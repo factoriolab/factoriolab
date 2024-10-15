@@ -1,18 +1,13 @@
-import { ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { ErrorService, LabErrorHandler } from './error.service';
+import { ErrorService } from './error.service';
 
 describe('ErrorService', () => {
   let service: ErrorService;
-  let errorHandler: ErrorHandler;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [{ provide: ErrorHandler, useClass: LabErrorHandler }],
-    });
+    TestBed.configureTestingModule({});
     service = TestBed.inject(ErrorService);
-    errorHandler = TestBed.inject(ErrorHandler);
   });
 
   it('should be created', () => {
@@ -21,8 +16,8 @@ describe('ErrorService', () => {
 
   it('should handle an error', () => {
     spyOn(console, 'error');
-    errorHandler.handleError('test');
+    service.handleError('test');
     expect(console.error).toHaveBeenCalledWith('test');
-    expect(service.message()).toEqual('test');
+    expect(service.message$.value).toEqual('test');
   });
 });

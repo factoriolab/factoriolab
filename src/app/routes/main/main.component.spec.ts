@@ -5,8 +5,8 @@ import {
   tick,
 } from '@angular/core/testing';
 
-import { TestModule } from 'src/tests';
-import { App } from '~/store';
+import { TestModule } from '~/tests';
+
 import { MainComponent } from './main.component';
 
 describe('MainComponent', () => {
@@ -15,8 +15,7 @@ describe('MainComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MainComponent],
-      imports: [TestModule],
+      imports: [TestModule, MainComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MainComponent);
@@ -30,17 +29,13 @@ describe('MainComponent', () => {
 
   describe('reset', () => {
     it('should set loading indicator and reset application', fakeAsync(() => {
-      spyOn(component.errorSvc.message, 'set');
-      spyOn(component.router, 'navigateByUrl');
-      spyOn(component.store, 'dispatch');
+      spyOn(component.errorSvc.message$, 'next');
+      spyOn(component.router, 'navigate');
       component.reset();
       expect(component.isResetting).toBeTrue();
       tick(100);
-      expect(component.errorSvc.message.set).toHaveBeenCalledWith(null);
-      expect(component.router.navigateByUrl).toHaveBeenCalledWith('factorio');
-      expect(component.store.dispatch).toHaveBeenCalledWith(
-        new App.ResetAction(),
-      );
+      expect(component.errorSvc.message$.next).toHaveBeenCalledWith(undefined);
+      expect(component.router.navigate).toHaveBeenCalledWith(['/1.1']);
       expect(component.isResetting).toBeFalse();
     }));
   });

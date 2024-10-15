@@ -11,10 +11,14 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { debounce, map, of, Subject, tap, timer } from 'rxjs';
 
+import { ValidateNumberDirective } from '~/directives/validate-number.directive';
 import { filterNullish } from '~/helpers';
-import { rational, Rational } from '~/models';
+import { Rational, rational } from '~/models/rational';
 
 type EventType = 'input' | 'blur' | 'enter';
 
@@ -25,13 +29,20 @@ interface Event {
 
 @Component({
   selector: 'lab-input-number',
+  standalone: true,
+  imports: [
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    ValidateNumberDirective,
+  ],
   templateUrl: './input-number.component.html',
   styleUrls: ['./input-number.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputNumberComponent implements OnInit, OnChanges {
-  value = input(rational(0n));
-  minimum = input<Rational | null>(rational(0n));
+  value = input(rational.zero);
+  minimum = input<Rational | null>(rational.zero);
   maximum = input<Rational | null>(null);
   width = input('');
   inputId = input('inputnumber');
@@ -76,7 +87,9 @@ export class InputNumberComponent implements OnInit, OnChanges {
     debounce((e) => (e.type === 'input' ? timer(300) : of({}))),
     map((e) => e.value),
     filterNullish(),
-    tap((v) => this.setValue.emit(rational(v))),
+    tap((v) => {
+      this.setValue.emit(rational(v));
+    }),
   );
 
   ngOnInit(): void {
@@ -121,7 +134,7 @@ export class InputNumberComponent implements OnInit, OnChanges {
     try {
       const value = this.value();
       const newValue = value.isInteger()
-        ? value.add(rational(1n))
+        ? value.add(rational.one)
         : value.ceil();
       const max = this.maximum();
       if (max == null || newValue.lte(max)) this.setValue.emit(newValue);
@@ -134,7 +147,7 @@ export class InputNumberComponent implements OnInit, OnChanges {
     try {
       const value = this.value();
       const newValue = value.isInteger()
-        ? value.sub(rational(1n))
+        ? value.sub(rational.one)
         : value.floor();
       const min = this.minimum();
       if (min == null || newValue.gte(min)) this.setValue.emit(newValue);

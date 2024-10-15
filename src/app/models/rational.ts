@@ -3,6 +3,7 @@ import * as formula from '@sideway/formula';
 const MAX_DENOM = 10000000;
 const DIVIDE_BY_ZERO = 'Cannot divide by zero';
 const FLOAT_TOLERANCE = 1e-10;
+const DECIMALS_REGEX = new RegExp(/\d+(\.(\d+))?(e-(\d+))?/);
 
 export function gcd(x: bigint, y: bigint): bigint {
   x = abs(x);
@@ -135,10 +136,10 @@ export class Rational {
     if (mixed && abs(this.p) > abs(this.q)) {
       const whole = this.p / this.q;
       const mod = this.p % this.q;
-      return `${whole} + ${mod}/${this.q}`;
+      return `${whole.toString()} + ${mod.toString()}/${this.q.toString()}`;
     }
 
-    return `${this.p}/${this.q}`;
+    return `${this.p.toString()}/${this.q.toString()}`;
   }
 
   /**
@@ -162,7 +163,7 @@ export class Rational {
     if (num % 1 !== 0) {
       // Pick apart complex numbers, looking for decimal and negative exponent
       // 3.33e-6 => ["3.33e-6", ".33", "33", "e-6", "6"]
-      const match = num.toString().match(/\d+(\.(\d+))?(e-(\d+))?/);
+      const match = DECIMALS_REGEX.exec(num.toString());
       let decimals = 0;
       // Regex pattern should match all known number toString formats
       // istanbul ignore else
@@ -186,7 +187,7 @@ export class Rational {
     return this.toString();
   }
 
-  constructor(p: bigint, q: bigint = 1n) {
+  constructor(p: bigint, q = 1n) {
     if (q === 1n) {
       this.p = p;
       this.q = q;
@@ -277,13 +278,13 @@ export function fromString(x: string): Rational {
     // Full math support for equations
     const value = new formula.Parser(x.substring(1)).evaluate();
     result = rational(value);
-  } else if (x.indexOf('/') === -1) {
+  } else if (!x.includes('/')) {
     result = fromNumber(Number(x));
   } else {
     const f = x.split('/');
     if (f.length > 2) throw new Error('Too many /');
 
-    if (f[0].indexOf(' ') === -1) {
+    if (!f[0].includes(' ')) {
       const p = Number(f[0]);
       const q = Number(f[1]);
       result = rational(p, q);
@@ -302,13 +303,13 @@ export function fromString(x: string): Rational {
   return result;
 }
 
-export function rational(x: number | bigint | string): Rational;
-export function rational(
+export function rationalFn(x: number | bigint | string): Rational;
+export function rationalFn(
   x: number | bigint | string | undefined,
 ): Rational | undefined;
-export function rational(p: number, q: number): Rational;
-export function rational(p: bigint, q: bigint): Rational;
-export function rational(
+export function rationalFn(p: number, q: number): Rational;
+export function rationalFn(p: bigint, q: bigint): Rational;
+export function rationalFn(
   p: number | bigint | string | undefined,
   q?: number | bigint,
 ): Rational | undefined {
@@ -330,3 +331,8 @@ export function rational(
       return fromString(p);
   }
 }
+
+export const rational = Object.assign(rationalFn, {
+  zero,
+  one,
+});

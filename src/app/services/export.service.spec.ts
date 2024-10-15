@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
-import { rational, Step } from '~/models';
+import { rational } from '~/models/rational';
+import { Step } from '~/models/step';
+import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
+
 import { ExportService } from './export.service';
 
 describe('ExportService', () => {
@@ -19,7 +21,7 @@ describe('ExportService', () => {
   describe('stepsToCsv', () => {
     it('should save the csv', () => {
       spyOn(service, 'saveAsCsv');
-      service.stepsToCsv(Mocks.Steps);
+      service.stepsToCsv(Mocks.steps);
       expect(service.saveAsCsv).toHaveBeenCalled();
     });
   });
@@ -27,7 +29,7 @@ describe('ExportService', () => {
   describe('flowToJson', () => {
     it('should save the json', () => {
       spyOn(service, 'saveAsJson');
-      service.flowToJson(Mocks.Flow);
+      service.flowToJson(Mocks.flow);
       expect(service.saveAsJson).toHaveBeenCalled();
     });
   });
@@ -39,7 +41,7 @@ describe('ExportService', () => {
       id: '0',
       itemId: ItemId.IronOre,
       recipeId: RecipeId.IronPlate,
-      parents: { ['1']: rational(1n) },
+      parents: { ['1']: rational.one },
     };
     const fullStep: Step = {
       id: '1',
@@ -71,14 +73,14 @@ describe('ExportService', () => {
         Outputs: '"iron-plate:8"',
         Targets: '"iron-plate:9"',
         Belts: '=3',
-        Belt: ItemId.TransportBelt,
+        Belt: ItemId.ExpressTransportBelt,
         Wagons: '=4',
         Wagon: ItemId.CargoWagon,
         Recipe: recipeId,
         Machines: '=5',
         Machine: ItemId.ElectricFurnace,
-        Modules: '"2 module"',
-        Beacons: '"0 beacon (2 speed-module-3)"',
+        Modules: `"2 ${ItemId.ProductivityModule3}"`,
+        Beacons: `"8 ${ItemId.Beacon} (2 ${ItemId.SpeedModule3})"`,
         Power: '=6',
         Pollution: '=7',
       });
@@ -88,12 +90,12 @@ describe('ExportService', () => {
       const result = service.stepToJson(minStep, [minStep]);
       expect(result).toEqual({
         Item: itemId,
-        Belt: ItemId.TransportBelt,
+        Belt: ItemId.ExpressTransportBelt,
         Wagon: ItemId.CargoWagon,
         Recipe: recipeId,
         Machine: ItemId.ElectricFurnace,
-        Modules: '"2 module"',
-        Beacons: '"0 beacon (2 speed-module-3)"',
+        Modules: `"2 ${ItemId.ProductivityModule3}"`,
+        Beacons: `"8 ${ItemId.Beacon} (2 ${ItemId.SpeedModule3})"`,
       });
     });
   });

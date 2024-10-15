@@ -1,14 +1,18 @@
+a {
+  text-decoration: none;
+}
+
 li {
   display: flex;
   align-items: center;
 
   &::before {
-    content: '';
-    width: 0.5rem;
-    height: 0.5rem;
+    margin-right: 0.5rem;
     border-radius: 50%;
     background: var(--text-color);
-    margin-right: 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    content: '';
   }
 
   i {
@@ -19,8 +23,4 @@ li {
     display: flex;
     align-items: center;
   }
-}
-
-a {
-  text-decoration: none;
 }

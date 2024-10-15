@@ -1,4 +1,5 @@
 import { areArraysEqual } from '~/helpers';
+
 import { Rational } from '../rational';
 import { areModuleSettingsEqual, ModuleSettings } from './module-settings';
 

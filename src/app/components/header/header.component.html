@@ -47,7 +47,9 @@
 </div>
 <a class="d-sm-none" [routerLink]="gameInfo().route">
   <p-splitButton
-    styleClass="p-button-lg p-button-text"
+    styleClass="p-button-lg"
+    text
+    size="large"
     [icon]="gameInfo().icon | iconSmClass"
     [model]="gameOptions()"
     (onDropdownClick)="cancelRouterLink($event)"

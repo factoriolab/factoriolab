@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 
-import { Dataset, IdType } from '~/models';
+import { Dataset } from '~/models/dataset';
+import { IdType } from '~/models/enum/id-type';
 
 export interface Collection {
   label: string;

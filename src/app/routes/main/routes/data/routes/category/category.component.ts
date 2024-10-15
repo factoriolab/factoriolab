@@ -1,16 +1,24 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 
-import { AppSharedModule } from '~/app-shared.module';
-import { Category } from '~/models';
-import { DataSharedModule } from '../../data-shared.module';
-import { DetailComponent } from '../../models';
+import { CollectionTableComponent } from '~/components/collection-table/collection-table.component';
+import { Category } from '~/models/data/category';
+import { IconClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+
+import { DetailComponent } from '../../models/detail.component';
 
 @Component({
+  selector: 'lab-category',
   standalone: true,
-  imports: [AppSharedModule, DataSharedModule],
+  imports: [
+    BreadcrumbModule,
+    CollectionTableComponent,
+    IconClassPipe,
+    TranslatePipe,
+  ],
   templateUrl: './category.component.html',
-  styleUrls: ['./category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryComponent extends DetailComponent {
@@ -18,7 +26,7 @@ export class CategoryComponent extends DetailComponent {
     () => this.data().categoryEntities[this.id()],
   );
   breadcrumb = computed<MenuItem[]>(() => [
-    this.parent(),
+    this.parent() ?? {},
     { label: this.obj()?.name },
   ]);
   itemIds = computed(() => {

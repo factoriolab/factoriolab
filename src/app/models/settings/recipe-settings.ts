@@ -4,17 +4,19 @@ import { Rational } from '../rational';
 import { BeaconSettings } from './beacon-settings';
 import { ModuleSettings } from './module-settings';
 
-export interface RecipeSettings {
-  excluded?: boolean;
-  checked?: boolean;
+export interface RecipeState {
   machineId?: string;
   fuelId?: string;
-  /** Calculated, not configurable */
-  fuelOptions?: SelectItem<string>[];
   modules?: ModuleSettings[];
-  /** Calculated, not configurable */
-  moduleOptions?: SelectItem<string>[];
   beacons?: BeaconSettings[];
   overclock?: Rational;
   cost?: Rational;
+}
+
+export interface RecipeSettings extends RecipeState {
+  defaultMachineId?: string;
+  defaultFuelId?: string;
+  fuelOptions?: SelectItem<string>[];
+  moduleOptions?: SelectItem<string>[];
+  defaultOverclock?: Rational;
 }

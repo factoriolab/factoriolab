@@ -1,20 +1,16 @@
 import { TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 
-import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
-import { Theme } from '~/models';
-import { Preferences, Settings } from '~/store';
-import { BrowserUtility } from '~/utilities';
+import { Theme } from '~/models/enum/theme';
+import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
+
 import { ThemeService } from './theme.service';
 
 describe('ThemeService', () => {
   let service: ThemeService;
-  let mockStore: MockStore;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(ThemeService);
-    mockStore = TestBed.inject(MockStore);
     // Set up an item icon override to be included
     const data = Mocks.getAdjustedDataset();
     data.itemEntities[ItemId.Coal].icon = 'coal';
@@ -23,13 +19,8 @@ describe('ThemeService', () => {
     data.categoryEntities[CategoryId.Combat].iconText = 'test';
     data.iconEntities['coal'].invertLight = true;
     data.iconEntities['pistol'].invertLight = true;
-    mockStore.overrideSelector(Settings.getDataset, data);
-    mockStore.refreshState();
-    service.initialize();
     localStorage.clear();
   });
-
-  afterEach(() => mockStore.resetSelectors());
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -38,22 +29,18 @@ describe('ThemeService', () => {
   it('should set the theme css href', () => {
     const themeLink = { href: '' };
     const tempLink = { href: '', onload: (): void => {} };
-    spyOn(service['head'], 'removeChild');
-    spyOn(service['head'], 'appendChild');
-    spyOn(service['document'], 'getElementById').and.returnValue(
-      themeLink as any,
-    );
-    spyOn(service['document'], 'createElement').and.returnValue(
-      tempLink as any,
-    );
-    mockStore.overrideSelector(Preferences.getTheme, Theme.Light);
-    mockStore.refreshState();
+    spyOn(service.head, 'removeChild');
+    spyOn(service.head, 'appendChild');
+    spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
+    spyOn(service.document, 'createElement').and.returnValue(tempLink as any);
+    service.preferencesSvc.apply({ theme: Theme.Light });
+    TestBed.flushEffects();
     expect(tempLink.href).toEqual('theme-light.css');
     expect(themeLink.href).toEqual('');
     tempLink.onload();
     expect(themeLink.href).toEqual('theme-light.css');
-    mockStore.overrideSelector(Preferences.getTheme, Theme.Dark);
-    mockStore.refreshState();
+    service.preferencesSvc.apply({ theme: Theme.Dark });
+    TestBed.flushEffects();
     expect(tempLink.href).toEqual('theme-dark.css');
     expect(themeLink.href).toEqual('theme-light.css');
     tempLink.onload();
@@ -63,12 +50,11 @@ describe('ThemeService', () => {
   it('should update theme values on initial pass', () => {
     spyOn(service, 'updateThemeValues');
     const themeLink = { href: 'theme-black.css' };
-    spyOn(service['document'], 'getElementById').and.returnValue(
-      themeLink as any,
-    );
+    spyOn(service.head, 'removeChild');
+    spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
     spyOn(service, 'themePath').and.returnValue('theme-black.css');
-    mockStore.overrideSelector(Preferences.getTheme, Theme.Black);
-    mockStore.refreshState();
+    service.preferencesSvc.apply({ theme: Theme.Black });
+    TestBed.flushEffects();
     expect(service.updateThemeValues).toHaveBeenCalled();
   });
 
@@ -84,9 +70,10 @@ describe('ThemeService', () => {
   describe('appInitTheme', () => {
     it('should switch to light theme if preferred', () => {
       const themeLink = { href: '' };
-      spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue({
-        theme: Theme.Light,
-      } as any);
+      localStorage.setItem(
+        'preferences',
+        JSON.stringify({ theme: Theme.Light }),
+      );
       spyOn(window.document, 'getElementById').and.returnValue(
         themeLink as any,
       );
@@ -96,9 +83,7 @@ describe('ThemeService', () => {
 
     it('should skip if specifying to use dark theme', () => {
       const themeLink = { href: '' };
-      spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue(
-        null as any,
-      );
+      localStorage.setItem('preferences', JSON.stringify({}));
       ThemeService.appInitTheme();
       expect(themeLink.href).toEqual('');
     });

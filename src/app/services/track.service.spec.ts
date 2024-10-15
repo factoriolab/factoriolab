@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { rational } from '~/models';
+import { rational } from '~/models/rational';
+
 import { TrackService } from './track.service';
 
 describe('TrackService', () => {
@@ -21,27 +22,11 @@ describe('TrackService', () => {
     });
   });
 
-  describe('trackByKey', () => {
-    it('should return an object key', () => {
-      expect(service.trackByKey(0, { key: 'key', value: 'value' })).toEqual(
-        'key',
-      );
-    });
-  });
-
-  describe('trackByIndex', () => {
-    it('should return a string by index only', () => {
-      expect(service.trackByIndex(0, { key: 'key', value: 'value' })).toEqual(
-        '0',
-      );
-    });
-  });
-
   describe('sortByValue', () => {
     it('should return a diff', () => {
       expect(
         service.sortByValue(
-          { key: 'a', value: rational(1n) },
+          { key: 'a', value: rational.one },
           { key: 'b', value: rational(2n) },
         ),
       ).toEqual(1);

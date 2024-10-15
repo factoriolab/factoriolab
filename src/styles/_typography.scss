@@ -1,27 +1,25 @@
 h2 {
   margin: 0;
-
+  line-height: 1.5;
   font-size: 1.5rem;
   font-weight: 700;
-  line-height: 1.5;
 }
 
 h3 {
   margin: 1rem 0;
-
+  line-height: 1.5;
   font-size: 1.125rem;
   font-weight: 600;
-  line-height: 1.5;
 }
 
 .monospace {
-  font-family: 'Roboto Mono', 'Courier New', Courier, monospace;
   white-space: pre;
+  font-family: 'Roboto Mono', 'Courier New', Courier, monospace;
 }
 
 .find-text {
   display: block;
-  color: transparent;
   position: absolute;
+  color: transparent;
   user-select: none;
 }

@@ -1,0 +1,221 @@
+<p-dialog
+  styleClass="picker-dialog"
+  [(visible)]="visible"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [focusOnShow]="false"
+  appendTo="body"
+  [header]="'techPicker.header' | translate"
+  [style]="{
+    minHeight: '528px',
+    height: '80vh',
+    width: '50vw',
+  }"
+  [breakpoints]="{ '768px': '80vw', '576px': '100vw' }"
+  (onHide)="onHide()"
+>
+  <div class="d-flex w-100 my-1 p-inputgroup">
+    <span class="p-inputgroup-addon">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </span>
+    <input
+      #filterInput
+      pInputText
+      type="text"
+      class="w-100"
+      [ngModel]="filter()"
+      (input)="filter.set(filterInput.value)"
+    />
+    <span class="p-inputgroup-addon flex-shrink-0">
+      <p-checkbox
+        [binary]="true"
+        [label]="'techPicker.unlockAll' | translate"
+        labelStyleClass="text-nowrap"
+        [ngModel]="allSelected()"
+        (onChange)="selectAll($event.checked)"
+      ></p-checkbox>
+    </span>
+    <span class="p-inputgroup-addon flex-shrink-0">
+      <p-checkbox
+        [binary]="true"
+        [label]="'techPicker.showLabels' | translate"
+        labelStyleClass="text-nowrap"
+        [ngModel]="showTechLabels()"
+        (onChange)="preferencesSvc.apply({ showTechLabels: $event.checked })"
+      ></p-checkbox>
+    </span>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="flex-shrink-0"
+      icon="fa-solid fa-file-import"
+      [label]="'techPicker.import' | translate"
+      [pTooltip]="'techPicker.importTooltip' | translate"
+      (click)="openImport(importInput)"
+    ></button>
+    <p-dialog
+      [(visible)]="importVisible"
+      [modal]="true"
+      [dismissableMask]="true"
+      [draggable]="true"
+      [resizable]="false"
+      appendTo="body"
+      [style]="{
+        width: '30vw',
+      }"
+      [breakpoints]="{ '768px': '50vw', '576px': '90vw' }"
+      [header]="'techPicker.importHeader' | translate"
+    >
+      <div class="d-flex flex-column">
+        @if (data().game === Game.Factorio) {
+          <div class="p-inputgroup mb-3">
+            <span class="p-inputgroup-addon">{{
+              'techPicker.exportFromFactorio' | translate
+            }}</span>
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-outlined"
+              icon="fa-solid fa-copy"
+              [label]="'techPicker.exportCopyScript' | translate"
+              (click)="copyScriptToClipboard()"
+            ></button>
+            <a
+              href="https://mods.factorio.com/mod/export-researched-technologies"
+              target="_blank"
+              pButton
+              pRipple
+              class="text-decoration-none p-inputgroup-addon p-button-outlined"
+              [label]="'techPicker.exportUseMod' | translate"
+              icon="fa-solid fa-link"
+            >
+            </a>
+          </div>
+        }
+        <div>{{ 'techPicker.importInstructions' | translate }}</div>
+        <textarea
+          #importInput
+          class="mt-2 w-100"
+          rows="10"
+          pInputTextarea
+          [(ngModel)]="importValue"
+          (keydown.enter)="importTechs()"
+        ></textarea>
+      </div>
+      <ng-template pTemplate="footer">
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="p-button-outlined"
+          icon="fa-solid fa-check"
+          [label]="'ok' | translate"
+          (click)="importTechs()"
+        ></button>
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="p-button-outlined p-button-secondary"
+          icon="fa-solid fa-xmark"
+          [label]="'cancel' | translate"
+          (click)="importVisible = false"
+        ></button>
+      </ng-template>
+    </p-dialog>
+  </div>
+
+  @if (visible) {
+    <p-scrollPanel
+      [style]="{ height: 'calc(80vh - 165px)', minHeight: '363px' }"
+    >
+      <ng-container
+        *ngTemplateOutlet="
+          techSet;
+          context: {
+            title: 'techPicker.available',
+            ids: status().available,
+            class: 'p-button-text',
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          techSet;
+          context: {
+            title: 'techPicker.locked',
+            ids: status().locked,
+            class: 'p-button-danger',
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          techSet;
+          context: {
+            title: 'techPicker.researched',
+            ids: status().researched,
+            class: 'p-button-success',
+          }
+        "
+      ></ng-container>
+      <ng-template #techSet let-title="title" let-ids="ids" let-class="class">
+        <h3>{{ title | translate }}</h3>
+        <div class="d-flex flex-wrap invert">
+          @if (ids.length === 0) {
+            <i>{{ 'none' | translate }}</i>
+          }
+          @for (id of ids; track id) {
+            <ng-container
+              *ngTemplateOutlet="techButton; context: { id, class }"
+            ></ng-container>
+          }
+        </div>
+      </ng-template>
+      <ng-template #techButton let-id="id" let-class="class"
+        ><button
+          pButton
+          pRipple
+          type="button"
+          class="me-1 mb-1"
+          [class]="class"
+          [label]="(showTechLabels() && data().itemEntities[id]?.name) || ''"
+          [class.hover-active]="selection().includes(id)"
+          [icon]="id | iconSmClass"
+          [pTooltip]="tooltip"
+          tooltipPosition="bottom"
+          (click)="clickId(id)"
+        >
+          <ng-template #tooltip>
+            <lab-tooltip [id]="id" type="technology"></lab-tooltip>
+          </ng-template>
+        </button>
+      </ng-template>
+    </p-scrollPanel>
+  }
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="hide()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined p-button-secondary"
+      icon="fa-solid fa-xmark"
+      [label]="'cancel' | translate"
+      (click)="hide(true)"
+    ></button>
+  </ng-template>
+</p-dialog>

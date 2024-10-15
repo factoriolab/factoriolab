@@ -1,14 +1,13 @@
 import fs from 'fs';
 
-import { getJsonData } from './helpers';
+import { getJsonData } from './helpers/file.helpers';
 
 const mod = process.argv[2];
 
-if (!mod) {
+if (!mod)
   throw new Error(
     'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
   );
-}
 
 const modPath = `./src/data/${mod}`;
 const modDataPath = `${modPath}/data.json`;

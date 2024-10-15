@@ -1,11 +1,8 @@
-import pkg from 'package.json';
-
-import { Environment } from './';
+import { Environment } from './index';
 
 export const environment: Environment = {
   production: false,
-  testing: true,
   debug: false,
   baseHref: '/',
-  version: `${pkg.version} (test)`,
+  name: 'test',
 };

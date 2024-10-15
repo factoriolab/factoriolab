@@ -1,32 +1,26 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 
-import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
-import { LabState, Recipes } from '~/store';
+import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
+
 import { PickerComponent } from './picker.component';
 
 describe('PickerComponent', () => {
   let component: PickerComponent;
   let fixture: ComponentFixture<PickerComponent>;
-  let mockStore: MockStore<LabState>;
   let markForCheck: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PickerComponent],
-      imports: [TestModule],
+      imports: [TestModule, PickerComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PickerComponent);
-    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     markForCheck = spyOn(ref.constructor.prototype, 'markForCheck');
     fixture.detectChanges();
   });
-
-  afterEach(() => mockStore.resetSelectors());
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -36,7 +30,7 @@ describe('PickerComponent', () => {
     it('should open the items dialog', () => {
       component.clickOpen(
         'item',
-        Mocks.AdjustedDataset.itemIds,
+        Mocks.adjustedDataset.itemIds,
         ItemId.IronPlate,
       );
       expect(component.visible).toBeTrue();
@@ -46,15 +40,25 @@ describe('PickerComponent', () => {
     it('should open the recipes dialog', () => {
       component.clickOpen(
         'recipe',
-        Mocks.AdjustedDataset.recipeIds,
+        Mocks.adjustedDataset.recipeIds,
         RecipeId.IronPlate,
       );
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();
     });
 
+    it('should handle a set', () => {
+      component.clickOpen(
+        'item',
+        Mocks.adjustedDataset.itemIds,
+        new Set([ItemId.IronPlate]),
+      );
+      expect(component.visible).toBeTrue();
+      expect(markForCheck).toHaveBeenCalled();
+    });
+
     it('should open as item multiselect', () => {
-      component.clickOpen('item', Mocks.AdjustedDataset.itemIds, [
+      component.clickOpen('item', Mocks.adjustedDataset.itemIds, [
         ItemId.IronPlate,
       ]);
       expect(component.visible).toBeTrue();
@@ -63,25 +67,12 @@ describe('PickerComponent', () => {
     });
 
     it('should open as recipe multiselect', () => {
-      component.clickOpen('recipe', Mocks.AdjustedDataset.recipeIds, [
+      component.clickOpen('recipe', Mocks.adjustedDataset.recipeIds, [
         RecipeId.IronPlate,
       ]);
       expect(component.visible).toBeTrue();
       expect(component.isMultiselect).toBeTrue();
       expect(component.selection?.length).toEqual(1);
-    });
-
-    it('should open as recipe multiselect with null defaults', () => {
-      const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
-      mockStore.overrideSelector(Recipes.getAdjustedDataset, data);
-      mockStore.refreshState();
-      component.clickOpen('recipe', Mocks.AdjustedDataset.recipeIds, [
-        RecipeId.IronPlate,
-      ]);
-      expect(component.visible).toBeTrue();
-      expect(component.isMultiselect).toBeTrue();
-      expect(component.selection?.length).toEqual(1);
-      mockStore.resetSelectors();
     });
   });
 
@@ -132,23 +123,23 @@ describe('PickerComponent', () => {
       spyOn(component.selectIds, 'emit');
       component.selection = [RecipeId.AdvancedCircuit];
       component.onHide();
-      expect(component.selectIds.emit).toHaveBeenCalledWith([
-        RecipeId.AdvancedCircuit,
-      ]);
+      expect(component.selectIds.emit).toHaveBeenCalledWith(
+        new Set([RecipeId.AdvancedCircuit]),
+      );
     });
   });
 
   describe('inputSearch', () => {
     beforeEach(() => {
-      component.clickOpen('item', Mocks.AdjustedDataset.itemIds);
+      component.clickOpen('item', Mocks.adjustedDataset.itemIds);
     });
 
     it('should skip if no search is specified', () => {
       component.search = '';
       component.inputSearch();
-      expect(component.categoryIds).toEqual(Mocks.AdjustedDataset.categoryIds);
+      expect(component.categoryIds).toEqual(Mocks.adjustedDataset.categoryIds);
       expect(component.categoryRows).toEqual(
-        Mocks.AdjustedDataset.categoryItemRows,
+        Mocks.adjustedDataset.categoryItemRows,
       );
     });
 

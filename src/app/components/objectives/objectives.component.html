@@ -1,0 +1,263 @@
+<p-card [header]="'objectives.title' | translate">
+  <div class="objectives-content">
+    <p-orderList
+      [value]="objectives()"
+      [dragdrop]="true"
+      [trackBy]="trackSvc.trackById"
+      (onReorder)="objectivesSvc.setOrder(objectives())"
+    >
+      <ng-template pTemplate="item" let-objective let-i="index">
+        <div class="p-inputgroup">
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-outlined border-end-0 cursor-grab"
+            icon="fa-solid fa-grip-lines"
+          ></button>
+          @if (objective.unit === ObjectiveUnit.Machines) {
+            <button
+              pButton
+              pRipple
+              labNoDrag
+              type="button"
+              class="p-button-outlined lab-button-icon-only text-truncate"
+              [pTooltip]="'objectives.selectARecipe' | translate"
+              tooltipPosition="top"
+              (click)="
+                editRecipePicker.clickOpen(
+                  'recipe',
+                  recipeIds(),
+                  objective.targetId
+                )
+              "
+            >
+              <i
+                class="p-button-icon"
+                [class]="objective.targetId | iconSmClass: 'recipe'"
+                ><span>#{{ objective.id }}</span></i
+              >
+              @if (!contentSvc.isMobile()) {
+                <span class="p-button-label">{{
+                  data().recipeEntities[objective.targetId].name
+                }}</span>
+              }
+            </button>
+            <lab-picker
+              #editRecipePicker
+              [header]="'objectives.selectARecipe' | translate"
+              (selectId)="
+                objectivesSvc.updateEntity(objective.id, {
+                  targetId: $event,
+                  machineId: undefined,
+                  modules: undefined,
+                  beacons: undefined,
+                  overclock: undefined,
+                })
+              "
+            ></lab-picker>
+          } @else {
+            <button
+              labNoDrag
+              pButton
+              pRipple
+              type="button"
+              class="p-button-outlined text-truncate"
+              [icon]="objective.targetId | iconSmClass"
+              [label]="
+                contentSvc.isMobile()
+                  ? ''
+                  : data().itemEntities[objective.targetId].name
+              "
+              [pTooltip]="'objectives.selectAnItem' | translate"
+              tooltipPosition="top"
+              (click)="
+                editItemPicker.clickOpen('item', itemIds(), objective.targetId)
+              "
+            ></button>
+            <lab-picker
+              #editItemPicker
+              [header]="'objectives.selectAnItem' | translate"
+              (selectId)="
+                objectivesSvc.updateEntity(objective.id, {
+                  targetId: $event,
+                  machineId: undefined,
+                  modules: undefined,
+                  beacons: undefined,
+                  overclock: undefined,
+                })
+              "
+            ></lab-picker>
+          }
+          <lab-input-number
+            labNoDrag
+            [pTooltip]="
+              objective.type === ObjectiveType.Maximize
+                ? maximizeType() === MaximizeType.Weight
+                  ? ('objectives.valueWeightTooltip' | translate)
+                  : ('objectives.valueRatioTooltip' | translate)
+                : ('objectives.valueTooltip' | translate)
+            "
+            tooltipPosition="top"
+            [hideButtons]="contentSvc.isMobile()"
+            [value]="objective.value"
+            (setValue)="
+              objectivesSvc.updateEntity(objective.id, { value: $event })
+            "
+          ></lab-input-number>
+          @if (objective.type !== ObjectiveType.Maximize) {
+            <p-dropdown
+              labDropdownTranslate
+              labNoDrag
+              [pTooltip]="'objectives.unitTooltip' | translate"
+              tooltipPosition="top"
+              [options]="unitOptions()"
+              [ngModel]="objective.unit"
+              (onChange)="
+                changeUnit(
+                  objective,
+                  $event.value,
+                  chooseItemPicker,
+                  chooseRecipePicker
+                )
+              "
+            ></p-dropdown>
+          }
+          <p-dropdown
+            labDropdownTranslate
+            labNoDrag
+            [pTooltip]="'objectives.typeTooltip' | translate"
+            tooltipPosition="top"
+            [options]="objectiveTypeOptions"
+            [ngModel]="objective.type"
+            (onChange)="
+              objectivesSvc.updateEntity(objective.id, { type: $event.value })
+            "
+          ></p-dropdown>
+          <button
+            pButton
+            pRipple
+            labNoDrag
+            type="button"
+            class="p-button-outlined"
+            icon="fa-solid fa-xmark"
+            [pTooltip]="'objectives.removeTooltip' | translate"
+            tooltipPosition="left"
+            (click)="objectivesSvc.remove(objective.id)"
+          ></button>
+        </div>
+      </ng-template>
+    </p-orderList>
+    <div class="objectives-buttons d-flex flex-wrap mt-2">
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="flex-grow-1 p-button-outlined"
+        icon="fa-solid fa-box"
+        tooltipPosition="top"
+        [label]="'objectives.addItems' | translate"
+        (click)="addItemPicker.clickOpen('item', itemIds())"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="flex-grow-1 p-button-outlined"
+        icon="fa-solid fa-industry"
+        tooltipPosition="top"
+        [label]="'objectives.addMachines' | translate"
+        (click)="addRecipePicker.clickOpen('recipe', recipeIds())"
+      ></button>
+      <p-dropdown
+        labDropdownTranslate
+        styleClass="h-100"
+        [pTooltip]="'objectives.selectDisplayRate' | translate"
+        [ngModel]="dispRateInfo().option"
+        [options]="displayRateOptions"
+        (onChange)="settingsSvc.apply({ displayRate: $event.value })"
+      >
+      </p-dropdown>
+      <p-toggleButton
+        [ngModel]="paused()"
+        [onIcon]="'fa-solid fa-play'"
+        offIcon="fa-solid fa-pause"
+        [pTooltip]="'objectives.pauseTooltip' | translate"
+        (onChange)="preferencesSvc.apply({ paused: $event.checked })"
+      ></p-toggleButton>
+    </div>
+    @if (result().unboundedRecipeId; as recipeId) {
+      <p-messages severity="warn" styleClass="mt-2">
+        <ng-template pTemplate>
+          <div>
+            <div class="d-flex align-items-center">
+              <span class="me-3">{{
+                'objectives.errorSimplexUnboundedRecipe' | translate
+              }}</span>
+              <i
+                [class]="recipeId | iconSmClass: 'recipe'"
+                [pTooltip]="tooltip"
+              ></i>
+              <span class="ms-3">{{
+                data().recipeEntities[recipeId].name
+              }}</span>
+              <ng-template #tooltip>
+                <lab-tooltip [id]="recipeId" type="recipe"></lab-tooltip>
+              </ng-template>
+            </div>
+            <button
+              type="button"
+              class="mt-2 p-button-rounded"
+              pButton
+              pRipple
+              icon="fa-solid fa-plus"
+              [label]="
+                'objectives.errorSimplexUnboundedAddRecipeLimit' | translate
+              "
+              (click)="
+                objectivesSvc.add({
+                  targetId: recipeId,
+                  unit: ObjectiveUnit.Machines,
+                  type: ObjectiveType.Limit,
+                })
+              "
+            ></button>
+          </div>
+        </ng-template>
+      </p-messages>
+    } @else {
+      @if (messages() | async; as messages) {
+        @if (messages.length) {
+          <p-messages
+            styleClass="mt-2"
+            [value]="messages"
+            [closable]="false"
+            [escape]="false"
+          ></p-messages>
+        }
+      }
+    }
+  </div>
+  <lab-picker
+    #addItemPicker
+    [header]="'objectives.selectAnItem' | translate"
+    (selectId)="
+      objectivesSvc.add({ targetId: $event, unit: ObjectiveUnit.Items })
+    "
+  ></lab-picker>
+  <lab-picker
+    #addRecipePicker
+    [header]="'objectives.selectARecipe' | translate"
+    (selectId)="
+      objectivesSvc.add({ targetId: $event, unit: ObjectiveUnit.Machines })
+    "
+  ></lab-picker>
+  <lab-picker
+    #chooseItemPicker
+    [header]="'objectives.selectAnItem' | translate"
+  ></lab-picker>
+  <lab-picker
+    #chooseRecipePicker
+    [header]="'objectives.selectARecipe' | translate"
+  ></lab-picker>
+</p-card>

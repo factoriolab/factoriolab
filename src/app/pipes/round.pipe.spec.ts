@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
-import { rational } from '~/models';
-import { DisplayService } from '~/services';
+import { rational } from '~/models/rational';
+import { DisplayService } from '~/services/display.service';
+
 import { RoundPipe } from './round.pipe';
 
 describe('RoundPipe', () => {

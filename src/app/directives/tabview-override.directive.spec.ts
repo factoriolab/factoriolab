@@ -1,11 +1,15 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomHandler } from 'primeng/dom';
-import { TabView } from 'primeng/tabview';
+import { TabView, TabViewModule } from 'primeng/tabview';
 
-import { TestModule } from 'src/tests';
+import { TestModule } from '~/tests';
+
+import { TabViewOverrideDirective } from './tabview-override.directive';
 
 @Component({
+  standalone: true,
+  imports: [TabViewModule, TabViewOverrideDirective],
   template: `<p-tabView></p-tabView>`,
 })
 class TestTabViewOverrideDirectiveComponent {
@@ -18,8 +22,7 @@ describe('TabViewOverrideDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TestTabViewOverrideDirectiveComponent],
-      imports: [TestModule],
+      imports: [TestModule, TestTabViewOverrideDirectiveComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestTabViewOverrideDirectiveComponent);

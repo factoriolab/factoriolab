@@ -1,8 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Mocks, TestModule } from 'src/tests';
 import { spread } from '~/helpers';
-import { LinkValue, MIN_LINK_VALUE, rational, Step } from '~/models';
+import { MIN_LINK_VALUE } from '~/models/constants';
+import { LinkValue } from '~/models/enum/link-value';
+import { rational } from '~/models/rational';
+import { Step } from '~/models/step';
+import { Mocks, TestModule } from '~/tests';
+
 import { FlowService } from './flow.service';
 
 describe('FlowService', () => {
@@ -37,11 +41,12 @@ describe('FlowService', () => {
   describe('buildGraph', () => {
     it('should handle various link and node types', () => {
       const result = service.buildGraph(
-        Mocks.LightOilSteps,
+        Mocks.lightOilSteps,
         '/m',
-        Mocks.ItemsStateInitial,
-        Mocks.PreferencesState,
-        Mocks.AdjustedDataset,
+        Mocks.settingsStateInitial,
+        Mocks.preferencesState,
+        Mocks.adjustedDataset,
+        Mocks.themeValues,
       );
 
       expect(result.nodes.length).toEqual(7);
@@ -50,29 +55,47 @@ describe('FlowService', () => {
 
     it('should handle different link text selection', () => {
       const result = service.buildGraph(
-        Mocks.LightOilSteps,
+        Mocks.lightOilSteps,
         '/m',
-        Mocks.ItemsStateInitial,
-        spread(Mocks.PreferencesState, {
-          flowSettings: spread(Mocks.FlowSettings, {
+        Mocks.settingsStateInitial,
+        spread(Mocks.preferencesState, {
+          flowSettings: spread(Mocks.flowSettings, {
             linkText: LinkValue.None,
           }),
         }),
-        Mocks.AdjustedDataset,
+        Mocks.adjustedDataset,
+        Mocks.themeValues,
       );
 
       expect(result.nodes.length).toEqual(7);
       expect(result.links.length).toEqual(8);
+    });
+
+    it('should handle missing recipeId on parent', () => {
+      const steps = [...Mocks.lightOilSteps];
+      const broken = spread(steps[1], { parents: { '4': rational.one } });
+      steps[1] = broken;
+      const result = service.buildGraph(
+        steps,
+        '/m',
+        Mocks.settingsStateInitial,
+        Mocks.preferencesState,
+        Mocks.adjustedDataset,
+        Mocks.themeValues,
+      );
+
+      expect(result.nodes.length).toEqual(7);
+      expect(result.links.length).toEqual(7);
     });
   });
 
   describe('stepLinkValue', () => {
     it('should handle all possible options', () => {
       expect(service.stepLinkValue(fullStep, LinkValue.None)).toEqual(
-        rational(1n),
+        rational.one,
       );
       expect(service.stepLinkValue(fullStep, LinkValue.Percent)).toEqual(
-        rational(1n),
+        rational.one,
       );
       expect(service.stepLinkValue(fullStep, LinkValue.Items)).toEqual(
         rational(2n),
@@ -90,16 +113,16 @@ describe('FlowService', () => {
 
     it('should handle undefined values', () => {
       expect(service.stepLinkValue(emptyStep, LinkValue.Items)).toEqual(
-        rational(0n),
+        rational.zero,
       );
       expect(service.stepLinkValue(emptyStep, LinkValue.Belts)).toEqual(
-        rational(0n),
+        rational.zero,
       );
       expect(service.stepLinkValue(emptyStep, LinkValue.Wagons)).toEqual(
-        rational(0n),
+        rational.zero,
       );
       expect(service.stepLinkValue(emptyStep, LinkValue.Machines)).toEqual(
-        rational(0n),
+        rational.zero,
       );
     });
   });
@@ -108,26 +131,26 @@ describe('FlowService', () => {
     it('should handle all possible options', () => {
       expect(
         service.linkSize(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.None,
-          rational(1n),
+          rational.one,
         ),
       ).toEqual(1);
       expect(
         service.linkSize(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.Percent,
-          rational(1n),
+          rational.one,
         ),
       ).toEqual(1);
       expect(
         service.linkSize(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.Items,
-          rational(1n),
+          rational.one,
         ),
       ).toEqual(1);
     });
@@ -135,18 +158,18 @@ describe('FlowService', () => {
     it('should fall back to minimum values', () => {
       expect(
         service.linkSize(
-          rational(1n),
-          rational(0n),
+          rational.one,
+          rational.zero,
           LinkValue.Percent,
-          rational(1n),
+          rational.one,
         ),
       ).toEqual(MIN_LINK_VALUE);
       expect(
         service.linkSize(
-          rational(1n),
-          rational(0n),
+          rational.one,
+          rational.zero,
           LinkValue.Items,
-          rational(1n),
+          rational.one,
         ),
       ).toEqual(MIN_LINK_VALUE);
     });
@@ -156,28 +179,28 @@ describe('FlowService', () => {
     it('should handle all possible options', () => {
       expect(
         service.linkText(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.None,
-          Mocks.PreferencesState.columns,
+          Mocks.preferencesState.columns,
           '/m',
         ),
       ).toEqual('');
       expect(
         service.linkText(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.Percent,
-          Mocks.PreferencesState.columns,
+          Mocks.preferencesState.columns,
           '/m',
         ),
       ).toEqual('100%');
       expect(
         service.linkText(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.Items,
-          Mocks.PreferencesState.columns,
+          Mocks.preferencesState.columns,
           '/m',
         ),
       ).toEqual('1/m');
@@ -187,10 +210,10 @@ describe('FlowService', () => {
       spyOn(service, 'linkPrecision').and.returnValue(null);
       expect(
         service.linkText(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.Machines,
-          Mocks.PreferencesState.columns,
+          Mocks.preferencesState.columns,
           '/m',
         ),
       ).toEqual('1');
@@ -200,27 +223,27 @@ describe('FlowService', () => {
   describe('linkPrecision', () => {
     it('should handle all possible options', () => {
       expect(
-        service.linkPrecision(LinkValue.None, Mocks.PreferencesState.columns),
+        service.linkPrecision(LinkValue.None, Mocks.preferencesState.columns),
       ).toEqual(null);
       expect(
         service.linkPrecision(
           LinkValue.Percent,
-          Mocks.PreferencesState.columns,
+          Mocks.preferencesState.columns,
         ),
       ).toEqual(null);
       expect(
-        service.linkPrecision(LinkValue.Items, Mocks.PreferencesState.columns),
+        service.linkPrecision(LinkValue.Items, Mocks.preferencesState.columns),
       ).toEqual(1);
       expect(
-        service.linkPrecision(LinkValue.Belts, Mocks.PreferencesState.columns),
+        service.linkPrecision(LinkValue.Belts, Mocks.preferencesState.columns),
       ).toEqual(1);
       expect(
-        service.linkPrecision(LinkValue.Wagons, Mocks.PreferencesState.columns),
+        service.linkPrecision(LinkValue.Wagons, Mocks.preferencesState.columns),
       ).toEqual(1);
       expect(
         service.linkPrecision(
           LinkValue.Machines,
-          Mocks.PreferencesState.columns,
+          Mocks.preferencesState.columns,
         ),
       ).toEqual(1);
     });
