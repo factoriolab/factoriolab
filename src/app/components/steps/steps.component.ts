@@ -32,7 +32,6 @@ import { BehaviorSubject, combineLatest, filter, first, pairwise } from 'rxjs';
 import { DropdownBaseDirective } from '~/directives/dropdown-base.directive';
 import { NoDragDirective } from '~/directives/no-drag.directive';
 import { coalesce, updateSetIds } from '~/helpers';
-import { Game } from '~/models/enum/game';
 import { ItemId } from '~/models/enum/item-id';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { stepDetailIcon, StepDetailTab } from '~/models/enum/step-detail-tab';
@@ -186,7 +185,6 @@ export class StepsComponent implements OnInit, AfterViewInit {
   stepDetailIcon = stepDetailIcon;
   ItemId = ItemId;
   StepDetailTab = StepDetailTab;
-  Game = Game;
   ObjectiveUnit = ObjectiveUnit;
   rational = rational;
 

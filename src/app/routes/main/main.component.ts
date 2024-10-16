@@ -54,7 +54,6 @@ export class MainComponent {
   translateSvc = inject(TranslateService);
 
   mod = this.settingsSvc.mod;
-  gameInfo = this.settingsSvc.gameInfo;
   result = this.objectivesSvc.matrixResult;
 
   isResetting = false;
@@ -92,7 +91,7 @@ export class MainComponent {
     setTimeout(() => {
       this.ngZone.run(() => {
         this.contentSvc.error$.next(undefined);
-        void this.router.navigate([this.gameInfo().route]);
+        void this.router.navigate([this.settingsSvc.gameInfo().route]);
         this.isResetting = false;
       });
     }, 10);

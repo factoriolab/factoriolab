@@ -68,8 +68,6 @@ export class LandingComponent {
   gameOptions = gameOptions;
   modOptions = modOptions;
 
-  Game = Game;
-
   selectItem(targetId: string): void {
     this.objectivesSvc.create({
       targetId,

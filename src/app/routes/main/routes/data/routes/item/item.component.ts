@@ -15,7 +15,6 @@ import { CollectionTableComponent } from '~/components/collection-table/collecti
 import { coalesce, updateSetIds } from '~/helpers';
 import { Category } from '~/models/data/category';
 import { Item } from '~/models/data/item';
-import { Game } from '~/models/enum/game';
 import { ItemId } from '~/models/enum/item-id';
 import { ItemState } from '~/models/settings/item-settings';
 import { MachineState } from '~/models/settings/machine-settings';
@@ -91,7 +90,7 @@ export class ItemComponent extends DetailComponent {
   machineSettings = computed<MachineState | undefined>(
     () => this.machinesState()[this.id()],
   );
-  Game = Game;
+
   ItemId = ItemId;
 
   changeExcluded(value: boolean): void {

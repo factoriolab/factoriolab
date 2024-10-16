@@ -17,12 +17,10 @@
         (onChange)="setGame($event.value)"
       >
         <ng-template pTemplate="selectedItem">
-          @if (gameInfo[data().game]; as info) {
-            <div class="d-flex align-items-center">
-              <i class="mx-1" [class]="info.icon | iconSmClass"></i>
-              <span class="ms-3">{{ info.label | translate }}</span>
-            </div>
-          }
+          <div class="d-flex align-items-center">
+            <i class="mx-1" [class]="data().info.icon | iconSmClass"></i>
+            <span class="ms-3">{{ data().info.label | translate }}</span>
+          </div>
         </ng-template>
         <ng-template pTemplate="item" let-item>
           @if ($any(gameInfo)[item.value]; as info) {
@@ -33,7 +31,7 @@
           }
         </ng-template>
       </p-dropdown>
-      @if (data().game === Game.Factorio) {
+      @if (data().info.flags.has('mods')) {
         <p-dropdown
           styleClass="mb-2 w-100"
           [filter]="true"

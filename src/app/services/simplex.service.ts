@@ -14,7 +14,6 @@ import { environment } from 'src/environments';
 import { contains, spread } from '~/helpers';
 import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
 import { AdjustedDataset } from '~/models/dataset';
-import { Game } from '~/models/enum/game';
 import { MaximizeType } from '~/models/enum/maximize-type';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
@@ -413,7 +412,7 @@ export class SimplexService {
   itemCost(itemId: string, costKey: CostKey, state: MatrixState): number {
     const base =
       state.data.itemEntities[itemId].stack == null &&
-      state.data.game === Game.Factorio
+      state.data.info.flags.has('fluidCostRatio')
         ? FACTORIO_FLUID_COST_RATIO
         : rational.one;
     const cost = state.costs[costKey];
@@ -977,7 +976,7 @@ export class SimplexService {
       );
     }
 
-    this.rateSvc.adjustPowerPollution(step, recipe, state.data.game);
+    this.rateSvc.adjustPowerPollution(step, recipe, state.data.info);
   }
   //#endregion
 }

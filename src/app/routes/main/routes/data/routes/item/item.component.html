@@ -392,25 +392,42 @@
           ></p-checkbox>
         </td>
       </tr>
-      @if (
-        data().game !== Game.DysonSphereProgram ||
-        itemSettings.beltId !== ItemId.Pipe
-      ) {
+      <tr>
+        <th>{{ 'data.belt' | translate }}</th>
+        @if (itemSettings.beltId; as beltId) {
+          <td>
+            <a
+              [routerLink]="
+                '/data/' +
+                (data().beltIds.includes(beltId)
+                  ? 'belts'
+                  : data().pipeIds.includes(beltId)
+                    ? 'pipes'
+                    : 'items') +
+                '/' +
+                beltId
+              "
+              queryParamsHandling="preserve"
+            >
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text"
+                [label]="data().itemEntities[beltId].name"
+                [icon]="beltId | iconSmClass: 'item'"
+              ></button>
+            </a>
+          </td>
+        }
+      </tr>
+      @if (itemSettings.wagonId; as wagonId) {
         <tr>
-          <th>{{ 'data.belt' | translate }}</th>
-          @if (itemSettings.beltId; as beltId) {
+          @if (obj.stack) {
+            <th>{{ 'data.cargoWagon' | translate }}</th>
             <td>
               <a
-                [routerLink]="
-                  '/data/' +
-                  (data().beltIds.includes(beltId)
-                    ? 'belts'
-                    : data().pipeIds.includes(beltId)
-                      ? 'pipes'
-                      : 'items') +
-                  '/' +
-                  beltId
-                "
+                [routerLink]="'/data/cargo-wagons/' + wagonId"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -418,54 +435,30 @@
                   pRipple
                   type="button"
                   class="p-button-text"
-                  [label]="data().itemEntities[beltId].name"
-                  [icon]="beltId | iconSmClass: 'item'"
+                  [label]="data().itemEntities[wagonId].name"
+                  [icon]="wagonId | iconSmClass: 'item'"
+                ></button>
+              </a>
+            </td>
+          } @else {
+            <th>{{ 'data.fluidWagon' | translate }}</th>
+            <td>
+              <a
+                [routerLink]="'/data/fluid-wagons/' + wagonId"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="data().itemEntities[wagonId].name"
+                  [icon]="wagonId | iconSmClass: 'item'"
                 ></button>
               </a>
             </td>
           }
         </tr>
-      }
-      @if (data().game === Game.Factorio || data().game === Game.Satisfactory) {
-        @if (itemSettings.wagonId; as wagonId) {
-          <tr>
-            @if (obj.stack) {
-              <th>{{ 'data.cargoWagon' | translate }}</th>
-              <td>
-                <a
-                  [routerLink]="'/data/cargo-wagons/' + wagonId"
-                  queryParamsHandling="preserve"
-                >
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    class="p-button-text"
-                    [label]="data().itemEntities[wagonId].name"
-                    [icon]="wagonId | iconSmClass: 'item'"
-                  ></button>
-                </a>
-              </td>
-            } @else {
-              <th>{{ 'data.fluidWagon' | translate }}</th>
-              <td>
-                <a
-                  [routerLink]="'/data/fluid-wagons/' + wagonId"
-                  queryParamsHandling="preserve"
-                >
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    class="p-button-text"
-                    [label]="data().itemEntities[wagonId].name"
-                    [icon]="wagonId | iconSmClass: 'item'"
-                  ></button>
-                </a>
-              </td>
-            }
-          </tr>
-        }
       }
     }
     @if (obj.machine && machineSettings(); as machineSettings) {
@@ -522,7 +515,7 @@
           }
         </td>
       </tr>
-      @if (data().game === Game.Factorio) {
+      @if (data().info.flags.has('beacons')) {
         <tr>
           <th>{{ 'data.beacons' | translate }}</th>
           <td>
@@ -572,7 +565,7 @@
           </td>
         </tr>
       }
-      @if (data().game === Game.Satisfactory) {
+      @if (data().info.flags.has('overclock')) {
         <tr>
           <th>{{ 'data.overclock' | translate }}</th>
           <td>{{ machineSettings.overclock }}%</td>

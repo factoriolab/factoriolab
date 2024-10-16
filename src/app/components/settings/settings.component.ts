@@ -124,7 +124,6 @@ export class SettingsComponent implements OnInit {
   gameStates = this.settingsSvc.gameStates;
   settings = this.settingsSvc.settings;
   options = this.settingsSvc.options;
-  game = this.settingsSvc.game;
   researchedTechnologyIds = this.settingsSvc.allResearchedTechnologyIds;
   columnsState = this.settingsSvc.columnsState;
   presetOptions = this.settingsSvc.presetOptions;
@@ -148,7 +147,11 @@ export class SettingsComponent implements OnInit {
       label: 'settings.saveSavedState',
       icon: 'fa-solid fa-floppy-disk',
       command: (): void => {
-        this.preferencesSvc.saveState(this.game(), this.state, this.search);
+        this.preferencesSvc.saveState(
+          this.data().game,
+          this.state,
+          this.search,
+        );
       },
     },
     {
@@ -163,7 +166,7 @@ export class SettingsComponent implements OnInit {
       label: 'settings.deleteSavedState',
       icon: 'fa-solid fa-trash',
       command: (): void => {
-        this.preferencesSvc.removeState(this.game(), this.state);
+        this.preferencesSvc.removeState(this.data().game, this.state);
         this.state = '';
       },
     },
@@ -181,7 +184,6 @@ export class SettingsComponent implements OnInit {
   themeOptions = themeOptions;
   maximizeTypeOptions = maximizeTypeOptions;
 
-  Game = Game;
   ItemId = ItemId;
   rational = rational;
   isStandalone = window.matchMedia('(display-mode: standalone)').matches;
@@ -240,10 +242,14 @@ export class SettingsComponent implements OnInit {
   clickSaveState(): void {
     if (!this.editValue || !this.editState) return;
 
-    this.preferencesSvc.saveState(this.game(), this.editValue, this.search);
+    this.preferencesSvc.saveState(
+      this.data().game,
+      this.editValue,
+      this.search,
+    );
 
     if (this.editState === 'edit' && this.state)
-      this.preferencesSvc.removeState(this.game(), this.state);
+      this.preferencesSvc.removeState(this.data().game, this.state);
 
     this.editState = null;
     this.state = this.editValue;

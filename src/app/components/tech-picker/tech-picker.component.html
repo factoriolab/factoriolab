@@ -70,7 +70,7 @@
       [header]="'techPicker.importHeader' | translate"
     >
       <div class="d-flex flex-column">
-        @if (data().game === Game.Factorio) {
+        @if (data().info.flags.has('mods')) {
           <div class="p-inputgroup mb-3">
             <span class="p-inputgroup-addon">{{
               'techPicker.exportFromFactorio' | translate

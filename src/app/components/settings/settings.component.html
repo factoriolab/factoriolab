@@ -177,7 +177,7 @@
           </div>
         </ng-template>
         <div class="p-fluid">
-          <div class="mt-3" [class.pb-3]="data().game === Game.Factorio">
+          <div class="mt-3" [class.pb-3]="data().info.flags.has('mods')">
             <span class="p-float-label">
               <p-dropdown
                 labDropdownTranslate
@@ -189,7 +189,7 @@
               >
               </p-dropdown>
               <label for="game">{{ 'settings.game' | translate }}</label>
-              @if (data().game !== Game.Factorio) {
+              @if (!data().info.flags.has('mods')) {
                 @for (mod of data().version | keyvalue; track mod.key) {
                   <small class="position-absolute end-0 bottom-100 me-1 mb-1">
                     {{ mod.value }}
@@ -198,7 +198,7 @@
               }
             </span>
           </div>
-          @if (data().game === Game.Factorio) {
+          @if (data().info.flags.has('mods')) {
             <div class="position-relative">
               <label for="mod" class="p-static-label">{{
                 'settings.modSet' | translate
@@ -445,7 +445,7 @@
               </div>
             </div>
           }
-          @if (data().fuelIds.length && data().game !== Game.Satisfactory) {
+          @if (data().info.flags.has('fuels')) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
                 <p-multiSelect
@@ -496,7 +496,7 @@
               </div>
             </div>
           }
-          @if (data().game !== Game.CaptainOfIndustry) {
+          @if (!data().info.flags.has('hideMachineSettings')) {
             <div class="p-inputgroup flex-wrap machine-preference mb-1">
               <span
                 class="p-inputgroup-addon"
@@ -537,7 +537,7 @@
                   </div>
                 </ng-template>
               </p-dropdown>
-              @if (data().game === Game.Satisfactory) {
+              @if (data().info.flags.has('overclock')) {
                 <p-inputNumber
                   #overclockInput
                   labNoDrag
@@ -561,7 +561,7 @@
                 </p-inputNumber>
               }
               @if (
-                data().game === Game.Factorio && settings().beacons;
+                data().info.flags.has('beacons') && settings().beacons;
                 as beacons
               ) {
                 <button
@@ -777,7 +777,7 @@
                         }
                       }
                       <!-- Overclock input -->
-                      @if (data().game === Game.Satisfactory) {
+                      @if (data().info.flags.has('overclock')) {
                         <p-inputNumber
                           #overclockInput
                           labNoDrag
@@ -863,7 +863,7 @@
             </p-orderList>
             <div class="pt-2"><!--spacer--></div>
           }
-          @if (data().game === Game.Factorio) {
+          @if (data().info.flags.has('beacons')) {
             <div class="pb-3">
               <p-checkbox
                 [ngModel]="settings().beaconReceivers != null"
@@ -893,7 +893,7 @@
               ></lab-input-number>
             </div>
           }
-          @if (data().game === Game.DysonSphereProgram) {
+          @if (data().info.flags.has('proliferator')) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
                 <p-dropdown
@@ -1134,7 +1134,7 @@
               </div>
             </div>
           }
-          @if (data().game === Game.Factorio) {
+          @if (data().info.flags.has('flowRate')) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
                 <p-inputNumber
@@ -1166,6 +1166,8 @@
                 </small>
               </div>
             </div>
+          }
+          @if (data().info.flags.has('inserterEstimation')) {
             <div class="mt-3">
               <div class="p-float-label">
                 <p-dropdown
@@ -1185,102 +1187,115 @@
               </div>
             </div>
           }
-          @if (data().game === Game.DysonSphereProgram) {
-            <div class="mt-3">
-              <div class="p-float-label">
-                <p-inputNumber
-                  #miningBonusInput
-                  inputId="mining-speed"
-                  suffix="%"
-                  [min]="100"
-                  [step]="10"
-                  [showButtons]="true"
-                  incrementButtonClass="p-button-outlined"
-                  decrementButtonClass="p-button-outlined"
-                  [pTooltip]="'settings.miningSpeedTooltip' | translate"
-                  [ngModel]="
-                    settings().miningBonus.add(rational(100)).toNumber()
-                  "
-                  (onBlur)="
-                    settingsSvc.apply({
-                      miningBonus: rational(
-                        (miningBonusInput.value ?? 100) - 100
-                      ),
-                    })
-                  "
-                ></p-inputNumber>
-                <label for="mining-speed">{{
-                  'settings.miningSpeed' | translate
-                }}</label>
-              </div>
-            </div>
-          }
         </div>
       </p-accordionTab>
-      @if (data().game === Game.Factorio) {
+      @if (
+        data().info.flags.has('inserterEstimation') ||
+        data().info.flags.has('miningSpeed') ||
+        data().info.flags.has('miningProductivity') ||
+        data().info.flags.has('researchSpeed')
+      ) {
         <p-accordionTab [header]="'settings.bonuses' | translate">
           <div class="p-fluid">
-            <div class="mt-3 pb-3">
-              <div class="p-float-label">
-                <p-inputNumber
-                  #miningProdInput
-                  inputId="mining-productivity"
-                  prefix="+"
-                  suffix="%"
-                  [min]="0"
-                  [step]="10"
-                  [showButtons]="true"
-                  incrementButtonClass="p-button-outlined"
-                  decrementButtonClass="p-button-outlined"
-                  [pTooltip]="'settings.miningProductivityTooltip' | translate"
-                  [ngModel]="settings().miningBonus.toNumber()"
-                  (onBlur)="
-                    settingsSvc.apply({
-                      miningBonus: rational(miningProdInput.value ?? 0),
-                    })
-                  "
-                ></p-inputNumber>
-                <label for="mining-productivity">{{
-                  'settings.miningProductivity' | translate
-                }}</label>
+            @if (data().info.flags.has('miningSpeed')) {
+              <div class="mt-3 pb-3">
+                <div class="p-float-label">
+                  <p-inputNumber
+                    #miningBonusInput
+                    inputId="mining-speed"
+                    suffix="%"
+                    [min]="100"
+                    [step]="10"
+                    [showButtons]="true"
+                    incrementButtonClass="p-button-outlined"
+                    decrementButtonClass="p-button-outlined"
+                    [pTooltip]="'settings.miningSpeedTooltip' | translate"
+                    [ngModel]="
+                      settings().miningBonus.add(rational(100)).toNumber()
+                    "
+                    (onBlur)="
+                      settingsSvc.apply({
+                        miningBonus: rational(
+                          (miningBonusInput.value ?? 100) - 100
+                        ),
+                      })
+                    "
+                  ></p-inputNumber>
+                  <label for="mining-speed">{{
+                    'settings.miningSpeed' | translate
+                  }}</label>
+                </div>
               </div>
-            </div>
-            <div class="mt-3 pb-3">
-              <div class="p-float-label">
-                <p-dropdown
-                  labDropdownTranslate
-                  inputId="research-bonus"
-                  [pTooltip]="'settings.researchSpeedTooltip' | translate"
-                  [ngModel]="settings().researchBonus"
-                  [options]="researchSpeedOptions"
-                  (onChange)="
-                    settingsSvc.apply({ researchBonus: $event.value })
-                  "
-                >
-                </p-dropdown>
-                <label for="research-speed">{{
-                  'settings.researchSpeed' | translate
-                }}</label>
+            }
+            @if (data().info.flags.has('miningProductivity')) {
+              <div class="mt-3 pb-3">
+                <div class="p-float-label">
+                  <p-inputNumber
+                    #miningProdInput
+                    inputId="mining-productivity"
+                    prefix="+"
+                    suffix="%"
+                    [min]="0"
+                    [step]="10"
+                    [showButtons]="true"
+                    incrementButtonClass="p-button-outlined"
+                    decrementButtonClass="p-button-outlined"
+                    [pTooltip]="
+                      'settings.miningProductivityTooltip' | translate
+                    "
+                    [ngModel]="settings().miningBonus.toNumber()"
+                    (onBlur)="
+                      settingsSvc.apply({
+                        miningBonus: rational(miningProdInput.value ?? 0),
+                      })
+                    "
+                  ></p-inputNumber>
+                  <label for="mining-productivity">{{
+                    'settings.miningProductivity' | translate
+                  }}</label>
+                </div>
               </div>
-            </div>
-            <div class="mt-3">
-              <div class="p-float-label">
-                <p-dropdown
-                  labDropdownTranslate
-                  inputId="inserter-capacity"
-                  [pTooltip]="'settings.inserterCapacityTooltip' | translate"
-                  [ngModel]="settings().inserterCapacity"
-                  [options]="inserterCapacityOptions"
-                  (onChange)="
-                    settingsSvc.apply({ inserterCapacity: $event.value })
-                  "
-                >
-                </p-dropdown>
-                <label for="inserter-capacity">{{
-                  'settings.inserterCapacity' | translate
-                }}</label>
+            }
+            @if (data().info.flags.has('researchSpeed')) {
+              <div class="mt-3 pb-3">
+                <div class="p-float-label">
+                  <p-dropdown
+                    labDropdownTranslate
+                    inputId="research-bonus"
+                    [pTooltip]="'settings.researchSpeedTooltip' | translate"
+                    [ngModel]="settings().researchBonus"
+                    [options]="researchSpeedOptions"
+                    (onChange)="
+                      settingsSvc.apply({ researchBonus: $event.value })
+                    "
+                  >
+                  </p-dropdown>
+                  <label for="research-speed">{{
+                    'settings.researchSpeed' | translate
+                  }}</label>
+                </div>
               </div>
-            </div>
+            }
+            @if (data().info.flags.has('inserterEstimation')) {
+              <div class="mt-3">
+                <div class="p-float-label">
+                  <p-dropdown
+                    labDropdownTranslate
+                    inputId="inserter-capacity"
+                    [pTooltip]="'settings.inserterCapacityTooltip' | translate"
+                    [ngModel]="settings().inserterCapacity"
+                    [options]="inserterCapacityOptions"
+                    (onChange)="
+                      settingsSvc.apply({ inserterCapacity: $event.value })
+                    "
+                  >
+                  </p-dropdown>
+                  <label for="inserter-capacity">{{
+                    'settings.inserterCapacity' | translate
+                  }}</label>
+                </div>
+              </div>
+            }
           </div>
         </p-accordionTab>
       }

@@ -2,7 +2,7 @@ import { SelectItem } from 'primeng/api';
 
 import { spread } from '~/helpers';
 
-import { GameInfo } from '../game-info';
+import { GameFlag, GameInfo } from '../game-info';
 
 export type ColumnKey =
   | 'checkbox'
@@ -22,8 +22,9 @@ export interface ColumnSettings {
 }
 
 export interface ColumnInfo {
-  hideDefault?: boolean;
-  hasPrecision?: boolean;
+  hideDefault?: true;
+  hasPrecision?: true;
+  flag?: true;
 }
 
 export type ColumnsState = Record<ColumnKey, ColumnSettings>;
@@ -35,11 +36,11 @@ export const columnsInfo: ColumnsInfo = {
   tree: {},
   items: { hasPrecision: true },
   belts: { hasPrecision: true },
-  wagons: { hasPrecision: true },
+  wagons: { hasPrecision: true, flag: true },
   machines: { hasPrecision: true },
-  beacons: {},
-  power: { hasPrecision: true },
-  pollution: { hasPrecision: true },
+  beacons: { flag: true },
+  power: { hasPrecision: true, flag: true },
+  pollution: { hasPrecision: true, flag: true },
   link: {},
 };
 
@@ -64,7 +65,7 @@ export const initialColumnsState: ColumnsState = allColumns.reduce(
 /** Get column options for passed game */
 export function columnOptions(gameInfo: GameInfo): SelectItem<ColumnKey>[] {
   return allColumns
-    .filter((c) => !gameInfo.hideColumns.includes(c))
+    .filter((c) => !columnsInfo[c].flag || gameInfo.flags.has(c as GameFlag))
     .map(
       (id): SelectItem<ColumnKey> => ({
         label: `options.column.${id}`,
@@ -78,11 +79,13 @@ export function gameColumnsState(
   columnsState: ColumnsState,
   gameInfo: GameInfo,
 ): ColumnsState {
-  gameInfo.hideColumns.forEach((c) => {
-    columnsState = spread(columnsState, {
-      [c]: spread(columnsState[c], { show: false }),
+  allColumns
+    .filter((c) => columnsInfo[c].flag && !gameInfo.flags.has(c as GameFlag))
+    .forEach((c) => {
+      columnsState = spread(columnsState, {
+        [c]: spread(columnsState[c], { show: false }),
+      });
     });
-  });
 
   return columnsState;
 }
