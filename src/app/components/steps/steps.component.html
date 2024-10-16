@@ -624,7 +624,7 @@
                     </ng-template>
                   </p-dropdown>
                 }
-                @if (data().game === Game.Satisfactory) {
+                @if (data().info.flags.has('overclock')) {
                   <p-inputNumber
                     #overclockInput
                     suffix="%"
@@ -1052,7 +1052,9 @@
         @case (StepDetailTab.Recipe) {
           <!-- Recipe row details -->
           @if (step.recipe) {
-            @if (data().game === Game.Factorio && step.recipe.isMining) {
+            @if (
+              data().info.flags.has('miningDepletion') && step.recipe.isMining
+            ) {
               <tr class="detail">
                 <ng-container *ngTemplateOutlet="leftPad"></ng-container>
                 <td colspan="100" class="fw-bold">
@@ -1286,7 +1288,7 @@
                                 }
                               </td>
                             }
-                            @if (data().game === Game.Factorio) {
+                            @if (data().info.flags.has('inserterEstimation')) {
                               <td>
                                 @if (
                                   itemsState()[input.key].beltId !==
@@ -1375,7 +1377,7 @@
                     ) {
                       @if (output.value.div(step.recipe.time); as items) {
                         <tr>
-                          @if (data().game === Game.Factorio) {
+                          @if (data().info.flags.has('inserterEstimation')) {
                             <td>
                               @if (
                                 itemsState()[output.key].beltId !== ItemId.Pipe
@@ -1450,7 +1452,7 @@
                   </ng-template>
                 </div>
               }
-              @if (data().game === Game.Factorio) {
+              @if (data().info.flags.has('inserterEstimation')) {
                 <small
                   [innerHTML]="'steps.inserterCountInfo' | translate"
                 ></small>

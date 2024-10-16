@@ -192,18 +192,18 @@ export class SettingsService extends Store<SettingsState> {
 
   objectiveUnitOptions = computed(() => {
     const dispRateInfo = this.displayRateInfo();
-    const game = this.game();
-    return objectiveUnitOptions(dispRateInfo, game);
+    const gameInfo = this.gameInfo();
+    return objectiveUnitOptions(dispRateInfo, gameInfo);
   });
 
   presetOptions = computed(() => {
-    const game = this.game();
-    return presetOptions(game);
+    const gameInfo = this.gameInfo();
+    return presetOptions(gameInfo);
   });
 
   linkValueOptions = computed(() => {
-    const game = this.game();
-    return linkValueOptions(game);
+    const gameInfo = this.gameInfo();
+    return linkValueOptions(gameInfo);
   });
 
   columnsState = computed(() => {
@@ -586,6 +586,7 @@ export class SettingsService extends Store<SettingsState> {
 
     return {
       game,
+      info: gameInfo[game],
       version: coalesce(mod?.version, {}),
       categoryIds,
       categoryEntities,

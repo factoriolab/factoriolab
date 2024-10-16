@@ -5,6 +5,7 @@ import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
 import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { gameInfo } from '~/models/game-info';
 import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { ModuleSettings } from '~/models/settings/module-settings';
@@ -64,7 +65,7 @@ describe('RecipeService', () => {
     it('should disallow empty module in Satisfactory mining', () => {
       const result = service.moduleOptions(
         Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],
-        spread(Mocks.dataset, { game: Game.Satisfactory }),
+        spread(Mocks.dataset, { info: gameInfo[Game.Satisfactory] }),
         RecipeId.Coal,
       );
       expect(result).toHaveSize(6);
@@ -663,7 +664,7 @@ describe('RecipeService', () => {
 
     it('should adjust based on Satisfactory Somersloop implementation', () => {
       const data = Mocks.getDataset();
-      data.game = Game.Satisfactory;
+      data.info = gameInfo[Game.Satisfactory];
       data.moduleEntities[ItemId.Somersloop] = {
         productivity: rational(1n),
         consumption: rational(1n),

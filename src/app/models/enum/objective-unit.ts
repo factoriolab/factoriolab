@@ -1,7 +1,7 @@
 import { SelectItem } from 'primeng/api';
 
+import { GameInfo } from '../game-info';
 import { DisplayRateInfo } from './display-rate';
-import { Game } from './game';
 
 export enum ObjectiveUnit {
   Items = 0,
@@ -12,7 +12,7 @@ export enum ObjectiveUnit {
 
 export function objectiveUnitOptions(
   dispRateInfo: DisplayRateInfo,
-  game: Game,
+  gameInfo: GameInfo,
 ): SelectItem<ObjectiveUnit>[] {
   const result: SelectItem<ObjectiveUnit>[] = [
     { value: ObjectiveUnit.Items, label: dispRateInfo.itemsLabel },
@@ -21,9 +21,8 @@ export function objectiveUnitOptions(
     { value: ObjectiveUnit.Machines, label: 'options.objectiveUnit.machines' },
   ];
 
-  if (game === Game.DysonSphereProgram || game === Game.CaptainOfIndustry) {
+  if (!gameInfo.flags.has('wagons'))
     return result.filter((i) => i.value !== ObjectiveUnit.Wagons);
-  }
 
   return result;
 }

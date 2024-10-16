@@ -22,7 +22,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { first } from 'rxjs';
 
 import { Item } from '~/models/data/item';
-import { Game } from '~/models/enum/game';
 import { Optional } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
@@ -119,8 +118,6 @@ export class TechPickerComponent extends DialogComponent {
 
   importVisible = false;
   importValue = '';
-
-  Game = Game;
 
   clickOpen(selection: Set<string>): void {
     this.selection.set(Array.from(selection));

@@ -8,7 +8,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputNumberComponent } from '~/components/input-number/input-number.component';
 import { coalesce, updateSetIds } from '~/helpers';
 import { Recipe } from '~/models/data/recipe';
-import { Game } from '~/models/enum/game';
 import { RecipeState } from '~/models/settings/recipe-settings';
 import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { RoundPipe } from '~/pipes/round.pipe';
@@ -63,8 +62,6 @@ export class RecipeComponent extends DetailComponent {
   recipeR = computed<Recipe | undefined>(
     () => this.data().adjustedRecipe[this.id()],
   );
-
-  Game = Game;
 
   changeExcluded(excluded: boolean): void {
     const value = updateSetIds(

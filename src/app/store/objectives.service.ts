@@ -216,6 +216,7 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
               // Use recipe id (vein type) in place of mining machine for DSP mining
               machine = step.recipeId;
             }
+
             if (machine != null) {
               if (!machines[machine]) machines[machine] = rational.zero;
 

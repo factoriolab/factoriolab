@@ -10,9 +10,9 @@ import { Recipe } from '~/models/data/recipe';
 import { AdjustedDataset } from '~/models/dataset';
 import { DisplayRateInfo } from '~/models/enum/display-rate';
 import { EnergyType } from '~/models/enum/energy-type';
-import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { GameInfo } from '~/models/game-info';
 import { ObjectiveSettings } from '~/models/objective';
 import { Rational, rational } from '~/models/rational';
 import { Settings } from '~/models/settings/settings';
@@ -88,7 +88,7 @@ export class RateService {
     else obj[parentId] = value;
   }
 
-  adjustPowerPollution(step: Step, recipe: Recipe, game: Game): void {
+  adjustPowerPollution(step: Step, recipe: Recipe, gameInfo: GameInfo): void {
     if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
         // Reset power
@@ -97,7 +97,7 @@ export class RateService {
         // Calculate drain
         if (recipe.drain?.nonzero()) {
           let machines = step.machines.ceil();
-          if (game === Game.DysonSphereProgram) {
+          if (gameInfo.flags.has('inactiveDrain')) {
             // In DSP drain is not cumulative; only add for inactive machines
             machines = machines.sub(step.machines);
           }
