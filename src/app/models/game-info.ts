@@ -46,7 +46,6 @@ export const gameInfo: Record<Game, GameInfo> = {
     flags: new Set([
       'beacons',
       'diminishingBeacons',
-      'flowRate',
       'fluidCostRatio',
       'fuels',
       'inserterEstimation',

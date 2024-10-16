@@ -288,6 +288,7 @@ export class SettingsService extends Store<SettingsState> {
     if (data.pipeIds) {
       for (const id of data.pipeIds) value[id] = data.beltEntities[id].speed;
     }
+
     return value;
   });
 
