@@ -1,7 +1,7 @@
 import { Entities } from './utils';
 
 export const APP = 'FactorioLab';
-export const DEFAULT_MOD = '2.0';
+export const DEFAULT_MOD = '1.1';
 export const MIN_LINK_VALUE = 1e-10;
 export const MIN_ZIP = 200;
 export const ZEMPTY = '_';

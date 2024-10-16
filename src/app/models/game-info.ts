@@ -1,4 +1,3 @@
-import { DEFAULT_MOD } from './constants';
 import { Game } from './enum/game';
 
 export type GameFlag =
@@ -40,9 +39,9 @@ export interface GameInfo {
 export const gameInfo: Record<Game, GameInfo> = {
   [Game.Factorio2]: {
     icon: 'factorio',
-    route: `/${DEFAULT_MOD}`,
+    route: `/2.0`,
     label: 'options.game.factorio2',
-    modId: DEFAULT_MOD,
+    modId: '2.0',
     flags: new Set([
       'beacons',
       'diminishingBeacons',
