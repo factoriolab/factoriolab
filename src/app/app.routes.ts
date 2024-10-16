@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { canActivateId } from './guards/id.guard';
 import { canActivateLanding } from './guards/landing.guard';
+import { canActivateRatio } from './guards/ratio.guard';
 import { DEFAULT_MOD } from './models/constants';
 
 export const routes: Routes = [
@@ -17,6 +18,11 @@ export const routes: Routes = [
           import('./routes/wizard/wizard.component').then(
             (c) => c.WizardComponent,
           ),
+      },
+      {
+        path: 'ratio',
+        canActivate: [canActivateRatio],
+        children: [],
       },
       {
         path: '',

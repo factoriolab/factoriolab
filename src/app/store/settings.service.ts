@@ -315,7 +315,7 @@ export class SettingsService extends Store<SettingsState> {
 
     return {
       icon: 'fa-solid fa-database',
-      routerLink: '/data',
+      routerLink: `/${coalesce(mod?.id, DEFAULT_MOD)}/data`,
       queryParamsHandling: 'preserve',
       label: mod?.name,
     };
