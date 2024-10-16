@@ -268,6 +268,64 @@ describe('RecipeService', () => {
       expect(result).toEqual(expected);
     });
 
+    it('should handle modules and diminishing beacons', () => {
+      const settings = spread(Mocks.recipesState[RecipeId.SteelChest]);
+      settings.modules = [
+        { count: rational.one, id: ItemId.SpeedModule },
+        { count: rational.one, id: ItemId.ProductivityModule },
+        { count: rational.one, id: ItemId.EfficiencyModule },
+        { id: ItemId.Module },
+      ];
+      settings.beacons = [
+        {
+          id: ItemId.Beacon,
+          count: rational(8n),
+          modules: [
+            { count: rational(2n), id: ItemId.SpeedModule },
+            { id: ItemId.Module },
+          ],
+        },
+      ];
+      const data = spread(Mocks.adjustedDataset, {
+        info: gameInfo[Game.Factorio2],
+        moduleEntities: spread(Mocks.adjustedDataset.moduleEntities, {
+          // To verify all factors work in beacons
+          [ItemId.SpeedModule]: spread(
+            Mocks.adjustedDataset.moduleEntities[ItemId.SpeedModule],
+            { productivity: rational.one, pollution: rational.one },
+          ),
+          // To verify null consumption works
+          [ItemId.ProductivityModule]: spread(
+            Mocks.adjustedDataset.moduleEntities[ItemId.ProductivityModule],
+            { consumption: undefined },
+          ),
+        }),
+      });
+      const result = service.adjustRecipe(
+        RecipeId.SteelChest,
+        settings,
+        Mocks.itemsStateInitial,
+        Mocks.settingsStateInitial,
+        data,
+      );
+      const expected = spread(
+        Mocks.adjustedDataset.recipeEntities[
+          RecipeId.SteelChest
+        ] as AdjustedRecipe,
+        {
+          out: { [ItemId.SteelChest]: rational(973346339n, 199930350n) },
+          time: rational(10662952n, 27441407n),
+          drain: rational(5n),
+          consumption: rational(1045321265n, 2665738n),
+          pollution: rational(81563963266427021n, 127910863523592000n),
+          productivity: rational(973346339n, 199930350n),
+          produces: new Set(),
+          output: {},
+        },
+      );
+      expect(result).toEqual(expected);
+    });
+
     it('should use minimum 20% effects', () => {
       const settings = spread(Mocks.recipesState[RecipeId.SteelChest]);
       settings.modules = [
@@ -692,6 +750,33 @@ describe('RecipeService', () => {
           drain: rational(600n),
           // consumption: rational(600n),
           pollution: rational(1n, 5n),
+          productivity: rational(2n),
+          produces: new Set(),
+          output: {},
+        },
+      );
+      expect(result).toEqual(expected);
+    });
+
+    it('should add machine productivity', () => {
+      const data = Mocks.getDataset();
+      data.machineEntities[ItemId.AssemblingMachine2].baseProductivity =
+        rational.one;
+      const result = service.adjustRecipe(
+        RecipeId.CopperCable,
+        Mocks.recipesState[RecipeId.CopperCable],
+        Mocks.itemsStateInitial,
+        Mocks.settingsStateInitial,
+        data,
+      );
+      const expected = spread(
+        Mocks.dataset.recipeEntities[RecipeId.CopperCable] as AdjustedRecipe,
+        {
+          out: { [ItemId.CopperCable]: rational(4n) },
+          time: rational(2n, 3n),
+          drain: rational(5n),
+          consumption: rational(150n),
+          pollution: rational(1n, 20n),
           productivity: rational(2n),
           produces: new Set(),
           output: {},

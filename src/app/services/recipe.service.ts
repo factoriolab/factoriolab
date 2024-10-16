@@ -289,10 +289,10 @@ export class RecipeService {
       if (recipeSettings.beacons != null) {
         let scale = rational.one;
         if (data.info.flags.has('diminishingBeacons')) {
-          const total = recipeSettings.beacons.reduce((t, b) => {
-            if (b.count) return t.add(b.count);
-            return t;
-          }, rational.zero);
+          const total = recipeSettings.beacons.reduce(
+            (t, b) => t.add(coalesce(b.count, rational.zero)),
+            rational.zero,
+          );
           const sqrt = total.pow(0.5);
           scale = sqrt.div(total);
         }
