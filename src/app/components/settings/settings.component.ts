@@ -185,6 +185,7 @@ export class SettingsComponent implements OnInit {
 
   ItemId = ItemId;
   rational = rational;
+  maximumStack = rational(4n);
   isStandalone = window.matchMedia('(display-mode: standalone)').matches;
 
   get search(): string {

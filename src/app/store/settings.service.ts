@@ -70,6 +70,7 @@ export interface SettingsState {
   cargoWagonId?: string;
   fluidWagonId?: string;
   flowRate: Rational;
+  stack?: Rational;
   excludedRecipeIds?: Set<string>;
   checkedRecipeIds: Set<string>;
   netProductionOnly: boolean;

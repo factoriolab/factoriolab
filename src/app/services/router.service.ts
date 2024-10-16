@@ -878,6 +878,7 @@ export class RouterService {
     str('icw', (s) => s.cargoWagonId, hash.wagons);
     str('ifw', (s) => s.fluidWagonId, hash.wagons);
     rat('ifr', (s) => s.flowRate);
+    rat('ist', (s) => s.stack);
     sub('rex', (s) => s.excludedRecipeIds, data.recipeIds, hash.recipes);
     sub('rch', (s) => s.checkedRecipeIds, data.recipeIds, hash.recipes);
     bln('rnp', (s) => s.netProductionOnly);
@@ -946,6 +947,7 @@ export class RouterService {
       cargoWagonId: str('icw', hash?.wagons),
       fluidWagonId: str('ifw', hash?.wagons),
       flowRate: rat('ifr'),
+      stack: rat('ist'),
       excludedRecipeIds: sub('rex', modHash.recipes, recipeIds),
       checkedRecipeIds: sub('rch', modHash.recipes, recipeIds),
       netProductionOnly: bln('rnp'),

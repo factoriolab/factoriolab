@@ -49,7 +49,7 @@ export class ItemsService extends EntityStore<ItemState> {
       const defaultWagonId = this.defaultWagon(item, settings);
       const beltId = coalesce(s?.beltId, defaultBeltId);
       const wagonId = coalesce(s?.wagonId, defaultWagonId);
-      const stack = s?.stack;
+      const stack = coalesce(s?.stack, settings.stack);
       value[item.id] = {
         beltId,
         defaultBeltId,
