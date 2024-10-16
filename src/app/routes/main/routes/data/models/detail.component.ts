@@ -24,7 +24,13 @@ export abstract class DetailComponent {
   parent = toSignal(
     toObservable(this.collectionLabel).pipe(
       switchMap((label) => this.translateSvc.get(label)),
-      map((label): MenuItem => ({ label })),
+      map(
+        (label): MenuItem => ({
+          label,
+          routerLink: '..',
+          queryParamsHandling: 'preserve',
+        }),
+      ),
     ),
   );
 }
