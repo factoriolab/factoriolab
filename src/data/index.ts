@@ -3,6 +3,7 @@ import { Game } from '~/models/enum/game';
 
 export const data: AppData = {
   mods: [
+    { id: '2.0', name: '2.0.0', game: Game.Factorio2 },
     { id: '1.1', name: '1.1.x', game: Game.Factorio },
     { id: '1.1e', name: '1.1.x Expensive', game: Game.Factorio },
     { id: '1.0', name: '1.0.0', game: Game.Factorio },
@@ -120,5 +121,6 @@ export const data: AppData = {
     'lls',
     'ulc',
     'ps2',
+    '2.0',
   ],
 };

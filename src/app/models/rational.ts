@@ -121,6 +121,12 @@ export class Rational {
     return new Rational(abs(this.p), this.q);
   }
 
+  pow(exponent: number): Rational {
+    const num = this.toNumber();
+    const result = Math.pow(num, exponent);
+    return rational(result);
+  }
+
   toNumber(): number {
     return Number(this.p) / Number(this.q);
   }

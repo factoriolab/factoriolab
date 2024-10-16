@@ -37,7 +37,7 @@ import { Preset, presetOptions } from '~/models/enum/preset';
 import { researchBonusValue } from '~/models/enum/research-bonus';
 import { gameInfo } from '~/models/game-info';
 import { Mod } from '~/models/mod';
-import { Options } from '~/models/options';
+import { modOptions, Options } from '~/models/options';
 import { Rational, rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import {
@@ -206,6 +206,11 @@ export class SettingsService extends Store<SettingsState> {
     return linkValueOptions(gameInfo);
   });
 
+  modOptions = computed(() => {
+    const game = this.game();
+    return modOptions(game);
+  });
+
   columnsState = computed(() => {
     const gameInfo = this.gameInfo();
     const columns = this.preferencesSvc.columns();
@@ -343,7 +348,8 @@ export class SettingsService extends Store<SettingsState> {
     let moduleRank: string[] | undefined;
     let overclock: Rational | undefined;
     switch (mod.game) {
-      case Game.Factorio: {
+      case Game.Factorio:
+      case Game.Factorio2: {
         moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
         if (m.beacon) {
           const beacon = mod.items.find((i) => i.id === m.beacon)?.beacon;

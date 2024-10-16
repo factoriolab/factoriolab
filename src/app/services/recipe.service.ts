@@ -286,6 +286,16 @@ export class RecipeService {
 
       // Beacons
       if (recipeSettings.beacons != null) {
+        let scale = rational.one;
+        if (data.info.flags.has('diminishingBeacons')) {
+          const total = recipeSettings.beacons.reduce((t, b) => {
+            if (b.count) return t.add(b.count);
+            return t;
+          }, rational.zero);
+          const sqrt = total.pow(0.5);
+          scale = sqrt.div(total);
+        }
+
         for (const beaconSettings of recipeSettings.beacons) {
           if (
             !beaconSettings.count?.nonzero() ||
@@ -301,7 +311,10 @@ export class RecipeService {
             const beacon = data.beaconEntities[beaconSettings.id];
             const factor = beaconSettings.count // Num of beacons
               .mul(beacon.effectivity) // Effectivity of beacons
-              .mul(count); // Num of modules/beacon
+              .mul(count) // Num of modules/beacon
+              .mul(scale); // Apply diminishing beacons scale
+
+            console.log(factor);
 
             if (module.speed) {
               speed = speed.add(module.speed.mul(factor));
@@ -381,8 +394,7 @@ export class RecipeService {
       if (oc) {
         if (usage?.gt(rational.zero)) {
           // Polynomial effect only on production buildings, not power generation
-          const factor = Math.pow(oc.toNumber(), 1.321928);
-          usage = usage.mul(rational(factor));
+          usage = usage.mul(oc.pow(1.321928));
         } else {
           usage = usage.mul(oc);
         }

@@ -218,7 +218,7 @@
                   [autofocusFilter]="!contentSvc.isMobile()"
                   [pTooltip]="'settings.modSetTooltip' | translate"
                   [ngModel]="settings().modId"
-                  [options]="modOptions"
+                  [options]="modOptions()"
                   (onChange)="setMod($event.value)"
                 >
                 </p-dropdown>

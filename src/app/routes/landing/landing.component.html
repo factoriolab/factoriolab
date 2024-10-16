@@ -37,7 +37,7 @@
           [filter]="true"
           [autofocusFilter]="!contentSvc.isMobile()"
           [ngModel]="modId()"
-          [options]="modOptions"
+          [options]="modOptions()"
           (onChange)="setMod($event.value)"
         ></p-dropdown>
       }
