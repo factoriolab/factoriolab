@@ -26,6 +26,8 @@ export interface MachineJson {
   consumption?: Entities<number | string>;
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
+  /** Productivity bonus that this machine always has */
+  baseProductivity?: number | string;
 }
 
 export interface Machine {
@@ -46,6 +48,8 @@ export interface Machine {
   consumption?: Entities<Rational>;
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
+  /** Productivity bonus that this machine always has */
+  baseProductivity?: Rational;
 }
 
 export function parseMachine(json: MachineJson): Machine;
@@ -69,5 +73,6 @@ export function parseMachine(
     silo: parseSilo(json.silo),
     consumption: toRationalEntities(json.consumption),
     size: json.size,
+    baseProductivity: rational(json.baseProductivity),
   };
 }

@@ -207,10 +207,11 @@ export class RecipeService {
       let consumption = rational.one;
       let pollution = rational.one;
 
-      if (recipe.isMining) {
-        // Adjust for mining bonus
-        prod = prod.add(miningFactor);
-      }
+      // Adjust for mining bonus
+      if (recipe.isMining) prod = prod.add(miningFactor);
+
+      // Adjust for base productivity
+      if (machine.baseProductivity) prod = prod.add(machine.baseProductivity);
 
       const proliferatorSprays: Entities<Rational> = {};
 

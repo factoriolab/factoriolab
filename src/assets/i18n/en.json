@@ -422,6 +422,7 @@
     "storageSize": "Storage size",
     "fluidCapacity": "Fluid capacity",
     "craftingSpeed": "Crafting speed",
+    "baseProductivity": "Base productivity",
     "fuelCategories": "Fuel categories",
     "fuelCategory": "Fuel category",
     "fuelValue": "Fuel value",
