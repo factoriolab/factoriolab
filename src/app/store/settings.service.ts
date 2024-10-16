@@ -471,12 +471,7 @@ export class SettingsService extends Store<SettingsState> {
       .map((i) => i.id);
     const beltIds = items
       .filter(fnPropsNotNullish('belt'))
-      .sort((a, b) =>
-        /** Don't sort belts in DSP, leave based on stacks */
-        game === Game.DysonSphereProgram
-          ? 0
-          : a.belt.speed.sub(b.belt.speed).toNumber(),
-      )
+      .sort((a, b) => a.belt.speed.sub(b.belt.speed).toNumber())
       .map((i) => i.id);
     const pipeIds = items
       .filter(fnPropsNotNullish('pipe'))
