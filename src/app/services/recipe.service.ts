@@ -19,7 +19,6 @@ import {
 } from '~/models/data/recipe';
 import { AdjustedDataset, Dataset } from '~/models/dataset';
 import { EnergyType } from '~/models/enum/energy-type';
-import { Game } from '~/models/enum/game';
 import { ItemId } from '~/models/enum/item-id';
 import {
   isRecipeObjective,
@@ -96,7 +95,7 @@ export class RecipeService {
     if (recipeId != null) {
       recipe = data.recipeEntities[recipeId];
       if (
-        data.game === Game.Satisfactory ||
+        !data.info.flags.has('miningTechnologyBypassLimitations') ||
         (!recipe.isMining && !recipe.isTechnology)
       ) {
         // Filter for modules allowed on this recipe
@@ -119,8 +118,8 @@ export class RecipeService {
       (m): SelectItem<string> => ({ value: m.id, label: m.name }),
     );
     if (
-      (data.game !== Game.Satisfactory || !recipe?.isMining) &&
-      data.game !== Game.FinalFactory
+      (!data.info.flags.has('resourcePurity') || !recipe?.isMining) &&
+      !data.info.flags.has('duplicators')
     ) {
       options.unshift({ label: 'None', value: ItemId.Module });
     }
@@ -197,7 +196,7 @@ export class RecipeService {
         recipe.time = recipe.time.div(minSpeed);
       }
 
-      if (recipe.isTechnology && data.game === Game.Factorio) {
+      if (recipe.isTechnology && data.info.flags.has('researchSpeed')) {
         // Adjust for research factor
         recipe.time = recipe.time.div(researchFactor);
       }
@@ -225,7 +224,7 @@ export class RecipeService {
           // Scale Satisfactory Somersloop bonus based on number of slots
           let scale: Rational | undefined;
           if (
-            data.game === Game.Satisfactory &&
+            data.info.flags.has('somersloop') &&
             id === ItemId.Somersloop &&
             machine.modules instanceof Rational
           )
@@ -353,7 +352,7 @@ export class RecipeService {
       // In Factorio, minimum recipe time is 1/60s (1 tick)
       if (
         recipe.time.lt(this.minFactorioRecipeTime) &&
-        data.game === Game.Factorio
+        data.info.flags.has('minimumRecipeTime')
       ) {
         recipe.time = this.minFactorioRecipeTime;
       }
@@ -394,7 +393,10 @@ export class RecipeService {
           ? usage.mul(consumption)
           : rational.zero;
 
-      if (data.game === Game.Satisfactory && recipe.consumption?.nonzero()) {
+      if (
+        data.info.flags.has('consumptionAsDrain') &&
+        recipe.consumption?.nonzero()
+      ) {
         recipe.drain = recipe.consumption;
         delete recipe.consumption;
       }

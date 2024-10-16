@@ -6,7 +6,6 @@ import {
   input,
 } from '@angular/core';
 
-import { Game } from '~/models/enum/game';
 import { BonusPercentPipe } from '~/pipes/bonus-percent.pipe';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { RoundPipe } from '~/pipes/round.pipe';
@@ -68,6 +67,4 @@ export class TooltipComponent {
   beltSpeedTxt = this.settingsSvc.beltSpeedTxt;
   dispRateInfo = this.settingsSvc.displayRateInfo;
   data = this.recipesSvc.adjustedDataset;
-
-  Game = Game;
 }

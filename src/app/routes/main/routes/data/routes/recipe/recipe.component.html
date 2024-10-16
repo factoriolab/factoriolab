@@ -296,7 +296,7 @@
           </td>
         </tr>
       }
-      @if (data().game === Game.Factorio) {
+      @if (data().info.flags.has('beacons')) {
         <tr>
           <th>{{ 'data.beacons' | translate }}</th>
           <td>
@@ -346,7 +346,7 @@
           </td>
         </tr>
       }
-      @if (data().game === Game.Satisfactory) {
+      @if (data().info.flags.has('overclock')) {
         <tr>
           <th>{{ 'data.overclock' | translate }}</th>
           <td>{{ recipeSettings.overclock }}%</td>
