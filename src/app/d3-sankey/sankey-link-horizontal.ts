@@ -138,16 +138,15 @@ export class BumpSankeyLoop {
         const radius0 = Math.max(minRadius, (bottom - num(this._y0)) * 0.75);
         const radius1 = Math.max(minRadius, (bottom - y) * 0.75);
 
-        this._context.bezierCurveTo(
-          num(this._x0) + radius0,
-          num(this._y0),
-          num(this._x0) + radius0,
-          bottom,
-          num(this._x0),
-          bottom,
-        );
+        const x0 = num(this._x0);
+        const y0 = num(this._y0);
+        const flip = x0 > x ? 1 : -1;
+        const x0cp = x0 + radius0 * flip;
+        const xcp = x - radius1 * flip;
+
+        this._context.bezierCurveTo(x0cp, y0, x0cp, bottom, x0, bottom);
         this._context.lineTo(x, bottom);
-        this._context.bezierCurveTo(x - radius1, bottom, x - radius1, y, x, y);
+        this._context.bezierCurveTo(xcp, bottom, xcp, y, x, y);
 
         break;
       }
