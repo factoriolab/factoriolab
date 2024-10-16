@@ -1,13 +1,17 @@
 import { BumpSankeyLoop } from './sankey-link-horizontal';
 
 describe('BumpSankeyLoop', () => {
-  const bump = new BumpSankeyLoop(
-    { closePath: () => {}, lineTo: () => {} } as any,
-    0,
-    0,
-    0,
-    0,
-  );
+  let bump: BumpSankeyLoop;
+
+  beforeEach(() => {
+    bump = new BumpSankeyLoop(
+      { closePath: () => {}, lineTo: () => {}, bezierCurveTo: () => {} } as any,
+      0,
+      0,
+      0,
+      0,
+    );
+  });
 
   it('should create', () => {
     expect(bump).toBeTruthy();
@@ -51,6 +55,31 @@ describe('BumpSankeyLoop', () => {
       bump._line = 1;
       bump.point(1, 1);
       expect(bump._context.lineTo).toHaveBeenCalled();
+    });
+
+    it('should flip loops', () => {
+      spyOn(bump._context, 'lineTo');
+      spyOn(bump._context, 'bezierCurveTo');
+      bump._point = 1;
+      bump._line = 1;
+      bump.point(1, 1);
+      expect(bump._context.bezierCurveTo).toHaveBeenCalledWith(
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+      );
+      expect(bump._context.lineTo).toHaveBeenCalledWith(1, 0);
+      expect(bump._context.bezierCurveTo).toHaveBeenCalledWith(
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+      );
     });
   });
 });
