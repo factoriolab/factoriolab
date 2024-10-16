@@ -470,5 +470,11 @@
     "addBeacons": "Add beacons",
     "eachTooltip": "Beacons per machine",
     "totalTooltip": "Total beacons"
+  },
+  "modules": {
+    "eachTooltip": "Number of modules"
+  },
+  "beltOverlay": {
+    "stackTooltip": "Stack size"
   }
 }

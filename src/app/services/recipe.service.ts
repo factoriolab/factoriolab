@@ -95,7 +95,7 @@ export class RecipeService {
     if (recipeId != null) {
       recipe = data.recipeEntities[recipeId];
       if (
-        !data.info.flags.has('miningTechnologyBypassLimitations') ||
+        !data.flags.has('miningTechnologyBypassLimitations') ||
         (!recipe.isMining && !recipe.isTechnology)
       ) {
         // Filter for modules allowed on this recipe
@@ -118,8 +118,8 @@ export class RecipeService {
       (m): SelectItem<string> => ({ value: m.id, label: m.name }),
     );
     if (
-      (!data.info.flags.has('resourcePurity') || !recipe?.isMining) &&
-      !data.info.flags.has('duplicators')
+      (!data.flags.has('resourcePurity') || !recipe?.isMining) &&
+      !data.flags.has('duplicators')
     ) {
       options.unshift({ label: 'None', value: ItemId.Module });
     }
@@ -196,7 +196,7 @@ export class RecipeService {
         recipe.time = recipe.time.div(minSpeed);
       }
 
-      if (recipe.isTechnology && data.info.flags.has('researchSpeed')) {
+      if (recipe.isTechnology && data.flags.has('researchSpeed')) {
         // Adjust for research factor
         recipe.time = recipe.time.div(researchFactor);
       }
@@ -225,7 +225,7 @@ export class RecipeService {
           // Scale Satisfactory Somersloop bonus based on number of slots
           let scale: Rational | undefined;
           if (
-            data.info.flags.has('somersloop') &&
+            data.flags.has('somersloop') &&
             id === ItemId.Somersloop &&
             machine.modules instanceof Rational
           )
@@ -288,7 +288,7 @@ export class RecipeService {
       // Beacons
       if (recipeSettings.beacons != null) {
         let scale = rational.one;
-        if (data.info.flags.has('diminishingBeacons')) {
+        if (data.flags.has('diminishingBeacons')) {
           const total = recipeSettings.beacons.reduce(
             (t, b) => t.add(coalesce(b.count, rational.zero)),
             rational.zero,
@@ -364,7 +364,7 @@ export class RecipeService {
       // In Factorio, minimum recipe time is 1/60s (1 tick)
       if (
         recipe.time.lt(this.minFactorioRecipeTime) &&
-        data.info.flags.has('minimumRecipeTime')
+        data.flags.has('minimumRecipeTime')
       ) {
         recipe.time = this.minFactorioRecipeTime;
       }
@@ -405,7 +405,7 @@ export class RecipeService {
           : rational.zero;
 
       if (
-        data.info.flags.has('consumptionAsDrain') &&
+        data.flags.has('consumptionAsDrain') &&
         recipe.consumption?.nonzero()
       ) {
         recipe.drain = recipe.consumption;

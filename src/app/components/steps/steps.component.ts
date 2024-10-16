@@ -37,12 +37,13 @@ import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { stepDetailIcon, StepDetailTab } from '~/models/enum/step-detail-tab';
 import { rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
+import { ItemSettings } from '~/models/settings/item-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { RecipeState } from '~/models/settings/recipe-settings';
 import { Step } from '~/models/step';
 import { StepDetail } from '~/models/step-detail';
 import { storedSignal } from '~/models/stored-signal';
-import { Entities } from '~/models/utils';
+import { Entities, Optional } from '~/models/utils';
 import { AsStepPipe } from '~/pipes/as-step.pipe';
 import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { InserterSpeedPipe } from '~/pipes/inserter-speed.pipe';
@@ -69,6 +70,7 @@ import { RecipesService } from '~/store/recipes.service';
 import { SettingsService } from '~/store/settings.service';
 
 import { BeaconsOverlayComponent } from '../beacons-overlay/beacons-overlay.component';
+import { BeltOverlayComponent } from '../belt-overlay/belt-overlay.component';
 import { ColumnsComponent } from '../columns/columns.component';
 import { ModulesOverlayComponent } from '../modules-overlay/modules-overlay.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -93,6 +95,7 @@ export type StepsMode = 'all' | 'focus';
     TooltipModule,
     AsStepPipe,
     BeaconsOverlayComponent,
+    BeltOverlayComponent,
     ColumnsComponent,
     DropdownBaseDirective,
     IconClassPipe,
@@ -411,6 +414,26 @@ export class StepsComponent implements OnInit, AfterViewInit {
     }
 
     update(id, state);
+  }
+
+  changeBelts(
+    step: Step,
+    state: ItemSettings,
+    defaultBeltId: Optional<string>,
+  ): void {
+    if (step.itemId == null) return;
+    this.itemsSvc.updateEntityField(
+      step.itemId,
+      'stack',
+      state.stack,
+      rational.one,
+    );
+    this.itemsSvc.updateEntityField(
+      step.itemId,
+      'beltId',
+      state.beltId,
+      defaultBeltId,
+    );
   }
 
   changeStepChecked(step: Step, value: boolean): void {

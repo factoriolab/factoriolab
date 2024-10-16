@@ -117,7 +117,7 @@
   }
   @if (type() === 'machine' && data().machineEntities[id()]; as machine) {
     <table>
-      @if (machine.speed && !data().info.flags.has('hideMachineSettings')) {
+      @if (machine.speed && !data().flags.has('hideMachineSettings')) {
         <tr>
           <td>{{ 'data.craftingSpeed' | translate }}</td>
           <td>{{ machine.speed | round }}</td>

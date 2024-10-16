@@ -35,6 +35,7 @@ import { MaximizeType } from '~/models/enum/maximize-type';
 import { objectiveUnitOptions } from '~/models/enum/objective-unit';
 import { Preset, presetOptions } from '~/models/enum/preset';
 import { researchBonusValue } from '~/models/enum/research-bonus';
+import { flags } from '~/models/flags';
 import { gameInfo } from '~/models/game-info';
 import { Mod } from '~/models/mod';
 import { modOptions, Options } from '~/models/options';
@@ -180,41 +181,14 @@ export class SettingsService extends Store<SettingsState> {
     return gameInfo[game];
   });
 
-  columnOptions = computed(() => {
-    const gameInfo = this.gameInfo();
-    return columnOptions(gameInfo);
-  });
-
   displayRateInfo = computed(() => {
     const displayRate = this.displayRate();
     return displayRateInfo[displayRate];
   });
 
-  objectiveUnitOptions = computed(() => {
-    const dispRateInfo = this.displayRateInfo();
-    const gameInfo = this.gameInfo();
-    return objectiveUnitOptions(dispRateInfo, gameInfo);
-  });
-
-  presetOptions = computed(() => {
-    const gameInfo = this.gameInfo();
-    return presetOptions(gameInfo);
-  });
-
-  linkValueOptions = computed(() => {
-    const gameInfo = this.gameInfo();
-    return linkValueOptions(gameInfo);
-  });
-
   modOptions = computed(() => {
     const game = this.game();
     return modOptions(game);
-  });
-
-  columnsState = computed(() => {
-    const gameInfo = this.gameInfo();
-    const columns = this.preferencesSvc.columns();
-    return gameColumnsState(spread(initialColumnsState, columns), gameInfo);
   });
 
   defaults = computed(() => this.computeDefaults(this.mod(), this.preset()));
@@ -228,6 +202,33 @@ export class SettingsService extends Store<SettingsState> {
       this.defaults(),
     ),
   );
+
+  linkValueOptions = computed(() => {
+    const data = this.dataset();
+    return linkValueOptions(data);
+  });
+
+  objectiveUnitOptions = computed(() => {
+    const dispRateInfo = this.displayRateInfo();
+    const data = this.dataset();
+    return objectiveUnitOptions(dispRateInfo, data);
+  });
+
+  presetOptions = computed(() => {
+    const data = this.dataset();
+    return presetOptions(data);
+  });
+
+  columnOptions = computed(() => {
+    const data = this.dataset();
+    return columnOptions(data);
+  });
+
+  columnsState = computed(() => {
+    const data = this.dataset();
+    const columns = this.preferencesSvc.columns();
+    return gameColumnsState(spread(initialColumnsState, columns), data);
+  });
 
   allResearchedTechnologyIds = computed(() => {
     const researchedTechnologyIds = this.researchedTechnologyIds();
@@ -349,8 +350,7 @@ export class SettingsService extends Store<SettingsState> {
     let moduleRank: string[] | undefined;
     let overclock: Rational | undefined;
     switch (mod.game) {
-      case Game.Factorio:
-      case Game.Factorio2: {
+      case Game.Factorio: {
         moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
         if (m.beacon) {
           const beacon = mod.items.find((i) => i.id === m.beacon)?.beacon;
@@ -594,6 +594,7 @@ export class SettingsService extends Store<SettingsState> {
     return {
       game,
       info: gameInfo[game],
+      flags: flags[coalesce(mod?.flags, DEFAULT_MOD)],
       version: coalesce(mod?.version, {}),
       categoryIds,
       categoryEntities,

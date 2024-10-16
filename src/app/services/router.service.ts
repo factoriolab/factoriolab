@@ -681,6 +681,7 @@ export class RouterService {
           id,
           this.zipSvc.zipString(obj.beltId),
           this.zipSvc.zipString(obj.wagonId),
+          this.zipSvc.zipRational(obj.stack),
         ]),
       );
       data.config.hash.i.push(
@@ -688,6 +689,7 @@ export class RouterService {
           this.zipSvc.zipNString(id, hash.items),
           this.zipSvc.zipNString(obj.beltId, hash.belts),
           this.zipSvc.zipNString(obj.wagonId, hash.wagons),
+          this.zipSvc.zipRational(obj.stack),
         ]),
       );
     }
@@ -704,6 +706,7 @@ export class RouterService {
       const obj: ItemState = {
         beltId: this.zipSvc.parseString(s[i++], hash?.belts),
         wagonId: this.zipSvc.parseString(s[i++], hash?.wagons),
+        stack: this.zipSvc.parseRational(s[i++]),
       };
 
       prune(obj);
