@@ -4,7 +4,7 @@ export const APP = 'FactorioLab';
 export const DEFAULT_MOD = '1.1';
 export const MIN_LINK_VALUE = 1e-10;
 export const MIN_ZIP = 200;
-export const ZEMPTY = '=';
+export const ZEMPTY = '_';
 export const ZARRAYSEP = '~';
 export const ZFIELDSEP = '*';
 export const ZTRUE = '1';

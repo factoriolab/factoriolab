@@ -13,9 +13,9 @@ describe('App Routes', () => {
     expect(await routes[0].children![0].loadComponent!()).toEqual(
       WizardComponent,
     );
-    expect(await routes[0].children![1].loadComponent!()).toEqual(
+    expect(await routes[0].children![2].loadComponent!()).toEqual(
       LandingComponent,
     );
-    expect(await routes[0].children![2].loadChildren!()).toEqual(mainRoutes);
+    expect(await routes[0].children![3].loadChildren!()).toEqual(mainRoutes);
   });
 });

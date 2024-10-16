@@ -24,6 +24,7 @@ import { ZipService } from './zip.service';
 
 export const V10LISTSEP = '_'; // V11: Deprecated
 export const V10NULL = '?'; // V11: Deprecated
+export const V10EMPTY = '='; // V11: _
 
 export enum ZipSectionV10 {
   Version = 'v',
@@ -521,7 +522,9 @@ export class MigrationService {
 
       // Convert disabled recipe ids
       if (s.length > 2 + x) {
-        const disabledRecipeIds = this.zipSvc.parseArray(s[2 + x]);
+        const disabledRecipeIds = this.zipSvc.parseArray(
+          s[2 + x].replaceAll(V10EMPTY, ZEMPTY),
+        );
         if (disabledRecipeIds) {
           const recipes = asString(params[ZipSectionV10.Recipes]);
           const list = recipes ? recipes.split(V10LISTSEP) : [];
@@ -698,12 +701,12 @@ export class MigrationService {
       list
         .map((z) => z.split(ZFIELDSEP))
         .forEach((s, i) => {
-          if (i === 0 && s[0] === ZTRUE) s[0] = ZEMPTY;
+          if (i === 0 && s[0] === ZTRUE) s[0] = V10EMPTY;
 
           // Move overclock after fuelId/fuelRankIds
           this.migrateMoveUpField(s, 5, 6);
 
-          if (s[0] !== ZEMPTY && s[0] !== '') {
+          if (s[0] !== V10EMPTY && s[0] !== '') {
             if (s.length > 1) {
               // Convert module rank to modules
               const moduleIdsStr = s[1];
@@ -775,7 +778,7 @@ export class MigrationService {
           const list = asString(params[ZipSectionV10.Machines])
             .split(V10LISTSEP)
             .map((l) => l.split(ZFIELDSEP));
-          const s = list.find((l) => l[0] === ZEMPTY || l[0] === '');
+          const s = list.find((l) => l[0] === V10EMPTY || l[0] === '');
           if (s) {
             while (s.length < 4) s.push('');
             s[3] = fuelRankIds;
@@ -901,7 +904,7 @@ export class MigrationService {
       const s = entry.split(ZFIELDSEP);
       const id = s[0];
       if (i === 0) {
-        if (id === ZEMPTY) machineRank = [];
+        if (id === V10EMPTY) machineRank = [];
         moduleRankIds = s[1];
         beacons = s[2];
         fuelRankIds = s[3];
@@ -991,7 +994,7 @@ export class MigrationService {
     prune(params);
 
     function replaceDeprecated(v: string): string {
-      return v.replaceAll(V10NULL, '').replaceAll(ZEMPTY, ZEMPTY);
+      return v.replaceAll(V10NULL, '').replaceAll(V10EMPTY, ZEMPTY);
     }
 
     Object.keys(params).forEach((k) => {
