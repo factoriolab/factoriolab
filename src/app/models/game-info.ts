@@ -50,7 +50,6 @@ export const gameInfo: Record<Game, GameInfo> = {
       'fluidCostRatio',
       'fuels',
       'inserterEstimation',
-      'minimumRecipeTime',
       'miningDepletion',
       'miningProductivity',
       'miningTechnologyBypassLimitations',

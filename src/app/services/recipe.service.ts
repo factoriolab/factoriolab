@@ -314,8 +314,6 @@ export class RecipeService {
               .mul(count) // Num of modules/beacon
               .mul(scale); // Apply diminishing beacons scale
 
-            console.log(factor);
-
             if (module.speed) {
               speed = speed.add(module.speed.mul(factor));
             }
