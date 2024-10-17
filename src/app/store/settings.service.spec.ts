@@ -312,31 +312,6 @@ describe('SettingsService', () => {
       ]);
     });
 
-    it('should not sort belts in DSP', () => {
-      spyOn(service, 'mod').and.returnValue(
-        spread(Mocks.mod, {
-          items: [
-            ...Mocks.mod.items,
-            {
-              id: 'id',
-              name: 'Item',
-              category: 'logistics',
-              row: 0,
-              belt: { speed: 1 },
-            },
-          ],
-        }),
-      );
-      spyOn(service, 'game').and.returnValue(Game.DysonSphereProgram);
-      const result = service.dataset();
-      expect(result.beltIds).toEqual([
-        ItemId.TransportBelt,
-        ItemId.FastTransportBelt,
-        ItemId.ExpressTransportBelt,
-        'id',
-      ]);
-    });
-
     it('should handle pipes when found', () => {
       const items = Mocks.mod.items.map((i) => {
         if (i.id === ItemId.Pipe) return spread(i, { pipe: { speed: 100 } });

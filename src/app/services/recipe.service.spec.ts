@@ -5,7 +5,7 @@ import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
 import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
-import { gameInfo } from '~/models/game-info';
+import { flags } from '~/models/flags';
 import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { ModuleSettings } from '~/models/settings/module-settings';
@@ -65,7 +65,7 @@ describe('RecipeService', () => {
     it('should disallow empty module in Satisfactory mining', () => {
       const result = service.moduleOptions(
         Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],
-        spread(Mocks.dataset, { info: gameInfo[Game.Satisfactory] }),
+        spread(Mocks.dataset, { flags: flags.sfy }),
         RecipeId.Coal,
       );
       expect(result).toHaveSize(6);
@@ -287,7 +287,7 @@ describe('RecipeService', () => {
         },
       ];
       const data = spread(Mocks.adjustedDataset, {
-        info: gameInfo[Game.Factorio2],
+        flags: flags['2.0'],
         moduleEntities: spread(Mocks.adjustedDataset.moduleEntities, {
           // To verify all factors work in beacons
           [ItemId.SpeedModule]: spread(
@@ -722,7 +722,7 @@ describe('RecipeService', () => {
 
     it('should adjust based on Satisfactory Somersloop implementation', () => {
       const data = Mocks.getDataset();
-      data.info = gameInfo[Game.Satisfactory];
+      data.flags = flags.sfy;
       data.moduleEntities[ItemId.Somersloop] = {
         productivity: rational(1n),
         consumption: rational(1n),

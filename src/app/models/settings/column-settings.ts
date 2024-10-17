@@ -2,7 +2,6 @@ import { SelectItem } from 'primeng/api';
 
 import { spread } from '~/helpers';
 
-import { Dataset } from '../dataset';
 import { Flag } from '../flags';
 
 export type ColumnKey =
@@ -64,9 +63,9 @@ export const initialColumnsState: ColumnsState = allColumns.reduce(
 ) as ColumnsState;
 
 /** Get column options for passed game */
-export function columnOptions(data: Dataset): SelectItem<ColumnKey>[] {
+export function columnOptions(flags: Set<Flag>): SelectItem<ColumnKey>[] {
   return allColumns
-    .filter((c) => !columnsInfo[c].flag || data.flags.has(c as Flag))
+    .filter((c) => !columnsInfo[c].flag || flags.has(c as Flag))
     .map(
       (id): SelectItem<ColumnKey> => ({
         label: `options.column.${id}`,
@@ -78,10 +77,10 @@ export function columnOptions(data: Dataset): SelectItem<ColumnKey>[] {
 
 export function gameColumnsState(
   columnsState: ColumnsState,
-  data: Dataset,
+  flags: Set<Flag>,
 ): ColumnsState {
   allColumns
-    .filter((c) => columnsInfo[c].flag && !data.flags.has(c as Flag))
+    .filter((c) => columnsInfo[c].flag && !flags.has(c as Flag))
     .forEach((c) => {
       columnsState = spread(columnsState, {
         [c]: spread(columnsState[c], { show: false }),

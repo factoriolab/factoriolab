@@ -206,29 +206,29 @@ export class SettingsService extends Store<SettingsState> {
 
   linkValueOptions = computed(() => {
     const data = this.dataset();
-    return linkValueOptions(data);
+    return linkValueOptions(data.flags);
   });
 
   objectiveUnitOptions = computed(() => {
     const dispRateInfo = this.displayRateInfo();
     const data = this.dataset();
-    return objectiveUnitOptions(dispRateInfo, data);
+    return objectiveUnitOptions(dispRateInfo, data.flags);
   });
 
   presetOptions = computed(() => {
     const data = this.dataset();
-    return presetOptions(data);
+    return presetOptions(data.flags);
   });
 
   columnOptions = computed(() => {
     const data = this.dataset();
-    return columnOptions(data);
+    return columnOptions(data.flags);
   });
 
   columnsState = computed(() => {
     const data = this.dataset();
     const columns = this.preferencesSvc.columns();
-    return gameColumnsState(spread(initialColumnsState, columns), data);
+    return gameColumnsState(spread(initialColumnsState, columns), data.flags);
   });
 
   allResearchedTechnologyIds = computed(() => {
