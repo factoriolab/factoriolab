@@ -1,5 +1,6 @@
 import { cloneEntities, spread, toRationalEntities } from '~/helpers';
 
+import { Quality } from '../enum/quality';
 import { Rational, rational } from '../rational';
 import { Entities } from '../utils';
 
@@ -57,6 +58,7 @@ export interface Recipe {
   drain?: Rational;
   consumption?: Rational;
   pollution?: Rational;
+  quality?: Quality;
 }
 
 export function parseRecipe(json: RecipeJson): Recipe {

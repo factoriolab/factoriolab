@@ -129,6 +129,14 @@
       "left": "Left",
       "right": "Right",
       "center": "Center"
+    },
+    "quality": {
+      "any": "Any",
+      "normal": "Normal",
+      "uncommon": "Uncommon",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary"
     }
   },
   "columns": {
