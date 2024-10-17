@@ -9,7 +9,6 @@ import {
   toEntities,
 } from '~/helpers';
 import { displayRateInfo } from '~/models/enum/display-rate';
-import { Game } from '~/models/enum/game';
 import { ItemId } from '~/models/enum/item-id';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
@@ -209,10 +208,7 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
           if (!recipe.part) {
             const settings = step.recipeSettings;
             let machine = settings.machineId;
-            if (
-              data.game === Game.DysonSphereProgram &&
-              machine === ItemId.MiningMachine
-            ) {
+            if (machine && data.machineEntities[machine].totalRecipe) {
               // Use recipe id (vein type) in place of mining machine for DSP mining
               machine = step.recipeId;
             }

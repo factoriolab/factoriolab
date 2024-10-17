@@ -550,7 +550,7 @@
             @if (
               step.machines &&
               step.machines.nonzero() &&
-              (machineId | machineShowRate: data().game)
+              !data().machineEntities[machineId].hideRate
             ) {
               <span class="monospace">{{
                 step.machines
@@ -596,62 +596,57 @@
                     </ng-template>
                   </button>
                 }
-                @if (machineId | machineShow: data().game) {
-                  <p-dropdown
-                    labDropdownBase="icon"
-                    [pTooltip]="tooltip"
-                    [options]="
-                      step.recipe.producers | options: data().itemEntities
-                    "
-                    [ngModel]="machineId"
-                    (onChange)="
-                      step.recipeObjectiveId
-                        ? objectivesSvc.updateEntityField(
-                            step.recipeObjectiveId,
-                            'machineId',
-                            $event.value,
-                            step.recipeSettings.defaultMachineId
-                          )
-                        : recipesSvc.updateEntityField(
-                            step.recipeId,
-                            'machineId',
-                            $event.value,
-                            step.recipeSettings.defaultMachineId
-                          )
-                    "
-                  >
-                    <ng-template pTemplate="selectedItem" let-item>
-                      @if (item) {
-                        <div class="d-flex">
-                          <i [class]="item.value | iconSmClass"></i>
-                        </div>
-                      }
-                    </ng-template>
-                    <ng-template pTemplate="item" let-item>
-                      <div
-                        class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="tooltip"
-                      >
+                <p-dropdown
+                  labDropdownBase="icon"
+                  [pTooltip]="tooltip"
+                  [options]="
+                    step.recipe.producers | options: data().itemEntities
+                  "
+                  [ngModel]="machineId"
+                  (onChange)="
+                    step.recipeObjectiveId
+                      ? objectivesSvc.updateEntityField(
+                          step.recipeObjectiveId,
+                          'machineId',
+                          $event.value,
+                          step.recipeSettings.defaultMachineId
+                        )
+                      : recipesSvc.updateEntityField(
+                          step.recipeId,
+                          'machineId',
+                          $event.value,
+                          step.recipeSettings.defaultMachineId
+                        )
+                  "
+                >
+                  <ng-template pTemplate="selectedItem" let-item>
+                    @if (item) {
+                      <div class="d-flex">
                         <i [class]="item.value | iconSmClass"></i>
-                        <div class="ms-3 text-truncate">
-                          {{ item.label }}
-                        </div>
-                        <ng-template #tooltip>
-                          <lab-tooltip
-                            [id]="item.value"
-                            type="machine"
-                          ></lab-tooltip>
-                        </ng-template>
                       </div>
-                    </ng-template>
-                    <ng-template #tooltip>
-                      <lab-tooltip
-                        [id]="machineId"
-                        type="machine"
-                      ></lab-tooltip>
-                    </ng-template>
-                  </p-dropdown>
-                }
+                    }
+                  </ng-template>
+                  <ng-template pTemplate="item" let-item>
+                    <div
+                      class="d-flex align-items-center py-2 w-100 h-100"
+                      [pTooltip]="tooltip"
+                    >
+                      <i [class]="item.value | iconSmClass"></i>
+                      <div class="ms-3 text-truncate">
+                        {{ item.label }}
+                      </div>
+                      <ng-template #tooltip>
+                        <lab-tooltip
+                          [id]="item.value"
+                          type="machine"
+                        ></lab-tooltip>
+                      </ng-template>
+                    </div>
+                  </ng-template>
+                  <ng-template #tooltip>
+                    <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
+                  </ng-template>
+                </p-dropdown>
                 @if (data().flags.has('overclock')) {
                   <p-inputNumber
                     #overclockInput
@@ -1664,7 +1659,7 @@
           @if (
             machines &&
             machines.nonzero() &&
-            (machineId | machineShowRate: data().game)
+            !data().machineEntities[machineId].hideRate
           ) {
             <span class="monospace">{{
               machines
@@ -1679,27 +1674,19 @@
                 {{ 'steps.inputs' | translate }}
               </div>
             }
-            @if (machineId | machineShow: data().game) {
-              <i [class]="recipeId | iconClass: 'recipe'" [pTooltip]="tooltip">
-                @if (recipeObjectiveId) {
-                  <span>#{{ recipeObjectiveId }}</span>
-                }
-                <ng-template #tooltip>
-                  <lab-tooltip [id]="recipeId" type="recipe"></lab-tooltip>
-                </ng-template>
-              </i>
-              <i [class]="machineId | iconClass" [pTooltip]="tooltip">
-                <ng-template #tooltip>
-                  <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
-                </ng-template>
-              </i>
-            } @else {
-              <div class="text-center" style="width: 68px">
-                @if (inputs) {
-                  {{ 'steps.inputs' | translate }}
-                }
-              </div>
-            }
+            <i [class]="recipeId | iconClass: 'recipe'" [pTooltip]="tooltip">
+              @if (recipeObjectiveId) {
+                <span>#{{ recipeObjectiveId }}</span>
+              }
+              <ng-template #tooltip>
+                <lab-tooltip [id]="recipeId" type="recipe"></lab-tooltip>
+              </ng-template>
+            </i>
+            <i [class]="machineId | iconClass" [pTooltip]="tooltip">
+              <ng-template #tooltip>
+                <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
+              </ng-template>
+            </i>
             @if (percent) {
               @if (percentOnDest) {
                 <i class="m-1 p-2 fa-solid fa-arrow-right"></i>

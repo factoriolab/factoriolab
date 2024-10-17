@@ -49,8 +49,6 @@ import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { InserterSpeedPipe } from '~/pipes/inserter-speed.pipe';
 import { LeftPadPipe } from '~/pipes/left-pad.pipe';
 import { MachineRatePipe } from '~/pipes/machine-rate.pipe';
-import { MachineShowPipe } from '~/pipes/machine-show.pipe';
-import { MachineShowRatePipe } from '~/pipes/machine-show-rate.pipe';
 import { OptionsPipe } from '~/pipes/options.pipe';
 import { PowerPipe } from '~/pipes/power.pipe';
 import { RatePipe } from '~/pipes/rate.pipe';
@@ -104,8 +102,6 @@ export type StepsMode = 'all' | 'focus';
     DropdownBaseDirective,
     LeftPadPipe,
     MachineRatePipe,
-    MachineShowPipe,
-    MachineShowRatePipe,
     ModulesOverlayComponent,
     NoDragDirective,
     OptionsPipe,
