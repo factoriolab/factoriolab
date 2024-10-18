@@ -45,7 +45,7 @@ export class AppComponent {
 
   reset(): void {
     this.dataSvc.error$.next(undefined);
-    void this.router.navigateByUrl('/');
+    void this.router.navigate(['/']);
     this.reload();
   }
 
