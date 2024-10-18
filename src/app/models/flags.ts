@@ -20,6 +20,7 @@ export type Flag =
   | 'pollution'
   | 'power'
   | 'proliferator'
+  | 'quality'
   | 'researchSpeed'
   | 'resourcePurity'
   | 'somersloop'
@@ -49,6 +50,7 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'mods',
     'pollution',
     'power',
+    'quality',
     'researchSpeed',
     'wagons',
   ]),

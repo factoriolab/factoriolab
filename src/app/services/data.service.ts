@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { effect, inject, Injectable } from '@angular/core';
 import {
+  BehaviorSubject,
   catchError,
   combineLatest,
   EMPTY,
@@ -13,7 +14,7 @@ import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
 import { Language } from '~/models/enum/language';
-import { Entities } from '~/models/utils';
+import { Entities, Optional } from '~/models/utils';
 import { DatasetsService } from '~/store/datasets.service';
 import { PreferencesService } from '~/store/preferences.service';
 import { SettingsService } from '~/store/settings.service';
@@ -29,6 +30,8 @@ export class DataService {
 
   cacheData: Entities<Observable<[ModData, ModHash]>> = {};
   cacheI18n: Entities<Entities<Observable<ModI18n>>> = {};
+
+  error$ = new BehaviorSubject<Optional<string>>(undefined);
 
   config$ = this.http
     .get<{
@@ -62,6 +65,10 @@ export class DataService {
       ]).pipe(
         tap(([data, hash]) => {
           this.datasetsSvc.loadData(id, data, hash);
+        }),
+        catchError((e: HttpErrorResponse) => {
+          this.error$.next(e.message);
+          return EMPTY;
         }),
         shareReplay(),
       );

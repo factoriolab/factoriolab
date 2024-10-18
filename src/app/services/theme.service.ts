@@ -115,21 +115,21 @@ export class ThemeService {
         .filter(fnPropsNotNullish('iconText'))
         .forEach((item) => {
           const selector = this.escapeSelector(item.id);
-          css += `.${selector}.item::after { content: "${item.iconText}"; } `;
+          css += `.${selector}.item::before { content: "${item.iconText}"; } `;
         });
       data.recipeIds
         .map((i) => data.recipeEntities[i])
         .filter(fnPropsNotNullish('iconText'))
         .forEach((recipe) => {
           const selector = this.escapeSelector(recipe.id);
-          css += `.${selector}.recipe::after { content: "${recipe.iconText}"; } `;
+          css += `.${selector}.recipe::before { content: "${recipe.iconText}"; } `;
         });
       data.categoryIds
         .map((i) => data.categoryEntities[i])
         .filter(fnPropsNotNullish('iconText'))
         .forEach((category) => {
           const selector = this.escapeSelector(category.id);
-          css += `.${selector}.category::after { content: "${category.iconText}"; } `;
+          css += `.${selector}.category::before { content: "${category.iconText}"; } `;
         });
       style.innerText = css;
       this.head.appendChild(style);

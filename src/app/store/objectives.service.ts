@@ -339,8 +339,7 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
             id,
             label: t,
             command:
-              // Simple assignment function; testing is unnecessary
-              // istanbul ignore next
+              // istanbul ignore next: Simple assignment function; testing is unnecessary
               (): void => {
                 history.replaceState(
                   {},

@@ -83,14 +83,12 @@ export class ExportService {
     this.saveAsJson(JSON.stringify(flowData), 'factoriolab_flow');
   }
 
-  /* Don't test dependencies (file-saver) */
-  /* istanbul ignore next */
+  // istanbul ignore next: Don't test dependencies (file-saver)
   saveAsCsv(data: string, name: string): void {
     saveAs(new Blob([data], { type: CSV_TYPE }), name + CSV_EXTENSION);
   }
 
-  /* Don't test dependencies (file-saver) */
-  /* istanbul ignore next */
+  // istanbul ignore next: Don't test dependencies (file-saver)
   saveAsJson(data: string, name: string): void {
     saveAs(new Blob([data], { type: JSON_TYPE }), name + JSON_EXTENSION);
   }

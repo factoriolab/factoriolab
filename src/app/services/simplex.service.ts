@@ -36,8 +36,7 @@ import { Entities } from '~/models/utils';
 import { RateService } from './rate.service';
 
 const simplexConfig: Simplex.Options = environment.debug
-  ? // Don't test debug environment level
-    // istanbul ignore next
+  ? // istanbul ignore next: Don't test debug environment level
     {}
   : { msgLevel: 'off' };
 
