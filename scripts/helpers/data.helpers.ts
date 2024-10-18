@@ -7,7 +7,7 @@ import {
 } from 'scripts/factorio.models';
 
 import { ModHash } from '~/models/data/mod-hash';
-import { Entities } from '~/models/entities';
+import { Entities } from '~/models/utils';
 
 import {
   allEffects,
