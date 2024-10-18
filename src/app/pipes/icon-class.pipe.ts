@@ -21,6 +21,7 @@ export class IconClassPipe implements PipeTransform {
 @Pipe({ name: 'iconSmClass', standalone: true })
 export class IconSmClassPipe implements PipeTransform {
   static transform(value: Optional<string>, type: IdType = 'item'): string {
+    if (value == null) return '';
     return `${IconClassPipe.transform(value, type)} sm`;
   }
 
