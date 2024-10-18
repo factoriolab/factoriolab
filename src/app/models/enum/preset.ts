@@ -1,6 +1,6 @@
 import { SelectItem } from 'primeng/api';
 
-import { GameInfo } from '../game-info';
+import { Flag } from '../flags';
 
 export enum Preset {
   Minimum = 0,
@@ -9,13 +9,13 @@ export enum Preset {
   Beacon12 = 3,
 }
 
-export function presetOptions(gameInfo: GameInfo): SelectItem<Preset>[] {
+export function presetOptions(flags: Set<Flag>): SelectItem<Preset>[] {
   const options: SelectItem<Preset>[] = [
     { value: Preset.Minimum, label: 'options.preset.minimum' },
     { value: Preset.Modules, label: 'options.preset.upgraded' },
   ];
 
-  if (gameInfo.flags.has('beacons')) {
+  if (flags.has('beacons')) {
     options[1].label = 'options.preset.modules';
     options.push(
       { value: Preset.Beacon8, label: 'options.preset.beacon8' },
@@ -23,7 +23,7 @@ export function presetOptions(gameInfo: GameInfo): SelectItem<Preset>[] {
     );
   }
 
-  if (gameInfo.flags.has('proliferator')) {
+  if (flags.has('proliferator')) {
     options.push({
       value: Preset.Beacon8,
       label: 'options.preset.proliferated',

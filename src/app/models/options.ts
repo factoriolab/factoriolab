@@ -3,9 +3,11 @@ import { data } from 'src/data';
 
 import { Game } from './enum/game';
 
-export const modOptions = data.mods
-  .filter((m) => m.game === Game.Factorio)
-  .map((m): SelectItem<string> => ({ label: m.name, value: m.id }));
+export function modOptions(game: Game): SelectItem<string>[] {
+  return data.mods
+    .filter((m) => m.game === game)
+    .map((m): SelectItem<string> => ({ label: m.name, value: m.id }));
+}
 
 export interface Options {
   categories: SelectItem<string>[];

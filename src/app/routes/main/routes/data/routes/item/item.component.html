@@ -515,7 +515,7 @@
           }
         </td>
       </tr>
-      @if (data().info.flags.has('beacons')) {
+      @if (data().flags.has('beacons')) {
         <tr>
           <th>{{ 'data.beacons' | translate }}</th>
           <td>
@@ -565,7 +565,7 @@
           </td>
         </tr>
       }
-      @if (data().info.flags.has('overclock')) {
+      @if (data().flags.has('overclock')) {
         <tr>
           <th>{{ 'data.overclock' | translate }}</th>
           <td>{{ machineSettings.overclock }}%</td>

@@ -121,6 +121,12 @@ export class Rational {
     return new Rational(abs(this.p), this.q);
   }
 
+  pow(exponent: number): Rational {
+    const num = this.toNumber();
+    const result = Math.pow(num, exponent);
+    return rational(result);
+  }
+
   toNumber(): number {
     return Number(this.p) / Number(this.q);
   }
@@ -165,8 +171,8 @@ export class Rational {
       // 3.33e-6 => ["3.33e-6", ".33", "33", "e-6", "6"]
       const match = DECIMALS_REGEX.exec(num.toString());
       let decimals = 0;
-      // Regex pattern should match all known number toString formats
-      // istanbul ignore else
+
+      // istanbul ignore else: Regex pattern should match all known number toString formats
       if (match) {
         // If decimal portion found, add length
         if (match[2]) decimals += match[2].length;

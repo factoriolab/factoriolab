@@ -41,7 +41,6 @@ import { powerUnitOptions } from '~/models/enum/power-unit';
 import { researchBonusOptions } from '~/models/enum/research-bonus';
 import { themeOptions } from '~/models/enum/theme';
 import { gameInfo } from '~/models/game-info';
-import { modOptions } from '~/models/options';
 import { rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
@@ -127,6 +126,7 @@ export class SettingsComponent implements OnInit {
   researchedTechnologyIds = this.settingsSvc.allResearchedTechnologyIds;
   columnsState = this.settingsSvc.columnsState;
   presetOptions = this.settingsSvc.presetOptions;
+  modOptions = this.settingsSvc.modOptions;
   defaults = this.settingsSvc.defaults;
   preferences = this.preferencesSvc.state;
   machinesState = this.machinesSvc.settings;
@@ -175,7 +175,6 @@ export class SettingsComponent implements OnInit {
 
   displayRateOptions = displayRateOptions;
   gameOptions = gameOptions;
-  modOptions = modOptions;
   inserterCapacityOptions = inserterCapacityOptions;
   inserterTargetOptions = inserterTargetOptions;
   languageOptions = languageOptions;
@@ -186,6 +185,7 @@ export class SettingsComponent implements OnInit {
 
   ItemId = ItemId;
   rational = rational;
+  maximumStack = rational(4n);
   isStandalone = window.matchMedia('(display-mode: standalone)').matches;
 
   get search(): string {

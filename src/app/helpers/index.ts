@@ -123,14 +123,14 @@ export function fnPropsNotNullish<T, S extends keyof T>(...keys: S[]) {
 export function getIdOptions(
   ids: string[],
   entities: Entities<{ name: string }>,
+  exclude?: Set<string>,
   emptyModule = false,
 ): SelectItem<string>[] {
+  if (exclude) ids = ids.filter((i) => !exclude.has(i));
   const list = ids.map(
     (i): SelectItem<string> => ({ label: entities[i].name, value: i }),
   );
-  if (emptyModule) {
-    list.unshift({ label: 'None', value: ItemId.Module });
-  }
+  if (emptyModule) list.unshift({ label: 'None', value: ItemId.Module });
 
   return list;
 }

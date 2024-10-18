@@ -461,8 +461,7 @@ export function sankey<
           w += v;
         }
 
-        // Unclear how to test this condition
-        // istanbul ignore if
+        // istanbul ignore if: Unclear how to test this condition
         if (!(w > 0)) continue;
         const dy = (y / w - target.y0) * alpha;
         target.y0 += dy;

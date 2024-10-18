@@ -312,31 +312,6 @@ describe('SettingsService', () => {
       ]);
     });
 
-    it('should not sort belts in DSP', () => {
-      spyOn(service, 'mod').and.returnValue(
-        spread(Mocks.mod, {
-          items: [
-            ...Mocks.mod.items,
-            {
-              id: 'id',
-              name: 'Item',
-              category: 'logistics',
-              row: 0,
-              belt: { speed: 1 },
-            },
-          ],
-        }),
-      );
-      spyOn(service, 'game').and.returnValue(Game.DysonSphereProgram);
-      const result = service.dataset();
-      expect(result.beltIds).toEqual([
-        ItemId.TransportBelt,
-        ItemId.FastTransportBelt,
-        ItemId.ExpressTransportBelt,
-        'id',
-      ]);
-    });
-
     it('should handle pipes when found', () => {
       const items = Mocks.mod.items.map((i) => {
         if (i.id === ItemId.Pipe) return spread(i, { pipe: { speed: 100 } });
@@ -364,6 +339,37 @@ describe('SettingsService', () => {
       spyOn(service, 'mod').and.returnValue(undefined);
       const result = service.dataset();
       expect(result.categoryIds.length).toEqual(0);
+    });
+
+    it('should handle quality', () => {
+      spyOn(service, 'mod').and.returnValue(
+        spread(Mocks.mod, { flags: 'spa' }),
+      );
+      spyOn(service, 'i18n').and.returnValue(Mocks.modI18n);
+      const result = service.dataset();
+      expect(result.categoryIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.categoryEntities).length).toEqual(
+        result.categoryIds.length,
+      );
+      expect(Object.keys(result.categoryItemRows).length).toEqual(
+        result.categoryIds.length,
+      );
+      expect(result.iconIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.iconEntities).length).toEqual(
+        result.iconIds.length,
+      );
+      expect(result.itemIds.length).toBeGreaterThan(0);
+      expect(result.beltIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.fuelIds).length).toBeGreaterThan(0);
+      expect(result.machineIds.length).toBeGreaterThan(0);
+      expect(result.moduleIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.itemEntities).length).toEqual(
+        result.itemIds.length,
+      );
+      expect(result.recipeIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.recipeEntities).length).toEqual(
+        result.recipeIds.length,
+      );
     });
   });
 

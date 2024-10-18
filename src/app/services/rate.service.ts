@@ -7,12 +7,11 @@ import {
 import { sankey } from '~/d3-sankey/sankey';
 import { coalesce, spread, toEntities } from '~/helpers';
 import { Recipe } from '~/models/data/recipe';
-import { AdjustedDataset } from '~/models/dataset';
+import { AdjustedDataset, Dataset } from '~/models/dataset';
 import { DisplayRateInfo } from '~/models/enum/display-rate';
 import { EnergyType } from '~/models/enum/energy-type';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
-import { GameInfo } from '~/models/game-info';
 import { ObjectiveSettings } from '~/models/objective';
 import { Rational, rational } from '~/models/rational';
 import { Settings } from '~/models/settings/settings';
@@ -47,8 +46,11 @@ export class RateService {
         break;
       }
       case ObjectiveUnit.Belts: {
-        const beltId = items[objective.targetId].beltId;
-        if (beltId) factor = beltSpeed[beltId];
+        const itemSettings = items[objective.targetId];
+        if (itemSettings.beltId)
+          factor = beltSpeed[itemSettings.beltId].mul(
+            coalesce(itemSettings.stack, rational.one),
+          );
         break;
       }
       case ObjectiveUnit.Wagons: {
@@ -88,7 +90,7 @@ export class RateService {
     else obj[parentId] = value;
   }
 
-  adjustPowerPollution(step: Step, recipe: Recipe, gameInfo: GameInfo): void {
+  adjustPowerPollution(step: Step, recipe: Recipe, data: Dataset): void {
     if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
         // Reset power
@@ -97,7 +99,7 @@ export class RateService {
         // Calculate drain
         if (recipe.drain?.nonzero()) {
           let machines = step.machines.ceil();
-          if (gameInfo.flags.has('inactiveDrain')) {
+          if (data.flags.has('inactiveDrain')) {
             // In DSP drain is not cumulative; only add for inactive machines
             machines = machines.sub(step.machines);
           }
@@ -204,11 +206,16 @@ export class RateService {
       delete step.belts;
       delete step.wagons;
     } else if (step.itemId != null) {
-      const belt = items[step.itemId].beltId;
-      if (step.items != null && belt != null)
+      const itemSettings = items[step.itemId];
+      const belt = itemSettings.beltId;
+      if (step.items != null && belt != null) {
         step.belts = step.items.div(beltSpeed[belt]);
 
-      const wagon = items[step.itemId].wagonId;
+        if (itemSettings.stack?.nonzero())
+          step.belts = step.belts.div(itemSettings.stack);
+      }
+
+      const wagon = itemSettings.wagonId;
       if (step.items != null && wagon != null) {
         const item = data.itemEntities[step.itemId];
         if (item.stack) {

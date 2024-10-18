@@ -7,6 +7,7 @@ import {
 import { MenuItem, SortEvent } from 'primeng/api';
 
 import { StepDetailTab } from '~/models/enum/step-detail-tab';
+import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
 import { StepDetail } from '~/models/step-detail';
 import { Entities } from '~/models/utils';
@@ -285,7 +286,7 @@ describe('StepsComponent', () => {
     });
   });
 
-  describe('changeRecipeField', () => {
+  describe('changeModulesBeacons', () => {
     let step: Step;
 
     beforeEach(() => {
@@ -329,6 +330,35 @@ describe('StepsComponent', () => {
       expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith(
         '1',
         {},
+      );
+    });
+  });
+
+  describe('changeBelts', () => {
+    it('should return if itemId is undefined', () => {
+      spyOn(component.itemsSvc, 'updateEntityField');
+      component.changeBelts({ id: '0' }, {}, undefined);
+      expect(component.itemsSvc.updateEntityField).not.toHaveBeenCalled();
+    });
+
+    it('should update the stack and beltId', () => {
+      spyOn(component.itemsSvc, 'updateEntityField');
+      component.changeBelts(
+        Mocks.step1,
+        Mocks.itemsStateInitial[ItemId.Coal],
+        ItemId.TransportBelt,
+      );
+      expect(component.itemsSvc.updateEntityField).toHaveBeenCalledWith(
+        Mocks.step1.itemId!,
+        'stack',
+        undefined,
+        rational.one,
+      );
+      expect(component.itemsSvc.updateEntityField).toHaveBeenCalledWith(
+        Mocks.step1.itemId!,
+        'beltId',
+        Mocks.itemsStateInitial[ItemId.Coal].beltId,
+        ItemId.TransportBelt,
       );
     });
   });

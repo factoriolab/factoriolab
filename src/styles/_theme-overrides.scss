@@ -93,6 +93,10 @@ table p-dropdown {
   font-weight: inherit;
 }
 
+.p-button.p-button-icon-only {
+  width: 36px;
+}
+
 // Fix width of large icon buttons
 .p-button-lg > .p-button.p-button-icon-only,
 .p-button.p-button-lg.p-button-icon-only {

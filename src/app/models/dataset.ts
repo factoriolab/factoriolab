@@ -13,12 +13,14 @@ import { AdjustedRecipe, Recipe } from './data/recipe';
 import { Technology } from './data/technology';
 import { Defaults } from './defaults';
 import { Game } from './enum/game';
+import { Flag } from './flags';
 import { GameInfo } from './game-info';
 import { Entities } from './utils';
 
 export interface Dataset {
   game: Game;
   info: GameInfo;
+  flags: Set<Flag>;
   version: Entities;
   categoryIds: string[];
   categoryEntities: Entities<Category>;
@@ -28,6 +30,7 @@ export interface Dataset {
   iconIds: string[];
   iconEntities: Entities<Icon>;
   itemIds: string[];
+  itemQIds: Set<string>;
   itemEntities: Entities<Item>;
   beaconIds: string[];
   beaconEntities: Entities<Beacon>;
@@ -45,6 +48,7 @@ export interface Dataset {
   fuelIds: string[];
   fuelEntities: Entities<Fuel>;
   recipeIds: string[];
+  recipeQIds: Set<string>;
   recipeEntities: Entities<Recipe>;
   technologyIds: string[];
   technologyEntities: Entities<Technology>;

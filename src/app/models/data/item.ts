@@ -1,3 +1,4 @@
+import { Quality } from '../enum/quality';
 import { Rational, rational } from '../rational';
 import { Beacon, BeaconJson, parseBeacon } from './beacon';
 import { Belt, BeltJson, parseBelt } from './belt';
@@ -48,6 +49,7 @@ export interface Item {
   icon?: string;
   /** Used to add extra text to an already defined icon */
   iconText?: string;
+  quality?: Quality;
 }
 
 export function parseItem(json: ItemJson): Item {

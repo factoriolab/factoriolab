@@ -17,13 +17,30 @@
     background-image: url('../assets/icons/icons.webp');
     width: 64px;
     height: 64px;
+    text-align: end;
+    text-shadow:
+      0 2px 2px black,
+      0 -2px 2px black,
+      2px 0 2px black,
+      -2px 0 2px black;
+    line-height: 2rem;
+    white-space: nowrap;
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    font-style: normal;
     content: '';
+    pointer-events: none;
   }
 
-  > span,
-  &::after {
-    // Styles for text overlay
+  /**
+   * E.G. Amount of item in recipe, id of machines objective.
+   * Display in lower right.
+   */
+  > span {
     position: absolute;
+    right: -6px;
+    bottom: -6px;
     text-shadow:
       0 2px 2px black,
       0 -2px 2px black,
@@ -36,21 +53,6 @@
     font-weight: 700;
     font-style: normal;
     pointer-events: none;
-  }
-
-  /**
-   * E.G. Amount of item in recipe, id of machines objective.
-   * Display in lower right.
-   */
-  > span {
-    right: -2px;
-    bottom: -3px;
-  }
-
-  /** E.G. Temperature of fluid. Display in upper right. */
-  &::after {
-    top: -7px;
-    right: -6px;
   }
 
   &.lg {
@@ -67,7 +69,8 @@
     width: 20px;
     height: 20px;
 
-    &::before {
+    &::before,
+    &::after {
       top: -6px;
       left: -6px;
     }
@@ -81,33 +84,37 @@
     }
   }
 
-  &.sum::after {
+  &.sum::before {
     content: 'Σ';
   }
 }
 
+.captain-of-industry::before {
+  background-position: -64px 0;
+}
+
 .dyson-sphere-program::before {
-  background-position: -66px -1px;
+  background-position: -128px 0;
 }
 
 .factorio::before {
-  background-position: -131px -1px;
+  background-position: -192px 0;
 }
 
-.fast-inserter::before {
-  background-position: -196px -1px;
+.final-factory::before {
+  background-position: -256px 0;
 }
 
-.inserter::before {
-  background-position: -1px -66px;
+.satisfactory::before {
+  background-position: 0 -64px;
 }
 
-.long-handed-inserter::before {
-  background-position: -66px -66px;
+.techtonica::before {
+  background-position: -64px -64px;
 }
 
 .module::before {
-  background-position: -131px -66px;
+  background-position: -128px -64px;
 }
 
 body.light .module::before {
@@ -115,29 +122,70 @@ body.light .module::before {
 }
 
 .pipe::before {
-  background-position: -196px -66px;
-}
-
-.satisfactory::before {
-  background-position: -1px -131px;
-}
-
-.stack-inserter::before {
-  background-position: -66px -131px;
+  background-position: -192px -64px;
 }
 
 .time::before {
-  background-position: -131px -131px;
+  background-position: -256px -64px;
 }
 
-.captain-of-industry::before {
-  background-position: -196px -131px;
+.fast-inserter::before {
+  background-position: 0 -128px;
 }
 
-.techtonica::before {
-  background-position: -1px -196px;
+.inserter::before {
+  background-position: -64px -128px;
 }
 
-.final-factory::before {
-  background-position: -66px -196px;
+.long-handed-inserter::before {
+  background-position: -128px -128px;
+}
+
+.stack-inserter::before {
+  background-position: -192px -128px;
+}
+
+.q-1,
+.q0,
+.q1,
+.q2,
+.q3,
+.q5 {
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scale(0.5);
+    transform-origin: 0 0;
+
+    /** Set up base app related icons sprite sheet */
+    background-image: url('../assets/icons/icons.webp');
+    width: 64px;
+    height: 64px;
+    content: '';
+  }
+}
+
+.q-1::after {
+  background-position: -256px -128px;
+}
+
+.q0::after {
+  background-position: 0 -192px;
+}
+
+.q1::after {
+  background-position: -64px -192px;
+}
+
+.q2::after {
+  background-position: -128px -192px;
+}
+
+.q3::after {
+  background-position: -192px -192px;
+}
+
+.q5::after {
+  background-position: -256px -192px;
 }

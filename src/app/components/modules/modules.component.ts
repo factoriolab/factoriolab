@@ -20,6 +20,7 @@ import { Rational, rational } from '~/models/rational';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
 import { RecipeService } from '~/services/recipe.service';
 import { SettingsService } from '~/store/settings.service';
 
@@ -39,6 +40,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     IconSmClassPipe,
     InputNumberComponent,
     TooltipComponent,
+    TranslatePipe,
   ],
   templateUrl: './modules.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

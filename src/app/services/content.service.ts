@@ -10,7 +10,6 @@ import { Confirmation, Message } from 'primeng/api';
 import { BehaviorSubject, fromEvent, map, Subject } from 'rxjs';
 
 import { versionStr } from '~/helpers';
-import { Optional } from '~/models/utils';
 
 import { DataService } from './data.service';
 
@@ -63,8 +62,6 @@ export class ContentService {
   toggleSettingsXl(): void {
     this.settingsXlHidden.set(!this.settingsXlHidden());
   }
-
-  error$ = new BehaviorSubject<Optional<string>>(undefined);
 
   version$ = this.dataSvc.config$.pipe(map((c) => versionStr(c.version)));
 }

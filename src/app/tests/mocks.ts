@@ -60,7 +60,7 @@ import { RecipeId } from './recipe-id';
 import { TestModule } from './test.module';
 
 export const raw = data;
-export const modInfo = data.mods[0];
+export const modInfo = data.mods.find((m) => m.id === '1.1')!;
 export const modData = modJson as unknown as ModData;
 modData.defaults!.excludedRecipes = [RecipeId.NuclearFuelReprocessing];
 export const modHash: ModHash = hashJson;

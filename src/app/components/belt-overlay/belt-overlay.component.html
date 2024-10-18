@@ -1,0 +1,75 @@
+<p-overlayPanel appendTo="body" (onHide)="onHide()">
+  <div class="d-flex flex-column gap-2">
+    <div class="d-flex flex-column">
+      <div class="p-inputgroup">
+        @if (settings(); as settings) {
+          <lab-input-number
+            width="3rem"
+            [pTooltip]="'beltOverlay.stackTooltip' | translate"
+            tooltipPosition="top"
+            [value]="settings?.stack ?? rational.one"
+            [minimum]="rational.one"
+            [maximum]="maximum"
+            (setValue)="setStack($event)"
+          >
+          </lab-input-number>
+          @if (settings.beltId; as beltId) {
+            <p-dropdown
+              labDropdownBase="icon"
+              [pTooltip]="tooltip"
+              [ngModel]="beltId"
+              [options]="type() === 'belt' ? options().belts : options().pipes"
+              (onChange)="setBelt($event.value)"
+            >
+              <ng-template pTemplate="selectedItem" let-item>
+                <div class="d-flex">
+                  <i [class]="item.value | iconSmClass"></i>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="item" let-item>
+                <div
+                  class="d-flex align-items-center py-2 w-100 h-100"
+                  [pTooltip]="tooltip"
+                >
+                  <i [class]="item.value | iconSmClass"></i>
+                  <div class="ms-3 text-truncate">
+                    {{ item.label }}
+                  </div>
+                  <ng-template #tooltip>
+                    <lab-tooltip
+                      [id]="item.value"
+                      [type]="$any(type)"
+                    ></lab-tooltip>
+                  </ng-template>
+                </div>
+              </ng-template>
+              <ng-template #tooltip>
+                <lab-tooltip [id]="beltId" [type]="$any(type)"></lab-tooltip>
+              </ng-template>
+            </p-dropdown>
+          }
+        }
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-solid fa-check"
+        class="p-button-outlined p-button-sm flex-grow-1"
+        [label]="'ok' | translate"
+        (click)="hide()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-solid fa-xmark"
+        class="p-button-outlined p-button-sm p-button-secondary flex-grow-1"
+        [label]="'cancel' | translate"
+        (click)="hide(true)"
+      ></button>
+    </div>
+  </div>
+</p-overlayPanel>

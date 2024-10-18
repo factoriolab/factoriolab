@@ -2,10 +2,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { spread } from '~/helpers';
 import { DisplayRate, displayRateInfo } from '~/models/enum/display-rate';
-import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
-import { gameInfo } from '~/models/game-info';
+import { flags } from '~/models/flags';
 import { ObjectiveSettings } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
@@ -159,7 +158,7 @@ describe('RateService', () => {
       service.adjustPowerPollution(
         result,
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.WoodenChest],
-        gameInfo[Game.Factorio],
+        Mocks.dataset,
       );
       expect(result).toEqual(step);
     });
@@ -168,7 +167,7 @@ describe('RateService', () => {
       const step: any = { machines: rational.one };
       const result = spread(step);
       const recipe: any = { drain: null, consumption: null, pollution: null };
-      service.adjustPowerPollution(result, recipe, gameInfo[Game.Factorio]);
+      service.adjustPowerPollution(result, recipe, Mocks.dataset);
       expect(result).toEqual(step);
     });
 
@@ -180,7 +179,7 @@ describe('RateService', () => {
         consumption: null,
         pollution: null,
       };
-      service.adjustPowerPollution(result, recipe, gameInfo[Game.Factorio]);
+      service.adjustPowerPollution(result, recipe, Mocks.dataset);
       expect(result).toEqual({
         machines: rational.one,
         power: rational(2n),
@@ -195,11 +194,9 @@ describe('RateService', () => {
         consumption: null,
         pollution: null,
       };
-      service.adjustPowerPollution(
-        result,
-        recipe,
-        gameInfo[Game.DysonSphereProgram],
-      );
+      const data = Mocks.getDataset();
+      data.flags = flags.dsp;
+      service.adjustPowerPollution(result, recipe, data);
       expect(result).toEqual({
         machines: rational(1n, 3n),
         power: rational(4n, 3n),
@@ -214,7 +211,7 @@ describe('RateService', () => {
         consumption: rational(2n),
         pollution: null,
       };
-      service.adjustPowerPollution(result, recipe, gameInfo[Game.Factorio]);
+      service.adjustPowerPollution(result, recipe, Mocks.dataset);
       expect(result).toEqual({
         machines: rational.one,
         power: rational(2n),
@@ -228,7 +225,7 @@ describe('RateService', () => {
         consumption: rational(4n),
         pollution: rational(5n),
       };
-      service.adjustPowerPollution(step, recipe, gameInfo[Game.Factorio]);
+      service.adjustPowerPollution(step, recipe, Mocks.dataset);
       expect(step).toEqual({
         machines: rational(3n, 2n),
         power: rational(12n),
@@ -414,6 +411,27 @@ describe('RateService', () => {
       );
       expect(step.belts).toBeUndefined();
       expect(step.wagons).toBeUndefined();
+    });
+
+    it('should calculate including stack', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: Mocks.item1.id,
+        items: Mocks.beltSpeed[ItemId.ExpressTransportBelt],
+        belts: rational.zero,
+      };
+      service.calculateBelts(
+        step,
+        spread(Mocks.itemsStateInitial, {
+          [Mocks.item1.id]: spread(Mocks.itemsStateInitial[Mocks.item1.id], {
+            stack: rational(2n),
+          }),
+        }),
+        Mocks.beltSpeed,
+        Mocks.adjustedDataset,
+      );
+      expect(step.belts).toEqual(rational(1n, 2n));
+      expect(step.wagons).toEqual(rational(9n, 400n));
     });
   });
 

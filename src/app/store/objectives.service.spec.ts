@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 
 import { spread } from '~/helpers';
 import { DisplayRate } from '~/models/enum/display-rate';
-import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { PowerUnit } from '~/models/enum/power-unit';
@@ -172,7 +171,11 @@ describe('ObjectivesService', () => {
         },
       ]);
       spyOn(service.recipesSvc, 'adjustedDataset').and.returnValue(
-        spread(Mocks.adjustedDataset, { game: Game.DysonSphereProgram }),
+        spread(Mocks.adjustedDataset, {
+          machineEntities: spread(Mocks.adjustedDataset.machineEntities, {
+            [ItemId.MiningMachine]: { totalRecipe: true },
+          }),
+        }),
       );
       const result = service.totals();
       expect(result).toEqual({

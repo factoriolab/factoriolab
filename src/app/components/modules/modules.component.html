@@ -3,6 +3,8 @@
     <div class="p-inputgroup">
       <lab-input-number
         width="3rem"
+        [pTooltip]="'modules.eachTooltip' | translate"
+        tooltipPosition="top"
         [value]="entry.count ?? rational.zero"
         [maximum]="maximum()[i]"
         [disabled]="entry.id === ItemId.Module"

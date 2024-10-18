@@ -49,6 +49,15 @@ describe('DataService', () => {
         Mocks.modHash,
       );
     });
+
+    it('should handle missing data', () => {
+      TestBed.flushEffects();
+      spyOn(service.error$, 'next');
+      http
+        .expectOne('data/1.1/data.json')
+        .flush('', { status: 404, statusText: 'error' });
+      expect(service.error$.next).toHaveBeenCalled();
+    });
   });
 
   describe('requestI18n', () => {

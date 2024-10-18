@@ -15,7 +15,7 @@ import { ToastModule } from 'primeng/toast';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
 
-// istanbul ignore next
+// istanbul ignore next: Don't test empty function override
 /** Allow entering spaces inside orderlist items */
 OrderList.prototype.onSpaceKey = function (): void {
   // Ignore space key

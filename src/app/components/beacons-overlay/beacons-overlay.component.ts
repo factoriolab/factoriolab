@@ -56,7 +56,7 @@ export class BeaconsOverlayComponent extends OverlayComponent {
   options = this.settingsSvc.options;
 
   beacons = signal<BeaconSettings[]>([]);
-  recipeId = signal<string | undefined>(undefined);
+  recipeId = signal<Optional<string>>(undefined);
   rational = rational;
 
   show(event: Event, values: BeaconSettings[], recipeId?: string): void {

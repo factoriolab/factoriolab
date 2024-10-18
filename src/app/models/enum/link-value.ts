@@ -1,6 +1,6 @@
 import { SelectItem } from 'primeng/api';
 
-import { GameInfo } from '../game-info';
+import { Flag } from '../flags';
 
 export enum LinkValue {
   None = 0,
@@ -11,7 +11,7 @@ export enum LinkValue {
   Machines = 5,
 }
 
-export function linkValueOptions(gameInfo: GameInfo): SelectItem<LinkValue>[] {
+export function linkValueOptions(flags: Set<Flag>): SelectItem<LinkValue>[] {
   const result: SelectItem<LinkValue>[] = [
     { label: 'options.linkValue.none', value: LinkValue.None },
     { label: 'options.linkValue.percent', value: LinkValue.Percent },
@@ -21,7 +21,7 @@ export function linkValueOptions(gameInfo: GameInfo): SelectItem<LinkValue>[] {
     { label: 'options.linkValue.machines', value: LinkValue.Machines },
   ];
 
-  if (!gameInfo.flags.has('wagons'))
+  if (!flags.has('wagons'))
     return result.filter((i) => i.value !== LinkValue.Wagons);
 
   return result;

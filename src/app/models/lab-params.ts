@@ -43,6 +43,8 @@ export interface LabParams {
   ifw?: string;
   /** `Rational` Flow rate */
   ifr?: string;
+  /** `Rational` Stack */
+  ist?: string;
   /** `Set` Excluded recipes */
   rex?: string;
   /** `Set` Checked recipes */

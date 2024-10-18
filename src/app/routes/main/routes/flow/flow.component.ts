@@ -410,8 +410,7 @@ export class FlowComponent implements AfterViewInit {
     return coalesce(d.y1, 0) - coalesce(d.y0, 0);
   }
 
-  /* Don't test dependencies (file-saver/cytoscape) */
-  /* istanbul ignore next */
+  // istanbul ignore next: Don't test dependencies (file-saver/cytoscape)
   saveCytoscapePng(cy: cytoscape.Core): void {
     saveAs(cy.png(), 'factoriolab_flow.png');
   }
