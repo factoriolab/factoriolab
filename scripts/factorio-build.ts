@@ -2,6 +2,7 @@ import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
+import { data } from 'src/data';
 
 import { coalesce, spread } from '~/helpers';
 import { CategoryJson } from '~/models/data/category';
@@ -12,6 +13,7 @@ import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
 import { RecipeJson } from '~/models/data/recipe';
 import { TechnologyJson } from '~/models/data/technology';
+import { flags } from '~/models/flags';
 import { Entities } from '~/models/utils';
 
 import {
@@ -58,13 +60,13 @@ import {
   addEntityValue,
   coerceArray,
   coerceString,
-  emptyModHash,
   getEntityMap,
   getIconText,
   getIngredients,
   getItemMap,
   getLastIngredient,
   getVersion,
+  updateHash,
 } from './helpers/data.helpers';
 import { getJsonData, getLocale } from './helpers/file.helpers';
 import { logTime, logWarn } from './helpers/log.helpers';
@@ -91,13 +93,17 @@ import {
  * existing defaults and append to the hash list.
  */
 
-const mod = process.argv[2];
-let mode: 'normal' | 'expensive' = 'normal';
-if (!mod) {
+const modId = process.argv[2];
+if (!modId)
   throw new Error(
     'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
   );
-}
+
+const mod = data.mods.find((m) => m.id === modId);
+if (!mod)
+  throw new Error(
+    'Please define this mod set in `src/data/index.ts` before running build.',
+  );
 
 // Set up paths
 const appDataPath =
@@ -109,17 +115,16 @@ const scriptOutputPath = `${factorioPath}/script-output`;
 const dataRawPath = `${scriptOutputPath}/data-raw-dump.json`;
 const tempPath = './scripts/temp';
 const tempIconsPath = `${tempPath}/icons`;
-const modPath = `./src/data/${mod}`;
+const modPath = `./src/data/${modId}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
 
-/** Check whether this is an existing mod set using expensive mode */
-if (fs.existsSync(modDataPath)) {
-  const oldData = getJsonData(modDataPath) as ModData;
-  if (oldData.expensive) {
-    mode = 'expensive';
-    console.log('Note: Using expensive mode data for this mod set');
-  }
+let mode: 'normal' | 'expensive' = 'normal';
+
+const modFlags = flags[mod.flags];
+if (modFlags.has('expensive')) {
+  mode = 'expensive';
+  console.log('Note: Using expensive mode data for this mod set');
 }
 
 async function processMod(): Promise<void> {
@@ -534,22 +539,10 @@ async function processMod(): Promise<void> {
     resourceDuplicate: [],
   };
 
-  const modHashReport = emptyModHash();
-  function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
-    if (hash[key] == null) hash[key] = [];
-
-    if (!hash[key].includes(id)) {
-      hash[key].push(id);
-      modHashReport[key].push(id);
-    }
-  }
-
   function writeData(): void {
     if (fs.existsSync(modDataPath)) {
       const oldData = getJsonData(modDataPath) as ModData;
       const oldHash = getJsonData(modHashPath) as ModHash;
-
-      if (mode === 'expensive') modData.expensive = true;
 
       modData.defaults = oldData.defaults;
 
@@ -561,27 +554,8 @@ async function processMod(): Promise<void> {
           );
       }
 
-      modData.items.forEach((i) => {
-        addIfMissing(oldHash, 'items', i.id);
-
-        if (i.beacon) addIfMissing(oldHash, 'beacons', i.id);
-        if (i.belt) addIfMissing(oldHash, 'belts', i.id);
-        if (i.fuel) addIfMissing(oldHash, 'fuels', i.id);
-        if (i.cargoWagon || i.fluidWagon) addIfMissing(oldHash, 'wagons', i.id);
-        if (i.machine) addIfMissing(oldHash, 'machines', i.id);
-        if (i.module) addIfMissing(oldHash, 'modules', i.id);
-        if (i.technology) addIfMissing(oldHash, 'technologies', i.id);
-      });
-
-      modData.recipes.forEach((r) => {
-        addIfMissing(oldHash, 'recipes', r.id);
-      });
-
+      updateHash(modData, oldHash, modFlags);
       fs.writeFileSync(modHashPath, JSON.stringify(oldHash));
-      fs.writeFileSync(
-        `${tempPath}/hash-update-report.json`,
-        JSON.stringify(modHashReport),
-      );
     } else {
       const modHash: ModHash = {
         items: modData.items.map((i) => i.id),

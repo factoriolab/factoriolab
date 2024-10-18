@@ -6,7 +6,16 @@ import {
   PrototypeBase,
 } from 'scripts/factorio.models';
 
+import { ItemJson } from '~/models/data/item';
+import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
+import {
+  itemHasQuality,
+  Quality,
+  qualityId,
+  recipeHasQuality,
+} from '~/models/enum/quality';
+import { Flag } from '~/models/flags';
 import { Entities } from '~/models/utils';
 
 import {
@@ -186,4 +195,60 @@ export function emptyModHash(): ModHash {
     technologies: [],
     recipes: [],
   };
+}
+
+export function addIfMissing(
+  hash: ModHash,
+  key: keyof ModHash,
+  id: string,
+): void {
+  if (hash[key] == null) hash[key] = [];
+  if (!hash[key].includes(id)) hash[key].push(id);
+}
+
+export function updateHashItem(hash: ModHash, i: ItemJson, id: string): void {
+  addIfMissing(hash, 'items', id);
+  if (i.beacon) addIfMissing(hash, 'beacons', id);
+  if (i.belt) addIfMissing(hash, 'belts', id);
+  if (i.fuel) addIfMissing(hash, 'fuels', id);
+  if (i.cargoWagon || i.fluidWagon) addIfMissing(hash, 'wagons', id);
+  if (i.machine) addIfMissing(hash, 'machines', id);
+  if (i.module) addIfMissing(hash, 'modules', id);
+  if (i.technology) addIfMissing(hash, 'technologies', id);
+}
+
+const QUALITIES = [
+  Quality.Uncommon,
+  Quality.Rare,
+  Quality.Epic,
+  Quality.Legendary,
+];
+
+export function updateHash(
+  data: ModData,
+  hash: ModHash,
+  flags: Set<Flag>,
+): void {
+  data.items.forEach((i) => {
+    updateHashItem(hash, i, i.id);
+    if (flags.has('quality') && itemHasQuality(i)) {
+      QUALITIES.forEach((q) => {
+        updateHashItem(hash, i, qualityId(i.id, q));
+      });
+    }
+  });
+
+  const itemData = data.items.reduce((e: Entities<ItemJson>, i) => {
+    e[i.id] = i;
+    return e;
+  }, {});
+
+  data.recipes.forEach((r) => {
+    addIfMissing(hash, 'recipes', r.id);
+    if (flags.has('quality') && recipeHasQuality(r, itemData)) {
+      QUALITIES.forEach((q) => {
+        addIfMissing(hash, 'recipes', qualityId(r.id, q));
+      });
+    }
+  });
 }

@@ -34,7 +34,12 @@ import { linkValueOptions } from '~/models/enum/link-value';
 import { MaximizeType } from '~/models/enum/maximize-type';
 import { objectiveUnitOptions } from '~/models/enum/objective-unit';
 import { Preset, presetOptions } from '~/models/enum/preset';
-import { Quality, qualityId } from '~/models/enum/quality';
+import {
+  itemHasQuality,
+  Quality,
+  qualityId,
+  recipeHasQuality,
+} from '~/models/enum/quality';
 import { researchBonusValue } from '~/models/enum/research-bonus';
 import { flags } from '~/models/flags';
 import { gameInfo } from '~/models/game-info';
@@ -506,7 +511,7 @@ export class SettingsService extends Store<SettingsState> {
       qualities.forEach((quality) => {
         for (let i = 0; i < itemsLen; i++) {
           const item = items[i];
-          if (item.technology != null || item.stack == null) continue;
+          if (!itemHasQuality(item)) continue;
 
           const id = qualityId(item.id, quality);
           itemQIds.add(id);
@@ -516,15 +521,7 @@ export class SettingsService extends Store<SettingsState> {
 
         for (let i = 0; i < recipesLen; i++) {
           const recipe = recipes[i];
-          if (
-            recipe.part != null ||
-            recipe.isMining ||
-            recipe.isTechnology ||
-            recipe.isBurn ||
-            !Object.keys(recipe.in).some((k) => itemData[k].stack) ||
-            !Object.keys(recipe.out).some((k) => itemData[k].stack)
-          )
-            continue;
+          if (!recipeHasQuality(recipe, itemData)) continue;
 
           const id = qualityId(recipe.id, quality);
           recipeQIds.add(id);

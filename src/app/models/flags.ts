@@ -4,6 +4,7 @@ export type Flag =
   | 'consumptionAsDrain'
   | 'diminishingBeacons'
   | 'duplicators'
+  | 'expensive'
   | 'fuels'
   | 'hideMachineSettings'
   | 'inactiveDrain'
@@ -30,6 +31,7 @@ export type FlagSet =
   | 'spa'
   | '2.0'
   | '1.1'
+  | '1.1e'
   | 'dsp'
   | 'sfy'
   | 'coi'
@@ -71,6 +73,23 @@ export const flags: Record<FlagSet, Set<Flag>> = {
   ]),
   '1.1': new Set([
     'beacons',
+    'flowRate',
+    'fluidCostRatio',
+    'fuels',
+    'inserterEstimation',
+    'minimumRecipeTime',
+    'miningDepletion',
+    'miningProductivity',
+    'miningTechnologyBypassLimitations',
+    'mods',
+    'pollution',
+    'power',
+    'researchSpeed',
+    'wagons',
+  ]),
+  '1.1e': new Set([
+    'beacons',
+    'expensive',
     'flowRate',
     'fluidCostRatio',
     'fuels',

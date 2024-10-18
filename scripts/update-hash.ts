@@ -1,53 +1,35 @@
 import fs from 'fs';
+import { data } from 'src/data';
 
 import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
+import { flags } from '~/models/flags';
 
+import { updateHash } from './helpers/data.helpers';
 import { getJsonData } from './helpers/file.helpers';
 
-const mod = process.argv[2];
+const modId = process.argv[2];
 
-if (!mod) {
+if (!modId) {
   throw new Error(
     'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
   );
 }
 
-const modPath = `./src/data/${mod}`;
+const mod = data.mods.find((m) => m.id === modId);
+if (!mod)
+  throw new Error(
+    'Please define this mod set in `src/data/index.ts` before running build.',
+  );
+
+const modPath = `./src/data/${modId}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
 
 const modData = getJsonData(modDataPath) as ModData;
 const modHash = getJsonData(modHashPath) as ModHash;
+const modFlags = flags[mod.flags];
 
-function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
-  if (hash[key] == null) hash[key] = [];
-
-  if (!hash[key].includes(id)) hash[key].push(id);
-}
-
-if (modData.defaults?.excludedRecipes) {
-  // Filter excluded recipes for only recipes that exist
-  modData.defaults.excludedRecipes = modData.defaults.excludedRecipes.filter(
-    (e) => modData.recipes.some((r) => r.id === e),
-  );
-}
-
-modData.items.forEach((i) => {
-  addIfMissing(modHash, 'items', i.id);
-
-  if (i.beacon) addIfMissing(modHash, 'beacons', i.id);
-  if (i.belt) addIfMissing(modHash, 'belts', i.id);
-  if (i.fuel) addIfMissing(modHash, 'fuels', i.id);
-  if (i.cargoWagon || i.fluidWagon) addIfMissing(modHash, 'wagons', i.id);
-  if (i.machine) addIfMissing(modHash, 'machines', i.id);
-  if (i.module) addIfMissing(modHash, 'modules', i.id);
-  if (i.technology) addIfMissing(modHash, 'technologies', i.id);
-});
-
-modData.recipes.forEach((r) => {
-  addIfMissing(modHash, 'recipes', r.id);
-});
+updateHash(modData, modHash, modFlags);
 
 fs.writeFileSync(modHashPath, JSON.stringify(modHash));
-fs.writeFileSync(modDataPath, JSON.stringify(modData));
