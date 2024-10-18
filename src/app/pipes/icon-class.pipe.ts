@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { QUALITY_REGEX } from '~/models/constants';
 import { IdType } from '~/models/enum/id-type';
+import { QUALITY_REGEX } from '~/models/enum/quality';
 import { Optional } from '~/models/utils';
 
 @Pipe({ name: 'iconClass', standalone: true })

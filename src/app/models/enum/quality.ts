@@ -17,3 +17,9 @@ export const qualityOptions: SelectItem<Quality>[] = [
   { value: Quality.Epic, label: 'options.quality.epic' },
   { value: Quality.Legendary, label: 'options.quality.legendary' },
 ];
+
+export const QUALITY_REGEX = /^(.*)\((\d)\)$/;
+
+export function qualityId(id: string, quality: Quality): string {
+  return `${id}(${quality.toString()})`;
+}

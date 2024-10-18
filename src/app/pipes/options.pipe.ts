@@ -11,17 +11,14 @@ export class OptionsPipe implements PipeTransform {
     entities: Entities<{ name: string }>,
     includeEmptyModule = false,
   ): SelectItem[] {
-    if (value == null) {
-      return [];
-    }
+    if (value == null) return [];
 
     const list = value.map(
       (i): SelectItem => ({ label: entities[i].name, value: i }),
     );
 
-    if (includeEmptyModule) {
+    if (includeEmptyModule)
       list.unshift({ label: 'None', value: ItemId.Module });
-    }
 
     return list;
   }

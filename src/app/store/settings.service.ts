@@ -34,7 +34,7 @@ import { linkValueOptions } from '~/models/enum/link-value';
 import { MaximizeType } from '~/models/enum/maximize-type';
 import { objectiveUnitOptions } from '~/models/enum/objective-unit';
 import { Preset, presetOptions } from '~/models/enum/preset';
-import { Quality } from '~/models/enum/quality';
+import { Quality, qualityId } from '~/models/enum/quality';
 import { researchBonusValue } from '~/models/enum/research-bonus';
 import { flags } from '~/models/flags';
 import { gameInfo } from '~/models/game-info';
@@ -263,15 +263,24 @@ export class SettingsService extends Store<SettingsState> {
       categories: getIdOptions(data.categoryIds, data.categoryEntities),
       items: getIdOptions(data.itemIds, data.itemEntities),
       beacons: getIdOptions(data.beaconIds, data.itemEntities),
-      belts: getIdOptions(data.beltIds, data.itemEntities),
-      pipes: getIdOptions(data.pipeIds, data.itemEntities),
-      cargoWagons: getIdOptions(data.cargoWagonIds, data.itemEntities),
-      fluidWagons: getIdOptions(data.fluidWagonIds, data.itemEntities),
+      belts: getIdOptions(data.beltIds, data.itemEntities, data.itemQIds),
+      pipes: getIdOptions(data.pipeIds, data.itemEntities, data.itemQIds),
+      cargoWagons: getIdOptions(
+        data.cargoWagonIds,
+        data.itemEntities,
+        data.itemQIds,
+      ),
+      fluidWagons: getIdOptions(
+        data.fluidWagonIds,
+        data.itemEntities,
+        data.itemQIds,
+      ),
       fuels: getIdOptions(data.fuelIds, data.itemEntities),
       modules: getIdOptions(data.moduleIds, data.itemEntities),
       proliferatorModules: getIdOptions(
         data.proliferatorModuleIds,
         data.itemEntities,
+        new Set(),
         true,
       ),
       machines: getIdOptions(data.machineIds, data.itemEntities),
@@ -475,64 +484,73 @@ export class SettingsService extends Store<SettingsState> {
         r.icon = firstOutItem.icon ?? firstOutId;
       });
 
-    let itemQIds = new Set<string>();
-    let recipeQIds = new Set<string>();
+    const itemQIds = new Set<string>();
+    const recipeQIds = new Set<string>();
     const _flags = flags[coalesce(mod?.flags, DEFAULT_MOD)];
     if (_flags.has('quality')) {
-      const qItems: Item[] = [];
-      const qRecipes: Recipe[] = [];
-      [Quality.Uncommon, Quality.Rare, Quality.Epic, Quality.Legendary].forEach(
-        (quality) => {
-          qItems.push(
-            ...items
-              .filter((i) => i.technology == null && i.stack)
-              .map((i) =>
-                spread(i, {
-                  id: `${i.id}(${quality.toString()})`,
-                  quality,
-                }),
-              ),
-          );
-          qRecipes.push(
-            ...recipes
-              .filter(
-                (r) =>
-                  r.part == null &&
-                  !r.isMining &&
-                  !r.isTechnology &&
-                  !r.isBurn &&
-                  Object.keys(r.in).some((k) => itemData[k].stack) &&
-                  Object.keys(r.out).some((k) => itemData[k].stack),
-              )
-              .map((r) => {
-                const qStr = quality.toString();
-                const qIn = this.qualityEntities(r.in, quality, itemData);
-                const qOut = this.qualityEntities(r.out, quality, itemData);
-                let qCatalyst: Optional<Entities<Rational>>;
-                if (r.catalyst)
-                  qCatalyst = this.qualityEntities(
-                    r.catalyst,
-                    quality,
-                    itemData,
-                  );
+      const qualities = [
+        Quality.Uncommon,
+        Quality.Rare,
+        Quality.Epic,
+        Quality.Legendary,
+      ];
+      recipes.forEach((r) => {
+        const len = r.producers.length;
+        qualities.forEach((q) => {
+          for (let i = 0; i < len; i++)
+            r.producers.push(qualityId(r.producers[i], q));
+        });
+      });
+      const itemsLen = items.length;
+      const recipesLen = recipes.length;
+      qualities.forEach((quality) => {
+        for (let i = 0; i < itemsLen; i++) {
+          const item = items[i];
+          if (item.technology != null || item.stack == null) continue;
 
-                return spread(r, {
-                  id: `${r.id}(${qStr})`,
-                  in: qIn,
-                  out: qOut,
-                  catalyst: qCatalyst,
-                  quality,
-                });
-              }),
+          const id = qualityId(item.id, quality);
+          itemQIds.add(id);
+          itemIds.push(id);
+          items.push(spread(item, { id, quality }));
+        }
+
+        for (let i = 0; i < recipesLen; i++) {
+          const recipe = recipes[i];
+          if (
+            recipe.part != null ||
+            recipe.isMining ||
+            recipe.isTechnology ||
+            recipe.isBurn ||
+            !Object.keys(recipe.in).some((k) => itemData[k].stack) ||
+            !Object.keys(recipe.out).some((k) => itemData[k].stack)
+          )
+            continue;
+
+          const id = qualityId(recipe.id, quality);
+          recipeQIds.add(id);
+          recipeIds.push(id);
+
+          const qIn = this.qualityEntities(recipe.in, quality, itemData);
+          const qOut = this.qualityEntities(recipe.out, quality, itemData);
+          let qCatalyst: Optional<Entities<Rational>>;
+          if (recipe.catalyst)
+            qCatalyst = this.qualityEntities(
+              recipe.catalyst,
+              quality,
+              itemData,
+            );
+
+          recipes.push(
+            spread(recipe, {
+              id,
+              in: qIn,
+              out: qOut,
+              catalyst: qCatalyst,
+              quality,
+            }),
           );
-        },
-      );
-      itemQIds = new Set(qItems.map((i) => i.id));
-      itemIds.push(...itemQIds);
-      items.push(...qItems);
-      recipeQIds = new Set(qRecipes.map((r) => r.id));
-      recipeIds.push(...recipeQIds);
-      recipes.push(...qRecipes);
+        }
+      });
     }
 
     // Filter for item types
@@ -746,9 +764,8 @@ export class SettingsService extends Store<SettingsState> {
     quality: Quality,
     itemData: Entities<ItemJson>,
   ): Entities<Rational> {
-    const qStr = quality.toString();
     return Object.keys(entities).reduce((e: Entities<Rational>, k) => {
-      if (itemData[k].stack) e[`${k}(${qStr})`] = entities[k];
+      if (itemData[k].stack) e[qualityId(k, quality)] = entities[k];
       else e[k] = entities[k];
       return e;
     }, {});

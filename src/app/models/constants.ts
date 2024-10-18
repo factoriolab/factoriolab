@@ -16,4 +16,3 @@ export const ZMAP = ZBASE64ABC.split('').reduce((e: Entities<number>, c, i) => {
   e[c] = i;
   return e;
 }, {});
-export const QUALITY_REGEX = /^(.*)\((\d)\)$/;
