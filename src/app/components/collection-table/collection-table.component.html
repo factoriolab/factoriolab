@@ -2,7 +2,7 @@
   [value]="value()"
   labPagedTable
   [paginator]="value().length > 10"
-  [globalFilterFields]="['group.id']"
+  [globalFilterFields]="['category.id']"
 >
   <ng-template pTemplate="header">
     <tr>
@@ -10,10 +10,10 @@
         <span>{{ 'data.name' | translate }}</span>
         <p-sortIcon field="name"></p-sortIcon>
       </th>
-      @if (type() !== 'group') {
-        <th pSortableColumn="group.name">
-          <span>{{ 'data.group' | translate }}</span>
-          <p-sortIcon field="group.name"></p-sortIcon>
+      @if (type() !== 'category') {
+        <th pSortableColumn="category.name">
+          <span>{{ 'data.category' | translate }}</span>
+          <p-sortIcon field="category.name"></p-sortIcon>
         </th>
       }
     </tr>
@@ -26,9 +26,9 @@
             matchMode="contains"
           ></p-columnFilter>
         </th>
-        @if (type() !== 'group') {
+        @if (type() !== 'category') {
           <th>
-            <p-columnFilter field="group.id" matchMode="in">
+            <p-columnFilter field="category.id" matchMode="in">
               <ng-template
                 pTemplate="filter"
                 let-value
@@ -37,7 +37,7 @@
                 <p-multiSelect
                   appendTo="body"
                   [ngModel]="value"
-                  [options]="options().groups"
+                  [options]="options().categories"
                   [maxSelectedLabels]="1"
                   [selectedItemsLabel]="'data.selectedLabel' | translate"
                   [placeholder]="'data.any' | translate"
@@ -64,11 +64,11 @@
           ></button>
         </a>
       </td>
-      @if (type() !== 'group') {
+      @if (type() !== 'category') {
         <td>
-          @if (obj.group) {
+          @if (obj.category) {
             <a
-              [routerLink]="'/data/groups/' + obj.group.id"
+              [routerLink]="'/data/categories/' + obj.category.id"
               queryParamsHandling="preserve"
             >
               <button
@@ -76,8 +76,8 @@
                 pRipple
                 type="button"
                 class="p-button-link"
-                [label]="obj.group.name"
-                [icon]="obj.group.id | iconSmClass: 'group'"
+                [label]="obj.category.name"
+                [icon]="obj.category.id | iconSmClass: 'category'"
               ></button>
             </a>
           }

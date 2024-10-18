@@ -69,7 +69,7 @@ export const mod = spread(modInfo as Mod, modData);
 export let defaults: Defaults;
 export let getDataset: () => Dataset;
 export let dataset: Dataset;
-export let groupId: string;
+export let categoryId: string;
 export let item1: Item;
 export let item2: Item;
 export let recipe1: Recipe;
@@ -337,7 +337,7 @@ beforeAll(() => {
     );
   };
   dataset = getDataset();
-  groupId = dataset.groupIds[0];
+  categoryId = dataset.categoryIds[0];
   item1 = dataset.itemEntities[dataset.itemIds[0]];
   item2 = dataset.itemEntities[dataset.itemIds[1]];
   recipe1 = dataset.recipeEntities[dataset.recipeIds[0]];

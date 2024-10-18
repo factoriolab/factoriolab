@@ -16,8 +16,8 @@ describe('CollectionTableComponent', () => {
     fixture = TestBed.createComponent(CollectionTableComponent);
     component = fixture.componentInstance;
     setInputs(fixture, {
-      ids: Mocks.adjustedDataset.groupIds,
-      type: 'group',
+      ids: Mocks.adjustedDataset.categoryIds,
+      type: 'category',
     });
   });
 
@@ -27,7 +27,7 @@ describe('CollectionTableComponent', () => {
 
   describe('route', () => {
     it('should get the correct parent route for the collection', () => {
-      expect(component.route()).toContain('groups');
+      expect(component.route()).toContain('categories');
       setInputs(fixture, { type: 'item' });
       expect(component.route()).toContain('items');
       setInputs(fixture, { type: 'recipe' });
@@ -38,9 +38,9 @@ describe('CollectionTableComponent', () => {
   });
 
   describe('balue', () => {
-    it('should get an array of group collection items', () => {
+    it('should get an array of category collection items', () => {
       expect(component.value().length).toEqual(
-        Mocks.adjustedDataset.groupIds.length,
+        Mocks.adjustedDataset.categoryIds.length,
       );
     });
 

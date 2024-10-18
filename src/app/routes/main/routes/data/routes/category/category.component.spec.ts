@@ -2,21 +2,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, setInputs, TestModule } from '~/tests';
 
-import { GroupComponent } from './group.component';
+import { CategoryComponent } from './category.component';
 
-describe('GroupComponent', () => {
-  let component: GroupComponent;
-  let fixture: ComponentFixture<GroupComponent>;
+describe('CategoryComponent', () => {
+  let component: CategoryComponent;
+  let fixture: ComponentFixture<CategoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestModule, GroupComponent],
+      imports: [TestModule, CategoryComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(GroupComponent);
+    fixture = TestBed.createComponent(CategoryComponent);
     component = fixture.componentInstance;
     setInputs(fixture, {
-      id: Mocks.groupId,
+      id: Mocks.categoryId,
       collectionLabel: 'data.items',
     });
   });

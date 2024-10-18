@@ -12,7 +12,7 @@ import { Technology } from './technology';
 export interface ItemJson {
   id: string;
   name: string;
-  group: string;
+  category: string;
   row: number;
   stack?: number;
   beacon?: BeaconJson;
@@ -33,7 +33,7 @@ export interface ItemJson {
 export interface Item {
   id: string;
   name: string;
-  group: string;
+  category: string;
   row: number;
   stack?: Rational;
   beacon?: Beacon;
@@ -56,7 +56,7 @@ export function parseItem(json: ItemJson): Item {
   return {
     id: json.id,
     name: json.name,
-    group: json.group,
+    category: json.category,
     row: json.row,
     stack: rational(json.stack),
     beacon: parseBeacon(json.beacon),

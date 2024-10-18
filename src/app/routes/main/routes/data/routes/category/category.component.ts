@@ -3,14 +3,14 @@ import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 
 import { CollectionTableComponent } from '~/components/collection-table/collection-table.component';
-import { Group } from '~/models/data/group';
+import { Category } from '~/models/data/category';
 import { IconClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 
 import { DetailComponent } from '../../models/detail.component';
 
 @Component({
-  selector: 'lab-group',
+  selector: 'lab-category',
   standalone: true,
   imports: [
     BreadcrumbModule,
@@ -18,11 +18,13 @@ import { DetailComponent } from '../../models/detail.component';
     IconClassPipe,
     TranslatePipe,
   ],
-  templateUrl: './group.component.html',
+  templateUrl: './category.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GroupComponent extends DetailComponent {
-  obj = computed<Group | undefined>(() => this.data().groupEntities[this.id()]);
+export class CategoryComponent extends DetailComponent {
+  obj = computed<Category | undefined>(
+    () => this.data().categoryEntities[this.id()],
+  );
   breadcrumb = computed<MenuItem[]>(() => [
     this.parent() ?? {},
     { label: this.obj()?.name },
@@ -30,11 +32,11 @@ export class GroupComponent extends DetailComponent {
   itemIds = computed(() => {
     const data = this.data();
     const id = this.id();
-    return data.itemIds.filter((i) => data.itemEntities[i].group === id);
+    return data.itemIds.filter((i) => data.itemEntities[i].category === id);
   });
   recipeIds = computed(() => {
     const data = this.data();
     const id = this.id();
-    return data.recipeIds.filter((r) => data.recipeEntities[r].group === id);
+    return data.recipeIds.filter((r) => data.recipeEntities[r].category === id);
   });
 }

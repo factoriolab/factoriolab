@@ -1,7 +1,7 @@
-import { Group } from './data/group';
+import { Category } from './data/category';
 
 export interface CollectionItem {
   id: string;
   name: string;
-  group?: Group;
+  category?: Category;
 }

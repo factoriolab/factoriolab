@@ -13,7 +13,7 @@ import { TableModule } from 'primeng/table';
 
 import { PagedTableDirective } from '~/directives/paged-table.directive';
 import { CollectionItem } from '~/models/collection-item';
-import { Group } from '~/models/data/group';
+import { Category } from '~/models/data/category';
 import { Item } from '~/models/data/item';
 import { RecipeJson } from '~/models/data/recipe';
 import { IdType } from '~/models/enum/id-type';
@@ -22,7 +22,7 @@ import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { SettingsService } from '~/store/settings.service';
 
-type Entity = Group | Item | RecipeJson;
+type Entity = Category | Item | RecipeJson;
 
 @Component({
   selector: 'lab-collection-table',
@@ -58,8 +58,8 @@ export class CollectionTableComponent {
     if (useRelativePath) return '';
 
     switch (type) {
-      case 'group':
-        return '/data/groups/';
+      case 'category':
+        return '/data/categories/';
       case 'item':
         return '/data/items/';
       case 'recipe':
@@ -74,8 +74,8 @@ export class CollectionTableComponent {
 
     let entities: Entities<Entity>;
     switch (type) {
-      case 'group':
-        entities = data.groupEntities;
+      case 'category':
+        entities = data.categoryEntities;
         break;
       case 'item':
         entities = data.itemEntities;
@@ -93,8 +93,9 @@ export class CollectionTableComponent {
           name: entity.name,
         };
 
-        if (type !== 'group') {
-          obj.group = data.groupEntities[(entity as Item | RecipeJson).group];
+        if (type !== 'category') {
+          obj.category =
+            data.categoryEntities[(entity as Item | RecipeJson).category];
         }
 
         return obj;

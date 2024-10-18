@@ -29,7 +29,7 @@ describe('RecipeComponent', () => {
     it('should handle undefined recipe', () => {
       setInputs(fixture, { id: 'not-found' });
       const info = component.info();
-      expect(info.group).toBeUndefined();
+      expect(info.category).toBeUndefined();
       expect(info.ingredientIds).toEqual([]);
       expect(info.catalystIds).toEqual([]);
       expect(info.productIds).toEqual([]);

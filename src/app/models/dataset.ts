@@ -1,9 +1,9 @@
 import { Beacon } from './data/beacon';
 import { Belt } from './data/belt';
 import { CargoWagon } from './data/cargo-wagon';
+import { Category } from './data/category';
 import { FluidWagon } from './data/fluid-wagon';
 import { Fuel } from './data/fuel';
-import { Group } from './data/group';
 import { Icon } from './data/icon';
 import { Item } from './data/item';
 import { Machine } from './data/machine';
@@ -22,10 +22,10 @@ export interface Dataset {
   info: GameInfo;
   flags: Set<Flag>;
   version: Entities;
-  groupIds: string[];
-  groupEntities: Entities<Group>;
-  groupItemRows: Entities<string[][]>;
-  groupRecipeRows: Entities<string[][]>;
+  categoryIds: string[];
+  categoryEntities: Entities<Category>;
+  categoryItemRows: Entities<string[][]>;
+  categoryRecipeRows: Entities<string[][]>;
   iconFile: string;
   iconIds: string[];
   iconEntities: Entities<Icon>;

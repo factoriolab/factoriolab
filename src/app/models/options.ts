@@ -10,7 +10,7 @@ export function modOptions(game: Game): SelectItem<string>[] {
 }
 
 export interface Options {
-  groups: SelectItem<string>[];
+  categories: SelectItem<string>[];
   items: SelectItem<string>[];
   beacons: SelectItem<string>[];
   belts: SelectItem<string>[];

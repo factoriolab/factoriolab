@@ -50,7 +50,7 @@ export class RecipeComponent extends DetailComponent {
     const data = this.data();
     const recipe = data.recipeEntities[id];
     return {
-      group: data.groupEntities[coalesce(recipe?.group, '')],
+      category: data.categoryEntities[coalesce(recipe?.category, '')],
       ingredientIds: Object.keys(recipe?.in ?? {}),
       catalystIds: Object.keys(recipe?.catalyst ?? {}),
       productIds: Object.keys(recipe?.out ?? {}),

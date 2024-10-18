@@ -1,4 +1,4 @@
-export enum GroupId {
+export enum CategoryId {
   Combat = 'combat',
   Fluids = 'fluids',
   Intermediate = 'intermediate-products',

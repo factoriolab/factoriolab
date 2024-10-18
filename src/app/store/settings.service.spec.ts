@@ -233,7 +233,7 @@ describe('SettingsService', () => {
             {
               id: 'proliferator',
               name: 'Proliferator',
-              group: 'logistics',
+              category: 'logistics',
               row: 0,
               module: { sprays: 1 },
             },
@@ -242,12 +242,12 @@ describe('SettingsService', () => {
       );
       spyOn(service, 'i18n').and.returnValue(Mocks.modI18n);
       const result = service.dataset();
-      expect(result.groupIds.length).toBeGreaterThan(0);
-      expect(Object.keys(result.groupEntities).length).toEqual(
-        result.groupIds.length,
+      expect(result.categoryIds.length).toBeGreaterThan(0);
+      expect(Object.keys(result.categoryEntities).length).toEqual(
+        result.categoryIds.length,
       );
-      expect(Object.keys(result.groupItemRows).length).toEqual(
-        result.groupIds.length,
+      expect(Object.keys(result.categoryItemRows).length).toEqual(
+        result.categoryIds.length,
       );
       expect(result.iconIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.iconEntities).length).toEqual(
@@ -276,7 +276,7 @@ describe('SettingsService', () => {
             {
               id: 'id',
               name: 'Item',
-              group: 'logistics',
+              category: 'logistics',
               row: 0,
               beacon: {
                 effectivity: 1,
@@ -338,7 +338,7 @@ describe('SettingsService', () => {
     it('should handle data not loaded yet', () => {
       spyOn(service, 'mod').and.returnValue(undefined);
       const result = service.dataset();
-      expect(result.groupIds.length).toEqual(0);
+      expect(result.categoryIds.length).toEqual(0);
     });
   });
 
@@ -385,7 +385,7 @@ describe('SettingsService', () => {
   describe('options', () => {
     it('should return options', () => {
       const result = service.options();
-      expect(result.groups.length).toBeGreaterThan(0);
+      expect(result.categories.length).toBeGreaterThan(0);
     });
   });
 

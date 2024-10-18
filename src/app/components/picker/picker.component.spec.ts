@@ -1,7 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GroupId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
+import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { PickerComponent } from './picker.component';
 
@@ -137,15 +137,17 @@ describe('PickerComponent', () => {
     it('should skip if no search is specified', () => {
       component.search = '';
       component.inputSearch();
-      expect(component.groupIds).toEqual(Mocks.adjustedDataset.groupIds);
-      expect(component.groupRows).toEqual(Mocks.adjustedDataset.groupItemRows);
+      expect(component.categoryIds).toEqual(Mocks.adjustedDataset.categoryIds);
+      expect(component.categoryRows).toEqual(
+        Mocks.adjustedDataset.categoryItemRows,
+      );
     });
 
     it('should search items', () => {
       component.search = 'petrol';
       component.inputSearch();
-      expect(component.groupIds.length).toEqual(1);
-      expect(component.groupRows[GroupId.Fluids]).toEqual([
+      expect(component.categoryIds.length).toEqual(1);
+      expect(component.categoryRows[CategoryId.Fluids]).toEqual([
         [ItemId.PetroleumGas],
       ]);
     });

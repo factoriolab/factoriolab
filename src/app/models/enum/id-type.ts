@@ -1,1 +1,1 @@
-export type IdType = 'group' | 'item' | 'recipe';
+export type IdType = 'category' | 'item' | 'recipe';
