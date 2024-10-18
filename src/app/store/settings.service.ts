@@ -501,6 +501,7 @@ export class SettingsService extends Store<SettingsState> {
                   !r.isMining &&
                   !r.isTechnology &&
                   !r.isBurn &&
+                  Object.keys(r.in).some((k) => itemData[k].stack) &&
                   Object.keys(r.out).some((k) => itemData[k].stack),
               )
               .map((r) => {
