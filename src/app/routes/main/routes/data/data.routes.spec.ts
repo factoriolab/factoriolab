@@ -1,13 +1,13 @@
 import { DataComponent } from './data.component';
 import { routes } from './data.routes';
-import { CategoryComponent } from './routes/category/category.component';
+import { GroupComponent } from './routes/group/group.component';
 import { CollectionComponent } from './routes/collection/collection.component';
 import { ItemComponent } from './routes/item/item.component';
 import { RecipeComponent } from './routes/recipe/recipe.component';
 
 describe('Data Routes', () => {
   it('should load child routes', async () => {
-    expect(await routes[0].loadComponent!()).toEqual(CategoryComponent);
+    expect(await routes[0].loadComponent!()).toEqual(GroupComponent);
     expect(await routes[1].loadComponent!()).toEqual(CollectionComponent);
     expect(await routes[2].loadComponent!()).toEqual(ItemComponent);
     expect(await routes[3].loadComponent!()).toEqual(CollectionComponent);

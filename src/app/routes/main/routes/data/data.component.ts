@@ -30,9 +30,9 @@ export class DataComponent {
 
   collections: MenuItem[] = [
     {
-      label: 'data.categories',
-      routerLink: 'categories',
-      id: 'categoryIds',
+      label: 'data.groups',
+      routerLink: 'groups',
+      id: 'groupIds',
     },
     {
       label: 'data.items',

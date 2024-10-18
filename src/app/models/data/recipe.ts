@@ -7,7 +7,7 @@ import { Entities } from '../utils';
 export interface RecipeJson {
   id: string;
   name: string;
-  category: string;
+  group: string;
   row: number;
   time: number | string;
   producers: string[];
@@ -34,7 +34,7 @@ export interface RecipeJson {
 export interface Recipe {
   id: string;
   name: string;
-  category: string;
+  group: string;
   row: number;
   time: Rational;
   producers: string[];
@@ -65,7 +65,7 @@ export function parseRecipe(json: RecipeJson): Recipe {
   return {
     id: json.id,
     name: json.name,
-    category: json.category,
+    group: json.group,
     row: json.row,
     time: rational(json.time),
     producers: json.producers,

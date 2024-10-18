@@ -13,7 +13,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 
 import { CollectionTableComponent } from '~/components/collection-table/collection-table.component';
 import { coalesce, updateSetIds } from '~/helpers';
-import { Category } from '~/models/data/category';
+import { Group } from '~/models/data/group';
 import { Item } from '~/models/data/item';
 import { ItemId } from '~/models/enum/item-id';
 import { ItemState } from '~/models/settings/item-settings';
@@ -63,10 +63,10 @@ export class ItemComponent extends DetailComponent {
     this.parent() ?? {},
     { label: this.obj()?.name },
   ]);
-  category = computed<Category | undefined>(() => {
+  group = computed<Group | undefined>(() => {
     const id = this.id();
     const data = this.data();
-    return data.categoryEntities[coalesce(data.itemEntities[id]?.category, '')];
+    return data.groupEntities[coalesce(data.itemEntities[id]?.group, '')];
   });
   recipes = computed(() => {
     const id = this.id();

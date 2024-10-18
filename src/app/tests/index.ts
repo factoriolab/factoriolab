@@ -2,7 +2,7 @@ import * as Mocks from './mocks';
 
 export { Mocks };
 
-export * from './category-id';
+export * from './group-id';
 export * from './item-id';
 export * from './recipe-id';
 export * from './test.module';

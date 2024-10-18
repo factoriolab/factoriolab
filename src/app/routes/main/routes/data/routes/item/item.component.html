@@ -11,12 +11,12 @@
         <i class="lg" [class]="id() | iconClass: 'item'"></i>
       </td>
     </tr>
-    @if (category(); as category) {
+    @if (group(); as group) {
       <tr>
-        <th>{{ 'data.category' | translate }}</th>
+        <th>{{ 'data.group' | translate }}</th>
         <td>
           <a
-            [routerLink]="'/data/categories/' + obj.category"
+            [routerLink]="'/data/groups/' + obj.group"
             queryParamsHandling="preserve"
           >
             <button
@@ -24,8 +24,8 @@
               pRipple
               type="button"
               class="p-button-text"
-              [label]="category.name"
-              [icon]="obj.category | iconSmClass: 'category'"
+              [label]="group.name"
+              [icon]="obj.group | iconSmClass: 'group'"
             ></button>
           </a>
         </td>
@@ -348,7 +348,7 @@
         </td>
       </tr>
     }
-    @if (category() && itemSettings(); as itemSettings) {
+    @if (group() && itemSettings(); as itemSettings) {
       <tr>
         <th colspan="2">
           <div class="d-flex align-items-center justify-content-between">

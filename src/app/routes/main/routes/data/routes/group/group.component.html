@@ -1,7 +1,7 @@
 <p-breadcrumb [home]="home()" [model]="breadcrumb()"></p-breadcrumb>
 @if (obj(); as obj) {
   <h3>{{ obj.name }}</h3>
-  <i class="lg" [class]="id() | iconClass: 'category'"></i>
+  <i class="lg" [class]="id() | iconClass: 'group'"></i>
   <h3>{{ 'data.items' | translate }}</h3>
   <lab-collection-table [ids]="itemIds()" type="item"></lab-collection-table>
   <h3>{{ 'data.recipes' | translate }}</h3>

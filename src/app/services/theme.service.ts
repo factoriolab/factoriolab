@@ -103,14 +103,14 @@ export class ThemeService {
           css += `.${selector}.recipe::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
           css += this.appendLightStyle(icon, selector, '.recipe');
         });
-      data.categoryIds
-        .map((c) => data.categoryEntities[c])
+      data.groupIds
+        .map((c) => data.groupEntities[c])
         .filter(fnPropsNotNullish('icon'))
-        .forEach((category) => {
-          const icon = data.iconEntities[category.icon];
-          const selector = this.escapeSelector(category.id);
-          css += `.${selector}.category::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
-          css += this.appendLightStyle(icon, selector, '.category');
+        .forEach((group) => {
+          const icon = data.iconEntities[group.icon];
+          const selector = this.escapeSelector(group.id);
+          css += `.${selector}.group::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
+          css += this.appendLightStyle(icon, selector, '.group');
         });
       data.itemIds
         .map((i) => data.itemEntities[i])
@@ -128,12 +128,12 @@ export class ThemeService {
           const selector = this.escapeSelector(recipe.id);
           css += `.${selector}.recipe::before { content: "${recipe.iconText}"; } `;
         });
-      data.categoryIds
-        .map((i) => data.categoryEntities[i])
+      data.groupIds
+        .map((i) => data.groupEntities[i])
         .filter(fnPropsNotNullish('iconText'))
-        .forEach((category) => {
-          const selector = this.escapeSelector(category.id);
-          css += `.${selector}.category::before { content: "${category.iconText}"; } `;
+        .forEach((group) => {
+          const selector = this.escapeSelector(group.id);
+          css += `.${selector}.group::before { content: "${group.iconText}"; } `;
         });
       style.innerText = css;
       this.head.appendChild(style);

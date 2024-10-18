@@ -52,20 +52,20 @@
   </div>
   @if (visible) {
     <p-tabView [(activeIndex)]="activeIndex" [scrollable]="true">
-      @for (categoryId of categoryIds; track categoryId; let i = $index) {
+      @for (groupId of groupIds; track groupId; let i = $index) {
         <p-tabPanel [selected]="i === activeIndex">
           <ng-template pTemplate="header">
-            <i [class]="categoryId | iconSmClass: 'category'"></i>
+            <i [class]="groupId | iconSmClass: 'group'"></i>
             <span
               class="d-none d-lg-inline ms-2 ps-1 text-nowrap text-truncate"
-              >{{ categoryEntities[categoryId].name }}</span
+              >{{ groupEntities[groupId].name }}</span
             >
           </ng-template>
           <ng-template pTemplate="content">
             <p-scrollPanel
               [style]="{ height: 'calc(80vh - 213px)', minHeight: '300px' }"
             >
-              @for (ids of categoryRows[categoryId]; track ids) {
+              @for (ids of groupRows[groupId]; track ids) {
                 <div class="d-flex flex-wrap">
                   @for (id of ids; track id) {
                     <button

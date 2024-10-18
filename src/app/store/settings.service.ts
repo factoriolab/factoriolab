@@ -260,7 +260,7 @@ export class SettingsService extends Store<SettingsState> {
     const data = this.dataset();
 
     return {
-      categories: getIdOptions(data.categoryIds, data.categoryEntities),
+      groups: getIdOptions(data.groupIds, data.groupEntities),
       items: getIdOptions(data.itemIds, data.itemEntities),
       beacons: getIdOptions(data.beaconIds, data.itemEntities),
       belts: getIdOptions(data.beltIds, data.itemEntities),
@@ -415,8 +415,8 @@ export class SettingsService extends Store<SettingsState> {
     defaults: Optional<Defaults>,
   ): Dataset {
     // Map out entities with mods
-    const categoryEntities = toEntities(
-      coalesce(mod?.categories, []),
+    const groupEntities = toEntities(
+      coalesce(mod?.groups, []),
       {},
       environment.debug,
     );
@@ -440,11 +440,11 @@ export class SettingsService extends Store<SettingsState> {
 
     // Apply localization
     if (i18n) {
-      for (const i of Object.keys(i18n.categories).filter(
-        (i) => categoryEntities[i],
+      for (const i of Object.keys(i18n.groups).filter(
+        (i) => groupEntities[i],
       )) {
-        categoryEntities[i] = spread(categoryEntities[i], {
-          name: i18n.categories[i],
+        groupEntities[i] = spread(groupEntities[i], {
+          name: i18n.groups[i],
         });
       }
 
@@ -456,7 +456,7 @@ export class SettingsService extends Store<SettingsState> {
     }
 
     // Convert to id arrays
-    const categoryIds = Object.keys(categoryEntities);
+    const groupIds = Object.keys(groupEntities);
     const iconIds = Object.keys(iconEntities);
     const itemIds = Object.keys(itemData);
     const recipeIds = Object.keys(recipeData);
@@ -574,12 +574,12 @@ export class SettingsService extends Store<SettingsState> {
       .filter(fnPropsNotNullish('technology'))
       .map((r) => r.id);
 
-    // Calculate category item rows
-    const categoryItemRows: Entities<string[][]> = {};
-    for (const id of categoryIds) {
+    // Calculate group item rows
+    const groupItemRows: Entities<string[][]> = {};
+    for (const id of groupIds) {
       const rows: string[][] = [[]];
       const rowItems = items
-        .filter((i) => i.category === id)
+        .filter((i) => i.group === id)
         .sort((a, b) => a.row - b.row);
       if (rowItems.length) {
         let index = rowItems[0].row;
@@ -592,16 +592,16 @@ export class SettingsService extends Store<SettingsState> {
           rows[rows.length - 1].push(item.id);
         }
 
-        categoryItemRows[id] = rows;
+        groupItemRows[id] = rows;
       }
     }
 
     // Calculate recipe item rows
-    const categoryRecipeRows: Entities<string[][]> = {};
-    for (const id of categoryIds) {
+    const groupRecipeRows: Entities<string[][]> = {};
+    for (const id of groupIds) {
       const rows: string[][] = [[]];
       const rowRecipes = recipes
-        .filter((r) => r.category === id)
+        .filter((r) => r.group === id)
         .sort((a, b) => a.row - b.row);
       if (rowRecipes.length) {
         let index = rowRecipes[0].row;
@@ -614,7 +614,7 @@ export class SettingsService extends Store<SettingsState> {
           rows[rows.length - 1].push(recipe.id);
         }
 
-        categoryRecipeRows[id] = rows;
+        groupRecipeRows[id] = rows;
       }
     }
 
@@ -653,10 +653,10 @@ export class SettingsService extends Store<SettingsState> {
       info: gameInfo[game],
       flags: _flags,
       version: coalesce(mod?.version, {}),
-      categoryIds,
-      categoryEntities,
-      categoryItemRows,
-      categoryRecipeRows,
+      groupIds: groupIds,
+      groupEntities: groupEntities,
+      groupItemRows: groupItemRows,
+      groupRecipeRows: groupRecipeRows,
       iconFile,
       iconIds,
       iconEntities,

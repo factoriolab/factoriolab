@@ -11,12 +11,12 @@
         <i class="lg" [class]="id() | iconClass: 'recipe'"></i>
       </td>
     </tr>
-    @if (info().category; as category) {
+    @if (info().group; as group) {
       <tr>
-        <th>{{ 'data.category' | translate }}</th>
+        <th>{{ 'data.group' | translate }}</th>
         <td>
           <a
-            [routerLink]="'/data/categories/' + obj.category"
+            [routerLink]="'/data/groups/' + obj.group"
             queryParamsHandling="preserve"
           >
             <button
@@ -24,8 +24,8 @@
               pRipple
               type="button"
               class="p-button-text"
-              [label]="category.name"
-              [icon]="obj.category | iconSmClass: 'category'"
+              [label]="group.name"
+              [icon]="obj.group | iconSmClass: 'group'"
             ></button>
           </a>
         </td>

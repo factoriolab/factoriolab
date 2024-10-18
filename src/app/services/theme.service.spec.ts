@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { Theme } from '~/models/enum/theme';
-import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
+import { GroupId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { ThemeService } from './theme.service';
 
@@ -15,8 +15,8 @@ describe('ThemeService', () => {
     const data = Mocks.getAdjustedDataset();
     data.itemEntities[ItemId.Coal].icon = 'coal';
     data.recipeEntities[RecipeId.Coal].icon = 'coal';
-    data.categoryEntities[CategoryId.Combat].icon = 'pistol';
-    data.categoryEntities[CategoryId.Combat].iconText = 'test';
+    data.groupEntities[GroupId.Combat].icon = 'pistol';
+    data.groupEntities[GroupId.Combat].iconText = 'test';
     data.iconEntities['coal'].invertLight = true;
     data.iconEntities['pistol'].invertLight = true;
     localStorage.clear();

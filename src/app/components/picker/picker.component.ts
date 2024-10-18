@@ -20,7 +20,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { TabViewOverrideDirective } from '~/directives/tabview-override.directive';
 import { coalesce } from '~/helpers';
-import { Category } from '~/models/data/category';
+import { Group } from '~/models/data/group';
 import { Entities } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
@@ -70,13 +70,13 @@ export class PickerComponent extends DialogComponent {
   isMultiselect = false;
   selection: string | string[] | undefined;
   default: string | string[] | undefined;
-  categoryEntities: Entities<Category> = {};
-  categoryIds: string[] = [];
-  categoryRows: Entities<string[][]> = {};
+  groupEntities: Entities<Group> = {};
+  groupIds: string[] = [];
+  groupRows: Entities<string[][]> = {};
   // Preserve state prior to any filtering
   allSelectItems: SelectItem<string>[] = [];
-  allCategoryIds: string[] = [];
-  allCategoryRows: Entities<string[][]> = {};
+  allGroupIds: string[] = [];
+  allGroupRows: Entities<string[][]> = {};
   activeIndex = 0;
 
   clickOpen(
@@ -96,15 +96,15 @@ export class PickerComponent extends DialogComponent {
       this.selection = selection;
     }
     this.search = '';
-    this.categoryEntities = data.categoryEntities;
+    this.groupEntities = data.groupEntities;
     if (type === 'item') {
-      this.categoryRows = {};
-      data.categoryIds.forEach((c) => {
-        if (data.categoryItemRows[c]) {
-          this.categoryRows[c] = [];
-          data.categoryItemRows[c].forEach((r) => {
+      this.groupRows = {};
+      data.groupIds.forEach((c) => {
+        if (data.groupItemRows[c]) {
+          this.groupRows[c] = [];
+          data.groupItemRows[c].forEach((r) => {
             const row = r.filter((i) => allIdsSet.has(i));
-            if (row.length) this.categoryRows[c].push(row);
+            if (row.length) this.groupRows[c].push(row);
           });
         }
       });
@@ -113,26 +113,24 @@ export class PickerComponent extends DialogComponent {
         (i): SelectItem<string> => ({
           label: data.itemEntities[i].name,
           value: i,
-          title: data.itemEntities[i].category,
+          title: data.itemEntities[i].group,
         }),
       );
 
       if (Array.isArray(selection)) {
         this.allSelected = selection.length === 0;
       } else if (selection != null) {
-        const index = data.categoryIds.indexOf(
-          data.itemEntities[selection].category,
-        );
+        const index = data.groupIds.indexOf(data.itemEntities[selection].group);
         this.activeIndex = index;
       }
     } else {
-      this.categoryRows = {};
-      data.categoryIds.forEach((c) => {
-        if (data.categoryRecipeRows[c]) {
-          this.categoryRows[c] = [];
-          data.categoryRecipeRows[c].forEach((r) => {
+      this.groupRows = {};
+      data.groupIds.forEach((c) => {
+        if (data.groupRecipeRows[c]) {
+          this.groupRows[c] = [];
+          data.groupRecipeRows[c].forEach((r) => {
             const row = r.filter((i) => allIdsSet.has(i));
-            if (row.length) this.categoryRows[c].push(row);
+            if (row.length) this.groupRows[c].push(row);
           });
         }
       });
@@ -141,7 +139,7 @@ export class PickerComponent extends DialogComponent {
         (i): SelectItem<string> => ({
           label: data.recipeEntities[i].name,
           value: i,
-          title: data.recipeEntities[i].category,
+          title: data.recipeEntities[i].group,
         }),
       );
 
@@ -149,17 +147,15 @@ export class PickerComponent extends DialogComponent {
         this.allSelected = selection.length === 0;
         this.default = [...coalesce(data.defaults?.excludedRecipeIds, [])];
       } else if (selection) {
-        const index = data.categoryIds.indexOf(
-          data.recipeEntities[selection].category,
+        const index = data.groupIds.indexOf(
+          data.recipeEntities[selection].group,
         );
         this.activeIndex = index;
       }
     }
-    this.categoryIds = data.categoryIds.filter(
-      (c) => this.categoryRows[c]?.length,
-    );
-    this.allCategoryIds = this.categoryIds;
-    this.allCategoryRows = this.categoryRows;
+    this.groupIds = data.groupIds.filter((c) => this.groupRows[c]?.length);
+    this.allGroupIds = this.groupIds;
+    this.allGroupRows = this.groupRows;
     this.show();
 
     if (!this.contentSvc.isMobile()) {
@@ -204,8 +200,8 @@ export class PickerComponent extends DialogComponent {
 
   inputSearch(): void {
     if (!this.search) {
-      this.categoryIds = this.allCategoryIds;
-      this.categoryRows = this.allCategoryRows;
+      this.groupIds = this.allGroupIds;
+      this.groupRows = this.allGroupRows;
       return;
     }
 
@@ -217,23 +213,23 @@ export class PickerComponent extends DialogComponent {
       'contains',
     ) as SelectItem<string>[];
 
-    // Filter for matching category ids
-    // (Cache category on the SelectItem `title` field)
-    this.categoryIds = this.allCategoryIds.filter((c) =>
+    // Filter for matching group ids
+    // (Cache group on the SelectItem `title` field)
+    this.groupIds = this.allGroupIds.filter((c) =>
       filteredItems.some((i) => i.title === c),
     );
 
-    // Filter category rows
-    this.categoryRows = {};
+    // Filter group rows
+    this.groupRows = {};
     const ids = filteredItems.map((i) => i.value);
-    for (const c of this.categoryIds) {
-      // Filter each category row
-      this.categoryRows[c] = [];
-      for (const r of this.allCategoryRows[c])
-        this.categoryRows[c].push(r.filter((i) => ids.includes(i)));
+    for (const c of this.groupIds) {
+      // Filter each group row
+      this.groupRows[c] = [];
+      for (const r of this.allGroupRows[c])
+        this.groupRows[c].push(r.filter((i) => ids.includes(i)));
 
-      // Filter out empty category rows
-      this.categoryRows[c] = this.categoryRows[c].filter((r) => r.length > 0);
+      // Filter out empty group rows
+      this.groupRows[c] = this.groupRows[c].filter((r) => r.length > 0);
     }
 
     setTimeout(() => {

@@ -16,9 +16,9 @@ describe('CollectionComponent', () => {
     fixture = TestBed.createComponent(CollectionComponent);
     component = fixture.componentInstance;
     setInputs(fixture, {
-      label: 'data.categories',
-      type: 'category',
-      key: 'categoryIds',
+      label: 'data.groups',
+      type: 'group',
+      key: 'groupIds',
     });
   });
 

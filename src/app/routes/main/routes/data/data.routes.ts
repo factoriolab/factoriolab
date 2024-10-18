@@ -2,25 +2,23 @@ import { DataRoute } from './models/data-route';
 
 export const routes: DataRoute[] = [
   {
-    path: 'categories/:id',
+    path: 'groups/:id',
     loadComponent: () =>
-      import('./routes/category/category.component').then(
-        (c) => c.CategoryComponent,
-      ),
+      import('./routes/group/group.component').then((c) => c.GroupComponent),
     data: {
-      collectionLabel: 'data.categories',
+      collectionLabel: 'data.groups',
     },
   },
   {
-    path: 'categories',
+    path: 'groups',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
         (c) => c.CollectionComponent,
       ),
     data: {
-      label: 'data.categories',
-      type: 'category',
-      key: 'categoryIds',
+      label: 'data.groups',
+      type: 'group',
+      key: 'groupIds',
     },
   },
   {

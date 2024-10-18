@@ -1,7 +1,7 @@
 import { Entities } from '../utils';
 
 export interface ModI18n {
-  categories: Entities;
+  groups: Entities;
   items: Entities;
   recipes: Entities;
 }

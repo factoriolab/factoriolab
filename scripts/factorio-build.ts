@@ -4,8 +4,8 @@ import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
 import { coalesce, spread } from '~/helpers';
-import { CategoryJson } from '~/models/data/category';
 import { FuelJson } from '~/models/data/fuel';
+import { GroupJson } from '~/models/data/group';
 import { ItemJson } from '~/models/data/item';
 import { MachineJson } from '~/models/data/machine';
 import { ModData } from '~/models/data/mod-data';
@@ -519,7 +519,7 @@ async function processMod(): Promise<void> {
 
   const modData: ModData = {
     version: {},
-    categories: [],
+    groups: [],
     icons: [],
     items: [],
     recipes: [],
@@ -996,7 +996,7 @@ async function processMod(): Promise<void> {
         const itemTemp: ItemJson = {
           id,
           name: fluidLocale.names[proto.name],
-          category: group.name,
+          group: group.name,
           row: getItemRow(proto),
           icon,
           fuel,
@@ -1023,7 +1023,7 @@ async function processMod(): Promise<void> {
               modData.items.push({
                 id: `${id}-heat-fuel`,
                 name: itemTemp.name,
-                category: itemTemp.category,
+                group: itemTemp.group,
                 row: getItemRow(proto),
                 icon,
                 fuel: heatFuel,
@@ -1038,7 +1038,7 @@ async function processMod(): Promise<void> {
       modData.items.push({
         id: proto.name,
         name: entityLocale.names[proto.name],
-        category: group.name,
+        group: group.name,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         beacon: getBeacon(proto),
@@ -1056,7 +1056,7 @@ async function processMod(): Promise<void> {
       modData.items.push({
         id: proto.name,
         name: entityLocale.names[proto.name],
-        category: group.name,
+        group: group.name,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         machine: getMachine(proto, proto.name),
@@ -1065,7 +1065,7 @@ async function processMod(): Promise<void> {
       modData.items.push({
         id: proto.name,
         name: entityLocale.names[proto.name],
-        category: group.name,
+        group: group.name,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         belt: getBelt(proto),
@@ -1074,7 +1074,7 @@ async function processMod(): Promise<void> {
       modData.items.push({
         id: proto.name,
         name: entityLocale.names[proto.name],
-        category: group.name,
+        group: group.name,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         cargoWagon: getCargoWagon(proto),
@@ -1083,7 +1083,7 @@ async function processMod(): Promise<void> {
       modData.items.push({
         id: proto.name,
         name: entityLocale.names[proto.name],
-        category: group.name,
+        group: group.name,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         fluidWagon: getFluidWagon(proto),
@@ -1092,7 +1092,7 @@ async function processMod(): Promise<void> {
       const item: ItemJson = {
         id: proto.name,
         name: itemLocale.names[proto.name],
-        category: group.name,
+        group: group.name,
         stack: proto.stack_size,
         row: getItemRow(proto),
         icon: await getIcon(proto),
@@ -1401,7 +1401,7 @@ async function processMod(): Promise<void> {
           const recipe: RecipeJson = {
             id,
             name: recipeLocale.names[proto.name],
-            category: subgroup.group,
+            group: subgroup.group,
             row: getRecipeRow(proto),
             time: recipeData.energy_required ?? 0.5,
             producers,
@@ -1447,7 +1447,7 @@ async function processMod(): Promise<void> {
             name: `${itemLocale.names[pumpName]} : ${
               fluidLocale.names[proto.name]
             }`,
-            category: group.name,
+            group: group.name,
             row: getRecipeRow(proto),
             time: 1,
             in: {},
@@ -1485,7 +1485,7 @@ async function processMod(): Promise<void> {
             name: `${itemLocale.names[boilerName]} : ${
               fluidLocale.names[proto.name]
             }`,
-            category: group.name,
+            group: group.name,
             row: getRecipeRow(proto),
             time: round(energyReqd, 10),
             in: { [inputProto.name]: 1 },
@@ -1572,7 +1572,7 @@ async function processMod(): Promise<void> {
               const recipe: RecipeJson = {
                 id,
                 name,
-                category: group.name,
+                group: group.name,
                 row: getRecipeRow(proto),
                 time: 40.6, // Ignored for silo recipes in calculator
                 in: recipeIn,
@@ -1601,7 +1601,7 @@ async function processMod(): Promise<void> {
           name: `${itemLocale.names[proto.name]} : ${
             itemLocale.names[proto.burnt_result]
           }`,
-          category: group.name,
+          group: group.name,
           row: getRecipeRow(proto),
           time: 1,
           in: { [proto.name]: 0 },
@@ -1668,7 +1668,7 @@ async function processMod(): Promise<void> {
             name: isFluidPrototype(proto)
               ? fluidLocale.names[proto.name]
               : itemLocale.names[proto.name],
-            category: group.name,
+            group: group.name,
             row: getRecipeRow(proto),
             time: minable.mining_time,
             in: recipeIn,
@@ -1746,7 +1746,7 @@ async function processMod(): Promise<void> {
     const recipe: RecipeJson = {
       id,
       name: techLocale.names[techRaw.name],
-      category: 'technology',
+      group: 'technology',
       row,
       time: techData.unit.time,
       producers,
@@ -1761,7 +1761,7 @@ async function processMod(): Promise<void> {
     const item: ItemJson = {
       id,
       name: recipe.name,
-      category: recipe.category,
+      group: recipe.group,
       row,
       technology,
       icon: recipe.icon,
@@ -1780,12 +1780,12 @@ async function processMod(): Promise<void> {
 
   for (const id of groupsUsed) {
     const itemGroup = dataRaw['item-group'][id];
-    const category: CategoryJson = {
+    const group: GroupJson = {
       id,
       name: groupLocale.names[id],
       icon: await getIcon(itemGroup),
     };
-    modData.categories.push(category);
+    modData.groups.push(group);
   }
 
   let icon = 'lab';
@@ -1801,7 +1801,7 @@ async function processMod(): Promise<void> {
     icon = lab.icon;
   }
 
-  modData.categories.push({
+  modData.groups.push({
     id: 'technology',
     name: 'Technology',
     icon,
