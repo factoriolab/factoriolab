@@ -16,7 +16,7 @@ import { Belt } from '~/models/data/belt';
 import { CargoWagon } from '~/models/data/cargo-wagon';
 import { FluidWagon } from '~/models/data/fluid-wagon';
 import { Fuel } from '~/models/data/fuel';
-import { Item, parseItem } from '~/models/data/item';
+import { Item, ItemJson, parseItem } from '~/models/data/item';
 import { Machine } from '~/models/data/machine';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
@@ -34,6 +34,7 @@ import { linkValueOptions } from '~/models/enum/link-value';
 import { MaximizeType } from '~/models/enum/maximize-type';
 import { objectiveUnitOptions } from '~/models/enum/objective-unit';
 import { Preset, presetOptions } from '~/models/enum/preset';
+import { Quality } from '~/models/enum/quality';
 import { researchBonusValue } from '~/models/enum/research-bonus';
 import { flags } from '~/models/flags';
 import { gameInfo } from '~/models/game-info';
@@ -464,6 +465,75 @@ export class SettingsService extends Store<SettingsState> {
     const items = itemIds.map((i) => parseItem(itemData[i]));
     const recipes = recipeIds.map((r) => parseRecipe(recipeData[r]));
 
+    // Calculate missing implicit recipe icons
+    // For recipes with no icon, use icon of first output item
+    recipes
+      .filter((r) => !iconEntities[r.id] && !r.icon)
+      .forEach((r) => {
+        const firstOutId = Object.keys(r.out)[0];
+        const firstOutItem = itemData[firstOutId];
+        r.icon = firstOutItem.icon ?? firstOutId;
+      });
+
+    let itemQIds = new Set<string>();
+    let recipeQIds = new Set<string>();
+    const _flags = flags[coalesce(mod?.flags, DEFAULT_MOD)];
+    if (_flags.has('quality')) {
+      const qItems: Item[] = [];
+      const qRecipes: Recipe[] = [];
+      [Quality.Uncommon, Quality.Rare, Quality.Epic, Quality.Legendary].forEach(
+        (quality) => {
+          qItems.push(
+            ...items
+              .filter((i) => i.technology == null && i.stack)
+              .map((i) =>
+                spread(i, {
+                  id: `${i.id}(${quality.toString()})`,
+                  quality,
+                }),
+              ),
+          );
+          qRecipes.push(
+            ...recipes
+              .filter(
+                (r) =>
+                  r.part == null &&
+                  !r.isMining &&
+                  !r.isTechnology &&
+                  !r.isBurn &&
+                  Object.keys(r.out).some((k) => itemData[k].stack),
+              )
+              .map((r) => {
+                const qStr = quality.toString();
+                const qIn = this.qualityEntities(r.in, quality, itemData);
+                const qOut = this.qualityEntities(r.out, quality, itemData);
+                let qCatalyst: Optional<Entities<Rational>>;
+                if (r.catalyst)
+                  qCatalyst = this.qualityEntities(
+                    r.catalyst,
+                    quality,
+                    itemData,
+                  );
+
+                return spread(r, {
+                  id: `${r.id}(${qStr})`,
+                  in: qIn,
+                  out: qOut,
+                  catalyst: qCatalyst,
+                  quality,
+                });
+              }),
+          );
+        },
+      );
+      itemQIds = new Set(qItems.map((i) => i.id));
+      itemIds.push(...itemQIds);
+      items.push(...qItems);
+      recipeQIds = new Set(qRecipes.map((r) => r.id));
+      recipeIds.push(...recipeQIds);
+      recipes.push(...qRecipes);
+    }
+
     // Filter for item types
     const beaconIds = items
       .filter(fnPropsNotNullish('beacon'))
@@ -502,16 +572,6 @@ export class SettingsService extends Store<SettingsState> {
     const technologyIds = items
       .filter(fnPropsNotNullish('technology'))
       .map((r) => r.id);
-
-    // Calculate missing implicit recipe icons
-    // For recipes with no icon, use icon of first output item
-    recipes
-      .filter((r) => !iconEntities[r.id] && !r.icon)
-      .forEach((r) => {
-        const firstOutId = Object.keys(r.out)[0];
-        const firstOutItem = itemData[firstOutId];
-        r.icon = firstOutItem.icon ?? firstOutId;
-      });
 
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};
@@ -590,7 +650,7 @@ export class SettingsService extends Store<SettingsState> {
     return {
       game,
       info: gameInfo[game],
-      flags: flags[coalesce(mod?.flags, DEFAULT_MOD)],
+      flags: _flags,
       version: coalesce(mod?.version, {}),
       categoryIds,
       categoryEntities,
@@ -600,6 +660,7 @@ export class SettingsService extends Store<SettingsState> {
       iconIds,
       iconEntities,
       itemIds,
+      itemQIds,
       itemEntities,
       beaconIds,
       beaconEntities,
@@ -618,6 +679,7 @@ export class SettingsService extends Store<SettingsState> {
       fuelIds,
       fuelEntities,
       recipeIds,
+      recipeQIds,
       recipeEntities,
       technologyIds,
       technologyEntities,
@@ -676,5 +738,18 @@ export class SettingsService extends Store<SettingsState> {
       overclock: state.overclock ?? defaults?.overclock,
       researchedTechnologyIds,
     });
+  }
+
+  private qualityEntities(
+    entities: Entities<Rational>,
+    quality: Quality,
+    itemData: Entities<ItemJson>,
+  ): Entities<Rational> {
+    const qStr = quality.toString();
+    return Object.keys(entities).reduce((e: Entities<Rational>, k) => {
+      if (itemData[k].stack) e[`${k}(${qStr})`] = entities[k];
+      else e[k] = entities[k];
+      return e;
+    }, {});
   }
 }

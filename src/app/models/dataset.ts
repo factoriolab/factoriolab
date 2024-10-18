@@ -30,6 +30,7 @@ export interface Dataset {
   iconIds: string[];
   iconEntities: Entities<Icon>;
   itemIds: string[];
+  itemQIds: Set<string>;
   itemEntities: Entities<Item>;
   beaconIds: string[];
   beaconEntities: Entities<Beacon>;
@@ -47,6 +48,7 @@ export interface Dataset {
   fuelIds: string[];
   fuelEntities: Entities<Fuel>;
   recipeIds: string[];
+  recipeQIds: Set<string>;
   recipeEntities: Entities<Recipe>;
   technologyIds: string[];
   technologyEntities: Entities<Technology>;

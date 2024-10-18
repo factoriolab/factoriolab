@@ -86,6 +86,7 @@ export class ThemeService {
       data.itemIds
         .map((i) => data.itemEntities[i])
         .filter(fnPropsNotNullish('icon'))
+        .filter((item) => !data.itemQIds.has(item.id))
         .forEach((item) => {
           const icon = data.iconEntities[item.icon];
           const selector = this.escapeSelector(item.id);
@@ -95,6 +96,7 @@ export class ThemeService {
       data.recipeIds
         .map((r) => data.recipeEntities[r])
         .filter(fnPropsNotNullish('icon'))
+        .filter((recipe) => !data.recipeQIds.has(recipe.id))
         .forEach((recipe) => {
           const icon = data.iconEntities[recipe.icon];
           const selector = this.escapeSelector(recipe.id);
@@ -113,6 +115,7 @@ export class ThemeService {
       data.itemIds
         .map((i) => data.itemEntities[i])
         .filter(fnPropsNotNullish('iconText'))
+        .filter((item) => !data.itemQIds.has(item.id))
         .forEach((item) => {
           const selector = this.escapeSelector(item.id);
           css += `.${selector}.item::before { content: "${item.iconText}"; } `;
@@ -120,6 +123,7 @@ export class ThemeService {
       data.recipeIds
         .map((i) => data.recipeEntities[i])
         .filter(fnPropsNotNullish('iconText'))
+        .filter((recipe) => !data.recipeQIds.has(recipe.id))
         .forEach((recipe) => {
           const selector = this.escapeSelector(recipe.id);
           css += `.${selector}.recipe::before { content: "${recipe.iconText}"; } `;
