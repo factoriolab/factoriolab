@@ -95,8 +95,9 @@ export class RecipeService {
     if (recipeId != null) {
       recipe = data.recipeEntities[recipeId];
       if (
-        !data.flags.has('miningTechnologyBypassLimitations') ||
-        (!recipe.isMining && !recipe.isTechnology)
+        Object.keys(data.limitations).length &&
+        (!data.flags.has('miningTechnologyBypassLimitations') ||
+          (!recipe.isMining && !recipe.isTechnology))
       ) {
         // Filter for modules allowed on this recipe
         allowed = allowed.filter(
@@ -104,6 +105,12 @@ export class RecipeService {
             !m.module.limitation ||
             data.limitations[m.module.limitation][recipeId],
         );
+      }
+
+      if (recipe.disallowedEffects) {
+        for (const disallowedEffect of recipe.disallowedEffects) {
+          allowed = allowed.filter((m) => m.module[disallowedEffect] == null);
+        }
       }
     }
 

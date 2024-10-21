@@ -232,6 +232,12 @@
           <td>{{ module.pollution | bonusPercent }}</td>
         </tr>
       }
+      @if (module.quality && module.quality.nonzero()) {
+        <tr>
+          <td>{{ 'data.quality' | translate }}</td>
+          <td>{{ module.quality | bonusPercent }}</td>
+        </tr>
+      }
       @if (module.sprays && module.sprays.nonzero()) {
         <tr>
           <td>{{ 'data.sprays' | translate }}</td>

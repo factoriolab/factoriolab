@@ -859,6 +859,8 @@ export class SimplexService {
       output = output.add(solution.excluded[itemId]);
 
     if (output.nonzero()) {
+      // Simplify amounts via float parsing
+      output = rational(output.toNumber());
       const step: Step = {
         id: steps.length.toString(),
         itemId,

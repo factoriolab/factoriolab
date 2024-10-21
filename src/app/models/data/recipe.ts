@@ -3,6 +3,7 @@ import { cloneEntities, spread, toRationalEntities } from '~/helpers';
 import { Quality } from '../enum/quality';
 import { Rational, rational } from '../rational';
 import { Entities } from '../utils';
+import { ModuleEffect } from './module';
 
 export interface RecipeJson {
   id: string;
@@ -29,6 +30,7 @@ export interface RecipeJson {
   iconText?: string;
   /** Used to override the machine's usage for this recipe */
   usage?: number | string;
+  disallowedEffects?: ModuleEffect[];
 }
 
 export interface Recipe {
@@ -59,6 +61,7 @@ export interface Recipe {
   consumption?: Rational;
   pollution?: Rational;
   quality?: Quality;
+  disallowedEffects?: ModuleEffect[];
 }
 
 export function parseRecipe(json: RecipeJson): Recipe {
@@ -81,6 +84,7 @@ export function parseRecipe(json: RecipeJson): Recipe {
     icon: json.icon,
     iconText: json.iconText,
     usage: rational(json.usage),
+    disallowedEffects: json.disallowedEffects,
   };
 }
 

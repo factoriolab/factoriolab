@@ -665,6 +665,7 @@ export class SettingsService extends Store<SettingsState> {
 
     return {
       game,
+      route: `/${coalesce(mod?.id, DEFAULT_MOD)}`,
       info: gameInfo[game],
       flags: _flags,
       version: coalesce(mod?.version, {}),

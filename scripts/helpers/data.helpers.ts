@@ -4,6 +4,7 @@ import {
   FluidPrototype,
   IngredientPrototype,
   PrototypeBase,
+  ResearchIngredient,
 } from 'scripts/factorio.models';
 
 import { ItemJson } from '~/models/data/item';
@@ -27,7 +28,6 @@ import {
   DataRawDump,
   EffectType,
   isFluidIngredient,
-  isSimpleIngredient,
   ModList,
   PlayerData,
 } from '../factorio-build.models';
@@ -76,11 +76,12 @@ export function getItemMap(
   dataRaw: DataRawDump,
 ): Record<string, AnyItemPrototype | FluidPrototype> {
   return anyItemKeys.reduce(
-    (result: Record<string, AnyItemPrototype | FluidPrototype>, key) =>
-      Object.keys(dataRaw[key]).reduce((result, name) => {
+    (result: Record<string, AnyItemPrototype | FluidPrototype>, key) => {
+      return Object.keys(dataRaw[key]).reduce((result, name) => {
         result[name] = dataRaw[key][name];
         return result;
-      }, result),
+      }, result);
+    },
     {},
   );
 }
@@ -107,7 +108,7 @@ export function getIconText(proto: PrototypeBase): string | undefined {
 }
 
 export function getIngredients(
-  ingredients: IngredientPrototype[] | Record<string, IngredientPrototype>,
+  ingredients: IngredientPrototype[] | undefined,
 ): [
   // Ingredients
   Record<string, number>,
@@ -118,36 +119,30 @@ export function getIngredients(
   const temps: Record<string, [number | undefined, number | undefined]> = {};
 
   for (const ingredient of coerceArray(ingredients)) {
-    if (isSimpleIngredient(ingredient)) {
-      const [itemId, amount] = ingredient;
-      addEntityValue(result, itemId, amount);
-    } else {
-      if (isFluidIngredient(ingredient)) {
-        if (ingredient.temperature) {
-          temps[ingredient.name] = [
-            ingredient.temperature,
-            ingredient.temperature,
-          ];
-        } else {
-          temps[ingredient.name] = [
-            ingredient.minimum_temperature,
-            ingredient.maximum_temperature,
-          ];
-        }
+    if (isFluidIngredient(ingredient)) {
+      if (ingredient.temperature) {
+        temps[ingredient.name] = [
+          ingredient.temperature,
+          ingredient.temperature,
+        ];
+      } else {
+        temps[ingredient.name] = [
+          ingredient.minimum_temperature,
+          ingredient.maximum_temperature,
+        ];
       }
-      addEntityValue(result, ingredient.name, ingredient.amount);
     }
+    addEntityValue(result, ingredient.name, ingredient.amount);
   }
 
   return [result, temps];
 }
 
-export function getLastIngredient(ingredients: IngredientPrototype[]): string {
+export function getLastIngredient(ingredients: ResearchIngredient[]): string {
   if (ingredients.length === 0) return '';
 
   const ingredient = ingredients[ingredients.length - 1];
-  if (isSimpleIngredient(ingredient)) return ingredient[0];
-  else return ingredient.name;
+  return ingredient[0];
 }
 
 export function getVersion(

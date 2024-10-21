@@ -3,13 +3,13 @@ import { Game } from '~/models/enum/game';
 
 export const data: AppData = {
   mods: [
-    { id: 'spa', name: 'Space Age', game: Game.Factorio, flags: 'spa' },
-    { id: '2.0', name: '2.0.0', game: Game.Factorio, flags: '2.0' },
-    { id: '1.1', name: '1.1.x', game: Game.Factorio, flags: '1.1' },
-    { id: '1.1e', name: '1.1.x Expensive', game: Game.Factorio, flags: '1.1' },
-    { id: '1.0', name: '1.0.0', game: Game.Factorio, flags: '1.1' },
-    { id: '017', name: '0.17.79', game: Game.Factorio, flags: '1.1' },
-    { id: '016', name: '0.16.51', game: Game.Factorio, flags: '1.1' },
+    // { id: 'spa', name: 'Space Age', game: Game.Factorio, flags: 'spa' },
+    { id: '2.0', name: '2.0', game: Game.Factorio, flags: '2.0' },
+    { id: '1.1', name: '1.1', game: Game.Factorio, flags: '1.1' },
+    { id: '1.1e', name: '1.1 Expensive', game: Game.Factorio, flags: '1.1' },
+    { id: '1.0', name: '1.0', game: Game.Factorio, flags: '1.1' },
+    { id: '017', name: '0.17', game: Game.Factorio, flags: '1.1' },
+    { id: '016', name: '0.16', game: Game.Factorio, flags: '1.1' },
     { id: '248', name: '248k Standalone', game: Game.Factorio, flags: '1.1' },
     { id: '248o', name: '248k Overhaul', game: Game.Factorio, flags: '1.1' },
     {

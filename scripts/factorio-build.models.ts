@@ -15,37 +15,37 @@ export interface PlayerData {
   };
 }
 
-export type EffectType = 'speed' | 'productivity' | 'consumption' | 'pollution';
+export type EffectType =
+  | 'speed'
+  | 'productivity'
+  | 'consumption'
+  | 'pollution'
+  | 'quality';
 
 export const allEffects: EffectType[] = [
   'consumption',
   'speed',
   'productivity',
   'pollution',
+  'quality',
 ];
-
-export function isSimpleIngredient(
-  value: M.IngredientPrototype,
-): value is [string, number] {
-  return Array.isArray(value);
-}
 
 export function isFluidIngredient(
   value: M.IngredientPrototype,
 ): value is M.FluidIngredientPrototype {
-  return !Array.isArray(value) && value.type === 'fluid';
-}
-
-export function isSimpleProduct(
-  value: M.ProductPrototype,
-): value is [string, number] {
-  return Array.isArray(value);
+  return value.type === 'fluid';
 }
 
 export function isFluidProduct(
   value: M.ProductPrototype,
 ): value is M.FluidProductPrototype {
-  return !Array.isArray(value) && value.type === 'fluid';
+  return value.type === 'fluid';
+}
+
+export function isResearchProduct(
+  value: M.ProductPrototype,
+): value is M.ProductPrototype {
+  return value.type === 'research-progress';
 }
 
 export interface DataRawDump {
@@ -64,11 +64,11 @@ export interface DataRawDump {
   'item-group': Entities<M.ItemGroup>;
   'item-subgroup': Entities<M.ItemSubGroup>;
   'item-with-entity-data': Entities<M.ItemWithEntityDataPrototype>;
-  'item-with-tags': Entities<M.ItemWithTagsPrototype>;
   lab: Entities<M.LabPrototype>;
   'mining-drill': Entities<M.MiningDrillPrototype>;
   module: Entities<M.ModulePrototype>;
   'offshore-pump': Entities<M.OffshorePumpPrototype>;
+  pump: Entities<M.PumpPrototype>;
   'rail-planner': Entities<M.RailPlannerPrototype>;
   reactor: Entities<M.ReactorPrototype>;
   recipe: Entities<M.RecipePrototype>;
@@ -132,7 +132,8 @@ export type AnyEntityPrototype =
   | M.RocketSiloPrototype
   | M.TransportBeltPrototype
   | M.CargoWagonPrototype
-  | M.FluidWagonPrototype;
+  | M.FluidWagonPrototype
+  | M.PumpPrototype;
 
 export interface ModDataReport {
   machineSpeedZero: string[];
@@ -165,6 +166,7 @@ export const anyEntityKeys = [
   'transport-belt',
   'cargo-wagon',
   'fluid-wagon',
+  'pump',
 ] as const;
 
 export const anyItemKeys = [
@@ -174,7 +176,6 @@ export const anyItemKeys = [
   'capsule',
   'gun',
   'item-with-entity-data',
-  'item-with-tags',
   'module',
   'rail-planner',
   'repair-tool',

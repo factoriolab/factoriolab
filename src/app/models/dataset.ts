@@ -19,6 +19,7 @@ import { Entities } from './utils';
 
 export interface Dataset {
   game: Game;
+  route: string;
   info: GameInfo;
   flags: Set<Flag>;
   version: Entities;

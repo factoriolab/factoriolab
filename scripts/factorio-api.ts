@@ -4,6 +4,7 @@ import fs from 'fs';
 import handlebars from 'handlebars';
 
 import * as M from './factorio-api.models';
+import { getJsonData } from './helpers/file.helpers';
 
 interface Data {
   app: string;
@@ -230,7 +231,8 @@ function parsePrototypeApi(api: M.PrototypeApi): Data {
 const generate = async function (): Promise<void> {
   console.log(`Regenerating Factorio prototype models from ${API_PATH}...`);
 
-  const api = await getPrototypeApi();
+  // const api = await getPrototypeApi();
+  const api = getJsonData('./scripts/prototype-api.json') as M.PrototypeApi;
   const data = parsePrototypeApi(api);
   const modelsSource = `/** Generated file, do not edit. See scripts/factorio-api.ts for generator. */
 
