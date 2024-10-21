@@ -1287,7 +1287,7 @@ async function processMod(): Promise<void> {
       } else {
         modDataReport.noProducers.push(proto.name);
       }
-    } else if (isFluidPrototype(proto)) {
+    } else if (isFluidPrototype(proto) && dataRaw.resource[proto.name]) {
       // Check for offshore pump recipes
       for (const pumpName of Object.keys(machines.offshorePump)) {
         const entityName = machines.offshorePump[pumpName];
