@@ -500,11 +500,10 @@ export class SettingsService extends Store<SettingsState> {
         Quality.Legendary,
       ];
       recipes.forEach((r) => {
-        const len = r.producers.length;
-        qualities.forEach((q) => {
-          for (let i = 0; i < len; i++)
-            r.producers.push(qualityId(r.producers[i], q));
-        });
+        r.producers = [
+          ...r.producers,
+          ...qualities.flatMap((q) => r.producers.map((p) => qualityId(p, q))),
+        ];
       });
       const itemsLen = items.length;
       const recipesLen = recipes.length;
