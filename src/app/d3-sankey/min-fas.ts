@@ -81,8 +81,7 @@ export function minFAS<
       let found = false;
       for (const node of nodes) {
         const indegree = indegrees.get(node);
-        // Unclear how to test this block
-        // istanbul ignore if
+        // istanbul ignore if: Unclear how to test this block
         if (indegree === 0) {
           found = true;
           s1.push(node);

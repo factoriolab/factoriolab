@@ -57,13 +57,14 @@ export class CollectionTableComponent {
 
     if (useRelativePath) return '';
 
+    const data = this.data();
     switch (type) {
       case 'category':
-        return '/data/categories/';
+        return `${data.route}/data/categories/`;
       case 'item':
-        return '/data/items/';
+        return `${data.route}/data/items/`;
       case 'recipe':
-        return '/data/recipes/';
+        return `${data.route}/data/recipes/`;
     }
   });
 

@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestModule } from '~/tests';
 
@@ -25,18 +20,5 @@ describe('MainComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('reset', () => {
-    it('should set loading indicator and reset application', fakeAsync(() => {
-      spyOn(component.contentSvc.error$, 'next');
-      spyOn(component.router, 'navigate');
-      component.reset();
-      expect(component.isResetting).toBeTrue();
-      tick(100);
-      expect(component.contentSvc.error$.next).toHaveBeenCalledWith(undefined);
-      expect(component.router.navigate).toHaveBeenCalledWith(['/1.1']);
-      expect(component.isResetting).toBeFalse();
-    }));
   });
 });

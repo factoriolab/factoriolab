@@ -1,16 +1,7 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  NgZone,
-} from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { map } from 'rxjs';
@@ -30,9 +21,7 @@ import { SettingsService } from '~/store/settings.service';
   standalone: true,
   imports: [
     AsyncPipe,
-    ButtonModule,
     CardModule,
-    DialogModule,
     ProgressSpinnerModule,
     TabMenuModule,
     HeaderComponent,
@@ -45,9 +34,6 @@ import { SettingsService } from '~/store/settings.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent {
-  ngZone = inject(NgZone);
-  ref = inject(ChangeDetectorRef);
-  router = inject(Router);
   contentSvc = inject(ContentService);
   objectivesSvc = inject(ObjectivesService);
   settingsSvc = inject(SettingsService);
@@ -55,8 +41,6 @@ export class MainComponent {
 
   mod = this.settingsSvc.mod;
   result = this.objectivesSvc.matrixResult;
-
-  isResetting = false;
 
   tabItems$ = this.translateSvc
     .multi(['app.list', 'app.flow', 'app.data'])
@@ -84,16 +68,4 @@ export class MainComponent {
     );
 
   SimplexResultType = SimplexResultType;
-
-  reset(): void {
-    this.isResetting = true;
-    // Give button loading indicator a chance to start
-    setTimeout(() => {
-      this.ngZone.run(() => {
-        this.contentSvc.error$.next(undefined);
-        void this.router.navigate([this.settingsSvc.gameInfo().route]);
-        this.isResetting = false;
-      });
-    }, 10);
-  }
 }

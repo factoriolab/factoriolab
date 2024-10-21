@@ -1,4 +1,3 @@
-import { coalesce } from '~/helpers';
 import { BeaconJson } from '~/models/data/beacon';
 import { BeltJson } from '~/models/data/belt';
 import { CargoWagonJson } from '~/models/data/cargo-wagon';
@@ -15,7 +14,7 @@ import { getPowerInKw } from './power.helpers';
 export function getBeacon(proto: M.BeaconPrototype): BeaconJson {
   return {
     effectivity: proto.distribution_effectivity,
-    modules: coalesce(proto.module_specification.module_slots, 0),
+    modules: proto.module_slots,
     range: proto.supply_area_distance,
     type:
       proto.energy_source.type === 'electric' ? EnergyType.Electric : undefined,
@@ -27,6 +26,10 @@ export function getBeacon(proto: M.BeaconPrototype): BeaconJson {
 
 export function getBelt(proto: M.TransportBeltPrototype): BeltJson {
   return { speed: proto.speed * 480 };
+}
+
+export function getPipe(proto: M.PumpPrototype): BeltJson {
+  return { speed: proto.pumping_speed * 60 };
 }
 
 export function getCargoWagon(proto: M.CargoWagonPrototype): CargoWagonJson {
@@ -80,13 +83,14 @@ export function getMachineModules(proto: D.MachineProto): number | undefined {
   )
     return undefined;
 
-  return proto.module_specification?.module_slots;
+  return proto.module_slots;
 }
 
 export function getMachinePollution(proto: D.MachineProto): number | undefined {
   if (M.isOffshorePumpPrototype(proto)) return undefined;
 
-  return proto.energy_source.emissions_per_minute;
+  // TODO: Support multiple pollutants
+  return proto.energy_source.emissions_per_minute?.['pollution'];
 }
 
 export function getMachineSilo(
@@ -141,9 +145,22 @@ export function getEntitySize(
   if (proto.collision_box === undefined) return [0, 0];
 
   // MapPositions can be arrays or objects
-  const [[left, top], [right, bottom]] = proto.collision_box.map((pos) =>
-    Array.isArray(pos) ? pos : [pos.x, pos.y],
-  );
+  let left = 0,
+    top = 0,
+    right = 0,
+    bottom = 0;
+  if (Array.isArray(proto.collision_box)) {
+    [[left, top], [right, bottom]] = proto.collision_box.map((pos) =>
+      Array.isArray(pos) ? pos : [pos.x, pos.y],
+    );
+  } else {
+    const leftTop = proto.collision_box.left_top;
+    [left, top] = Array.isArray(leftTop) ? leftTop : [leftTop.x, leftTop.y];
+    const rightBottom = proto.collision_box.right_bottom;
+    [right, bottom] = Array.isArray(rightBottom)
+      ? rightBottom
+      : [rightBottom.x, rightBottom.y];
+  }
 
   if (proto.flags?.includes('placeable-off-grid'))
     return [right - left, bottom - top];
@@ -204,4 +221,20 @@ export function getMachineUsage(proto: D.MachineProto): number | undefined {
   else if (M.isReactorPrototype(proto)) return getPowerInKw(proto.consumption);
 
   return getPowerInKw(proto.energy_usage);
+}
+
+export function getRecipeDisallowedEffects(
+  proto: M.RecipePrototype,
+): ModuleEffect[] | undefined {
+  const disallowedEffects: ModuleEffect[] = [];
+
+  if (proto.allow_consumption === false) disallowedEffects.push('consumption');
+  if (proto.allow_pollution === false) disallowedEffects.push('pollution');
+  if (proto.allow_quality === false) disallowedEffects.push('quality');
+  if (proto.allow_speed === false) disallowedEffects.push('speed');
+
+  if (!proto.allow_productivity) disallowedEffects.push('productivity');
+
+  if (disallowedEffects.length) return disallowedEffects;
+  return undefined;
 }

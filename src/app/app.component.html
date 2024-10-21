@@ -1,0 +1,39 @@
+@if (dataSvc.error$ | async; as error) {
+  <p-dialog
+    [visible]="true"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    [closeOnEscape]="false"
+    [style]="{ maxWidth: '75%' }"
+  >
+    <ng-template pTemplate="header">
+      <div class="p-dialog-title p-error">
+        <i class="fa-solid fa-circle-exclamation me-2"></i>
+        <span>{{ 'app.error' | translate }}</span>
+      </div>
+    </ng-template>
+    <div class="p-error">
+      <div>{{ 'app.errorDetail' | translate }}</div>
+      <div class="mt-4">{{ error }}</div>
+      <div class="text-end mt-4">
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="p-button-outlined"
+          [label]="'reset' | translate"
+          (click)="reset()"
+        ></button>
+      </div>
+    </div>
+  </p-dialog>
+  <div class="d-flex align-items-end justify-content-center vh-100 pb-4">
+    <span>{{ contentSvc.version$ | async }}</span>
+  </div>
+} @else {
+  <router-outlet></router-outlet>
+}
+
+<lab-content></lab-content>

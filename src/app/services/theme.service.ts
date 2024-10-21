@@ -86,6 +86,7 @@ export class ThemeService {
       data.itemIds
         .map((i) => data.itemEntities[i])
         .filter(fnPropsNotNullish('icon'))
+        .filter((item) => !data.itemQIds.has(item.id))
         .forEach((item) => {
           const icon = data.iconEntities[item.icon];
           const selector = this.escapeSelector(item.id);
@@ -95,6 +96,7 @@ export class ThemeService {
       data.recipeIds
         .map((r) => data.recipeEntities[r])
         .filter(fnPropsNotNullish('icon'))
+        .filter((recipe) => !data.recipeQIds.has(recipe.id))
         .forEach((recipe) => {
           const icon = data.iconEntities[recipe.icon];
           const selector = this.escapeSelector(recipe.id);
@@ -113,23 +115,25 @@ export class ThemeService {
       data.itemIds
         .map((i) => data.itemEntities[i])
         .filter(fnPropsNotNullish('iconText'))
+        .filter((item) => !data.itemQIds.has(item.id))
         .forEach((item) => {
           const selector = this.escapeSelector(item.id);
-          css += `.${selector}.item::after { content: "${item.iconText}"; } `;
+          css += `.${selector}.item::before { content: "${item.iconText}"; } `;
         });
       data.recipeIds
         .map((i) => data.recipeEntities[i])
         .filter(fnPropsNotNullish('iconText'))
+        .filter((recipe) => !data.recipeQIds.has(recipe.id))
         .forEach((recipe) => {
           const selector = this.escapeSelector(recipe.id);
-          css += `.${selector}.recipe::after { content: "${recipe.iconText}"; } `;
+          css += `.${selector}.recipe::before { content: "${recipe.iconText}"; } `;
         });
       data.categoryIds
         .map((i) => data.categoryEntities[i])
         .filter(fnPropsNotNullish('iconText'))
         .forEach((category) => {
           const selector = this.escapeSelector(category.id);
-          css += `.${selector}.category::after { content: "${category.iconText}"; } `;
+          css += `.${selector}.category::before { content: "${category.iconText}"; } `;
         });
       style.innerText = css;
       this.head.appendChild(style);

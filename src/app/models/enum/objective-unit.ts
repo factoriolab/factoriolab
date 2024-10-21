@@ -1,6 +1,6 @@
 import { SelectItem } from 'primeng/api';
 
-import { GameInfo } from '../game-info';
+import { Flag } from '../flags';
 import { DisplayRateInfo } from './display-rate';
 
 export enum ObjectiveUnit {
@@ -12,7 +12,7 @@ export enum ObjectiveUnit {
 
 export function objectiveUnitOptions(
   dispRateInfo: DisplayRateInfo,
-  gameInfo: GameInfo,
+  flags: Set<Flag>,
 ): SelectItem<ObjectiveUnit>[] {
   const result: SelectItem<ObjectiveUnit>[] = [
     { value: ObjectiveUnit.Items, label: dispRateInfo.itemsLabel },
@@ -21,7 +21,7 @@ export function objectiveUnitOptions(
     { value: ObjectiveUnit.Machines, label: 'options.objectiveUnit.machines' },
   ];
 
-  if (!gameInfo.flags.has('wagons'))
+  if (!flags.has('wagons'))
     return result.filter((i) => i.value !== ObjectiveUnit.Wagons);
 
   return result;

@@ -359,8 +359,11 @@
         }
         <!-- Belts -->
         @if (columnsState().belts.show) {
-          @if (step.itemId && step.belts) {
-            @if (itemsState()[step.itemId].beltId; as beltId) {
+          @if (
+            step.itemId && step.belts && itemsState()[step.itemId];
+            as itemSettings
+          ) {
+            @if (itemSettings.beltId; as beltId) {
               <td class="w-0 px-0 px-sm-2 text-end">
                 <span class="monospace">{{
                   step.belts | rate: columnsState().belts.precision
@@ -377,53 +380,78 @@
                         : null;
                     as type
                   ) {
-                    <p-dropdown
-                      labDropdownBase="icon"
-                      [pTooltip]="tooltip"
-                      [ngModel]="beltId"
-                      [options]="
-                        type === 'belt' ? options().belts : options().pipes
-                      "
-                      (onChange)="
-                        itemsSvc.updateEntityField(
-                          step.itemId,
-                          'beltId',
-                          $event.value,
-                          itemsState()[step.itemId].defaultBeltId
-                        )
-                      "
-                    >
-                      <ng-template pTemplate="selectedItem" let-item>
-                        @if (item) {
-                          <div class="d-flex">
+                    @if (data().flags.has('beltStack')) {
+                      <button
+                        pButton
+                        pRipple
+                        type="button"
+                        class="hover-action p-button-text"
+                        (click)="
+                          beltPicker.show($event, itemSettings, $any(type))
+                        "
+                      >
+                        <i class="p-button-icon" [class]="beltId | iconSmClass">
+                          @if (itemSettings.stack?.gt(rational.one)) {
+                            <span>{{ itemSettings.stack }}</span>
+                          }
+                        </i>
+                        <i class="hover-icon fa-solid fa-gear"></i>
+                      </button>
+                      <lab-belt-overlay
+                        #beltPicker
+                        (setValue)="
+                          changeBelts(step, $event, itemSettings.defaultBeltId)
+                        "
+                      ></lab-belt-overlay>
+                    } @else {
+                      <p-dropdown
+                        labDropdownBase="icon"
+                        [pTooltip]="tooltip"
+                        [ngModel]="beltId"
+                        [options]="
+                          type === 'belt' ? options().belts : options().pipes
+                        "
+                        (onChange)="
+                          itemsSvc.updateEntityField(
+                            step.itemId,
+                            'beltId',
+                            $event.value,
+                            itemSettings.defaultBeltId
+                          )
+                        "
+                      >
+                        <ng-template pTemplate="selectedItem" let-item>
+                          @if (item) {
+                            <div class="d-flex">
+                              <i [class]="item.value | iconSmClass"></i>
+                            </div>
+                          }
+                        </ng-template>
+                        <ng-template pTemplate="item" let-item>
+                          <div
+                            class="d-flex align-items-center py-2 w-100 h-100"
+                            [pTooltip]="tooltip"
+                          >
                             <i [class]="item.value | iconSmClass"></i>
+                            <div class="ms-3 text-truncate">
+                              {{ item.label }}
+                            </div>
+                            <ng-template #tooltip>
+                              <lab-tooltip
+                                [id]="item.value"
+                                [type]="$any(type)"
+                              ></lab-tooltip>
+                            </ng-template>
                           </div>
-                        }
-                      </ng-template>
-                      <ng-template pTemplate="item" let-item>
-                        <div
-                          class="d-flex align-items-center py-2 w-100 h-100"
-                          [pTooltip]="tooltip"
-                        >
-                          <i [class]="item.value | iconSmClass"></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label }}
-                          </div>
-                          <ng-template #tooltip>
-                            <lab-tooltip
-                              [id]="item.value"
-                              [type]="$any(type)"
-                            ></lab-tooltip>
-                          </ng-template>
-                        </div>
-                      </ng-template>
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="beltId"
-                          [type]="$any(type)"
-                        ></lab-tooltip>
-                      </ng-template>
-                    </p-dropdown>
+                        </ng-template>
+                        <ng-template #tooltip>
+                          <lab-tooltip
+                            [id]="beltId"
+                            [type]="$any(type)"
+                          ></lab-tooltip>
+                        </ng-template>
+                      </p-dropdown>
+                    }
                   } @else {
                     <!-- Pipe icon only -->
                     <i [class]="beltId | iconClass" [pTooltip]="tooltip">
@@ -522,7 +550,7 @@
             @if (
               step.machines &&
               step.machines.nonzero() &&
-              (machineId | machineShowRate: data().game)
+              !data().machineEntities[machineId].hideRate
             ) {
               <span class="monospace">{{
                 step.machines
@@ -568,63 +596,58 @@
                     </ng-template>
                   </button>
                 }
-                @if (machineId | machineShow: data().game) {
-                  <p-dropdown
-                    labDropdownBase="icon"
-                    [pTooltip]="tooltip"
-                    [options]="
-                      step.recipe.producers | options: data().itemEntities
-                    "
-                    [ngModel]="machineId"
-                    (onChange)="
-                      step.recipeObjectiveId
-                        ? objectivesSvc.updateEntityField(
-                            step.recipeObjectiveId,
-                            'machineId',
-                            $event.value,
-                            step.recipeSettings.defaultMachineId
-                          )
-                        : recipesSvc.updateEntityField(
-                            step.recipeId,
-                            'machineId',
-                            $event.value,
-                            step.recipeSettings.defaultMachineId
-                          )
-                    "
-                  >
-                    <ng-template pTemplate="selectedItem" let-item>
-                      @if (item) {
-                        <div class="d-flex">
-                          <i [class]="item.value | iconSmClass"></i>
-                        </div>
-                      }
-                    </ng-template>
-                    <ng-template pTemplate="item" let-item>
-                      <div
-                        class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="tooltip"
-                      >
+                <p-dropdown
+                  labDropdownBase="icon"
+                  [pTooltip]="tooltip"
+                  [options]="
+                    step.recipe.producers | options: data().itemEntities
+                  "
+                  [ngModel]="machineId"
+                  (onChange)="
+                    step.recipeObjectiveId
+                      ? objectivesSvc.updateEntityField(
+                          step.recipeObjectiveId,
+                          'machineId',
+                          $event.value,
+                          step.recipeSettings.defaultMachineId
+                        )
+                      : recipesSvc.updateEntityField(
+                          step.recipeId,
+                          'machineId',
+                          $event.value,
+                          step.recipeSettings.defaultMachineId
+                        )
+                  "
+                >
+                  <ng-template pTemplate="selectedItem" let-item>
+                    @if (item) {
+                      <div class="d-flex">
                         <i [class]="item.value | iconSmClass"></i>
-                        <div class="ms-3 text-truncate">
-                          {{ item.label }}
-                        </div>
-                        <ng-template #tooltip>
-                          <lab-tooltip
-                            [id]="item.value"
-                            type="machine"
-                          ></lab-tooltip>
-                        </ng-template>
                       </div>
-                    </ng-template>
-                    <ng-template #tooltip>
-                      <lab-tooltip
-                        [id]="machineId"
-                        type="machine"
-                      ></lab-tooltip>
-                    </ng-template>
-                  </p-dropdown>
-                }
-                @if (data().info.flags.has('overclock')) {
+                    }
+                  </ng-template>
+                  <ng-template pTemplate="item" let-item>
+                    <div
+                      class="d-flex align-items-center py-2 w-100 h-100"
+                      [pTooltip]="tooltip"
+                    >
+                      <i [class]="item.value | iconSmClass"></i>
+                      <div class="ms-3 text-truncate">
+                        {{ item.label }}
+                      </div>
+                      <ng-template #tooltip>
+                        <lab-tooltip
+                          [id]="item.value"
+                          type="machine"
+                        ></lab-tooltip>
+                      </ng-template>
+                    </div>
+                  </ng-template>
+                  <ng-template #tooltip>
+                    <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
+                  </ng-template>
+                </p-dropdown>
+                @if (data().flags.has('overclock')) {
                   <p-inputNumber
                     #overclockInput
                     suffix="%"
@@ -1052,9 +1075,7 @@
         @case (StepDetailTab.Recipe) {
           <!-- Recipe row details -->
           @if (step.recipe) {
-            @if (
-              data().info.flags.has('miningDepletion') && step.recipe.isMining
-            ) {
+            @if (data().flags.has('miningDepletion') && step.recipe.isMining) {
               <tr class="detail">
                 <ng-container *ngTemplateOutlet="leftPad"></ng-container>
                 <td colspan="100" class="fw-bold">
@@ -1288,7 +1309,7 @@
                                 }
                               </td>
                             }
-                            @if (data().info.flags.has('inserterEstimation')) {
+                            @if (data().flags.has('inserterEstimation')) {
                               <td>
                                 @if (
                                   itemsState()[input.key].beltId !==
@@ -1377,7 +1398,7 @@
                     ) {
                       @if (output.value.div(step.recipe.time); as items) {
                         <tr>
-                          @if (data().info.flags.has('inserterEstimation')) {
+                          @if (data().flags.has('inserterEstimation')) {
                             <td>
                               @if (
                                 itemsState()[output.key].beltId !== ItemId.Pipe
@@ -1452,7 +1473,7 @@
                   </ng-template>
                 </div>
               }
-              @if (data().info.flags.has('inserterEstimation')) {
+              @if (data().flags.has('inserterEstimation')) {
                 <small
                   [innerHTML]="'steps.inserterCountInfo' | translate"
                 ></small>
@@ -1638,7 +1659,7 @@
           @if (
             machines &&
             machines.nonzero() &&
-            (machineId | machineShowRate: data().game)
+            !data().machineEntities[machineId].hideRate
           ) {
             <span class="monospace">{{
               machines
@@ -1649,31 +1670,23 @@
         <td class="p-0" colspan="100">
           <div class="d-flex align-items-center">
             @if (inputs) {
-              <div class="position-absolute">
+              <div>
                 {{ 'steps.inputs' | translate }}
               </div>
             }
-            @if (machineId | machineShow: data().game) {
-              <i [class]="recipeId | iconClass: 'recipe'" [pTooltip]="tooltip">
-                @if (recipeObjectiveId) {
-                  <span>#{{ recipeObjectiveId }}</span>
-                }
-                <ng-template #tooltip>
-                  <lab-tooltip [id]="recipeId" type="recipe"></lab-tooltip>
-                </ng-template>
-              </i>
-              <i [class]="machineId | iconClass" [pTooltip]="tooltip">
-                <ng-template #tooltip>
-                  <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
-                </ng-template>
-              </i>
-            } @else {
-              <div class="text-center" style="width: 68px">
-                @if (inputs) {
-                  {{ 'steps.inputs' | translate }}
-                }
-              </div>
-            }
+            <i [class]="recipeId | iconClass: 'recipe'" [pTooltip]="tooltip">
+              @if (recipeObjectiveId) {
+                <span>#{{ recipeObjectiveId }}</span>
+              }
+              <ng-template #tooltip>
+                <lab-tooltip [id]="recipeId" type="recipe"></lab-tooltip>
+              </ng-template>
+            </i>
+            <i [class]="machineId | iconClass" [pTooltip]="tooltip">
+              <ng-template #tooltip>
+                <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
+              </ng-template>
+            </i>
             @if (percent) {
               @if (percentOnDest) {
                 <i class="m-1 p-2 fa-solid fa-arrow-right"></i>

@@ -1,19 +1,19 @@
 import { ErrorHandler, inject, Injectable, NgZone } from '@angular/core';
 
-import { ContentService } from './content.service';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ErrorService implements ErrorHandler {
-  contentSvc = inject(ContentService);
+  dataSvc = inject(DataService);
   ngZone = inject(NgZone);
 
   handleError(error: string): void {
-    if (this.contentSvc.error$.value == null) {
+    if (this.dataSvc.error$.value == null) {
       this.ngZone.run(() => {
         console.error(error);
-        this.contentSvc.error$.next(error);
+        this.dataSvc.error$.next(error);
       });
     }
   }

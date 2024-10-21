@@ -1,6 +1,5 @@
-import { gameInfo } from '../game-info';
+import { flags } from '../flags';
 import { DisplayRate, displayRateInfo } from './display-rate';
-import { Game } from './game';
 import { objectiveUnitOptions } from './objective-unit';
 
 describe('ObjectiveUnit', () => {
@@ -8,23 +7,17 @@ describe('ObjectiveUnit', () => {
     const dispRateInfo = displayRateInfo[DisplayRate.PerMinute];
 
     it('should return the correct options for Factorio', () => {
-      expect(
-        objectiveUnitOptions(dispRateInfo, gameInfo[Game.Factorio]).length,
-      ).toEqual(4);
+      expect(objectiveUnitOptions(dispRateInfo, flags['1.1']).length).toEqual(
+        4,
+      );
     });
 
     it('should return the correct options for Captain of Industry', () => {
-      expect(
-        objectiveUnitOptions(dispRateInfo, gameInfo[Game.CaptainOfIndustry])
-          .length,
-      ).toEqual(3);
+      expect(objectiveUnitOptions(dispRateInfo, flags.coi).length).toEqual(3);
     });
 
     it('should return the correct options for Dyson Sphere Program', () => {
-      expect(
-        objectiveUnitOptions(dispRateInfo, gameInfo[Game.DysonSphereProgram])
-          .length,
-      ).toEqual(3);
+      expect(objectiveUnitOptions(dispRateInfo, flags.dsp).length).toEqual(3);
     });
   });
 });

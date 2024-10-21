@@ -20,6 +20,6 @@ describe('ErrorService', () => {
     spyOn(console, 'error');
     service.handleError('test');
     expect(console.error).toHaveBeenCalledWith('test');
-    expect(service.contentSvc.error$.value).toEqual('test');
+    expect(service.dataSvc.error$.value).toEqual('test');
   });
 });

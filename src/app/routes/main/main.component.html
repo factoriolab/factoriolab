@@ -3,90 +3,56 @@
   [settingsXlHidden]="contentSvc.settingsXlHidden()"
 ></lab-header>
 
-@if (contentSvc.error$ | async; as error) {
-  <p-dialog
-    [visible]="true"
-    [modal]="true"
-    [draggable]="false"
-    [resizable]="false"
-    [closable]="false"
-    [closeOnEscape]="false"
-  >
-    <ng-template pTemplate="header">
-      <div class="p-dialog-title p-error">
-        <i class="fa-solid fa-circle-exclamation me-2"></i>
-        <span>{{ 'app.error' | translate }}</span>
+<lab-settings
+  [active]="contentSvc.settingsActive()"
+  [hidden]="contentSvc.settingsXlHidden()"
+></lab-settings>
+<div
+  role="none"
+  class="layout-mask"
+  [class.active]="contentSvc.settingsActive()"
+  (click)="contentSvc.toggleSettings()"
+></div>
+<div
+  class="layout-content"
+  [class.settings-xl-hidden]="contentSvc.settingsXlHidden()"
+>
+  <main class="px-sm-4 py-4">
+    @if (mod()) {
+      <lab-objectives></lab-objectives>
+      <p-card styleClass="mt-4" [header]="'app.factory' | translate">
+        @if (tabItems$ | async; as model) {
+          <p-tabMenu [model]="model"></p-tabMenu>
+        }
+        <router-outlet></router-outlet>
+        <ng-template pTemplate="footer">
+          <div class="d-flex align-items-center justify-content-between">
+            @if (result().resultType === SimplexResultType.Solved) {
+              <div>
+                {{
+                  'app.simplexSolved'
+                    | translate
+                      : {
+                          time: result().time,
+                          cost: result().cost?.toPrecision(2),
+                        }
+                }}
+              </div>
+            } @else {
+              <div>
+                {{
+                  'options.simplexResultType.' + result().resultType | translate
+                }}
+              </div>
+            }
+            <span>{{ contentSvc.version$ | async }}</span>
+          </div>
+        </ng-template>
+      </p-card>
+    } @else {
+      <div class="d-flex flex-column align-items-center mt-5">
+        <p-progressSpinner></p-progressSpinner>
       </div>
-    </ng-template>
-    <div class="p-error">
-      <div>{{ 'app.errorDetail' | translate }}</div>
-      <div class="mt-4">{{ error }}</div>
-      <div class="text-end mt-4">
-        <button
-          pButton
-          pRipple
-          type="button"
-          class="p-button-outlined"
-          [label]="'reset' | translate"
-          [loading]="isResetting"
-          (click)="reset()"
-        ></button>
-      </div>
-    </div>
-  </p-dialog>
-} @else {
-  <lab-settings
-    [active]="contentSvc.settingsActive()"
-    [hidden]="contentSvc.settingsXlHidden()"
-  ></lab-settings>
-  <div
-    role="none"
-    class="layout-mask"
-    [class.active]="contentSvc.settingsActive()"
-    (click)="contentSvc.toggleSettings()"
-  ></div>
-  <div
-    class="layout-content"
-    [class.settings-xl-hidden]="contentSvc.settingsXlHidden()"
-  >
-    <main class="px-sm-4 py-4">
-      @if (mod()) {
-        <lab-objectives></lab-objectives>
-        <p-card styleClass="mt-4" [header]="'app.factory' | translate">
-          @if (tabItems$ | async; as model) {
-            <p-tabMenu [model]="model"></p-tabMenu>
-          }
-          <router-outlet></router-outlet>
-          <ng-template pTemplate="footer">
-            <div class="d-flex align-items-center justify-content-between">
-              @if (result().resultType === SimplexResultType.Solved) {
-                <div>
-                  {{
-                    'app.simplexSolved'
-                      | translate
-                        : {
-                            time: result().time,
-                            cost: result().cost?.toPrecision(2),
-                          }
-                  }}
-                </div>
-              } @else {
-                <div>
-                  {{
-                    'options.simplexResultType.' + result().resultType
-                      | translate
-                  }}
-                </div>
-              }
-              <span>{{ contentSvc.version$ | async }}</span>
-            </div>
-          </ng-template>
-        </p-card>
-      } @else {
-        <div class="d-flex flex-column align-items-center mt-5">
-          <p-progressSpinner></p-progressSpinner>
-        </div>
-      }
-    </main>
-  </div>
-}
+    }
+  </main>
+</div>

@@ -95,8 +95,9 @@ export class RecipeService {
     if (recipeId != null) {
       recipe = data.recipeEntities[recipeId];
       if (
-        !data.info.flags.has('miningTechnologyBypassLimitations') ||
-        (!recipe.isMining && !recipe.isTechnology)
+        Object.keys(data.limitations).length &&
+        (!data.flags.has('miningTechnologyBypassLimitations') ||
+          (!recipe.isMining && !recipe.isTechnology))
       ) {
         // Filter for modules allowed on this recipe
         allowed = allowed.filter(
@@ -104,6 +105,12 @@ export class RecipeService {
             !m.module.limitation ||
             data.limitations[m.module.limitation][recipeId],
         );
+      }
+
+      if (recipe.disallowedEffects) {
+        for (const disallowedEffect of recipe.disallowedEffects) {
+          allowed = allowed.filter((m) => m.module[disallowedEffect] == null);
+        }
       }
     }
 
@@ -118,8 +125,8 @@ export class RecipeService {
       (m): SelectItem<string> => ({ value: m.id, label: m.name }),
     );
     if (
-      (!data.info.flags.has('resourcePurity') || !recipe?.isMining) &&
-      !data.info.flags.has('duplicators')
+      (!data.flags.has('resourcePurity') || !recipe?.isMining) &&
+      !data.flags.has('duplicators')
     ) {
       options.unshift({ label: 'None', value: ItemId.Module });
     }
@@ -193,10 +200,11 @@ export class RecipeService {
         for (const b of belts.filter(notNullish)) {
           if (minSpeed.lt(b.speed)) minSpeed = b.speed;
         }
+
         recipe.time = recipe.time.div(minSpeed);
       }
 
-      if (recipe.isTechnology && data.info.flags.has('researchSpeed')) {
+      if (recipe.isTechnology && data.flags.has('researchSpeed')) {
         // Adjust for research factor
         recipe.time = recipe.time.div(researchFactor);
       }
@@ -207,10 +215,11 @@ export class RecipeService {
       let consumption = rational.one;
       let pollution = rational.one;
 
-      if (recipe.isMining) {
-        // Adjust for mining bonus
-        prod = prod.add(miningFactor);
-      }
+      // Adjust for mining bonus
+      if (recipe.isMining) prod = prod.add(miningFactor);
+
+      // Adjust for base productivity
+      if (machine.baseProductivity) prod = prod.add(machine.baseProductivity);
 
       const proliferatorSprays: Entities<Rational> = {};
 
@@ -224,7 +233,7 @@ export class RecipeService {
           // Scale Satisfactory Somersloop bonus based on number of slots
           let scale: Rational | undefined;
           if (
-            data.info.flags.has('somersloop') &&
+            data.flags.has('somersloop') &&
             id === ItemId.Somersloop &&
             machine.modules instanceof Rational
           )
@@ -286,6 +295,16 @@ export class RecipeService {
 
       // Beacons
       if (recipeSettings.beacons != null) {
+        let scale = rational.one;
+        if (data.flags.has('diminishingBeacons')) {
+          const total = recipeSettings.beacons.reduce(
+            (t, b) => t.add(coalesce(b.count, rational.zero)),
+            rational.zero,
+          );
+          const sqrt = total.pow(0.5);
+          scale = sqrt.div(total);
+        }
+
         for (const beaconSettings of recipeSettings.beacons) {
           if (
             !beaconSettings.count?.nonzero() ||
@@ -301,7 +320,8 @@ export class RecipeService {
             const beacon = data.beaconEntities[beaconSettings.id];
             const factor = beaconSettings.count // Num of beacons
               .mul(beacon.effectivity) // Effectivity of beacons
-              .mul(count); // Num of modules/beacon
+              .mul(count) // Num of modules/beacon
+              .mul(scale); // Apply diminishing beacons scale
 
             if (module.speed) {
               speed = speed.add(module.speed.mul(factor));
@@ -352,7 +372,7 @@ export class RecipeService {
       // In Factorio, minimum recipe time is 1/60s (1 tick)
       if (
         recipe.time.lt(this.minFactorioRecipeTime) &&
-        data.info.flags.has('minimumRecipeTime')
+        data.flags.has('minimumRecipeTime')
       ) {
         recipe.time = this.minFactorioRecipeTime;
       }
@@ -381,8 +401,7 @@ export class RecipeService {
       if (oc) {
         if (usage?.gt(rational.zero)) {
           // Polynomial effect only on production buildings, not power generation
-          const factor = Math.pow(oc.toNumber(), 1.321928);
-          usage = usage.mul(rational(factor));
+          usage = usage.mul(oc.pow(1.321928));
         } else {
           usage = usage.mul(oc);
         }
@@ -394,7 +413,7 @@ export class RecipeService {
           : rational.zero;
 
       if (
-        data.info.flags.has('consumptionAsDrain') &&
+        data.flags.has('consumptionAsDrain') &&
         recipe.consumption?.nonzero()
       ) {
         recipe.drain = recipe.consumption;

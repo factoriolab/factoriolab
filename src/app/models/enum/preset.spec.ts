@@ -1,21 +1,18 @@
-import { gameInfo } from '../game-info';
-import { Game } from './game';
+import { flags } from '../flags';
 import { presetOptions } from './preset';
 
 describe('Preset', () => {
   describe('presetOptions', () => {
     it('should return the correct options for Factorio', () => {
-      expect(presetOptions(gameInfo[Game.Factorio]).length).toEqual(4);
+      expect(presetOptions(flags['1.1']).length).toEqual(4);
     });
 
     it('should return the correct options for Captain of Industry', () => {
-      expect(presetOptions(gameInfo[Game.CaptainOfIndustry]).length).toEqual(2);
+      expect(presetOptions(flags.coi).length).toEqual(2);
     });
 
     it('should return the correct options for Dyson Sphere Program', () => {
-      expect(presetOptions(gameInfo[Game.DysonSphereProgram]).length).toEqual(
-        3,
-      );
+      expect(presetOptions(flags.dsp).length).toEqual(3);
     });
   });
 });

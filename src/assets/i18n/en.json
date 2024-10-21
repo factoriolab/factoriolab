@@ -38,6 +38,7 @@
     },
     "game": {
       "factorio": "Factorio",
+      "factorio2": "Factorio 2.0",
       "dysonSphereProgram": "Dyson Sphere Program",
       "satisfactory": "Satisfactory",
       "captainOfIndustry": "Captain of Industry",
@@ -128,6 +129,14 @@
       "left": "Left",
       "right": "Right",
       "center": "Center"
+    },
+    "quality": {
+      "any": "Any",
+      "normal": "Normal",
+      "uncommon": "Uncommon",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary"
     }
   },
   "columns": {
@@ -257,6 +266,8 @@
     "proliferatorSelfSprayTooltip": "Select the proliferator spray applied to proliferator itself",
     "defaultTransportBelt": "Default transport belt",
     "defaultTransportBeltTooltip": "Select the default belt to be used by all items",
+    "defaultStack": "Default stack size",
+    "defaultStackTooltip": "Select the default stack size on belts",
     "defaultPipe": "Default pipe",
     "defaultPipeTooltip": "Select the default pipe to be used by all fluids",
     "defaultCargoWagon": "Default cargo wagon",
@@ -421,12 +432,14 @@
     "storageSize": "Storage size",
     "fluidCapacity": "Fluid capacity",
     "craftingSpeed": "Crafting speed",
+    "baseProductivity": "Base productivity",
     "fuelCategories": "Fuel categories",
     "fuelCategory": "Fuel category",
     "fuelValue": "Fuel value",
     "energyDrain": "Energy drain",
     "pollution": "Pollution",
     "consumption": "Consumption",
+    "quality": "Quality",
     "dimensions": "Dimensions",
     "rocketSilo": "Rocket silo",
     "rocketPartsRequired": "Rocket parts required",
@@ -468,5 +481,11 @@
     "addBeacons": "Add beacons",
     "eachTooltip": "Beacons per machine",
     "totalTooltip": "Total beacons"
+  },
+  "modules": {
+    "eachTooltip": "Number of modules"
+  },
+  "beltOverlay": {
+    "stackTooltip": "Stack size"
   }
 }
