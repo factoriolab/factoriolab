@@ -145,6 +145,7 @@ export function getLastIngredient(ingredients: ResearchIngredient[]): string {
   return ingredient[0];
 }
 
+const builtIn = new Set(['base', 'elevated-rails', 'quality', 'space-age']);
 export function getVersion(
   modsPath: string,
   factorioPath: string,
@@ -164,7 +165,7 @@ export function getVersion(
   return modList.mods
     .filter((m) => m.enabled)
     .reduce((version: Record<string, string>, mod) => {
-      if (mod.name === 'base') {
+      if (builtIn.has(mod.name)) {
         version[mod.name] = playerData['last-played-version'].game_version;
         return version;
       }
