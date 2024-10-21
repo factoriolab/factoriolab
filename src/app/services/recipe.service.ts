@@ -109,7 +109,11 @@ export class RecipeService {
 
       if (recipe.disallowedEffects) {
         for (const disallowedEffect of recipe.disallowedEffects) {
-          allowed = allowed.filter((m) => m.module[disallowedEffect] == null);
+          allowed = allowed.filter(
+            (m) =>
+              m.module[disallowedEffect] == null ||
+              m.module[disallowedEffect].lte(rational.zero),
+          );
         }
       }
     }
@@ -117,7 +121,11 @@ export class RecipeService {
     // Filter for modules allowed on this entity
     if (entity.disallowedEffects) {
       for (const disallowedEffect of entity.disallowedEffects) {
-        allowed = allowed.filter((m) => m.module[disallowedEffect] == null);
+        allowed = allowed.filter(
+          (m) =>
+            m.module[disallowedEffect] == null ||
+            m.module[disallowedEffect].lte(rational.zero),
+        );
       }
     }
 
