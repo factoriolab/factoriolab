@@ -2,6 +2,7 @@ import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
+import { data } from 'src/data';
 
 import { coalesce, spread } from '~/helpers';
 import { CategoryJson } from '~/models/data/category';
@@ -12,6 +13,7 @@ import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
 import { RecipeJson } from '~/models/data/recipe';
 import { TechnologyJson } from '~/models/data/technology';
+import { flags } from '~/models/flags';
 import { Entities } from '~/models/utils';
 
 import {
@@ -29,17 +31,17 @@ import {
   isMiningDrillPrototype,
   isModulePrototype,
   isOffshorePumpPrototype,
+  isPumpPrototype,
   isReactorPrototype,
   isRecipePrototype,
+  isResearchProgressProductPrototype,
   isRocketSiloPrototype,
   isTechnologyPrototype,
   isTransportBeltPrototype,
   isUnlockRecipeModifier,
   ItemGroup,
   ProductPrototype,
-  RecipeData,
   RecipePrototype,
-  TechnologyData,
   TechnologyPrototype,
 } from './factorio.models';
 import {
@@ -50,7 +52,6 @@ import {
   DataRawDump,
   isAnyItemPrototype,
   isFluidProduct,
-  isSimpleProduct,
   MachineProto,
   ModDataReport,
 } from './factorio-build.models';
@@ -58,13 +59,13 @@ import {
   addEntityValue,
   coerceArray,
   coerceString,
-  emptyModHash,
   getEntityMap,
   getIconText,
   getIngredients,
   getItemMap,
   getLastIngredient,
   getVersion,
+  updateHash,
 } from './helpers/data.helpers';
 import { getJsonData, getLocale } from './helpers/file.helpers';
 import { logTime, logWarn } from './helpers/log.helpers';
@@ -83,6 +84,8 @@ import {
   getMachineSpeed,
   getMachineType,
   getMachineUsage,
+  getPipe,
+  getRecipeDisallowedEffects,
 } from './helpers/proto.helpers';
 
 /**
@@ -91,13 +94,17 @@ import {
  * existing defaults and append to the hash list.
  */
 
-const mod = process.argv[2];
-let mode: 'normal' | 'expensive' = 'normal';
-if (!mod) {
+const modId = process.argv[2];
+if (!modId)
   throw new Error(
     'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
   );
-}
+
+const mod = data.mods.find((m) => m.id === modId);
+if (!mod)
+  throw new Error(
+    'Please define this mod set in `src/data/index.ts` before running build.',
+  );
 
 // Set up paths
 const appDataPath =
@@ -109,18 +116,10 @@ const scriptOutputPath = `${factorioPath}/script-output`;
 const dataRawPath = `${scriptOutputPath}/data-raw-dump.json`;
 const tempPath = './scripts/temp';
 const tempIconsPath = `${tempPath}/icons`;
-const modPath = `./src/data/${mod}`;
+const modPath = `./src/data/${modId}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
-
-/** Check whether this is an existing mod set using expensive mode */
-if (fs.existsSync(modDataPath)) {
-  const oldData = getJsonData(modDataPath) as ModData;
-  if (oldData.expensive) {
-    mode = 'expensive';
-    console.log('Note: Using expensive mode data for this mod set');
-  }
-}
+const modFlags = flags[mod.flags];
 
 async function processMod(): Promise<void> {
   // Read mod data
@@ -146,8 +145,6 @@ async function processMod(): Promise<void> {
   const dataRaw = getJsonData(dataRawPath) as DataRawDump;
 
   // Set up collections
-  // Record of limitations by hash: id
-  const limitations: Record<string, string> = {};
   // Record of technology ids by raw id: factoriolab id
   const techId: Record<string, string> = {};
 
@@ -157,21 +154,21 @@ async function processMod(): Promise<void> {
   function getRecipeProduct(
     recipe: RecipePrototype,
   ): AnyItemPrototype | FluidPrototype | undefined {
-    const recipeData = getRecipeData(recipe);
-    if (recipeData.result) return itemMap[recipeData.result];
-    else if (recipeData.results?.length === 1) {
-      const result = recipeData.results[0];
-      if (isSimpleProduct(result)) return itemMap[result[0]];
-      else if (isFluidProduct(result)) return dataRaw.fluid[result.name];
+    if (recipe.results?.length === 1) {
+      const result = recipe.results[0];
+      if (isFluidProduct(result)) return dataRaw.fluid[result.name];
+      // TODO: Handle research progress products
+      else if (isResearchProgressProductPrototype(result)) return undefined;
       else return itemMap[result.name];
-    } else if (recipeData.results && recipeData.main_product) {
-      const mainProduct = recipeData.main_product;
-      const result = recipeData.results.find((r) =>
-        isSimpleProduct(r) ? r[0] === mainProduct : r.name === mainProduct,
+    } else if (recipe.results && recipe.main_product) {
+      const mainProduct = recipe.main_product;
+      const result = recipe.results.find(
+        (r) => !isResearchProgressProductPrototype(r) && r.name === mainProduct,
       );
       if (result) {
-        if (isSimpleProduct(result)) return itemMap[result[0]];
-        else if (isFluidProduct(result)) return dataRaw.fluid[result.name];
+        if (isFluidProduct(result)) return dataRaw.fluid[result.name];
+        // TODO: Handle research progress products
+        else if (isResearchProgressProductPrototype(result)) return undefined;
         else return itemMap[result.name];
       } else {
         throw new Error(
@@ -286,7 +283,7 @@ async function processMod(): Promise<void> {
 
     const hash = `${JSON.stringify(spec.icon)}.${JSON.stringify(
       spec.icon_size,
-    )}.${JSON.stringify(spec.icon_mipmaps)}.${JSON.stringify(spec.icons)}`;
+    )}.${JSON.stringify(spec.icons)}`;
     if (iconHash[hash]) {
       iconId = iconHash[hash];
     } else {
@@ -361,14 +358,12 @@ async function processMod(): Promise<void> {
     if (isMiningDrillPrototype(proto))
       addProducers(name, proto.resource_categories, 'resource');
 
-    if (!isOffshorePumpPrototype(proto)) {
-      if (proto.energy_source.type === 'burner') {
-        if (proto.energy_source.fuel_categories)
-          addProducers(name, proto.energy_source.fuel_categories, 'burner');
-        else if (proto.energy_source.fuel_category)
-          addProducers(name, [proto.energy_source.fuel_category], 'burner');
-      }
-    }
+    if (
+      !isOffshorePumpPrototype(proto) &&
+      proto.energy_source.type === 'burner' &&
+      proto.energy_source.fuel_categories
+    )
+      addProducers(name, proto.energy_source.fuel_categories, 'burner');
 
     if (
       isAssemblingMachinePrototype(proto) ||
@@ -402,11 +397,11 @@ async function processMod(): Promise<void> {
   function getMachineCategory(proto: MachineProto): string[] | undefined {
     if (isOffshorePumpPrototype(proto)) return undefined;
 
-    if (proto.energy_source.type === 'burner') {
-      if (proto.energy_source.fuel_categories)
-        return proto.energy_source.fuel_categories;
-      else return [proto.energy_source.fuel_category ?? 'chemical'];
-    }
+    if (
+      proto.energy_source.type === 'burner' &&
+      proto.energy_source.fuel_categories
+    )
+      return proto.energy_source.fuel_categories;
 
     if (proto.energy_source.type === 'fluid') {
       if (proto.energy_source.fluid_box.filter != null)
@@ -418,11 +413,6 @@ async function processMod(): Promise<void> {
     }
 
     return undefined;
-  }
-
-  function getRecipeData(recipe: RecipePrototype): RecipeData {
-    const data = recipe[mode];
-    return typeof data === 'object' ? data : (recipe as RecipeData);
   }
 
   function getProducts(
@@ -446,41 +436,41 @@ async function processMod(): Promise<void> {
 
     if (results != null) {
       for (const product of coerceArray(results)) {
-        if (isSimpleProduct(product)) {
-          const [itemId, amount] = product;
-          addEntityValue(record, itemId, amount);
-          total += amount;
-        } else {
-          if (isFluidProduct(product)) {
-            const fluid = dataRaw.fluid[product.name];
-            const temp = product.temperature ?? fluid.default_temperature;
-            temps[product.name] = temp;
-            addFluidTemp(product.name, temp);
-          }
-
-          let amount = product.amount;
-          if (
-            amount == null &&
-            product.amount_max != null &&
-            product.amount_min != null
-          ) {
-            amount = (product.amount_max + product.amount_min) / 2;
-          }
-
-          if (amount == null) continue;
-
-          if (product.probability) amount = amount * product.probability;
-
-          addEntityValue(record, product.name, amount);
-
-          if (product.catalyst_amount) {
-            if (catalyst == null) catalyst = {};
-
-            addEntityValue(catalyst, product.name, product.catalyst_amount);
-          }
-
-          total += amount;
+        if (isResearchProgressProductPrototype(product)) continue;
+        if (isFluidProduct(product)) {
+          const fluid = dataRaw.fluid[product.name];
+          const temp = product.temperature ?? fluid.default_temperature;
+          temps[product.name] = temp;
+          addFluidTemp(product.name, temp);
         }
+
+        // TODO: Handle research progress products
+        let amount = product.amount;
+        if (
+          amount == null &&
+          product.amount_max != null &&
+          product.amount_min != null
+        ) {
+          amount = (product.amount_max + product.amount_min) / 2;
+        }
+
+        if (amount == null) continue;
+
+        if (product.probability) amount = amount * product.probability;
+
+        addEntityValue(record, product.name, amount);
+
+        if (product.ignored_by_productivity) {
+          if (catalyst == null) catalyst = {};
+
+          addEntityValue(
+            catalyst,
+            product.name,
+            product.ignored_by_productivity,
+          );
+        }
+
+        total += amount;
       }
     } else if (result && result_count) {
       addEntityValue(record, result, result_count);
@@ -523,7 +513,6 @@ async function processMod(): Promise<void> {
     icons: [],
     items: [],
     recipes: [],
-    limitations: {},
   };
 
   const modDataReport: ModDataReport = {
@@ -534,22 +523,10 @@ async function processMod(): Promise<void> {
     resourceDuplicate: [],
   };
 
-  const modHashReport = emptyModHash();
-  function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
-    if (hash[key] == null) hash[key] = [];
-
-    if (!hash[key].includes(id)) {
-      hash[key].push(id);
-      modHashReport[key].push(id);
-    }
-  }
-
   function writeData(): void {
     if (fs.existsSync(modDataPath)) {
       const oldData = getJsonData(modDataPath) as ModData;
       const oldHash = getJsonData(modHashPath) as ModHash;
-
-      if (mode === 'expensive') modData.expensive = true;
 
       modData.defaults = oldData.defaults;
 
@@ -561,27 +538,8 @@ async function processMod(): Promise<void> {
           );
       }
 
-      modData.items.forEach((i) => {
-        addIfMissing(oldHash, 'items', i.id);
-
-        if (i.beacon) addIfMissing(oldHash, 'beacons', i.id);
-        if (i.belt) addIfMissing(oldHash, 'belts', i.id);
-        if (i.fuel) addIfMissing(oldHash, 'fuels', i.id);
-        if (i.cargoWagon || i.fluidWagon) addIfMissing(oldHash, 'wagons', i.id);
-        if (i.machine) addIfMissing(oldHash, 'machines', i.id);
-        if (i.module) addIfMissing(oldHash, 'modules', i.id);
-        if (i.technology) addIfMissing(oldHash, 'technologies', i.id);
-      });
-
-      modData.recipes.forEach((r) => {
-        addIfMissing(oldHash, 'recipes', r.id);
-      });
-
+      updateHash(modData, oldHash, modFlags);
       fs.writeFileSync(modHashPath, JSON.stringify(oldHash));
-      fs.writeFileSync(
-        `${tempPath}/hash-update-report.json`,
-        JSON.stringify(modHashReport),
-      );
     } else {
       const modHash: ModHash = {
         items: modData.items.map((i) => i.id),
@@ -617,27 +575,26 @@ async function processMod(): Promise<void> {
   const recipesUnlocked: Record<string, string> = {};
   const technologySet = new Set<TechnologyPrototype>();
   for (const key of Object.keys(dataRaw.technology)) {
-    const techRaw = dataRaw.technology[key];
-    const techData = techRaw[mode] || (techRaw as TechnologyData);
+    const tech = dataRaw.technology[key];
 
     if (
-      itemMap[techRaw.name] ||
-      entityMap[techRaw.name] ||
-      dataRaw.recipe[techRaw.name] ||
-      dataRaw['item-group'][techRaw.name]
+      itemMap[tech.name] ||
+      entityMap[tech.name] ||
+      dataRaw.recipe[tech.name] ||
+      dataRaw['item-group'][tech.name]
     ) {
-      techId[techRaw.name] = `${techRaw.name}-technology`;
+      techId[tech.name] = `${tech.name}-technology`;
     } else {
-      techId[techRaw.name] = techRaw.name;
+      techId[tech.name] = tech.name;
     }
 
-    if (!techData.hidden && techData.enabled !== false) {
-      technologySet.add(techRaw);
+    if (!tech.hidden && tech.enabled !== false) {
+      technologySet.add(tech);
 
-      for (const effect of coerceArray(techData.effects)) {
+      for (const effect of coerceArray(tech.effects)) {
         if (isUnlockRecipeModifier(effect)) {
-          recipesUnlocked[effect.recipe] = techId[techRaw.name];
-          technologySet.add(techRaw);
+          recipesUnlocked[effect.recipe] = techId[tech.name];
+          technologySet.add(tech);
         }
       }
     }
@@ -661,7 +618,6 @@ async function processMod(): Promise<void> {
   }
 
   // Cache recipe results to use later
-  const recipeDataMap: Record<string, RecipeData> = {};
   const recipeResultsMap: Record<
     string,
     [
@@ -683,29 +639,22 @@ async function processMod(): Promise<void> {
     let include = true;
 
     // Skip recipes that don't have results
-    const recipeData = getRecipeData(recipe);
-    const results = getProducts(
-      recipeData.results,
-      recipeData.result,
-      recipeData.result_count,
-    );
+    const results = getProducts(recipe.results);
 
     if (results[2] === 0) {
       modDataReport.noProducts.push(key);
       include = false;
     }
 
-    recipeDataMap[key] = recipeData;
     recipeResultsMap[key] = results;
 
     // Always include fixed recipes that have outputs
     if (!fixedRecipe.has(key)) {
       // Skip recipes that are not unlocked / enabled
-      if (recipeData.enabled === false && !recipesUnlocked[key])
-        include = false;
+      if (recipe.enabled === false && !recipesUnlocked[key]) include = false;
 
       // Skip recipes that are hidden
-      if (recipeData.hidden) include = false;
+      if (recipe.hidden) include = false;
     }
 
     if (include) {
@@ -724,81 +673,8 @@ async function processMod(): Promise<void> {
 
     if (include) {
       recipesEnabled[key] = recipe;
-      recipeIngredientsMap[key] = getIngredients(recipeData.ingredients);
+      recipeIngredientsMap[key] = getIngredients(recipe.ingredients);
     }
-  }
-
-  function checkForMatch(
-    ingredients: Record<string, number>,
-    results: Record<string, number>,
-  ): boolean {
-    const inKeys = Object.keys(ingredients);
-    const outKeys = Object.keys(results);
-    return (
-      inKeys.length === outKeys.length &&
-      inKeys.every((i) => results[i] === ingredients[i])
-    );
-  }
-
-  const keysToRemove = new Set<string>();
-  const recipesIncluded = Object.keys(recipesEnabled);
-
-  // Check for recipe loops
-  for (const key of Object.keys(recipesEnabled)) {
-    const ingredientsKeys = Object.keys(recipeIngredientsMap[key][0]);
-    let matchKey: string | undefined;
-    let matchMulti = false;
-    const matchIngredients: string[] = [];
-    for (const r of recipesIncluded) {
-      const results = recipeResultsMap[r][0];
-      const ingredients = recipeIngredientsMap[r][0];
-      for (const key of ingredientsKeys) {
-        if (results[key]) {
-          if (matchKey == null) matchKey = r;
-          else {
-            matchMulti = true;
-            break;
-          }
-        }
-
-        if (ingredients[key]) matchIngredients.push(key);
-      }
-
-      if (matchMulti) break;
-    }
-
-    if (matchKey != null && !matchMulti && matchIngredients.length === 1) {
-      // Ingredients to this recipe are only produced by one recipe
-      // If matchIngredients.length is 1, then the ingredients are also not used elsewhere
-
-      // Check for a loop
-      const results = recipeResultsMap[matchKey][0];
-      const ingredientMatch = checkForMatch(
-        recipeIngredientsMap[key][0],
-        results,
-      );
-
-      if (ingredientMatch) {
-        // Check whether results of this recipe match ingredients of matched recipe
-        const results = recipeResultsMap[key][0];
-        const fullMatch = checkForMatch(
-          recipeIngredientsMap[matchKey][0],
-          results,
-        );
-
-        if (fullMatch) {
-          // Detected recipe loop
-          keysToRemove.add(key);
-          keysToRemove.add(matchKey);
-          delete recipesEnabled[key];
-          delete recipesEnabled[matchKey];
-        }
-      }
-    }
-  }
-
-  for (const key of keysToRemove) {
-    delete recipesEnabled[key];
   }
 
   logTime('Processing data');
@@ -823,20 +699,12 @@ async function processMod(): Promise<void> {
 
     if (item.fuel_value) itemsUsed.add(item.name);
 
-    if (item.rocket_launch_product || item.rocket_launch_products) {
+    if (item.rocket_launch_products) {
       itemsUsed.add(item.name);
 
-      if (item.rocket_launch_product) {
-        if (isSimpleProduct(item.rocket_launch_product))
-          itemsUsed.add(item.rocket_launch_product[0]);
-        else itemsUsed.add(item.rocket_launch_product.name);
-      }
-
       if (item.rocket_launch_products) {
-        for (const product of item.rocket_launch_products) {
-          if (isSimpleProduct(product)) itemsUsed.add(product[0]);
-          else itemsUsed.add(product.name);
-        }
+        for (const product of item.rocket_launch_products)
+          itemsUsed.add(product.name);
       }
     }
 
@@ -869,17 +737,19 @@ async function processMod(): Promise<void> {
   }
 
   // Check for use in technology ingredients
-  const techDataMap: Record<string, TechnologyData> = {};
   const techIngredientsMap: Record<string, Record<string, number>> = {};
   for (const tech of technologySet) {
-    const techData = tech[mode] || (tech as TechnologyData);
-    const techIngredients =
-      techData.unit == null ? {} : getIngredients(techData.unit.ingredients)[0];
+    const techIngredients = coerceArray(tech.unit?.ingredients).reduce(
+      (e: Record<string, number>, [itemId, amount]) => {
+        e[itemId] = amount;
+        return e;
+      },
+      {},
+    );
 
     for (const ingredient of Object.keys(techIngredients))
       itemsUsed.add(ingredient);
 
-    techDataMap[tech.name] = techData;
     techIngredientsMap[tech.name] = techIngredients;
   }
 
@@ -964,6 +834,7 @@ async function processMod(): Promise<void> {
         const boiler = dataRaw.boiler[boilerName];
         if (
           boiler.output_fluid_box.filter === proto.name &&
+          boiler.target_temperature &&
           boiler.target_temperature !== proto.default_temperature
         )
           addFluidTemp(proto.name, boiler.target_temperature);
@@ -1070,6 +941,15 @@ async function processMod(): Promise<void> {
         icon: await getIcon(proto),
         belt: getBelt(proto),
       });
+    } else if (isPumpPrototype(proto)) {
+      modData.items.push({
+        id: proto.name,
+        name: entityLocale.names[proto.name],
+        category: group.name,
+        row: getItemRow(proto),
+        icon: await getIcon(proto),
+        pipe: getPipe(proto),
+      });
     } else if (isCargoWagonPrototype(proto)) {
       modData.items.push({
         id: proto.name,
@@ -1149,6 +1029,12 @@ async function processMod(): Promise<void> {
           item.belt = getBelt(entity);
         }
 
+        // Parse pipe
+        if (dataRaw.pump[result]) {
+          const entity = dataRaw.pump[result];
+          item.pipe = getPipe(entity);
+        }
+
         // Parse cargo wagon
         if (dataRaw['cargo-wagon'][result]) {
           const entity = dataRaw['cargo-wagon'][result];
@@ -1165,31 +1051,12 @@ async function processMod(): Promise<void> {
       // Parse module
       if (isModulePrototype(proto)) {
         item.module = {
-          consumption: proto.effect.consumption?.bonus || undefined,
-          pollution: proto.effect.pollution?.bonus || undefined,
-          productivity: proto.effect.productivity?.bonus || undefined,
-          speed: proto.effect.speed?.bonus || undefined,
+          consumption: proto.effect.consumption || undefined,
+          pollution: proto.effect.pollution || undefined,
+          productivity: proto.effect.productivity || undefined,
+          quality: proto.effect.quality || undefined,
+          speed: proto.effect.speed || undefined,
         };
-
-        let limitation = coerceArray(proto.limitation);
-        if (proto.limitation_blacklist) {
-          limitation = limitation ?? Object.keys(recipesEnabled);
-          limitation = limitation.filter(
-            (l) => !proto.limitation_blacklist?.includes(l),
-          );
-        }
-
-        if (limitation != null) {
-          const set = new Set(limitation);
-          const value = [...set].sort();
-          const hash = JSON.stringify(value);
-          if (!limitations[hash]) {
-            limitations[hash] = proto.name;
-            modData.limitations[proto.name] = value;
-          }
-
-          item.module.limitation = limitations[hash];
-        }
       }
 
       // Parse fuel
@@ -1291,10 +1158,10 @@ async function processMod(): Promise<void> {
     groupsUsed.add(group.name);
 
     if (isRecipePrototype(proto)) {
-      const recipeData = recipeDataMap[proto.name];
       const [recipeIn, recipeInTemp] = recipeIngredientsMap[proto.name];
       const [_recipeOut, , , temps] = recipeResultsMap[proto.name];
       let [, recipeCatalyst] = recipeResultsMap[proto.name];
+      const disallowedEffects = getRecipeDisallowedEffects(proto);
 
       // Convert fluid outputs to use correct ids
       const recipeOut = spread(_recipeOut);
@@ -1394,16 +1261,12 @@ async function processMod(): Promise<void> {
           const [recipeIn, ids] = recipeInOptions[i];
           const id = i === 0 ? proto.name : `${proto.name}-${ids.join('-')}`;
 
-          if (proto.name === 'ore-tin') {
-            console.log(recipeInTemp);
-          }
-
           const recipe: RecipeJson = {
             id,
             name: recipeLocale.names[proto.name],
             category: subgroup.group,
             row: getRecipeRow(proto),
-            time: recipeData.energy_required ?? 0.5,
+            time: proto.energy_required ?? 0.5,
             producers,
             in: recipeIn,
             /**
@@ -1416,14 +1279,8 @@ async function processMod(): Promise<void> {
             icon,
           };
 
-          if (i > 0) {
-            recipe.icon = recipe.icon ?? proto.name;
-            // Add recipe temperature variants to relevant limitations
-            for (const limitationId of Object.keys(modData.limitations)) {
-              const limitation = modData.limitations[limitationId];
-              if (limitation.includes(proto.name)) limitation.push(id);
-            }
-          }
+          if (i > 0) recipe.icon = recipe.icon ?? proto.name;
+          if (disallowedEffects) recipe.disallowedEffects = disallowedEffects;
 
           modData.recipes.push(recipe);
         }
@@ -1435,7 +1292,10 @@ async function processMod(): Promise<void> {
       for (const pumpName of Object.keys(machines.offshorePump)) {
         const entityName = machines.offshorePump[pumpName];
         const offshorePump = dataRaw['offshore-pump'][entityName];
-        if (offshorePump.fluid === proto.name) {
+        if (
+          offshorePump.fluid_box.filter == null ||
+          offshorePump.fluid_box.filter === proto.name
+        ) {
           // Found an offshore pump recipe
           const id = getFakeRecipeId(
             proto.name,
@@ -1462,7 +1322,10 @@ async function processMod(): Promise<void> {
       for (const boilerName of Object.keys(machines.boiler)) {
         const entityName = machines.boiler[boilerName];
         const boiler = dataRaw.boiler[entityName];
-        if (boiler.output_fluid_box.filter === proto.name) {
+        if (
+          boiler.output_fluid_box.filter === proto.name &&
+          boiler.target_temperature
+        ) {
           if (boiler.fluid_box.filter == null) continue;
           const inputProto = dataRaw.fluid[boiler.fluid_box.filter];
           let outputId = proto.name;
@@ -1504,16 +1367,12 @@ async function processMod(): Promise<void> {
           // Ignore if already processed
           processedLaunchProto.has(launch_proto.name) ||
           // Ignore if no launch products
-          (launch_proto.rocket_launch_product == null &&
-            launch_proto.rocket_launch_products == null)
+          launch_proto.rocket_launch_products == null
         )
           continue;
 
         const [recipeOut, recipeCatalyst] = getProducts(
-          launch_proto.rocket_launch_products ??
-            (launch_proto.rocket_launch_product
-              ? [launch_proto.rocket_launch_product]
-              : undefined),
+          launch_proto.rocket_launch_products,
         );
 
         if (recipeOut[proto.name]) {
@@ -1555,12 +1414,7 @@ async function processMod(): Promise<void> {
 
               // Add rocket parts
               let part: string | undefined;
-              const partRecipeData = getRecipeData(partRecipe);
-              const [partRecipeProducts, _] = getProducts(
-                partRecipeData.results,
-                partRecipeData.result,
-                partRecipeData.result_count,
-              );
+              const [partRecipeProducts, _] = getProducts(partRecipe.results);
               for (const id of Object.keys(partRecipeProducts)) {
                 recipeIn[id] =
                   partRecipeProducts[id] * silo.rocket_parts_required;
@@ -1698,10 +1552,8 @@ async function processMod(): Promise<void> {
 
   const technologies = Array.from(technologySet).sort((a, b) => {
     // First, sort by number of ingredients
-    const aData = a[mode] || (a as TechnologyData);
-    const bData = b[mode] || (b as TechnologyData);
-    const aIngredients = coerceArray(aData.unit.ingredients);
-    const bIngredients = coerceArray(bData.unit.ingredients);
+    const aIngredients = coerceArray(a.unit?.ingredients);
+    const bIngredients = coerceArray(b.unit?.ingredients);
 
     if (aIngredients.length !== bIngredients.length) {
       return aIngredients.length - bIngredients.length;
@@ -1723,11 +1575,10 @@ async function processMod(): Promise<void> {
 
   const labs = Object.keys(machines.lab);
   const technologyIds = technologies.map((t) => t.name);
-  for (const techRaw of technologies) {
-    const techData = techDataMap[techRaw.name];
+  for (const tech of technologies) {
     const technology: TechnologyJson = {};
-    const id = techId[techRaw.name];
-    const prerequisites = coerceArray(techData.prerequisites);
+    const id = techId[tech.name];
+    const prerequisites = coerceArray(tech.prerequisites);
     if (prerequisites?.length) {
       technology.prerequisites = prerequisites
         // Ignore any disabled or hidden prerequisites
@@ -1735,7 +1586,7 @@ async function processMod(): Promise<void> {
         .map((p) => techId[p]);
     }
 
-    const inputs = Object.keys(techIngredientsMap[techRaw.name]);
+    const inputs = Object.keys(techIngredientsMap[tech.name]);
     const row = inputs.length;
     const producers = labs.filter((l) => {
       const lab = dataRaw.lab[machines.lab[l]];
@@ -1743,30 +1594,32 @@ async function processMod(): Promise<void> {
       return inputs.every((i) => labInputs.includes(i));
     });
 
-    const recipe: RecipeJson = {
-      id,
-      name: techLocale.names[techRaw.name],
-      category: 'technology',
-      row,
-      time: techData.unit.time,
-      producers,
-      in: techIngredientsMap[techRaw.name],
-      out: { [id]: 1 },
-      isTechnology: true,
-      icon: await getIcon(techRaw),
-      iconText: getIconText(techRaw),
-    };
-    modData.recipes.push(recipe);
-
     const item: ItemJson = {
       id,
-      name: recipe.name,
-      category: recipe.category,
+      name: techLocale.names[tech.name],
+      category: 'technology',
       row,
       technology,
-      icon: recipe.icon,
-      iconText: recipe.iconText,
+      icon: await getIcon(tech),
+      iconText: getIconText(tech),
     };
+
+    if (tech.unit) {
+      const recipe: RecipeJson = {
+        id,
+        name: item.name,
+        category: item.category,
+        row,
+        time: tech.unit.time,
+        producers,
+        in: techIngredientsMap[tech.name],
+        out: { [id]: 1 },
+        isTechnology: true,
+        icon: item.icon,
+        iconText: item.iconText,
+      };
+      modData.recipes.push(recipe);
+    }
 
     if (inputs.length) {
       const firstInput = itemMap[inputs[0]];

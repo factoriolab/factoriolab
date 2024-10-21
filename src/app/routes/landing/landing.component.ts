@@ -14,7 +14,6 @@ import { Game, gameOptions } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { gameInfo } from '~/models/game-info';
-import { modOptions } from '~/models/options';
 import { rational } from '~/models/rational';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
@@ -63,10 +62,10 @@ export class LandingComponent {
   itemIds = this.recipesSvc.availableItemIds;
   states = this.settingsSvc.gameStates;
   stateOptions = this.settingsSvc.stateOptions;
+  modOptions = this.settingsSvc.modOptions;
 
   gameInfo = gameInfo;
   gameOptions = gameOptions;
-  modOptions = modOptions;
 
   selectItem(targetId: string): void {
     this.objectivesSvc.create({

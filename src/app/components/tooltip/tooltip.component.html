@@ -117,10 +117,16 @@
   }
   @if (type() === 'machine' && data().machineEntities[id()]; as machine) {
     <table>
-      @if (machine.speed && !data().info.flags.has('hideMachineSettings')) {
+      @if (machine.speed && !data().flags.has('hideMachineSettings')) {
         <tr>
           <td>{{ 'data.craftingSpeed' | translate }}</td>
           <td>{{ machine.speed | round }}</td>
+        </tr>
+      }
+      @if (machine.baseProductivity) {
+        <tr>
+          <td>{{ 'data.baseProductivity' | translate }}</td>
+          <td>{{ machine.baseProductivity | round }}</td>
         </tr>
       }
       @if (machine.modules) {
@@ -224,6 +230,12 @@
         <tr>
           <td>{{ 'data.pollution' | translate }}</td>
           <td>{{ module.pollution | bonusPercent }}</td>
+        </tr>
+      }
+      @if (module.quality && module.quality.nonzero()) {
+        <tr>
+          <td>{{ 'data.quality' | translate }}</td>
+          <td>{{ module.quality | bonusPercent }}</td>
         </tr>
       }
       @if (module.sprays && module.sprays.nonzero()) {

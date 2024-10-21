@@ -33,7 +33,7 @@ describe('canActivateId', () => {
 
   it('should migrate old states', async () => {
     await RouterTestingHarness.create('/list?p=coal*0.5&s=**0&v=10');
-    expect(router.url).toEqual('/1.1/list?v=11&o=coal*0.5&odr=0');
+    expect(router.url).toEqual('/2.0/list?v=11&o=coal*0.5&odr=0');
   });
 
   it('should migrate old zip states', async () => {
@@ -47,7 +47,7 @@ describe('canActivateId', () => {
 
   it('should migrate old game shortcuts', async () => {
     const rth = await RouterTestingHarness.create('/factorio');
-    expect(router.url).toEqual('/1.1');
+    expect(router.url).toEqual('/2.0');
     await rth.navigateByUrl('/satisfactory');
     expect(router.url).toEqual('/sfy');
     await rth.navigateByUrl('/techtonica');

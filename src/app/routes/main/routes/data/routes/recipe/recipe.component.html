@@ -16,7 +16,7 @@
         <th>{{ 'data.category' | translate }}</th>
         <td>
           <a
-            [routerLink]="'/data/categories/' + obj.category"
+            [routerLink]="data().route + '/data/categories/' + obj.category"
             queryParamsHandling="preserve"
           >
             <button
@@ -42,7 +42,7 @@
           @for (i of info().ingredientIds; track i) {
             <div>
               <a
-                [routerLink]="'/data/items/' + i"
+                [routerLink]="data().route + '/data/items/' + i"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -67,7 +67,7 @@
           @for (i of info().catalystIds; track i) {
             <div>
               <a
-                [routerLink]="'/data/items/' + i"
+                [routerLink]="data().route + '/data/items/' + i"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -92,7 +92,7 @@
           @for (i of info().productIds; track i) {
             <div>
               <a
-                [routerLink]="'/data/items/' + i"
+                [routerLink]="data().route + '/data/items/' + i"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -116,7 +116,7 @@
         @for (i of obj.producers; track i) {
           <div>
             <a
-              [routerLink]="'/data/machines/' + i"
+              [routerLink]="data().route + '/data/machines/' + i"
               queryParamsHandling="preserve"
             >
               <button
@@ -137,7 +137,7 @@
         <th>{{ 'data.unlockedBy' | translate }}</th>
         <td>
           <a
-            [routerLink]="'/data/technologies/' + obj.unlockedBy"
+            [routerLink]="data().route + '/data/technologies/' + obj.unlockedBy"
             queryParamsHandling="preserve"
           >
             <button
@@ -181,7 +181,7 @@
         <th>{{ 'data.rocketPart' | translate }}</th>
         <td>
           <a
-            [routerLink]="'/data/items/' + obj.part"
+            [routerLink]="data().route + '/data/items/' + obj.part"
             queryParamsHandling="preserve"
           >
             <button
@@ -251,7 +251,7 @@
         <td>
           @if (recipeSettings.machineId; as id) {
             <a
-              [routerLink]="'/data/machines/' + id"
+              [routerLink]="data().route + '/data/machines/' + id"
               queryParamsHandling="preserve"
             >
               <button
@@ -277,7 +277,7 @@
                     <i [class]="moduleId | iconSmClass"></i>
                   } @else {
                     <a
-                      [routerLink]="'/data/modules/' + moduleId"
+                      [routerLink]="data().route + '/data/modules/' + moduleId"
                       queryParamsHandling="preserve"
                     >
                       <button
@@ -296,7 +296,7 @@
           </td>
         </tr>
       }
-      @if (data().info.flags.has('beacons')) {
+      @if (data().flags.has('beacons')) {
         <tr>
           <th>{{ 'data.beacons' | translate }}</th>
           <td>
@@ -304,7 +304,7 @@
               <div>
                 @if (beacon.id) {
                   <a
-                    [routerLink]="'/data/beacons/' + beacon.id"
+                    [routerLink]="data().route + '/data/beacons/' + beacon.id"
                     queryParamsHandling="preserve"
                   >
                     <button
@@ -326,7 +326,9 @@
                       <i [class]="moduleId | iconSmClass"> </i>
                     } @else {
                       <a
-                        [routerLink]="'/data/modules/' + moduleId"
+                        [routerLink]="
+                          data().route + '/data/modules/' + moduleId
+                        "
                         queryParamsHandling="preserve"
                       >
                         <button
@@ -346,7 +348,7 @@
           </td>
         </tr>
       }
-      @if (data().info.flags.has('overclock')) {
+      @if (data().flags.has('overclock')) {
         <tr>
           <th>{{ 'data.overclock' | translate }}</th>
           <td>{{ recipeSettings.overclock }}%</td>

@@ -177,7 +177,7 @@
           </div>
         </ng-template>
         <div class="p-fluid">
-          <div class="mt-3" [class.pb-3]="data().info.flags.has('mods')">
+          <div class="mt-3" [class.pb-3]="data().flags.has('mods')">
             <span class="p-float-label">
               <p-dropdown
                 labDropdownTranslate
@@ -189,7 +189,7 @@
               >
               </p-dropdown>
               <label for="game">{{ 'settings.game' | translate }}</label>
-              @if (!data().info.flags.has('mods')) {
+              @if (!data().flags.has('mods')) {
                 @for (mod of data().version | keyvalue; track mod.key) {
                   <small class="position-absolute end-0 bottom-100 me-1 mb-1">
                     {{ mod.value }}
@@ -198,7 +198,7 @@
               }
             </span>
           </div>
-          @if (data().info.flags.has('mods')) {
+          @if (data().flags.has('mods')) {
             <div class="position-relative">
               <label for="mod" class="p-static-label">{{
                 'settings.modSet' | translate
@@ -218,7 +218,7 @@
                   [autofocusFilter]="!contentSvc.isMobile()"
                   [pTooltip]="'settings.modSetTooltip' | translate"
                   [ngModel]="settings().modId"
-                  [options]="modOptions"
+                  [options]="modOptions()"
                   (onChange)="setMod($event.value)"
                 >
                 </p-dropdown>
@@ -395,108 +395,101 @@
             </span>
           </div>
           @if (data().moduleIds.length > 1) {
-            <div class="mt-3 pb-3">
-              <div class="p-float-label">
-                <p-multiSelect
-                  inputId="modifier-rank"
-                  styleClass="icons"
-                  appendTo="body"
-                  scrollHeight="40vh"
-                  panelStyleClass="tooltip"
-                  [pTooltip]="'settings.modifierRankTooltip' | translate"
-                  [ngModel]="settings().moduleRankIds"
-                  [options]="options().modules"
-                  (onChange)="
-                    settingsSvc.updateField(
-                      'moduleRankIds',
-                      $event.value,
-                      settings().defaultModuleRankIds
-                    )
-                  "
-                >
-                  <ng-template pTemplate="selectedItems" let-items>
-                    <div class="d-flex">
-                      @for (item of items; track item; let i = $index) {
-                        <i class="mx-2" [class]="item | iconSmClass"></i>
-                      }
+            <div class="pb-3">
+              <label class="p-static-label" for="modifier-rank">{{
+                'settings.modifierRank' | translate
+              }}</label>
+              <p-multiSelect
+                inputId="modifier-rank"
+                styleClass="icons"
+                appendTo="body"
+                scrollHeight="40vh"
+                panelStyleClass="tooltip"
+                [pTooltip]="'settings.modifierRankTooltip' | translate"
+                [ngModel]="settings().moduleRankIds"
+                [options]="options().modules"
+                (onChange)="
+                  settingsSvc.updateField(
+                    'moduleRankIds',
+                    $event.value,
+                    settings().defaultModuleRankIds
+                  )
+                "
+              >
+                <ng-template pTemplate="selectedItems" let-items>
+                  <div class="d-flex">
+                    @for (item of items; track item; let i = $index) {
+                      <i class="mx-2" [class]="item | iconSmClass"></i>
+                    }
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="item" let-item>
+                  <div
+                    class="d-flex align-items-center p-2 w-100 h-100"
+                    [pTooltip]="tooltip"
+                  >
+                    <i [class]="item.value | iconSmClass"></i>
+                    <div class="ms-3 text-truncate">
+                      {{ item.label }}
                     </div>
-                  </ng-template>
-                  <ng-template pTemplate="item" let-item>
-                    <div
-                      class="d-flex align-items-center p-2 w-100 h-100"
-                      [pTooltip]="tooltip"
-                    >
-                      <i [class]="item.value | iconSmClass"></i>
-                      <div class="ms-3 text-truncate">
-                        {{ item.label }}
-                      </div>
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="item.value"
-                          type="module"
-                        ></lab-tooltip>
-                      </ng-template>
-                    </div>
-                  </ng-template>
-                </p-multiSelect>
-                <label for="modifier-rank">{{
-                  'settings.modifierRank' | translate
-                }}</label>
-              </div>
+                    <ng-template #tooltip>
+                      <lab-tooltip
+                        [id]="item.value"
+                        type="module"
+                      ></lab-tooltip>
+                    </ng-template>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
             </div>
           }
-          @if (data().info.flags.has('fuels')) {
-            <div class="mt-3 pb-3">
-              <div class="p-float-label">
-                <p-multiSelect
-                  inputId="fuel-rank"
-                  styleClass="icons"
-                  appendTo="body"
-                  scrollHeight="40vh"
-                  panelStyleClass="tooltip"
-                  [pTooltip]="'settings.fuelRankTooltip' | translate"
-                  [ngModel]="settings().fuelRankIds"
-                  [options]="options().fuels"
-                  (onChange)="
-                    settingsSvc.updateField(
-                      'fuelRankIds',
-                      $event.value,
-                      settings().defaultFuelRankIds
-                    )
-                  "
-                >
-                  <ng-template pTemplate="selectedItems" let-items>
-                    <div class="d-flex">
-                      @for (item of items; track item; let i = $index) {
-                        <i class="mx-2" [class]="item | iconSmClass"></i>
-                      }
+          @if (data().flags.has('fuels')) {
+            <div class="pb-3">
+              <label class="p-static-label" for="fuel-rank">{{
+                'settings.fuelRank' | translate
+              }}</label>
+              <p-multiSelect
+                inputId="fuel-rank"
+                styleClass="icons"
+                appendTo="body"
+                scrollHeight="40vh"
+                panelStyleClass="tooltip"
+                [pTooltip]="'settings.fuelRankTooltip' | translate"
+                [ngModel]="settings().fuelRankIds"
+                [options]="options().fuels"
+                (onChange)="
+                  settingsSvc.updateField(
+                    'fuelRankIds',
+                    $event.value,
+                    settings().defaultFuelRankIds
+                  )
+                "
+              >
+                <ng-template pTemplate="selectedItems" let-items>
+                  <div class="d-flex">
+                    @for (item of items; track item; let i = $index) {
+                      <i class="mx-2" [class]="item | iconSmClass"></i>
+                    }
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="item" let-item>
+                  <div
+                    class="d-flex align-items-center p-2 w-100 h-100"
+                    [pTooltip]="tooltip"
+                  >
+                    <i [class]="item.value | iconSmClass"></i>
+                    <div class="ms-3 text-truncate">
+                      {{ item.label }}
                     </div>
-                  </ng-template>
-                  <ng-template pTemplate="item" let-item>
-                    <div
-                      class="d-flex align-items-center p-2 w-100 h-100"
-                      [pTooltip]="tooltip"
-                    >
-                      <i [class]="item.value | iconSmClass"></i>
-                      <div class="ms-3 text-truncate">
-                        {{ item.label }}
-                      </div>
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="item.value"
-                          type="fuel"
-                        ></lab-tooltip>
-                      </ng-template>
-                    </div>
-                  </ng-template>
-                </p-multiSelect>
-                <label for="fuel-rank">{{
-                  'settings.fuelRank' | translate
-                }}</label>
-              </div>
+                    <ng-template #tooltip>
+                      <lab-tooltip [id]="item.value" type="fuel"></lab-tooltip>
+                    </ng-template>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
             </div>
           }
-          @if (!data().info.flags.has('hideMachineSettings')) {
+          @if (!data().flags.has('hideMachineSettings')) {
             <div class="p-inputgroup flex-wrap machine-preference mb-1">
               <span
                 class="p-inputgroup-addon"
@@ -537,7 +530,7 @@
                   </div>
                 </ng-template>
               </p-dropdown>
-              @if (data().info.flags.has('overclock')) {
+              @if (data().flags.has('overclock')) {
                 <p-inputNumber
                   #overclockInput
                   labNoDrag
@@ -561,7 +554,7 @@
                 </p-inputNumber>
               }
               @if (
-                data().info.flags.has('beacons') && settings().beacons;
+                data().flags.has('beacons') && settings().beacons;
                 as beacons
               ) {
                 <button
@@ -777,7 +770,7 @@
                         }
                       }
                       <!-- Overclock input -->
-                      @if (data().info.flags.has('overclock')) {
+                      @if (data().flags.has('overclock')) {
                         <p-inputNumber
                           #overclockInput
                           labNoDrag
@@ -863,7 +856,7 @@
             </p-orderList>
             <div class="pt-2"><!--spacer--></div>
           }
-          @if (data().info.flags.has('beacons')) {
+          @if (data().flags.has('beacons')) {
             <div class="pb-3">
               <p-checkbox
                 [ngModel]="settings().beaconReceivers != null"
@@ -893,7 +886,7 @@
               ></lab-input-number>
             </div>
           }
-          @if (data().info.flags.has('proliferator')) {
+          @if (data().flags.has('proliferator')) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
                 <p-dropdown
@@ -987,6 +980,22 @@
               }}</label>
             </div>
           </div>
+          @if (data().flags.has('beltStack')) {
+            <div class="pb-3">
+              <label class="p-static-label" for="stack">{{
+                'settings.defaultStack' | translate
+              }}</label>
+              <lab-input-number
+                inputId="stack"
+                class="w-100"
+                [pTooltip]="'settings.defaultStackTooltip' | translate"
+                [value]="settings().stack ?? rational.one"
+                [minimum]="rational.one"
+                [maximum]="maximumStack"
+                (setValue)="settingsSvc.apply({ stack: $event })"
+              ></lab-input-number>
+            </div>
+          }
           @if (data().pipeIds.length > 1) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
@@ -1134,7 +1143,7 @@
               </div>
             </div>
           }
-          @if (data().info.flags.has('flowRate')) {
+          @if (data().flags.has('flowRate')) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
                 <p-inputNumber
@@ -1167,7 +1176,7 @@
               </div>
             </div>
           }
-          @if (data().info.flags.has('inserterEstimation')) {
+          @if (data().flags.has('inserterEstimation')) {
             <div class="mt-3">
               <div class="p-float-label">
                 <p-dropdown
@@ -1190,14 +1199,14 @@
         </div>
       </p-accordionTab>
       @if (
-        data().info.flags.has('inserterEstimation') ||
-        data().info.flags.has('miningSpeed') ||
-        data().info.flags.has('miningProductivity') ||
-        data().info.flags.has('researchSpeed')
+        data().flags.has('inserterEstimation') ||
+        data().flags.has('miningSpeed') ||
+        data().flags.has('miningProductivity') ||
+        data().flags.has('researchSpeed')
       ) {
         <p-accordionTab [header]="'settings.bonuses' | translate">
           <div class="p-fluid">
-            @if (data().info.flags.has('miningSpeed')) {
+            @if (data().flags.has('miningSpeed')) {
               <div class="mt-3 pb-3">
                 <div class="p-float-label">
                   <p-inputNumber
@@ -1227,7 +1236,7 @@
                 </div>
               </div>
             }
-            @if (data().info.flags.has('miningProductivity')) {
+            @if (data().flags.has('miningProductivity')) {
               <div class="mt-3 pb-3">
                 <div class="p-float-label">
                   <p-inputNumber
@@ -1256,7 +1265,7 @@
                 </div>
               </div>
             }
-            @if (data().info.flags.has('researchSpeed')) {
+            @if (data().flags.has('researchSpeed')) {
               <div class="mt-3 pb-3">
                 <div class="p-float-label">
                   <p-dropdown
@@ -1276,7 +1285,7 @@
                 </div>
               </div>
             }
-            @if (data().info.flags.has('inserterEstimation')) {
+            @if (data().flags.has('inserterEstimation')) {
               <div class="mt-3">
                 <div class="p-float-label">
                   <p-dropdown

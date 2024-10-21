@@ -4,10 +4,20 @@ import {
   FluidPrototype,
   IngredientPrototype,
   PrototypeBase,
+  ResearchIngredient,
 } from 'scripts/factorio.models';
 
+import { ItemJson } from '~/models/data/item';
+import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
-import { Entities } from '~/models/entities';
+import {
+  itemHasQuality,
+  Quality,
+  qualityId,
+  recipeHasQuality,
+} from '~/models/enum/quality';
+import { Flag } from '~/models/flags';
+import { Entities } from '~/models/utils';
 
 import {
   allEffects,
@@ -18,7 +28,6 @@ import {
   DataRawDump,
   EffectType,
   isFluidIngredient,
-  isSimpleIngredient,
   ModList,
   PlayerData,
 } from '../factorio-build.models';
@@ -67,11 +76,12 @@ export function getItemMap(
   dataRaw: DataRawDump,
 ): Record<string, AnyItemPrototype | FluidPrototype> {
   return anyItemKeys.reduce(
-    (result: Record<string, AnyItemPrototype | FluidPrototype>, key) =>
-      Object.keys(dataRaw[key]).reduce((result, name) => {
+    (result: Record<string, AnyItemPrototype | FluidPrototype>, key) => {
+      return Object.keys(dataRaw[key]).reduce((result, name) => {
         result[name] = dataRaw[key][name];
         return result;
-      }, result),
+      }, result);
+    },
     {},
   );
 }
@@ -98,7 +108,7 @@ export function getIconText(proto: PrototypeBase): string | undefined {
 }
 
 export function getIngredients(
-  ingredients: IngredientPrototype[] | Record<string, IngredientPrototype>,
+  ingredients: IngredientPrototype[] | undefined,
 ): [
   // Ingredients
   Record<string, number>,
@@ -109,36 +119,30 @@ export function getIngredients(
   const temps: Record<string, [number | undefined, number | undefined]> = {};
 
   for (const ingredient of coerceArray(ingredients)) {
-    if (isSimpleIngredient(ingredient)) {
-      const [itemId, amount] = ingredient;
-      addEntityValue(result, itemId, amount);
-    } else {
-      if (isFluidIngredient(ingredient)) {
-        if (ingredient.temperature) {
-          temps[ingredient.name] = [
-            ingredient.temperature,
-            ingredient.temperature,
-          ];
-        } else {
-          temps[ingredient.name] = [
-            ingredient.minimum_temperature,
-            ingredient.maximum_temperature,
-          ];
-        }
+    if (isFluidIngredient(ingredient)) {
+      if (ingredient.temperature) {
+        temps[ingredient.name] = [
+          ingredient.temperature,
+          ingredient.temperature,
+        ];
+      } else {
+        temps[ingredient.name] = [
+          ingredient.minimum_temperature,
+          ingredient.maximum_temperature,
+        ];
       }
-      addEntityValue(result, ingredient.name, ingredient.amount);
     }
+    addEntityValue(result, ingredient.name, ingredient.amount);
   }
 
   return [result, temps];
 }
 
-export function getLastIngredient(ingredients: IngredientPrototype[]): string {
+export function getLastIngredient(ingredients: ResearchIngredient[]): string {
   if (ingredients.length === 0) return '';
 
   const ingredient = ingredients[ingredients.length - 1];
-  if (isSimpleIngredient(ingredient)) return ingredient[0];
-  else return ingredient.name;
+  return ingredient[0];
 }
 
 export function getVersion(
@@ -186,4 +190,60 @@ export function emptyModHash(): ModHash {
     technologies: [],
     recipes: [],
   };
+}
+
+export function addIfMissing(
+  hash: ModHash,
+  key: keyof ModHash,
+  id: string,
+): void {
+  if (hash[key] == null) hash[key] = [];
+  if (!hash[key].includes(id)) hash[key].push(id);
+}
+
+export function updateHashItem(hash: ModHash, i: ItemJson, id: string): void {
+  addIfMissing(hash, 'items', id);
+  if (i.beacon) addIfMissing(hash, 'beacons', id);
+  if (i.belt) addIfMissing(hash, 'belts', id);
+  if (i.fuel) addIfMissing(hash, 'fuels', id);
+  if (i.cargoWagon || i.fluidWagon) addIfMissing(hash, 'wagons', id);
+  if (i.machine) addIfMissing(hash, 'machines', id);
+  if (i.module) addIfMissing(hash, 'modules', id);
+  if (i.technology) addIfMissing(hash, 'technologies', id);
+}
+
+const QUALITIES = [
+  Quality.Uncommon,
+  Quality.Rare,
+  Quality.Epic,
+  Quality.Legendary,
+];
+
+export function updateHash(
+  data: ModData,
+  hash: ModHash,
+  flags: Set<Flag>,
+): void {
+  data.items.forEach((i) => {
+    updateHashItem(hash, i, i.id);
+    if (flags.has('quality') && itemHasQuality(i)) {
+      QUALITIES.forEach((q) => {
+        updateHashItem(hash, i, qualityId(i.id, q));
+      });
+    }
+  });
+
+  const itemData = data.items.reduce((e: Entities<ItemJson>, i) => {
+    e[i.id] = i;
+    return e;
+  }, {});
+
+  data.recipes.forEach((r) => {
+    addIfMissing(hash, 'recipes', r.id);
+    if (flags.has('quality') && recipeHasQuality(r, itemData)) {
+      QUALITIES.forEach((q) => {
+        addIfMissing(hash, 'recipes', qualityId(r.id, q));
+      });
+    }
+  });
 }

@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 
-import { DEFAULT_MOD } from '~/models/constants';
 import { Language } from '~/models/enum/language';
 import { Preset } from '~/models/enum/preset';
 import {
@@ -26,8 +25,8 @@ import { Mocks } from '.';
       provide: DatasetsService,
       useFactory: (): DatasetsService => {
         const datasetsSvc = new DatasetsService();
-        datasetsSvc.loadData(DEFAULT_MOD, Mocks.modData, Mocks.modHash);
-        datasetsSvc.loadI18n(DEFAULT_MOD, Language.Chinese, Mocks.modI18n);
+        datasetsSvc.loadData('1.1', Mocks.modData, Mocks.modHash);
+        datasetsSvc.loadI18n('1.1', Language.Chinese, Mocks.modI18n);
         return datasetsSvc;
       },
     },
@@ -35,7 +34,7 @@ import { Mocks } from '.';
       provide: SettingsService,
       useFactory: (): SettingsService => {
         const settingsSvc = new SettingsService();
-        settingsSvc.apply({ modId: DEFAULT_MOD, preset: Preset.Beacon8 });
+        settingsSvc.apply({ modId: '1.1', preset: Preset.Beacon8 });
         return settingsSvc;
       },
     },

@@ -16,7 +16,7 @@ import { Belt } from '~/models/data/belt';
 import { CargoWagon } from '~/models/data/cargo-wagon';
 import { FluidWagon } from '~/models/data/fluid-wagon';
 import { Fuel } from '~/models/data/fuel';
-import { Item, parseItem } from '~/models/data/item';
+import { Item, ItemJson, parseItem } from '~/models/data/item';
 import { Machine } from '~/models/data/machine';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
@@ -34,10 +34,17 @@ import { linkValueOptions } from '~/models/enum/link-value';
 import { MaximizeType } from '~/models/enum/maximize-type';
 import { objectiveUnitOptions } from '~/models/enum/objective-unit';
 import { Preset, presetOptions } from '~/models/enum/preset';
+import {
+  itemHasQuality,
+  Quality,
+  qualityId,
+  recipeHasQuality,
+} from '~/models/enum/quality';
 import { researchBonusValue } from '~/models/enum/research-bonus';
+import { flags } from '~/models/flags';
 import { gameInfo } from '~/models/game-info';
 import { Mod } from '~/models/mod';
-import { Options } from '~/models/options';
+import { modOptions, Options } from '~/models/options';
 import { Rational, rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import {
@@ -69,6 +76,7 @@ export interface SettingsState {
   cargoWagonId?: string;
   fluidWagonId?: string;
   flowRate: Rational;
+  stack?: Rational;
   excludedRecipeIds?: Set<string>;
   checkedRecipeIds: Set<string>;
   netProductionOnly: boolean;
@@ -180,36 +188,14 @@ export class SettingsService extends Store<SettingsState> {
     return gameInfo[game];
   });
 
-  columnOptions = computed(() => {
-    const gameInfo = this.gameInfo();
-    return columnOptions(gameInfo);
-  });
-
   displayRateInfo = computed(() => {
     const displayRate = this.displayRate();
     return displayRateInfo[displayRate];
   });
 
-  objectiveUnitOptions = computed(() => {
-    const dispRateInfo = this.displayRateInfo();
-    const gameInfo = this.gameInfo();
-    return objectiveUnitOptions(dispRateInfo, gameInfo);
-  });
-
-  presetOptions = computed(() => {
-    const gameInfo = this.gameInfo();
-    return presetOptions(gameInfo);
-  });
-
-  linkValueOptions = computed(() => {
-    const gameInfo = this.gameInfo();
-    return linkValueOptions(gameInfo);
-  });
-
-  columnsState = computed(() => {
-    const gameInfo = this.gameInfo();
-    const columns = this.preferencesSvc.columns();
-    return gameColumnsState(spread(initialColumnsState, columns), gameInfo);
+  modOptions = computed(() => {
+    const game = this.game();
+    return modOptions(game);
   });
 
   defaults = computed(() => this.computeDefaults(this.mod(), this.preset()));
@@ -223,6 +209,33 @@ export class SettingsService extends Store<SettingsState> {
       this.defaults(),
     ),
   );
+
+  linkValueOptions = computed(() => {
+    const data = this.dataset();
+    return linkValueOptions(data.flags);
+  });
+
+  objectiveUnitOptions = computed(() => {
+    const dispRateInfo = this.displayRateInfo();
+    const data = this.dataset();
+    return objectiveUnitOptions(dispRateInfo, data.flags);
+  });
+
+  presetOptions = computed(() => {
+    const data = this.dataset();
+    return presetOptions(data.flags);
+  });
+
+  columnOptions = computed(() => {
+    const data = this.dataset();
+    return columnOptions(data.flags);
+  });
+
+  columnsState = computed(() => {
+    const data = this.dataset();
+    const columns = this.preferencesSvc.columns();
+    return gameColumnsState(spread(initialColumnsState, columns), data.flags);
+  });
 
   allResearchedTechnologyIds = computed(() => {
     const researchedTechnologyIds = this.researchedTechnologyIds();
@@ -255,15 +268,24 @@ export class SettingsService extends Store<SettingsState> {
       categories: getIdOptions(data.categoryIds, data.categoryEntities),
       items: getIdOptions(data.itemIds, data.itemEntities),
       beacons: getIdOptions(data.beaconIds, data.itemEntities),
-      belts: getIdOptions(data.beltIds, data.itemEntities),
-      pipes: getIdOptions(data.pipeIds, data.itemEntities),
-      cargoWagons: getIdOptions(data.cargoWagonIds, data.itemEntities),
-      fluidWagons: getIdOptions(data.fluidWagonIds, data.itemEntities),
+      belts: getIdOptions(data.beltIds, data.itemEntities, data.itemQIds),
+      pipes: getIdOptions(data.pipeIds, data.itemEntities, data.itemQIds),
+      cargoWagons: getIdOptions(
+        data.cargoWagonIds,
+        data.itemEntities,
+        data.itemQIds,
+      ),
+      fluidWagons: getIdOptions(
+        data.fluidWagonIds,
+        data.itemEntities,
+        data.itemQIds,
+      ),
       fuels: getIdOptions(data.fuelIds, data.itemEntities),
       modules: getIdOptions(data.moduleIds, data.itemEntities),
       proliferatorModules: getIdOptions(
         data.proliferatorModuleIds,
         data.itemEntities,
+        new Set(),
         true,
       ),
       machines: getIdOptions(data.machineIds, data.itemEntities),
@@ -283,6 +305,7 @@ export class SettingsService extends Store<SettingsState> {
     if (data.pipeIds) {
       for (const id of data.pipeIds) value[id] = data.beltEntities[id].speed;
     }
+
     return value;
   });
 
@@ -456,6 +479,76 @@ export class SettingsService extends Store<SettingsState> {
     const items = itemIds.map((i) => parseItem(itemData[i]));
     const recipes = recipeIds.map((r) => parseRecipe(recipeData[r]));
 
+    // Calculate missing implicit recipe icons
+    // For recipes with no icon, use icon of first output item
+    recipes
+      .filter((r) => !iconEntities[r.id] && !r.icon)
+      .forEach((r) => {
+        const firstOutId = Object.keys(r.out)[0];
+        const firstOutItem = itemData[firstOutId];
+        r.icon = firstOutItem.icon ?? firstOutId;
+      });
+
+    const itemQIds = new Set<string>();
+    const recipeQIds = new Set<string>();
+    const _flags = flags[coalesce(mod?.flags, DEFAULT_MOD)];
+    if (_flags.has('quality')) {
+      const qualities = [
+        Quality.Uncommon,
+        Quality.Rare,
+        Quality.Epic,
+        Quality.Legendary,
+      ];
+      recipes.forEach((r) => {
+        r.producers = [
+          ...r.producers,
+          ...qualities.flatMap((q) => r.producers.map((p) => qualityId(p, q))),
+        ];
+      });
+      const itemsLen = items.length;
+      const recipesLen = recipes.length;
+      qualities.forEach((quality) => {
+        for (let i = 0; i < itemsLen; i++) {
+          const item = items[i];
+          if (!itemHasQuality(item)) continue;
+
+          const id = qualityId(item.id, quality);
+          itemQIds.add(id);
+          itemIds.push(id);
+          items.push(spread(item, { id, quality }));
+        }
+
+        for (let i = 0; i < recipesLen; i++) {
+          const recipe = recipes[i];
+          if (!recipeHasQuality(recipe, itemData)) continue;
+
+          const id = qualityId(recipe.id, quality);
+          recipeQIds.add(id);
+          recipeIds.push(id);
+
+          const qIn = this.qualityEntities(recipe.in, quality, itemData);
+          const qOut = this.qualityEntities(recipe.out, quality, itemData);
+          let qCatalyst: Optional<Entities<Rational>>;
+          if (recipe.catalyst)
+            qCatalyst = this.qualityEntities(
+              recipe.catalyst,
+              quality,
+              itemData,
+            );
+
+          recipes.push(
+            spread(recipe, {
+              id,
+              in: qIn,
+              out: qOut,
+              catalyst: qCatalyst,
+              quality,
+            }),
+          );
+        }
+      });
+    }
+
     // Filter for item types
     const beaconIds = items
       .filter(fnPropsNotNullish('beacon'))
@@ -463,12 +556,7 @@ export class SettingsService extends Store<SettingsState> {
       .map((i) => i.id);
     const beltIds = items
       .filter(fnPropsNotNullish('belt'))
-      .sort((a, b) =>
-        /** Don't sort belts in DSP, leave based on stacks */
-        game === Game.DysonSphereProgram
-          ? 0
-          : a.belt.speed.sub(b.belt.speed).toNumber(),
-      )
+      .sort((a, b) => a.belt.speed.sub(b.belt.speed).toNumber())
       .map((i) => i.id);
     const pipeIds = items
       .filter(fnPropsNotNullish('pipe'))
@@ -499,16 +587,6 @@ export class SettingsService extends Store<SettingsState> {
     const technologyIds = items
       .filter(fnPropsNotNullish('technology'))
       .map((r) => r.id);
-
-    // Calculate missing implicit recipe icons
-    // For recipes with no icon, use icon of first output item
-    recipes
-      .filter((r) => !iconEntities[r.id] && !r.icon)
-      .forEach((r) => {
-        const firstOutId = Object.keys(r.out)[0];
-        const firstOutItem = itemData[firstOutId];
-        r.icon = firstOutItem.icon ?? firstOutId;
-      });
 
     // Calculate category item rows
     const categoryItemRows: Entities<string[][]> = {};
@@ -586,7 +664,9 @@ export class SettingsService extends Store<SettingsState> {
 
     return {
       game,
+      route: `/${coalesce(mod?.id, DEFAULT_MOD)}`,
       info: gameInfo[game],
+      flags: _flags,
       version: coalesce(mod?.version, {}),
       categoryIds,
       categoryEntities,
@@ -596,6 +676,7 @@ export class SettingsService extends Store<SettingsState> {
       iconIds,
       iconEntities,
       itemIds,
+      itemQIds,
       itemEntities,
       beaconIds,
       beaconEntities,
@@ -614,6 +695,7 @@ export class SettingsService extends Store<SettingsState> {
       fuelIds,
       fuelEntities,
       recipeIds,
+      recipeQIds,
       recipeEntities,
       technologyIds,
       technologyEntities,
@@ -672,5 +754,17 @@ export class SettingsService extends Store<SettingsState> {
       overclock: state.overclock ?? defaults?.overclock,
       researchedTechnologyIds,
     });
+  }
+
+  private qualityEntities(
+    entities: Entities<Rational>,
+    quality: Quality,
+    itemData: Entities<ItemJson>,
+  ): Entities<Rational> {
+    return Object.keys(entities).reduce((e: Entities<Rational>, k) => {
+      if (itemData[k].stack) e[qualityId(k, quality)] = entities[k];
+      else e[k] = entities[k];
+      return e;
+    }, {});
   }
 }

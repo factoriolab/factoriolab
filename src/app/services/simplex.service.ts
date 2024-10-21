@@ -36,8 +36,7 @@ import { Entities } from '~/models/utils';
 import { RateService } from './rate.service';
 
 const simplexConfig: Simplex.Options = environment.debug
-  ? // Don't test debug environment level
-    // istanbul ignore next
+  ? // istanbul ignore next: Don't test debug environment level
     {}
   : { msgLevel: 'off' };
 
@@ -412,7 +411,7 @@ export class SimplexService {
   itemCost(itemId: string, costKey: CostKey, state: MatrixState): number {
     const base =
       state.data.itemEntities[itemId].stack == null &&
-      state.data.info.flags.has('fluidCostRatio')
+      state.data.flags.has('fluidCostRatio')
         ? FACTORIO_FLUID_COST_RATIO
         : rational.one;
     const cost = state.costs[costKey];
@@ -860,6 +859,8 @@ export class SimplexService {
       output = output.add(solution.excluded[itemId]);
 
     if (output.nonzero()) {
+      // Simplify amounts via float parsing
+      output = rational(output.toNumber());
       const step: Step = {
         id: steps.length.toString(),
         itemId,
@@ -976,7 +977,7 @@ export class SimplexService {
       );
     }
 
-    this.rateSvc.adjustPowerPollution(step, recipe, state.data.info);
+    this.rateSvc.adjustPowerPollution(step, recipe, state.data);
   }
   //#endregion
 }

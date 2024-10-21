@@ -7,11 +7,10 @@ import { RecipeJson } from './recipe';
 
 export interface ModData {
   version: Entities;
-  expensive?: boolean;
   categories: CategoryJson[];
   icons: IconJson[];
   items: ItemJson[];
   recipes: RecipeJson[];
-  limitations: Entities<string[]>;
+  limitations?: Entities<string[]>;
   defaults?: DefaultsJson;
 }
