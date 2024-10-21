@@ -62,6 +62,20 @@ describe('RecipeService', () => {
       expect(result).toHaveSize(1);
     });
 
+    it('should filter recipe disallowed effects', () => {
+      const data = Mocks.getDataset();
+      data.recipeEntities[RecipeId.Coal].disallowedEffects = [
+        'speed',
+        'consumption',
+      ];
+      const result = service.moduleOptions(
+        data.beaconEntities[ItemId.Beacon],
+        data,
+        RecipeId.Coal,
+      );
+      expect(result).toHaveSize(1);
+    });
+
     it('should disallow empty module in Satisfactory mining', () => {
       const result = service.moduleOptions(
         Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],

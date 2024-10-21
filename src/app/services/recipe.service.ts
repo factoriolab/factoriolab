@@ -200,6 +200,7 @@ export class RecipeService {
         for (const b of belts.filter(notNullish)) {
           if (minSpeed.lt(b.speed)) minSpeed = b.speed;
         }
+
         recipe.time = recipe.time.div(minSpeed);
       }
 

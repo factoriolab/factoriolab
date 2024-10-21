@@ -12,9 +12,9 @@ export interface GameInfo {
 export const gameInfo: Record<Game, GameInfo> = {
   [Game.Factorio]: {
     icon: 'factorio',
-    route: '/1.1',
+    route: '/2.0',
     label: 'options.game.factorio',
-    modId: '1.1',
+    modId: '2.0',
   },
   [Game.DysonSphereProgram]: {
     icon: 'dyson-sphere-program',
