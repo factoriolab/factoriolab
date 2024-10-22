@@ -77,6 +77,7 @@ export interface DataRawDump {
   'rocket-silo': Entities<M.RocketSiloPrototype>;
   'rocket-silo-rocket': Entities<M.RocketSiloRocketPrototype>;
   'selection-tool': Entities<M.SelectionToolPrototype>;
+  'space-platform-starter-pack': Entities<M.SpacePlatformStarterPackPrototype>;
   'spidertron-remote': Entities<M.SpidertronRemotePrototype>;
   technology: Entities<M.TechnologyPrototype>;
   tool: Entities<M.ToolPrototype>;
@@ -99,6 +100,7 @@ export type AnyItemPrototype =
   | M.RailPlannerPrototype
   | M.RepairToolPrototype
   | M.SelectionToolPrototype
+  | M.SpacePlatformStarterPackPrototype
   | M.SpidertronRemotePrototype
   | M.ToolPrototype;
 
@@ -115,6 +117,7 @@ export function isAnyItemPrototype(proto: unknown): proto is AnyItemPrototype {
     M.isRailPlannerPrototype(proto) ||
     M.isRepairToolPrototype(proto) ||
     M.isSelectionToolPrototype(proto) ||
+    M.isSpacePlatformStarterPackPrototype(proto) ||
     M.isSpidertronRemotePrototype(proto) ||
     M.isToolPrototype(proto)
   );
@@ -181,6 +184,7 @@ export const anyItemKeys = [
   'repair-tool',
   'selection-tool',
   'spidertron-remote',
+  'space-platform-starter-pack',
   'tool',
   'fluid',
 ] as const;

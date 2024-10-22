@@ -28,6 +28,28 @@
       [(ngModel)]="search"
       (input)="inputSearch()"
     />
+    @if (data().flags.has('quality')) {
+      <p-dropdown
+        labDropdownBase="icon"
+        [(ngModel)]="quality"
+        [options]="qualityOptions"
+        (onChange)="inputSearch()"
+      >
+        <ng-template pTemplate="selectedItem" let-item>
+          <div class="d-flex">
+            <i [class]="'lab-icon transparent sm q' + item.value"></i>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="item" let-item>
+          <div class="d-flex align-items-center py-2 w-100 h-100">
+            <i [class]="'lab-icon transparent sm q' + item.value"></i>
+            <div class="ms-3 text-truncate">
+              {{ item.label | translate }}
+            </div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    }
     @if (isMultiselect) {
       <span class="p-inputgroup-addon flex-shrink-0">
         <p-checkbox

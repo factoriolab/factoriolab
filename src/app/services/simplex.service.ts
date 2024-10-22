@@ -860,7 +860,7 @@ export class SimplexService {
 
     if (output.nonzero()) {
       // Simplify amounts via float parsing
-      output = rational(output.toNumber());
+      output = output.simplify();
       const step: Step = {
         id: steps.length.toString(),
         itemId,
@@ -879,7 +879,7 @@ export class SimplexService {
          * differs from output by a rounding error, set surplus to the output
          * amount, since that is the more reliable value.
          */
-        const diff = rational(output.sub(solution.surplus[itemId]).toNumber());
+        const diff = output.sub(solution.surplus[itemId]).simplify();
         step.surplus = diff.isZero() ? step.items : solution.surplus[itemId];
       }
     }

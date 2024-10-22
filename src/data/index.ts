@@ -3,7 +3,7 @@ import { Game } from '~/models/enum/game';
 
 export const data: AppData = {
   mods: [
-    // { id: 'spa', name: 'Space Age', game: Game.Factorio, flags: 'spa' },
+    { id: 'spa', name: 'Space Age', game: Game.Factorio, flags: 'spa' },
     { id: '2.0', name: '2.0', game: Game.Factorio, flags: '2.0' },
     { id: '1.1', name: '1.1', game: Game.Factorio, flags: '1.1' },
     { id: '1.1e', name: '1.1 Expensive', game: Game.Factorio, flags: '1.1' },

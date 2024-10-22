@@ -13,7 +13,7 @@ export enum Quality {
   Legendary = 5,
 }
 
-export const qualityOptions: SelectItem<Quality>[] = [
+export const qualityFilterOptions: SelectItem<Quality>[] = [
   { value: Quality.Any, label: 'options.quality.any' },
   { value: Quality.Normal, label: 'options.quality.normal' },
   { value: Quality.Uncommon, label: 'options.quality.uncommon' },
@@ -22,7 +22,15 @@ export const qualityOptions: SelectItem<Quality>[] = [
   { value: Quality.Legendary, label: 'options.quality.legendary' },
 ];
 
+export const qualityOptions = qualityFilterOptions.slice(3);
+
 export const QUALITY_REGEX = /^(.*)\((\d)\)$/;
+
+export function baseId(id: string): string {
+  const match = QUALITY_REGEX.exec(id);
+  if (match) return match[1];
+  return id;
+}
 
 export function qualityId(id: string, quality: Quality): string {
   if (quality < Quality.Uncommon) return id;
@@ -40,7 +48,7 @@ export function recipeHasQuality(
   return (
     recipe.part == null &&
     !recipe.isMining &&
-    !recipe.isTechnology &&
+    (!recipe.isTechnology || Object.keys(recipe.in).length > 0) &&
     !recipe.isBurn &&
     Object.keys(recipe.in).some((k) => itemData[k].stack) &&
     Object.keys(recipe.out).some((k) => itemData[k].stack)
