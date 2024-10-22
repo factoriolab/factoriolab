@@ -1,4 +1,11 @@
-import { Quality, qualityId } from './quality';
+import { baseId, Quality, qualityId } from './quality';
+
+describe('baseId', () => {
+  it('should convert an id to its base id without quality', () => {
+    expect(baseId('id')).toEqual('id');
+    expect(baseId('id(5)')).toEqual('id');
+  });
+});
 
 describe('qualityId', () => {
   it('should return unaltered id for standard quality', () => {

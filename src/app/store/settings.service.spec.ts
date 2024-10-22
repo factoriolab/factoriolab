@@ -6,6 +6,7 @@ import { EnergyType } from '~/models/enum/energy-type';
 import { Game } from '~/models/enum/game';
 import { Language } from '~/models/enum/language';
 import { Preset } from '~/models/enum/preset';
+import { Quality } from '~/models/enum/quality';
 import { gameInfo } from '~/models/game-info';
 import { rational } from '~/models/rational';
 import { Settings } from '~/models/settings/settings';
@@ -402,6 +403,7 @@ describe('SettingsService', () => {
       const result = service.settings();
       for (const key of Object.keys(value) as (keyof Settings)[])
         expect(result[key]).toEqual(value[key]);
+      expect(result.quality).toEqual(Quality.Rare);
     });
 
     it('should fall back if setting and defaults are undefined', () => {
@@ -410,6 +412,20 @@ describe('SettingsService', () => {
       expect(result.machineRankIds).toEqual([]);
       expect(result.fuelRankIds).toEqual([]);
       expect(result.moduleRankIds).toEqual([]);
+    });
+
+    it('should calculate legendary quality level', () => {
+      spyOn(service, 'researchedTechnologyIds').and.returnValue(
+        new Set([ItemId.LegendaryQuality]),
+      );
+      expect(service.settings().quality).toEqual(Quality.Legendary);
+    });
+
+    it('should calculate epic quality level', () => {
+      spyOn(service, 'researchedTechnologyIds').and.returnValue(
+        new Set([ItemId.EpicQuality]),
+      );
+      expect(service.settings().quality).toEqual(Quality.Epic);
     });
   });
 

@@ -200,7 +200,6 @@ export function toBoolEntities(
 
 export function toEntities<T extends { id: string }>(
   value: T[],
-  init: Entities<T> = {},
   warn = false,
 ): Entities<T> {
   if (warn) {
@@ -208,13 +207,13 @@ export function toEntities<T extends { id: string }>(
       if (e[v.id]) console.warn(`Duplicate id: ${v.id}`);
       e[v.id] = v;
       return e;
-    }, init);
+    }, {});
   }
 
   return value.reduce((e: Entities<T>, v) => {
     e[v.id] = v;
     return e;
-  }, init);
+  }, {});
 }
 
 export function toRationalEntities(

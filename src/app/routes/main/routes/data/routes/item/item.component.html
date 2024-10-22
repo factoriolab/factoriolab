@@ -158,10 +158,12 @@
           <h3>{{ 'data.machine' | translate }}</h3>
         </th>
       </tr>
-      <tr>
-        <th>{{ 'data.craftingSpeed' | translate }}</th>
-        <td>{{ machine.speed }}</td>
-      </tr>
+      @if (machine.speed) {
+        <tr>
+          <th>{{ 'data.craftingSpeed' | translate }}</th>
+          <td>{{ machine.speed | round }}</td>
+        </tr>
+      }
       @if (machine.modules) {
         <tr>
           <th>{{ 'data.moduleSlots' | translate }}</th>

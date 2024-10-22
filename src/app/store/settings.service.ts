@@ -20,7 +20,7 @@ import { Item, ItemJson, parseItem } from '~/models/data/item';
 import { Machine } from '~/models/data/machine';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
-import { Module } from '~/models/data/module';
+import { Module, ModuleEffect } from '~/models/data/module';
 import { parseRecipe, Recipe } from '~/models/data/recipe';
 import { Technology } from '~/models/data/technology';
 import { Dataset } from '~/models/dataset';
@@ -431,23 +431,16 @@ export class SettingsService extends Store<SettingsState> {
     // Map out entities with mods
     const categoryEntities = toEntities(
       coalesce(mod?.categories, []),
-      {},
       environment.debug,
     );
     const iconFile = `data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp`;
     const iconEntities = toEntities(
       coalesce(mod?.icons, []),
-      {},
       environment.debug,
     );
-    const itemData = toEntities(
-      coalesce(mod?.items, []),
-      {},
-      environment.debug,
-    );
+    const itemData = toEntities(coalesce(mod?.items, []), environment.debug);
     const recipeData = toEntities(
       coalesce(mod?.recipes, []),
-      {},
       environment.debug,
     );
     const limitations = reduceEntities(coalesce(mod?.limitations, {}));
@@ -515,7 +508,45 @@ export class SettingsService extends Store<SettingsState> {
           const id = qualityId(item.id, quality);
           itemQIds.add(id);
           itemIds.push(id);
-          items.push(spread(item, { id, quality }));
+          const qItem = spread(item, {
+            id,
+            quality,
+            icon: coalesce(item.icon, item.id),
+          });
+
+          if (qItem.machine?.speed) {
+            const speed = rational.one
+              .add(rational(quality))
+              .mul(rational(3n, 10n))
+              .add(rational.one)
+              .mul(qItem.machine.speed);
+
+            qItem.machine = spread(qItem.machine, { speed });
+          }
+
+          if (qItem.module) {
+            const factor = rational.one
+              .add(rational(quality))
+              .mul(rational(3n, 10n))
+              .add(rational.one);
+
+            const effs: ModuleEffect[] = [
+              'consumption',
+              'pollution',
+              'productivity',
+              'quality',
+              'speed',
+            ];
+            for (const eff of effs) {
+              if (qItem.module[eff]) {
+                let value = qItem.module[eff].mul(factor);
+                value = value.mul(rational(100n)).floor().div(rational(100n));
+                qItem.module = spread(qItem.module, { [eff]: value });
+              }
+            }
+          }
+
+          items.push(qItem);
         }
 
         for (let i = 0; i < recipesLen; i++) {
@@ -526,8 +557,15 @@ export class SettingsService extends Store<SettingsState> {
           recipeQIds.add(id);
           recipeIds.push(id);
 
-          const qIn = this.qualityEntities(recipe.in, quality, itemData);
-          const qOut = this.qualityEntities(recipe.out, quality, itemData);
+          const qIn = this.qualityEntities(
+            recipe.in,
+            quality,
+            itemData,
+            recipe.isTechnology,
+          );
+          const qOut = recipe.isTechnology
+            ? recipe.out
+            : this.qualityEntities(recipe.out, quality, itemData);
           let qCatalyst: Optional<Entities<Rational>>;
           if (recipe.catalyst)
             qCatalyst = this.qualityEntities(
@@ -543,6 +581,7 @@ export class SettingsService extends Store<SettingsState> {
               out: qOut,
               catalyst: qCatalyst,
               quality,
+              icon: coalesce(recipe.icon, recipe.id),
             }),
           );
         }
@@ -732,6 +771,11 @@ export class SettingsService extends Store<SettingsState> {
     const fuelRankIds = coalesce(state.fuelRankIds, defaultFuelRankIds);
     const defaultModuleRankIds = coalesce(defaults?.moduleRankIds, []);
     const moduleRankIds = coalesce(state.moduleRankIds, defaultModuleRankIds);
+    const quality = researchedTechnologyIds.has(ItemId.LegendaryQuality)
+      ? Quality.Legendary
+      : researchedTechnologyIds.has(ItemId.EpicQuality)
+        ? Quality.Epic
+        : Quality.Rare;
 
     return spread(state as Settings, {
       beltId,
@@ -753,6 +797,7 @@ export class SettingsService extends Store<SettingsState> {
       beacons: this.recipeSvc.hydrateBeacons(state.beacons, defaults?.beacons),
       overclock: state.overclock ?? defaults?.overclock,
       researchedTechnologyIds,
+      quality,
     });
   }
 
@@ -760,10 +805,15 @@ export class SettingsService extends Store<SettingsState> {
     entities: Entities<Rational>,
     quality: Quality,
     itemData: Entities<ItemJson>,
+    qualityDurability = false,
   ): Entities<Rational> {
+    const factor = qualityDurability
+      ? rational.one.add(rational(quality))
+      : rational.one;
     return Object.keys(entities).reduce((e: Entities<Rational>, k) => {
-      if (itemData[k].stack) e[qualityId(k, quality)] = entities[k];
-      else e[k] = entities[k];
+      if (itemData[k].stack) {
+        e[qualityId(k, quality)] = entities[k].div(factor);
+      } else e[k] = entities[k];
       return e;
     }, {});
   }

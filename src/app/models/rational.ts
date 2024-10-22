@@ -127,6 +127,10 @@ export class Rational {
     return rational(result);
   }
 
+  simplify(): Rational {
+    return rational(this.toNumber());
+  }
+
   toNumber(): number {
     return Number(this.p) / Number(this.q);
   }

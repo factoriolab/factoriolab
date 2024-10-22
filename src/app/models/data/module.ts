@@ -7,6 +7,20 @@ export type ModuleEffect =
   | 'quality'
   | 'speed';
 
+export const goodNegativeEffects = new Set<ModuleEffect>([
+  'consumption',
+  'pollution',
+]);
+
+export function filterEffect(module: Module, effect: ModuleEffect): boolean {
+  return (
+    module[effect] == null ||
+    (goodNegativeEffects.has(effect)
+      ? module[effect].gte(rational.zero)
+      : module[effect].lte(rational.zero))
+  );
+}
+
 export interface ModuleJson {
   consumption?: number | string;
   pollution?: number | string;

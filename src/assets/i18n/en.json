@@ -292,6 +292,7 @@
     "inserterCapacityTooltip": "Enter the current level of inserter capacity bonus; this setting only affects inserter estimates",
     "miningSpeed": "Mining speed",
     "miningSpeedTooltip": "Enter the current mining speed with bonus; Default is 100%",
+    "maxQuality": "Maximum quality",
     "display": "Display",
     "openColumnSettings": "Open column settings",
     "displayRate": "Display rate units",
