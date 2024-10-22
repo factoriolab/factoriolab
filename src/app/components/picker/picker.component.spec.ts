@@ -1,6 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { Quality } from '~/models/enum/quality';
 import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { PickerComponent } from './picker.component';
@@ -135,12 +136,11 @@ describe('PickerComponent', () => {
     });
 
     it('should skip if no search is specified', () => {
+      spyOn(component.filterSvc, 'filter');
       component.search = '';
+      component.quality = Quality.Any;
       component.inputSearch();
-      expect(component.categoryIds).toEqual(Mocks.adjustedDataset.categoryIds);
-      expect(component.categoryRows).toEqual(
-        Mocks.adjustedDataset.categoryItemRows,
-      );
+      expect(component.filterSvc.filter).not.toHaveBeenCalled();
     });
 
     it('should search items', () => {
@@ -150,6 +150,13 @@ describe('PickerComponent', () => {
       expect(component.categoryRows[CategoryId.Fluids]).toEqual([
         [ItemId.PetroleumGas],
       ]);
+    });
+
+    it('should search items with quality', () => {
+      component.search = 'petrol';
+      component.quality = Quality.Legendary;
+      component.inputSearch();
+      expect(component.categoryIds.length).toEqual(0);
     });
   });
 });

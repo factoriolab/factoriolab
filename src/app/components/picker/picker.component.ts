@@ -178,11 +178,8 @@ export class PickerComponent extends DialogComponent {
   }
 
   selectAll(value: boolean): void {
-    if (value) {
-      this.selection = [];
-    } else {
-      this.selection = this.allSelectItems.map((i) => i.value);
-    }
+    if (value) this.selection = [];
+    else this.selection = this.allSelectItems.map((i) => i.value);
   }
 
   reset(): void {
@@ -192,11 +189,8 @@ export class PickerComponent extends DialogComponent {
   clickId(id: string): void {
     if (Array.isArray(this.selection)) {
       const index = this.selection.indexOf(id);
-      if (index === -1) {
-        this.selection.push(id);
-      } else {
-        this.selection.splice(index, 1);
-      }
+      if (index === -1) this.selection.push(id);
+      else this.selection.splice(index, 1);
       this.allSelected = this.selection.length === 0;
     } else {
       this.selectId.emit(id);
@@ -205,9 +199,8 @@ export class PickerComponent extends DialogComponent {
   }
 
   save(): void {
-    if (Array.isArray(this.selection)) {
+    if (Array.isArray(this.selection))
       this.selectIds.emit(new Set(this.selection));
-    }
   }
 
   inputSearch(): void {

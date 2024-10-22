@@ -111,7 +111,7 @@ describe('toEntities', () => {
 
   it('should warn about duplicate ids', () => {
     spyOn(console, 'warn');
-    toEntities([{ id }, { id }], {}, true);
+    toEntities([{ id }, { id }], true);
     expect(console.warn).toHaveBeenCalled();
   });
 });

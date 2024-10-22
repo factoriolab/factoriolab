@@ -10,6 +10,7 @@ import {
 } from '~/helpers';
 import { Beacon } from '~/models/data/beacon';
 import { Machine, MachineJson } from '~/models/data/machine';
+import { filterEffect } from '~/models/data/module';
 import {
   AdjustedRecipe,
   cloneRecipe,
@@ -115,10 +116,8 @@ export class RecipeService {
 
       if (recipe.disallowedEffects) {
         for (const disallowedEffect of recipe.disallowedEffects) {
-          allowed = allowed.filter(
-            (m) =>
-              m.module[disallowedEffect] == null ||
-              m.module[disallowedEffect].lte(rational.zero),
+          allowed = allowed.filter((m) =>
+            filterEffect(m.module, disallowedEffect),
           );
         }
       }
@@ -127,10 +126,8 @@ export class RecipeService {
     // Filter for modules allowed on this entity
     if (entity.disallowedEffects) {
       for (const disallowedEffect of entity.disallowedEffects) {
-        allowed = allowed.filter(
-          (m) =>
-            m.module[disallowedEffect] == null ||
-            m.module[disallowedEffect].lte(rational.zero),
+        allowed = allowed.filter((m) =>
+          filterEffect(m.module, disallowedEffect),
         );
       }
     }

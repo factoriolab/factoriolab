@@ -5,6 +5,7 @@ import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
 import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { Quality } from '~/models/enum/quality';
 import { flags } from '~/models/flags';
 import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
@@ -59,7 +60,7 @@ describe('RecipeService', () => {
         }),
         Mocks.dataset,
       );
-      expect(result).toHaveSize(1);
+      expect(result).toHaveSize(4);
     });
 
     it('should filter recipe disallowed effects', () => {
@@ -797,6 +798,52 @@ describe('RecipeService', () => {
         },
       );
       expect(result).toEqual(expected);
+    });
+
+    it('should handle quality', () => {
+      const data = Mocks.getDataset();
+      data.flags = flags.spa;
+      data.moduleEntities[ItemId.SpeedModule3].speed = rational.zero;
+      data.moduleEntities[ItemId.SpeedModule3].quality = rational.one;
+      const recipeSettings = spread(
+        Mocks.recipesStateInitial[RecipeId.FirearmMagazine],
+        { beacons: undefined },
+      );
+      const settings = spread(Mocks.settingsStateInitial, {
+        quality: Quality.Legendary,
+      });
+      const result = service.adjustRecipe(
+        RecipeId.FirearmMagazine,
+        recipeSettings,
+        Mocks.itemsStateInitial,
+        settings,
+        data,
+      );
+      expect(result.out).toEqual({
+        ['firearm-magazine']: rational(3n, 5n),
+        ['firearm-magazine(1)']: rational(6n, 25n),
+        ['firearm-magazine(2)']: rational(12n, 125n),
+        ['firearm-magazine(3)']: rational(24n, 625n),
+        ['firearm-magazine(5)']: rational(16n, 625n),
+      });
+    });
+
+    it('should ignore fluid quality', () => {
+      const data = Mocks.getDataset();
+      data.flags = flags.spa;
+      data.moduleEntities[ItemId.ProductivityModule3].quality = rational.one;
+      data.moduleEntities[ItemId.SpeedModule3].quality = rational.one;
+      const settings = spread(Mocks.settingsStateInitial, {
+        quality: Quality.Legendary,
+      });
+      const result = service.adjustRecipe(
+        RecipeId.BasicOilProcessing,
+        Mocks.recipesStateInitial[RecipeId.BasicOilProcessing],
+        Mocks.itemsStateInitial,
+        settings,
+        data,
+      );
+      expect(Object.keys(result.out).length).toEqual(1);
     });
   });
 
