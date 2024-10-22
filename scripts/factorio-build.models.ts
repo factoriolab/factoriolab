@@ -80,6 +80,7 @@ export interface DataRawDump {
   'space-platform-starter-pack': Entities<M.SpacePlatformStarterPackPrototype>;
   'spidertron-remote': Entities<M.SpidertronRemotePrototype>;
   technology: Entities<M.TechnologyPrototype>;
+  tile: Entities<M.TilePrototype>;
   tool: Entities<M.ToolPrototype>;
   'transport-belt': Entities<M.TransportBeltPrototype>;
 }
