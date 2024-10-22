@@ -41,6 +41,7 @@
     position: absolute;
     right: -6px;
     bottom: -6px;
+    z-index: 1;
     text-shadow:
       0 2px 2px black,
       0 -2px 2px black,
@@ -143,6 +144,10 @@ body.light .module::before {
 
 .stack-inserter::before {
   background-position: -192px -128px;
+}
+
+.transparent::before {
+  background-position: 0 -256px;
 }
 
 .q-1,

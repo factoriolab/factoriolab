@@ -1,5 +1,7 @@
 import { SettingsState } from '~/store/settings.service';
 
+import { Quality } from '../enum/quality';
+
 export interface Settings
   extends Omit<SettingsState, 'excludedRecipeIds' | 'researchedTechnologyIds'> {
   defaultBeltId?: string;
@@ -15,4 +17,5 @@ export interface Settings
   moduleRankIds: string[];
   defaultModuleRankIds: string[];
   researchedTechnologyIds: Set<string>;
+  quality: Quality;
 }

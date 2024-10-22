@@ -38,6 +38,7 @@ import { ItemId } from '~/models/enum/item-id';
 import { languageOptions } from '~/models/enum/language';
 import { maximizeTypeOptions } from '~/models/enum/maximize-type';
 import { powerUnitOptions } from '~/models/enum/power-unit';
+import { qualityOptions } from '~/models/enum/quality';
 import { researchBonusOptions } from '~/models/enum/research-bonus';
 import { themeOptions } from '~/models/enum/theme';
 import { gameInfo } from '~/models/game-info';
@@ -182,6 +183,7 @@ export class SettingsComponent implements OnInit {
   researchSpeedOptions = researchBonusOptions;
   themeOptions = themeOptions;
   maximizeTypeOptions = maximizeTypeOptions;
+  qualityOptions = qualityOptions;
 
   ItemId = ItemId;
   rational = rational;

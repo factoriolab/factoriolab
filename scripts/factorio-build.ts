@@ -27,6 +27,8 @@ import {
   isFluidWagonPrototype,
   isFurnacePrototype,
   isItemGroup,
+  isItemIngredientPrototype,
+  isItemProductPrototype,
   isLabPrototype,
   isMiningDrillPrototype,
   isModulePrototype,
@@ -636,14 +638,13 @@ async function processMod(): Promise<void> {
   > = {};
   for (const key of Object.keys(dataRaw.recipe)) {
     const recipe = dataRaw.recipe[key];
-    let include = true;
 
     // Skip recipes that don't have results
     const results = getProducts(recipe.results);
 
     if (results[2] === 0) {
       modDataReport.noProducts.push(key);
-      include = false;
+      continue;
     }
 
     recipeResultsMap[key] = results;
@@ -651,30 +652,30 @@ async function processMod(): Promise<void> {
     // Always include fixed recipes that have outputs
     if (!fixedRecipe.has(key)) {
       // Skip recipes that are not unlocked / enabled
-      if (recipe.enabled === false && !recipesUnlocked[key]) include = false;
+      if (recipe.enabled === false && !recipesUnlocked[key]) continue;
 
-      // Skip recipes that are hidden
-      if (recipe.hidden) include = false;
-    }
+      // Skip recipes that are hidden and disabled
+      if (recipe.hidden && recipe.enabled === false) continue;
 
-    if (include) {
-      /**
-       * Exclude loading / unloading containers from Freight Forwarding
-       * These are imperfect loops that are not detected automatically, because
-       * there is a chance the container will break in the unload recipe
-       */
-      const subgroup = dataRaw['item-subgroup'][getSubgroup(recipe)];
+      // Skip bad recycling
       if (
-        subgroup.group === 'ic-load-container' ||
-        subgroup.group === 'ic-unload-container'
-      )
-        include = false;
+        recipe.category === 'recycling' &&
+        recipe.ingredients?.length &&
+        recipe.results?.length
+      ) {
+        const ingredient = recipe.ingredients[0];
+
+        if (isItemIngredientPrototype(ingredient)) {
+          if (dataRaw.item[ingredient.name]?.subgroup === 'other') continue;
+          const result = recipe.results[0];
+          if (isItemProductPrototype(result) && result.name === ingredient.name)
+            continue;
+        }
+      }
     }
 
-    if (include) {
-      recipesEnabled[key] = recipe;
-      recipeIngredientsMap[key] = getIngredients(recipe.ingredients);
-    }
+    recipesEnabled[key] = recipe;
+    recipeIngredientsMap[key] = getIngredients(recipe.ingredients);
   }
 
   logTime('Processing data');
@@ -729,8 +730,10 @@ async function processMod(): Promise<void> {
 
   // Check for use in recipe ingredients / products
   for (const key of Object.keys(recipesEnabled)) {
-    for (const ingredient of Object.keys(recipeIngredientsMap[key][0]))
+    for (const ingredient of Object.keys(recipeIngredientsMap[key][0])) {
       itemsUsed.add(ingredient);
+      if (ingredient === 'blueprint') console.log(key, 'blueprint!');
+    }
 
     for (const product of Object.keys(recipeResultsMap[key][0]))
       itemsUsed.add(product);
@@ -753,9 +756,10 @@ async function processMod(): Promise<void> {
     techIngredientsMap[tech.name] = techIngredients;
   }
 
-  const itemsUsedProtos = Array.from(itemsUsed.values()).map(
-    (key) => itemMap[key],
-  );
+  const itemsUsedProtos = Array.from(itemsUsed.values()).map((key) => {
+    if (itemMap[key] == null) console.log(key);
+    return itemMap[key];
+  });
 
   // Exclude any entities that are placed by the added items
   const placedEntities = new Set<string>();

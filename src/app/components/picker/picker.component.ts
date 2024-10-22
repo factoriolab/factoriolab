@@ -13,14 +13,17 @@ import { FilterService, SelectItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TabViewModule } from 'primeng/tabview';
 import { TooltipModule } from 'primeng/tooltip';
 
+import { DropdownBaseDirective } from '~/directives/dropdown-base.directive';
 import { TabViewOverrideDirective } from '~/directives/tabview-override.directive';
 import { coalesce } from '~/helpers';
 import { Category } from '~/models/data/category';
+import { Quality, qualityFilterOptions } from '~/models/enum/quality';
 import { Entities } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
@@ -38,11 +41,13 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     ButtonModule,
     CheckboxModule,
     DialogModule,
+    DropdownModule,
     InputTextModule,
     ScrollPanelModule,
     TooltipModule,
     TabViewModule,
     IconSmClassPipe,
+    DropdownBaseDirective,
     TabViewOverrideDirective,
     TooltipComponent,
     TranslatePipe,
@@ -65,6 +70,7 @@ export class PickerComponent extends DialogComponent {
 
   search = '';
   allSelected = false;
+  quality = Quality.Normal;
 
   type: 'item' | 'recipe' = 'item';
   isMultiselect = false;
@@ -78,6 +84,7 @@ export class PickerComponent extends DialogComponent {
   allCategoryIds: string[] = [];
   allCategoryRows: Entities<string[][]> = {};
   activeIndex = 0;
+  qualityOptions = qualityFilterOptions;
 
   clickOpen(
     type: 'item' | 'recipe',
@@ -160,6 +167,7 @@ export class PickerComponent extends DialogComponent {
     );
     this.allCategoryIds = this.categoryIds;
     this.allCategoryRows = this.categoryRows;
+    this.inputSearch();
     this.show();
 
     if (!this.contentSvc.isMobile()) {
@@ -203,15 +211,30 @@ export class PickerComponent extends DialogComponent {
   }
 
   inputSearch(): void {
-    if (!this.search) {
+    if (!this.search && this.quality === Quality.Any) {
       this.categoryIds = this.allCategoryIds;
       this.categoryRows = this.allCategoryRows;
       return;
     }
 
+    let allItems = this.allSelectItems;
+
+    if (this.quality !== Quality.Any) {
+      const check = this.quality === Quality.Normal ? undefined : this.quality;
+      if (this.type === 'item') {
+        allItems = allItems.filter(
+          (i) => this.data().itemEntities[i.value].quality === check,
+        );
+      } else {
+        allItems = allItems.filter(
+          (i) => this.data().recipeEntities[i.value].quality === check,
+        );
+      }
+    }
+
     // Filter for matching item ids
     const filteredItems = this.filterSvc.filter(
-      this.allSelectItems,
+      allItems,
       ['label'],
       this.search,
       'contains',

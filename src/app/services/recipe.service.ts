@@ -21,6 +21,12 @@ import { AdjustedDataset, Dataset } from '~/models/dataset';
 import { EnergyType } from '~/models/enum/energy-type';
 import { ItemId } from '~/models/enum/item-id';
 import {
+  baseId,
+  itemHasQuality,
+  Quality,
+  qualityId,
+} from '~/models/enum/quality';
+import {
   isRecipeObjective,
   ObjectiveSettings,
   ObjectiveState,
@@ -222,6 +228,7 @@ export class RecipeService {
       let prod = rational.one;
       let consumption = rational.one;
       let pollution = rational.one;
+      let quality = rational.zero;
 
       // Adjust for mining bonus
       if (recipe.isMining) prod = prod.add(miningFactor);
@@ -247,9 +254,7 @@ export class RecipeService {
           )
             scale = machine.modules;
 
-          if (module.speed) {
-            speed = speed.add(module.speed.mul(count));
-          }
+          if (module.speed) speed = speed.add(module.speed.mul(count));
 
           if (module.productivity) {
             let effect = module.productivity.mul(count);
@@ -271,9 +276,10 @@ export class RecipeService {
             consumption = consumption.add(effect);
           }
 
-          if (module.pollution) {
+          if (module.pollution)
             pollution = pollution.add(module.pollution.mul(count));
-          }
+
+          if (module.quality) quality = quality.add(module.quality.mul(count));
 
           // Note: Count is ignored for proliferator / sprays (assumed to be 1)
           if (module.sprays) {
@@ -331,37 +337,29 @@ export class RecipeService {
               .mul(count) // Num of modules/beacon
               .mul(scale); // Apply diminishing beacons scale
 
-            if (module.speed) {
-              speed = speed.add(module.speed.mul(factor));
-            }
+            if (module.speed) speed = speed.add(module.speed.mul(factor));
 
-            if (module.productivity) {
+            if (module.productivity)
               prod = prod.add(module.productivity.mul(factor));
-            }
 
-            if (module.consumption) {
+            if (module.consumption)
               consumption = consumption.add(module.consumption.mul(factor));
-            }
 
-            if (module.pollution) {
+            if (module.pollution)
               pollution = pollution.add(module.pollution.mul(factor));
-            }
+
+            if (module.quality)
+              quality = quality.add(module.quality.mul(factor));
           }
         }
       }
 
       // Check for speed, consumption, or pollution below minimum value (20%)
-      if (speed.lt(this.minFactor)) {
-        speed = this.minFactor;
-      }
+      if (speed.lt(this.minFactor)) speed = this.minFactor;
 
-      if (consumption.lt(this.minFactor)) {
-        consumption = this.minFactor;
-      }
+      if (consumption.lt(this.minFactor)) consumption = this.minFactor;
 
-      if (pollution.lt(this.minFactor)) {
-        pollution = this.minFactor;
-      }
+      if (pollution.lt(this.minFactor)) pollution = this.minFactor;
 
       // Overclock effects
       let oc: Rational | undefined;
@@ -381,9 +379,8 @@ export class RecipeService {
       if (
         recipe.time.lt(this.minFactorioRecipeTime) &&
         data.flags.has('minimumRecipeTime')
-      ) {
+      )
         recipe.time = this.minFactorioRecipeTime;
-      }
 
       // Productivity
       for (const outId of Object.keys(recipe.out)) {
@@ -392,12 +389,9 @@ export class RecipeService {
           const catalyst = recipe.catalyst[outId];
           const affected = recipe.out[outId].sub(catalyst);
           // Only change output if affected amount > 0
-          if (affected.gt(rational.zero)) {
+          if (affected.gt(rational.zero))
             recipe.out[outId] = catalyst.add(affected.mul(prod));
-          }
-        } else {
-          recipe.out[outId] = recipe.out[outId].mul(prod);
-        }
+        } else recipe.out[outId] = recipe.out[outId].mul(prod);
       }
 
       recipe.productivity = prod;
@@ -407,12 +401,9 @@ export class RecipeService {
       let usage =
         (recipe.usage ? recipe.usage : machine.usage) ?? rational.zero;
       if (oc) {
-        if (usage?.gt(rational.zero)) {
-          // Polynomial effect only on production buildings, not power generation
-          usage = usage.mul(oc.pow(1.321928));
-        } else {
-          usage = usage.mul(oc);
-        }
+        // Polynomial effect only on production buildings, not power generation
+        if (usage?.gt(rational.zero)) usage = usage.mul(oc.pow(1.321928));
+        else usage = usage.mul(oc);
       }
 
       recipe.consumption =
@@ -436,6 +427,40 @@ export class RecipeService {
               .mul(pollution)
               .mul(consumption)
           : rational.zero;
+
+      // Adjust for quality
+      if (data.flags.has('quality') && quality.gt(rational.zero)) {
+        const factor = quality.div(rational(10n));
+        for (const outId of Object.keys(recipe.out)) {
+          // Adjust by factor
+          const item = data.itemEntities[outId];
+          if (!itemHasQuality(item)) continue;
+          const original = recipe.out[outId];
+          let amount = original;
+          const id = baseId(outId);
+          let lastId: string | undefined;
+          for (
+            let i = recipe.quality ?? Quality.Normal;
+            i <= settings.quality;
+            i++
+          ) {
+            if (i === (4 as unknown as Quality)) continue;
+            const qId = qualityId(id, i);
+            if (lastId == null) {
+              amount = amount.mul(factor);
+              lastId = qId;
+            } else {
+              if (recipe.out[lastId] == null) {
+                console.log(recipe, lastId);
+              }
+              recipe.out[lastId] = recipe.out[lastId].sub(amount);
+              recipe.out[qId] = amount;
+              amount = amount.mul(factor);
+              lastId = qId;
+            }
+          }
+        }
+      }
 
       // Add machine consumption
       if (machine.consumption) {
