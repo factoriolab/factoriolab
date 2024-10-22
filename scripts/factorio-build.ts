@@ -730,10 +730,8 @@ async function processMod(): Promise<void> {
 
   // Check for use in recipe ingredients / products
   for (const key of Object.keys(recipesEnabled)) {
-    for (const ingredient of Object.keys(recipeIngredientsMap[key][0])) {
+    for (const ingredient of Object.keys(recipeIngredientsMap[key][0]))
       itemsUsed.add(ingredient);
-      if (ingredient === 'blueprint') console.log(key, 'blueprint!');
-    }
 
     for (const product of Object.keys(recipeResultsMap[key][0]))
       itemsUsed.add(product);
@@ -756,10 +754,9 @@ async function processMod(): Promise<void> {
     techIngredientsMap[tech.name] = techIngredients;
   }
 
-  const itemsUsedProtos = Array.from(itemsUsed.values()).map((key) => {
-    if (itemMap[key] == null) console.log(key);
-    return itemMap[key];
-  });
+  const itemsUsedProtos = Array.from(itemsUsed.values()).map(
+    (key) => itemMap[key],
+  );
 
   // Exclude any entities that are placed by the added items
   const placedEntities = new Set<string>();

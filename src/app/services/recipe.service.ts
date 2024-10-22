@@ -450,9 +450,6 @@ export class RecipeService {
               amount = amount.mul(factor);
               lastId = qId;
             } else {
-              if (recipe.out[lastId] == null) {
-                console.log(recipe, lastId);
-              }
               recipe.out[lastId] = recipe.out[lastId].sub(amount);
               recipe.out[qId] = amount;
               amount = amount.mul(factor);

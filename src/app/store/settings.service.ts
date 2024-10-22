@@ -587,6 +587,7 @@ export class SettingsService extends Store<SettingsState> {
               out: qOut,
               catalyst: qCatalyst,
               quality,
+              icon: coalesce(recipe.icon, recipe.id),
             }),
           );
         }
