@@ -666,7 +666,12 @@ async function processMod(): Promise<void> {
         const ingredient = recipe.ingredients[0];
 
         if (isItemIngredientPrototype(ingredient)) {
-          if (dataRaw.item[ingredient.name]?.subgroup === 'other') continue;
+          // if (dataRaw.item[ingredient.name]?.subgroup === 'other') continue;
+          const item = dataRaw.item[ingredient.name];
+          if (item && item.hidden) {
+            continue;
+            // console.log(item.name);
+          }
           const result = recipe.results[0];
           if (isItemProductPrototype(result) && result.name === ingredient.name)
             continue;

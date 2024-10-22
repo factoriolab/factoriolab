@@ -79,8 +79,6 @@ export interface LabParams {
   bre?: string;
   /** `number` Inserter capacity */
   bic?: string;
-  /** `number` Quality */
-  bqu?: string;
   /** `Set` Researched technologies */
   tre?: string;
   /** V10 Legacy researched technologies */

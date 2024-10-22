@@ -894,7 +894,6 @@ export class RouterService {
     rat('bmi', (s) => s.miningBonus);
     rat('bre', (s) => s.researchBonus);
     num('bic', (s) => s.inserterCapacity);
-    num('bqu', (s) => s.quality);
     sub(
       'tre',
       (s) => s.researchedTechnologyIds,
@@ -964,7 +963,6 @@ export class RouterService {
       miningBonus: rat('bmi'),
       researchBonus: rat('bre'),
       inserterCapacity: num('bic'),
-      quality: num('bqu'),
       researchedTechnologyIds: sub('tre', modHash.technologies, techIds),
     };
 

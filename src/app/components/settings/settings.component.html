@@ -1305,45 +1305,6 @@
                 </div>
               </div>
             }
-            @if (data().flags.has('quality')) {
-              <div class="mt-3">
-                <div class="p-float-label">
-                  <p-dropdown
-                    labDropdownBase
-                    inputId="max-quality"
-                    [ngModel]="settings().quality"
-                    [options]="qualityOptions"
-                    (onChange)="settingsSvc.apply({ quality: $event.value })"
-                  >
-                    <ng-template pTemplate="selectedItem" let-item>
-                      @if (item) {
-                        <div class="d-flex align-items-center h-100">
-                          <i
-                            [class]="'lab-icon transparent sm q' + item.value"
-                          ></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label | translate }}
-                          </div>
-                        </div>
-                      }
-                    </ng-template>
-                    <ng-template pTemplate="item" let-item>
-                      <div class="d-flex align-items-center py-2 w-100 h-100">
-                        <i
-                          [class]="'lab-icon transparent sm q' + item.value"
-                        ></i>
-                        <div class="ms-3 text-truncate">
-                          {{ item.label | translate }}
-                        </div>
-                      </div>
-                    </ng-template>
-                  </p-dropdown>
-                  <label for="max-quality">{{
-                    'settings.maxQuality' | translate
-                  }}</label>
-                </div>
-              </div>
-            }
           </div>
         </p-accordionTab>
       }

@@ -91,7 +91,6 @@ export interface SettingsState {
   inserterTarget: InserterTarget;
   miningBonus: Rational;
   researchBonus: Rational;
-  quality?: Quality;
   inserterCapacity: InserterCapacity;
   researchedTechnologyIds?: Set<string>;
   costs: CostSettings;
@@ -116,7 +115,6 @@ export const initialSettingsState: SettingsState = {
   inserterTarget: InserterTarget.ExpressTransportBelt,
   miningBonus: rational.zero,
   researchBonus: researchBonusValue.speed6,
-  quality: Quality.Legendary,
   inserterCapacity: InserterCapacity.Capacity7,
   costs: {
     factor: rational.one,
@@ -565,10 +563,6 @@ export class SettingsService extends Store<SettingsState> {
             itemData,
             recipe.isTechnology,
           );
-          if (recipe.id === 'railgun-shooting-speed-1') {
-            console.log(qIn, recipe.in, quality, recipe.isTechnology);
-          }
-
           const qOut = recipe.isTechnology
             ? recipe.out
             : this.qualityEntities(recipe.out, quality, itemData);
@@ -777,6 +771,11 @@ export class SettingsService extends Store<SettingsState> {
     const fuelRankIds = coalesce(state.fuelRankIds, defaultFuelRankIds);
     const defaultModuleRankIds = coalesce(defaults?.moduleRankIds, []);
     const moduleRankIds = coalesce(state.moduleRankIds, defaultModuleRankIds);
+    const quality = researchedTechnologyIds.has(ItemId.LegendaryQuality)
+      ? Quality.Legendary
+      : researchedTechnologyIds.has(ItemId.EpicQuality)
+        ? Quality.Epic
+        : Quality.Rare;
 
     return spread(state as Settings, {
       beltId,
@@ -798,6 +797,7 @@ export class SettingsService extends Store<SettingsState> {
       beacons: this.recipeSvc.hydrateBeacons(state.beacons, defaults?.beacons),
       overclock: state.overclock ?? defaults?.overclock,
       researchedTechnologyIds,
+      quality,
     });
   }
 
