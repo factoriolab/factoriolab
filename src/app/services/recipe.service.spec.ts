@@ -790,10 +790,15 @@ describe('RecipeService', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should add machine productivity', () => {
+    it('should add machine base effects', () => {
       const data = Mocks.getDataset();
-      data.machineEntities[ItemId.AssemblingMachine2].baseProductivity =
-        rational.one;
+      data.machineEntities[ItemId.AssemblingMachine2].baseEffect = {
+        consumption: rational(1n, 2n),
+        pollution: rational(1n, 2n),
+        productivity: rational(1n, 2n),
+        quality: rational(1n, 2n),
+        speed: rational(1n, 2n),
+      };
       const result = service.adjustRecipe(
         RecipeId.CopperCable,
         Mocks.recipesState[RecipeId.CopperCable],
@@ -804,12 +809,12 @@ describe('RecipeService', () => {
       const expected = spread(
         Mocks.dataset.recipeEntities[RecipeId.CopperCable] as AdjustedRecipe,
         {
-          out: { [ItemId.CopperCable]: rational(4n) },
-          time: rational(2n, 3n),
+          out: { [ItemId.CopperCable]: rational(3n) },
+          time: rational(4n, 9n),
           drain: rational(5n),
-          consumption: rational(150n),
-          pollution: rational(1n, 20n),
-          productivity: rational(2n),
+          consumption: rational(225n),
+          pollution: rational(9n, 80n),
+          productivity: rational(3n, 2n),
           produces: new Set(),
           output: {},
         },

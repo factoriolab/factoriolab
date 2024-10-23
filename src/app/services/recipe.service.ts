@@ -231,7 +231,14 @@ export class RecipeService {
       if (recipe.isMining) prod = prod.add(miningFactor);
 
       // Adjust for base productivity
-      if (machine.baseProductivity) prod = prod.add(machine.baseProductivity);
+      if (machine.baseEffect) {
+        const eff = machine.baseEffect;
+        if (eff.consumption) consumption = consumption.add(eff.consumption);
+        if (eff.pollution) pollution = pollution.add(eff.pollution);
+        if (eff.productivity) prod = prod.add(eff.productivity);
+        if (eff.quality) quality = quality.add(eff.quality);
+        if (eff.speed) speed = speed.add(eff.speed);
+      }
 
       const proliferatorSprays: Entities<Rational> = {};
 

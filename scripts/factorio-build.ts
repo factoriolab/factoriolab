@@ -78,6 +78,7 @@ import {
   getCargoWagon,
   getEntitySize,
   getFluidWagon,
+  getMachineBaseEffect,
   getMachineDisallowedEffects,
   getMachineDrain,
   getMachineModules,
@@ -497,6 +498,8 @@ async function processMod(): Promise<void> {
       pollution: getMachinePollution(proto),
       silo: getMachineSilo(proto, dataRaw['rocket-silo-rocket']),
       size: getEntitySize(proto),
+      baseEffect: getMachineBaseEffect(proto),
+      entityType: proto.type,
     };
 
     if (machine.speed === 0) {

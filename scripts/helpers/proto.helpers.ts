@@ -5,6 +5,7 @@ import { FluidWagonJson } from '~/models/data/fluid-wagon';
 import { ModuleEffect } from '~/models/data/module';
 import { SiloJson } from '~/models/data/silo';
 import { EnergyType } from '~/models/enum/energy-type';
+import { Optional } from '~/models/utils';
 
 import * as M from '../factorio.models';
 import * as D from '../factorio-build.models';
@@ -222,6 +223,27 @@ export function getMachineUsage(proto: D.MachineProto): number | undefined {
   else if (M.isReactorPrototype(proto)) return getPowerInKw(proto.consumption);
 
   return getPowerInKw(proto.energy_usage);
+}
+
+export function getMachineBaseEffect(
+  proto: D.MachineProto,
+): Optional<Partial<Record<ModuleEffect, number>>> {
+  if (
+    M.isBoilerPrototype(proto) ||
+    M.isOffshorePumpPrototype(proto) ||
+    M.isReactorPrototype(proto) ||
+    proto.effect_receiver?.base_effect == null
+  )
+    return undefined;
+
+  const eff = proto.effect_receiver.base_effect;
+  const result: Partial<Record<ModuleEffect, number>> = {};
+  if (eff.consumption) result.consumption = eff.consumption;
+  if (eff.pollution) result.pollution = eff.pollution;
+  if (eff.productivity) result.productivity = eff.productivity;
+  if (eff.quality) result.quality = eff.quality;
+  if (eff.speed) result.speed = eff.speed;
+  return result;
 }
 
 export function getRecipeDisallowedEffects(
