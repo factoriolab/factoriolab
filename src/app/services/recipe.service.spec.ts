@@ -303,6 +303,23 @@ describe('RecipeService', () => {
       ];
       const data = spread(Mocks.adjustedDataset, {
         flags: flags['2.0'],
+        beaconEntities: spread(Mocks.adjustedDataset.beaconEntities, {
+          [ItemId.Beacon]: spread(
+            Mocks.adjustedDataset.beaconEntities[ItemId.Beacon],
+            {
+              profile: [
+                rational(1),
+                rational(0.7071),
+                rational(0.5773),
+                rational(0.5),
+                rational(0.4472),
+                rational(0.4082),
+                rational(0.3779),
+                rational(0.3535),
+              ],
+            },
+          ),
+        }),
         moduleEntities: spread(Mocks.adjustedDataset.moduleEntities, {
           // To verify all factors work in beacons
           [ItemId.SpeedModule]: spread(
@@ -328,12 +345,12 @@ describe('RecipeService', () => {
           RecipeId.SteelChest
         ] as AdjustedRecipe,
         {
-          out: { [ItemId.SteelChest]: rational(973346339n, 199930350n) },
-          time: rational(10662952n, 27441407n),
+          out: { [ItemId.SteelChest]: rational(1217n, 250n) },
+          time: rational(5000n, 12867n),
           drain: rational(5n),
-          consumption: rational(1045321265n, 2665738n),
-          pollution: rational(81563963266427021n, 127910863523592000n),
-          productivity: rational(973346339n, 199930350n),
+          consumption: rational(3921n, 10n),
+          pollution: rational(3187773n, 5000000n),
+          productivity: rational(1217n, 250n),
           produces: new Set(),
           output: {},
         },

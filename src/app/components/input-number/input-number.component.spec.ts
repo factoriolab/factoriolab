@@ -91,6 +91,14 @@ describe('InputNumberComponent', () => {
       expect(emit).toHaveBeenCalledWith(rational(4n, 3n));
       expect(component._value).toEqual('4/3');
     }));
+
+    it('should round if set to integer mode', fakeAsync(() => {
+      setInputs(fixture, { integer: true });
+      component._value = '0.5';
+      component.changeValue('input');
+      tick(500);
+      expect(emit).toHaveBeenCalledWith(rational.one);
+    }));
   });
 
   describe('increase', () => {

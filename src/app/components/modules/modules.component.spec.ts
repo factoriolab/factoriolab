@@ -38,7 +38,7 @@ describe('ModulesComponent', () => {
         }),
       );
       fixture.detectChanges();
-      expect(component.maximum()).toEqual([null, null]);
+      expect(component.maximum()).toEqual([undefined, undefined]);
     });
   });
 

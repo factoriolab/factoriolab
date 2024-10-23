@@ -143,6 +143,14 @@ describe('Rational', () => {
     });
   });
 
+  describe('round', () => {
+    it('should round integers or up/down', () => {
+      expect(rational(2n).round()).toEqual(rational(2n));
+      expect(rational(2n, 3n).round()).toEqual(rational(1n));
+      expect(rational(4n, 3n).round()).toEqual(rational(1n));
+    });
+  });
+
   describe('abs', () => {
     it('should deterine absolute value', () => {
       expect(rational(2).abs()).toEqual(new Rational(2n));
