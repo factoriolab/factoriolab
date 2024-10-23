@@ -688,7 +688,8 @@ async function processMod(): Promise<void> {
   const itemsUsed = new Set<string>(Object.keys(dataRaw.module));
 
   const itemKeys = anyItemKeys.reduce((result: string[], key) => {
-    result.push(...Object.keys(dataRaw[key]));
+    const data = dataRaw[key] ?? {};
+    result.push(...Object.keys(data));
     return result;
   }, []);
 

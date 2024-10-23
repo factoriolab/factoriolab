@@ -21,6 +21,7 @@ export function getBeacon(proto: M.BeaconPrototype): BeaconJson {
     usage: getPowerInKw(proto.energy_usage),
     disallowedEffects: getDisallowedEffects(proto.allowed_effects, true),
     size: getEntitySize(proto),
+    profile: proto.profile,
   };
 }
 
