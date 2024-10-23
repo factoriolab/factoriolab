@@ -17,7 +17,7 @@ import { CargoWagon } from '~/models/data/cargo-wagon';
 import { FluidWagon } from '~/models/data/fluid-wagon';
 import { Fuel } from '~/models/data/fuel';
 import { Item, ItemJson, parseItem } from '~/models/data/item';
-import { Machine } from '~/models/data/machine';
+import { Machine, typeHasCraftingSpeed } from '~/models/data/machine';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
 import { Module, ModuleEffect } from '~/models/data/module';
@@ -514,7 +514,11 @@ export class SettingsService extends Store<SettingsState> {
             icon: coalesce(item.icon, item.id),
           });
 
-          if (qItem.machine?.speed) {
+          if (
+            qItem.machine?.speed &&
+            qItem.machine.entityType &&
+            typeHasCraftingSpeed.has(qItem.machine.entityType)
+          ) {
             const speed = rational.one
               .add(rational(quality))
               .mul(rational(3n, 10n))

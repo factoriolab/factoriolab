@@ -173,7 +173,7 @@ export class PickerComponent extends DialogComponent {
     if (!this.contentSvc.isMobile()) {
       setTimeout(() => {
         this.filterInput().nativeElement.focus();
-      });
+      }, 10);
     }
   }
 
