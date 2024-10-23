@@ -661,24 +661,20 @@ async function processMod(): Promise<void> {
       if (recipe.hidden && recipe.enabled === false) continue;
 
       // Skip bad recycling
-      if (
-        recipe.category === 'recycling' &&
-        recipe.ingredients?.length &&
-        recipe.results?.length
-      ) {
+      if (recipe.category === 'recycling') {
+        if (!recipe.ingredients?.length || !recipe.results?.length) continue;
         const ingredient = recipe.ingredients[0];
 
         if (isItemIngredientPrototype(ingredient)) {
-          // if (dataRaw.item[ingredient.name]?.subgroup === 'other') continue;
           const item = dataRaw.item[ingredient.name];
-          if (item && item.hidden) {
-            continue;
-            // console.log(item.name);
-          }
+          if (item && item.hidden) continue;
+
           const result = recipe.results[0];
           if (isItemProductPrototype(result) && result.name === ingredient.name)
             continue;
         }
+
+        if (techId['recycling']) recipesUnlocked[key] = techId['recycling'];
       }
     }
 
