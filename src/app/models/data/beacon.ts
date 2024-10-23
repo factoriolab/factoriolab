@@ -13,6 +13,7 @@ export interface BeaconJson {
   disallowedEffects?: ModuleEffect[];
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
+  profile?: number[];
 }
 
 export interface Beacon {
@@ -26,6 +27,7 @@ export interface Beacon {
   disallowedEffects?: ModuleEffect[];
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
+  profile?: Rational[];
 }
 
 export function parseBeacon(json: BeaconJson): Beacon;
@@ -40,5 +42,6 @@ export function parseBeacon(json: BeaconJson | undefined): Beacon | undefined {
     usage: rational(json.usage),
     disallowedEffects: json.disallowedEffects,
     size: json.size,
+    profile: json.profile ? json.profile.map((p) => rational(p)) : undefined,
   };
 }

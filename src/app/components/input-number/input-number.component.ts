@@ -19,6 +19,7 @@ import { debounce, map, of, Subject, tap, timer } from 'rxjs';
 import { ValidateNumberDirective } from '~/directives/validate-number.directive';
 import { filterNullish } from '~/helpers';
 import { Rational, rational } from '~/models/rational';
+import { Optional } from '~/models/utils';
 
 type EventType = 'input' | 'blur' | 'enter';
 
@@ -42,10 +43,11 @@ interface Event {
 })
 export class InputNumberComponent implements OnInit, OnChanges {
   value = input(rational.zero);
-  minimum = input<Rational | null>(rational.zero);
-  maximum = input<Rational | null>(null);
+  minimum = input<Optional<Rational>>(rational.zero);
+  maximum = input<Optional<Rational>>(undefined);
   width = input('');
   inputId = input('inputnumber');
+  integer = input(false);
   disabled = input(false);
   hideButtons = input(false);
   textButtons = input(false);
@@ -88,7 +90,9 @@ export class InputNumberComponent implements OnInit, OnChanges {
     map((e) => e.value),
     filterNullish(),
     tap((v) => {
-      this.setValue.emit(rational(v));
+      let value = rational(v);
+      if (this.integer()) value = value.round();
+      this.setValue.emit(value);
     }),
   );
 

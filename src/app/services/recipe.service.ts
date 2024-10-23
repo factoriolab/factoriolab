@@ -306,14 +306,13 @@ export class RecipeService {
 
       // Beacons
       if (recipeSettings.beacons != null) {
-        let scale = rational.one;
+        let profileIndex: number | undefined;
         if (data.flags.has('diminishingBeacons')) {
           const total = recipeSettings.beacons.reduce(
             (t, b) => t.add(coalesce(b.count, rational.zero)),
             rational.zero,
           );
-          const sqrt = total.pow(0.5);
-          scale = sqrt.div(total);
+          profileIndex = Math.round(total.toNumber()) - 1;
         }
 
         for (const beaconSettings of recipeSettings.beacons) {
@@ -329,6 +328,16 @@ export class RecipeService {
             if (id == null || id === ItemId.Module || count == null) continue;
             const module = data.moduleEntities[id];
             const beacon = data.beaconEntities[beaconSettings.id];
+
+            let scale = rational.one;
+            if (
+              beacon.profile &&
+              profileIndex &&
+              profileIndex >= 0 &&
+              profileIndex < beacon.profile.length
+            )
+              scale = beacon.profile[profileIndex];
+
             const factor = beaconSettings.count // Num of beacons
               .mul(beacon.effectivity) // Effectivity of beacons
               .mul(count) // Num of modules/beacon
