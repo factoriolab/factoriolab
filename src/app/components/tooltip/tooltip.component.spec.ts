@@ -20,4 +20,16 @@ describe('TooltipComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('recipe', () => {
+    it('should return undefined for invalid types', () => {
+      setInputs(fixture, { type: 'beacon' });
+      expect(component.recipe()).toBeUndefined();
+    });
+
+    it('should not return a recipe if multiple are available', () => {
+      setInputs(fixture, { id: 'petroleum-gas' });
+      expect(component.recipe()).toBeUndefined();
+    });
+  });
 });

@@ -6,6 +6,13 @@ import { Entities } from '../utils';
 import { ModuleEffect } from './module';
 import { parseSilo, Silo, SiloJson } from './silo';
 
+// Should map to values in the machine `entityType` field
+export const typeHasCraftingSpeed = new Set([
+  'assembling-machine',
+  'furnace',
+  'rocket-silo',
+]);
+
 export interface MachineJson {
   /** If undefined, speed is based on belt speed */
   speed?: number | string;
@@ -26,12 +33,14 @@ export interface MachineJson {
   consumption?: Entities<number | string>;
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
-  /** Productivity bonus that this machine always has */
-  baseProductivity?: number | string;
+  /** Bonus effects that this machine always has */
+  baseEffect?: Partial<Record<ModuleEffect, number>>;
   /** If true, hide the calculated number of machines */
   hideRate?: boolean;
   /** If true, tally totals by recipe instead of machine */
   totalRecipe?: boolean;
+  /** Type of machine. (e.g. mining drill, assembling machine, etc) */
+  entityType?: string;
 }
 
 export interface Machine {
@@ -52,12 +61,14 @@ export interface Machine {
   consumption?: Entities<Rational>;
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
-  /** Productivity bonus that this machine always has */
-  baseProductivity?: Rational;
+  /** Bonus effects that this machine always has */
+  baseEffect?: Partial<Record<ModuleEffect, Rational>>;
   /** If true, hide the calculated number of machines */
   hideRate?: boolean;
   /** If true, tally totals by recipe instead of machine */
   totalRecipe?: boolean;
+  /** Type of machine. (e.g. mining drill, assembling machine, etc) */
+  entityType?: string;
 }
 
 export function parseMachine(json: MachineJson): Machine;
@@ -81,8 +92,19 @@ export function parseMachine(
     silo: parseSilo(json.silo),
     consumption: toRationalEntities(json.consumption),
     size: json.size,
-    baseProductivity: rational(json.baseProductivity),
+    baseEffect: json.baseEffect ? parseBaseEffect(json.baseEffect) : undefined,
     hideRate: json.hideRate,
     totalRecipe: json.totalRecipe,
+    entityType: json.entityType,
   };
+}
+
+function parseBaseEffect(
+  eff: Partial<Record<ModuleEffect, number>>,
+): Partial<Record<ModuleEffect, Rational>> {
+  const keys = Object.keys(eff) as ModuleEffect[];
+  return keys.reduce((e: Partial<Record<ModuleEffect, Rational>>, k) => {
+    e[k] = rational(eff[k]);
+    return e;
+  }, {});
 }

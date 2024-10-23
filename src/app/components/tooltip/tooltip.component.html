@@ -8,12 +8,7 @@
 } @else {
   @if (data().itemEntities[id()]; as item) {
     <div class="title">{{ item.name }}</div>
-    @if (
-      (type() === 'item' || type() === 'technology') &&
-        data().itemRecipeIds[id()].length === 1 &&
-        data().recipeEntities[data().itemRecipeIds[id()][0]];
-      as recipe
-    ) {
+    @if (recipe(); as recipe) {
       <ng-container *ngTemplateOutlet="recipeProcess; context: { recipe }">
       </ng-container>
     }
@@ -123,11 +118,37 @@
           <td>{{ machine.speed | round }}</td>
         </tr>
       }
-      @if (machine.baseProductivity) {
-        <tr>
-          <td>{{ 'data.baseProductivity' | translate }}</td>
-          <td>{{ machine.baseProductivity | round }}</td>
-        </tr>
+      @if (machine.baseEffect; as eff) {
+        @if (eff.consumption && eff.consumption.nonzero()) {
+          <tr>
+            <td>{{ 'data.energyConsumption' | translate }}</td>
+            <td>{{ eff.consumption | bonusPercent }}</td>
+          </tr>
+        }
+        @if (eff.speed && eff.speed.nonzero()) {
+          <tr>
+            <td>{{ 'data.speed' | translate }}</td>
+            <td>{{ eff.speed | bonusPercent }}</td>
+          </tr>
+        }
+        @if (eff.productivity && eff.productivity.nonzero()) {
+          <tr>
+            <td>{{ 'data.productivity' | translate }}</td>
+            <td>{{ eff.productivity | bonusPercent }}</td>
+          </tr>
+        }
+        @if (eff.pollution && eff.pollution.nonzero()) {
+          <tr>
+            <td>{{ 'data.pollution' | translate }}</td>
+            <td>{{ eff.pollution | bonusPercent }}</td>
+          </tr>
+        }
+        @if (eff.quality && eff.quality.nonzero()) {
+          <tr>
+            <td>{{ 'data.quality' | translate }}</td>
+            <td>{{ eff.quality | bonusPercent }}</td>
+          </tr>
+        }
       }
       @if (machine.modules) {
         <tr>

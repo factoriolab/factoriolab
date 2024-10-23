@@ -343,8 +343,21 @@ describe('SettingsService', () => {
     });
 
     it('should handle quality', () => {
+      const items = Mocks.mod.items.map((i) =>
+        i.id === ItemId.ElectricMiningDrill
+          ? spread(i, {
+              machine: spread(i.machine!, { entityType: 'mining-drill' }),
+            })
+          : i.id === ItemId.AssemblingMachine1
+            ? spread(i, {
+                machine: spread(i.machine!, {
+                  entityType: 'assembling-machine',
+                }),
+              })
+            : i,
+      );
       spyOn(service, 'mod').and.returnValue(
-        spread(Mocks.mod, { flags: 'spa' }),
+        spread(Mocks.mod, { flags: 'spa', items }),
       );
       spyOn(service, 'i18n').and.returnValue(Mocks.modI18n);
       const result = service.dataset();
