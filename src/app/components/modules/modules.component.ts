@@ -78,7 +78,7 @@ export class ModulesComponent {
   maximum = computed(() => {
     const values = this.modules();
     const slots = coalesce(this.entity().modules, rational.zero);
-    if (slots === true) return values.map(() => null);
+    if (slots === true) return values.map(() => undefined);
     let sum = this.sum();
     const empty = values.find((e) => e.id === ItemId.Module);
     if (empty) sum = sum.sub(coalesce(empty.count, rational.zero));

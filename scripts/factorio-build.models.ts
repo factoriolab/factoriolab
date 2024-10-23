@@ -77,7 +77,7 @@ export interface DataRawDump {
   'rocket-silo': Entities<M.RocketSiloPrototype>;
   'rocket-silo-rocket': Entities<M.RocketSiloRocketPrototype>;
   'selection-tool': Entities<M.SelectionToolPrototype>;
-  'space-platform-starter-pack': Entities<M.SpacePlatformStarterPackPrototype>;
+  'space-platform-starter-pack'?: Entities<M.SpacePlatformStarterPackPrototype>;
   'spidertron-remote': Entities<M.SpidertronRemotePrototype>;
   technology: Entities<M.TechnologyPrototype>;
   tile: Entities<M.TilePrototype>;

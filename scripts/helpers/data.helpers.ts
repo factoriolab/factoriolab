@@ -77,8 +77,9 @@ export function getItemMap(
 ): Record<string, AnyItemPrototype | FluidPrototype> {
   return anyItemKeys.reduce(
     (result: Record<string, AnyItemPrototype | FluidPrototype>, key) => {
-      return Object.keys(dataRaw[key]).reduce((result, name) => {
-        result[name] = dataRaw[key][name];
+      const data = dataRaw[key] ?? {};
+      return Object.keys(data).reduce((result, name) => {
+        result[name] = data[name];
         return result;
       }, result);
     },
