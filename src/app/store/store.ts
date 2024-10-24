@@ -23,7 +23,7 @@ export abstract class Store<T extends object> {
       return;
     }
 
-    let next = spread(this.initial, partial);
+    let next = spread(this.initial, partial as Partial<T>);
 
     // Spread any top-level nested keys (multi-level nesting not supported)
     for (const key of this.nestedKeys) {

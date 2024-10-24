@@ -26,7 +26,6 @@ describe('SimplexService', () => {
     recipeLimits: {},
     unproduceableIds: new Set(),
     excludedIds: new Set(),
-    recipeIds: Mocks.adjustedDataset.recipeIds,
     itemIds: Mocks.adjustedDataset.itemIds,
     data: Mocks.adjustedDataset,
     maximizeType: MaximizeType.Weight,
@@ -190,9 +189,6 @@ describe('SimplexService', () => {
           ItemId.CopperPlate,
         ]),
         excludedIds: new Set(),
-        recipeIds: Mocks.adjustedDataset.recipeIds.filter(
-          (r) => r !== RecipeId.NuclearFuelReprocessing,
-        ),
         itemIds: Mocks.adjustedDataset.itemIds,
         data: Mocks.adjustedDataset,
         maximizeType: MaximizeType.Weight,

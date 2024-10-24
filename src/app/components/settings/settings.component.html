@@ -284,7 +284,7 @@
               icon="fa-solid fa-microchip"
               [pTooltip]="'settings.techsTooltip' | translate"
               [label]="
-                researchedTechnologyIds()
+                settings().researchedTechnologyIds
                   ? ('settings.techsResearched'
                     | translate
                       : {
@@ -394,7 +394,7 @@
               <label for="preset">{{ 'settings.preset' | translate }}</label>
             </span>
           </div>
-          @if (data().moduleIds.length > 1) {
+          @if (options().modules.length) {
             <div class="pb-3">
               <label class="p-static-label" for="modifier-rank">{{
                 'settings.modifierRank' | translate
@@ -492,7 +492,7 @@
           @if (!data().flags.has('hideMachineSettings')) {
             <div class="p-inputgroup flex-wrap machine-preference mb-1">
               <span
-                class="p-inputgroup-addon"
+                class="p-inputgroup-addon icon-width"
                 [pTooltip]="'settings.machineDefaults' | translate"
               >
                 <i class="fa-solid fa-industry"></i>
@@ -557,39 +557,43 @@
                 data().flags.has('beacons') && settings().beacons;
                 as beacons
               ) {
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="hover-action icons p-button-text flex-column"
-                  [pTooltip]="tooltip"
-                  (click)="beaconsOverlay.show($event, beacons)"
-                >
-                  @for (beacon of beacons; track $index) {
-                    <div class="d-flex">
-                      <i class="p-button-icon" [class]="beacon.id | iconSmClass"
-                        ><span>{{ beacon.count }}</span></i
-                      >
-                      @for (module of beacon.modules; track module.id) {
+                @if (beacons.length) {
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="hover-action icons p-button-text flex-column"
+                    [pTooltip]="tooltip"
+                    (click)="beaconsOverlay.show($event, beacons)"
+                  >
+                    @for (beacon of beacons; track $index) {
+                      <div class="d-flex">
                         <i
                           class="p-button-icon"
-                          [class]="module.id | iconSmClass"
-                          ><span>{{ module.count }}</span></i
+                          [class]="beacon.id | iconSmClass"
+                          ><span>{{ beacon.count }}</span></i
                         >
-                      }
-                    </div>
-                  }
-                  <i class="hover-icon fa-solid fa-gear"></i>
-                </button>
-                <lab-beacons-overlay
-                  #beaconsOverlay
-                  (setValue)="changeDefaultBeacons($event)"
-                ></lab-beacons-overlay>
-                <ng-template #tooltip>
-                  @if (beacons?.[0]?.id; as beaconId) {
-                    <lab-tooltip [id]="beaconId" type="beacon"></lab-tooltip>
-                  }
-                </ng-template>
+                        @for (module of beacon.modules; track module.id) {
+                          <i
+                            class="p-button-icon"
+                            [class]="module.id | iconSmClass"
+                            ><span>{{ module.count }}</span></i
+                          >
+                        }
+                      </div>
+                    }
+                    <i class="hover-icon fa-solid fa-gear"></i>
+                  </button>
+                  <lab-beacons-overlay
+                    #beaconsOverlay
+                    (setValue)="changeDefaultBeacons($event)"
+                  ></lab-beacons-overlay>
+                  <ng-template #tooltip>
+                    @if (beacons?.[0]?.id; as beaconId) {
+                      <lab-tooltip [id]="beaconId" type="beacon"></lab-tooltip>
+                    }
+                  </ng-template>
+                }
               }
             </div>
             <p-orderList
@@ -626,13 +630,9 @@
                         (onChange)="setMachine(machineId, $event.value)"
                       >
                         <ng-template pTemplate="selectedItem" let-item>
-                          @if (item) {
-                            <div class="d-flex">
-                              <i [class]="item.value | iconSmClass"></i>
-                            </div>
-                          } @else {
-                            <div>{{ machineId }}</div>
-                          }
+                          <div class="d-flex">
+                            <i [class]="machineId | iconSmClass"></i>
+                          </div>
                         </ng-template>
                         <ng-template pTemplate="item" let-item>
                           <div
@@ -996,7 +996,7 @@
               ></lab-input-number>
             </div>
           }
-          @if (data().pipeIds.length > 1) {
+          @if (options().pipes.length > 1) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
                 <p-dropdown
@@ -1045,7 +1045,7 @@
               </div>
             </div>
           }
-          @if (data().cargoWagonIds.length > 1) {
+          @if (options().cargoWagons.length > 1) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
                 <p-dropdown
@@ -1094,7 +1094,7 @@
               </div>
             </div>
           }
-          @if (data().fluidWagonIds.length > 1) {
+          @if (options().fluidWagons.length > 1) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
                 <p-dropdown

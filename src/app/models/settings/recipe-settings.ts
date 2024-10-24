@@ -16,6 +16,7 @@ export interface RecipeState {
 export interface RecipeSettings extends RecipeState {
   defaultMachineId?: string;
   defaultFuelId?: string;
+  machineOptions?: SelectItem<string>[];
   fuelOptions?: SelectItem<string>[];
   moduleOptions?: SelectItem<string>[];
   defaultOverclock?: Rational;

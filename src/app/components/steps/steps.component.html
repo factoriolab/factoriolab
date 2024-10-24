@@ -566,42 +566,55 @@
                   !preferences().hideDuplicateIcons ||
                   (step.itemId != null && step.itemId !== step.recipeId)
                 ) {
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    class="hover-action p-button-text"
-                    [pTooltip]="tooltip"
-                    (click)="
-                      objectivesSvc.add({
-                        targetId: step.recipeId,
-                        unit: ObjectiveUnit.Machines,
-                      })
-                    "
-                  >
-                    <span
-                      class="p-button-icon"
-                      [class]="step.recipeId | iconSmClass: 'recipe'"
+                  @if (stepDetails()[step.id]; as details) {
+                    <p-multiSelect
+                      inputId="enabled-recipes"
+                      styleClass="icon"
+                      appendTo="body"
+                      scrollHeight="40vh"
+                      panelStyleClass="tooltip"
+                      [(ngModel)]="details.recipesEnabled"
+                      [options]="details.recipeOptions"
+                      (onPanelHide)="
+                        changeRecipesIncluded(
+                          details.recipeIds,
+                          details.recipesEnabled
+                        )
+                      "
                     >
-                      @if (step.recipeObjectiveId) {
-                        <span>#{{ step.recipeObjectiveId }}</span>
-                      }
-                    </span>
-                    <i class="hover-icon fa-solid fa-circle-plus"></i>
-                    <ng-template #tooltip>
-                      <lab-tooltip
-                        [id]="step.recipeId"
-                        type="recipe"
-                      ></lab-tooltip>
-                    </ng-template>
-                  </button>
+                      <ng-template pTemplate="selectedItems" let-items>
+                        <div class="d-flex">
+                          <i [class]="step.recipeId | iconSmClass: 'recipe'">
+                            @if (step.recipeObjectiveId) {
+                              <span>#{{ step.recipeObjectiveId }}</span>
+                            }
+                          </i>
+                        </div>
+                      </ng-template>
+                      <ng-template pTemplate="item" let-item>
+                        <div
+                          class="d-flex align-items-center p-2 w-100 h-100"
+                          [pTooltip]="tooltip"
+                        >
+                          <i [class]="item.value | iconSmClass: 'recipe'"></i>
+                          <div class="ms-3 text-truncate">
+                            {{ item.label }}
+                          </div>
+                          <ng-template #tooltip>
+                            <lab-tooltip
+                              [id]="item.value"
+                              type="recipe"
+                            ></lab-tooltip>
+                          </ng-template>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  }
                 }
                 <p-dropdown
                   labDropdownBase="icon"
                   [pTooltip]="tooltip"
-                  [options]="
-                    step.recipe.producers | options: data().itemEntities
-                  "
+                  [options]="step.recipeSettings.machineOptions"
                   [ngModel]="machineId"
                   (onChange)="
                     step.recipeObjectiveId
@@ -838,7 +851,8 @@
             @if (
               step.recipeId &&
               step.recipeSettings &&
-              step.recipeSettings.beacons
+              step.recipeSettings.beacons &&
+              step.recipeSettings.beacons.length
             ) {
               <button
                 pButton
@@ -1480,69 +1494,6 @@
               }
             </td>
           </tr>
-        }
-        @case (StepDetailTab.Recipes) {
-          <!-- Recipes row details -->
-          @if (step.itemId && stepDetails()[step.id]; as stepDetails) {
-            <tr class="detail">
-              <td></td>
-              <td colspan="100">
-                <div>
-                  <div class="fw-bold">
-                    {{ 'steps.includedRecipes' | translate }}
-                  </div>
-                  <div class="mb-2">
-                    <small>{{ 'steps.includedRecipesInfo' | translate }}</small>
-                  </div>
-                  <p-checkbox
-                    [ngModel]="stepDetails.allRecipesIncluded"
-                    [binary]="true"
-                    [label]="'picker.includeAll' | translate"
-                    (onChange)="
-                      changeRecipesExcluded(
-                        stepDetails.recipeIds,
-                        stepDetails.allRecipesIncluded
-                      )
-                    "
-                  ></p-checkbox>
-                </div>
-              </td>
-            </tr>
-            <tr class="detail">
-              <td></td>
-              <td colspan="100">
-                <div class="d-flex flex-wrap">
-                  @for (recipeId of stepDetails.recipeIds; track recipeId) {
-                    <button
-                      pButton
-                      pRipple
-                      type="button"
-                      class="p-button-text hover-action me-2"
-                      [class.hover-active]="
-                        settings().excludedRecipeIds.has(recipeId)
-                      "
-                      [icon]="recipeId | iconSmClass: 'recipe'"
-                      [pTooltip]="tooltip"
-                      (click)="
-                        changeRecipesExcluded(
-                          [recipeId],
-                          !settings().excludedRecipeIds.has(recipeId)
-                        )
-                      "
-                    >
-                      <i class="hover-icon fa-solid fa-eye-slash"></i>
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="recipeId"
-                          type="recipe"
-                        ></lab-tooltip>
-                      </ng-template>
-                    </button>
-                  }
-                </div>
-              </td>
-            </tr>
-          }
         }
       }
     }

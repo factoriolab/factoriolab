@@ -33,6 +33,7 @@ export interface Dataset {
   itemIds: string[];
   itemQIds: Set<string>;
   itemEntities: Entities<Item>;
+  noRecipeItemIds: Set<string>;
   beaconIds: string[];
   beaconEntities: Entities<Beacon>;
   beltIds: string[];
@@ -64,7 +65,7 @@ export interface AdjustedDataset extends Dataset {
   /** For each item, all recipe ids that produce the item */
   itemRecipeIds: Entities<string[]>;
   /** For each item, all included recipe ids that produce the item */
-  itemIncludedRecipeIds: Entities<string[]>;
+  itemAvailableRecipeIds: Entities<string[]>;
   /** For each item, all included recipe ids that consume/produce the item */
-  itemIncludedIoRecipeIds: Entities<string[]>;
+  itemAvailableIoRecipeIds: Entities<string[]>;
 }

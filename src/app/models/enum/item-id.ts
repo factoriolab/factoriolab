@@ -9,6 +9,7 @@ export const ItemId = {
   Module: 'module',
   Pipe: 'pipe',
   Pumpjack: 'pumpjack',
+  QualityModuleTechnology: 'quality-module-technology',
   Somersloop: 'somersloop',
   StackInserter: 'stack-inserter',
 };

@@ -12,7 +12,12 @@
           class="mt-2"
           icon="fa-solid fa-box"
           [label]="'wizard.produceItemsButton' | translate"
-          (click)="addItemObjectivePicker.clickOpen('item', itemIds())"
+          (click)="
+            addItemObjectivePicker.clickOpen(
+              'item',
+              settings().availableItemIds
+            )
+          "
         ></button>
         <lab-picker
           #addItemObjectivePicker
@@ -28,7 +33,9 @@
           class="mt-2"
           icon="fa-solid fa-industry"
           [label]="'wizard.runMachinesButton' | translate"
-          (click)="addRecipePicker.clickOpen('recipe', recipeIds())"
+          (click)="
+            addRecipePicker.clickOpen('recipe', settings().availableRecipeIds)
+          "
         ></button>
         <lab-picker
           #addRecipePicker

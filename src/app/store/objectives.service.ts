@@ -1,5 +1,6 @@
 import { computed, inject, Injectable, Injector } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { SelectItem } from 'primeng/api';
 import { filter, pairwise, switchMap } from 'rxjs';
 
 import {
@@ -289,6 +290,8 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
       const tabs: StepDetailTab[] = [];
       const outputs: StepOutput[] = [];
       let recipeIds: string[] = [];
+      let recipesEnabled: string[] = [];
+      let recipeOptions: SelectItem<string>[] = [];
       if (s.itemId != null && s.items != null) {
         const itemId = s.itemId; // Store null-checked id
         tabs.push(StepDetailTab.Item);
@@ -327,9 +330,15 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
 
       if (s.itemId != null) {
         recipeIds = data.itemRecipeIds[s.itemId];
-        if (recipeIds.length) {
-          tabs.push(StepDetailTab.Recipes);
-        }
+        recipesEnabled = recipeIds.filter(
+          (r) => !settings.excludedRecipeIds.has(r),
+        );
+        recipeOptions = recipeIds.map(
+          (r): SelectItem<string> => ({
+            value: r,
+            label: data.recipeEntities[r].name,
+          }),
+        );
       }
 
       e[s.id] = {
@@ -351,9 +360,8 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
         }),
         outputs,
         recipeIds,
-        allRecipesIncluded: recipeIds.every(
-          (r) => !settings.excludedRecipeIds.has(r),
-        ),
+        recipesEnabled,
+        recipeOptions,
       };
 
       return e;

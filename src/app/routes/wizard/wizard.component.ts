@@ -51,9 +51,8 @@ export class WizardComponent {
   recipesSvc = inject(RecipesService);
   settingsSvc = inject(SettingsService);
 
-  itemIds = this.recipesSvc.availableItemIds;
-  recipeIds = this.settingsSvc.availableRecipeIds;
   data = this.settingsSvc.dataset;
+  settings = this.settingsSvc.settings;
   displayRate = this.settingsSvc.displayRate;
 
   id = '';
