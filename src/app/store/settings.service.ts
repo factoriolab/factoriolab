@@ -20,7 +20,7 @@ import { Item, ItemJson, parseItem } from '~/models/data/item';
 import { Machine, typeHasCraftingSpeed } from '~/models/data/machine';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
-import { Module, ModuleEffect } from '~/models/data/module';
+import { filterEffect, Module, ModuleEffect } from '~/models/data/module';
 import { parseRecipe, Recipe } from '~/models/data/recipe';
 import { Technology } from '~/models/data/technology';
 import { Dataset } from '~/models/dataset';
@@ -520,7 +520,7 @@ export class SettingsService extends Store<SettingsState> {
               'speed',
             ];
             for (const eff of effs) {
-              if (qItem.module[eff]) {
+              if (qItem.module[eff] && !filterEffect(qItem.module, eff)) {
                 let value = qItem.module[eff].mul(factor);
                 value = value.mul(rational(100n)).floor().div(rational(100n));
                 qItem.module = spread(qItem.module, { [eff]: value });
