@@ -149,7 +149,7 @@ for _, tech in pairs(game.player.force.technologies) do
         list[#list + 1] = tech.name
     end
 end
-game.write_file("techs.txt", table.concat(list, ","))
+helpers.write_file("techs.txt", table.concat(list, ","))
 `;
     void window.navigator.clipboard.writeText(script);
     this.translateSvc
