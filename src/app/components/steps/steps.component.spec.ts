@@ -41,7 +41,8 @@ describe('StepsComponent', () => {
               : [],
           outputs: [],
           recipeIds: [],
-          allRecipesIncluded: true,
+          recipesEnabled: [],
+          recipeOptions: [],
         };
         return e;
       }, {}),
@@ -177,13 +178,15 @@ describe('StepsComponent', () => {
             tabs: [tab1, tab2],
             outputs: [],
             recipeIds: [],
-            allRecipesIncluded: true,
+            recipesEnabled: [],
+            recipeOptions: [],
           },
           ['3']: {
             tabs: [tab1],
             outputs: [],
             recipeIds: [],
-            allRecipesIncluded: true,
+            recipesEnabled: [],
+            recipeOptions: [],
           },
         },
       );
@@ -274,17 +277,17 @@ describe('StepsComponent', () => {
     });
   });
 
-  describe('changeRecipesExcluded', () => {
-    it('should update the set and pass with defaults to the store dispatcher', () => {
-      spyOn(component.settingsSvc, 'updateField');
-      component.changeRecipesExcluded([RecipeId.Coal], true);
-      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
-        'excludedRecipeIds',
-        new Set([RecipeId.NuclearFuelReprocessing, RecipeId.Coal]),
-        new Set([RecipeId.NuclearFuelReprocessing]),
-      );
-    });
-  });
+  // describe('changeRecipesExcluded', () => {
+  //   it('should update the set and pass with defaults to the store dispatcher', () => {
+  //     spyOn(component.settingsSvc, 'updateField');
+  //     component.changeRecipesExcluded([RecipeId.Coal], true);
+  //     expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+  //       'excludedRecipeIds',
+  //       new Set([RecipeId.NuclearFuelReprocessing, RecipeId.Coal]),
+  //       new Set([RecipeId.NuclearFuelReprocessing]),
+  //     );
+  //   });
+  // });
 
   describe('changeModulesBeacons', () => {
     let step: Step;

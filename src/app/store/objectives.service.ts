@@ -362,9 +362,6 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
         recipeIds,
         recipesEnabled,
         recipeOptions,
-        allRecipesIncluded: recipeIds.every(
-          (r) => !settings.excludedRecipeIds.has(r),
-        ),
       };
 
       return e;

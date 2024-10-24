@@ -26,26 +26,34 @@ describe('RecipeService', () => {
   describe('bestMatch', () => {
     it('should pick the first option if list only contains one', () => {
       const value = 'value';
-      const result = service.bestMatch([value], []);
+      const result = service.bestMatch([{ value }], []);
       expect(result).toEqual(value);
     });
 
     it('should pick the first match from rank', () => {
       const value = 'value';
-      const result = service.bestMatch(['test1', value], ['test2', value]);
+      const result = service.bestMatch(
+        [{ value: 'test1' }, { value }],
+        ['test2', value],
+      );
       expect(result).toEqual(value);
     });
   });
 
   describe('fuelOptions', () => {
     it('should handle entities with no fuel categories', () => {
-      const result = service.fuelOptions({} as any, Mocks.adjustedDataset);
+      const result = service.fuelOptions(
+        {} as any,
+        Mocks.settingsStateInitial,
+        Mocks.adjustedDataset,
+      );
       expect(result).toEqual([]);
     });
 
     it('should handle entity that specifies a fuel', () => {
       const result = service.fuelOptions(
         { fuel: ItemId.Coal } as any,
+        Mocks.settingsStateInitial,
         Mocks.adjustedDataset,
       );
       expect(result).toEqual([{ value: ItemId.Coal, label: 'Coal' }]);
@@ -58,6 +66,7 @@ describe('RecipeService', () => {
         spread(Mocks.dataset.beaconEntities[ItemId.Beacon], {
           disallowedEffects: ['speed', 'consumption'],
         }),
+        Mocks.settingsStateInitial,
         Mocks.dataset,
       );
       expect(result).toHaveSize(4);
@@ -71,6 +80,7 @@ describe('RecipeService', () => {
       ];
       const result = service.moduleOptions(
         data.beaconEntities[ItemId.Beacon],
+        Mocks.settingsStateInitial,
         data,
         RecipeId.Coal,
       );
@@ -80,6 +90,7 @@ describe('RecipeService', () => {
     it('should disallow empty module in Satisfactory mining', () => {
       const result = service.moduleOptions(
         Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],
+        Mocks.settingsStateInitial,
         spread(Mocks.dataset, { flags: flags.sfy }),
         RecipeId.Coal,
       );
@@ -1034,7 +1045,6 @@ describe('RecipeService', () => {
       spyOn(service, 'adjustSiloRecipes').and.callThrough();
       spyOn(service, 'adjustRecipe').and.callThrough();
       const result = service.adjustDataset(
-        Mocks.adjustedDataset.recipeIds,
         Mocks.recipesStateInitial,
         Mocks.itemsStateInitial,
         Mocks.settingsStateInitial,

@@ -15,5 +15,4 @@ export interface StepDetail {
   recipeIds: string[];
   recipesEnabled: string[];
   recipeOptions: SelectItem<string>[];
-  allRecipesIncluded: boolean;
 }

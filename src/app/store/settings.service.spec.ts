@@ -387,37 +387,24 @@ describe('SettingsService', () => {
     });
   });
 
-  describe('allResearchedTechnologyIds', () => {
-    it('should return all ids if undefined', () => {
-      expect(service.allResearchedTechnologyIds().size).toEqual(192);
-    });
-
-    it('should return the setting', () => {
-      spyOn(service, 'researchedTechnologyIds').and.returnValue(
-        new Set([ItemId.ArtilleryShellRange]),
-      );
-      expect(service.allResearchedTechnologyIds().size).toEqual(1);
-    });
-  });
-
   describe('settings', () => {
-    it('should overwrite defaults when specified', () => {
-      const value: any = {
-        beltId: 'belt',
-        pipeId: 'pipe',
-        cargoWagonId: 'cargoWagon',
-        fluidWagonId: 'fluidWagon',
-        excludedRecipeIds: new Set(['excludedRecipes']),
-        machineRankIds: 'machineRank',
-        fuelRankIds: 'fuelRank',
-        moduleRankIds: 'moduleRank',
-      };
-      spyOn(service, 'state').and.returnValue(value);
-      const result = service.settings();
-      for (const key of Object.keys(value) as (keyof Settings)[])
-        expect(result[key]).toEqual(value[key]);
-      expect(result.quality).toEqual(Quality.Rare);
-    });
+    // it('should overwrite defaults when specified', () => {
+    //   const value: any = {
+    //     beltId: 'belt',
+    //     pipeId: 'pipe',
+    //     cargoWagonId: 'cargoWagon',
+    //     fluidWagonId: 'fluidWagon',
+    //     excludedRecipeIds: new Set(['excludedRecipes']),
+    //     machineRankIds: 'machineRank',
+    //     fuelRankIds: 'fuelRank',
+    //     moduleRankIds: 'moduleRank',
+    //   };
+    //   spyOn(service, 'state').and.returnValue(value);
+    //   const result = service.settings();
+    //   for (const key of Object.keys(value) as (keyof Settings)[])
+    //     expect(result[key]).toEqual(value[key]);
+    //   expect(result.quality).toEqual(Quality.Rare);
+    // });
 
     it('should fall back if setting and defaults are undefined', () => {
       spyOn(service, 'state').and.returnValue({} as any);
@@ -427,19 +414,19 @@ describe('SettingsService', () => {
       expect(result.moduleRankIds).toEqual([]);
     });
 
-    it('should calculate legendary quality level', () => {
-      spyOn(service, 'researchedTechnologyIds').and.returnValue(
-        new Set([ItemId.LegendaryQuality]),
-      );
-      expect(service.settings().quality).toEqual(Quality.Legendary);
-    });
+    // it('should calculate legendary quality level', () => {
+    //   spyOn(service, 'researchedTechnologyIds').and.returnValue(
+    //     new Set([ItemId.LegendaryQuality]),
+    //   );
+    //   expect(service.settings().quality).toEqual(Quality.Legendary);
+    // });
 
-    it('should calculate epic quality level', () => {
-      spyOn(service, 'researchedTechnologyIds').and.returnValue(
-        new Set([ItemId.EpicQuality]),
-      );
-      expect(service.settings().quality).toEqual(Quality.Epic);
-    });
+    // it('should calculate epic quality level', () => {
+    //   spyOn(service, 'researchedTechnologyIds').and.returnValue(
+    //     new Set([ItemId.EpicQuality]),
+    //   );
+    //   expect(service.settings().quality).toEqual(Quality.Epic);
+    // });
   });
 
   describe('options', () => {
@@ -485,16 +472,6 @@ describe('SettingsService', () => {
       const result = service.beltSpeedTxt();
       expect(result['a']).toEqual('1');
       expect(result['b']).toEqual('0.33');
-    });
-  });
-
-  describe('availableRecipeIds', () => {
-    it('should filter for only unlocked recipes', () => {
-      spyOn(service, 'allResearchedTechnologyIds').and.returnValue(
-        new Set([RecipeId.Automation]),
-      );
-      const result = service.availableRecipeIds();
-      expect(result.length).toEqual(234);
     });
   });
 

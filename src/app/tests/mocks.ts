@@ -375,7 +375,7 @@ beforeAll(() => {
   settingsStateInitial = settingsSvc.computeSettings(
     initialSettingsState,
     defaults,
-    new Set(dataset.technologyIds),
+    dataset,
   );
   itemsStateInitial = itemsSvc.computeItemsSettings(
     {},
@@ -398,7 +398,6 @@ beforeAll(() => {
   recipesStateInitial = getRecipesState();
   getAdjustedDataset = (): AdjustedDataset => {
     return recipeSvc.adjustDataset(
-      dataset.recipeIds,
       recipesStateInitial,
       itemsStateInitial,
       settingsStateInitial,
