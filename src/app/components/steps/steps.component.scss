@@ -56,7 +56,8 @@
 :host ::ng-deep {
   // Mask input fields
   .p-dropdown,
-  .p-inputtext {
+  .p-inputtext,
+  .p-multiselect {
     // For some reason, this breaks unless ::ng-deep is included on each
     &:not(:is(:hover, ::ng-deep :focus, ::ng-deep .ng-invalid)) {
       border-color: transparent;

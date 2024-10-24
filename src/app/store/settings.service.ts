@@ -737,12 +737,6 @@ export class SettingsService extends Store<SettingsState> {
     defaults: Optional<Defaults>,
     data: Dataset,
   ): Settings {
-    const defaultExcludedRecipeIds = new Set(defaults?.excludedRecipeIds);
-    const excludedRecipeIds = coalesce(
-      state.excludedRecipeIds,
-      defaultExcludedRecipeIds,
-    );
-
     const techIds = state.researchedTechnologyIds;
     const allTechnologyIds = Object.keys(data.technologyEntities);
     let researchedTechnologyIds = new Set(allTechnologyIds);
@@ -764,7 +758,6 @@ export class SettingsService extends Store<SettingsState> {
       return (
         (recipe.unlockedBy == null ||
           researchedTechnologyIds.has(recipe.unlockedBy)) &&
-        !excludedRecipeIds?.has(recipe.id) &&
         (recipe.quality == null || recipe.quality <= quality)
       );
     });
@@ -841,6 +834,11 @@ export class SettingsService extends Store<SettingsState> {
         })
         .filter((b) => b.id);
     }
+    const defaultExcludedRecipeIds = new Set(defaults?.excludedRecipeIds);
+    const excludedRecipeIds = coalesce(
+      state.excludedRecipeIds,
+      defaultExcludedRecipeIds,
+    );
 
     return spread(state as Settings, {
       beltId,
