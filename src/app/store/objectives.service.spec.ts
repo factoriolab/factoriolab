@@ -191,100 +191,104 @@ describe('ObjectivesService', () => {
     });
   });
 
-  // describe('stepDetails', () => {
-  //   it('should determine detail tabs to display for steps', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: '0',
-  //         itemId: ItemId.PetroleumGas,
-  //         items: rational.one,
-  //         recipeId: RecipeId.Coal,
-  //         machines: rational.one,
-  //         outputs: { [ItemId.PetroleumGas]: rational(2n) },
-  //       },
-  //       {
-  //         id: '1',
-  //         recipeId: RecipeId.CrudeOil,
-  //         machines: rational(2n),
-  //         outputs: { [ItemId.PetroleumGas]: rational.one },
-  //       },
-  //       {
-  //         id: '2',
-  //       },
-  //     ];
-  //     spyOn(service, 'steps').and.returnValue(steps);
-  //     const result = service.stepDetails();
-  //     expect(result).toEqual({
-  //       ['0']: {
-  //         tabs: [
-  //           {
-  //             label: StepDetailTab.Item,
-  //             id: 'step_0_item_tab',
-  //             command: result['0'].tabs[0].command,
-  //           },
-  //           {
-  //             label: StepDetailTab.Recipe,
-  //             id: 'step_0_recipe_tab',
-  //             command: result['0'].tabs[1].command,
-  //           },
-  //           {
-  //             label: StepDetailTab.Machine,
-  //             id: 'step_0_machine_tab',
-  //             command: result['0'].tabs[2].command,
-  //           },
-  //         ],
-  //         outputs: [
-  //           {
-  //             value: rational(2n),
-  //             step: steps[0],
-  //           },
-  //           {
-  //             value: rational.one,
-  //             step: steps[1],
-  //           },
-  //           {
-  //             inputs: true,
-  //             value: rational(-2n),
-  //           },
-  //         ],
-  //         recipeIds: [
-  //           RecipeId.BasicOilProcessing,
-  //           RecipeId.AdvancedOilProcessing,
-  //           RecipeId.CoalLiquefaction,
-  //           RecipeId.CoalLiquefactionSteam500,
-  //           RecipeId.LightOilCracking,
-  //         ],
-  //         recipesEnabled: [],
-  //         recipeOptions: [],
-  //       },
-  //       ['1']: {
-  //         tabs: [
-  //           {
-  //             label: StepDetailTab.Recipe,
-  //             id: 'step_1_recipe_tab',
-  //             command: result['1'].tabs[0].command,
-  //           },
-  //           {
-  //             label: StepDetailTab.Machine,
-  //             id: 'step_1_machine_tab',
-  //             command: result['1'].tabs[1].command,
-  //           },
-  //         ],
-  //         outputs: [],
-  //         recipeIds: [],
-  //         recipesEnabled: [],
-  //         recipeOptions: [],
-  //       },
-  //       ['2']: {
-  //         tabs: [],
-  //         outputs: [],
-  //         recipeIds: [],
-  //         recipesEnabled: [],
-  //         recipeOptions: [],
-  //       },
-  //     });
-  //   });
-  // });
+  describe('stepDetails', () => {
+    it('should determine detail tabs to display for steps', () => {
+      const steps: Step[] = [
+        {
+          id: '0',
+          itemId: ItemId.PetroleumGas,
+          items: rational.one,
+          recipeId: RecipeId.Coal,
+          machines: rational.one,
+          outputs: { [ItemId.PetroleumGas]: rational(2n) },
+        },
+        {
+          id: '1',
+          recipeId: RecipeId.CrudeOil,
+          machines: rational(2n),
+          outputs: { [ItemId.PetroleumGas]: rational.one },
+        },
+        {
+          id: '2',
+        },
+      ];
+      spyOn(service, 'steps').and.returnValue(steps);
+      const result = service.stepDetails();
+      const recipeIds = [
+        RecipeId.BasicOilProcessing,
+        RecipeId.AdvancedOilProcessing,
+        RecipeId.CoalLiquefaction,
+        RecipeId.CoalLiquefactionSteam500,
+        RecipeId.LightOilCracking,
+      ];
+      expect(result).toEqual({
+        ['0']: {
+          tabs: [
+            {
+              label: StepDetailTab.Item,
+              id: 'step_0_item_tab',
+              command: result['0'].tabs[0].command,
+            },
+            {
+              label: StepDetailTab.Recipe,
+              id: 'step_0_recipe_tab',
+              command: result['0'].tabs[1].command,
+            },
+            {
+              label: StepDetailTab.Machine,
+              id: 'step_0_machine_tab',
+              command: result['0'].tabs[2].command,
+            },
+          ],
+          outputs: [
+            {
+              value: rational(2n),
+              step: steps[0],
+            },
+            {
+              value: rational.one,
+              step: steps[1],
+            },
+            {
+              inputs: true,
+              value: rational(-2n),
+            },
+          ],
+          recipeIds,
+          recipesEnabled: recipeIds,
+          recipeOptions: recipeIds.map((r) => ({
+            value: r,
+            label: Mocks.dataset.recipeEntities[r].name,
+          })),
+        },
+        ['1']: {
+          tabs: [
+            {
+              label: StepDetailTab.Recipe,
+              id: 'step_1_recipe_tab',
+              command: result['1'].tabs[0].command,
+            },
+            {
+              label: StepDetailTab.Machine,
+              id: 'step_1_machine_tab',
+              command: result['1'].tabs[1].command,
+            },
+          ],
+          outputs: [],
+          recipeIds: [],
+          recipesEnabled: [],
+          recipeOptions: [],
+        },
+        ['2']: {
+          tabs: [],
+          outputs: [],
+          recipeIds: [],
+          recipesEnabled: [],
+          recipeOptions: [],
+        },
+      });
+    });
+  });
 
   describe('stepById', () => {
     it('should create a map of step ids to steps', () => {

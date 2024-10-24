@@ -277,17 +277,20 @@ describe('StepsComponent', () => {
     });
   });
 
-  // describe('changeRecipesExcluded', () => {
-  //   it('should update the set and pass with defaults to the store dispatcher', () => {
-  //     spyOn(component.settingsSvc, 'updateField');
-  //     component.changeRecipesExcluded([RecipeId.Coal], true);
-  //     expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
-  //       'excludedRecipeIds',
-  //       new Set([RecipeId.NuclearFuelReprocessing, RecipeId.Coal]),
-  //       new Set([RecipeId.NuclearFuelReprocessing]),
-  //     );
-  //   });
-  // });
+  describe('changeRecipesIncluded', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component.settingsSvc, 'updateField');
+      component.changeRecipesIncluded(
+        [RecipeId.Coal, RecipeId.CoalLiquefaction],
+        [RecipeId.CoalLiquefaction],
+      );
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'excludedRecipeIds',
+        new Set([RecipeId.NuclearFuelReprocessing, RecipeId.Coal]),
+        new Set([RecipeId.NuclearFuelReprocessing]),
+      );
+    });
+  });
 
   describe('changeModulesBeacons', () => {
     let step: Step;

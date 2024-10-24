@@ -40,6 +40,29 @@ describe('RecipeService', () => {
     });
   });
 
+  describe('machineOptions', () => {
+    it('should filter the list of producers', () => {
+      const result = service.machineOptions(
+        Mocks.dataset.recipeEntities[RecipeId.Coal],
+        Mocks.settingsStateInitial,
+        Mocks.adjustedDataset,
+      );
+      expect(result.length).toEqual(2);
+    });
+
+    it('should fall back to full list of producers if none available', () => {
+      const settings = spread(Mocks.settingsStateInitial, {
+        availableItemIds: new Set(),
+      });
+      const result = service.machineOptions(
+        Mocks.dataset.recipeEntities[RecipeId.Coal],
+        settings,
+        Mocks.adjustedDataset,
+      );
+      expect(result.length).toEqual(2);
+    });
+  });
+
   describe('fuelOptions', () => {
     it('should handle entities with no fuel categories', () => {
       const result = service.fuelOptions(

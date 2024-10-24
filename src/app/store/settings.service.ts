@@ -787,10 +787,9 @@ export class SettingsService extends Store<SettingsState> {
 
     function pickItemIds(
       itemIds: Optional<string[]>,
-      defaultIds: Optional<string[]>,
-    ): Optional<string[]> {
+      defaultIds: string[],
+    ): string[] {
       itemIds = coalesce(itemIds, defaultIds);
-      if (!itemIds) return undefined;
       return itemIds.filter((i) => availableItemIds.has(i));
     }
 
