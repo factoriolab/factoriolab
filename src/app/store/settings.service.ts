@@ -497,8 +497,7 @@ export class SettingsService extends Store<SettingsState> {
             qItem.machine.entityType &&
             typeHasCraftingSpeed.has(qItem.machine.entityType)
           ) {
-            const speed = rational.one
-              .add(rational(quality))
+            const speed = rational(quality)
               .mul(rational(3n, 10n))
               .add(rational.one)
               .mul(qItem.machine.speed);
