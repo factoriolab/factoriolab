@@ -50,12 +50,4 @@ describe('RecipesService', () => {
       expect(service.recipeSvc.adjustDataset).toHaveBeenCalled();
     });
   });
-
-  describe('availableItemIds', () => {
-    it('should return items with some recipe available to produce it', () => {
-      const result = service.availableItemIds();
-      // Cannot produce wood in vanilla Factorio
-      expect(result.length).toEqual(Mocks.adjustedDataset.itemIds.length - 1);
-    });
-  });
 });

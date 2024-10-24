@@ -24,6 +24,7 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { Table, TableModule } from 'primeng/table';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TooltipModule } from 'primeng/tooltip';
@@ -49,7 +50,6 @@ import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { InserterSpeedPipe } from '~/pipes/inserter-speed.pipe';
 import { LeftPadPipe } from '~/pipes/left-pad.pipe';
 import { MachineRatePipe } from '~/pipes/machine-rate.pipe';
-import { OptionsPipe } from '~/pipes/options.pipe';
 import { PowerPipe } from '~/pipes/power.pipe';
 import { RatePipe } from '~/pipes/rate.pipe';
 import { StepHrefPipe } from '~/pipes/step-href.pipe';
@@ -88,6 +88,7 @@ export type StepsMode = 'all' | 'focus';
     CheckboxModule,
     DropdownModule,
     InputNumberModule,
+    MultiSelectModule,
     TableModule,
     TabMenuModule,
     TooltipModule,
@@ -104,7 +105,6 @@ export type StepsMode = 'all' | 'focus';
     MachineRatePipe,
     ModulesOverlayComponent,
     NoDragDirective,
-    OptionsPipe,
     PowerPipe,
     RatePipe,
     StepHrefPipe,
@@ -364,12 +364,9 @@ export class StepsComponent implements OnInit, AfterViewInit {
     this.settingsSvc.apply({ excludedItemIds });
   }
 
-  changeRecipesExcluded(ids: string[], excluded: boolean): void {
-    const value = updateSetIds(
-      ids,
-      excluded,
-      this.settings().excludedRecipeIds,
-    );
+  changeRecipesIncluded(allIds: string[], includedIds: string[]): void {
+    let value = updateSetIds(allIds, true, this.settings().excludedRecipeIds);
+    value = updateSetIds(includedIds, false, value);
     this.settingsSvc.updateField(
       'excludedRecipeIds',
       value,

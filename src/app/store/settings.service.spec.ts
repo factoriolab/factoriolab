@@ -7,6 +7,7 @@ import { Game } from '~/models/enum/game';
 import { Language } from '~/models/enum/language';
 import { Preset } from '~/models/enum/preset';
 import { Quality } from '~/models/enum/quality';
+import { flags } from '~/models/flags';
 import { gameInfo } from '~/models/game-info';
 import { rational } from '~/models/rational';
 import { Settings } from '~/models/settings/settings';
@@ -20,6 +21,7 @@ describe('SettingsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(SettingsService);
+    // console.log(service.modId());
   });
 
   it('should be created', () => {
@@ -387,36 +389,24 @@ describe('SettingsService', () => {
     });
   });
 
-  describe('allResearchedTechnologyIds', () => {
-    it('should return all ids if undefined', () => {
-      expect(service.allResearchedTechnologyIds().size).toEqual(192);
-    });
-
-    it('should return the setting', () => {
-      spyOn(service, 'researchedTechnologyIds').and.returnValue(
-        new Set([ItemId.ArtilleryShellRange]),
-      );
-      expect(service.allResearchedTechnologyIds().size).toEqual(1);
-    });
-  });
-
   describe('settings', () => {
     it('should overwrite defaults when specified', () => {
       const value: any = {
-        beltId: 'belt',
-        pipeId: 'pipe',
-        cargoWagonId: 'cargoWagon',
-        fluidWagonId: 'fluidWagon',
+        modId: '1.1',
+        beltId: ItemId.FastTransportBelt,
+        pipeId: ItemId.Pipe,
+        cargoWagonId: ItemId.CargoWagon,
+        fluidWagonId: ItemId.FluidWagon,
         excludedRecipeIds: new Set(['excludedRecipes']),
-        machineRankIds: 'machineRank',
-        fuelRankIds: 'fuelRank',
-        moduleRankIds: 'moduleRank',
+        machineRankIds: [ItemId.AssemblingMachine2],
+        fuelRankIds: [ItemId.Coal],
+        moduleRankIds: [ItemId.SpeedModule],
       };
       spyOn(service, 'state').and.returnValue(value);
       const result = service.settings();
       for (const key of Object.keys(value) as (keyof Settings)[])
         expect(result[key]).toEqual(value[key]);
-      expect(result.quality).toEqual(Quality.Rare);
+      expect(result.quality).toEqual(Quality.Normal);
     });
 
     it('should fall back if setting and defaults are undefined', () => {
@@ -428,17 +418,65 @@ describe('SettingsService', () => {
     });
 
     it('should calculate legendary quality level', () => {
-      spyOn(service, 'researchedTechnologyIds').and.returnValue(
-        new Set([ItemId.LegendaryQuality]),
+      const data = Mocks.getDataset();
+      data.flags = flags.spa;
+      spyOn(service, 'dataset').and.returnValue(data);
+      spyOn(service, 'state').and.returnValue(
+        spread(Mocks.settingsStateInitial, {
+          researchedTechnologyIds: new Set([ItemId.LegendaryQuality]),
+        }),
       );
       expect(service.settings().quality).toEqual(Quality.Legendary);
     });
 
     it('should calculate epic quality level', () => {
-      spyOn(service, 'researchedTechnologyIds').and.returnValue(
-        new Set([ItemId.EpicQuality]),
+      const data = Mocks.getDataset();
+      data.flags = flags.spa;
+      spyOn(service, 'dataset').and.returnValue(data);
+      spyOn(service, 'state').and.returnValue(
+        spread(Mocks.settingsStateInitial, {
+          researchedTechnologyIds: new Set([ItemId.EpicQuality]),
+        }),
       );
       expect(service.settings().quality).toEqual(Quality.Epic);
+    });
+
+    it('should calculate rare quality level', () => {
+      const data = Mocks.getDataset();
+      data.flags = flags.spa;
+      spyOn(service, 'dataset').and.returnValue(data);
+      spyOn(service, 'state').and.returnValue(
+        spread(Mocks.settingsStateInitial, {
+          researchedTechnologyIds: new Set([ItemId.QualityModuleTechnology]),
+        }),
+      );
+      expect(service.settings().quality).toEqual(Quality.Rare);
+    });
+
+    it('should filter items based on unlocked recipes', () => {
+      const data = Mocks.getDataset();
+      data.flags = flags.spa;
+      const qId = ItemId.Coal + '(1)';
+      data.itemIds.push(qId);
+      data.noRecipeItemIds.add(qId);
+      data.itemEntities[qId] = spread(data.itemEntities[ItemId.Coal], {
+        quality: Quality.Uncommon,
+      });
+      data.recipeIds.push(qId);
+      data.recipeEntities[qId] = spread(data.recipeEntities[ItemId.Coal], {
+        quality: Quality.Uncommon,
+      });
+      spyOn(service, 'state').and.returnValue(
+        spread(Mocks.settingsStateInitial, {
+          preset: Preset.Beacon8,
+          researchedTechnologyIds: new Set([ItemId.Automation]),
+        }),
+      );
+      spyOn(service, 'defaults').and.returnValue(Mocks.defaults);
+      spyOn(service, 'dataset').and.returnValue(data);
+      const result = service.settings();
+      expect(result.cargoWagonId).toBeUndefined();
+      expect(result.beacons).toEqual([]);
     });
   });
 
@@ -485,16 +523,6 @@ describe('SettingsService', () => {
       const result = service.beltSpeedTxt();
       expect(result['a']).toEqual('1');
       expect(result['b']).toEqual('0.33');
-    });
-  });
-
-  describe('availableRecipeIds', () => {
-    it('should filter for only unlocked recipes', () => {
-      spyOn(service, 'allResearchedTechnologyIds').and.returnValue(
-        new Set([RecipeId.Automation]),
-      );
-      const result = service.availableRecipeIds();
-      expect(result.length).toEqual(234);
     });
   });
 

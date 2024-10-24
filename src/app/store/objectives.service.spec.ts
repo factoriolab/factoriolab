@@ -214,6 +214,13 @@ describe('ObjectivesService', () => {
       ];
       spyOn(service, 'steps').and.returnValue(steps);
       const result = service.stepDetails();
+      const recipeIds = [
+        RecipeId.BasicOilProcessing,
+        RecipeId.AdvancedOilProcessing,
+        RecipeId.CoalLiquefaction,
+        RecipeId.CoalLiquefactionSteam500,
+        RecipeId.LightOilCracking,
+      ];
       expect(result).toEqual({
         ['0']: {
           tabs: [
@@ -232,11 +239,6 @@ describe('ObjectivesService', () => {
               id: 'step_0_machine_tab',
               command: result['0'].tabs[2].command,
             },
-            {
-              label: StepDetailTab.Recipes,
-              id: 'step_0_recipes_tab',
-              command: result['0'].tabs[3].command,
-            },
           ],
           outputs: [
             {
@@ -252,14 +254,12 @@ describe('ObjectivesService', () => {
               value: rational(-2n),
             },
           ],
-          recipeIds: [
-            RecipeId.BasicOilProcessing,
-            RecipeId.AdvancedOilProcessing,
-            RecipeId.CoalLiquefaction,
-            RecipeId.CoalLiquefactionSteam500,
-            RecipeId.LightOilCracking,
-          ],
-          allRecipesIncluded: true,
+          recipeIds,
+          recipesEnabled: recipeIds,
+          recipeOptions: recipeIds.map((r) => ({
+            value: r,
+            label: Mocks.dataset.recipeEntities[r].name,
+          })),
         },
         ['1']: {
           tabs: [
@@ -276,13 +276,15 @@ describe('ObjectivesService', () => {
           ],
           outputs: [],
           recipeIds: [],
-          allRecipesIncluded: true,
+          recipesEnabled: [],
+          recipeOptions: [],
         },
         ['2']: {
           tabs: [],
           outputs: [],
           recipeIds: [],
-          allRecipesIncluded: true,
+          recipesEnabled: [],
+          recipeOptions: [],
         },
       });
     });

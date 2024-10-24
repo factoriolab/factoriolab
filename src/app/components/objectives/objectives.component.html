@@ -27,7 +27,7 @@
               (click)="
                 editRecipePicker.clickOpen(
                   'recipe',
-                  recipeIds(),
+                  settings().availableRecipeIds,
                   objective.targetId
                 )
               "
@@ -72,7 +72,11 @@
               [pTooltip]="'objectives.selectAnItem' | translate"
               tooltipPosition="top"
               (click)="
-                editItemPicker.clickOpen('item', itemIds(), objective.targetId)
+                editItemPicker.clickOpen(
+                  'item',
+                  settings().availableItemIds,
+                  objective.targetId
+                )
               "
             ></button>
             <lab-picker
@@ -157,7 +161,7 @@
         icon="fa-solid fa-box"
         tooltipPosition="top"
         [label]="'objectives.addItems' | translate"
-        (click)="addItemPicker.clickOpen('item', itemIds())"
+        (click)="addItemPicker.clickOpen('item', settings().availableItemIds)"
       ></button>
       <button
         pButton
@@ -167,7 +171,9 @@
         icon="fa-solid fa-industry"
         tooltipPosition="top"
         [label]="'objectives.addMachines' | translate"
-        (click)="addRecipePicker.clickOpen('recipe', recipeIds())"
+        (click)="
+          addRecipePicker.clickOpen('recipe', settings().availableRecipeIds)
+        "
       ></button>
       <p-dropdown
         labDropdownTranslate

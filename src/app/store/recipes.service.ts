@@ -36,22 +36,15 @@ export class RecipesService extends EntityStore<RecipeState> {
   adjustedDataset = computed(() => {
     const recipesState = this.settings();
     const itemsState = this.itemsSvc.settings();
-    const recipeIds = this.settingsSvc.availableRecipeIds();
     const settings = this.settingsSvc.settings();
     const data = this.settingsSvc.dataset();
 
     return this.recipeSvc.adjustDataset(
-      recipeIds,
       recipesState,
       itemsState,
       settings,
       data,
     );
-  });
-
-  availableItemIds = computed(() => {
-    const data = this.adjustedDataset();
-    return data.itemIds.filter((i) => data.itemRecipeIds[i].length);
   });
 
   computeRecipesSettings(

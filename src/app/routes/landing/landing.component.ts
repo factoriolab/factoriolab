@@ -21,7 +21,6 @@ import { ContentService } from '~/services/content.service';
 import { RouterService } from '~/services/router.service';
 import { ObjectivesService } from '~/store/objectives.service';
 import { PreferencesService } from '~/store/preferences.service';
-import { RecipesService } from '~/store/recipes.service';
 import { SettingsService } from '~/store/settings.service';
 
 @Component({
@@ -51,15 +50,13 @@ export class LandingComponent {
   contentSvc = inject(ContentService);
   objectivesSvc = inject(ObjectivesService);
   preferencesSvc = inject(PreferencesService);
-  recipesSvc = inject(RecipesService);
   routerSvc = inject(RouterService);
   settingsSvc = inject(SettingsService);
 
   modId = this.settingsSvc.modId;
   mod = this.settingsSvc.mod;
   data = this.settingsSvc.dataset;
-  recipeIds = this.settingsSvc.availableRecipeIds;
-  itemIds = this.recipesSvc.availableItemIds;
+  settings = this.settingsSvc.settings;
   states = this.settingsSvc.gameStates;
   stateOptions = this.settingsSvc.stateOptions;
   modOptions = this.settingsSvc.modOptions;

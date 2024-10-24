@@ -88,12 +88,13 @@ export class PickerComponent extends DialogComponent {
 
   clickOpen(
     type: 'item' | 'recipe',
-    allIds: string[],
+    allIds: string[] | Set<string>,
     selection?: string | string[] | Set<string>,
   ): void {
     const data = this.data();
     this.type = type;
     const allIdsSet = new Set(allIds);
+    const allIdsArr = Array.from(allIds);
     if (selection instanceof Set) selection = Array.from(selection);
     if (Array.isArray(selection)) {
       this.isMultiselect = true;
@@ -116,7 +117,7 @@ export class PickerComponent extends DialogComponent {
         }
       });
 
-      this.allSelectItems = allIds.map(
+      this.allSelectItems = allIdsArr.map(
         (i): SelectItem<string> => ({
           label: data.itemEntities[i].name,
           value: i,
@@ -144,7 +145,7 @@ export class PickerComponent extends DialogComponent {
         }
       });
 
-      this.allSelectItems = allIds.map(
+      this.allSelectItems = allIdsArr.map(
         (i): SelectItem<string> => ({
           label: data.recipeEntities[i].name,
           value: i,

@@ -43,9 +43,9 @@ export class MachinesService extends EntityStore<MachineState> {
       const s: MachineSettings = spread(state[id]);
 
       if (machine.type === EnergyType.Burner) {
-        s.fuelOptions = this.recipeSvc.fuelOptions(machine, data);
+        s.fuelOptions = this.recipeSvc.fuelOptions(machine, settings, data);
         s.defaultFuelId = this.recipeSvc.bestMatch(
-          s.fuelOptions.map((o) => o.value),
+          s.fuelOptions,
           settings.fuelRankIds,
         );
         s.fuelId = coalesce(s?.fuelId, s.defaultFuelId);
@@ -55,7 +55,7 @@ export class MachinesService extends EntityStore<MachineState> {
       }
 
       if (machine.modules) {
-        s.moduleOptions = this.recipeSvc.moduleOptions(machine, data);
+        s.moduleOptions = this.recipeSvc.moduleOptions(machine, settings, data);
         s.modules = this.recipeSvc.hydrateModules(
           s.modules,
           s.moduleOptions,
