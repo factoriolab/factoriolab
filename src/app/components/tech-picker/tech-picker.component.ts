@@ -236,8 +236,10 @@ helpers.write_file("techs.txt", table.concat(list, ","))
   save(): void {
     const selection = this.selection();
     const data = this.data();
-    if (selection.length === data.technologyIds.length)
+    if (selection.length === data.technologyIds.length) {
       this.selectIds.emit(undefined);
+      return;
+    }
 
     this.selectIds.emit(new Set(selection));
   }

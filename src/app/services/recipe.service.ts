@@ -57,18 +57,36 @@ export class RecipeService {
   minFactorioRecipeTime = rational(1n, 60n);
 
   /** Determines what option to use based on preferred rank */
-  bestMatch(options: string[], rank: string[]): string {
-    if (options.length > 1) {
+  bestMatch(options: SelectItem<string>[], rank: string[]): string {
+    const ids = options.map((o) => o.value);
+    if (ids.length > 1) {
       for (const r of rank) {
         // Return first matching option in rank list
-        if (options.includes(r)) return r;
+        if (ids.includes(r)) return r;
       }
     }
-    return options[0];
+
+    return ids[0];
+  }
+
+  machineOptions(
+    recipe: Recipe,
+    settings: Settings,
+    data: Dataset,
+  ): SelectItem<string>[] {
+    let machineIds = recipe.producers.filter((p) =>
+      settings.availableItemIds.has(p),
+    );
+    if (machineIds.length === 0) machineIds = recipe.producers;
+    return machineIds.map((m) => ({
+      value: m,
+      label: data.itemEntities[m].name,
+    }));
   }
 
   fuelOptions(
     entity: MachineJson | Machine,
+    settings: Settings,
     data: Dataset,
   ): SelectItem<string>[] {
     if (entity.fuel) {
@@ -79,10 +97,12 @@ export class RecipeService {
     if (entity.fuelCategories == null) return [];
 
     const fuelCategories = entity.fuelCategories;
-    const allowed = data.fuelIds
+    let allowed = data.fuelIds
       .map((f) => data.itemEntities[f])
       .filter(fnPropsNotNullish('fuel'))
       .filter((f) => fuelCategories.includes(f.fuel.category));
+    if (allowed.some((f) => settings.availableItemIds.has(f.id)))
+      allowed = allowed.filter((f) => settings.availableItemIds.has(f.id));
     return allowed.map(
       (f): SelectItem<string> => ({ value: f.id, label: f.name }),
     );
@@ -90,13 +110,15 @@ export class RecipeService {
 
   moduleOptions(
     entity: Machine | Beacon,
+    settings: Settings,
     data: Dataset,
     recipeId?: string,
   ): SelectItem<string>[] {
     // Get all modules
     let allowed = data.moduleIds
       .map((i) => data.itemEntities[i])
-      .filter(fnPropsNotNullish('module'));
+      .filter(fnPropsNotNullish('module'))
+      .filter((m) => settings.availableItemIds.has(m.id));
 
     let recipe: Recipe | undefined;
     if (recipeId != null) {
@@ -158,10 +180,7 @@ export class RecipeService {
       if (machineValue.every((m) => m.id && set.has(m.id))) return machineValue;
     }
 
-    const id = this.bestMatch(
-      options.map((o) => o.value),
-      moduleRankIds,
-    );
+    const id = this.bestMatch(options, moduleRankIds);
     count = count === true ? rational.zero : count;
     return [{ id, count }];
   }
@@ -632,12 +651,12 @@ export class RecipeService {
   }
 
   adjustDataset(
-    recipeIds: string[],
     recipes: RecipesSettings,
     items: ItemsSettings,
     settings: Settings,
     data: Dataset,
   ): AdjustedDataset {
+    const recipeIds = Array.from(settings.availableRecipeIds);
     const adjustedRecipe = this.adjustRecipes(
       recipeIds,
       recipes,
@@ -646,23 +665,18 @@ export class RecipeService {
       data,
     );
     this.adjustCosts(recipeIds, adjustedRecipe, recipes, settings.costs, data);
-    return this.finalizeData(
-      recipeIds,
-      settings.excludedRecipeIds,
-      adjustedRecipe,
-      data,
-    );
+    return this.finalizeData(recipeIds, adjustedRecipe, settings, data);
   }
 
   adjustRecipes(
-    recipeIds: string[],
+    availableRecipeIds: string[],
     recipes: RecipesSettings,
     items: ItemsSettings,
     settings: Settings,
     data: Dataset,
   ): Entities<AdjustedRecipe> {
     return this.adjustSiloRecipes(
-      recipeIds.reduce((e: Entities<AdjustedRecipe>, i) => {
+      availableRecipeIds.reduce((e: Entities<AdjustedRecipe>, i) => {
         e[i] = this.adjustRecipe(i, recipes[i], items, settings, data);
         return e;
       }, {}),
@@ -707,21 +721,21 @@ export class RecipeService {
   }
 
   finalizeData(
-    recipeIds: string[],
-    excludedRecipeIds: Set<string>,
+    availableRecipeIds: string[],
     adjustedRecipe: Entities<AdjustedRecipe>,
+    settings: Settings,
     data: Dataset,
   ): AdjustedDataset {
     const itemRecipeIds: Entities<string[]> = {};
-    const itemIncludedRecipeIds: Entities<string[]> = {};
-    const itemIncludedIoRecipeIds: Entities<string[]> = {};
+    const itemAvailableRecipeIds: Entities<string[]> = {};
+    const itemAvailableIoRecipeIds: Entities<string[]> = {};
     data.itemIds.forEach((i) => {
       itemRecipeIds[i] = [];
-      itemIncludedRecipeIds[i] = [];
-      itemIncludedIoRecipeIds[i] = [];
+      itemAvailableRecipeIds[i] = [];
+      itemAvailableIoRecipeIds[i] = [];
     });
 
-    recipeIds
+    availableRecipeIds
       .map((i) => adjustedRecipe[i])
       .forEach((recipe) => {
         finalizeRecipe(recipe);
@@ -729,13 +743,13 @@ export class RecipeService {
           itemRecipeIds[productId].push(recipe.id),
         );
 
-        if (!excludedRecipeIds.has(recipe.id)) {
+        if (!settings.excludedRecipeIds.has(recipe.id)) {
           recipe.produces.forEach((productId) =>
-            itemIncludedRecipeIds[productId].push(recipe.id),
+            itemAvailableRecipeIds[productId].push(recipe.id),
           );
 
           Object.keys(recipe.output).forEach((ioId) =>
-            itemIncludedIoRecipeIds[ioId].push(recipe.id),
+            itemAvailableIoRecipeIds[ioId].push(recipe.id),
           );
         }
       });
@@ -743,8 +757,8 @@ export class RecipeService {
     return spread(data as AdjustedDataset, {
       adjustedRecipe,
       itemRecipeIds,
-      itemIncludedRecipeIds,
-      itemIncludedIoRecipeIds,
+      itemAvailableRecipeIds,
+      itemAvailableIoRecipeIds,
     });
   }
 
@@ -755,8 +769,9 @@ export class RecipeService {
     settings: Settings,
     data: Dataset,
   ): void {
+    s.machineOptions = this.machineOptions(recipe, settings, data);
     s.defaultMachineId = this.bestMatch(
-      recipe.producers,
+      s.machineOptions,
       settings.machineRankIds,
     );
     s.machineId = coalesce(s.machineId, s.defaultMachineId);
@@ -777,7 +792,7 @@ export class RecipeService {
     }
 
     if (machine != null && this.allowsModules(recipe, machine)) {
-      s.moduleOptions = this.moduleOptions(machine, data, recipe.id);
+      s.moduleOptions = this.moduleOptions(machine, settings, data, recipe.id);
       s.modules = this.hydrateModules(
         s.modules,
         s.moduleOptions,
@@ -849,10 +864,7 @@ export class RecipeService {
     );
     if (areArraysEqual(value, def, areModuleSettingsEqual)) return undefined;
 
-    const moduleId = this.bestMatch(
-      options.map((o) => o.value),
-      moduleRankIds,
-    );
+    const moduleId = this.bestMatch(options, moduleRankIds);
     const moduleCount = count === true || count == null ? rational.zero : count;
     const result = value
       // Exclude empty module entry
@@ -878,10 +890,7 @@ export class RecipeService {
       return this.defaultModules(options, moduleRankIds, count, machineValue);
 
     const moduleCount = count === true || count == null ? rational.zero : count;
-    const moduleId = this.bestMatch(
-      options.map((o) => o.value),
-      moduleRankIds,
-    );
+    const moduleId = this.bestMatch(options, moduleRankIds);
     const result = value.map((m) => ({
       count: coalesce(m.count, moduleCount),
       id: coalesce(m.id, moduleId),

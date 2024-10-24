@@ -89,9 +89,8 @@ export class ObjectivesComponent {
   dispRateInfo = this.settingsSvc.displayRateInfo;
   maximizeType = this.settingsSvc.maximizeType;
   unitOptions = this.settingsSvc.objectiveUnitOptions;
-  recipeIds = this.settingsSvc.availableRecipeIds;
-  itemIds = this.recipesSvc.availableItemIds;
   data = this.recipesSvc.adjustedDataset;
+  settings = this.settingsSvc.settings;
   convertObjectiveValues = this.preferencesSvc.convertObjectiveValues;
   paused = this.preferencesSvc.paused;
   objectives = computed(() => [...this.objectivesSvc.objectives()]);

@@ -599,9 +599,7 @@
                 <p-dropdown
                   labDropdownBase="icon"
                   [pTooltip]="tooltip"
-                  [options]="
-                    step.recipe.producers | options: data().itemEntities
-                  "
+                  [options]="step.recipeSettings.machineOptions"
                   [ngModel]="machineId"
                   (onChange)="
                     step.recipeObjectiveId
@@ -838,7 +836,8 @@
             @if (
               step.recipeId &&
               step.recipeSettings &&
-              step.recipeSettings.beacons
+              step.recipeSettings.beacons &&
+              step.recipeSettings.beacons.length
             ) {
               <button
                 pButton

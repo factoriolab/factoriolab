@@ -124,7 +124,6 @@ export class SettingsComponent implements OnInit {
   gameStates = this.settingsSvc.gameStates;
   settings = this.settingsSvc.settings;
   options = this.settingsSvc.options;
-  researchedTechnologyIds = this.settingsSvc.allResearchedTechnologyIds;
   columnsState = this.settingsSvc.columnsState;
   presetOptions = this.settingsSvc.presetOptions;
   modOptions = this.settingsSvc.modOptions;

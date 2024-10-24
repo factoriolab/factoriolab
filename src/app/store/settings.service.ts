@@ -141,6 +141,7 @@ export class SettingsService extends Store<SettingsState> {
   maximizeType = this.select('maximizeType');
   modId = this.select('modId');
   preset = this.select('preset');
+  excludedRecipeIds = this.select('excludedRecipeIds');
   researchedTechnologyIds = this.select('researchedTechnologyIds');
 
   mod = computed(() => {
@@ -237,59 +238,49 @@ export class SettingsService extends Store<SettingsState> {
     return gameColumnsState(spread(initialColumnsState, columns), data.flags);
   });
 
-  allResearchedTechnologyIds = computed(() => {
-    const researchedTechnologyIds = this.researchedTechnologyIds();
-    const data = this.dataset();
-
-    const allTechnologyIds = Object.keys(data.technologyEntities);
-    if (
-      /** No need to parse if all researched */
-      researchedTechnologyIds == null ||
-      /** Skip if data is not loaded */
-      allTechnologyIds.length === 0
-    )
-      return new Set(allTechnologyIds);
-
-    return researchedTechnologyIds;
-  });
-
   settings = computed(() =>
-    this.computeSettings(
-      this.state(),
-      this.defaults(),
-      this.allResearchedTechnologyIds(),
-    ),
+    this.computeSettings(this.state(), this.defaults(), this.dataset()),
   );
 
   options = computed((): Options => {
     const data = this.dataset();
+    const settings = this.settings();
+    const itemSet = new Set(settings.availableItemIds);
+
+    function itemOptions(
+      ids: string[],
+      exclude?: Set<string>,
+    ): SelectItem<string>[] {
+      return getIdOptions(ids, data.itemEntities, itemSet, exclude);
+    }
 
     return {
-      categories: getIdOptions(data.categoryIds, data.categoryEntities),
-      items: getIdOptions(data.itemIds, data.itemEntities),
-      beacons: getIdOptions(data.beaconIds, data.itemEntities),
-      belts: getIdOptions(data.beltIds, data.itemEntities, data.itemQIds),
-      pipes: getIdOptions(data.pipeIds, data.itemEntities, data.itemQIds),
-      cargoWagons: getIdOptions(
-        data.cargoWagonIds,
-        data.itemEntities,
-        data.itemQIds,
+      categories: getIdOptions(
+        data.categoryIds,
+        data.categoryEntities,
+        new Set(data.categoryIds),
       ),
-      fluidWagons: getIdOptions(
-        data.fluidWagonIds,
-        data.itemEntities,
-        data.itemQIds,
-      ),
-      fuels: getIdOptions(data.fuelIds, data.itemEntities),
-      modules: getIdOptions(data.moduleIds, data.itemEntities),
+      items: itemOptions(data.itemIds),
+      beacons: itemOptions(data.beaconIds),
+      belts: itemOptions(data.beltIds, data.itemQIds),
+      pipes: itemOptions(data.pipeIds, data.itemQIds),
+      cargoWagons: itemOptions(data.cargoWagonIds, data.itemQIds),
+      fluidWagons: itemOptions(data.fluidWagonIds, data.itemQIds),
+      fuels: itemOptions(data.fuelIds, data.itemQIds),
+      modules: itemOptions(data.moduleIds, itemSet),
       proliferatorModules: getIdOptions(
         data.proliferatorModuleIds,
         data.itemEntities,
+        itemSet,
         new Set(),
         true,
       ),
-      machines: getIdOptions(data.machineIds, data.itemEntities),
-      recipes: getIdOptions(data.recipeIds, data.recipeEntities),
+      machines: itemOptions(data.machineIds),
+      recipes: getIdOptions(
+        data.recipeIds,
+        data.recipeEntities,
+        new Set(settings.availableRecipeIds),
+      ),
     };
   });
 
@@ -318,19 +309,6 @@ export class SettingsService extends Store<SettingsState> {
       e[beltId] = Number(speed.toNumber().toFixed(2)).toString();
       return e;
     }, {});
-  });
-
-  availableRecipeIds = computed(() => {
-    const researchedTechnologyIds = this.allResearchedTechnologyIds();
-    const data = this.dataset();
-
-    return data.recipeIds.filter((i) => {
-      const recipe = data.recipeEntities[i];
-      return (
-        recipe.unlockedBy == null ||
-        researchedTechnologyIds.has(recipe.unlockedBy)
-      );
-    });
   });
 
   modMenuItem = computed((): MenuItem => {
@@ -700,7 +678,12 @@ export class SettingsService extends Store<SettingsState> {
       e[i.id] = i;
       return e;
     }, {});
+    const noRecipeItemIds = new Set(itemIds);
     const recipeEntities = recipes.reduce((e: Entities<Recipe>, r) => {
+      Object.keys(r.out).forEach((i) => {
+        if ((r.in[i] ?? 0) < r.out[i]) noRecipeItemIds.delete(i);
+      });
+
       e[r.id] = r;
       return e;
     }, {});
@@ -721,6 +704,7 @@ export class SettingsService extends Store<SettingsState> {
       itemIds,
       itemQIds,
       itemEntities,
+      noRecipeItemIds,
       beaconIds,
       beaconEntities,
       beltIds,
@@ -751,35 +735,112 @@ export class SettingsService extends Store<SettingsState> {
   computeSettings(
     state: SettingsState,
     defaults: Optional<Defaults>,
-    researchedTechnologyIds: Set<string>,
+    data: Dataset,
   ): Settings {
-    const defaultBeltId = defaults?.beltId;
-    const beltId = coalesce(state.beltId, defaultBeltId);
-    const defaultPipeId = defaults?.pipeId;
-    const pipeId = coalesce(state.pipeId, defaultPipeId);
-    const defaultCargoWagonId = defaults?.cargoWagonId;
-    const cargoWagonId = coalesce(state.cargoWagonId, defaultCargoWagonId);
-    const defaultFluidWagonId = defaults?.fluidWagonId;
-    const fluidWagonId = coalesce(state.fluidWagonId, defaultFluidWagonId);
     const defaultExcludedRecipeIds = new Set(defaults?.excludedRecipeIds);
     const excludedRecipeIds = coalesce(
       state.excludedRecipeIds,
       defaultExcludedRecipeIds,
     );
+
+    const techIds = state.researchedTechnologyIds;
+    const allTechnologyIds = Object.keys(data.technologyEntities);
+    let researchedTechnologyIds = new Set(allTechnologyIds);
+    if (techIds != null && allTechnologyIds.length > 0)
+      researchedTechnologyIds = techIds;
+
+    let quality = Quality.Normal;
+    if (data.flags.has('quality')) {
+      if (researchedTechnologyIds.has(ItemId.LegendaryQuality))
+        quality = Quality.Legendary;
+      else if (researchedTechnologyIds.has(ItemId.EpicQuality))
+        quality = Quality.Epic;
+      else if (researchedTechnologyIds.has(ItemId.QualityModuleTechnology))
+        quality = Quality.Rare;
+    }
+
+    const availableRecipeIdArr = data.recipeIds.filter((i) => {
+      const recipe = data.recipeEntities[i];
+      return (
+        (recipe.unlockedBy == null ||
+          researchedTechnologyIds.has(recipe.unlockedBy)) &&
+        !excludedRecipeIds?.has(recipe.id) &&
+        (recipe.quality == null || recipe.quality <= quality)
+      );
+    });
+    const availableRecipeIds = new Set(availableRecipeIdArr);
+
+    const noRecipeQualItemIds = Array.from(data.noRecipeItemIds)
+      .map((i) => data.itemEntities[i])
+      .filter((i) => i.quality == null || i.quality < quality)
+      .map((i) => i.id);
+    const availableItemIds = new Set(noRecipeQualItemIds);
+    availableRecipeIdArr
+      .map((r) => data.recipeEntities[r])
+      .forEach((r) => {
+        Object.keys(r.out).forEach((i) => {
+          if ((r.in[i] ?? 0) < r.out[i]) availableItemIds.add(i);
+        });
+      });
+
+    function pickItemId(
+      itemId: Optional<string>,
+      defaultId: Optional<string>,
+    ): Optional<string> {
+      itemId = coalesce(itemId, defaultId);
+      if (!itemId || !availableItemIds.has(itemId)) return undefined;
+      return itemId;
+    }
+
+    function pickItemIds(
+      itemIds: Optional<string[]>,
+      defaultIds: Optional<string[]>,
+    ): Optional<string[]> {
+      itemIds = coalesce(itemIds, defaultIds);
+      if (!itemIds) return undefined;
+      return itemIds.filter((i) => availableItemIds.has(i));
+    }
+
+    const defaultBeltId = defaults?.beltId;
+    const beltId = pickItemId(state.beltId, defaultBeltId);
+    const defaultPipeId = defaults?.pipeId;
+    const pipeId = pickItemId(state.pipeId, defaultPipeId);
+    const defaultCargoWagonId = defaults?.cargoWagonId;
+    const cargoWagonId = pickItemId(state.cargoWagonId, defaultCargoWagonId);
+    const defaultFluidWagonId = defaults?.fluidWagonId;
+    const fluidWagonId = pickItemId(state.fluidWagonId, defaultFluidWagonId);
     const defaultMachineRankIds = coalesce(defaults?.machineRankIds, []);
-    const machineRankIds = coalesce(
+    const machineRankIds = pickItemIds(
       state.machineRankIds,
       defaultMachineRankIds,
     );
     const defaultFuelRankIds = coalesce(defaults?.fuelRankIds, []);
-    const fuelRankIds = coalesce(state.fuelRankIds, defaultFuelRankIds);
+    const fuelRankIds = pickItemIds(state.fuelRankIds, defaultFuelRankIds);
     const defaultModuleRankIds = coalesce(defaults?.moduleRankIds, []);
-    const moduleRankIds = coalesce(state.moduleRankIds, defaultModuleRankIds);
-    const quality = researchedTechnologyIds.has(ItemId.LegendaryQuality)
-      ? Quality.Legendary
-      : researchedTechnologyIds.has(ItemId.EpicQuality)
-        ? Quality.Epic
-        : Quality.Rare;
+    const moduleRankIds = pickItemIds(
+      state.moduleRankIds,
+      defaultModuleRankIds,
+    );
+    let defaultBeacons = defaults?.beacons;
+    if (defaultBeacons) {
+      // Prune default beacons to available beacons / modules
+      defaultBeacons = defaultBeacons
+        .map((b) => {
+          if (b.id && !availableItemIds.has(b.id))
+            b = spread(b, { id: undefined });
+          if (b.modules) {
+            b = spread(b, {
+              modules: b.modules.map((m) => {
+                if (m.id && !availableItemIds.has(m.id))
+                  m = spread(m, { id: ItemId.Module });
+                return m;
+              }),
+            });
+          }
+          return b;
+        })
+        .filter((b) => b.id);
+    }
 
     return spread(state as Settings, {
       beltId,
@@ -798,9 +859,11 @@ export class SettingsService extends Store<SettingsState> {
       defaultFuelRankIds,
       moduleRankIds,
       defaultModuleRankIds,
-      beacons: this.recipeSvc.hydrateBeacons(state.beacons, defaults?.beacons),
+      beacons: this.recipeSvc.hydrateBeacons(state.beacons, defaultBeacons),
       overclock: state.overclock ?? defaults?.overclock,
       researchedTechnologyIds,
+      availableRecipeIds,
+      availableItemIds,
       quality,
     });
   }

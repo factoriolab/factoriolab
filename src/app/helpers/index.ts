@@ -5,12 +5,7 @@ import { environment } from 'src/environments';
 import { APP } from '~/models/constants';
 import { ItemId } from '~/models/enum/item-id';
 import { Rational, rational } from '~/models/rational';
-import {
-  Entities,
-  Optional,
-  PickNonNullish,
-  RecursivePartial,
-} from '~/models/utils';
+import { Entities, Optional, PickNonNullish } from '~/models/utils';
 
 export function addValueToRecordByIds(
   record: Entities<Rational>,
@@ -123,9 +118,11 @@ export function fnPropsNotNullish<T, S extends keyof T>(...keys: S[]) {
 export function getIdOptions(
   ids: string[],
   entities: Entities<{ name: string }>,
+  include: Set<string>,
   exclude?: Set<string>,
   emptyModule = false,
 ): SelectItem<string>[] {
+  ids = ids.filter((i) => include.has(i));
   if (exclude) ids = ids.filter((i) => !exclude.has(i));
   const list = ids.map(
     (i): SelectItem<string> => ({ label: entities[i].name, value: i }),
@@ -182,7 +179,7 @@ export function reduceEntities(
 }
 
 /** Spread, but ensures type safety of the object to be applied */
-export function spread<T>(obj: T, ...apply: RecursivePartial<T>[]): T {
+export function spread<T>(obj: T, ...apply: Partial<T>[]): T {
   if (apply.length === 0) return { ...obj };
   for (const a of apply) obj = { ...obj, ...a };
   return obj;

@@ -70,8 +70,6 @@ export interface MatrixState {
   unproduceableIds: Set<string>;
   /** Items that are explicitly excluded */
   excludedIds: Set<string>;
-  /** All recipes that are included */
-  recipeIds: string[];
   /** All items that are included */
   itemIds: string[];
   data: AdjustedDataset;
@@ -193,15 +191,6 @@ export class SimplexService {
       recipeLimits: {},
       unproduceableIds: new Set(),
       excludedIds: settings.excludedItemIds,
-      recipeIds: data.recipeIds.filter((r) => {
-        // Filter for included, unlocked recipes
-        const recipe = data.recipeEntities[r];
-        return (
-          !settings.excludedRecipeIds.has(r) &&
-          (recipe.unlockedBy == null ||
-            settings.researchedTechnologyIds.has(recipe.unlockedBy))
-        );
-      }),
       itemIds: data.itemIds.filter((i) => !settings.excludedItemIds.has(i)),
       maximizeType: settings.maximizeType,
       surplusMachinesOutput: settings.surplusMachinesOutput,
@@ -298,7 +287,7 @@ export class SimplexService {
 
   /** Find matching recipes for an item that have not yet been parsed */
   recipeMatches(itemId: string, state: MatrixState): Recipe[] {
-    const recipes = state.data.itemIncludedRecipeIds[itemId]
+    const recipes = state.data.itemAvailableRecipeIds[itemId]
       .filter((r) => !state.recipes[r])
       .map((r) => state.data.adjustedRecipe[r]);
 
@@ -357,7 +346,7 @@ export class SimplexService {
     const recipeSet = new Set(Object.keys(state.recipes));
     state.unproduceableIds = new Set(
       itemIds.filter((i) =>
-        state.data.itemIncludedRecipeIds[i].every((r) => !recipeSet.has(r)),
+        state.data.itemAvailableRecipeIds[i].every((r) => !recipeSet.has(r)),
       ),
     );
   }
@@ -576,7 +565,7 @@ export class SimplexService {
       const values = state.itemValues[itemId];
       const netCoeffs: [Variable, number][] = [];
       const inputCoeffs: [Variable, number][] = [];
-      state.data.itemIncludedIoRecipeIds[itemId].forEach((recipeId) => {
+      state.data.itemAvailableIoRecipeIds[itemId].forEach((recipeId) => {
         const recipe = state.recipes[recipeId];
         if (recipe == null) return;
 
@@ -828,7 +817,7 @@ export class SimplexService {
     const values = state.itemValues[itemId];
     const steps = state.steps;
     let output = rational.zero;
-    state.data.itemIncludedIoRecipeIds[itemId].forEach((recipeId) => {
+    state.data.itemAvailableIoRecipeIds[itemId].forEach((recipeId) => {
       const recipeAmt = solution.recipes[recipeId];
       if (recipeAmt == null) return;
 

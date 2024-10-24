@@ -55,6 +55,7 @@ export class ModulesComponent {
 
   setValue = output<ModuleSettings[]>();
 
+  settings = this.settingsSvc.settings;
   data = this.settingsSvc.dataset;
 
   exclude = computed(() =>
@@ -71,6 +72,7 @@ export class ModulesComponent {
   options = computed(() => {
     return this.recipeSvc.moduleOptions(
       this.entity(),
+      this.settings(),
       this.data(),
       this.recipeId(),
     );
