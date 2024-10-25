@@ -438,10 +438,9 @@ export class RecipeService {
         else usage = usage.mul(oc);
       }
 
+      usage = usage.mul(consumption);
       recipe.consumption =
-        machine.type === EnergyType.Electric
-          ? usage.mul(consumption)
-          : rational.zero;
+        machine.type === EnergyType.Electric ? usage : rational.zero;
 
       if (
         data.flags.has('consumptionAsDrain') &&
