@@ -48,7 +48,8 @@ export function getMachineDisallowedEffects(
   if (
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
-    M.isReactorPrototype(proto)
+    M.isReactorPrototype(proto) ||
+    M.isAsteroidCollectorPrototype(proto)
   )
     return undefined;
 
@@ -81,7 +82,8 @@ export function getMachineModules(proto: D.MachineProto): number | undefined {
   if (
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
-    M.isReactorPrototype(proto)
+    M.isReactorPrototype(proto) ||
+    M.isAsteroidCollectorPrototype(proto)
   )
     return undefined;
 
@@ -188,7 +190,8 @@ export function getEntitySize(
 }
 
 export function getMachineSpeed(proto: D.MachineProto): number {
-  if (M.isReactorPrototype(proto)) return 1;
+  if (M.isReactorPrototype(proto) || M.isAsteroidCollectorPrototype(proto))
+    return 1;
 
   let speed: number;
   if (M.isBoilerPrototype(proto))
@@ -217,7 +220,8 @@ export function getMachineType(proto: D.MachineProto): EnergyType | undefined {
 }
 
 export function getMachineUsage(proto: D.MachineProto): number | undefined {
-  if (M.isOffshorePumpPrototype(proto)) return undefined;
+  if (M.isOffshorePumpPrototype(proto) || M.isAsteroidCollectorPrototype(proto))
+    return undefined;
   else if (M.isBoilerPrototype(proto))
     return getPowerInKw(proto.energy_consumption);
   else if (M.isReactorPrototype(proto)) return getPowerInKw(proto.consumption);
@@ -232,6 +236,7 @@ export function getMachineBaseEffect(
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
+    M.isAsteroidCollectorPrototype(proto) ||
     proto.effect_receiver?.base_effect == null
   )
     return undefined;

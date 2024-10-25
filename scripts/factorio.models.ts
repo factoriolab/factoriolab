@@ -2,7 +2,7 @@
 
 /**
  * Application: factorio
- * Version: 8aca854
+ * Version: 2.0.10
  * API Version: 6
  */
 
@@ -2138,6 +2138,8 @@ interface _DontBuildEntityAchievementPrototype {
   amount?: number;
   /** This will disable the achievement, if this entity is placed. If you finish the game without building this entity, you receive the achievement. */
   dont_build: EntityID | EntityID[];
+  /** If you research technology using one of specified items before building entity, you receive the achievement. */
+  research_with?: ItemID | ItemID[];
 }
 
 export type DontBuildEntityAchievementPrototype =
@@ -3896,8 +3898,8 @@ interface _KillAchievementPrototype {
   type: 'kill-achievement';
   /** This is the amount of entity of the specified type the player needs to destroy to receive the achievement. */
   amount?: number;
-  /** The killer of the entity must be this entity. */
-  damage_dealer?: EntityID;
+  /** The killer of the entity must be one of these entities. */
+  damage_dealer?: EntityID | EntityID[];
   /** This defines how the player needs to destroy the specific entity. */
   damage_type?: DamageTypeID;
   /** This defines if the player needs to be in a vehicle. */
@@ -12386,6 +12388,7 @@ If set to a number that is less than `amount_min`, the game will use `amount_min
   amount_max?: number;
   /** Only loaded, and mandatory if `amount` is not defined. */
   amount_min?: number;
+  /** Probability that a craft will yield one additional product. Also applies to bonus crafts caused by productivity. */
   extra_count_fraction?: number;
   /** Amount that should be deducted from any productivity induced bonus crafts.
 
@@ -13542,6 +13545,21 @@ export interface PodDistanceTraveledProcessionBezierControlPoint {
   /** Mandatory if `distance` is defined. */
   timestamp?: MapTick;
 }
+export interface PodDistanceTraveledProcessionLayer {
+  contribute_to_distance_traveled?: boolean;
+  distance_traveled_contribution?: number;
+  frames: PodDistanceTraveledProcessionBezierControlPoint[];
+  /** The group this layer belongs to, for inheritance. */
+  reference_group?: ProcessionLayerInheritanceGroupID;
+  type: 'pod-distance-traveled';
+}
+
+export function isPodDistanceTraveledProcessionLayer(
+  value: unknown,
+): value is PodDistanceTraveledProcessionLayer {
+  return (value as { type: string }).type === 'pod-distance-traveled';
+}
+
 /** One frame in time for a Bezier interpolation. */
 export interface PodMovementProcessionBezierControlPoint {
   /** `offset` and `offset_t` interpolate a vector smoothly over time using `offset_rate` and `offset_rate_t` for a 0-1 rate curve.
@@ -15107,6 +15125,7 @@ If this is set to `true`, the game will generate an icon shadow (using signed di
   /** Only loaded if this is an icon, that is it has the flag `"group=icon"` or `"group=gui"`. Will be clamped to range `[0, 5]`. */
   mipmap_count?: number;
   priority?: SpritePriority;
+  /** Whether to rotate the `shift` alongside the sprite's rotation. This only applies to sprites which are procedurally rotated by the game engine (like projectiles, wires, inserter hands, etc). */
   rotate_shift?: boolean;
   /** Values other than `1` specify the scale of the sprite on default zoom. A scale of `2` means that the picture will be two times bigger on screen (and thus more pixelated). */
   scale?: number;
@@ -18116,8 +18135,6 @@ export type PlayerInputMethodFilter =
   | 'keyboard_and_mouse'
   | 'game_controller';
 
-export type PodDistanceTraveledProcessionLayer = ProcessionLayer;
-
 /** Probabilities of all items must add up to 100. */
 export type ProbabilityTable = ProbabilityTableItem[];
 
@@ -18165,7 +18182,7 @@ export type ProcessionID = string;
 
 Loaded as one of the procession layers, based on the value of the `type` key. */
 export type ProcessionLayer =
-  // | PodDistanceTraveledProcessionLayer
+  | PodDistanceTraveledProcessionLayer
   | PodMovementProcessionLayer
   | PodOpacityProcessionLayer
   | SingleGraphicProcessionLayer
