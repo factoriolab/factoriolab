@@ -267,7 +267,7 @@ export class SettingsService extends Store<SettingsState> {
       cargoWagons: itemOptions(data.cargoWagonIds, data.itemQIds),
       fluidWagons: itemOptions(data.fluidWagonIds, data.itemQIds),
       fuels: itemOptions(data.fuelIds, data.itemQIds),
-      modules: itemOptions(data.moduleIds, itemSet),
+      modules: itemOptions(data.moduleIds, data.itemQIds),
       proliferatorModules: getIdOptions(
         data.proliferatorModuleIds,
         data.itemEntities,
