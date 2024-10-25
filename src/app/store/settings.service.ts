@@ -531,7 +531,6 @@ export class SettingsService extends Store<SettingsState> {
               .add(rational.one)
               .mul(qItem.beacon.effectivity);
 
-            console.log(quality, qItem.beacon.effectivity, effectivity);
             qItem.beacon = spread(qItem.beacon, { effectivity });
 
             if (qItem.beacon.usage) {

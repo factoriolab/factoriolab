@@ -17,12 +17,16 @@ import { flags } from '~/models/flags';
 import { Entities } from '~/models/utils';
 
 import {
+  AsteroidPrototype,
   FluidBox,
   FluidPrototype,
   isAssemblingMachinePrototype,
+  isAsteroidCollectorPrototype,
   isBeaconPrototype,
   isBoilerPrototype,
   isCargoWagonPrototype,
+  isCreateAsteroidChunkEffectItem,
+  isCreateEntityTriggerEffectItem,
   isFluidPrototype,
   isFluidWagonPrototype,
   isFurnacePrototype,
@@ -38,12 +42,15 @@ import {
   isRecipePrototype,
   isResearchProgressProductPrototype,
   isRocketSiloPrototype,
+  isSpaceLocationPrototype,
   isTechnologyPrototype,
   isTransportBeltPrototype,
   isUnlockRecipeModifier,
   ItemGroup,
   ProductPrototype,
   RecipePrototype,
+  SpaceConnectionPrototype,
+  SpaceLocationPrototype,
   TechnologyPrototype,
 } from './factorio.models';
 import {
@@ -54,6 +61,7 @@ import {
   DataRawDump,
   isAnyItemPrototype,
   isFluidProduct,
+  Locale,
   MachineProto,
   ModDataReport,
 } from './factorio-build.models';
@@ -141,6 +149,8 @@ async function processMod(): Promise<void> {
   const itemLocale = getLocale('item-locale.json');
   const fluidLocale = getLocale('fluid-locale.json');
   const recipeLocale = getLocale('recipe-locale.json');
+  const spaceConnectionLocale = getLocale('space-connection-locale.json');
+  const spaceLocationLocale = getLocale('space-location-locale.json');
   const techLocale = getLocale('technology-locale.json');
   const entityLocale = getLocale('entity-locale.json');
 
@@ -153,6 +163,11 @@ async function processMod(): Promise<void> {
 
   const itemMap = getItemMap(dataRaw);
   const entityMap = getEntityMap(dataRaw);
+
+  function getLocaleName(locale: Locale, key: string): string {
+    const name = locale.names[key];
+    return name.replaceAll(/\[(.*?)\]/g, '');
+  }
 
   function getRecipeProduct(
     recipe: RecipePrototype,
@@ -200,7 +215,9 @@ async function processMod(): Promise<void> {
       | AnyItemPrototype
       | AnyEntityPrototype
       | FluidPrototype
-      | RecipePrototype,
+      | RecipePrototype
+      | SpaceLocationPrototype
+      | SpaceConnectionPrototype,
   ): string {
     if (proto.subgroup) return proto.subgroup;
 
@@ -233,7 +250,9 @@ async function processMod(): Promise<void> {
       | RecipePrototype
       | AnyItemPrototype
       | AnyEntityPrototype
-      | FluidPrototype,
+      | FluidPrototype
+      | SpaceLocationPrototype
+      | SpaceConnectionPrototype,
   ): number {
     const subgroupId = getSubgroup(proto);
     const subgroup = dataRaw['item-subgroup'][subgroupId];
@@ -338,11 +357,12 @@ async function processMod(): Promise<void> {
   }
 
   // Records of producer categories to producers
-  type ProducerType = 'burner' | 'crafting' | 'resource';
+  type ProducerType = 'burner' | 'crafting' | 'resource' | 'asteroid';
   const producersMap: Record<ProducerType, Record<string, string[]>> = {
     burner: {},
     crafting: {},
     resource: {},
+    asteroid: {},
   };
   function addProducers(
     id: string,
@@ -392,6 +412,10 @@ async function processMod(): Promise<void> {
       machines.lab[name] = proto.name;
     } else if (isOffshorePumpPrototype(proto)) {
       machines.offshorePump[name] = proto.name;
+    }
+
+    if (isAsteroidCollectorPrototype(proto)) {
+      addProducers(name, [''], 'asteroid');
     }
   }
 
@@ -693,7 +717,7 @@ async function processMod(): Promise<void> {
   }, []);
 
   const entityKeys = anyEntityKeys.reduce((result: string[], key) => {
-    result.push(...Object.keys(dataRaw[key]));
+    result.push(...Object.keys(dataRaw[key] ?? {}));
     return result;
   }, []);
 
@@ -928,7 +952,8 @@ async function processMod(): Promise<void> {
       isMiningDrillPrototype(proto) ||
       isOffshorePumpPrototype(proto) ||
       isReactorPrototype(proto) ||
-      isRocketSiloPrototype(proto)
+      isRocketSiloPrototype(proto) ||
+      isAsteroidCollectorPrototype(proto)
     ) {
       modData.items.push({
         id: proto.name,
@@ -1026,6 +1051,9 @@ async function processMod(): Promise<void> {
           item.machine = getMachine(entity, proto.name);
         } else if (dataRaw.reactor[result]) {
           const entity = dataRaw.reactor[result];
+          item.machine = getMachine(entity, proto.name);
+        } else if (dataRaw['asteroid-collector']?.[result]) {
+          const entity = dataRaw['asteroid-collector'][result];
           item.machine = getMachine(entity, proto.name);
         }
 
@@ -1293,39 +1321,40 @@ async function processMod(): Promise<void> {
       } else {
         modDataReport.noProducers.push(proto.name);
       }
-    } else if (
-      isFluidPrototype(proto) &&
-      Object.keys(dataRaw.tile).some(
-        (t) => dataRaw.tile[t].fluid === proto.name,
-      )
-    ) {
-      // Check for offshore pump recipes
-      for (const pumpName of Object.keys(machines.offshorePump)) {
-        const entityName = machines.offshorePump[pumpName];
-        const offshorePump = dataRaw['offshore-pump'][entityName];
-        if (
-          offshorePump.fluid_box.filter == null ||
-          offshorePump.fluid_box.filter === proto.name
-        ) {
-          // Found an offshore pump recipe
-          const id = getFakeRecipeId(
-            proto.name,
-            `${pumpName}-${proto.name}-pump`,
-          );
-          const out = offshorePump.pumping_speed * 60;
-          const recipe: RecipeJson = {
-            id,
-            name: `${itemLocale.names[pumpName]} : ${
-              fluidLocale.names[proto.name]
-            }`,
-            category: group.name,
-            row: getRecipeRow(proto),
-            time: 1,
-            in: {},
-            out: { [proto.name]: out },
-            producers: [pumpName],
-          };
-          modData.recipes.push(recipe);
+    } else if (isFluidPrototype(proto)) {
+      if (
+        Object.keys(dataRaw.tile).some(
+          (t) => dataRaw.tile[t].fluid === proto.name,
+        )
+      ) {
+        // Check for offshore pump recipes
+        for (const pumpName of Object.keys(machines.offshorePump)) {
+          const entityName = machines.offshorePump[pumpName];
+          const offshorePump = dataRaw['offshore-pump'][entityName];
+          if (
+            offshorePump.fluid_box.filter == null ||
+            offshorePump.fluid_box.filter === proto.name
+          ) {
+            // Found an offshore pump recipe
+            const id = getFakeRecipeId(
+              proto.name,
+              `${pumpName}-${proto.name}-pump`,
+            );
+            const out = offshorePump.pumping_speed * 60;
+            const recipe: RecipeJson = {
+              id,
+              name: `${itemLocale.names[pumpName]} : ${
+                fluidLocale.names[proto.name]
+              }`,
+              category: group.name,
+              row: getRecipeRow(proto),
+              time: 1,
+              in: {},
+              out: { [proto.name]: out },
+              producers: [pumpName],
+            };
+            modData.recipes.push(recipe);
+          }
         }
       }
 
@@ -1480,8 +1509,8 @@ async function processMod(): Promise<void> {
   }
 
   const resourceHash = new Set<string>();
-  for (const name of Object.keys(dataRaw.resource)) {
-    const resource = dataRaw.resource[name];
+  for (const key of Object.keys(dataRaw.resource)) {
+    const resource = dataRaw.resource[key];
     if (resource?.minable) {
       // Found mining recipe
       const minable = resource.minable;
@@ -1522,7 +1551,7 @@ async function processMod(): Promise<void> {
       if (proto != null) {
         const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
         const group = dataRaw['item-group'][subgroup.group];
-        const fakeId = getFakeRecipeId(proto.name, `${name}-mining`);
+        const fakeId = getFakeRecipeId(proto.name, `${key}-mining`);
 
         const recipeInOptions = getRecipeInOptions(recipeIn, recipeInTemp);
         recipeInOptions.forEach(([recipeIn, ids], i) => {
@@ -1546,7 +1575,7 @@ async function processMod(): Promise<void> {
 
           const hash = JSON.stringify(recipe);
           if (resourceHash.has(hash)) {
-            modDataReport.resourceDuplicate.push(name);
+            modDataReport.resourceDuplicate.push(key);
           } else {
             recipe.id = id;
             modData.recipes.push(recipe);
@@ -1554,9 +1583,137 @@ async function processMod(): Promise<void> {
           }
         });
       } else {
-        modDataReport.resourceNoMinableProducts.push(name);
+        modDataReport.resourceNoMinableProducts.push(key);
       }
     }
+  }
+
+  const asteroidResults: Entities<Entities<number>> = {};
+
+  if (dataRaw.asteroid) {
+    const rawAsteroid = dataRaw.asteroid;
+
+    function addAsteroidResult(
+      asteroid: AsteroidPrototype,
+      num: number,
+      out: Entities<number>,
+    ): void {
+      if (itemMap[asteroid.name]) {
+        addEntityValue(out, asteroid.name, num);
+      } else if (asteroid.dying_trigger_effect) {
+        if (Array.isArray(asteroid.dying_trigger_effect)) {
+          asteroid.dying_trigger_effect.forEach((e) => {
+            if (isCreateEntityTriggerEffectItem(e)) {
+              const count =
+                num * (e.probability ?? 1) * (e.offsets?.length ?? 1);
+
+              if (itemMap[e.entity_name])
+                addEntityValue(out, e.entity_name, count);
+              else {
+                const child = rawAsteroid[e.entity_name];
+                if (child) addAsteroidResult(child, count, out);
+              }
+            } else if (isCreateAsteroidChunkEffectItem(e)) {
+              const count =
+                num * (e.probability ?? 1) * (e.offsets?.length ?? 1);
+              if (itemMap[e.asteroid_name])
+                addEntityValue(out, e.asteroid_name, count);
+              else {
+                const child = rawAsteroid[e.asteroid_name];
+                if (child) {
+                  addAsteroidResult(child, count, out);
+                }
+              }
+            }
+          });
+        } else {
+          throw new Error('Non-array asteroid trigger effect not handled');
+        }
+      }
+    }
+
+    for (const key of Object.keys(dataRaw.asteroid)) {
+      const proto = dataRaw.asteroid[key];
+      asteroidResults[proto.name] = {};
+      addAsteroidResult(proto, 1, asteroidResults[proto.name]);
+    }
+  }
+
+  function addAsteroidProbability(
+    out: Entities<number>,
+    asteroidId: string,
+    probability: number,
+  ): void {
+    if (dataRaw['asteroid-chunk'][asteroidId])
+      addEntityValue(out, asteroidId, probability);
+    else {
+      Object.keys(asteroidResults[asteroidId]).forEach((k) => {
+        addEntityValue(out, k, probability * asteroidResults[asteroidId][k]);
+      });
+    }
+  }
+
+  function addAsteroidRecipe(
+    key: string,
+    proto: SpaceLocationPrototype | SpaceConnectionPrototype,
+  ): void {
+    if (proto.asteroid_spawn_definitions) {
+      // Add asteroid mining recipe
+      let name = '';
+      const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
+      const group = dataRaw['item-group'][subgroup.group];
+      const fakeId = getFakeRecipeId(proto.name, `${key}-asteroid-collection`);
+      const out: Entities<number> = {};
+      if (isSpaceLocationPrototype(proto)) {
+        name = getLocaleName(spaceLocationLocale, key);
+        proto.asteroid_spawn_definitions.forEach((def) => {
+          addAsteroidProbability(out, def.asteroid, def.probability);
+        });
+      } else {
+        name = getLocaleName(spaceConnectionLocale, key);
+        proto.asteroid_spawn_definitions.forEach((def) => {
+          if (Array.isArray(def)) {
+            const [asteroidId, spawn] = def;
+            spawn.forEach((d) => {
+              addAsteroidProbability(out, asteroidId, d.probability);
+            });
+          } else {
+            def.spawn_points.forEach((spawn) => {
+              addAsteroidProbability(out, def.asteroid, spawn.probability);
+            });
+          }
+        });
+      }
+
+      const total = Object.keys(out).reduce((n, k) => (n += out[k]), 0);
+      Object.keys(out).forEach((k) => {
+        out[k] /= total;
+      });
+
+      const recipe: RecipeJson = {
+        id: fakeId,
+        name,
+        category: group.name,
+        row: getRecipeRow(proto),
+        time: 1,
+        in: {},
+        out,
+        producers: producersMap.asteroid[''],
+      };
+      modData.recipes.push(recipe);
+    }
+  }
+
+  if (dataRaw['space-connection']) {
+    for (const key of Object.keys(dataRaw['space-connection'])) {
+      const proto = dataRaw['space-connection'][key];
+      addAsteroidRecipe(key, proto);
+    }
+  }
+
+  for (const key of Object.keys(dataRaw['space-location'])) {
+    const proto = dataRaw['space-location'][key];
+    addAsteroidRecipe(key, proto);
   }
 
   const sortedProtoIds = protosSorted.map((p) => p.name);

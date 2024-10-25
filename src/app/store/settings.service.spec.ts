@@ -21,7 +21,6 @@ describe('SettingsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(SettingsService);
-    // console.log(service.modId());
   });
 
   it('should be created', () => {
