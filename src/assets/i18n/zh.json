@@ -29,11 +29,11 @@
       "link": "链接"
     },
     "displayRate": {
-      "perSecond": "每秒产量",
+      "perSecond": "每秒",
       "perSecondSuffix": "/秒",
-      "perMinute": "每分钟产量",
+      "perMinute": "每分钟",
       "perMinuteSuffix": "/分",
-      "perHour": "每小时产量",
+      "perHour": "每小时",
       "perHourSuffix": "/时"
     },
     "game": {
@@ -98,24 +98,25 @@
     },
     "simplexResultType": {
       "failed": "失败",
-      "paused": "暂停",
-      "skipped": "跳过",
+      "paused": "已暂停",
+      "skipped": "已忽略",
       "solved": "已完成"
     },
     "stepDetailTab": {
       "item": "物品",
       "recipe": "配方",
-      "machine": "设备"
+      "machine": "设备",
+      "recipes": "配方"
     },
     "theme": { "light": "浅色", "dark": "深色 (默认)", "black": "黑色" },
     "flowDiagram": { "sankey": "桑基图", "boxLine": "工序图" },
     "linkValue": {
       "none": "无",
-      "percent": "比例",
-      "items": "物品",
-      "belts": "传送带",
-      "wagons": "车厢",
-      "machines": "设备"
+      "percent": "按比例",
+      "items": "按物品",
+      "belts": "按传送带",
+      "wagons": "按车厢",
+      "machines": "按设备"
     },
     "powerUnit": {
       "auto": "自动",
@@ -199,7 +200,7 @@
     "loadLastState": "加载最近保存的状态",
     "help": "如何使用",
     "skip": "跳过",
-    "bypass": "不再显示"
+    "bypass": "不再显示该页面"
   },
   "wizard": {
     "back": "返回",
@@ -219,15 +220,15 @@
     "createSavedState": "新建状态",
     "editSavedState": "重命名",
     "deleteSavedState": "删除此状态",
-    "saveSavedState": "保存",
+    "saveSavedState": "保存当前状态",
     "selectSavedState": "选择已保存的状态",
     "nameSavedState": "请输入一个名字...",
-    "saveState": "保存此状态",
+    "saveState": "保存当前状态",
     "requestMod": "没有找到您使用的Mod？",
     "game": "游戏",
     "gameTooltip": "选择要使用的游戏计算器",
     "modSet": "Mod 设置",
-    "modSetTooltip": "请选择在异星工厂中要使用的 Mod 版本或合集",
+    "modSetTooltip": "请选择游戏版本或Mod合集",
     "modVersions": "Mod 版本",
     "mod": "Mod",
     "version": "版本",
@@ -246,7 +247,7 @@
     "addMachineTooltip": "添加一个设备配置",
     "removeMachinePreference": "删除设备配置",
     "machineDefaults": "默认设备设置",
-    "machineTooltip": "选择设备设置",
+    "machineTooltip": "选择设备",
     "fuelTooltip": "选择燃料",
     "modifierCountTooltip": "选择修改器数",
     "modifierTooltip": "选择修改器",
@@ -274,9 +275,9 @@
     "defaultFluidWagon": "默认液罐车厢",
     "defaultFluidWagonTooltip": "选择所有流体默认使用的液罐车厢",
     "fuelRank": "首选燃料",
-    "fuelRankTooltip": "选择首选燃料的使用顺序",
-    "modifierRank": "首选修改器",
-    "modifierRankTooltip": "选择首选修改器的使用顺序",
+    "fuelRankTooltip": "选择燃料的使用顺序",
+    "modifierRank": "首选插件",
+    "modifierRankTooltip": "选择插件的使用顺序",
     "flowRateUnit": "u/秒",
     "pipeFlowRate": "管道流速",
     "pipeFlowRateTooltip": "请输入管道流速",
@@ -353,7 +354,7 @@
     "wagonsUndoTooltip": "取消所有对车厢的修改",
     "machinesUndoTooltip": "取消所有对设备的修改",
     "beaconsUndoTooltip": "取消所有对插件效果分享塔的修改",
-    "downloadAsCsv": "导出为 csv 文件",
+    "downloadAsCsv": "导出为 CSV 文件",
     "showDetails": "展开详情",
     "hideDetails": "隐藏详情",
     "modifierCountTooltip": "选择修改器数",
@@ -423,7 +424,7 @@
     "recipe": "配方",
     "stackSize": "堆叠数",
     "efficiency": "效率",
-    "moduleSlots": "插槽数",
+    "moduleSlots": "插件槽",
     "range": "范围",
     "energySource": "能量来源",
     "energyConsumption": "能源消耗",
@@ -454,7 +455,7 @@
     "consumedByRecipes": "消耗于配方",
     "producedByRecipes": "制造于配方",
     "producibleRecipes": "可制造配方",
-    "unlockedRecipes": "已解锁配方",
+    "unlockedRecipes": "成果",
     "currentPageReportTemplate": "第 {first} ~ {last} 条，共计 {totalRecords}",
     "itemSettings": "物品设置",
     "excluded": "已禁用",
@@ -467,7 +468,7 @@
     "ingredients": "原料",
     "catalysts": "催化剂",
     "products": "产物",
-    "producers": "生产设备",
+    "producers": "制造于",
     "unlockedBy": "解锁自",
     "mining": "采集",
     "rocketPart": "火箭组件",
@@ -478,7 +479,7 @@
   },
   "beaconsOverlay": {
     "addBeacons": "添加插件效果分享塔",
-    "eachTooltip": "每个设备手插件效果分享塔个数",
+    "eachTooltip": "每个设备受插件效果分享塔影响个数",
     "totalTooltip": "插件效果分享塔总数"
   },
   "modules": {
