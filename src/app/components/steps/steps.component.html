@@ -573,6 +573,7 @@
                       appendTo="body"
                       scrollHeight="40vh"
                       panelStyleClass="tooltip"
+                      [pTooltip]="tooltip"
                       [(ngModel)]="details.recipesEnabled"
                       [options]="details.recipeOptions"
                       (onPanelHide)="
@@ -582,6 +583,12 @@
                         )
                       "
                     >
+                      <ng-template #tooltip>
+                        <lab-tooltip
+                          [id]="step.recipeId"
+                          type="recipe"
+                        ></lab-tooltip>
+                      </ng-template>
                       <ng-template pTemplate="selectedItems" let-items>
                         <div class="d-flex">
                           <i [class]="step.recipeId | iconSmClass: 'recipe'">
@@ -964,7 +971,7 @@
   <ng-template pTemplate="rowexpansion" let-_step>
     <!-- Details row tab menu -->
     @if (_step | asStep; as step) {
-      <tr class="detail">
+      <tr class="detail tabs">
         <td class="px-1">
           <a
             class="text-decoration-none"
@@ -1492,6 +1499,15 @@
                   [innerHTML]="'steps.inserterCountInfo' | translate"
                 ></small>
               }
+            </td>
+          </tr>
+        }
+        @case (StepDetailTab.Recipes) {
+          <tr class="detail">
+            <td></td>
+            <td colspan="100" class="py-4">
+              This functionality has been moved. The recipe icon in the machines
+              column now opens a multiselect dropdown to select enabled recipes.
             </td>
           </tr>
         }

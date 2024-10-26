@@ -267,7 +267,7 @@ export class SettingsService extends Store<SettingsState> {
       cargoWagons: itemOptions(data.cargoWagonIds, data.itemQIds),
       fluidWagons: itemOptions(data.fluidWagonIds, data.itemQIds),
       fuels: itemOptions(data.fuelIds, data.itemQIds),
-      modules: itemOptions(data.moduleIds, itemSet),
+      modules: itemOptions(data.moduleIds),
       proliferatorModules: getIdOptions(
         data.proliferatorModuleIds,
         data.itemEntities,
@@ -501,13 +501,11 @@ export class SettingsService extends Store<SettingsState> {
               .mul(rational(3n, 10n))
               .add(rational.one)
               .mul(qItem.machine.speed);
-
             qItem.machine = spread(qItem.machine, { speed });
           }
 
           if (qItem.module) {
-            const factor = rational.one
-              .add(rational(quality))
+            const factor = rational(quality)
               .mul(rational(3n, 10n))
               .add(rational.one);
 
@@ -524,6 +522,22 @@ export class SettingsService extends Store<SettingsState> {
                 value = value.mul(rational(100n)).floor().div(rational(100n));
                 qItem.module = spread(qItem.module, { [eff]: value });
               }
+            }
+          }
+
+          if (qItem.beacon) {
+            const effectivity = rational(quality)
+              .mul(rational(2n, 15n))
+              .add(rational.one)
+              .mul(qItem.beacon.effectivity);
+
+            qItem.beacon = spread(qItem.beacon, { effectivity });
+
+            if (qItem.beacon.usage) {
+              const usage = rational.one
+                .sub(rational(quality).mul(rational(1n, 6n)))
+                .mul(qItem.beacon.usage);
+              qItem.beacon = spread(qItem.beacon, { usage });
             }
           }
 

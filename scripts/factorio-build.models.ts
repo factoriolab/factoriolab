@@ -52,6 +52,9 @@ export interface DataRawDump {
   ammo: Entities<M.AmmoItemPrototype>;
   armor: Entities<M.ArmorPrototype>;
   'assembling-machine': Entities<M.AssemblingMachinePrototype>;
+  asteroid?: Entities<M.AsteroidPrototype>;
+  'asteroid-chunk': Entities<M.AsteroidChunkPrototype>;
+  'asteroid-collector'?: Entities<M.AsteroidCollectorPrototype>;
   beacon: Entities<M.BeaconPrototype>;
   boiler: Entities<M.BoilerPrototype>;
   capsule: Entities<M.CapsulePrototype>;
@@ -77,6 +80,8 @@ export interface DataRawDump {
   'rocket-silo': Entities<M.RocketSiloPrototype>;
   'rocket-silo-rocket': Entities<M.RocketSiloRocketPrototype>;
   'selection-tool': Entities<M.SelectionToolPrototype>;
+  'space-connection'?: Entities<M.SpaceConnectionPrototype>;
+  'space-location': Entities<M.SpaceLocationPrototype>;
   'space-platform-starter-pack'?: Entities<M.SpacePlatformStarterPackPrototype>;
   'spidertron-remote': Entities<M.SpidertronRemotePrototype>;
   technology: Entities<M.TechnologyPrototype>;
@@ -137,7 +142,8 @@ export type AnyEntityPrototype =
   | M.TransportBeltPrototype
   | M.CargoWagonPrototype
   | M.FluidWagonPrototype
-  | M.PumpPrototype;
+  | M.PumpPrototype
+  | M.AsteroidCollectorPrototype;
 
 export interface ModDataReport {
   machineSpeedZero: string[];
@@ -155,7 +161,8 @@ export type MachineProto =
   | M.LabPrototype
   | M.MiningDrillPrototype
   | M.OffshorePumpPrototype
-  | M.ReactorPrototype;
+  | M.ReactorPrototype
+  | M.AsteroidCollectorPrototype;
 
 export const anyEntityKeys = [
   'beacon',
@@ -171,6 +178,7 @@ export const anyEntityKeys = [
   'cargo-wagon',
   'fluid-wagon',
   'pump',
+  'asteroid-collector',
 ] as const;
 
 export const anyItemKeys = [

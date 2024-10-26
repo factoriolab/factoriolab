@@ -105,7 +105,8 @@
     "stepDetailTab": {
       "item": "Item",
       "recipe": "Recipe",
-      "machine": "Machine"
+      "machine": "Machine",
+      "recipes": "Recipes"
     },
     "theme": { "light": "Light", "dark": "Dark (Default)", "black": "Black" },
     "flowDiagram": { "sankey": "Sankey", "boxLine": "Box-line" },

@@ -39,7 +39,7 @@ export function addEntityValue(
   val: number,
 ): void {
   if (e[id] == null) e[id] = val;
-  else e[id] = e[id] + val;
+  else e[id] += val;
 }
 
 export function coerceArray<T>(
@@ -63,11 +63,14 @@ export function getEntityMap(
   dataRaw: DataRawDump,
 ): Record<string, AnyEntityPrototype> {
   return anyEntityKeys.reduce(
-    (result: Record<string, AnyEntityPrototype>, key) =>
-      Object.keys(dataRaw[key]).reduce((result, name) => {
-        result[name] = dataRaw[key][name];
+    (result: Record<string, AnyEntityPrototype>, key) => {
+      if (dataRaw[key] == null) return result;
+      const raw = dataRaw[key];
+      return Object.keys(raw).reduce((result, name) => {
+        result[name] = raw[name];
         return result;
-      }, result),
+      }, result);
+    },
     {},
   );
 }

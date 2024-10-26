@@ -239,6 +239,11 @@ describe('ObjectivesService', () => {
               id: 'step_0_machine_tab',
               command: result['0'].tabs[2].command,
             },
+            {
+              label: StepDetailTab.Recipes,
+              id: 'step_0_recipes_tab',
+              command: result['0'].tabs[3].command,
+            },
           ],
           outputs: [
             {

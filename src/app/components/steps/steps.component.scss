@@ -68,6 +68,10 @@
 
 tr.detail {
   background-color: var(--surface-ground);
+
+  &.tabs > * {
+    border-bottom-color: transparent;
+  }
 }
 
 :host
