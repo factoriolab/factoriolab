@@ -72,7 +72,7 @@
       "beacon8": "8 个插件效果分享塔",
       "beacon12": "12 个插件效果分享塔",
       "upgraded": "已升级",
-      "proliferated": "已增殖"
+      "proliferated": "已增产"
     },
     "objectiveUnit": {
       "itemsPerSecond": "物品/秒",
@@ -262,7 +262,7 @@
     "averageBeaconReceivers": "平均每个插件效果分享塔影响的设备数",
     "averageBeaconReceiversTooltip": "平均每个插件效果分享塔影响几个设备 (最小为 1)",
     "proliferatorSelfSpray": "自喷涂增产剂",
-    "proliferatorSelfSprayTooltip": "选择适用于增殖体本身的增殖喷剂",
+    "proliferatorSelfSprayTooltip": "选择适用于增产体本身的增产喷剂",
     "defaultTransportBelt": "默认使用的传送带",
     "defaultTransportBeltTooltip": "选择所有物品默认使用的传送带",
     "defaultStack": "默认堆叠数",
@@ -446,7 +446,7 @@
     "productivity": "生产速率",
     "speed": "速度",
     "sprays": "喷涂",
-    "proliferator": "增殖剂",
+    "proliferator": "增产剂",
     "pipe": "管道",
     "pipeFlowRate": "流速 (物品/秒)",
     "flowRate": "流速",
