@@ -319,6 +319,7 @@ export class FlowComponent implements AfterViewInit {
     this.cy = cytoscape({
       container: this.svgElement().nativeElement,
       elements: [...nodes, ...links],
+      wheelSensitivity: 0.1,
       style: [
         {
           selector: 'node',
