@@ -934,9 +934,12 @@ export class RouterService {
     const techIds = new Set(
       modData.items.filter((i) => i.technology != null).map((i) => i.id),
     );
-    let locationIds = new Set<string>();
-    if (modData.locations)
-      locationIds = new Set(modData.locations.map((l) => l.id));
+    const locationIds = new Set<string>(
+      coalesce(
+        modData.locations?.map((l) => l.id),
+        [],
+      ),
+    );
 
     const obj: PartialSettingsState = {
       modId,

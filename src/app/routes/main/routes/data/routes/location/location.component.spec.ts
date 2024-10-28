@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ItemId, setInputs, TestModule } from '~/tests';
+
 import { LocationComponent } from './location.component';
 
 describe('LocationComponent', () => {
@@ -8,13 +10,15 @@ describe('LocationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LocationComponent]
-    })
-    .compileComponents();
+      imports: [TestModule, LocationComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LocationComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    setInputs(fixture, {
+      id: ItemId.AssemblingMachine2,
+      collectionLabel: 'data.locations',
+    });
   });
 
   it('should create', () => {

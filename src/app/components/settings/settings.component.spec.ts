@@ -214,6 +214,18 @@ describe('SettingsComponent', () => {
     });
   });
 
+  describe('changeLocations', () => {
+    it('should set the locations', () => {
+      spyOn(component.settingsSvc, 'updateField');
+      component.changeLocations(['id2']);
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'locationIds',
+        new Set(['id2']),
+        new Set(['id']),
+      );
+    });
+  });
+
   describe('changeModules', () => {
     it('should dehydrate the modules', () => {
       spyOn(component.recipeSvc, 'dehydrateModules');
