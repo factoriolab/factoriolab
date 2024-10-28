@@ -69,7 +69,7 @@ describe('SettingsService', () => {
     });
   });
 
-  describe('gameStates', () => {
+  describe('modStates', () => {
     it('should return the game states', () => {
       spyOn(service.preferencesSvc, 'states').and.returnValue(
         Mocks.preferencesState.states,
@@ -81,6 +81,11 @@ describe('SettingsService', () => {
   });
 
   describe('stateOptions', () => {
+    it('should return empty if mod is not yet set', () => {
+      spyOn(service, 'modId').and.returnValue(undefined);
+      expect(service.modStates()).toEqual({});
+    });
+
     it('should return the options as a list', () => {
       spyOn(service.preferencesSvc, 'states').and.returnValue(
         Mocks.preferencesState.states,
