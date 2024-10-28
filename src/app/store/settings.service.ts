@@ -165,20 +165,24 @@ export class SettingsService extends Store<SettingsState> {
     const lang = this.preferencesSvc.language();
     return datasets[modId]?.i18n?.[lang];
   });
-
   game = computed(() => {
     const mod = this.mod();
     return coalesce(mod?.game, Game.Factorio);
   });
 
-  gameStates = computed(() => {
-    const game = this.game();
+  modStates = computed(() => {
+    const modId = this.modId();
+    if (modId == null) return {};
     const states = this.preferencesSvc.states();
-    return states[game];
+    let result = coalesce(states[modId], {});
+    // Migrate game-based states
+    const game = this.game();
+    if (states[game]) result = spread(states[game], result);
+    return result;
   });
 
   stateOptions = computed(() => {
-    const states = this.gameStates();
+    const states = this.modStates();
     return Object.keys(states)
       .sort()
       .map((i): SelectItem<string> => ({ label: i, value: i }));
@@ -703,7 +707,7 @@ export class SettingsService extends Store<SettingsState> {
 
     return {
       game,
-      route: `/${coalesce(mod?.id, DEFAULT_MOD)}`,
+      modId: coalesce(mod?.id, DEFAULT_MOD),
       info: gameInfo[game],
       flags: _flags,
       version: coalesce(mod?.version, {}),

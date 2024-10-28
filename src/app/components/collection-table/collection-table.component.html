@@ -68,9 +68,7 @@
         <td>
           @if (obj.category) {
             <a
-              [routerLink]="
-                data().route + '/data/categories/' + obj.category.id
-              "
+              [routerLink]="dataRoute() + 'categories/' + obj.category.id"
               queryParamsHandling="preserve"
             >
               <button

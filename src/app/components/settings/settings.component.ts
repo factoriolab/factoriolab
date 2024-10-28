@@ -3,10 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   HostBinding,
   inject,
   Input,
-  OnInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -104,7 +104,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
   styleUrls: ['./settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent {
   router = inject(Router);
   contentSvc = inject(ContentService);
   datasetsSvc = inject(DatasetsService);
@@ -121,7 +121,7 @@ export class SettingsComponent implements OnInit {
   modId = this.settingsSvc.modId;
   data = this.settingsSvc.dataset;
   savedStates = this.settingsSvc.stateOptions;
-  gameStates = this.settingsSvc.gameStates;
+  gameStates = this.settingsSvc.modStates;
   settings = this.settingsSvc.settings;
   options = this.settingsSvc.options;
   columnsState = this.settingsSvc.columnsState;
@@ -193,12 +193,14 @@ export class SettingsComponent implements OnInit {
     return window.location.search.substring(1);
   }
 
-  ngOnInit(): void {
-    const states = this.settingsSvc.gameStates();
-    this.state = coalesce(
-      Object.keys(states).find((s) => states[s] === this.search),
-      '',
-    );
+  constructor() {
+    effect(() => {
+      const states = this.settingsSvc.modStates();
+      this.state = coalesce(
+        Object.keys(states).find((s) => states[s] === this.search),
+        '',
+      );
+    });
   }
 
   clickResetSettings(): void {
@@ -244,13 +246,13 @@ export class SettingsComponent implements OnInit {
     if (!this.editValue || !this.editState) return;
 
     this.preferencesSvc.saveState(
-      this.data().game,
+      this.data().modId,
       this.editValue,
       this.search,
     );
 
     if (this.editState === 'edit' && this.state)
-      this.preferencesSvc.removeState(this.data().game, this.state);
+      this.preferencesSvc.removeState(this.data().modId, this.state);
 
     this.editState = null;
     this.state = this.editValue;

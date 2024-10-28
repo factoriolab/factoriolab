@@ -74,7 +74,7 @@ describe('SettingsService', () => {
       spyOn(service.preferencesSvc, 'states').and.returnValue(
         Mocks.preferencesState.states,
       );
-      expect(service.gameStates()).toEqual(
+      expect(service.modStates()).toEqual(
         Mocks.preferencesState.states[Game.Factorio],
       );
     });
