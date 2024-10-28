@@ -55,6 +55,8 @@ export interface Dataset {
   technologyIds: string[];
   technologyEntities: Entities<Technology>;
   proliferatorModuleIds: string[];
+  locationIds: string[];
+  locationEntities: Entities<Category>;
   limitations: Entities<Entities<boolean>>;
   hash?: ModHash;
   defaults?: Defaults | null;

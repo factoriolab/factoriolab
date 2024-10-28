@@ -5,6 +5,7 @@ import {
   IngredientPrototype,
   PrototypeBase,
   ResearchIngredient,
+  SurfaceCondition,
 } from 'scripts/factorio.models';
 
 import { ItemJson } from '~/models/data/item';
@@ -17,7 +18,7 @@ import {
   recipeHasQuality,
 } from '~/models/enum/quality';
 import { Flag } from '~/models/flags';
-import { Entities } from '~/models/utils';
+import { Entities, Optional } from '~/models/utils';
 
 import {
   allEffects,
@@ -25,6 +26,8 @@ import {
   AnyEntityPrototype,
   anyItemKeys,
   AnyItemPrototype,
+  anyLocationKeys,
+  AnyLocationPrototype,
   DataRawDump,
   EffectType,
   isFluidIngredient,
@@ -81,13 +84,54 @@ export function getItemMap(
   return anyItemKeys.reduce(
     (result: Record<string, AnyItemPrototype | FluidPrototype>, key) => {
       const data = dataRaw[key] ?? {};
-      return Object.keys(data).reduce((result, name) => {
-        result[name] = data[name];
-        return result;
+      return Object.keys(data).reduce((r, name) => {
+        r[name] = data[name];
+        return r;
       }, result);
     },
     {},
   );
+}
+
+export function getSurfacePropertyDefaults(
+  dataRaw: DataRawDump,
+): Record<string, number> {
+  return Object.keys(dataRaw['surface-property']).reduce(
+    (result: Record<string, number>, key) => {
+      result[key] = dataRaw['surface-property'][key].default_value;
+      return result;
+    },
+    {},
+  );
+}
+
+export function getLocations(dataRaw: DataRawDump): AnyLocationPrototype[] {
+  return anyLocationKeys.reduce((result: AnyLocationPrototype[], key) => {
+    const data = dataRaw[key] ?? {};
+    result.push(...Object.keys(data).map((k) => data[k]));
+    return result;
+  }, []);
+}
+
+export function getAllowedLocations(
+  surface_conditions: Optional<SurfaceCondition[]>,
+  locations: AnyLocationPrototype[],
+  defaults: Record<string, number>,
+): Optional<string[]> {
+  if (surface_conditions == null) return undefined;
+
+  const matches = locations.filter((l) => {
+    return surface_conditions.every((c) => {
+      const value = l.surface_properties?.[c.property] ?? defaults[c.property];
+      if (c.max != null && value > c.max) return false;
+      if (c.min != null && value < c.min) return false;
+      return true;
+    });
+  });
+
+  if (matches.length === locations.length) return undefined;
+
+  return matches.map((m) => m.name);
 }
 
 export function getDisallowedEffects(
@@ -194,6 +238,7 @@ export function emptyModHash(): ModHash {
     modules: [],
     technologies: [],
     recipes: [],
+    locations: [],
   };
 }
 
@@ -250,5 +295,9 @@ export function updateHash(
         addIfMissing(hash, 'recipes', qualityId(r.id, q));
       });
     }
+  });
+
+  data.locations?.forEach((l) => {
+    addIfMissing(hash, 'locations', l.id);
   });
 }

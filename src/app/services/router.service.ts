@@ -900,6 +900,7 @@ export class RouterService {
       data.technologyIds,
       hash.technologies,
     );
+    sub('loc', (s) => s.locationIds, data.locationIds, hash.locations ?? []);
     rat('cfa', (s) => s.costs.factor);
     rat('cma', (s) => s.costs.machine);
     rat('cfp', (s) => s.costs.footprint);
@@ -933,6 +934,9 @@ export class RouterService {
     const techIds = new Set(
       modData.items.filter((i) => i.technology != null).map((i) => i.id),
     );
+    let locationIds = new Set<string>();
+    if (modData.locations)
+      locationIds = new Set(modData.locations.map((l) => l.id));
 
     const obj: PartialSettingsState = {
       modId,
@@ -964,6 +968,7 @@ export class RouterService {
       researchBonus: rat('bre'),
       inserterCapacity: num('bic'),
       researchedTechnologyIds: sub('tre', modHash.technologies, techIds),
+      locationIds: sub('loc', modHash.locations ?? [], locationIds),
     };
 
     const costs: Partial<CostSettings> = {
