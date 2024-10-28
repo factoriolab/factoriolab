@@ -487,7 +487,7 @@ export class RecipeService {
             } else {
               recipe.out[lastId] = recipe.out[lastId].sub(amount);
               recipe.out[qId] = amount;
-              amount = amount.mul(quality);
+              amount = amount.mul(rational(1n, 10n));
               lastId = qId;
             }
           }
