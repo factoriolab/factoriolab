@@ -84,17 +84,18 @@ describe('SettingsComponent', () => {
     });
   });
 
-  describe('ngOnInit', () => {
+  describe('state effect', () => {
     it('should ignore if no matching state is found', () => {
       expect(component.state).toEqual('');
     });
 
     it('should set state to matching saved state', () => {
-      spyOnProperty(component, 'search').and.returnValue('z=zip');
-      spyOn(component.settingsSvc, 'gameStates').and.returnValue({
-        name: 'z=zip',
-      });
-      component.ngOnInit();
+      component.preferencesSvc.saveState(
+        Mocks.modId,
+        'name',
+        window.location.search.substring(1),
+      );
+      fixture.detectChanges();
       expect(component.state).toEqual('name');
     });
   });
@@ -160,7 +161,7 @@ describe('SettingsComponent', () => {
       spyOnProperty(component, 'search').and.returnValue(value);
       component.clickSaveState();
       expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
-        Game.Factorio,
+        Mocks.modId,
         id,
         value,
       );
@@ -175,12 +176,12 @@ describe('SettingsComponent', () => {
       spyOnProperty(component, 'search').and.returnValue(value);
       component.clickSaveState();
       expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
-        Game.Factorio,
+        Mocks.modId,
         id,
         value,
       );
       expect(component.preferencesSvc.removeState).toHaveBeenCalledWith(
-        Game.Factorio,
+        Mocks.modId,
         id,
       );
       expect(component.editState).toBeNull();

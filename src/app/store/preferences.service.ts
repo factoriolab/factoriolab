@@ -21,7 +21,7 @@ import { TranslateService } from '../services/translate.service';
 import { Store } from './store';
 
 export interface PreferencesState {
-  states: Record<Game, Entities>;
+  states: Record<string, Entities>;
   columns: ColumnsState;
   language: Language;
   powerUnit: PowerUnit;
@@ -108,18 +108,18 @@ export class PreferencesService extends Store<PreferencesState> {
     });
   }
 
-  saveState(game: Game, id: string, value: string): void {
+  saveState(modId: string, id: string, value: string): void {
     this.update((state) => {
-      const gameStates = spread(state.states[game], { [id]: value });
-      const states = spread(state.states, { [game]: gameStates });
+      const gameStates = spread(state.states[modId], { [id]: value });
+      const states = spread(state.states, { [modId]: gameStates });
       return { states };
     });
   }
 
-  removeState(game: Game, id: string): void {
+  removeState(modId: string, id: string): void {
     this.update((state) => {
-      const gameStates = this._removeEntry(state.states[game], id);
-      const states = spread(state.states, { [game]: gameStates });
+      const gameStates = this._removeEntry(state.states[modId], id);
+      const states = spread(state.states, { [modId]: gameStates });
       return { states };
     });
   }
