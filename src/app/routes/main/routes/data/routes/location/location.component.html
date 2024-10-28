@@ -1,0 +1,7 @@
+<p-breadcrumb [home]="home()" [model]="breadcrumb()"></p-breadcrumb>
+@if (obj(); as obj) {
+  <h3>{{ obj.name }}</h3>
+  <i class="lg" [class]="id() | iconClass: 'location'"></i>
+} @else {
+  <div class="p-error">{{ 'data.notFound' | translate }}</div>
+}

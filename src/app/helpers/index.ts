@@ -118,7 +118,7 @@ export function fnPropsNotNullish<T, S extends keyof T>(...keys: S[]) {
 export function getIdOptions(
   ids: string[],
   entities: Entities<{ name: string }>,
-  include: Set<string>,
+  include = new Set(ids),
   exclude?: Set<string>,
   emptyModule = false,
 ): SelectItem<string>[] {

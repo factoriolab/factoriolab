@@ -394,6 +394,47 @@
               <label for="preset">{{ 'settings.preset' | translate }}</label>
             </span>
           </div>
+          @if (options().locations.length) {
+            <div class="pb-3">
+              <label class="p-static-label" for="locations">{{
+                'settings.locations' | translate
+              }}</label>
+              <p-multiSelect
+                #locationsSelect
+                inputId="locations"
+                styleClass="icons"
+                appendTo="body"
+                scrollHeight="40vh"
+                panelStyleClass="tooltip"
+                [pTooltip]="'settings.locationsTooltip' | translate"
+                [ngModel]="settings().locationIds | toArray"
+                [options]="options().locations"
+                (onPanelHide)="changeLocations(locationsSelect.value)"
+              >
+                <ng-template pTemplate="selectedItems" let-items>
+                  <div class="d-flex">
+                    @for (location of items; track location; let i = $index) {
+                      <i
+                        class="mx-2"
+                        [class]="location | iconSmClass: 'location'"
+                      ></i>
+                    }
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="item" let-item>
+                  <div
+                    class="d-flex align-items-center p-2 w-100 h-100"
+                    [pTooltip]="data().locationEntities[item.value].name"
+                  >
+                    <i [class]="item.value | iconSmClass: 'location'"></i>
+                    <div class="ms-3 text-truncate">
+                      {{ item.label }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
+            </div>
+          }
           @if (options().modules.length) {
             <div class="pb-3">
               <label class="p-static-label" for="modifier-rank">{{

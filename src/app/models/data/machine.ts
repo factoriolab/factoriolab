@@ -41,6 +41,7 @@ export interface MachineJson {
   totalRecipe?: boolean;
   /** Type of machine. (e.g. mining drill, assembling machine, etc) */
   entityType?: string;
+  locations?: string[];
 }
 
 export interface Machine {
@@ -69,6 +70,7 @@ export interface Machine {
   totalRecipe?: boolean;
   /** Type of machine. (e.g. mining drill, assembling machine, etc) */
   entityType?: string;
+  locations?: string[];
 }
 
 export function parseMachine(json: MachineJson): Machine;
@@ -96,6 +98,7 @@ export function parseMachine(
     hideRate: json.hideRate,
     totalRecipe: json.totalRecipe,
     entityType: json.entityType,
+    locations: json.locations,
   };
 }
 

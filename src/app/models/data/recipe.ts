@@ -31,6 +31,8 @@ export interface RecipeJson {
   /** Used to override the machine's usage for this recipe */
   usage?: number | string;
   disallowedEffects?: ModuleEffect[];
+  locations?: string[];
+  hideProducer?: boolean;
 }
 
 export interface Recipe {
@@ -62,6 +64,8 @@ export interface Recipe {
   pollution?: Rational;
   quality?: Quality;
   disallowedEffects?: ModuleEffect[];
+  locations?: string[];
+  hideProducer?: boolean;
 }
 
 export function parseRecipe(json: RecipeJson): Recipe {
@@ -85,6 +89,8 @@ export function parseRecipe(json: RecipeJson): Recipe {
     iconText: json.iconText,
     usage: rational(json.usage),
     disallowedEffects: json.disallowedEffects,
+    locations: json.locations,
+    hideProducer: json.hideProducer,
   };
 }
 

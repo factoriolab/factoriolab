@@ -8,4 +8,5 @@ export interface ModHash {
   modules: string[];
   recipes: string[];
   technologies: string[];
+  locations?: string[];
 }

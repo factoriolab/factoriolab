@@ -89,5 +89,10 @@ export class DataComponent {
       routerLink: 'recipes',
       id: 'recipeIds',
     },
+    {
+      label: 'data.locations',
+      routerLink: 'locations',
+      id: 'locationIds',
+    },
   ];
 }

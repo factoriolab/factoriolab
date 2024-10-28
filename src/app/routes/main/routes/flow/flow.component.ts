@@ -19,6 +19,7 @@ import { saveAs } from 'file-saver';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { combineLatest, debounceTime, delay, Subject } from 'rxjs';
+import { environment } from 'src/environments';
 
 import { FlowSettingsComponent } from '~/components/flow-settings/flow-settings.component';
 import { StepsComponent } from '~/components/steps/steps.component';
@@ -54,6 +55,7 @@ import { PreferencesService } from '~/store/preferences.service';
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
 cytoscape.use(elk as cytoscape.Ext);
+cytoscape.warnings(environment.debug);
 
 @Component({
   selector: 'lab-flow',
@@ -319,6 +321,7 @@ export class FlowComponent implements AfterViewInit {
     this.cy = cytoscape({
       container: this.svgElement().nativeElement,
       elements: [...nodes, ...links],
+      wheelSensitivity: 0.1,
       style: [
         {
           selector: 'node',
