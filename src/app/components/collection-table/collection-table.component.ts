@@ -51,20 +51,24 @@ export class CollectionTableComponent {
   options = this.settingsSvc.options;
   data = this.settingsSvc.dataset;
 
+  dataRoute = computed(() => {
+    const data = this.data();
+    return `/${data.modId}/data/`;
+  });
   route = computed(() => {
-    const type = this.type();
     const useRelativePath = this.useRelativePath();
 
     if (useRelativePath) return '';
 
-    const data = this.data();
+    const type = this.type();
+    const dataRoute = this.dataRoute();
     switch (type) {
       case 'category':
-        return `${data.route}/data/categories/`;
+        return `${dataRoute}categories/`;
       case 'item':
-        return `${data.route}/data/items/`;
+        return `${dataRoute}items/`;
       case 'recipe':
-        return `${data.route}/data/recipes/`;
+        return `${dataRoute}recipes/`;
     }
   });
 

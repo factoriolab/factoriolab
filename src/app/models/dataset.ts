@@ -19,7 +19,7 @@ import { Entities } from './utils';
 
 export interface Dataset {
   game: Game;
-  route: string;
+  modId: string;
   info: GameInfo;
   flags: Set<Flag>;
   version: Entities;

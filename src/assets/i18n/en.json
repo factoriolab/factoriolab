@@ -373,7 +373,8 @@
     "includedRecipes": "Included recipes",
     "includedRecipesInfo": "Click recipes to include or exclude them. Excluded recipes will not be used in the solution.",
     "total": "Total",
-    "emptyMessage": "Click on a node in the diagram to view details"
+    "emptyMessage": "Click on a node in the diagram to view details",
+    "selectRecipesTooltip": "Click to select included recipes for this item"
   },
   "flow": {
     "downloadAsPng": "Download as PNG",
