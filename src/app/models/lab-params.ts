@@ -83,6 +83,8 @@ export interface LabParams {
   tre?: string;
   /** V10 Legacy researched technologies */
   v10tre?: string;
+  /** `Set` Locations */
+  loc?: string;
   /** `Rational` Cost factor */
   cfa?: string;
   /** `Rational` Cost machine */

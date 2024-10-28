@@ -242,6 +242,14 @@
         }
       </div>
     }
+    @if (machine.locations) {
+      <div class="mt-1">{{ 'data.locations' | translate }}</div>
+      <div>
+        @for (location of machine.locations; track location) {
+          <i [class]="location | iconSmClass: 'location'"></i>
+        }
+      </div>
+    }
   }
   @if (type() === 'module' && data().moduleEntities[id()]; as module) {
     <table>
@@ -314,14 +322,24 @@
         >
       }
     </div>
-    <div class="mt-1">{{ 'data.producers' | translate }}</div>
-    <div>
-      @for (producer of recipe.producers; track producer) {
-        @if (data().itemEntities[producer].quality == null) {
-          <i [class]="producer | iconSmClass"></i>
+    @if (!recipe.hideProducer) {
+      <div class="mt-1">{{ 'data.producers' | translate }}</div>
+      <div>
+        @for (producer of recipe.producers; track producer) {
+          @if (data().itemEntities[producer].quality == null) {
+            <i [class]="producer | iconSmClass"></i>
+          }
         }
-      }
-    </div>
+      </div>
+    }
+    @if (recipe.locations) {
+      <div class="mt-1">{{ 'data.locations' | translate }}</div>
+      <div>
+        @for (location of recipe.locations; track location) {
+          <i [class]="location | iconSmClass: 'location'"></i>
+        }
+      </div>
+    }
   }
 </ng-template>
 @if (action(); as action) {

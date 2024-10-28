@@ -22,4 +22,5 @@ export interface Options {
   proliferatorModules: SelectItem<string>[];
   machines: SelectItem<string>[];
   recipes: SelectItem<string>[];
+  locations: SelectItem<string>[];
 }

@@ -63,5 +63,13 @@ describe('CollectionTableComponent', () => {
         Mocks.adjustedDataset.technologyIds.length,
       );
     });
+
+    it('should get an array of location collection items', () => {
+      setInputs(fixture, {
+        ids: [],
+        type: 'location',
+      });
+      expect(component.value().length).toEqual(0);
+    });
   });
 });

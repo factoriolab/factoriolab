@@ -12,5 +12,6 @@ export interface ModData {
   items: ItemJson[];
   recipes: RecipeJson[];
   limitations?: Entities<string[]>;
+  locations?: CategoryJson[];
   defaults?: DefaultsJson;
 }

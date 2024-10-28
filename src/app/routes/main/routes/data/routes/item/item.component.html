@@ -249,6 +249,30 @@
           <td>{{ silo.launch | round }}</td>
         </tr>
       }
+      @if (machine.locations) {
+        <tr>
+          <th>{{ 'data.locations' | translate }}</th>
+          <td>
+            @for (i of machine.locations; track i) {
+              <div>
+                <a
+                  [routerLink]="dataRoute() + 'locations/' + i"
+                  queryParamsHandling="preserve"
+                >
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    [label]="data().locationEntities[i].name"
+                    [icon]="i | iconSmClass: 'location'"
+                  ></button>
+                </a>
+              </div>
+            }
+          </td>
+        </tr>
+      }
     }
     @if (obj.module; as module) {
       <tr>
@@ -282,7 +306,7 @@
       }
       @if (module.quality && module.quality.nonzero()) {
         <tr>
-          <td>{{ 'data.quality' | translate }}</td>
+          <th>{{ 'data.quality' | translate }}</th>
           <td>{{ module.quality | bonusPercent }}</td>
         </tr>
       }

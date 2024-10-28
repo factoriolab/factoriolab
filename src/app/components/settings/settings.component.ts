@@ -48,6 +48,7 @@ import { ModuleSettings } from '~/models/settings/module-settings';
 import { Entities } from '~/models/utils';
 import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { ToArrayPipe } from '~/pipes/to-array.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
 import { RecipeService } from '~/services/recipe.service';
@@ -97,6 +98,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     NoDragDirective,
     PickerComponent,
     TechPickerComponent,
+    ToArrayPipe,
     TooltipComponent,
     TranslatePipe,
   ],
@@ -269,6 +271,14 @@ export class SettingsComponent {
 
   setMod(modId: string): void {
     void this.router.navigate([modId, 'list']);
+  }
+
+  changeLocations(locationIds: string[]): void {
+    this.settingsSvc.updateField(
+      'locationIds',
+      new Set(locationIds),
+      this.settings().defaultLocationIds,
+    );
   }
 
   changeModules(id: string, value: ModuleSettings[]): void {

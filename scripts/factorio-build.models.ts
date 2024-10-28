@@ -71,6 +71,7 @@ export interface DataRawDump {
   'mining-drill': Entities<M.MiningDrillPrototype>;
   module: Entities<M.ModulePrototype>;
   'offshore-pump': Entities<M.OffshorePumpPrototype>;
+  planet: Entities<M.PlanetPrototype>;
   pump: Entities<M.PumpPrototype>;
   'rail-planner': Entities<M.RailPlannerPrototype>;
   reactor: Entities<M.ReactorPrototype>;
@@ -84,6 +85,8 @@ export interface DataRawDump {
   'space-location': Entities<M.SpaceLocationPrototype>;
   'space-platform-starter-pack'?: Entities<M.SpacePlatformStarterPackPrototype>;
   'spidertron-remote': Entities<M.SpidertronRemotePrototype>;
+  surface: Entities<M.SurfacePrototype>;
+  'surface-property': Entities<M.SurfacePropertyPrototype>;
   technology: Entities<M.TechnologyPrototype>;
   tile: Entities<M.TilePrototype>;
   tool: Entities<M.ToolPrototype>;
@@ -145,6 +148,8 @@ export type AnyEntityPrototype =
   | M.PumpPrototype
   | M.AsteroidCollectorPrototype;
 
+export type AnyLocationPrototype = M.PlanetPrototype | M.SurfacePrototype;
+
 export interface ModDataReport {
   machineSpeedZero: string[];
   noProducers: string[];
@@ -197,3 +202,5 @@ export const anyItemKeys = [
   'tool',
   'fluid',
 ] as const;
+
+export const anyLocationKeys = ['surface', 'planet'] as const;

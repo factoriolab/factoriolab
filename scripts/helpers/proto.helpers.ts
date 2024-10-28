@@ -49,7 +49,8 @@ export function getMachineDisallowedEffects(
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
-    M.isAsteroidCollectorPrototype(proto)
+    M.isAsteroidCollectorPrototype(proto) ||
+    M.isContainerPrototype(proto)
   )
     return undefined;
 
@@ -59,6 +60,7 @@ export function getMachineDisallowedEffects(
 export function getMachineDrain(proto: D.MachineProto): number | undefined {
   if (
     M.isOffshorePumpPrototype(proto) ||
+    M.isContainerPrototype(proto) ||
     proto.energy_source.type !== 'electric'
   )
     return undefined;
@@ -83,7 +85,8 @@ export function getMachineModules(proto: D.MachineProto): number | undefined {
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
-    M.isAsteroidCollectorPrototype(proto)
+    M.isAsteroidCollectorPrototype(proto) ||
+    M.isContainerPrototype(proto)
   )
     return undefined;
 
@@ -91,7 +94,8 @@ export function getMachineModules(proto: D.MachineProto): number | undefined {
 }
 
 export function getMachinePollution(proto: D.MachineProto): number | undefined {
-  if (M.isOffshorePumpPrototype(proto)) return undefined;
+  if (M.isOffshorePumpPrototype(proto) || M.isContainerPrototype(proto))
+    return undefined;
 
   // TODO: Support multiple pollutants
   return proto.energy_source.emissions_per_minute?.['pollution'];
@@ -190,7 +194,11 @@ export function getEntitySize(
 }
 
 export function getMachineSpeed(proto: D.MachineProto): number {
-  if (M.isReactorPrototype(proto) || M.isAsteroidCollectorPrototype(proto))
+  if (
+    M.isReactorPrototype(proto) ||
+    M.isAsteroidCollectorPrototype(proto) ||
+    M.isContainerPrototype(proto)
+  )
     return 1;
 
   let speed: number;
@@ -206,7 +214,8 @@ export function getMachineSpeed(proto: D.MachineProto): number {
 }
 
 export function getMachineType(proto: D.MachineProto): EnergyType | undefined {
-  if (M.isOffshorePumpPrototype(proto)) return undefined;
+  if (M.isOffshorePumpPrototype(proto) || M.isContainerPrototype(proto))
+    return undefined;
 
   switch (proto.energy_source.type) {
     case 'burner':
@@ -220,7 +229,11 @@ export function getMachineType(proto: D.MachineProto): EnergyType | undefined {
 }
 
 export function getMachineUsage(proto: D.MachineProto): number | undefined {
-  if (M.isOffshorePumpPrototype(proto) || M.isAsteroidCollectorPrototype(proto))
+  if (
+    M.isOffshorePumpPrototype(proto) ||
+    M.isAsteroidCollectorPrototype(proto) ||
+    M.isContainerPrototype(proto)
+  )
     return undefined;
   else if (M.isBoilerPrototype(proto))
     return getPowerInKw(proto.energy_consumption);
@@ -237,6 +250,7 @@ export function getMachineBaseEffect(
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
     M.isAsteroidCollectorPrototype(proto) ||
+    M.isContainerPrototype(proto) ||
     proto.effect_receiver?.base_effect == null
   )
     return undefined;
@@ -249,6 +263,12 @@ export function getMachineBaseEffect(
   if (eff.quality) result.quality = eff.quality;
   if (eff.speed) result.speed = eff.speed;
   return result;
+}
+
+export function getMachineHideRate(proto: D.MachineProto): Optional<boolean> {
+  if (M.isAsteroidCollectorPrototype(proto) || M.isContainerPrototype(proto))
+    return true;
+  return undefined;
 }
 
 export function getRecipeDisallowedEffects(

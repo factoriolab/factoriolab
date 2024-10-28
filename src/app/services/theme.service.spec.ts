@@ -17,6 +17,8 @@ describe('ThemeService', () => {
     data.recipeEntities[RecipeId.Coal].icon = 'coal';
     data.categoryEntities[CategoryId.Combat].icon = 'pistol';
     data.categoryEntities[CategoryId.Combat].iconText = 'test';
+    data.locationEntities['id'].icon = 'coal';
+    data.locationEntities['id'].iconText = 'test';
     data.iconEntities['coal'].invertLight = true;
     data.iconEntities['pistol'].invertLight = true;
     localStorage.clear();

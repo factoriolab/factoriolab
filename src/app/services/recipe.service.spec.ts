@@ -61,6 +61,19 @@ describe('RecipeService', () => {
       );
       expect(result.length).toEqual(2);
     });
+
+    it('should filter for producers allowed at the current locations', () => {
+      const data = Mocks.getDataset();
+      data.machineEntities[ItemId.BurnerMiningDrill].locations = ['id2'];
+      data.machineEntities[ItemId.ElectricMiningDrill].locations = ['id'];
+      const recipe = data.recipeEntities[RecipeId.Coal];
+      const result = service.machineOptions(
+        recipe,
+        Mocks.settingsStateInitial,
+        data,
+      );
+      expect(result.length).toEqual(1);
+    });
   });
 
   describe('fuelOptions', () => {
@@ -860,7 +873,7 @@ describe('RecipeService', () => {
       const data = Mocks.getDataset();
       data.flags = flags.spa;
       data.moduleEntities[ItemId.SpeedModule3].speed = rational.zero;
-      data.moduleEntities[ItemId.SpeedModule3].quality = rational.one;
+      data.moduleEntities[ItemId.SpeedModule3].quality = rational(1n, 40n);
       const recipeSettings = spread(
         Mocks.recipesStateInitial[RecipeId.FirearmMagazine],
         { beacons: undefined },
@@ -876,11 +889,11 @@ describe('RecipeService', () => {
         data,
       );
       expect(result.out).toEqual({
-        ['firearm-magazine']: rational(3n, 5n),
-        ['firearm-magazine(1)']: rational(6n, 25n),
-        ['firearm-magazine(2)']: rational(12n, 125n),
-        ['firearm-magazine(3)']: rational(24n, 625n),
-        ['firearm-magazine(5)']: rational(16n, 625n),
+        ['firearm-magazine']: rational(9n, 10n),
+        ['firearm-magazine(1)']: rational(9n, 100n),
+        ['firearm-magazine(2)']: rational(9n, 1000n),
+        ['firearm-magazine(3)']: rational(9n, 10000n),
+        ['firearm-magazine(5)']: rational(1n, 10000n),
       });
     });
 

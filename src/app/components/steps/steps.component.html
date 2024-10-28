@@ -570,55 +570,60 @@
                     *ngTemplateOutlet="recipesSelect"
                   ></ng-container>
                 }
-                <p-dropdown
-                  labDropdownBase="icon"
-                  [pTooltip]="tooltip"
-                  [options]="step.recipeSettings.machineOptions"
-                  [ngModel]="machineId"
-                  (onChange)="
-                    step.recipeObjectiveId
-                      ? objectivesSvc.updateEntityField(
-                          step.recipeObjectiveId,
-                          'machineId',
-                          $event.value,
-                          step.recipeSettings.defaultMachineId
-                        )
-                      : recipesSvc.updateEntityField(
-                          step.recipeId,
-                          'machineId',
-                          $event.value,
-                          step.recipeSettings.defaultMachineId
-                        )
-                  "
-                >
-                  <ng-template pTemplate="selectedItem" let-item>
-                    @if (item) {
-                      <div class="d-flex">
+                @if (!step.recipe.hideProducer) {
+                  <p-dropdown
+                    labDropdownBase="icon"
+                    [pTooltip]="tooltip"
+                    [options]="step.recipeSettings.machineOptions"
+                    [ngModel]="machineId"
+                    (onChange)="
+                      step.recipeObjectiveId
+                        ? objectivesSvc.updateEntityField(
+                            step.recipeObjectiveId,
+                            'machineId',
+                            $event.value,
+                            step.recipeSettings.defaultMachineId
+                          )
+                        : recipesSvc.updateEntityField(
+                            step.recipeId,
+                            'machineId',
+                            $event.value,
+                            step.recipeSettings.defaultMachineId
+                          )
+                    "
+                  >
+                    <ng-template pTemplate="selectedItem" let-item>
+                      @if (item) {
+                        <div class="d-flex">
+                          <i [class]="item.value | iconSmClass"></i>
+                        </div>
+                      }
+                    </ng-template>
+                    <ng-template pTemplate="item" let-item>
+                      <div
+                        class="d-flex align-items-center py-2 w-100 h-100"
+                        [pTooltip]="tooltip"
+                      >
                         <i [class]="item.value | iconSmClass"></i>
+                        <div class="ms-3 text-truncate">
+                          {{ item.label }}
+                        </div>
+                        <ng-template #tooltip>
+                          <lab-tooltip
+                            [id]="item.value"
+                            type="machine"
+                          ></lab-tooltip>
+                        </ng-template>
                       </div>
-                    }
-                  </ng-template>
-                  <ng-template pTemplate="item" let-item>
-                    <div
-                      class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="tooltip"
-                    >
-                      <i [class]="item.value | iconSmClass"></i>
-                      <div class="ms-3 text-truncate">
-                        {{ item.label }}
-                      </div>
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="item.value"
-                          type="machine"
-                        ></lab-tooltip>
-                      </ng-template>
-                    </div>
-                  </ng-template>
-                  <ng-template #tooltip>
-                    <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
-                  </ng-template>
-                </p-dropdown>
+                    </ng-template>
+                    <ng-template #tooltip>
+                      <lab-tooltip
+                        [id]="machineId"
+                        type="machine"
+                      ></lab-tooltip>
+                    </ng-template>
+                  </p-dropdown>
+                }
                 @if (data().flags.has('overclock')) {
                   <p-inputNumber
                     #overclockInput
@@ -803,7 +808,7 @@
           </td>
         } @else {
           <td></td>
-          <td>
+          <td class="px-0 pe-sm-2">
             <ng-container *ngTemplateOutlet="recipesSelect"></ng-container>
           </td>
         }

@@ -112,6 +112,15 @@ export class ThemeService {
           css += `.${selector}.category::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
           css += this.appendLightStyle(icon, selector, '.category');
         });
+      data.locationIds
+        .map((c) => data.locationEntities[c])
+        .filter(fnPropsNotNullish('icon'))
+        .forEach((location) => {
+          const icon = data.iconEntities[location.icon];
+          const selector = this.escapeSelector(location.id);
+          css += `.${selector}.location::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
+          css += this.appendLightStyle(icon, selector, '.location');
+        });
       data.itemIds
         .map((i) => data.itemEntities[i])
         .filter(fnPropsNotNullish('iconText'))
@@ -134,6 +143,13 @@ export class ThemeService {
         .forEach((category) => {
           const selector = this.escapeSelector(category.id);
           css += `.${selector}.category::before { content: "${category.iconText}"; } `;
+        });
+      data.locationIds
+        .map((i) => data.locationEntities[i])
+        .filter(fnPropsNotNullish('iconText'))
+        .forEach((location) => {
+          const selector = this.escapeSelector(location.id);
+          css += `.${selector}.location::before { content: "${location.iconText}"; } `;
         });
       style.innerText = css;
       this.head.appendChild(style);
