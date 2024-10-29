@@ -14,7 +14,7 @@ import { ModHash } from '~/models/data/mod-hash';
 import { RecipeJson } from '~/models/data/recipe';
 import { TechnologyJson } from '~/models/data/technology';
 import { flags } from '~/models/flags';
-import { Entities } from '~/models/utils';
+import { Entities, Optional } from '~/models/utils';
 
 import {
   AsteroidPrototype,
@@ -37,12 +37,15 @@ import {
   isMiningDrillPrototype,
   isModulePrototype,
   isOffshorePumpPrototype,
+  isPlanetPrototype,
   isPumpPrototype,
   isReactorPrototype,
   isRecipePrototype,
   isResearchProgressProductPrototype,
   isRocketSiloPrototype,
+  isSpaceConnectionPrototype,
   isSpaceLocationPrototype,
+  isSurfacePrototype,
   isTechnologyPrototype,
   isTransportBeltPrototype,
   isUnlockRecipeModifier,
@@ -51,6 +54,7 @@ import {
   RecipePrototype,
   SpaceConnectionPrototype,
   SpaceLocationPrototype,
+  SurfaceCondition,
   TechnologyPrototype,
 } from './factorio.models';
 import {
@@ -58,6 +62,7 @@ import {
   AnyEntityPrototype,
   anyItemKeys,
   AnyItemPrototype,
+  AnyLocationPrototype,
   DataRawDump,
   isAnyItemPrototype,
   isFluidProduct,
@@ -69,11 +74,14 @@ import {
   addEntityValue,
   coerceArray,
   coerceString,
+  getAllowedLocations,
   getEntityMap,
   getIconText,
   getIngredients,
   getItemMap,
   getLastIngredient,
+  getLocations,
+  getSurfacePropertyDefaults,
   getVersion,
   updateHash,
 } from './helpers/data.helpers';
@@ -89,6 +97,7 @@ import {
   getMachineBaseEffect,
   getMachineDisallowedEffects,
   getMachineDrain,
+  getMachineHideRate,
   getMachineModules,
   getMachinePollution,
   getMachineSilo,
@@ -151,6 +160,7 @@ async function processMod(): Promise<void> {
   const recipeLocale = getLocale('recipe-locale.json');
   const spaceConnectionLocale = getLocale('space-connection-locale.json');
   const spaceLocationLocale = getLocale('space-location-locale.json');
+  const surfaceLocale = getLocale('surface-locale.json');
   const techLocale = getLocale('technology-locale.json');
   const entityLocale = getLocale('entity-locale.json');
 
@@ -163,6 +173,18 @@ async function processMod(): Promise<void> {
 
   const itemMap = getItemMap(dataRaw);
   const entityMap = getEntityMap(dataRaw);
+  const surfacePropertyDefaults = getSurfacePropertyDefaults(dataRaw);
+  const allLocations = getLocations(dataRaw);
+
+  function getDataAllowedLocations(
+    surface_conditions: Optional<SurfaceCondition[]>,
+  ): Optional<string[]> {
+    return getAllowedLocations(
+      surface_conditions,
+      allLocations,
+      surfacePropertyDefaults,
+    );
+  }
 
   function getLocaleName(locale: Locale, key: string): string {
     const name = locale.names[key];
@@ -214,6 +236,7 @@ async function processMod(): Promise<void> {
     proto:
       | AnyItemPrototype
       | AnyEntityPrototype
+      | AnyLocationPrototype
       | FluidPrototype
       | RecipePrototype
       | SpaceLocationPrototype
@@ -284,10 +307,13 @@ async function processMod(): Promise<void> {
     spec:
       | AnyItemPrototype
       | AnyEntityPrototype
+      | AnyLocationPrototype
       | FluidPrototype
       | ItemGroup
       | RecipePrototype
-      | TechnologyPrototype,
+      | TechnologyPrototype
+      | SpaceConnectionPrototype
+      | SpaceLocationPrototype,
   ): Promise<string | undefined> {
     const id = isTechnologyPrototype(spec) ? techId[spec.name] : spec.name;
 
@@ -298,14 +324,19 @@ async function processMod(): Promise<void> {
     }
 
     // If recipe still has no product icon, calculator will pick first product
-    if (!isRecipePrototype(spec) && spec.icon == null && spec.icons == null)
+    if (
+      !isRecipePrototype(spec) &&
+      spec.icon == null &&
+      (isSurfacePrototype(spec) || spec.icons == null)
+    )
       throw new Error(`No icons for proto ${spec.name}`);
 
     let iconId = id;
 
-    const hash = `${JSON.stringify(spec.icon)}.${JSON.stringify(
+    let hash = `${JSON.stringify(spec.icon)}.${JSON.stringify(
       spec.icon_size,
-    )}.${JSON.stringify(spec.icons)}`;
+    )}.`;
+    if (!isSurfacePrototype(spec)) hash += JSON.stringify(spec.icons);
     if (iconHash[hash]) {
       iconId = iconHash[hash];
     } else {
@@ -329,6 +360,10 @@ async function processMod(): Promise<void> {
       else if (isTechnologyPrototype(spec)) folder = 'technology';
       else if (isItemGroup(spec)) folder = 'item-group';
       else if (isAnyItemPrototype(spec)) folder = 'item';
+      else if (isSurfacePrototype(spec)) folder = 'surface';
+      else if (isSpaceConnectionPrototype(spec)) folder = 'space-connection';
+      else if (isSpaceLocationPrototype(spec) || isPlanetPrototype(spec))
+        folder = 'space-location';
       else folder = 'entity';
 
       const path = `${scriptOutputPath}/${folder}/${spec.name}.png`;
@@ -357,12 +392,13 @@ async function processMod(): Promise<void> {
   }
 
   // Records of producer categories to producers
-  type ProducerType = 'burner' | 'crafting' | 'resource' | 'asteroid';
+  type ProducerType = 'burner' | 'crafting' | 'resource' | 'asteroid' | 'spoil';
   const producersMap: Record<ProducerType, Record<string, string[]>> = {
     burner: {},
     crafting: {},
     resource: {},
     asteroid: {},
+    spoil: { ['']: ['spoilage'] },
   };
   function addProducers(
     id: string,
@@ -414,9 +450,8 @@ async function processMod(): Promise<void> {
       machines.offshorePump[name] = proto.name;
     }
 
-    if (isAsteroidCollectorPrototype(proto)) {
+    if (isAsteroidCollectorPrototype(proto))
       addProducers(name, [''], 'asteroid');
-    }
   }
 
   const ANY_FLUID_BURN = 'fluid';
@@ -524,6 +559,8 @@ async function processMod(): Promise<void> {
       size: getEntitySize(proto),
       baseEffect: getMachineBaseEffect(proto),
       entityType: proto.type,
+      hideRate: getMachineHideRate(proto),
+      locations: getDataAllowedLocations(proto.surface_conditions),
     };
 
     if (machine.speed === 0) {
@@ -741,6 +778,11 @@ async function processMod(): Promise<void> {
     if (item.burnt_result) {
       itemsUsed.add(item.name);
       itemsUsed.add(item.burnt_result);
+    }
+
+    if (item.spoil_result) {
+      itemsUsed.add(item.name);
+      itemsUsed.add(item.spoil_result);
     }
   }
 
@@ -1080,15 +1122,23 @@ async function processMod(): Promise<void> {
           const entity = dataRaw['fluid-wagon'][result];
           item.fluidWagon = getFluidWagon(entity);
         }
+      } else if (proto.name === 'spoilage') {
+        item.machine = {
+          speed: 1,
+          hideRate: true,
+          entityType: 'spoilage',
+        };
       }
 
       // Parse module
       if (isModulePrototype(proto)) {
+        let quality: number | undefined;
+        if (proto.effect.quality) quality = proto.effect.quality / 10;
         item.module = {
           consumption: proto.effect.consumption || undefined,
           pollution: proto.effect.pollution || undefined,
           productivity: proto.effect.productivity || undefined,
-          quality: proto.effect.quality || undefined,
+          quality,
           speed: proto.effect.speed || undefined,
         };
       }
@@ -1288,6 +1338,7 @@ async function processMod(): Promise<void> {
         }
 
         const recipeInOptions = getRecipeInOptions(recipeIn, recipeInTemp);
+        const locations = getDataAllowedLocations(proto.surface_conditions);
         // For each set of valid fluid temperature inputs, generate a recipe
         const icon = await getIcon(proto);
         for (let i = 0; i < recipeInOptions.length; i++) {
@@ -1311,6 +1362,7 @@ async function processMod(): Promise<void> {
             catalyst: recipeCatalyst,
             unlockedBy: recipesUnlocked[proto.name],
             icon,
+            locations,
           };
 
           if (i > 0) recipe.icon = recipe.icon ?? proto.name;
@@ -1322,11 +1374,10 @@ async function processMod(): Promise<void> {
         modDataReport.noProducers.push(proto.name);
       }
     } else if (isFluidPrototype(proto)) {
-      if (
-        Object.keys(dataRaw.tile).some(
-          (t) => dataRaw.tile[t].fluid === proto.name,
-        )
-      ) {
+      const tile = Object.keys(dataRaw.tile)
+        .map((t) => dataRaw.tile[t])
+        .find((t) => t.fluid === proto.name);
+      if (tile) {
         // Check for offshore pump recipes
         for (const pumpName of Object.keys(machines.offshorePump)) {
           const entityName = machines.offshorePump[pumpName];
@@ -1335,6 +1386,9 @@ async function processMod(): Promise<void> {
             offshorePump.fluid_box.filter == null ||
             offshorePump.fluid_box.filter === proto.name
           ) {
+            let locations: string[] | undefined;
+            if (tile.sprite_usage_surface)
+              locations = [tile.sprite_usage_surface];
             // Found an offshore pump recipe
             const id = getFakeRecipeId(
               proto.name,
@@ -1352,6 +1406,7 @@ async function processMod(): Promise<void> {
               in: {},
               out: { [proto.name]: out },
               producers: [pumpName],
+              locations,
             };
             modData.recipes.push(recipe);
           }
@@ -1505,6 +1560,26 @@ async function processMod(): Promise<void> {
         };
         modData.recipes.push(recipe);
       }
+
+      // Check for spoil recipes
+      if (isAnyItemPrototype(proto) && proto.spoil_result) {
+        // Found spoil recipe
+        const id = getFakeRecipeId(proto.spoil_result, `${proto.name}-spoil`);
+        const recipe: RecipeJson = {
+          id,
+          name: `${itemLocale.names[proto.name]} : ${
+            itemLocale.names[proto.spoil_result]
+          }`,
+          category: group.name,
+          row: getRecipeRow(proto),
+          time: 1,
+          in: { [proto.name]: 1 },
+          out: { [proto.spoil_result]: 1 },
+          producers: producersMap.spoil[''],
+          hideProducer: true,
+        };
+        modData.recipes.push(recipe);
+      }
     }
   }
 
@@ -1557,6 +1632,16 @@ async function processMod(): Promise<void> {
         recipeInOptions.forEach(([recipeIn, ids], i) => {
           const id = i === 0 ? fakeId : `${fakeId}-${ids.join('-')}`;
 
+          const locations = allLocations
+            .filter((l) => {
+              if (!isPlanetPrototype(l)) return false;
+              return (
+                l.map_gen_settings?.autoplace_settings?.entity?.settings?.[
+                  key
+                ] != null
+              );
+            })
+            .map((l) => l.name);
           const recipe: RecipeJson = {
             id: '',
             name: isFluidPrototype(proto)
@@ -1571,6 +1656,7 @@ async function processMod(): Promise<void> {
             cost: 100 / total,
             isMining: true,
             producers: miners,
+            locations,
           };
 
           const hash = JSON.stringify(recipe);
@@ -1653,10 +1739,10 @@ async function processMod(): Promise<void> {
     }
   }
 
-  function addAsteroidRecipe(
+  async function addAsteroidRecipe(
     key: string,
     proto: SpaceLocationPrototype | SpaceConnectionPrototype,
-  ): void {
+  ): Promise<void> {
     if (proto.asteroid_spawn_definitions) {
       // Add asteroid mining recipe
       let name = '';
@@ -1690,8 +1776,10 @@ async function processMod(): Promise<void> {
         out[k] /= total;
       });
 
+      const icon = await getIcon(proto);
       const recipe: RecipeJson = {
         id: fakeId,
+        icon,
         name,
         category: group.name,
         row: getRecipeRow(proto),
@@ -1707,13 +1795,13 @@ async function processMod(): Promise<void> {
   if (dataRaw['space-connection']) {
     for (const key of Object.keys(dataRaw['space-connection'])) {
       const proto = dataRaw['space-connection'][key];
-      addAsteroidRecipe(key, proto);
+      await addAsteroidRecipe(key, proto);
     }
   }
 
   for (const key of Object.keys(dataRaw['space-location'])) {
     const proto = dataRaw['space-location'][key];
-    addAsteroidRecipe(key, proto);
+    await addAsteroidRecipe(key, proto);
   }
 
   const sortedProtoIds = protosSorted.map((p) => p.name);
@@ -1808,6 +1896,19 @@ async function processMod(): Promise<void> {
     };
     modData.categories.push(category);
   }
+
+  const locations: CategoryJson[] = [];
+  for (const loc of allLocations) {
+    const locale = isPlanetPrototype(loc) ? spaceLocationLocale : surfaceLocale;
+    const location: CategoryJson = {
+      id: loc.name,
+      name: getLocaleName(locale, loc.name),
+      icon: await getIcon(loc),
+    };
+    locations.push(location);
+  }
+
+  if (locations.length) modData.locations = locations;
 
   let icon = 'lab';
   let lab = modData.items.find((i) => i.id === icon);

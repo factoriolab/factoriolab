@@ -93,6 +93,7 @@ export interface SettingsState {
   researchBonus: Rational;
   inserterCapacity: InserterCapacity;
   researchedTechnologyIds?: Set<string>;
+  locationIds?: Set<string>;
   costs: CostSettings;
 }
 
@@ -165,20 +166,24 @@ export class SettingsService extends Store<SettingsState> {
     const lang = this.preferencesSvc.language();
     return datasets[modId]?.i18n?.[lang];
   });
-
   game = computed(() => {
     const mod = this.mod();
     return coalesce(mod?.game, Game.Factorio);
   });
 
-  gameStates = computed(() => {
-    const game = this.game();
+  modStates = computed(() => {
+    const modId = this.modId();
+    if (modId == null) return {};
     const states = this.preferencesSvc.states();
-    return states[game];
+    let result = coalesce(states[modId], {});
+    // Migrate game-based states
+    const game = this.game();
+    if (states[game]) result = spread(states[game], result);
+    return result;
   });
 
   stateOptions = computed(() => {
-    const states = this.gameStates();
+    const states = this.modStates();
     return Object.keys(states)
       .sort()
       .map((i): SelectItem<string> => ({ label: i, value: i }));
@@ -254,12 +259,8 @@ export class SettingsService extends Store<SettingsState> {
       return getIdOptions(ids, data.itemEntities, itemSet, exclude);
     }
 
-    return {
-      categories: getIdOptions(
-        data.categoryIds,
-        data.categoryEntities,
-        new Set(data.categoryIds),
-      ),
+    const result = {
+      categories: getIdOptions(data.categoryIds, data.categoryEntities),
       items: itemOptions(data.itemIds),
       beacons: itemOptions(data.beaconIds),
       belts: itemOptions(data.beltIds, data.itemQIds),
@@ -281,7 +282,10 @@ export class SettingsService extends Store<SettingsState> {
         data.recipeEntities,
         new Set(settings.availableRecipeIds),
       ),
+      locations: getIdOptions(data.locationIds, data.locationEntities),
     };
+
+    return result;
   });
 
   beltSpeed = computed(() => {
@@ -422,6 +426,10 @@ export class SettingsService extends Store<SettingsState> {
       environment.debug,
     );
     const limitations = reduceEntities(coalesce(mod?.limitations, {}));
+    const locationEntities = toEntities(
+      coalesce(mod?.locations, []),
+      environment.debug,
+    );
 
     // Apply localization
     if (i18n) {
@@ -445,6 +453,7 @@ export class SettingsService extends Store<SettingsState> {
     const iconIds = Object.keys(iconEntities);
     const itemIds = Object.keys(itemData);
     const recipeIds = Object.keys(recipeData);
+    const locationIds = Object.keys(locationEntities);
 
     // Generate temporary object arrays
     const items = itemIds.map((i) => parseItem(itemData[i]));
@@ -703,7 +712,7 @@ export class SettingsService extends Store<SettingsState> {
 
     return {
       game,
-      route: `/${coalesce(mod?.id, DEFAULT_MOD)}`,
+      modId: coalesce(mod?.id, DEFAULT_MOD),
       info: gameInfo[game],
       flags: _flags,
       version: coalesce(mod?.version, {}),
@@ -739,6 +748,8 @@ export class SettingsService extends Store<SettingsState> {
       recipeEntities,
       technologyIds,
       technologyEntities,
+      locationIds,
+      locationEntities,
       limitations,
       hash,
       defaults,
@@ -756,6 +767,11 @@ export class SettingsService extends Store<SettingsState> {
     if (techIds != null && allTechnologyIds.length > 0)
       researchedTechnologyIds = techIds;
 
+    const locIds = state.locationIds;
+    const allLocationIds = Object.keys(data.locationEntities);
+    let locationIds = new Set(allLocationIds);
+    if (locIds != null && allLocationIds.length > 0) locationIds = locIds;
+
     let quality = Quality.Normal;
     if (data.flags.has('quality')) {
       if (researchedTechnologyIds.has(ItemId.LegendaryQuality))
@@ -766,28 +782,35 @@ export class SettingsService extends Store<SettingsState> {
         quality = Quality.Rare;
     }
 
-    const availableRecipeIdArr = data.recipeIds.filter((i) => {
-      const recipe = data.recipeEntities[i];
-      return (
-        (recipe.unlockedBy == null ||
-          researchedTechnologyIds.has(recipe.unlockedBy)) &&
-        (recipe.quality == null || recipe.quality <= quality)
+    let availableRecipes = data.recipeIds
+      .map((r) => data.recipeEntities[r])
+      .filter(
+        (r) =>
+          (r.unlockedBy == null || researchedTechnologyIds.has(r.unlockedBy)) &&
+          (r.quality == null || r.quality <= quality) &&
+          (r.locations == null || r.locations.some((l) => locationIds.has(l))),
       );
-    });
-    const availableRecipeIds = new Set(availableRecipeIdArr);
 
     const noRecipeQualItemIds = Array.from(data.noRecipeItemIds)
       .map((i) => data.itemEntities[i])
       .filter((i) => i.quality == null || i.quality < quality)
       .map((i) => i.id);
     const availableItemIds = new Set(noRecipeQualItemIds);
-    availableRecipeIdArr
-      .map((r) => data.recipeEntities[r])
-      .forEach((r) => {
-        Object.keys(r.out).forEach((i) => {
-          if ((r.in[i] ?? 0) < r.out[i]) availableItemIds.add(i);
-        });
+    availableRecipes.forEach((r) => {
+      Object.keys(r.out).forEach((i) => {
+        if ((r.in[i] ?? 0) < r.out[i]) availableItemIds.add(i);
       });
+    });
+
+    availableRecipes = availableRecipes.filter((r) =>
+      r.producers.some(
+        (p) =>
+          availableItemIds.has(p) &&
+          (data.machineEntities[p].locations == null ||
+            data.machineEntities[p].locations.some((l) => locationIds.has(l))),
+      ),
+    );
+    const availableRecipeIds = new Set(availableRecipes.map((r) => r.id));
 
     function pickItemId(
       itemId: Optional<string>,
@@ -818,6 +841,10 @@ export class SettingsService extends Store<SettingsState> {
     const machineRankIds = pickItemIds(
       state.machineRankIds,
       defaultMachineRankIds,
+    ).filter(
+      (m) =>
+        data.machineEntities[m].locations == null ||
+        data.machineEntities[m].locations.some((l) => locationIds.has(l)),
     );
     const defaultFuelRankIds = coalesce(defaults?.fuelRankIds, []);
     const fuelRankIds = pickItemIds(state.fuelRankIds, defaultFuelRankIds);
@@ -872,6 +899,8 @@ export class SettingsService extends Store<SettingsState> {
       beacons: this.recipeSvc.hydrateBeacons(state.beacons, defaultBeacons),
       overclock: state.overclock ?? defaults?.overclock,
       researchedTechnologyIds,
+      locationIds,
+      defaultLocationIds: new Set(data.locationIds),
       availableRecipeIds,
       availableItemIds,
       quality,

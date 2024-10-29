@@ -69,18 +69,23 @@ describe('SettingsService', () => {
     });
   });
 
-  describe('gameStates', () => {
+  describe('modStates', () => {
     it('should return the game states', () => {
       spyOn(service.preferencesSvc, 'states').and.returnValue(
         Mocks.preferencesState.states,
       );
-      expect(service.gameStates()).toEqual(
+      expect(service.modStates()).toEqual(
         Mocks.preferencesState.states[Game.Factorio],
       );
     });
   });
 
   describe('stateOptions', () => {
+    it('should return empty if mod is not yet set', () => {
+      spyOn(service, 'modId').and.returnValue(undefined);
+      expect(service.modStates()).toEqual({});
+    });
+
     it('should return the options as a list', () => {
       spyOn(service.preferencesSvc, 'states').and.returnValue(
         Mocks.preferencesState.states,
@@ -476,6 +481,18 @@ describe('SettingsService', () => {
       const result = service.settings();
       expect(result.cargoWagonId).toBeUndefined();
       expect(result.beacons).toEqual([]);
+    });
+
+    it('should filter for recipes and machines that match locations', () => {
+      const data = Mocks.getDataset();
+      data.recipeEntities[RecipeId.Coal].locations = ['id2'];
+      data.machineEntities[ItemId.ElectricMiningDrill].locations = ['id2'];
+      spyOn(service, 'state').and.returnValue(Mocks.settingsStateInitial);
+      spyOn(service, 'defaults').and.returnValue(Mocks.defaults);
+      spyOn(service, 'dataset').and.returnValue(data);
+      const result = service.settings();
+      expect(result.availableRecipeIds.size).toEqual(data.recipeIds.length - 2);
+      expect(result.availableItemIds.size).toEqual(data.itemIds.length - 1);
     });
   });
 

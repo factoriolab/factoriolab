@@ -566,107 +566,64 @@
                   !preferences().hideDuplicateIcons ||
                   (step.itemId != null && step.itemId !== step.recipeId)
                 ) {
-                  @if (stepDetails()[step.id]; as details) {
-                    <p-multiSelect
-                      inputId="enabled-recipes"
-                      styleClass="icon"
-                      appendTo="body"
-                      scrollHeight="40vh"
-                      panelStyleClass="tooltip"
-                      [pTooltip]="tooltip"
-                      [(ngModel)]="details.recipesEnabled"
-                      [options]="details.recipeOptions"
-                      (onPanelHide)="
-                        changeRecipesIncluded(
-                          details.recipeIds,
-                          details.recipesEnabled
-                        )
-                      "
-                    >
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="step.recipeId"
-                          type="recipe"
-                        ></lab-tooltip>
-                      </ng-template>
-                      <ng-template pTemplate="selectedItems" let-items>
-                        <div class="d-flex">
-                          <i [class]="step.recipeId | iconSmClass: 'recipe'">
-                            @if (step.recipeObjectiveId) {
-                              <span>#{{ step.recipeObjectiveId }}</span>
-                            }
-                          </i>
-                        </div>
-                      </ng-template>
-                      <ng-template pTemplate="item" let-item>
-                        <div
-                          class="d-flex align-items-center p-2 w-100 h-100"
-                          [pTooltip]="tooltip"
-                        >
-                          <i [class]="item.value | iconSmClass: 'recipe'"></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label }}
-                          </div>
-                          <ng-template #tooltip>
-                            <lab-tooltip
-                              [id]="item.value"
-                              type="recipe"
-                            ></lab-tooltip>
-                          </ng-template>
-                        </div>
-                      </ng-template>
-                    </p-multiSelect>
-                  }
+                  <ng-container
+                    *ngTemplateOutlet="recipesSelect"
+                  ></ng-container>
                 }
-                <p-dropdown
-                  labDropdownBase="icon"
-                  [pTooltip]="tooltip"
-                  [options]="step.recipeSettings.machineOptions"
-                  [ngModel]="machineId"
-                  (onChange)="
-                    step.recipeObjectiveId
-                      ? objectivesSvc.updateEntityField(
-                          step.recipeObjectiveId,
-                          'machineId',
-                          $event.value,
-                          step.recipeSettings.defaultMachineId
-                        )
-                      : recipesSvc.updateEntityField(
-                          step.recipeId,
-                          'machineId',
-                          $event.value,
-                          step.recipeSettings.defaultMachineId
-                        )
-                  "
-                >
-                  <ng-template pTemplate="selectedItem" let-item>
-                    @if (item) {
-                      <div class="d-flex">
+                @if (!step.recipe.hideProducer) {
+                  <p-dropdown
+                    labDropdownBase="icon"
+                    [pTooltip]="tooltip"
+                    [options]="step.recipeSettings.machineOptions"
+                    [ngModel]="machineId"
+                    (onChange)="
+                      step.recipeObjectiveId
+                        ? objectivesSvc.updateEntityField(
+                            step.recipeObjectiveId,
+                            'machineId',
+                            $event.value,
+                            step.recipeSettings.defaultMachineId
+                          )
+                        : recipesSvc.updateEntityField(
+                            step.recipeId,
+                            'machineId',
+                            $event.value,
+                            step.recipeSettings.defaultMachineId
+                          )
+                    "
+                  >
+                    <ng-template pTemplate="selectedItem" let-item>
+                      @if (item) {
+                        <div class="d-flex">
+                          <i [class]="item.value | iconSmClass"></i>
+                        </div>
+                      }
+                    </ng-template>
+                    <ng-template pTemplate="item" let-item>
+                      <div
+                        class="d-flex align-items-center py-2 w-100 h-100"
+                        [pTooltip]="tooltip"
+                      >
                         <i [class]="item.value | iconSmClass"></i>
+                        <div class="ms-3 text-truncate">
+                          {{ item.label }}
+                        </div>
+                        <ng-template #tooltip>
+                          <lab-tooltip
+                            [id]="item.value"
+                            type="machine"
+                          ></lab-tooltip>
+                        </ng-template>
                       </div>
-                    }
-                  </ng-template>
-                  <ng-template pTemplate="item" let-item>
-                    <div
-                      class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="tooltip"
-                    >
-                      <i [class]="item.value | iconSmClass"></i>
-                      <div class="ms-3 text-truncate">
-                        {{ item.label }}
-                      </div>
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="item.value"
-                          type="machine"
-                        ></lab-tooltip>
-                      </ng-template>
-                    </div>
-                  </ng-template>
-                  <ng-template #tooltip>
-                    <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
-                  </ng-template>
-                </p-dropdown>
+                    </ng-template>
+                    <ng-template #tooltip>
+                      <lab-tooltip
+                        [id]="machineId"
+                        type="machine"
+                      ></lab-tooltip>
+                    </ng-template>
+                  </p-dropdown>
+                }
                 @if (data().flags.has('overclock')) {
                   <p-inputNumber
                     #overclockInput
@@ -850,8 +807,67 @@
             }
           </td>
         } @else {
-          <td colspan="2"></td>
+          <td></td>
+          <td class="px-0 pe-sm-2">
+            <ng-container *ngTemplateOutlet="recipesSelect"></ng-container>
+          </td>
         }
+        <ng-template #recipesSelect>
+          @if (stepDetails()[step.id]; as details) {
+            <p-multiSelect
+              inputId="enabled-recipes"
+              styleClass="icon"
+              appendTo="body"
+              scrollHeight="40vh"
+              panelStyleClass="tooltip"
+              [(ngModel)]="details.recipesEnabled"
+              [options]="details.recipeOptions"
+              [pTooltip]="tooltip"
+              (onPanelHide)="
+                changeRecipesIncluded(details.recipeIds, details.recipesEnabled)
+              "
+            >
+              <ng-template #tooltip>
+                @if (step.recipeId) {
+                  <lab-tooltip
+                    [id]="step.recipeId"
+                    type="recipe"
+                    [action]="'steps.selectRecipesTooltip' | translate"
+                  ></lab-tooltip>
+                } @else {
+                  {{ 'steps.selectRecipesTooltip' | translate }}
+                }
+              </ng-template>
+              <ng-template pTemplate="selectedItems" let-items>
+                @if (step.recipeId) {
+                  <div class="d-flex">
+                    <i [class]="step.recipeId | iconSmClass: 'recipe'">
+                      @if (step.recipeObjectiveId) {
+                        <span>#{{ step.recipeObjectiveId }}</span>
+                      }
+                    </i>
+                  </div>
+                } @else {
+                  <i class="fa-solid fa-flask-vial"></i>
+                }
+              </ng-template>
+              <ng-template pTemplate="item" let-item>
+                <div
+                  class="d-flex align-items-center p-2 w-100 h-100"
+                  [pTooltip]="tooltip"
+                >
+                  <i [class]="item.value | iconSmClass: 'recipe'"></i>
+                  <div class="ms-3 text-truncate">
+                    {{ item.label }}
+                  </div>
+                  <ng-template #tooltip>
+                    <lab-tooltip [id]="item.value" type="recipe"></lab-tooltip>
+                  </ng-template>
+                </div>
+              </ng-template>
+            </p-multiSelect>
+          }
+        </ng-template>
         <!-- Beacons -->
         @if (columnsState().beacons.show) {
           <td colspan="2" class="px-0 px-sm-2">

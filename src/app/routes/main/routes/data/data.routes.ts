@@ -244,6 +244,28 @@ export const routes: DataRoute[] = [
     },
   },
   {
+    path: 'locations/:id',
+    loadComponent: () =>
+      import('./routes/location/location.component').then(
+        (c) => c.LocationComponent,
+      ),
+    data: {
+      collectionLabel: 'data.locations',
+    },
+  },
+  {
+    path: 'locations',
+    loadComponent: () =>
+      import('./routes/collection/collection.component').then(
+        (c) => c.CollectionComponent,
+      ),
+    data: {
+      label: 'data.locations',
+      type: 'location',
+      key: 'locationIds',
+    },
+  },
+  {
     path: '',
     pathMatch: 'full',
     loadComponent: () =>

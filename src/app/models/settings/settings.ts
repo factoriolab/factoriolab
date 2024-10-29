@@ -17,6 +17,8 @@ export interface Settings
   moduleRankIds: string[];
   defaultModuleRankIds: string[];
   researchedTechnologyIds: Set<string>;
+  locationIds: Set<string>;
+  defaultLocationIds: Set<string>;
   availableRecipeIds: Set<string>;
   availableItemIds: Set<string>;
   quality: Quality;

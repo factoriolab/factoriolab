@@ -74,8 +74,13 @@ export class RecipeService {
     settings: Settings,
     data: Dataset,
   ): SelectItem<string>[] {
-    let machineIds = recipe.producers.filter((p) =>
-      settings.availableItemIds.has(p),
+    let machineIds = recipe.producers.filter(
+      (p) =>
+        settings.availableItemIds.has(p) &&
+        (data.machineEntities[p].locations == null ||
+          data.machineEntities[p].locations.some((l) =>
+            settings.locationIds.has(l),
+          )),
     );
     if (machineIds.length === 0) machineIds = recipe.producers;
     return machineIds.map((m) => ({
@@ -461,7 +466,6 @@ export class RecipeService {
 
       // Adjust for quality
       if (data.flags.has('quality') && quality.gt(rational.zero)) {
-        const factor = quality.div(rational(10n));
         for (const outId of Object.keys(recipe.out)) {
           // Adjust by factor
           const item = data.itemEntities[outId];
@@ -478,12 +482,12 @@ export class RecipeService {
             if (i === (4 as unknown as Quality)) continue;
             const qId = qualityId(id, i);
             if (lastId == null) {
-              amount = amount.mul(factor);
+              amount = amount.mul(quality);
               lastId = qId;
             } else {
               recipe.out[lastId] = recipe.out[lastId].sub(amount);
               recipe.out[qId] = amount;
-              amount = amount.mul(factor);
+              amount = amount.mul(rational(1n, 10n));
               lastId = qId;
             }
           }

@@ -84,17 +84,18 @@ describe('SettingsComponent', () => {
     });
   });
 
-  describe('ngOnInit', () => {
+  describe('state effect', () => {
     it('should ignore if no matching state is found', () => {
       expect(component.state).toEqual('');
     });
 
     it('should set state to matching saved state', () => {
-      spyOnProperty(component, 'search').and.returnValue('z=zip');
-      spyOn(component.settingsSvc, 'gameStates').and.returnValue({
-        name: 'z=zip',
-      });
-      component.ngOnInit();
+      component.preferencesSvc.saveState(
+        Mocks.modId,
+        'name',
+        window.location.search.substring(1),
+      );
+      fixture.detectChanges();
       expect(component.state).toEqual('name');
     });
   });
@@ -160,7 +161,7 @@ describe('SettingsComponent', () => {
       spyOnProperty(component, 'search').and.returnValue(value);
       component.clickSaveState();
       expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
-        Game.Factorio,
+        Mocks.modId,
         id,
         value,
       );
@@ -175,12 +176,12 @@ describe('SettingsComponent', () => {
       spyOnProperty(component, 'search').and.returnValue(value);
       component.clickSaveState();
       expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
-        Game.Factorio,
+        Mocks.modId,
         id,
         value,
       );
       expect(component.preferencesSvc.removeState).toHaveBeenCalledWith(
-        Game.Factorio,
+        Mocks.modId,
         id,
       );
       expect(component.editState).toBeNull();
@@ -210,6 +211,18 @@ describe('SettingsComponent', () => {
       spyOn(component.router, 'navigate');
       component.setMod('mod');
       expect(component.router.navigate).toHaveBeenCalledWith(['mod', 'list']);
+    });
+  });
+
+  describe('changeLocations', () => {
+    it('should set the locations', () => {
+      spyOn(component.settingsSvc, 'updateField');
+      component.changeLocations(['id2']);
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'locationIds',
+        new Set(['id2']),
+        new Set(['id']),
+      );
     });
   });
 

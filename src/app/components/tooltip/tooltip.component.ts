@@ -50,6 +50,7 @@ export class TooltipComponent {
 
   id = input.required<string>();
   type = input<TooltipType>('item');
+  action = input<string>();
 
   dataKey: Record<TooltipType, string> = {
     item: 'items',

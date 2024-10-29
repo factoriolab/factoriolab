@@ -19,7 +19,7 @@ import { Entities } from './utils';
 
 export interface Dataset {
   game: Game;
-  route: string;
+  modId: string;
   info: GameInfo;
   flags: Set<Flag>;
   version: Entities;
@@ -55,6 +55,8 @@ export interface Dataset {
   technologyIds: string[];
   technologyEntities: Entities<Technology>;
   proliferatorModuleIds: string[];
+  locationIds: string[];
+  locationEntities: Entities<Category>;
   limitations: Entities<Entities<boolean>>;
   hash?: ModHash;
   defaults?: Defaults | null;

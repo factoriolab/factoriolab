@@ -317,7 +317,9 @@
     "surplusMachinesOutput": "Surplus machines output",
     "surplusMachinesOutputTooltip": "If checked, output from machine objectives will be treated as surplus instead of required.",
     "convertObjectiveValues": "Convert objective values",
-    "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity."
+    "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
+    "locations": "Locations",
+    "locationsTooltip": "Select the allowed locations for recipes and machines"
   },
   "objectives": {
     "title": "Objectives",
@@ -373,7 +375,8 @@
     "includedRecipes": "Included recipes",
     "includedRecipesInfo": "Click recipes to include or exclude them. Excluded recipes will not be used in the solution.",
     "total": "Total",
-    "emptyMessage": "Click on a node in the diagram to view details"
+    "emptyMessage": "Click on a node in the diagram to view details",
+    "selectRecipesTooltip": "Click to select included recipes for this item"
   },
   "flow": {
     "downloadAsPng": "Download as PNG",
@@ -475,7 +478,8 @@
     "technology": "Technology",
     "prerequisites": "Prerequisites",
     "recipeSettings": "Recipe settings",
-    "cost": "Cost"
+    "cost": "Cost",
+    "locations": "Locations"
   },
   "beaconsOverlay": {
     "addBeacons": "Add beacons",

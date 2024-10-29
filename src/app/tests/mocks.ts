@@ -59,10 +59,12 @@ import { ItemId } from './item-id';
 import { RecipeId } from './recipe-id';
 import { TestModule } from './test.module';
 
+export const modId = '1.1';
 export const raw = data;
-export const modInfo = data.mods.find((m) => m.id === '1.1')!;
+export const modInfo = data.mods.find((m) => m.id === modId)!;
 export const modData = modJson as unknown as ModData;
 modData.defaults!.excludedRecipes = [RecipeId.NuclearFuelReprocessing];
+modData.locations = [{ id: 'id', name: 'Location' }];
 export const modHash: ModHash = hashJson;
 export const modI18n: ModI18n = i18nJson;
 export const mod = spread(modInfo as Mod, modData);

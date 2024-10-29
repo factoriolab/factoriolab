@@ -16,7 +16,7 @@
         <th>{{ 'data.category' | translate }}</th>
         <td>
           <a
-            [routerLink]="data().route + '/data/categories/' + obj.category"
+            [routerLink]="dataRoute() + 'categories/' + obj.category"
             queryParamsHandling="preserve"
           >
             <button
@@ -136,7 +136,7 @@
           <th>{{ 'data.burntResult' | translate }}</th>
           <td>
             <a
-              [routerLink]="data().route + '/data/items/' + fuel.result"
+              [routerLink]="dataRoute() + 'items/' + fuel.result"
               queryParamsHandling="preserve"
             >
               <button
@@ -249,6 +249,30 @@
           <td>{{ silo.launch | round }}</td>
         </tr>
       }
+      @if (machine.locations) {
+        <tr>
+          <th>{{ 'data.locations' | translate }}</th>
+          <td>
+            @for (i of machine.locations; track i) {
+              <div>
+                <a
+                  [routerLink]="dataRoute() + 'locations/' + i"
+                  queryParamsHandling="preserve"
+                >
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    [label]="data().locationEntities[i].name"
+                    [icon]="i | iconSmClass: 'location'"
+                  ></button>
+                </a>
+              </div>
+            }
+          </td>
+        </tr>
+      }
     }
     @if (obj.module; as module) {
       <tr>
@@ -282,7 +306,7 @@
       }
       @if (module.quality && module.quality.nonzero()) {
         <tr>
-          <td>{{ 'data.quality' | translate }}</td>
+          <th>{{ 'data.quality' | translate }}</th>
           <td>{{ module.quality | bonusPercent }}</td>
         </tr>
       }
@@ -297,7 +321,7 @@
           <th>{{ 'data.proliferator' | translate }}</th>
           <td>
             <a
-              [routerLink]="data().route + '/data/items/' + module.proliferator"
+              [routerLink]="dataRoute() + 'items/' + module.proliferator"
               queryParamsHandling="preserve"
             >
               <button
@@ -339,7 +363,7 @@
           @for (i of technology.prerequisites; track i) {
             <div>
               <a
-                [routerLink]="data().route + '/data/technologies/' + i"
+                [routerLink]="dataRoute() + 'technologies/' + i"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -406,8 +430,7 @@
           <td>
             <a
               [routerLink]="
-                data().route +
-                '/data/' +
+                dataRoute() +
                 (data().beltIds.includes(beltId)
                   ? 'belts'
                   : data().pipeIds.includes(beltId)
@@ -436,7 +459,7 @@
             <th>{{ 'data.cargoWagon' | translate }}</th>
             <td>
               <a
-                [routerLink]="data().route + '/data/cargo-wagons/' + wagonId"
+                [routerLink]="dataRoute() + 'cargo-wagons/' + wagonId"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -453,7 +476,7 @@
             <th>{{ 'data.fluidWagon' | translate }}</th>
             <td>
               <a
-                [routerLink]="data().route + '/data/fluid-wagons/' + wagonId"
+                [routerLink]="dataRoute() + 'fluid-wagons/' + wagonId"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -508,7 +531,7 @@
                   [routerLink]="
                     moduleId === 'module'
                       ? null
-                      : data().route + '/data/modules/' + moduleId
+                      : dataRoute() + 'modules/' + moduleId
                   "
                   queryParamsHandling="preserve"
                 >
@@ -534,7 +557,7 @@
               <div>
                 @if (beacon.id) {
                   <a
-                    [routerLink]="data().route + '/data/beacons/' + beacon.id"
+                    [routerLink]="dataRoute() + 'beacons/' + beacon.id"
                     queryParamsHandling="preserve"
                   >
                     <button
@@ -556,9 +579,7 @@
                       <i [class]="moduleId | iconSmClass"> </i>
                     } @else {
                       <a
-                        [routerLink]="
-                          data().route + '/data/modules/' + moduleId
-                        "
+                        [routerLink]="dataRoute() + 'modules/' + moduleId"
                         queryParamsHandling="preserve"
                       >
                         <button

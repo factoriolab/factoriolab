@@ -57,7 +57,7 @@ export class LandingComponent {
   mod = this.settingsSvc.mod;
   data = this.settingsSvc.dataset;
   settings = this.settingsSvc.settings;
-  states = this.settingsSvc.gameStates;
+  states = this.settingsSvc.modStates;
   stateOptions = this.settingsSvc.stateOptions;
   modOptions = this.settingsSvc.modOptions;
 

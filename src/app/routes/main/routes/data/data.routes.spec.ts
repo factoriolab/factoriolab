@@ -3,6 +3,7 @@ import { routes } from './data.routes';
 import { CategoryComponent } from './routes/category/category.component';
 import { CollectionComponent } from './routes/collection/collection.component';
 import { ItemComponent } from './routes/item/item.component';
+import { LocationComponent } from './routes/location/location.component';
 import { RecipeComponent } from './routes/recipe/recipe.component';
 
 describe('Data Routes', () => {
@@ -31,6 +32,8 @@ describe('Data Routes', () => {
     expect(await routes[21].loadComponent!()).toEqual(CollectionComponent);
     expect(await routes[22].loadComponent!()).toEqual(RecipeComponent);
     expect(await routes[23].loadComponent!()).toEqual(CollectionComponent);
-    expect(await routes[24].loadComponent!()).toEqual(DataComponent);
+    expect(await routes[24].loadComponent!()).toEqual(LocationComponent);
+    expect(await routes[25].loadComponent!()).toEqual(CollectionComponent);
+    expect(await routes[26].loadComponent!()).toEqual(DataComponent);
   });
 });

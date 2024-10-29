@@ -10,7 +10,7 @@
         <span>{{ 'data.name' | translate }}</span>
         <p-sortIcon field="name"></p-sortIcon>
       </th>
-      @if (type() !== 'category') {
+      @if (hasCategory()) {
         <th pSortableColumn="category.name">
           <span>{{ 'data.category' | translate }}</span>
           <p-sortIcon field="category.name"></p-sortIcon>
@@ -26,7 +26,7 @@
             matchMode="contains"
           ></p-columnFilter>
         </th>
-        @if (type() !== 'category') {
+        @if (hasCategory()) {
           <th>
             <p-columnFilter field="category.id" matchMode="in">
               <ng-template
@@ -64,13 +64,11 @@
           ></button>
         </a>
       </td>
-      @if (type() !== 'category') {
+      @if (hasCategory()) {
         <td>
           @if (obj.category) {
             <a
-              [routerLink]="
-                data().route + '/data/categories/' + obj.category.id
-              "
+              [routerLink]="dataRoute() + 'categories/' + obj.category.id"
               queryParamsHandling="preserve"
             >
               <button

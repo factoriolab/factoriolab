@@ -16,7 +16,7 @@
         <th>{{ 'data.category' | translate }}</th>
         <td>
           <a
-            [routerLink]="data().route + '/data/categories/' + obj.category"
+            [routerLink]="dataRoute() + 'categories/' + obj.category"
             queryParamsHandling="preserve"
           >
             <button
@@ -42,7 +42,7 @@
           @for (i of info().ingredientIds; track i) {
             <div>
               <a
-                [routerLink]="data().route + '/data/items/' + i"
+                [routerLink]="dataRoute() + 'items/' + i"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -67,7 +67,7 @@
           @for (i of info().catalystIds; track i) {
             <div>
               <a
-                [routerLink]="data().route + '/data/items/' + i"
+                [routerLink]="dataRoute() + 'items/' + i"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -92,7 +92,7 @@
           @for (i of info().productIds; track i) {
             <div>
               <a
-                [routerLink]="data().route + '/data/items/' + i"
+                [routerLink]="dataRoute() + 'items/' + i"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -110,34 +110,60 @@
         </td>
       </tr>
     }
-    <tr>
-      <th>{{ 'data.producers' | translate }}</th>
-      <td>
-        @for (i of obj.producers; track i) {
-          <div>
-            <a
-              [routerLink]="data().route + '/data/machines/' + i"
-              queryParamsHandling="preserve"
-            >
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="p-button-text"
-                [label]="data().itemEntities[i].name"
-                [icon]="i | iconSmClass"
-              ></button>
-            </a>
-          </div>
-        }
-      </td>
-    </tr>
+    @if (!obj.hideProducer) {
+      <tr>
+        <th>{{ 'data.producers' | translate }}</th>
+        <td>
+          @for (i of obj.producers; track i) {
+            <div>
+              <a
+                [routerLink]="dataRoute() + 'machines/' + i"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="data().itemEntities[i].name"
+                  [icon]="i | iconSmClass"
+                ></button>
+              </a>
+            </div>
+          }
+        </td>
+      </tr>
+    }
+    @if (obj.locations) {
+      <tr>
+        <th>{{ 'data.locations' | translate }}</th>
+        <td>
+          @for (i of obj.locations; track i) {
+            <div>
+              <a
+                [routerLink]="dataRoute() + 'locations/' + i"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="data().locationEntities[i].name"
+                  [icon]="i | iconSmClass: 'location'"
+                ></button>
+              </a>
+            </div>
+          }
+        </td>
+      </tr>
+    }
     @if (obj.unlockedBy) {
       <tr>
         <th>{{ 'data.unlockedBy' | translate }}</th>
         <td>
           <a
-            [routerLink]="data().route + '/data/technologies/' + obj.unlockedBy"
+            [routerLink]="dataRoute() + 'technologies/' + obj.unlockedBy"
             queryParamsHandling="preserve"
           >
             <button
@@ -181,7 +207,7 @@
         <th>{{ 'data.rocketPart' | translate }}</th>
         <td>
           <a
-            [routerLink]="data().route + '/data/items/' + obj.part"
+            [routerLink]="dataRoute() + 'items/' + obj.part"
             queryParamsHandling="preserve"
           >
             <button
@@ -251,7 +277,7 @@
         <td>
           @if (recipeSettings.machineId; as id) {
             <a
-              [routerLink]="data().route + '/data/machines/' + id"
+              [routerLink]="dataRoute() + 'machines/' + id"
               queryParamsHandling="preserve"
             >
               <button
@@ -277,7 +303,7 @@
                     <i [class]="moduleId | iconSmClass"></i>
                   } @else {
                     <a
-                      [routerLink]="data().route + '/data/modules/' + moduleId"
+                      [routerLink]="dataRoute() + 'modules/' + moduleId"
                       queryParamsHandling="preserve"
                     >
                       <button
@@ -304,7 +330,7 @@
               <div>
                 @if (beacon.id) {
                   <a
-                    [routerLink]="data().route + '/data/beacons/' + beacon.id"
+                    [routerLink]="dataRoute() + 'beacons/' + beacon.id"
                     queryParamsHandling="preserve"
                   >
                     <button
@@ -326,9 +352,7 @@
                       <i [class]="moduleId | iconSmClass"> </i>
                     } @else {
                       <a
-                        [routerLink]="
-                          data().route + '/data/modules/' + moduleId
-                        "
+                        [routerLink]="dataRoute() + '/modules/' + moduleId"
                         queryParamsHandling="preserve"
                       >
                         <button

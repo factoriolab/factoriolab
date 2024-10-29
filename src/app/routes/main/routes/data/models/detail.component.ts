@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
@@ -33,4 +33,8 @@ export abstract class DetailComponent {
       ),
     ),
   );
+  dataRoute = computed(() => {
+    const data = this.data();
+    return `/${data.modId}/data/`;
+  });
 }

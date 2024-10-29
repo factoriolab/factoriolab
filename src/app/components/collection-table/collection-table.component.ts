@@ -51,23 +51,28 @@ export class CollectionTableComponent {
   options = this.settingsSvc.options;
   data = this.settingsSvc.dataset;
 
+  dataRoute = computed(() => {
+    const data = this.data();
+    return `/${data.modId}/data/`;
+  });
   route = computed(() => {
-    const type = this.type();
     const useRelativePath = this.useRelativePath();
 
     if (useRelativePath) return '';
 
-    const data = this.data();
+    const type = this.type();
+    const dataRoute = this.dataRoute();
     switch (type) {
       case 'category':
-        return `${data.route}/data/categories/`;
-      case 'item':
-        return `${data.route}/data/items/`;
-      case 'recipe':
-        return `${data.route}/data/recipes/`;
+        return `${dataRoute}categories/`;
+      default:
+        return `${dataRoute}${type}s/`;
     }
   });
-
+  hasCategory = computed(() => {
+    const type = this.type();
+    return type !== 'category' && type !== 'location';
+  });
   value = computed((): CollectionItem[] => {
     const ids = this.ids();
     const type = this.type();
@@ -83,6 +88,10 @@ export class CollectionTableComponent {
         break;
       case 'recipe':
         entities = data.recipeEntities;
+        break;
+      case 'location':
+        entities = data.locationEntities;
+        break;
     }
 
     return ids
@@ -94,7 +103,7 @@ export class CollectionTableComponent {
           name: entity.name,
         };
 
-        if (type !== 'category') {
+        if (this.hasCategory()) {
           obj.category =
             data.categoryEntities[(entity as Item | RecipeJson).category];
         }
