@@ -249,8 +249,8 @@
     "machineDefaults": "默认设备设置",
     "machineTooltip": "选择设备",
     "fuelTooltip": "选择燃料",
-    "modifierCountTooltip": "选择修改器数",
-    "modifierTooltip": "选择修改器",
+    "modifierCountTooltip": "选择插件数",
+    "modifierTooltip": "选择插件",
     "overclockTooltip": "选择超频比例",
     "beaconCountTooltip": "设置插件效果分享塔数量",
     "beaconTooltip": "插件效果分享塔设置",
@@ -317,7 +317,9 @@
     "surplusMachinesOutput": "过剩产量",
     "surplusMachinesOutputTooltip": "如果勾选，机器目标的输出将被视为过剩，而不是必需",
     "convertObjectiveValues": "转换目标值",
-    "convertObjectiveValuesTooltip": "如果勾选，当类型改变时，目标值将被转换以保留物品数量"
+    "convertObjectiveValuesTooltip": "如果勾选，当类型改变时，目标值将被转换以保留物品数量",
+    "locations": "地点",
+    "locationsTooltip": "为配方和设备选择允许使用的地点"
   },
   "objectives": {
     "title": "目标",
@@ -357,7 +359,7 @@
     "downloadAsCsv": "导出为 CSV 文件",
     "showDetails": "展开详情",
     "hideDetails": "隐藏详情",
-    "modifierCountTooltip": "选择修改器数",
+    "modifierCountTooltip": "选择插件数",
     "overclockTooltip": "超频百分比",
     "beaconEachTooltip": "每个设备受插件效果分享塔影响数",
     "beaconTotalTooltip": "插件效果分享塔总数",
@@ -373,7 +375,8 @@
     "includedRecipes": "启用配方",
     "includedRecipesInfo": "单击配方以包含或排除它们 (解决方案中不会使用排除在外的配方)",
     "total": "总计",
-    "emptyMessage": "点击图表中的节点查看详细信息"
+    "emptyMessage": "点击图表中的节点查看详细信息",
+    "selectRecipesTooltip": "选择该物品包含的配方"
   },
   "flow": {
     "downloadAsPng": "导出为 PNG 文件",
@@ -475,7 +478,8 @@
     "technology": "科技",
     "prerequisites": "前置需求",
     "recipeSettings": "配方设置",
-    "cost": "消耗"
+    "cost": "消耗",
+    "locations": "地点"
   },
   "beaconsOverlay": {
     "addBeacons": "添加插件效果分享塔",
