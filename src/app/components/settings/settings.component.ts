@@ -150,7 +150,7 @@ export class SettingsComponent {
       icon: 'fa-solid fa-floppy-disk',
       command: (): void => {
         this.preferencesSvc.saveState(
-          this.data().game,
+          this.data().modId,
           this.state,
           this.search,
         );
@@ -168,7 +168,7 @@ export class SettingsComponent {
       label: 'settings.deleteSavedState',
       icon: 'fa-solid fa-trash',
       command: (): void => {
-        this.preferencesSvc.removeState(this.data().game, this.state);
+        this.preferencesSvc.removeState(this.data().modId, this.state);
         this.state = '';
       },
     },
