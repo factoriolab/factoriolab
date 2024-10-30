@@ -271,6 +271,19 @@ export function getMachineHideRate(proto: D.MachineProto): Optional<boolean> {
   return undefined;
 }
 
+export function getMachineIngredientUsage(
+  proto: D.MachineProto,
+): Optional<number> {
+  if (
+    M.isLabPrototype(proto) &&
+    proto.science_pack_drain_rate_percent &&
+    proto.science_pack_drain_rate_percent !== 100
+  )
+    return proto.science_pack_drain_rate_percent / 100;
+
+  return undefined;
+}
+
 export function getRecipeDisallowedEffects(
   proto: M.RecipePrototype,
 ): ModuleEffect[] | undefined {
