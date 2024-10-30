@@ -98,6 +98,7 @@ import {
   getMachineDisallowedEffects,
   getMachineDrain,
   getMachineHideRate,
+  getMachineIngredientUsage,
   getMachineModules,
   getMachinePollution,
   getMachineSilo,
@@ -561,6 +562,7 @@ async function processMod(): Promise<void> {
       entityType: proto.type,
       hideRate: getMachineHideRate(proto),
       locations: getDataAllowedLocations(proto.surface_conditions),
+      ingredientUsage: getMachineIngredientUsage(proto),
     };
 
     if (machine.speed === 0) {

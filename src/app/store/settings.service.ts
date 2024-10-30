@@ -782,33 +782,39 @@ export class SettingsService extends Store<SettingsState> {
         quality = Quality.Rare;
     }
 
-    let availableRecipes = data.recipeIds
+    // List of recipes that have been unlocked by technology
+    const unlockedRecipes = data.recipeIds
       .map((r) => data.recipeEntities[r])
       .filter(
         (r) =>
           (r.unlockedBy == null || researchedTechnologyIds.has(r.unlockedBy)) &&
-          (r.quality == null || r.quality <= quality) &&
-          (r.locations == null || r.locations.some((l) => locationIds.has(l))),
+          (r.quality == null || r.quality <= quality),
       );
 
+    // Initialize list of items with those that have no recipe
     const noRecipeQualItemIds = Array.from(data.noRecipeItemIds)
       .map((i) => data.itemEntities[i])
       .filter((i) => i.quality == null || i.quality < quality)
       .map((i) => i.id);
     const availableItemIds = new Set(noRecipeQualItemIds);
-    availableRecipes.forEach((r) => {
-      Object.keys(r.out).forEach((i) => {
-        if ((r.in[i] ?? 0) < r.out[i]) availableItemIds.add(i);
-      });
+    // Add all items that are consumed or produced by unlocked recipes
+    unlockedRecipes.forEach((r) => {
+      Object.keys(r.in).forEach((i) => availableItemIds.add(i));
+      Object.keys(r.out).forEach((i) => availableItemIds.add(i));
     });
 
-    availableRecipes = availableRecipes.filter((r) =>
-      r.producers.some(
-        (p) =>
-          availableItemIds.has(p) &&
-          (data.machineEntities[p].locations == null ||
-            data.machineEntities[p].locations.some((l) => locationIds.has(l))),
-      ),
+    // Limit available recipes based on locations and whether machines are available
+    const availableRecipes = unlockedRecipes.filter(
+      (r) =>
+        (r.locations == null || r.locations.some((l) => locationIds.has(l))) &&
+        r.producers.some(
+          (p) =>
+            availableItemIds.has(p) &&
+            (data.machineEntities[p].locations == null ||
+              data.machineEntities[p].locations.some((l) =>
+                locationIds.has(l),
+              )),
+        ),
     );
     const availableRecipeIds = new Set(availableRecipes.map((r) => r.id));
 

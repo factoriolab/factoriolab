@@ -492,7 +492,7 @@ describe('SettingsService', () => {
       spyOn(service, 'dataset').and.returnValue(data);
       const result = service.settings();
       expect(result.availableRecipeIds.size).toEqual(data.recipeIds.length - 2);
-      expect(result.availableItemIds.size).toEqual(data.itemIds.length - 1);
+      expect(result.availableItemIds.size).toEqual(data.itemIds.length);
     });
   });
 

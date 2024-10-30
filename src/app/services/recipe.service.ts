@@ -464,6 +464,13 @@ export class RecipeService {
               .mul(consumption)
           : rational.zero;
 
+      // Adjust for ingredient usage (Space Age: Biolab)
+      if (machine.ingredientUsage) {
+        for (const i of Object.keys(recipe.in)) {
+          recipe.in[i] = recipe.in[i].mul(machine.ingredientUsage);
+        }
+      }
+
       // Adjust for quality
       if (data.flags.has('quality') && quality.gt(rational.zero)) {
         for (const outId of Object.keys(recipe.out)) {
