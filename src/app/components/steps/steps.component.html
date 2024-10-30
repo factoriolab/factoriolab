@@ -380,12 +380,16 @@
                         : null;
                     as type
                   ) {
-                    @if (data().flags.has('beltStack')) {
+                    @if (
+                      data().flags.has('beltStack') &&
+                      data().itemEntities[step.itemId].stack
+                    ) {
                       <button
                         pButton
                         pRipple
                         type="button"
                         class="hover-action p-button-text"
+                        [pTooltip]="tooltip"
                         (click)="
                           beltPicker.show($event, itemSettings, $any(type))
                         "
@@ -444,14 +448,14 @@
                             </ng-template>
                           </div>
                         </ng-template>
-                        <ng-template #tooltip>
-                          <lab-tooltip
-                            [id]="beltId"
-                            [type]="$any(type)"
-                          ></lab-tooltip>
-                        </ng-template>
                       </p-dropdown>
                     }
+                    <ng-template #tooltip>
+                      <lab-tooltip
+                        [id]="beltId"
+                        [type]="$any(type)"
+                      ></lab-tooltip>
+                    </ng-template>
                   } @else {
                     <!-- Pipe icon only -->
                     <i [class]="beltId | iconClass" [pTooltip]="tooltip">
