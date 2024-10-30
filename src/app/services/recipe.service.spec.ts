@@ -914,6 +914,19 @@ describe('RecipeService', () => {
       );
       expect(Object.keys(result.out).length).toEqual(1);
     });
+
+    it('should adjust for ingredientUsage', () => {
+      const data = Mocks.getDataset();
+      data.machineEntities[ItemId.Lab].ingredientUsage = rational(1n, 2n);
+      const result = service.adjustRecipe(
+        RecipeId.ArtilleryShellRange,
+        Mocks.recipesStateInitial[RecipeId.ArtilleryShellRange],
+        Mocks.itemsStateInitial,
+        Mocks.settingsStateInitial,
+        data,
+      );
+      expect(result.in[ItemId.SpaceSciencePack]).toEqual(rational(1n, 2n));
+    });
   });
 
   describe('adjustLaunchRecipeObjective', () => {

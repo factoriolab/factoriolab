@@ -42,6 +42,8 @@ export interface MachineJson {
   /** Type of machine. (e.g. mining drill, assembling machine, etc) */
   entityType?: string;
   locations?: string[];
+  /** Percent of ingredients used (Space Age: Biolab) */
+  ingredientUsage?: number;
 }
 
 export interface Machine {
@@ -71,6 +73,8 @@ export interface Machine {
   /** Type of machine. (e.g. mining drill, assembling machine, etc) */
   entityType?: string;
   locations?: string[];
+  /** Percent of ingredients used (Space Age: Biolab) */
+  ingredientUsage?: Rational;
 }
 
 export function parseMachine(json: MachineJson): Machine;
@@ -99,6 +103,7 @@ export function parseMachine(
     totalRecipe: json.totalRecipe,
     entityType: json.entityType,
     locations: json.locations,
+    ingredientUsage: rational(json.ingredientUsage),
   };
 }
 
