@@ -11,6 +11,7 @@ export interface RecipeState {
   beacons?: BeaconSettings[];
   overclock?: Rational;
   cost?: Rational;
+  productivity?: Rational;
 }
 
 export interface RecipeSettings extends RecipeState {

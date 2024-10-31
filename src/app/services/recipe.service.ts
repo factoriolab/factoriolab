@@ -264,6 +264,10 @@ export class RecipeService {
         if (eff.speed) speed = speed.add(eff.speed);
       }
 
+      // Adjust for technology bonus
+      if (recipeSettings.productivity)
+        prod = prod.add(recipeSettings.productivity.div(rational(100n)));
+
       const proliferatorSprays: Entities<Rational> = {};
 
       // Modules
@@ -844,6 +848,8 @@ export class RecipeService {
 
     const result: ObjectiveSettings = spread(objective);
     const recipe = data.recipeEntities[result.targetId];
+    // Apply productivity bonus, this cannot be adjusted on individual objectives
+    result.productivity = recipes[result.targetId].productivity;
     this.computeRecipeSettings(result, recipe, machines, settings, data);
 
     result.recipe = this.adjustRecipe(

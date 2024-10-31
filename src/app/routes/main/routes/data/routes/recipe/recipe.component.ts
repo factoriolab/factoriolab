@@ -4,10 +4,12 @@ import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 import { InputNumberComponent } from '~/components/input-number/input-number.component';
 import { coalesce, updateSetIds } from '~/helpers';
 import { Recipe } from '~/models/data/recipe';
+import { rational } from '~/models/rational';
 import { RecipeState } from '~/models/settings/recipe-settings';
 import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { RoundPipe } from '~/pipes/round.pipe';
@@ -23,6 +25,7 @@ import { DetailComponent } from '../../models/detail.component';
     BreadcrumbModule,
     ButtonModule,
     CheckboxModule,
+    InputNumberModule,
     IconClassPipe,
     IconSmClassPipe,
     InputNumberComponent,
@@ -37,6 +40,8 @@ export class RecipeComponent extends DetailComponent {
   recipesStateRaw = this.recipesSvc.state;
   recipesState = this.recipesSvc.settings;
   settings = this.settingsSvc.settings;
+
+  rational = rational;
 
   obj = computed<Recipe | undefined>(
     () => this.data().recipeEntities[this.id()],

@@ -319,7 +319,9 @@
     "convertObjectiveValues": "Convert objective values",
     "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
     "locations": "Locations",
-    "locationsTooltip": "Select the allowed locations for recipes and machines"
+    "locationsTooltip": "Select the allowed locations for recipes and machines",
+    "recipeProductivity": "Recipe productivity bonuses",
+    "recipeProductivityTooltip": "Click to set productivity bonuses for recipes upgraded by technology"
   },
   "objectives": {
     "title": "Objectives",

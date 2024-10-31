@@ -391,6 +391,15 @@ describe('SettingsService', () => {
         result.recipeIds.length,
       );
     });
+
+    it('should build list of recipes that allow prod upgrades', () => {
+      const recipes = Mocks.mod.recipes.map((r) =>
+        r.id === RecipeId.SteelChest ? spread(r, { canProdUpgrade: true }) : r,
+      );
+      spyOn(service, 'mod').and.returnValue(spread(Mocks.mod, { recipes }));
+      const result = service.dataset();
+      expect(result.canProdUpgradeRecipeIds).toEqual([RecipeId.SteelChest]);
+    });
   });
 
   describe('settings', () => {

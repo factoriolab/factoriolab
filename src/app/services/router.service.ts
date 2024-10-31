@@ -727,6 +727,7 @@ export class RouterService {
       const beacons = this.zipSvc.zipArray(data.recipeSettings.beaconMap[id]);
       const overclock = this.zipSvc.zipNumber(obj.overclock);
       const cost = this.zipSvc.zipNumber(obj.cost);
+      const prod = this.zipSvc.zipNumber(obj.productivity);
       data.config.bare.r.push(
         this.zipSvc.zipFields([
           id,
@@ -736,6 +737,7 @@ export class RouterService {
           overclock,
           cost,
           this.zipSvc.zipString(obj.fuelId),
+          prod,
         ]),
       );
       data.config.hash.r.push(
@@ -747,6 +749,7 @@ export class RouterService {
           overclock,
           cost,
           this.zipSvc.zipNString(obj.fuelId, hash.fuels),
+          prod,
         ]),
       );
     }
@@ -776,6 +779,7 @@ export class RouterService {
         overclock: this.zipSvc.parseRational(s[i++]),
         cost: this.zipSvc.parseRational(s[i++]),
         fuelId: this.zipSvc.parseString(s[i++], hash?.fuels),
+        productivity: this.zipSvc.parseRational(s[i++]),
       };
 
       prune(obj);

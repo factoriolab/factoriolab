@@ -458,6 +458,9 @@ export class SettingsService extends Store<SettingsState> {
     // Generate temporary object arrays
     const items = itemIds.map((i) => parseItem(itemData[i]));
     const recipes = recipeIds.map((r) => parseRecipe(recipeData[r]));
+    const canProdUpgradeRecipeIds = recipes
+      .filter((r) => r.canProdUpgrade)
+      .map((r) => r.id);
 
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output item
@@ -746,6 +749,7 @@ export class SettingsService extends Store<SettingsState> {
       recipeIds,
       recipeQIds,
       recipeEntities,
+      canProdUpgradeRecipeIds,
       technologyIds,
       technologyEntities,
       locationIds,
