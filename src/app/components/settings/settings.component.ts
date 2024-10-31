@@ -64,6 +64,7 @@ import { CostsComponent } from '../costs/costs.component';
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { ModulesOverlayComponent } from '../modules-overlay/modules-overlay.component';
 import { PickerComponent } from '../picker/picker.component';
+import { RecipeProductivityComponent } from '../recipe-productivity/recipe-productivity.component';
 import { TechPickerComponent } from '../tech-picker/tech-picker.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 
@@ -97,6 +98,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     ModulesOverlayComponent,
     NoDragDirective,
     PickerComponent,
+    RecipeProductivityComponent,
     TechPickerComponent,
     ToArrayPipe,
     TooltipComponent,
@@ -174,6 +176,7 @@ export class SettingsComponent {
     },
   ];
   versionsVisible = false;
+  recipeProdVisible = false;
 
   displayRateOptions = displayRateOptions;
   gameOptions = gameOptions;

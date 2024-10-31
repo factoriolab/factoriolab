@@ -25,6 +25,7 @@ import {
   isBeaconPrototype,
   isBoilerPrototype,
   isCargoWagonPrototype,
+  isChangeRecipeProductivityModifier,
   isCreateAsteroidChunkEffectItem,
   isCreateEntityTriggerEffectItem,
   isFluidPrototype,
@@ -641,6 +642,7 @@ async function processMod(): Promise<void> {
 
   // Record of recipe id : technology id
   const recipesUnlocked: Record<string, string> = {};
+  const recipesCanProdUpgrade = new Set<string>();
   const technologySet = new Set<TechnologyPrototype>();
   for (const key of Object.keys(dataRaw.technology)) {
     const tech = dataRaw.technology[key];
@@ -663,6 +665,10 @@ async function processMod(): Promise<void> {
         if (isUnlockRecipeModifier(effect)) {
           recipesUnlocked[effect.recipe] = techId[tech.name];
           technologySet.add(tech);
+        }
+
+        if (isChangeRecipeProductivityModifier(effect)) {
+          recipesCanProdUpgrade.add(effect.recipe);
         }
       }
     }
@@ -1341,6 +1347,7 @@ async function processMod(): Promise<void> {
 
         const recipeInOptions = getRecipeInOptions(recipeIn, recipeInTemp);
         const locations = getDataAllowedLocations(proto.surface_conditions);
+        const canProdUpgrade = recipesCanProdUpgrade.has(proto.name);
         // For each set of valid fluid temperature inputs, generate a recipe
         const icon = await getIcon(proto);
         for (let i = 0; i < recipeInOptions.length; i++) {
@@ -1365,6 +1372,7 @@ async function processMod(): Promise<void> {
             unlockedBy: recipesUnlocked[proto.name],
             icon,
             locations,
+            canProdUpgrade,
           };
 
           if (i > 0) recipe.icon = recipe.icon ?? proto.name;
