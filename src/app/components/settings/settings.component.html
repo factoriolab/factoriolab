@@ -1243,7 +1243,8 @@
         data().flags.has('inserterEstimation') ||
         data().flags.has('miningSpeed') ||
         data().flags.has('miningProductivity') ||
-        data().flags.has('researchSpeed')
+        data().flags.has('researchSpeed') ||
+        data().canProdUpgradeRecipeIds.length
       ) {
         <p-accordionTab [header]="'settings.bonuses' | translate">
           <div class="p-fluid">
@@ -1344,6 +1345,24 @@
                     'settings.inserterCapacity' | translate
                   }}</label>
                 </div>
+              </div>
+            }
+            @if (data().canProdUpgradeRecipeIds.length) {
+              <div class="pb-3">
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-rounded p-button-outlined"
+                  icon="fa-solid fa-flask-vial"
+                  [pTooltip]="'settings.recipeProductivityTooltip' | translate"
+                  [label]="'settings.recipeProductivity' | translate"
+                  (click)="recipeProdDlg.open()"
+                >
+                  <lab-recipe-productivity
+                    #recipeProdDlg
+                  ></lab-recipe-productivity>
+                </button>
               </div>
             }
           </div>

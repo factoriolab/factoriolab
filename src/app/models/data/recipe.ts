@@ -33,6 +33,7 @@ export interface RecipeJson {
   disallowedEffects?: ModuleEffect[];
   locations?: string[];
   hideProducer?: boolean;
+  canProdUpgrade?: boolean;
 }
 
 export interface Recipe {
@@ -66,6 +67,7 @@ export interface Recipe {
   disallowedEffects?: ModuleEffect[];
   locations?: string[];
   hideProducer?: boolean;
+  canProdUpgrade?: boolean;
 }
 
 export function parseRecipe(json: RecipeJson): Recipe {
@@ -91,6 +93,7 @@ export function parseRecipe(json: RecipeJson): Recipe {
     disallowedEffects: json.disallowedEffects,
     locations: json.locations,
     hideProducer: json.hideProducer,
+    canProdUpgrade: json.canProdUpgrade,
   };
 }
 

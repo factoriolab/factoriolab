@@ -927,6 +927,21 @@ describe('RecipeService', () => {
       );
       expect(result.in[ItemId.SpaceSciencePack]).toEqual(rational(1n, 2n));
     });
+
+    it('should adjust for recipe productivity', () => {
+      const recipeSettings = spread(
+        Mocks.recipesStateInitial[RecipeId.SteelPlate],
+        { productivity: rational(50n) },
+      );
+      const result = service.adjustRecipe(
+        RecipeId.SteelPlate,
+        recipeSettings,
+        Mocks.itemsStateInitial,
+        Mocks.settingsStateInitial,
+        Mocks.dataset,
+      );
+      expect(result.out[ItemId.SteelPlate]).toEqual(rational(17n, 10n));
+    });
   });
 
   describe('adjustLaunchRecipeObjective', () => {
