@@ -1185,7 +1185,7 @@
                             beltId: itemsState()[row.step.itemId].beltId,
                             wagons: row.step.wagons?.mul(row.percent),
                             wagonId: itemsState()[row.step.itemId].wagonId,
-                            machines: output.step?.machines.mul(row.percent),
+                            machines: output.step?.machines?.mul(row.percent),
                             machineId: output.step?.recipeSettings?.machineId,
                             recipeId: output.step?.recipeId,
                             recipeObjectiveId: output.step?.recipeObjectiveId,
