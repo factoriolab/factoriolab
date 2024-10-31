@@ -10,6 +10,8 @@ import { parseSilo, Silo, SiloJson } from './silo';
 export const typeHasCraftingSpeed = new Set([
   'assembling-machine',
   'furnace',
+  'lab',
+  'offshore-pump',
   'rocket-silo',
 ]);
 
