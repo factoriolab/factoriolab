@@ -1468,7 +1468,7 @@ async function processMod(): Promise<void> {
             row: getRecipeRow(proto),
             time: round(energyReqd, 10),
             in: { [inputProto.name]: 1 },
-            out: { [outputId]: 1 },
+            out: { [outputId]: 10 },
             producers: [boilerName],
           };
           modData.recipes.push(recipe);
