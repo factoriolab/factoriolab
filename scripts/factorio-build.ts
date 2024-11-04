@@ -557,7 +557,7 @@ async function processMod(): Promise<void> {
       usage: getMachineUsage(proto),
       drain: getMachineDrain(proto),
       pollution: getMachinePollution(proto),
-      silo: getMachineSilo(proto, dataRaw['rocket-silo-rocket']),
+      silo: getMachineSilo(proto),
       size: getEntitySize(proto),
       baseEffect: getMachineBaseEffect(proto),
       entityType: proto.type,
