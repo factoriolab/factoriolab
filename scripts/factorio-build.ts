@@ -1407,10 +1407,16 @@ async function processMod(): Promise<void> {
             offshorePump.fluid_box.filter == null ||
             offshorePump.fluid_box.filter === proto.name
           ) {
-            let locations: string[] | undefined;
-            if (tile.sprite_usage_surface)
-              locations = [tile.sprite_usage_surface];
-            // Found an offshore pump recipe
+            const locations: string[] = allLocations
+              .filter(
+                (l) =>
+                  isPlanetPrototype(l) &&
+                  l.map_gen_settings?.autoplace_settings?.tile?.settings?.[
+                    tile.name
+                  ],
+              )
+              .map((l) => l.name);
+
             const id = getFakeRecipeId(
               proto.name,
               `${pumpName}-${proto.name}-pump`,
