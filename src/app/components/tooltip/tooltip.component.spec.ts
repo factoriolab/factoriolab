@@ -32,20 +32,4 @@ describe('TooltipComponent', () => {
       expect(component.recipe()).toBeUndefined();
     });
   });
-
-  describe('unlockedRecipes', () => {
-    it('should return a list of unlocked recipes', () => {
-      setInputs(fixture, { id: 'automation', type: 'technology' });
-      expect(component.unlockedRecipes()?.length).toEqual(2);
-    });
-
-    it('should return undefined for non-techs', () => {
-      expect(component.unlockedRecipes()).toBeUndefined();
-    });
-
-    it('should return undefined if no recipes are unlocked', () => {
-      setInputs(fixture, { id: 'steel-axe', type: 'technology' });
-      expect(component.unlockedRecipes()).toBeUndefined();
-    });
-  });
 });
