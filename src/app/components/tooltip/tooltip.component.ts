@@ -83,18 +83,4 @@ export class TooltipComponent {
     if (recipes.length === 1) return recipes[0];
     return undefined;
   });
-
-  unlockedRecipes = computed(() => {
-    const type = this.type();
-    if (type !== 'technology') return undefined;
-
-    const id = this.id();
-    const data = this.data();
-    const result = data.recipeIds
-      .map((r) => data.recipeEntities[r])
-      .filter((r) => r.quality == null && r.unlockedBy === id)
-      .map((r) => r.id);
-    if (result.length === 0) return undefined;
-    return result;
-  });
 }

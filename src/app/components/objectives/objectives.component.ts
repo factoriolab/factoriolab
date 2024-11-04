@@ -221,7 +221,10 @@ export class ObjectivesComponent {
         }
       }
     } else {
-      if (objective.unit === ObjectiveUnit.Machines) {
+      if (
+        objective.unit === ObjectiveUnit.Machines &&
+        data.adjustedRecipe[objective.targetId]
+      ) {
         const itemIds = Array.from(
           data.adjustedRecipe[objective.targetId].produces,
         );

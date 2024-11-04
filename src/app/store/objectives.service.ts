@@ -206,7 +206,7 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
         if (step.machines?.nonzero()) {
           const recipe = step.recipe;
           // Don't include silos from launch recipes
-          if (!recipe.part && !recipe.hideProducer) {
+          if (!recipe.part && !recipe.flags.has('hideProducer')) {
             const settings = step.recipeSettings;
             let machine = settings.machineId;
             if (machine && data.machineEntities[machine].totalRecipe) {

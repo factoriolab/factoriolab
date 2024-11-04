@@ -394,7 +394,9 @@ describe('SettingsService', () => {
 
     it('should build list of recipes that allow prod upgrades', () => {
       const recipes = Mocks.mod.recipes.map((r) =>
-        r.id === RecipeId.SteelChest ? spread(r, { canProdUpgrade: true }) : r,
+        r.id === RecipeId.SteelChest
+          ? spread(r, { flags: ['canProdUpgrade'] })
+          : r,
       );
       spyOn(service, 'mod').and.returnValue(spread(Mocks.mod, { recipes }));
       const result = service.dataset();
@@ -433,6 +435,7 @@ describe('SettingsService', () => {
     it('should calculate legendary quality level', () => {
       const data = Mocks.getDataset();
       data.flags = flags.spa;
+      data.technologyEntities[ItemId.LegendaryQuality] = {};
       spyOn(service, 'dataset').and.returnValue(data);
       spyOn(service, 'state').and.returnValue(
         spread(Mocks.settingsStateInitial, {
@@ -445,6 +448,7 @@ describe('SettingsService', () => {
     it('should calculate epic quality level', () => {
       const data = Mocks.getDataset();
       data.flags = flags.spa;
+      data.technologyEntities[ItemId.EpicQuality] = {};
       spyOn(service, 'dataset').and.returnValue(data);
       spyOn(service, 'state').and.returnValue(
         spread(Mocks.settingsStateInitial, {
@@ -457,6 +461,7 @@ describe('SettingsService', () => {
     it('should calculate rare quality level', () => {
       const data = Mocks.getDataset();
       data.flags = flags.spa;
+      data.technologyEntities[ItemId.QualityModuleTechnology] = {};
       spyOn(service, 'dataset').and.returnValue(data);
       spyOn(service, 'state').and.returnValue(
         spread(Mocks.settingsStateInitial, {

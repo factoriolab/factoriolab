@@ -110,7 +110,7 @@
         </td>
       </tr>
     }
-    @if (!obj.hideProducer) {
+    @if (!obj.flags.has('hideProducer')) {
       <tr>
         <th>{{ 'data.producers' | translate }}</th>
         <td>
@@ -158,27 +158,31 @@
         </td>
       </tr>
     }
-    @if (obj.unlockedBy) {
+    @if (obj.flags.has('locked')) {
       <tr>
         <th>{{ 'data.unlockedBy' | translate }}</th>
         <td>
-          <a
-            [routerLink]="dataRoute() + 'technologies/' + obj.unlockedBy"
-            queryParamsHandling="preserve"
-          >
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="p-button-text"
-              [label]="data().itemEntities[obj.unlockedBy].name"
-              [icon]="obj.unlockedBy | iconSmClass: 'recipe'"
-            ></button>
-          </a>
+          @for (techId of unlockedBy(); track techId) {
+            <div>
+              <a
+                [routerLink]="dataRoute() + 'technologies/' + techId"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="data().itemEntities[techId].name"
+                  [icon]="techId | iconSmClass: 'item'"
+                ></button>
+              </a>
+            </div>
+          }
         </td>
       </tr>
     }
-    @if (obj.isMining) {
+    @if (obj.flags.has('mining')) {
       <tr>
         <th>{{ 'data.mining' | translate }}</th>
         <td>
@@ -190,7 +194,7 @@
         </td>
       </tr>
     }
-    @if (obj.isTechnology) {
+    @if (obj.flags.has('technology')) {
       <tr>
         <th>{{ 'data.technology' | translate }}</th>
         <td>
@@ -379,7 +383,7 @@
         </tr>
       }
     }
-    @if (recipeR()?.canProdUpgrade) {
+    @if (recipeR()?.flags?.has('canProdUpgrade')) {
       <tr>
         <th>{{ 'data.productivity' | translate }}</th>
         <td>
