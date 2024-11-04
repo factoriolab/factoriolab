@@ -67,6 +67,13 @@ export class RecipeComponent extends DetailComponent {
   recipeR = computed<Recipe | undefined>(
     () => this.data().adjustedRecipe[this.id()],
   );
+  unlockedBy = computed(() => {
+    const id = this.id();
+    const data = this.data();
+    return data.technologyIds.filter((i) =>
+      data.technologyEntities[i].unlockedRecipes?.includes(id),
+    );
+  });
 
   changeExcluded(excluded: boolean): void {
     const value = updateSetIds(

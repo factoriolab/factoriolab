@@ -45,6 +45,15 @@ export function addEntityValue(
   else e[id] += val;
 }
 
+export function pushEntityValue(
+  e: Entities<string[]>,
+  id: string,
+  val: string,
+): void {
+  if (e[id] == null) e[id] = [val];
+  else e[id].push(val);
+}
+
 export function coerceArray<T>(
   value: T[] | Record<string, T> | null | undefined,
 ): T[] {

@@ -459,7 +459,7 @@ export class SettingsService extends Store<SettingsState> {
     const items = itemIds.map((i) => parseItem(itemData[i]));
     const recipes = recipeIds.map((r) => parseRecipe(recipeData[r]));
     const canProdUpgradeRecipeIds = recipes
-      .filter((r) => r.canProdUpgrade)
+      .filter((r) => r.flags.has('canProdUpgrade'))
       .map((r) => r.id);
 
     // Calculate missing implicit recipe icons
@@ -568,9 +568,9 @@ export class SettingsService extends Store<SettingsState> {
             recipe.in,
             quality,
             itemData,
-            recipe.isTechnology,
+            recipe.flags.has('technology'),
           );
-          const qOut = recipe.isTechnology
+          const qOut = recipe.flags.has('technology')
             ? recipe.out
             : this.qualityEntities(recipe.out, quality, itemData);
           let qCatalyst: Optional<Entities<Rational>>;
@@ -791,7 +791,10 @@ export class SettingsService extends Store<SettingsState> {
       .map((r) => data.recipeEntities[r])
       .filter(
         (r) =>
-          (r.unlockedBy == null || researchedTechnologyIds.has(r.unlockedBy)) &&
+          (!r.flags.has('locked') ||
+            Array.from(researchedTechnologyIds).some((t) =>
+              data.technologyEntities[t].unlockedRecipes?.includes(r.id),
+            )) &&
           (r.quality == null || r.quality <= quality),
       );
 

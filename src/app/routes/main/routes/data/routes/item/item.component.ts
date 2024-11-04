@@ -74,13 +74,12 @@ export class ItemComponent extends DetailComponent {
     const producedBy: string[] = [];
     const consumedBy: string[] = [];
     const producible: string[] = [];
-    const unlocked: string[] = [];
+    const unlocked = data.technologyEntities[id]?.unlockedRecipes ?? [];
     for (const r of data.recipeIds) {
       const recipe = data.recipeEntities[r];
       if (recipe.out[id]) producedBy.push(r);
       if (recipe.in[id]) consumedBy.push(r);
       if (recipe.producers.includes(id)) producible.push(r);
-      if (recipe.unlockedBy === id) unlocked.push(r);
     }
     return { producedBy, consumedBy, producible, unlocked };
   });

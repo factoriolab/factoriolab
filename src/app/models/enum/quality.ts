@@ -45,11 +45,12 @@ export function recipeHasQuality(
   recipe: Recipe | RecipeJson,
   itemData: Entities<ItemJson>,
 ): boolean {
+  const flags = new Set(recipe.flags);
   return (
     recipe.part == null &&
-    !recipe.isMining &&
-    (!recipe.isTechnology || Object.keys(recipe.in).length > 0) &&
-    !recipe.isBurn &&
+    !flags.has('mining') &&
+    (!flags.has('technology') || Object.keys(recipe.in).length > 0) &&
+    !flags.has('burn') &&
     Object.keys(recipe.in).some((k) => itemData[k].stack) &&
     Object.keys(recipe.out).some((k) => itemData[k].stack)
   );

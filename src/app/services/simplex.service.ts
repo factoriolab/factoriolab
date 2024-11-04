@@ -276,6 +276,9 @@ export class SimplexService {
       }
     }
 
+    // Simplify all maximize values to a ratio
+    this.simplifyMaximizeValues(state);
+
     // Include any output-only items to calculate surplus
     this.addSurplusVariables(state);
 
@@ -323,6 +326,20 @@ export class SimplexService {
     for (const recipe of matches) {
       this.parseRecipeRecursively(recipe, state);
     }
+  }
+
+  simplifyMaximizeValues(state: MatrixState): void {
+    const itemVals = Object.keys(state.itemValues).map(
+      (i) => state.itemValues[i],
+    );
+    const total = itemVals.reduce((r, val) => {
+      if (val.max) return r.add(val.max);
+      return r;
+    }, rational.zero);
+
+    itemVals.forEach((val) => {
+      if (val.max) val.max = val.max.div(total);
+    });
   }
 
   /** Include items that only function as outputs to calculate surplus values */

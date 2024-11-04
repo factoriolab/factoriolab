@@ -73,7 +73,8 @@ export class RateService {
     // Adjust based on productivity for technology objectives
     const recipe =
       data.adjustedRecipe[data.itemRecipeIds[objective.targetId][0]];
-    if (recipe?.isTechnology) factor = factor.mul(recipe.productivity);
+    if (recipe?.flags.has('technology'))
+      factor = factor.mul(recipe.productivity);
 
     return rate.mul(factor);
   }
@@ -199,7 +200,10 @@ export class RateService {
         const machine = data.machineEntities[machineId];
         const recipe = data.recipeEntities[step.recipeId];
         // No belts/wagons on research rows or rocket part rows
-        noItems = !!(recipe.isTechnology || (machine.silo && !recipe.part));
+        noItems = !!(
+          recipe.flags.has('technology') ||
+          (machine.silo && !recipe.part)
+        );
       }
     }
     if (noItems) {
