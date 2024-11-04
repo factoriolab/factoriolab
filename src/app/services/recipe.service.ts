@@ -131,7 +131,7 @@ export class RecipeService {
       if (
         Object.keys(data.limitations).length &&
         (!data.flags.has('miningTechnologyBypassLimitations') ||
-          (!recipe.isMining && !recipe.isTechnology))
+          (!recipe.flags.has('mining') && !recipe.flags.has('technology')))
       ) {
         // Filter for modules allowed on this recipe
         allowed = allowed.filter(
@@ -163,7 +163,7 @@ export class RecipeService {
       (m): SelectItem<string> => ({ value: m.id, label: m.name }),
     );
     if (
-      (!data.flags.has('resourcePurity') || !recipe?.isMining) &&
+      (!data.flags.has('resourcePurity') || !recipe?.flags.has('mining')) &&
       !data.flags.has('duplicators')
     ) {
       options.unshift({ label: 'None', value: ItemId.Module });
@@ -239,7 +239,7 @@ export class RecipeService {
         recipe.time = recipe.time.div(minSpeed);
       }
 
-      if (recipe.isTechnology && data.flags.has('researchSpeed')) {
+      if (recipe.flags.has('technology') && data.flags.has('researchSpeed')) {
         // Adjust for research factor
         recipe.time = recipe.time.div(researchFactor);
       }
@@ -252,7 +252,7 @@ export class RecipeService {
       let quality = rational.zero;
 
       // Adjust for mining bonus
-      if (recipe.isMining) prod = prod.add(miningFactor);
+      if (recipe.flags.has('mining')) prod = prod.add(miningFactor);
 
       // Adjust for base productivity
       if (machine.baseEffect) {
@@ -793,7 +793,7 @@ export class RecipeService {
     const machine = data.machineEntities[s.machineId];
     const def = machines[s.machineId];
 
-    if (recipe.isBurn) {
+    if (recipe.flags.has('burn')) {
       s.defaultFuelId = Object.keys(recipe.in)[0];
       s.fuelId = s.defaultFuelId;
     } else if (machine.type === EnergyType.Burner) {

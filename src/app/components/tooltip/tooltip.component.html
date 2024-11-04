@@ -21,7 +21,7 @@
           }
         </div>
       }
-      @if (unlockedRecipes(); as recipes) {
+      @if (data().technologyEntities[id()].unlockedRecipes; as recipes) {
         @if (recipes.length > 5) {
           <table>
             <tr>
@@ -322,7 +322,7 @@
         >
       }
     </div>
-    @if (!recipe.hideProducer) {
+    @if (!recipe.flags.has('hideProducer')) {
       <div class="mt-1">{{ 'data.producers' | translate }}</div>
       <div>
         @for (producer of recipe.producers; track producer) {

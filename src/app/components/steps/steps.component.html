@@ -574,7 +574,7 @@
                     *ngTemplateOutlet="recipesSelect"
                   ></ng-container>
                 }
-                @if (!step.recipe.hideProducer) {
+                @if (!step.recipe.flags.has('hideProducer')) {
                   <p-dropdown
                     labDropdownBase="icon"
                     [pTooltip]="tooltip"
@@ -659,7 +659,7 @@
                   </p-inputNumber>
                 }
                 @if (step.recipeSettings?.fuelId; as fuelId) {
-                  @if (step.recipe.isBurn) {
+                  @if (step.recipe.flags.has('burn')) {
                     <div class="d-flex align-items-center">
                       <i
                         class="padded"
@@ -1116,7 +1116,10 @@
         @case (StepDetailTab.Recipe) {
           <!-- Recipe row details -->
           @if (step.recipe) {
-            @if (data().flags.has('miningDepletion') && step.recipe.isMining) {
+            @if (
+              data().flags.has('miningDepletion') &&
+              step.recipe.flags.has('mining')
+            ) {
               <tr class="detail">
                 <ng-container *ngTemplateOutlet="leftPad"></ng-container>
                 <td colspan="100" class="fw-bold">
