@@ -35,6 +35,7 @@ import { MaximizeType } from '~/models/enum/maximize-type';
 import { objectiveUnitOptions } from '~/models/enum/objective-unit';
 import { Preset, presetOptions } from '~/models/enum/preset';
 import {
+  baseId,
   itemHasQuality,
   Quality,
   qualityId,
@@ -793,7 +794,9 @@ export class SettingsService extends Store<SettingsState> {
         (r) =>
           (!r.flags.has('locked') ||
             Array.from(researchedTechnologyIds).some((t) =>
-              data.technologyEntities[t].unlockedRecipes?.includes(r.id),
+              data.technologyEntities[t].unlockedRecipes?.includes(
+                baseId(r.id),
+              ),
             )) &&
           (r.quality == null || r.quality <= quality),
       );
