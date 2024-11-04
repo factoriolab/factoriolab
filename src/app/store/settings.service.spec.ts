@@ -435,6 +435,7 @@ describe('SettingsService', () => {
     it('should calculate legendary quality level', () => {
       const data = Mocks.getDataset();
       data.flags = flags.spa;
+      data.technologyEntities[ItemId.LegendaryQuality] = {};
       spyOn(service, 'dataset').and.returnValue(data);
       spyOn(service, 'state').and.returnValue(
         spread(Mocks.settingsStateInitial, {
@@ -447,6 +448,7 @@ describe('SettingsService', () => {
     it('should calculate epic quality level', () => {
       const data = Mocks.getDataset();
       data.flags = flags.spa;
+      data.technologyEntities[ItemId.EpicQuality] = {};
       spyOn(service, 'dataset').and.returnValue(data);
       spyOn(service, 'state').and.returnValue(
         spread(Mocks.settingsStateInitial, {
@@ -459,6 +461,7 @@ describe('SettingsService', () => {
     it('should calculate rare quality level', () => {
       const data = Mocks.getDataset();
       data.flags = flags.spa;
+      data.technologyEntities[ItemId.QualityModuleTechnology] = {};
       spyOn(service, 'dataset').and.returnValue(data);
       spyOn(service, 'state').and.returnValue(
         spread(Mocks.settingsStateInitial, {
