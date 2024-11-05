@@ -1164,6 +1164,24 @@ describe('RecipeService', () => {
     });
   });
 
+  describe('finalizeData', () => {
+    it('should filter out recipe ids that are not viable', () => {
+      const adjustedRecipe = spread(Mocks.adjustedDataset.adjustedRecipe, {
+        [RecipeId.IronOre]: spread(
+          Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronOre],
+          { output: { [ItemId.IronPlate]: rational(-5n) } },
+        ),
+      });
+      const result = service.finalizeData(
+        [RecipeId.IronOre, RecipeId.IronPlate],
+        adjustedRecipe,
+        Mocks.settingsStateInitial,
+        Mocks.dataset,
+      );
+      expect(result.itemAvailableRecipeIds[ItemId.IronPlate].length).toEqual(0);
+    });
+  });
+
   describe('adjustObjective', () => {
     it('should return an item objective unaltered', () => {
       expect(
