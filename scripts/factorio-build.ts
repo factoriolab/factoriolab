@@ -1395,48 +1395,48 @@ async function processMod(): Promise<void> {
         modDataReport.noProducers.push(proto.name);
       }
     } else if (isFluidPrototype(proto)) {
-      const tile = Object.keys(dataRaw.tile)
-        .map((t) => dataRaw.tile[t])
-        .find((t) => t.fluid === proto.name);
-      if (tile) {
-        // Check for offshore pump recipes
-        for (const pumpName of Object.keys(machines.offshorePump)) {
-          const entityName = machines.offshorePump[pumpName];
-          const offshorePump = dataRaw['offshore-pump'][entityName];
-          if (
-            offshorePump.fluid_box.filter == null ||
-            offshorePump.fluid_box.filter === proto.name
-          ) {
-            const locations: string[] = allLocations
-              .filter(
-                (l) =>
-                  isPlanetPrototype(l) &&
-                  l.map_gen_settings?.autoplace_settings?.tile?.settings?.[
-                    tile.name
-                  ],
-              )
-              .map((l) => l.name);
+      // Check for offshore pump recipes
+      for (const pumpName of Object.keys(machines.offshorePump)) {
+        const entityName = machines.offshorePump[pumpName];
+        const offshorePump = dataRaw['offshore-pump'][entityName];
+        if (
+          offshorePump.fluid_box.filter == null ||
+          offshorePump.fluid_box.filter === proto.name
+        ) {
+          const locations: string[] = allLocations
+            .filter((l) => {
+              if (!isPlanetPrototype(l)) return false;
 
-            const id = getFakeRecipeId(
-              proto.name,
-              `${pumpName}-${proto.name}-pump`,
-            );
-            const out = offshorePump.pumping_speed * 60;
-            const recipe: RecipeJson = {
-              id,
-              name: `${itemLocale.names[pumpName]} : ${
-                fluidLocale.names[proto.name]
-              }`,
-              category: group.name,
-              row: getRecipeRow(proto),
-              time: 1,
-              in: {},
-              out: { [proto.name]: out },
-              producers: [pumpName],
-              locations,
-            };
-            modData.recipes.push(recipe);
-          }
+              const settings =
+                l.map_gen_settings?.autoplace_settings?.tile?.settings;
+              if (settings == null) return false;
+
+              const keys = Object.keys(settings);
+              return keys.some((k) => dataRaw.tile[k].fluid === proto.name);
+            })
+            .map((l) => l.name);
+
+          if (locations.length === 0) continue;
+
+          const id = getFakeRecipeId(
+            proto.name,
+            `${pumpName}-${proto.name}-pump`,
+          );
+          const out = offshorePump.pumping_speed * 60;
+          const recipe: RecipeJson = {
+            id,
+            name: `${itemLocale.names[pumpName]} : ${
+              fluidLocale.names[proto.name]
+            }`,
+            category: group.name,
+            row: getRecipeRow(proto),
+            time: 1,
+            in: {},
+            out: { [proto.name]: out },
+            producers: [pumpName],
+            locations,
+          };
+          modData.recipes.push(recipe);
         }
       }
 
