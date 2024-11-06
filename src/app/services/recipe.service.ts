@@ -768,43 +768,52 @@ export class RecipeService {
         }
       });
 
-    // /**
-    //  * Check whether ingredients are safe (ingredients are net-produceable, or
-    //  * have no recipes in the entire data set based on `noRecipeItemIds`).
-    //  * This only checks one level deep, but continues iterating over the list of
-    //  * itemIds until it no longer finds any inviable recipes to remove. This
-    //  * code is intended only to catch simple recycling loops that are infeasible
-    //  * production solutions.
-    //  */
-    // let filtered = false;
-    // do {
-    //   filtered = false;
-    //   data.itemIds.forEach((itemId) => {
-    //     itemAvailableRecipeIds[itemId] = itemAvailableRecipeIds[itemId].filter(
-    //       (recipeId) => {
-    //         const recipe = adjustedRecipe[recipeId];
-    //         const result = Object.keys(recipe.in).every(
-    //           (inputId) =>
-    //             data.noRecipeItemIds.has(inputId) ||
-    //             itemAvailableRecipeIds[inputId]
-    //               .map((r) => adjustedRecipe[r])
-    //               .some(
-    //                 (inputRecipe) =>
-    //                   inputRecipe.produces.has(inputId) &&
-    //                   (inputRecipe.output[itemId] == null ||
-    //                     inputRecipe.output[itemId]
-    //                       .inverse()
-    //                       .lt(recipe.output[itemId])),
-    //               ),
-    //         );
+    /**
+     * Check whether ingredients are safe (ingredients are net-produceable, or
+     * have no recipes in the entire data set based on `noRecipeItemIds`).
+     * This only checks one level deep, but continues iterating over the list of
+     * itemIds until it no longer finds any inviable recipes to remove. This
+     * code is intended only to catch simple recycling loops that are infeasible
+     * production solutions.
+     */
+    let filtered = false;
+    do {
+      filtered = false;
+      data.itemIds.forEach((itemId) => {
+        itemAvailableRecipeIds[itemId] = itemAvailableRecipeIds[itemId].filter(
+          (recipeId) => {
+            const recipe = adjustedRecipe[recipeId];
+            const result = Object.keys(recipe.in).every(
+              (ingredientId) =>
+                // Ingredient is not produceable by any recipes in the dataset
+                data.noRecipeItemIds.has(ingredientId) ||
+                // Ingredient is net-produced by this recipe
+                recipe.produces.has(ingredientId) ||
+                // Ingredient is net-produced by another recipe
+                itemAvailableRecipeIds[ingredientId]
+                  .map((r) => adjustedRecipe[r])
+                  .some(
+                    (inputRecipe) =>
+                      inputRecipe.output[itemId] == null ||
+                      /**
+                       * Determine how much of this item is consumed per cycle
+                       * of the input recipe, then compare to how much is
+                       * produced by the output recipe. If more is consumed than
+                       * produced, the input recipe is an infeasible solution.
+                       */
+                      inputRecipe.output[itemId]
+                        .mul(recipe.output[ingredientId])
+                        .div(inputRecipe.output[ingredientId])
+                        .lte(recipe.output[itemId]),
+                  ),
+            );
 
-    //         if (!result) filtered = true;
-
-    //         return result;
-    //       },
-    //     );
-    //   });
-    // } while (filtered);
+            if (!result) filtered = true;
+            return result;
+          },
+        );
+      });
+    } while (filtered);
 
     return spread(data as AdjustedDataset, {
       adjustedRecipe,

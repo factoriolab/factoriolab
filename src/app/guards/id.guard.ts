@@ -31,7 +31,7 @@ export const canActivateId: CanActivateFn = (
         map((queryParams) => migrationSvc.migrate(undefined, queryParams)),
         switchMap(async ({ modId, params }) => {
           if (params.z) params = await routerSvc.getHashParams(params);
-          return router.createUrlTree([coalesce(modId, DEFAULT_MOD), id], {
+          return router.createUrlTree([coalesce(modId, '1.1'), id], {
             queryParams: params,
           });
         }),
