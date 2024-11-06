@@ -105,9 +105,12 @@ export interface AdjustedRecipe extends Recipe {
 export function finalizeRecipe(recipe: AdjustedRecipe): void {
   for (const outId of Object.keys(recipe.out)) {
     const output = recipe.out[outId];
-    if (recipe.in[outId] == null || recipe.in[outId].lt(output)) {
+
+    if (
+      output.gt(rational.zero) &&
+      (recipe.in[outId] == null || recipe.in[outId].lt(output))
+    )
       recipe.produces.add(outId);
-    }
 
     recipe.output[outId] = output
       .sub(recipe.in[outId] ?? rational.zero)
