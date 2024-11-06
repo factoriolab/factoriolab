@@ -62,7 +62,7 @@ describe('canActivateLanding', () => {
   it('should navigate to the list', async () => {
     spyOn(preferencesSvc, 'bypassLanding').and.returnValue(true);
     await RouterTestingHarness.create('/?v=6');
-    expect(router.url).toEqual('/2.0/list?v=6');
+    expect(router.url).toEqual('/spa/list?v=6');
   });
 
   it('should allow navigating to the landing page', async () => {

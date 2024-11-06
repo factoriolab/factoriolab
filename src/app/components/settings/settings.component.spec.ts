@@ -202,7 +202,7 @@ describe('SettingsComponent', () => {
     it('should map a game to its default mod id', () => {
       spyOn(component, 'setMod');
       component.setGame(Game.Factorio);
-      expect(component.setMod).toHaveBeenCalledWith('2.0');
+      expect(component.setMod).toHaveBeenCalledWith('spa');
     });
   });
 
