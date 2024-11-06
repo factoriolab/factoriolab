@@ -768,43 +768,43 @@ export class RecipeService {
         }
       });
 
-    /**
-     * Check whether ingredients are safe (ingredients are net-produceable, or
-     * have no recipes in the entire data set based on `noRecipeItemIds`).
-     * This only checks one level deep, but continues iterating over the list of
-     * itemIds until it no longer finds any inviable recipes to remove. This
-     * code is intended only to catch simple recycling loops that are infeasible
-     * production solutions.
-     */
-    let filtered = false;
-    do {
-      filtered = false;
-      data.itemIds.forEach((itemId) => {
-        itemAvailableRecipeIds[itemId] = itemAvailableRecipeIds[itemId].filter(
-          (recipeId) => {
-            const recipe = adjustedRecipe[recipeId];
-            const result = Object.keys(recipe.in).every(
-              (inputId) =>
-                data.noRecipeItemIds.has(inputId) ||
-                itemAvailableRecipeIds[inputId]
-                  .map((r) => adjustedRecipe[r])
-                  .some(
-                    (inputRecipe) =>
-                      inputRecipe.produces.has(inputId) &&
-                      (inputRecipe.output[itemId] == null ||
-                        inputRecipe.output[itemId]
-                          .inverse()
-                          .lt(recipe.output[itemId])),
-                  ),
-            );
+    // /**
+    //  * Check whether ingredients are safe (ingredients are net-produceable, or
+    //  * have no recipes in the entire data set based on `noRecipeItemIds`).
+    //  * This only checks one level deep, but continues iterating over the list of
+    //  * itemIds until it no longer finds any inviable recipes to remove. This
+    //  * code is intended only to catch simple recycling loops that are infeasible
+    //  * production solutions.
+    //  */
+    // let filtered = false;
+    // do {
+    //   filtered = false;
+    //   data.itemIds.forEach((itemId) => {
+    //     itemAvailableRecipeIds[itemId] = itemAvailableRecipeIds[itemId].filter(
+    //       (recipeId) => {
+    //         const recipe = adjustedRecipe[recipeId];
+    //         const result = Object.keys(recipe.in).every(
+    //           (inputId) =>
+    //             data.noRecipeItemIds.has(inputId) ||
+    //             itemAvailableRecipeIds[inputId]
+    //               .map((r) => adjustedRecipe[r])
+    //               .some(
+    //                 (inputRecipe) =>
+    //                   inputRecipe.produces.has(inputId) &&
+    //                   (inputRecipe.output[itemId] == null ||
+    //                     inputRecipe.output[itemId]
+    //                       .inverse()
+    //                       .lt(recipe.output[itemId])),
+    //               ),
+    //         );
 
-            if (!result) filtered = true;
+    //         if (!result) filtered = true;
 
-            return result;
-          },
-        );
-      });
-    } while (filtered);
+    //         return result;
+    //       },
+    //     );
+    //   });
+    // } while (filtered);
 
     return spread(data as AdjustedDataset, {
       adjustedRecipe,
