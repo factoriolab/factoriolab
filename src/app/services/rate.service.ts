@@ -282,7 +282,7 @@ export class RateService {
 
   calculateDisplayRate(step: Step, dispRateInfo: DisplayRateInfo): void {
     if (step.items) {
-      if (step.parents) {
+      if (step.parents && step.items.nonzero()) {
         for (const key of Object.keys(step.parents)) {
           step.parents[key] = step.parents[key].div(step.items);
         }
