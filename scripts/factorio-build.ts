@@ -1389,6 +1389,16 @@ async function processMod(): Promise<void> {
           if (i > 0) recipe.icon = recipe.icon ?? proto.name;
           if (disallowedEffects) recipe.disallowedEffects = disallowedEffects;
 
+          if (id !== proto.name) {
+            // Need to update unlocked recipes
+            Object.keys(technologyUnlocks)
+              .map((t) => technologyUnlocks[t])
+              .filter((t) => t.includes(proto.name))
+              .forEach((t) => {
+                t.push(id);
+              });
+          }
+
           modData.recipes.push(recipe);
         }
       } else {
