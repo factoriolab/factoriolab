@@ -391,6 +391,17 @@ describe('SettingsService', () => {
         result.recipeIds.length,
       );
     });
+
+    it('should build list of recipes that allow prod upgrades', () => {
+      const recipes = Mocks.mod.recipes.map((r) =>
+        r.id === RecipeId.SteelChest
+          ? spread(r, { flags: ['canProdUpgrade'] })
+          : r,
+      );
+      spyOn(service, 'mod').and.returnValue(spread(Mocks.mod, { recipes }));
+      const result = service.dataset();
+      expect(result.canProdUpgradeRecipeIds).toEqual([RecipeId.SteelChest]);
+    });
   });
 
   describe('settings', () => {
@@ -424,6 +435,7 @@ describe('SettingsService', () => {
     it('should calculate legendary quality level', () => {
       const data = Mocks.getDataset();
       data.flags = flags.spa;
+      data.technologyEntities[ItemId.LegendaryQuality] = {};
       spyOn(service, 'dataset').and.returnValue(data);
       spyOn(service, 'state').and.returnValue(
         spread(Mocks.settingsStateInitial, {
@@ -436,6 +448,7 @@ describe('SettingsService', () => {
     it('should calculate epic quality level', () => {
       const data = Mocks.getDataset();
       data.flags = flags.spa;
+      data.technologyEntities[ItemId.EpicQuality] = {};
       spyOn(service, 'dataset').and.returnValue(data);
       spyOn(service, 'state').and.returnValue(
         spread(Mocks.settingsStateInitial, {
@@ -448,6 +461,7 @@ describe('SettingsService', () => {
     it('should calculate rare quality level', () => {
       const data = Mocks.getDataset();
       data.flags = flags.spa;
+      data.technologyEntities[ItemId.QualityModuleTechnology] = {};
       spyOn(service, 'dataset').and.returnValue(data);
       spyOn(service, 'state').and.returnValue(
         spread(Mocks.settingsStateInitial, {
@@ -492,7 +506,7 @@ describe('SettingsService', () => {
       spyOn(service, 'dataset').and.returnValue(data);
       const result = service.settings();
       expect(result.availableRecipeIds.size).toEqual(data.recipeIds.length - 2);
-      expect(result.availableItemIds.size).toEqual(data.itemIds.length - 1);
+      expect(result.availableItemIds.size).toEqual(data.itemIds.length);
     });
   });
 

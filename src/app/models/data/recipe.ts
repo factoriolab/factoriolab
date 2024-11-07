@@ -5,6 +5,14 @@ import { Rational, rational } from '../rational';
 import { Entities } from '../utils';
 import { ModuleEffect } from './module';
 
+export type RecipeFlag =
+  | 'mining'
+  | 'technology'
+  | 'burn'
+  | 'locked'
+  | 'hideProducer'
+  | 'canProdUpgrade';
+
 export interface RecipeJson {
   id: string;
   name: string;
@@ -19,11 +27,6 @@ export interface RecipeJson {
   cost?: number | string;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
-  /** If a recipe is locked initially, indicates what technology is required */
-  unlockedBy?: string;
-  isMining?: boolean;
-  isTechnology?: boolean;
-  isBurn?: boolean;
   /** Used to link the recipe to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -32,7 +35,7 @@ export interface RecipeJson {
   usage?: number | string;
   disallowedEffects?: ModuleEffect[];
   locations?: string[];
-  hideProducer?: boolean;
+  flags?: RecipeFlag[];
 }
 
 export interface Recipe {
@@ -49,11 +52,6 @@ export interface Recipe {
   cost?: Rational;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
-  /** If a recipe is locked initially, indicates what technology unlocks it */
-  unlockedBy?: string;
-  isMining?: boolean;
-  isTechnology?: boolean;
-  isBurn?: boolean;
   /** Used to link the recipe to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -65,7 +63,7 @@ export interface Recipe {
   quality?: Quality;
   disallowedEffects?: ModuleEffect[];
   locations?: string[];
-  hideProducer?: boolean;
+  flags: Set<string>;
 }
 
 export function parseRecipe(json: RecipeJson): Recipe {
@@ -81,16 +79,12 @@ export function parseRecipe(json: RecipeJson): Recipe {
     catalyst: toRationalEntities(json.catalyst),
     cost: rational(json.cost),
     part: json.part,
-    unlockedBy: json.unlockedBy,
-    isMining: json.isMining,
-    isTechnology: json.isTechnology,
-    isBurn: json.isBurn,
     icon: json.icon,
     iconText: json.iconText,
     usage: rational(json.usage),
     disallowedEffects: json.disallowedEffects,
     locations: json.locations,
-    hideProducer: json.hideProducer,
+    flags: new Set(json.flags),
   };
 }
 
@@ -111,9 +105,12 @@ export interface AdjustedRecipe extends Recipe {
 export function finalizeRecipe(recipe: AdjustedRecipe): void {
   for (const outId of Object.keys(recipe.out)) {
     const output = recipe.out[outId];
-    if (recipe.in[outId] == null || recipe.in[outId].lt(output)) {
+
+    if (
+      output.gt(rational.zero) &&
+      (recipe.in[outId] == null || recipe.in[outId].lt(output))
+    )
       recipe.produces.add(outId);
-    }
 
     recipe.output[outId] = output
       .sub(recipe.in[outId] ?? rational.zero)

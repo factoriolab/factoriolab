@@ -48,7 +48,7 @@ describe('SettingsComponent', () => {
       spyOnProperty(component, 'search').and.returnValue('search');
       component.editStateMenu[1].command!({});
       expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
-        Game.Factorio,
+        '1.1',
         'id',
         'search',
       );
@@ -71,7 +71,7 @@ describe('SettingsComponent', () => {
       component.editStateMenu[3].command!({});
       tick();
       expect(component.preferencesSvc.removeState).toHaveBeenCalledWith(
-        Game.Factorio,
+        '1.1',
         id,
       );
       expect(component.state).toEqual('');
@@ -202,7 +202,7 @@ describe('SettingsComponent', () => {
     it('should map a game to its default mod id', () => {
       spyOn(component, 'setMod');
       component.setGame(Game.Factorio);
-      expect(component.setMod).toHaveBeenCalledWith('2.0');
+      expect(component.setMod).toHaveBeenCalledWith('spa');
     });
   });
 

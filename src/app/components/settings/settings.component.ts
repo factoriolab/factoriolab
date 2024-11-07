@@ -64,6 +64,7 @@ import { CostsComponent } from '../costs/costs.component';
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { ModulesOverlayComponent } from '../modules-overlay/modules-overlay.component';
 import { PickerComponent } from '../picker/picker.component';
+import { RecipeProductivityComponent } from '../recipe-productivity/recipe-productivity.component';
 import { TechPickerComponent } from '../tech-picker/tech-picker.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 
@@ -97,6 +98,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     ModulesOverlayComponent,
     NoDragDirective,
     PickerComponent,
+    RecipeProductivityComponent,
     TechPickerComponent,
     ToArrayPipe,
     TooltipComponent,
@@ -150,7 +152,7 @@ export class SettingsComponent {
       icon: 'fa-solid fa-floppy-disk',
       command: (): void => {
         this.preferencesSvc.saveState(
-          this.data().game,
+          this.data().modId,
           this.state,
           this.search,
         );
@@ -168,12 +170,13 @@ export class SettingsComponent {
       label: 'settings.deleteSavedState',
       icon: 'fa-solid fa-trash',
       command: (): void => {
-        this.preferencesSvc.removeState(this.data().game, this.state);
+        this.preferencesSvc.removeState(this.data().modId, this.state);
         this.state = '';
       },
     },
   ];
   versionsVisible = false;
+  recipeProdVisible = false;
 
   displayRateOptions = displayRateOptions;
   gameOptions = gameOptions;

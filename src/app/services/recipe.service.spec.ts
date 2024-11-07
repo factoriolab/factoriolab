@@ -914,6 +914,34 @@ describe('RecipeService', () => {
       );
       expect(Object.keys(result.out).length).toEqual(1);
     });
+
+    it('should adjust for ingredientUsage', () => {
+      const data = Mocks.getDataset();
+      data.machineEntities[ItemId.Lab].ingredientUsage = rational(1n, 2n);
+      const result = service.adjustRecipe(
+        RecipeId.ArtilleryShellRange,
+        Mocks.recipesStateInitial[RecipeId.ArtilleryShellRange],
+        Mocks.itemsStateInitial,
+        Mocks.settingsStateInitial,
+        data,
+      );
+      expect(result.in[ItemId.SpaceSciencePack]).toEqual(rational(1n, 2n));
+    });
+
+    it('should adjust for recipe productivity', () => {
+      const recipeSettings = spread(
+        Mocks.recipesStateInitial[RecipeId.SteelPlate],
+        { productivity: rational(50n) },
+      );
+      const result = service.adjustRecipe(
+        RecipeId.SteelPlate,
+        recipeSettings,
+        Mocks.itemsStateInitial,
+        Mocks.settingsStateInitial,
+        Mocks.dataset,
+      );
+      expect(result.out[ItemId.SteelPlate]).toEqual(rational(17n, 10n));
+    });
   });
 
   describe('adjustLaunchRecipeObjective', () => {
@@ -1133,6 +1161,24 @@ describe('RecipeService', () => {
       );
       expect(adjustedRecipe[RecipeId.Coal].cost).toEqual(rational(1183n, 4n));
       expect(adjustedRecipe[RecipeId.CopperCable].cost).toEqual(rational(9n));
+    });
+  });
+
+  describe('finalizeData', () => {
+    it('should filter out recipe ids that are not viable', () => {
+      const adjustedRecipe = spread(Mocks.adjustedDataset.adjustedRecipe, {
+        [RecipeId.IronOre]: spread(
+          Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronOre],
+          { output: { [ItemId.IronPlate]: rational(-5n) } },
+        ),
+      });
+      const result = service.finalizeData(
+        [RecipeId.IronOre, RecipeId.IronPlate],
+        adjustedRecipe,
+        Mocks.settingsStateInitial,
+        Mocks.dataset,
+      );
+      expect(result.itemAvailableRecipeIds[ItemId.IronPlate].length).toEqual(0);
     });
   });
 

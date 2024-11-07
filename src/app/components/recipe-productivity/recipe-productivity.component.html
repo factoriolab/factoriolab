@@ -1,0 +1,83 @@
+<p-dialog
+  [(visible)]="visible"
+  appendTo="body"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [focusOnShow]="false"
+  [style]="{ width: '600px', maxHeight: '500px' }"
+  [breakpoints]="{ '600px': '100vw' }"
+  [header]="'settings.recipeProductivity' | translate"
+  (onHide)="save()"
+>
+  <p-table
+    responsiveLayout="scroll"
+    styleClass="p-datatable-sm"
+    [value]="data().canProdUpgradeRecipeIds"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ 'data.recipe' | translate }}</th>
+        <th>{{ 'data.productivity' | translate }}</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-recipeId>
+      @if (data().recipeEntities[recipeId]; as recipe) {
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <i [class]="recipeId | iconClass: 'recipe'"></i>
+              <span>{{ recipe.name }}</span>
+            </div>
+          </td>
+          <td>
+            <p-inputNumber
+              #prodInput
+              prefix="+"
+              suffix="%"
+              [min]="0"
+              [step]="10"
+              [showButtons]="true"
+              incrementButtonClass="p-button-outlined"
+              decrementButtonClass="p-button-outlined"
+              [ngModel]="editValue[recipeId]?.toNumber() ?? 0"
+              (onBlur)="editValue[recipeId] = rational(prodInput.value ?? 0)"
+            ></p-inputNumber>
+          </td>
+        </tr>
+      }
+    </ng-template>
+  </p-table>
+  <ng-template pTemplate="footer">
+    @if (modified) {
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-outlined"
+        icon="fa-solid fa-rotate-left"
+        [label]="'reset' | translate"
+        (click)="reset()"
+      ></button>
+    }
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="hide()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined p-button-secondary"
+      icon="fa-solid fa-xmark"
+      [label]="'cancel' | translate"
+      (click)="hide(true)"
+    ></button>
+  </ng-template>
+</p-dialog>

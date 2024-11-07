@@ -101,46 +101,11 @@ export function getMachinePollution(proto: D.MachineProto): number | undefined {
   return proto.energy_source.emissions_per_minute?.['pollution'];
 }
 
-export function getMachineSilo(
-  proto: D.MachineProto,
-  rocketSiloRocket: Record<string, M.RocketSiloRocketPrototype>,
-): SiloJson | undefined {
+export function getMachineSilo(proto: D.MachineProto): SiloJson | undefined {
   if (M.isRocketSiloPrototype(proto)) {
-    const rocket = rocketSiloRocket[proto.rocket_entity];
-
-    let launch = 0;
-    // Lights blinking open
-    launch += 1 / proto.light_blinking_speed + 1;
-    // Doors opening
-    launch += 1 / proto.door_opening_speed + 1;
-    // Doors opened
-    launch += (proto.rocket_rising_delay ?? 30) + 1;
-    // Rocket rising
-    launch += 1 / rocket.rising_speed + 1;
-    // Rocket ready
-    launch += 14; // Estimate for satellite inserter swing time
-    // Launch started
-    launch += (proto.launch_wait_time ?? 120) + 1;
-    // Engine starting
-    launch += 1 / rocket.engine_starting_speed + 1;
-    // Rocket flying
-    const rocketFlightThreshold = 0.5;
-    launch +=
-      Math.log(
-        1 +
-          (rocketFlightThreshold * rocket.flying_acceleration) /
-            rocket.flying_speed,
-      ) / Math.log(1 + rocket.flying_acceleration);
-    // Lights blinking close
-    launch += 1 / proto.light_blinking_speed + 1;
-    // Doors closing
-    launch += 1 / proto.door_opening_speed + 1;
-
-    launch = Math.floor(launch + 0.5);
-
     return {
       parts: proto.rocket_parts_required,
-      launch,
+      launch: 0,
     };
   }
 
@@ -268,6 +233,19 @@ export function getMachineBaseEffect(
 export function getMachineHideRate(proto: D.MachineProto): Optional<boolean> {
   if (M.isAsteroidCollectorPrototype(proto) || M.isContainerPrototype(proto))
     return true;
+  return undefined;
+}
+
+export function getMachineIngredientUsage(
+  proto: D.MachineProto,
+): Optional<number> {
+  if (
+    M.isLabPrototype(proto) &&
+    proto.science_pack_drain_rate_percent &&
+    proto.science_pack_drain_rate_percent !== 100
+  )
+    return proto.science_pack_drain_rate_percent / 100;
+
   return undefined;
 }
 

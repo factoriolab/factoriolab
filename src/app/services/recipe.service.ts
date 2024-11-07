@@ -131,7 +131,7 @@ export class RecipeService {
       if (
         Object.keys(data.limitations).length &&
         (!data.flags.has('miningTechnologyBypassLimitations') ||
-          (!recipe.isMining && !recipe.isTechnology))
+          (!recipe.flags.has('mining') && !recipe.flags.has('technology')))
       ) {
         // Filter for modules allowed on this recipe
         allowed = allowed.filter(
@@ -163,7 +163,7 @@ export class RecipeService {
       (m): SelectItem<string> => ({ value: m.id, label: m.name }),
     );
     if (
-      (!data.flags.has('resourcePurity') || !recipe?.isMining) &&
+      (!data.flags.has('resourcePurity') || !recipe?.flags.has('mining')) &&
       !data.flags.has('duplicators')
     ) {
       options.unshift({ label: 'None', value: ItemId.Module });
@@ -239,7 +239,7 @@ export class RecipeService {
         recipe.time = recipe.time.div(minSpeed);
       }
 
-      if (recipe.isTechnology && data.flags.has('researchSpeed')) {
+      if (recipe.flags.has('technology') && data.flags.has('researchSpeed')) {
         // Adjust for research factor
         recipe.time = recipe.time.div(researchFactor);
       }
@@ -252,7 +252,7 @@ export class RecipeService {
       let quality = rational.zero;
 
       // Adjust for mining bonus
-      if (recipe.isMining) prod = prod.add(miningFactor);
+      if (recipe.flags.has('mining')) prod = prod.add(miningFactor);
 
       // Adjust for base productivity
       if (machine.baseEffect) {
@@ -263,6 +263,10 @@ export class RecipeService {
         if (eff.quality) quality = quality.add(eff.quality);
         if (eff.speed) speed = speed.add(eff.speed);
       }
+
+      // Adjust for technology bonus
+      if (recipeSettings.productivity)
+        prod = prod.add(recipeSettings.productivity.div(rational(100n)));
 
       const proliferatorSprays: Entities<Rational> = {};
 
@@ -463,6 +467,13 @@ export class RecipeService {
               .mul(pollution)
               .mul(consumption)
           : rational.zero;
+
+      // Adjust for ingredient usage (Space Age: Biolab)
+      if (machine.ingredientUsage) {
+        for (const i of Object.keys(recipe.in)) {
+          recipe.in[i] = recipe.in[i].mul(machine.ingredientUsage);
+        }
+      }
 
       // Adjust for quality
       if (data.flags.has('quality') && quality.gt(rational.zero)) {
@@ -757,6 +768,53 @@ export class RecipeService {
         }
       });
 
+    /**
+     * Check whether ingredients are safe (ingredients are net-produceable, or
+     * have no recipes in the entire data set based on `noRecipeItemIds`).
+     * This only checks one level deep, but continues iterating over the list of
+     * itemIds until it no longer finds any inviable recipes to remove. This
+     * code is intended only to catch simple recycling loops that are infeasible
+     * production solutions.
+     */
+    let filtered = false;
+    do {
+      filtered = false;
+      data.itemIds.forEach((itemId) => {
+        itemAvailableRecipeIds[itemId] = itemAvailableRecipeIds[itemId].filter(
+          (recipeId) => {
+            const recipe = adjustedRecipe[recipeId];
+            const result = Object.keys(recipe.in).every(
+              (ingredientId) =>
+                // Ingredient is not produceable by any recipes in the dataset
+                data.noRecipeItemIds.has(ingredientId) ||
+                // Ingredient is net-produced by this recipe
+                recipe.produces.has(ingredientId) ||
+                // Ingredient is net-produced by another recipe
+                itemAvailableRecipeIds[ingredientId]
+                  .map((r) => adjustedRecipe[r])
+                  .some(
+                    (inputRecipe) =>
+                      inputRecipe.output[itemId] == null ||
+                      /**
+                       * Determine how much of this item is consumed per cycle
+                       * of the input recipe, then compare to how much is
+                       * produced by the output recipe. If more is consumed than
+                       * produced, the input recipe is an infeasible solution.
+                       */
+                      inputRecipe.output[itemId]
+                        .mul(recipe.output[ingredientId])
+                        .div(inputRecipe.output[ingredientId])
+                        .lte(recipe.output[itemId]),
+                  ),
+            );
+
+            if (!result) filtered = true;
+            return result;
+          },
+        );
+      });
+    } while (filtered);
+
     return spread(data as AdjustedDataset, {
       adjustedRecipe,
       itemRecipeIds,
@@ -782,7 +840,7 @@ export class RecipeService {
     const machine = data.machineEntities[s.machineId];
     const def = machines[s.machineId];
 
-    if (recipe.isBurn) {
+    if (recipe.flags.has('burn')) {
       s.defaultFuelId = Object.keys(recipe.in)[0];
       s.fuelId = s.defaultFuelId;
     } else if (machine.type === EnergyType.Burner) {
@@ -837,6 +895,8 @@ export class RecipeService {
 
     const result: ObjectiveSettings = spread(objective);
     const recipe = data.recipeEntities[result.targetId];
+    // Apply productivity bonus, this cannot be adjusted on individual objectives
+    result.productivity = recipes[result.targetId].productivity;
     this.computeRecipeSettings(result, recipe, machines, settings, data);
 
     result.recipe = this.adjustRecipe(
