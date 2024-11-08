@@ -432,7 +432,7 @@
     "moduleSlots": "Module slots",
     "range": "Range",
     "energySource": "Energy source",
-    "energyConsumption": "Energy consumption",
+    "energyConsumption": "Power",
     "disallowedEffects": "Disallowed effects",
     "beltSpeed": "Speed (Items/s)",
     "storageSize": "Storage size",
