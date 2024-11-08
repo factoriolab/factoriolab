@@ -67,6 +67,7 @@ modData.defaults!.excludedRecipes = [RecipeId.NuclearFuelReprocessing];
 modData.locations = [{ id: 'id', name: 'Location' }];
 export const modHash: ModHash = hashJson;
 export const modI18n: ModI18n = i18nJson;
+modI18n.locations = { ['id']: 'Translated' };
 export const mod = spread(modInfo as Mod, modData);
 export let defaults: Defaults;
 export let getDataset: () => Dataset;
