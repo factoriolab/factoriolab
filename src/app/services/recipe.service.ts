@@ -840,8 +840,8 @@ export class RecipeService {
           // Some recipes were removed because of this ingredient
           removals[itemId]?.length
         ) {
-          removals[itemId].forEach(([itemId, recipeId]) =>
-            itemAvailableIoRecipeIds[itemId].push(recipeId),
+          removals[itemId].forEach(([i, r]) =>
+            itemAvailableRecipeIds[i].push(r),
           );
           delete removals[itemId];
           filtered = true;

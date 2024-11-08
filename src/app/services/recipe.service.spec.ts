@@ -1169,16 +1169,43 @@ describe('RecipeService', () => {
       const adjustedRecipe = spread(Mocks.adjustedDataset.adjustedRecipe, {
         [RecipeId.IronOre]: spread(
           Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronOre],
-          { output: { [ItemId.IronPlate]: rational(-5n) } },
+          {
+            output: {
+              [ItemId.IronPlate]: rational(-5n),
+              [ItemId.Concrete]: rational(-50n),
+            },
+          },
+        ),
+        [RecipeId.IronPlate]: spread(
+          Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronPlate],
+          {
+            output: {
+              [ItemId.ElectronicCircuit]: rational(-5n),
+              [ItemId.IronPlate]: rational.one,
+            },
+          },
         ),
       });
+
+      const data = Mocks.getDataset();
+      data.itemIds = data.itemIds.filter((i) => i !== ItemId.ElectronicCircuit);
+      data.itemIds.unshift(ItemId.ElectronicCircuit);
       const result = service.finalizeData(
-        [RecipeId.IronOre, RecipeId.IronPlate],
+        [
+          RecipeId.ElectronicCircuit,
+          RecipeId.IronOre,
+          RecipeId.IronPlate,
+          RecipeId.Concrete,
+        ],
         adjustedRecipe,
         Mocks.settingsStateInitial,
-        Mocks.dataset,
+        data,
       );
       expect(result.itemAvailableRecipeIds[ItemId.IronPlate].length).toEqual(0);
+      expect(result.itemAvailableRecipeIds[ItemId.Concrete].length).toEqual(0);
+      expect(
+        result.itemAvailableRecipeIds[ItemId.ElectronicCircuit].length,
+      ).toEqual(1);
     });
   });
 
