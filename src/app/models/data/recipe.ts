@@ -97,7 +97,7 @@ export function cloneRecipe(recipe: Recipe): Recipe {
 }
 
 export interface AdjustedRecipe extends Recipe {
-  productivity: Rational;
+  effects: Record<ModuleEffect, Rational>;
   produces: Set<string>;
   output: Entities<Rational>;
 }

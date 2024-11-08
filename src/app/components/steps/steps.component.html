@@ -299,6 +299,7 @@
                         <lab-tooltip
                           [id]="step.recipeId"
                           type="recipe"
+                          [adjustedRecipe]="step.recipe"
                         ></lab-tooltip>
                       }
                     </ng-template>
@@ -836,6 +837,7 @@
                   <lab-tooltip
                     [id]="step.recipeId"
                     type="recipe"
+                    [adjustedRecipe]="step.recipe"
                     [action]="'steps.selectRecipesTooltip' | translate"
                   ></lab-tooltip>
                 } @else {
@@ -1144,7 +1146,7 @@
                         context: {
                           items: row.step.items
                             .mul(row.percent)
-                            .div(step.recipe.productivity),
+                            .div(step.recipe.effects.productivity),
                           itemId: output.key,
                         }
                       "

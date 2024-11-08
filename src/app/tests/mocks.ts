@@ -10,6 +10,7 @@ import { Item } from '~/models/data/item';
 import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
+import { ModuleEffect } from '~/models/data/module';
 import { Recipe } from '~/models/data/recipe';
 import { AdjustedDataset, Dataset } from '~/models/dataset';
 import { Defaults } from '~/models/defaults';
@@ -481,3 +482,11 @@ beforeAll(() => {
     },
   ];
 });
+
+export const ModuleEffects: Record<ModuleEffect, Rational> = {
+  consumption: rational.one,
+  pollution: rational.one,
+  productivity: rational.one,
+  quality: rational.zero,
+  speed: rational.one,
+};
