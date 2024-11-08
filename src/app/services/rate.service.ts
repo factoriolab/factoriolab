@@ -74,7 +74,7 @@ export class RateService {
     const recipe =
       data.adjustedRecipe[data.itemRecipeIds[objective.targetId][0]];
     if (recipe?.flags.has('technology'))
-      factor = factor.mul(recipe.productivity);
+      factor = factor.mul(recipe.effects.productivity);
 
     return rate.mul(factor);
   }

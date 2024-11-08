@@ -4,6 +4,60 @@
     <ng-container
       *ngTemplateOutlet="recipeProcess; context: { recipe }"
     ></ng-container>
+    @if (adjustedRecipe()?.effects; as effects) {
+      <table>
+        @if (!effects.consumption.eq(rational.one)) {
+          <tr
+            [class.maximum-effect]="
+              data().flags.has('minimumFactor') &&
+              effects.consumption.eq(recipeSvc.minFactor)
+            "
+          >
+            <td>{{ 'data.energyConsumption' | translate }}</td>
+            <td>{{ effects.consumption.sub(rational.one) | bonusPercent }}</td>
+          </tr>
+        }
+        @if (!effects.speed.eq(rational.one)) {
+          <tr
+            [class.maximum-effect]="
+              data().flags.has('minimumFactor') &&
+              effects.speed.eq(recipeSvc.minFactor)
+            "
+          >
+            <td>{{ 'data.speed' | translate }}</td>
+            <td>{{ effects.speed.sub(rational.one) | bonusPercent }}</td>
+          </tr>
+        }
+        @if (!effects.productivity.eq(rational.one)) {
+          <tr
+            [class.maximum-effect]="
+              data().flags.has('maximumFactor') &&
+              effects.productivity.eq(recipeSvc.maxFactor)
+            "
+          >
+            <td>{{ 'data.productivity' | translate }}</td>
+            <td>{{ effects.productivity.sub(rational.one) | bonusPercent }}</td>
+          </tr>
+        }
+        @if (!effects.pollution.eq(rational.one)) {
+          <tr
+            [class.maximum-effect]="
+              data().flags.has('minimumFactor') &&
+              effects.pollution.eq(recipeSvc.minFactor)
+            "
+          >
+            <td>{{ 'data.pollution' | translate }}</td>
+            <td>{{ effects.pollution.sub(rational.one) | bonusPercent }}</td>
+          </tr>
+        }
+        @if (effects.quality.nonzero()) {
+          <tr>
+            <td>{{ 'data.quality' | translate }}</td>
+            <td>{{ effects.quality | bonusPercent }}</td>
+          </tr>
+        }
+      </table>
+    }
   }
 } @else {
   @if (data().itemEntities[id()]; as item) {
