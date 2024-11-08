@@ -776,6 +776,7 @@ export class RecipeService {
      * code is intended only to catch simple recycling loops that are infeasible
      * production solutions.
      */
+    const removals: Entities<[string, string][]> = {};
     let filtered = false;
     do {
       filtered = false;
@@ -783,35 +784,68 @@ export class RecipeService {
         itemAvailableRecipeIds[itemId] = itemAvailableRecipeIds[itemId].filter(
           (recipeId) => {
             const recipe = adjustedRecipe[recipeId];
-            const result = Object.keys(recipe.in).every(
-              (ingredientId) =>
-                // Ingredient is not produceable by any recipes in the dataset
-                data.noRecipeItemIds.has(ingredientId) ||
+            const result = Object.keys(recipe.in).every((ingredientId) => {
+              if (
+                // Ingredient is excluded
+                settings.excludedItemIds.has(ingredientId) ||
+                // Ingredient is not produceable by any included recipes
+                itemAvailableRecipeIds[ingredientId].length === 0 ||
                 // Ingredient is net-produced by this recipe
-                recipe.produces.has(ingredientId) ||
-                // Ingredient is net-produced by another recipe
-                itemAvailableRecipeIds[ingredientId]
-                  .map((r) => adjustedRecipe[r])
-                  .some(
-                    (inputRecipe) =>
-                      inputRecipe.output[itemId] == null ||
-                      /**
-                       * Determine how much of this item is consumed per cycle
-                       * of the input recipe, then compare to how much is
-                       * produced by the output recipe. If more is consumed than
-                       * produced, the input recipe is an infeasible solution.
-                       */
-                      inputRecipe.output[itemId]
-                        .mul(recipe.output[ingredientId])
-                        .div(inputRecipe.output[ingredientId])
-                        .lte(recipe.output[itemId]),
-                  ),
-            );
+                recipe.produces.has(ingredientId)
+              )
+                return true;
+
+              // Ingredient is net-produced by another recipe
+              const result = itemAvailableRecipeIds[ingredientId]
+                .map((r) => adjustedRecipe[r])
+                .some(
+                  (inputRecipe) =>
+                    inputRecipe.output[itemId] == null ||
+                    /**
+                     * Determine how much of this item is consumed per cycle
+                     * of the input recipe, then compare to how much is
+                     * produced by the output recipe. If more is consumed than
+                     * produced, the input recipe is an infeasible solution.
+                     */
+                    inputRecipe.output[itemId]
+                      .mul(recipe.output[ingredientId])
+                      .div(inputRecipe.output[ingredientId])
+                      .lte(recipe.output[itemId]),
+                );
+
+              if (!result) {
+                if (removals[ingredientId] == null)
+                  removals[ingredientId] = [[itemId, recipeId]];
+                else removals[ingredientId].push([itemId, recipeId]);
+              }
+
+              return result;
+            });
 
             if (!result) filtered = true;
+
             return result;
           },
         );
+
+        /**
+         * In the very unlikely case that this algorithm:
+         * 1) Removes a recipe because an ingredient cannot be produced
+         * 2) Later determines that ingredient has no valid recipes at all
+         * Algorithm needs to re-add this recipe as an option for the item.
+         */
+        if (
+          // This ingredient cannot be produced
+          itemAvailableRecipeIds[itemId].length === 0 &&
+          // Some recipes were removed because of this ingredient
+          removals[itemId]?.length
+        ) {
+          removals[itemId].forEach(([i, r]) =>
+            itemAvailableRecipeIds[i].push(r),
+          );
+          delete removals[itemId];
+          filtered = true;
+        }
       });
     } while (filtered);
 
