@@ -11,6 +11,8 @@ export type Flag =
   | 'inserterEstimation'
   | 'flowRate'
   | 'fluidCostRatio'
+  | 'maximumFactor'
+  | 'minimumFactor'
   | 'minimumRecipeTime'
   | 'miningDepletion'
   | 'miningProductivity'
@@ -46,6 +48,8 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'fluidCostRatio',
     'fuels',
     'inserterEstimation',
+    'maximumFactor',
+    'minimumFactor',
     'miningDepletion',
     'miningProductivity',
     'mods',
@@ -61,6 +65,8 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'fluidCostRatio',
     'fuels',
     'inserterEstimation',
+    'maximumFactor',
+    'minimumFactor',
     'miningDepletion',
     'miningProductivity',
     'mods',
@@ -75,6 +81,7 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'fluidCostRatio',
     'fuels',
     'inserterEstimation',
+    'minimumFactor',
     'minimumRecipeTime',
     'miningDepletion',
     'miningProductivity',
@@ -92,6 +99,7 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'fluidCostRatio',
     'fuels',
     'inserterEstimation',
+    'minimumFactor',
     'minimumRecipeTime',
     'miningDepletion',
     'miningProductivity',
