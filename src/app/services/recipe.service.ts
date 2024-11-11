@@ -427,7 +427,7 @@ export class RecipeService {
         if (eff.pollution.lt(this.minFactor)) eff.pollution = this.minFactor;
       }
 
-      if (data.flags.has('maximumFactor')) {
+      if (data.flags.has('maximumFactor') && !recipe.flags.has('mining')) {
         // Check for productivity over maximum value (300%)
         if (eff.productivity.gt(this.maxFactor))
           eff.productivity = this.maxFactor;
