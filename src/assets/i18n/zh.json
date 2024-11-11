@@ -319,7 +319,9 @@
     "convertObjectiveValues": "转换目标值",
     "convertObjectiveValuesTooltip": "如果勾选，当类型改变时，目标值将被转换以保留物品数量",
     "locations": "地点",
-    "locationsTooltip": "为配方和设备选择允许使用的地点"
+    "locationsTooltip": "为配方和设备选择允许使用的地点",
+    "recipeProductivity": "配方产能加成",
+    "recipeProductivityTooltip": "点击设置科技加成对应的配方产能加成"
   },
   "objectives": {
     "title": "目标",
