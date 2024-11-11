@@ -63,7 +63,7 @@ export interface Recipe {
   quality?: Quality;
   disallowedEffects?: ModuleEffect[];
   locations?: string[];
-  flags: Set<string>;
+  flags: Set<RecipeFlag>;
 }
 
 export function parseRecipe(json: RecipeJson): Recipe {
