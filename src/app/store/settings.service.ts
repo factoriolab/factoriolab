@@ -447,6 +447,16 @@ export class SettingsService extends Store<SettingsState> {
 
       for (const i of Object.keys(i18n.recipes).filter((i) => recipeData[i]))
         recipeData[i] = spread(recipeData[i], { name: i18n.recipes[i] });
+
+      if (i18n.locations) {
+        for (const i of Object.keys(i18n.locations).filter(
+          (i) => locationEntities[i],
+        )) {
+          locationEntities[i] = spread(locationEntities[i], {
+            name: i18n.locations[i],
+          });
+        }
+      }
     }
 
     // Convert to id arrays

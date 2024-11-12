@@ -11,6 +11,7 @@ import { ItemJson } from '~/models/data/item';
 import { MachineJson } from '~/models/data/machine';
 import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
+import { ModI18n } from '~/models/data/mod-i18n';
 import { RecipeFlag, RecipeJson } from '~/models/data/recipe';
 import { TechnologyJson } from '~/models/data/technology';
 import { flags } from '~/models/flags';
@@ -122,6 +123,8 @@ if (!modId)
   throw new Error(
     'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
   );
+
+const lang: Optional<string> = process.argv[3];
 
 const mod = data.mods.find((m) => m.id === modId);
 if (!mod)
@@ -594,6 +597,25 @@ async function processMod(): Promise<void> {
   };
 
   function writeData(): void {
+    if (lang) {
+      function entityNames(list: { id: string; name: string }[]): Entities {
+        return list.reduce((e: Entities, i) => {
+          e[i.id] = i.name;
+          return e;
+        }, {});
+      }
+      const modI18n: ModI18n = {
+        categories: entityNames(modData.categories),
+        items: entityNames(modData.items),
+        recipes: entityNames(modData.recipes),
+      };
+      if (modData.locations) modI18n.locations = entityNames(modData.locations);
+      const modI18nPath = `${modPath}/i18n/${lang}.json`;
+      fs.writeFileSync(modI18nPath, JSON.stringify(modI18n));
+      console.log(lang);
+      return;
+    }
+
     if (fs.existsSync(modDataPath)) {
       const oldData = getJsonData(modDataPath) as ModData;
       const oldHash = getJsonData(modHashPath) as ModHash;

@@ -21,13 +21,11 @@ export class StepHrefPipe implements PipeTransform {
     let step = value;
     if (step.recipeId) {
       const recipe = this.data().adjustedRecipe[step.recipeId];
-      if (
-        recipe?.flags.has('technology') &&
-        recipe.productivity &&
-        value.items
-      ) {
+      if (recipe?.flags.has('technology') && value.items) {
         // Adjust items to account for productivity bonus
-        step = spread(value, { items: value.items.div(recipe.productivity) });
+        step = spread(value, {
+          items: value.items.div(recipe.effects.productivity),
+        });
       }
     }
     return this.routerSvc.stepHref(step, zipPartial, this.data().hash);

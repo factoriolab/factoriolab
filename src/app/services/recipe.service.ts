@@ -10,7 +10,7 @@ import {
 } from '~/helpers';
 import { Beacon } from '~/models/data/beacon';
 import { Machine, MachineJson } from '~/models/data/machine';
-import { filterEffect } from '~/models/data/module';
+import { filterEffect, ModuleEffect } from '~/models/data/module';
 import {
   AdjustedRecipe,
   cloneRecipe,
@@ -52,6 +52,7 @@ import { RecipesSettings } from '~/store/recipes.service';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
+  maxFactor = rational(4n);
   minFactor = rational(1n, 5n);
   pollutionFactor = rational(60n);
   minFactorioRecipeTime = rational(1n, 60n);
@@ -199,7 +200,17 @@ export class RecipeService {
   ): AdjustedRecipe {
     const recipe = spread(
       cloneRecipe(data.recipeEntities[recipeId]) as AdjustedRecipe,
-      { productivity: rational.one, produces: new Set(), output: {} },
+      {
+        effects: {
+          consumption: rational.one,
+          pollution: rational.one,
+          productivity: rational.one,
+          quality: rational.zero,
+          speed: rational.one,
+        },
+        produces: new Set(),
+        output: {},
+      },
     );
 
     const {
@@ -245,28 +256,25 @@ export class RecipeService {
       }
 
       // Calculate factors
-      let speed = rational.one;
-      let prod = rational.one;
-      let consumption = rational.one;
-      let pollution = rational.one;
-      let quality = rational.zero;
+      const eff = recipe.effects;
 
       // Adjust for mining bonus
-      if (recipe.flags.has('mining')) prod = prod.add(miningFactor);
+      if (recipe.flags.has('mining'))
+        eff.productivity = eff.productivity.add(miningFactor);
 
       // Adjust for base productivity
       if (machine.baseEffect) {
-        const eff = machine.baseEffect;
-        if (eff.consumption) consumption = consumption.add(eff.consumption);
-        if (eff.pollution) pollution = pollution.add(eff.pollution);
-        if (eff.productivity) prod = prod.add(eff.productivity);
-        if (eff.quality) quality = quality.add(eff.quality);
-        if (eff.speed) speed = speed.add(eff.speed);
+        const keys = Object.keys(machine.baseEffect) as ModuleEffect[];
+        for (const k of keys) {
+          if (machine.baseEffect[k]) eff[k] = eff[k].add(machine.baseEffect[k]);
+        }
       }
 
       // Adjust for technology bonus
       if (recipeSettings.productivity)
-        prod = prod.add(recipeSettings.productivity.div(rational(100n)));
+        eff.productivity = eff.productivity.add(
+          recipeSettings.productivity.div(rational(100n)),
+        );
 
       const proliferatorSprays: Entities<Rational> = {};
 
@@ -286,14 +294,14 @@ export class RecipeService {
           )
             scale = machine.modules;
 
-          if (module.speed) speed = speed.add(module.speed.mul(count));
+          if (module.speed) eff.speed = eff.speed.add(module.speed.mul(count));
 
           if (module.productivity) {
             let effect = module.productivity.mul(count);
 
             if (scale) effect = effect.div(scale);
 
-            prod = prod.add(effect);
+            eff.productivity = eff.productivity.add(effect);
           }
 
           if (module.consumption) {
@@ -305,13 +313,14 @@ export class RecipeService {
               effect = effect.mul(effect).sub(rational.one);
             }
 
-            consumption = consumption.add(effect);
+            eff.consumption = eff.consumption.add(effect);
           }
 
           if (module.pollution)
-            pollution = pollution.add(module.pollution.mul(count));
+            eff.pollution = eff.pollution.add(module.pollution.mul(count));
 
-          if (module.quality) quality = quality.add(module.quality.mul(count));
+          if (module.quality)
+            eff.quality = eff.quality.add(module.quality.mul(count));
 
           // Note: Count is ignored for proliferator / sprays (assumed to be 1)
           if (module.sprays) {
@@ -378,29 +387,27 @@ export class RecipeService {
               .mul(count) // Num of modules/beacon
               .mul(scale); // Apply diminishing beacons scale
 
-            if (module.speed) speed = speed.add(module.speed.mul(factor));
+            if (module.speed)
+              eff.speed = eff.speed.add(module.speed.mul(factor));
 
             if (module.productivity)
-              prod = prod.add(module.productivity.mul(factor));
+              eff.productivity = eff.productivity.add(
+                module.productivity.mul(factor),
+              );
 
             if (module.consumption)
-              consumption = consumption.add(module.consumption.mul(factor));
+              eff.consumption = eff.consumption.add(
+                module.consumption.mul(factor),
+              );
 
             if (module.pollution)
-              pollution = pollution.add(module.pollution.mul(factor));
+              eff.pollution = eff.pollution.add(module.pollution.mul(factor));
 
             if (module.quality)
-              quality = quality.add(module.quality.mul(factor));
+              eff.quality = eff.quality.add(module.quality.mul(factor));
           }
         }
       }
-
-      // Check for speed, consumption, or pollution below minimum value (20%)
-      if (speed.lt(this.minFactor)) speed = this.minFactor;
-
-      if (consumption.lt(this.minFactor)) consumption = this.minFactor;
-
-      if (pollution.lt(this.minFactor)) pollution = this.minFactor;
 
       // Overclock effects
       let oc: Rational | undefined;
@@ -409,14 +416,28 @@ export class RecipeService {
         !recipeSettings.overclock.eq(rational(100n))
       ) {
         oc = recipeSettings.overclock.div(rational(100n));
-        speed = speed.mul(oc);
+        eff.speed = eff.speed.mul(oc);
+      }
+
+      if (data.flags.has('minimumFactor')) {
+        // Check for speed, consumption, or pollution below minimum value (20%)
+        if (eff.speed.lt(this.minFactor)) eff.speed = this.minFactor;
+        if (eff.consumption.lt(this.minFactor))
+          eff.consumption = this.minFactor;
+        if (eff.pollution.lt(this.minFactor)) eff.pollution = this.minFactor;
+      }
+
+      if (data.flags.has('maximumFactor') && !recipe.flags.has('mining')) {
+        // Check for productivity over maximum value (300%)
+        if (eff.productivity.gt(this.maxFactor))
+          eff.productivity = this.maxFactor;
       }
 
       // Calculate module/beacon effects
       // Speed
-      recipe.time = recipe.time.div(speed);
+      recipe.time = recipe.time.div(eff.speed);
 
-      // In Factorio, minimum recipe time is 1/60s (1 tick)
+      // In Factorio 1.x, minimum recipe time is 1/60s (1 tick)
       if (
         recipe.time.lt(this.minFactorioRecipeTime) &&
         data.flags.has('minimumRecipeTime')
@@ -431,11 +452,9 @@ export class RecipeService {
           const affected = recipe.out[outId].sub(catalyst);
           // Only change output if affected amount > 0
           if (affected.gt(rational.zero))
-            recipe.out[outId] = catalyst.add(affected.mul(prod));
-        } else recipe.out[outId] = recipe.out[outId].mul(prod);
+            recipe.out[outId] = catalyst.add(affected.mul(eff.productivity));
+        } else recipe.out[outId] = recipe.out[outId].mul(eff.productivity);
       }
-
-      recipe.productivity = prod;
 
       // Power
       recipe.drain = machine.drain;
@@ -447,7 +466,7 @@ export class RecipeService {
         else usage = usage.mul(oc);
       }
 
-      usage = usage.mul(consumption);
+      usage = usage.mul(eff.consumption);
       recipe.consumption =
         machine.type === EnergyType.Electric ? usage : rational.zero;
 
@@ -464,8 +483,8 @@ export class RecipeService {
         machine.pollution && recipeSettings.machineId !== ItemId.Pumpjack
           ? machine.pollution
               .div(this.pollutionFactor)
-              .mul(pollution)
-              .mul(consumption)
+              .mul(eff.pollution)
+              .mul(eff.consumption)
           : rational.zero;
 
       // Adjust for ingredient usage (Space Age: Biolab)
@@ -476,7 +495,7 @@ export class RecipeService {
       }
 
       // Adjust for quality
-      if (data.flags.has('quality') && quality.gt(rational.zero)) {
+      if (data.flags.has('quality') && eff.quality.gt(rational.zero)) {
         for (const outId of Object.keys(recipe.out)) {
           // Adjust by factor
           const item = data.itemEntities[outId];
@@ -493,7 +512,7 @@ export class RecipeService {
             if (i === (4 as unknown as Quality)) continue;
             const qId = qualityId(id, i);
             if (lastId == null) {
-              amount = amount.mul(quality);
+              amount = amount.mul(eff.quality);
               lastId = qId;
             } else {
               recipe.out[lastId] = recipe.out[lastId].sub(amount);
@@ -776,6 +795,7 @@ export class RecipeService {
      * code is intended only to catch simple recycling loops that are infeasible
      * production solutions.
      */
+    const removals: Entities<[string, string][]> = {};
     let filtered = false;
     do {
       filtered = false;
@@ -783,35 +803,68 @@ export class RecipeService {
         itemAvailableRecipeIds[itemId] = itemAvailableRecipeIds[itemId].filter(
           (recipeId) => {
             const recipe = adjustedRecipe[recipeId];
-            const result = Object.keys(recipe.in).every(
-              (ingredientId) =>
-                // Ingredient is not produceable by any recipes in the dataset
-                data.noRecipeItemIds.has(ingredientId) ||
+            const result = Object.keys(recipe.in).every((ingredientId) => {
+              if (
+                // Ingredient is excluded
+                settings.excludedItemIds.has(ingredientId) ||
+                // Ingredient is not produceable by any included recipes
+                itemAvailableRecipeIds[ingredientId].length === 0 ||
                 // Ingredient is net-produced by this recipe
-                recipe.produces.has(ingredientId) ||
-                // Ingredient is net-produced by another recipe
-                itemAvailableRecipeIds[ingredientId]
-                  .map((r) => adjustedRecipe[r])
-                  .some(
-                    (inputRecipe) =>
-                      inputRecipe.output[itemId] == null ||
-                      /**
-                       * Determine how much of this item is consumed per cycle
-                       * of the input recipe, then compare to how much is
-                       * produced by the output recipe. If more is consumed than
-                       * produced, the input recipe is an infeasible solution.
-                       */
-                      inputRecipe.output[itemId]
-                        .mul(recipe.output[ingredientId])
-                        .div(inputRecipe.output[ingredientId])
-                        .lte(recipe.output[itemId]),
-                  ),
-            );
+                recipe.produces.has(ingredientId)
+              )
+                return true;
+
+              // Ingredient is net-produced by another recipe
+              const result = itemAvailableRecipeIds[ingredientId]
+                .map((r) => adjustedRecipe[r])
+                .some(
+                  (inputRecipe) =>
+                    inputRecipe.output[itemId] == null ||
+                    /**
+                     * Determine how much of this item is consumed per cycle
+                     * of the input recipe, then compare to how much is
+                     * produced by the output recipe. If more is consumed than
+                     * produced, the input recipe is an infeasible solution.
+                     */
+                    inputRecipe.output[itemId]
+                      .mul(recipe.output[ingredientId])
+                      .div(inputRecipe.output[ingredientId])
+                      .lte(recipe.output[itemId]),
+                );
+
+              if (!result) {
+                if (removals[ingredientId] == null)
+                  removals[ingredientId] = [[itemId, recipeId]];
+                else removals[ingredientId].push([itemId, recipeId]);
+              }
+
+              return result;
+            });
 
             if (!result) filtered = true;
+
             return result;
           },
         );
+
+        /**
+         * In the very unlikely case that this algorithm:
+         * 1) Removes a recipe because an ingredient cannot be produced
+         * 2) Later determines that ingredient has no valid recipes at all
+         * Algorithm needs to re-add this recipe as an option for the item.
+         */
+        if (
+          // This ingredient cannot be produced
+          itemAvailableRecipeIds[itemId].length === 0 &&
+          // Some recipes were removed because of this ingredient
+          removals[itemId]?.length
+        ) {
+          removals[itemId].forEach(([i, r]) =>
+            itemAvailableRecipeIds[i].push(r),
+          );
+          delete removals[itemId];
+          filtered = true;
+        }
       });
     } while (filtered);
 

@@ -63,7 +63,7 @@ export interface Recipe {
   quality?: Quality;
   disallowedEffects?: ModuleEffect[];
   locations?: string[];
-  flags: Set<string>;
+  flags: Set<RecipeFlag>;
 }
 
 export function parseRecipe(json: RecipeJson): Recipe {
@@ -97,7 +97,7 @@ export function cloneRecipe(recipe: Recipe): Recipe {
 }
 
 export interface AdjustedRecipe extends Recipe {
-  productivity: Rational;
+  effects: Record<ModuleEffect, Rational>;
   produces: Set<string>;
   output: Entities<Rational>;
 }
