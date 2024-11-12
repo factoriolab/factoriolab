@@ -153,7 +153,6 @@ export type AnyLocationPrototype = M.PlanetPrototype | M.SurfacePrototype;
 export interface ModDataReport {
   machineSpeedZero: string[];
   noProducers: string[];
-  noProducts: string[];
   resourceNoMinableProducts: string[];
   resourceDuplicate: string[];
 }

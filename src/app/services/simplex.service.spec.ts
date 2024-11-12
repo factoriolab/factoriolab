@@ -29,7 +29,7 @@ describe('SimplexService', () => {
     itemIds: Mocks.adjustedDataset.itemIds,
     data: Mocks.adjustedDataset,
     maximizeType: MaximizeType.Weight,
-    surplusMachinesOutput: false,
+    requireMachinesOutput: false,
     costs: {
       factor: rational.one,
       machine: rational.one,
@@ -192,7 +192,7 @@ describe('SimplexService', () => {
         itemIds: Mocks.adjustedDataset.itemIds,
         data: Mocks.adjustedDataset,
         maximizeType: MaximizeType.Weight,
-        surplusMachinesOutput: false,
+        requireMachinesOutput: false,
         costs: Mocks.costs,
       });
     });
@@ -393,7 +393,6 @@ describe('SimplexService', () => {
     it('should find a solution using glpk maximizing by ratio', () => {
       const state = getState();
       state.maximizeType = MaximizeType.Ratio;
-      state.surplusMachinesOutput = true;
       // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
       state.unproduceableIds = new Set([

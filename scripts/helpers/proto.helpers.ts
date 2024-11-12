@@ -90,7 +90,7 @@ export function getMachineModules(proto: D.MachineProto): number | undefined {
   )
     return undefined;
 
-  return proto.module_slots;
+  return proto.module_slots || undefined;
 }
 
 export function getMachinePollution(proto: D.MachineProto): number | undefined {

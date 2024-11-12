@@ -313,7 +313,7 @@
         @if (step.itemId && step.items) {
           <td class="w-0 px-0 px-sm-2 text-end">
             @if (step.surplus && step.surplus.nonzero()) {
-              <span class="monospace"
+              <span class="monospace error-text"
                 >(+{{ step.surplus | rate: columnsState().items.precision }})
               </span>
             }
