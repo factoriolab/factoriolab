@@ -33,8 +33,6 @@ import {
   isFluidWagonPrototype,
   isFurnacePrototype,
   isItemGroup,
-  isItemIngredientPrototype,
-  isItemProductPrototype,
   isLabPrototype,
   isMiningDrillPrototype,
   isModulePrototype,
@@ -590,7 +588,6 @@ async function processMod(): Promise<void> {
 
   const modDataReport: ModDataReport = {
     machineSpeedZero: [],
-    noProducts: [],
     noProducers: [],
     resourceNoMinableProducts: [],
     resourceDuplicate: [],
@@ -735,16 +732,6 @@ async function processMod(): Promise<void> {
   for (const key of Object.keys(dataRaw.recipe)) {
     const recipe = dataRaw.recipe[key];
 
-    // Skip recipes that don't have results
-    const results = getProducts(recipe.results);
-
-    if (results[2] === 0) {
-      modDataReport.noProducts.push(key);
-      continue;
-    }
-
-    recipeResultsMap[key] = results;
-
     // Always include fixed recipes that have outputs
     if (!fixedRecipe.has(key)) {
       // Skip recipes that are not unlocked / enabled
@@ -752,31 +739,23 @@ async function processMod(): Promise<void> {
 
       // Skip recipes that are hidden and disabled
       if (recipe.hidden && recipe.enabled === false) continue;
-
-      // Skip bad recycling
-      if (recipe.category === 'recycling') {
-        if (!recipe.ingredients?.length || !recipe.results?.length) continue;
-        const ingredient = recipe.ingredients[0];
-
-        if (isItemIngredientPrototype(ingredient)) {
-          const item = dataRaw.item[ingredient.name];
-          if (item && item.hidden) continue;
-
-          const result = recipe.results[0];
-          if (isItemProductPrototype(result) && result.name === ingredient.name)
-            continue;
-        }
-
-        const recyclingId = techId['recycling'];
-        if (recyclingId) {
-          recipesLocked.add(key);
-          pushEntityValue(technologyUnlocks, recyclingId, key);
-        }
-      }
     }
 
-    recipesEnabled[key] = recipe;
-    recipeIngredientsMap[key] = getIngredients(recipe.ingredients);
+    // Process recycling recipes later, after determining included items
+    if (recipe.category === 'recycling') continue;
+
+    // Don't include recipes with no inputs/outputs
+    const ingredients = getIngredients(recipe.ingredients);
+    const products = getProducts(recipe.results);
+    if (
+      Object.keys(ingredients[0]).length === 0 &&
+      Object.keys(products[0]).length === 0
+    )
+      continue;
+
+    recipesEnabled[recipe.name] = recipe;
+    recipeIngredientsMap[recipe.name] = ingredients;
+    recipeResultsMap[recipe.name] = products;
   }
 
   logTime('Processing data');
@@ -859,6 +838,28 @@ async function processMod(): Promise<void> {
       itemsUsed.add(ingredient);
 
     techIngredientsMap[tech.name] = techIngredients;
+  }
+
+  // Add relevant recycling recipes
+  for (const key of Object.keys(dataRaw.recipe)) {
+    if (recipesEnabled[key]) continue;
+
+    const recipe = dataRaw.recipe[key];
+    if (recipe.category !== 'recycling') continue;
+
+    // Only include recycling recipes with used items
+    const ingredients = getIngredients(recipe.ingredients);
+    const products = getProducts(recipe.results);
+
+    if (
+      !Object.keys(ingredients[0]).every((i) => itemsUsed.has(i)) ||
+      !Object.keys(products[0]).every((i) => itemsUsed.has(i))
+    )
+      continue;
+
+    recipesEnabled[recipe.name] = recipe;
+    recipeIngredientsMap[recipe.name] = ingredients;
+    recipeResultsMap[recipe.name] = products;
   }
 
   const itemsUsedProtos = Array.from(itemsUsed.values()).map(
@@ -2037,13 +2038,6 @@ async function processMod(): Promise<void> {
     if (modDataReport.noProducers.length) {
       logWarn(
         `Recipes with no producers: ${modDataReport.noProducers.length.toString()}`,
-      );
-      console.log('These recipes have been removed.');
-    }
-
-    if (modDataReport.noProducts.length) {
-      logWarn(
-        `Recipes with no products: ${modDataReport.noProducts.length.toString()}`,
       );
       console.log('These recipes have been removed.');
     }
