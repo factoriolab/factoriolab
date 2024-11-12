@@ -1506,13 +1506,13 @@
           </div>
           <div class="pb-3">
             <p-checkbox
-              [ngModel]="settings().surplusMachinesOutput"
+              [ngModel]="settings().requireMachinesOutput"
               [binary]="true"
-              [label]="'settings.surplusMachinesOutput' | translate"
-              [pTooltip]="'settings.surplusMachinesOutputTooltip' | translate"
+              [label]="'settings.requireMachinesOutput' | translate"
+              [pTooltip]="'settings.requireMachinesOutputTooltip' | translate"
               tooltipPosition="top"
               (onChange)="
-                settingsSvc.apply({ surplusMachinesOutput: $event.checked })
+                settingsSvc.apply({ requireMachinesOutput: $event.checked })
               "
             ></p-checkbox>
           </div>

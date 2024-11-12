@@ -69,7 +69,7 @@ const mockSettingsState: SettingsState = {
   modId: '1.0',
   checkedObjectiveIds: new Set(['1']),
   maximizeType: MaximizeType.Weight,
-  surplusMachinesOutput: false,
+  requireMachinesOutput: false,
   displayRate: DisplayRate.PerHour,
   excludedItemIds: new Set([ItemId.SteelChest]),
   checkedItemIds: new Set([ItemId.SteelChest]),
@@ -145,6 +145,7 @@ const mockZipPartial: Zip<LabParams> = {
     rex: 'DB',
     rch: 'DB',
     tre: 'A',
+    omt: '0',
   },
   hash: {
     e: ['2*A', '2*G', '*G'],
@@ -178,6 +179,7 @@ const mockZipPartial: Zip<LabParams> = {
     rex: 'DB',
     rch: 'DB',
     tre: 'A',
+    omt: '0',
   },
 };
 
@@ -406,7 +408,7 @@ describe('RouterService', () => {
         costs: spread(mockState.settingsState!.costs),
       }),
     });
-    delete mockStateV10.settingsState?.surplusMachinesOutput;
+    delete mockStateV10.settingsState?.requireMachinesOutput;
     delete mockStateV10.settingsState?.costs?.footprint;
 
     const mockStateV8: PartialState = spread(mockStateV10, {

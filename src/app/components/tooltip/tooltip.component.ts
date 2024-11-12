@@ -84,8 +84,8 @@ export class TooltipComponent {
     const data = this.data();
     const itemRecipeIds = data.itemRecipeIds[id];
     const recipes = itemRecipeIds
-      .map((r) => data.recipeEntities[r])
-      .filter((r) => r.quality == null);
+      .map((r) => data.adjustedRecipe[r])
+      .filter((r) => r.quality == null && r.produces.has(id));
     if (recipes.length === 1) return recipes[0];
     return undefined;
   });

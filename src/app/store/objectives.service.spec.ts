@@ -280,9 +280,14 @@ describe('ObjectivesService', () => {
             },
           ],
           outputs: [],
-          recipeIds: [],
-          recipesEnabled: [],
-          recipeOptions: [],
+          recipeIds: [RecipeId.CrudeOil],
+          recipesEnabled: [RecipeId.CrudeOil],
+          recipeOptions: [
+            {
+              label: Mocks.dataset.recipeEntities[RecipeId.CrudeOil].name,
+              value: RecipeId.CrudeOil,
+            },
+          ],
         },
         ['2']: {
           tabs: [],

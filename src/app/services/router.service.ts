@@ -873,7 +873,7 @@ export class RouterService {
     // Zip state
     sub('och', (s) => s.checkedObjectiveIds, objectiveIds);
     num('omt', (s) => s.maximizeType);
-    bln('osm', (s) => s.surplusMachinesOutput);
+    bln('orm', (s) => s.requireMachinesOutput);
     num('odr', (s) => s.displayRate);
     sub('iex', (s) => s.excludedItemIds, data.itemIds, hash.items);
     sub('ich', (s) => s.checkedItemIds, data.itemIds, hash.items);
@@ -949,7 +949,7 @@ export class RouterService {
       modId,
       checkedObjectiveIds: sub('och', objectiveIds),
       maximizeType: num('omt'),
-      surplusMachinesOutput: bln('osm'),
+      requireMachinesOutput: bln('orm'),
       displayRate: num('odr'),
       excludedItemIds: sub('iex', modHash.items, itemIds),
       checkedItemIds: sub('ich', modHash.items, itemIds),

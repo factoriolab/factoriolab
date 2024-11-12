@@ -183,6 +183,18 @@ export class PickerComponent extends DialogComponent {
     else this.selection = this.allSelectItems.map((i) => i.value);
   }
 
+  toggleCategory(categoryId: string): void {
+    const value = new Set(this.selection);
+    this.categoryRows[categoryId].forEach((row) => {
+      row.forEach((i) => {
+        if (value.has(i)) value.delete(i);
+        else value.add(i);
+      });
+    });
+    this.selection = Array.from(value);
+    this.allSelected = this.selection.length === 0;
+  }
+
   reset(): void {
     this.selection = this.default;
   }
