@@ -145,6 +145,7 @@ const mockZipPartial: Zip<LabParams> = {
     rex: 'DB',
     rch: 'DB',
     tre: 'A',
+    omt: '0',
   },
   hash: {
     e: ['2*A', '2*G', '*G'],
@@ -178,6 +179,7 @@ const mockZipPartial: Zip<LabParams> = {
     rex: 'DB',
     rch: 'DB',
     tre: 'A',
+    omt: '0',
   },
 };
 

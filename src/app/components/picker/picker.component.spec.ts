@@ -92,6 +92,14 @@ describe('PickerComponent', () => {
     });
   });
 
+  describe('toggleCategory', () => {
+    it('should toggle the items in the passed category', () => {
+      component.clickOpen('item', Mocks.dataset.itemIds, [ItemId.Water]);
+      component.toggleCategory(CategoryId.Fluids);
+      expect(component.selection?.length).toEqual(8);
+    });
+  });
+
   describe('reset', () => {
     it('should set the selection back to the default value', () => {
       component.selection = [ItemId.IronPlate];

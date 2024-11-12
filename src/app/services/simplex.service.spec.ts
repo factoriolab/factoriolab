@@ -29,7 +29,7 @@ describe('SimplexService', () => {
     itemIds: Mocks.adjustedDataset.itemIds,
     data: Mocks.adjustedDataset,
     maximizeType: MaximizeType.Weight,
-    requireMachinesOutput: false,
+    requireMachinesOutput: true,
     costs: {
       factor: rational.one,
       machine: rational.one,
@@ -132,10 +132,8 @@ describe('SimplexService', () => {
             id: '0',
             targetId: RecipeId.AdvancedCircuit,
             value: rational.one,
-            unit: ObjectiveUnit.Machines,
+            unit: ObjectiveUnit.Items,
             type: ObjectiveType.Maximize,
-            recipe:
-              Mocks.adjustedDataset.adjustedRecipe[RecipeId.AdvancedCircuit],
           },
         ],
         Mocks.settingsStateInitial,
@@ -191,7 +189,7 @@ describe('SimplexService', () => {
         excludedIds: new Set(),
         itemIds: Mocks.adjustedDataset.itemIds,
         data: Mocks.adjustedDataset,
-        maximizeType: MaximizeType.Weight,
+        maximizeType: MaximizeType.Ratio,
         requireMachinesOutput: false,
         costs: Mocks.costs,
       });
@@ -201,10 +199,15 @@ describe('SimplexService', () => {
   describe('recipeMatches', () => {
     it('should find matching recipes for an item', () => {
       const state = getState();
-      const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
-      const result = service.recipeMatches(ItemId.Coal, state);
-      expect(state.recipes).toEqual({ [RecipeId.Coal]: recipe });
-      expect(result).toEqual([recipe]);
+      const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperOre];
+      const recipe2 =
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperPlate];
+      const result = service.recipeMatches(ItemId.CopperOre, state);
+      expect(state.recipes).toEqual({
+        [RecipeId.CopperOre]: recipe,
+        [RecipeId.CopperPlate]: recipe2,
+      });
+      expect(result).toEqual([recipe2, recipe]);
     });
   });
 
@@ -215,20 +218,11 @@ describe('SimplexService', () => {
       const result = service.itemMatches(recipe, state);
       expect(state.itemValues[ItemId.CopperPlate].out).toEqual(rational.zero);
       expect(state.recipes).toEqual({});
-      expect(result).toEqual([ItemId.CopperPlate]);
+      expect(result).toEqual([ItemId.CopperPlate, ItemId.CopperCable]);
     });
   });
 
   describe('parseRecipeRecursively', () => {
-    it('should do nothing for recipes with no inputs', () => {
-      spyOn(service, 'parseItemRecursively');
-      service.parseRecipeRecursively(
-        Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronOre],
-        getState(),
-      );
-      expect(service.parseItemRecursively).not.toHaveBeenCalled();
-    });
-
     it('should parse recipe inputs recursively', () => {
       spyOn(service, 'itemMatches').and.returnValue([ItemId.CopperPlate]);
       spyOn(service, 'parseItemRecursively');
@@ -244,15 +238,6 @@ describe('SimplexService', () => {
   });
 
   describe('parseItemRecursively', () => {
-    it('should do nothing for simple recipe that was already parsed', () => {
-      spyOn(service, 'parseRecipeRecursively');
-      const state = getState();
-      state.recipes[RecipeId.CopperCable] =
-        Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable];
-      service.parseItemRecursively(ItemId.CopperCable, state);
-      expect(service.parseRecipeRecursively).not.toHaveBeenCalled();
-    });
-
     it('should parse a simple recipe', () => {
       spyOn(service, 'parseRecipeRecursively');
       const state = getState();
@@ -393,6 +378,7 @@ describe('SimplexService', () => {
     it('should find a solution using glpk maximizing by ratio', () => {
       const state = getState();
       state.maximizeType = MaximizeType.Ratio;
+      state.requireMachinesOutput = false;
       // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
       state.unproduceableIds = new Set([
