@@ -76,6 +76,7 @@ export interface MatrixState {
   maximizeType: MaximizeType;
   requireMachinesOutput: boolean;
   costs: CostSettings;
+  hasSurplusCost: boolean;
 }
 
 export interface MatrixSolution {
@@ -196,6 +197,7 @@ export class SimplexService {
       requireMachinesOutput: settings.requireMachinesOutput,
       costs: settings.costs,
       data,
+      hasSurplusCost: settings.costs.surplus.gt(rational.zero),
     };
 
     // Add item objectives to matrix state
@@ -290,7 +292,10 @@ export class SimplexService {
 
   /** Find matching recipes for an item that have not yet been parsed */
   recipeMatches(itemId: string, state: MatrixState): Recipe[] {
-    const recipes = state.data.itemAvailableIoRecipeIds[itemId]
+    const map = state.hasSurplusCost
+      ? state.data.itemAvailableIoRecipeIds
+      : state.data.itemAvailableRecipeIds;
+    const recipes = map[itemId]
       .filter((r) => !state.recipes[r])
       .map((r) => state.data.adjustedRecipe[r]);
 
@@ -305,9 +310,11 @@ export class SimplexService {
     Object.keys(recipe.in)
       .filter((i) => state.itemValues[i]?.out == null)
       .forEach((i) => itemIds.add(i));
-    Object.keys(recipe.out)
-      .filter((i) => state.itemValues[i]?.out == null)
-      .forEach((i) => itemIds.add(i));
+    if (state.hasSurplusCost) {
+      Object.keys(recipe.out)
+        .filter((i) => state.itemValues[i]?.out == null)
+        .forEach((i) => itemIds.add(i));
+    }
     for (const itemId of itemIds) this.addItemValue(state.itemValues, itemId);
 
     return Array.from(itemIds);

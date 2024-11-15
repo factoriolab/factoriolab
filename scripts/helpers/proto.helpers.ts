@@ -50,7 +50,8 @@ export function getMachineDisallowedEffects(
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
     M.isAsteroidCollectorPrototype(proto) ||
-    M.isContainerPrototype(proto)
+    M.isContainerPrototype(proto) ||
+    M.isAgriculturalTowerPrototype(proto)
   )
     return undefined;
 
@@ -86,7 +87,7 @@ export function getMachineModules(proto: D.MachineProto): number | undefined {
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
     M.isAsteroidCollectorPrototype(proto) ||
-    M.isContainerPrototype(proto)
+    M.isAgriculturalTowerPrototype(proto)
   )
     return undefined;
 
@@ -162,7 +163,7 @@ export function getMachineSpeed(proto: D.MachineProto): number {
   if (
     M.isReactorPrototype(proto) ||
     M.isAsteroidCollectorPrototype(proto) ||
-    M.isContainerPrototype(proto)
+    M.isAgriculturalTowerPrototype(proto)
   )
     return 1;
 
@@ -215,7 +216,7 @@ export function getMachineBaseEffect(
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
     M.isAsteroidCollectorPrototype(proto) ||
-    M.isContainerPrototype(proto) ||
+    M.isAgriculturalTowerPrototype(proto) ||
     proto.effect_receiver?.base_effect == null
   )
     return undefined;
@@ -231,8 +232,7 @@ export function getMachineBaseEffect(
 }
 
 export function getMachineHideRate(proto: D.MachineProto): Optional<boolean> {
-  if (M.isAsteroidCollectorPrototype(proto) || M.isContainerPrototype(proto))
-    return true;
+  if (M.isAsteroidCollectorPrototype(proto)) return true;
   return undefined;
 }
 

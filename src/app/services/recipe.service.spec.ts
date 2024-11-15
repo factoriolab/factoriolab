@@ -1194,6 +1194,25 @@ describe('RecipeService', () => {
       expect(adjustedRecipe[RecipeId.Coal].cost).toEqual(rational(1183n, 4n));
       expect(adjustedRecipe[RecipeId.CopperCable].cost).toEqual(rational(9n));
     });
+
+    it('should adjust recycling cost', () => {
+      const adjustedRecipe = service.adjustRecipes(
+        Mocks.adjustedDataset.recipeIds,
+        Mocks.recipesStateInitial,
+        Mocks.itemsStateInitial,
+        Mocks.settingsStateInitial,
+        Mocks.adjustedDataset,
+      );
+      adjustedRecipe[RecipeId.Coal].flags.add('recycling');
+      service.adjustCosts(
+        [RecipeId.Coal],
+        adjustedRecipe,
+        Mocks.recipesStateInitial,
+        spread(Mocks.costs, { recycling: rational.zero }),
+        Mocks.adjustedDataset,
+      );
+      expect(adjustedRecipe[RecipeId.Coal].cost).toEqual(rational.zero);
+    });
   });
 
   describe('finalizeData', () => {

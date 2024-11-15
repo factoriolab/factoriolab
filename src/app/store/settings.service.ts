@@ -126,6 +126,7 @@ export const initialSettingsState: SettingsState = {
     excluded: rational.zero,
     surplus: rational.zero,
     maximize: rational(-1000000n),
+    recycling: rational(1000n),
   },
 };
 

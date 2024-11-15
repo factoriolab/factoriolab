@@ -33,12 +33,14 @@ describe('SimplexService', () => {
     costs: {
       factor: rational.one,
       machine: rational.one,
+      recycling: rational(1000n),
       footprint: rational.one,
       unproduceable: rational(1000000n),
       excluded: rational.zero,
       surplus: rational.zero,
       maximize: rational(-1000000n),
     },
+    hasSurplusCost: false,
   });
   const getResult = (
     resultType: SimplexResultType = SimplexResultType.Solved,
@@ -192,6 +194,7 @@ describe('SimplexService', () => {
         maximizeType: MaximizeType.Ratio,
         requireMachinesOutput: false,
         costs: Mocks.costs,
+        hasSurplusCost: false,
       });
     });
   });
@@ -199,6 +202,17 @@ describe('SimplexService', () => {
   describe('recipeMatches', () => {
     it('should find matching recipes for an item', () => {
       const state = getState();
+      const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperOre];
+      const result = service.recipeMatches(ItemId.CopperOre, state);
+      expect(state.recipes).toEqual({
+        [RecipeId.CopperOre]: recipe,
+      });
+      expect(result).toEqual([recipe]);
+    });
+
+    it('should include all input/output recipes if surplus cost > 0', () => {
+      const state = getState();
+      state.hasSurplusCost = true;
       const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperOre];
       const recipe2 =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperPlate];
@@ -214,6 +228,16 @@ describe('SimplexService', () => {
   describe('itemMatches', () => {
     it('should find matching items for a recipe', () => {
       const state = getState();
+      const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable];
+      const result = service.itemMatches(recipe, state);
+      expect(state.itemValues[ItemId.CopperPlate].out).toEqual(rational.zero);
+      expect(state.recipes).toEqual({});
+      expect(result).toEqual([ItemId.CopperPlate]);
+    });
+
+    it('should include recipe output items if surplus cost > 0', () => {
+      const state = getState();
+      state.hasSurplusCost = true;
       const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable];
       const result = service.itemMatches(recipe, state);
       expect(state.itemValues[ItemId.CopperPlate].out).toEqual(rational.zero);

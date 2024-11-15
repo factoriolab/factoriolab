@@ -101,6 +101,7 @@ const mockSettingsState: SettingsState = {
   costs: {
     factor: rational(2n),
     machine: rational(10n),
+    recycling: rational(1000n),
     footprint: rational.one,
     unproduceable: rational.zero,
     excluded: rational(100n),
@@ -410,6 +411,7 @@ describe('RouterService', () => {
     });
     delete mockStateV10.settingsState?.requireMachinesOutput;
     delete mockStateV10.settingsState?.costs?.footprint;
+    delete mockStateV10.settingsState?.costs?.recycling;
 
     const mockStateV8: PartialState = spread(mockStateV10, {
       settingsState: spread(mockStateV10.settingsState),
