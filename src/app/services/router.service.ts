@@ -912,6 +912,7 @@ export class RouterService {
     rat('cex', (s) => s.costs.excluded);
     rat('csu', (s) => s.costs.surplus);
     rat('cmx', (s) => s.costs.maximize);
+    rat('cre', (s) => s.costs.recycling);
   }
 
   unzipSettings(
@@ -986,6 +987,7 @@ export class RouterService {
       excluded: rat('cex'),
       surplus: rat('csu'),
       maximize: rat('cmx'),
+      recycling: rat('cre'),
     };
 
     const mps = this.migrationSvc.parseSet.bind(this.migrationSvc);

@@ -14,7 +14,7 @@ export class InserterSpeedPipe implements PipeTransform {
     if (value != null) {
       const inserter = InserterData[settings.inserterTarget][
         settings.inserterCapacity
-      ]?.find((d) => d.value.gt(value) || d.id === ItemId.StackInserter);
+      ]?.find((d) => d.value.gt(value) || d.id === ItemId.BulkInserter);
 
       if (inserter == null) {
         // Should be impossible due to stack inserter fallback

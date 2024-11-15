@@ -153,6 +153,8 @@
     "recipe": "Recipe",
     "machineTooltip": "Multiplies cost by number of machines running recipes",
     "machine": "Machine",
+    "recyclingTooltip": "Multiplies cost of recycling recipes by this number",
+    "recycling": "Recycling",
     "footprintTooltip": "Whether to multiply cost by tile area of machines",
     "footprint": "Footprint",
     "unproduceableTooltip": "Cost of items that cannot be produced by any included recipes",

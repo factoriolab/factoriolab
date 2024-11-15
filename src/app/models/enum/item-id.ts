@@ -1,4 +1,5 @@
 export const ItemId = {
+  BulkInserter: 'bulk-inserter',
   EpicQuality: 'epic-quality',
   FastInserter: 'fast-inserter',
   Inserter: 'inserter',
@@ -11,5 +12,4 @@ export const ItemId = {
   Pumpjack: 'pumpjack',
   QualityModuleTechnology: 'quality-module-technology',
   Somersloop: 'somersloop',
-  StackInserter: 'stack-inserter',
 };

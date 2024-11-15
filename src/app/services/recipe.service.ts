@@ -750,6 +750,9 @@ export class RecipeService {
             }
           }
         }
+
+        if (recipe.flags.has('recycling'))
+          recipe.cost = recipe.cost.mul(costs.recycling);
       });
   }
 
