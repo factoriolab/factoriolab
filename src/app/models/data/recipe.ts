@@ -9,6 +9,8 @@ export type RecipeFlag =
   | 'mining'
   | 'technology'
   | 'burn'
+  | 'grow'
+  | 'recycling'
   | 'locked'
   | 'hideProducer'
   | 'canProdUpgrade';

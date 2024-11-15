@@ -31,6 +31,16 @@
         ></lab-input-number>
       </td>
     </tr>
+    <tr [pTooltip]="'costs.recyclingTooltip' | translate">
+      <td>{{ 'costs.recycling' | translate }}</td>
+      <td>
+        <lab-input-number
+          width="8rem"
+          [value]="editValue.recycling"
+          (setValue)="editValue.recycling = $event"
+        ></lab-input-number>
+      </td>
+    </tr>
     <tr [pTooltip]="'costs.footprintTooltip' | translate">
       <td>{{ 'costs.footprint' | translate }}</td>
       <td class="p-2">

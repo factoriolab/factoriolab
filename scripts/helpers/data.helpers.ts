@@ -126,7 +126,7 @@ export function getAllowedLocations(
   surface_conditions: Optional<SurfaceCondition[]>,
   locations: AnyLocationPrototype[],
   defaults: Record<string, number>,
-): Optional<string[]> {
+): Optional<AnyLocationPrototype[]> {
   if (surface_conditions == null) return undefined;
 
   const matches = locations.filter((l) => {
@@ -140,7 +140,7 @@ export function getAllowedLocations(
 
   if (matches.length === locations.length) return undefined;
 
-  return matches.map((m) => m.name);
+  return matches;
 }
 
 export function getDisallowedEffects(

@@ -99,4 +99,6 @@ export interface LabParams {
   csu?: string;
   /** `Rational` Cost maximize */
   cmx?: string;
+  /** `Rational` Cost recycling */
+  cre?: string;
 }
