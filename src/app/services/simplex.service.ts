@@ -74,8 +74,9 @@ export interface MatrixState {
   itemIds: string[];
   data: AdjustedDataset;
   maximizeType: MaximizeType;
-  surplusMachinesOutput: boolean;
+  requireMachinesOutput: boolean;
   costs: CostSettings;
+  hasSurplusCost: boolean;
 }
 
 export interface MatrixSolution {
@@ -193,9 +194,10 @@ export class SimplexService {
       excludedIds: settings.excludedItemIds,
       itemIds: data.itemIds.filter((i) => !settings.excludedItemIds.has(i)),
       maximizeType: settings.maximizeType,
-      surplusMachinesOutput: settings.surplusMachinesOutput,
+      requireMachinesOutput: settings.requireMachinesOutput,
       costs: settings.costs,
       data,
+      hasSurplusCost: settings.costs.surplus.gt(rational.zero),
     };
 
     // Add item objectives to matrix state
@@ -290,7 +292,10 @@ export class SimplexService {
 
   /** Find matching recipes for an item that have not yet been parsed */
   recipeMatches(itemId: string, state: MatrixState): Recipe[] {
-    const recipes = state.data.itemAvailableRecipeIds[itemId]
+    const map = state.hasSurplusCost
+      ? state.data.itemAvailableIoRecipeIds
+      : state.data.itemAvailableRecipeIds;
+    const recipes = map[itemId]
       .filter((r) => !state.recipes[r])
       .map((r) => state.data.adjustedRecipe[r]);
 
@@ -301,22 +306,25 @@ export class SimplexService {
 
   /** Find matching item inputs for a recipe that have not yet been parsed */
   itemMatches(recipe: Recipe, state: MatrixState): string[] {
-    const itemIds = Object.keys(recipe.in).filter(
-      (i) => state.itemValues[i]?.out == null,
-    );
-    for (const itemId of itemIds) {
-      this.addItemValue(state.itemValues, itemId);
+    const itemIds = new Set<string>();
+    Object.keys(recipe.in)
+      .filter((i) => state.itemValues[i]?.out == null)
+      .forEach((i) => itemIds.add(i));
+    if (state.hasSurplusCost) {
+      Object.keys(recipe.out)
+        .filter((i) => state.itemValues[i]?.out == null)
+        .forEach((i) => itemIds.add(i));
     }
-    return itemIds;
+    for (const itemId of itemIds) this.addItemValue(state.itemValues, itemId);
+
+    return Array.from(itemIds);
   }
 
   /** Look for item inputs for a recipe, recursively */
   parseRecipeRecursively(recipe: Recipe, state: MatrixState): void {
-    if (recipe.in) {
-      const matches = this.itemMatches(recipe, state);
-      for (const itemId of matches.filter((m) => state.itemIds.includes(m))) {
-        this.parseItemRecursively(itemId, state);
-      }
+    const matches = this.itemMatches(recipe, state);
+    for (const itemId of matches.filter((m) => state.itemIds.includes(m))) {
+      this.parseItemRecursively(itemId, state);
     }
   }
 
@@ -603,7 +611,7 @@ export class SimplexService {
         const recipe = obj.recipe;
         const val = recipe.output[itemId];
         if (val?.nonzero()) {
-          if (val.gt(rational.zero) && !state.surplusMachinesOutput) {
+          if (val.gt(rational.zero) && state.requireMachinesOutput) {
             if (recipeObjectiveOutput[itemId] == null)
               recipeObjectiveOutput[itemId] = {};
             recipeObjectiveOutput[itemId][obj.id] = val;
@@ -911,9 +919,12 @@ export class SimplexService {
     const potentials: Entities<string[]> = {};
     for (const step of steps.filter((s) => s.recipeId == null)) {
       if (step.itemId) {
-        potentials[step.itemId] = recipes
-          .filter((r) => step.itemId && r.produces.has(step.itemId))
-          .sort((a, b) => Object.keys(a.out).length - Object.keys(b.out).length)
+        const itemId = step.itemId;
+        const potentialRecipes = recipes.filter(
+          (r) => r.output[itemId] != null,
+        );
+        potentials[itemId] = potentialRecipes
+          .sort((a, b) => b.output[itemId].sub(a.output[itemId]).toNumber())
           .map((r) => r.id);
       }
     }

@@ -68,7 +68,7 @@ export interface SettingsState {
   modId?: string;
   checkedObjectiveIds: Set<string>;
   maximizeType: MaximizeType;
-  surplusMachinesOutput: boolean;
+  requireMachinesOutput: boolean;
   displayRate: DisplayRate;
   excludedItemIds: Set<string>;
   checkedItemIds: Set<string>;
@@ -105,8 +105,8 @@ export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
 export const initialSettingsState: SettingsState = {
   checkedObjectiveIds: new Set(),
   preset: Preset.Minimum,
-  maximizeType: MaximizeType.Weight,
-  surplusMachinesOutput: false,
+  maximizeType: MaximizeType.Ratio,
+  requireMachinesOutput: false,
   displayRate: DisplayRate.PerMinute,
   excludedItemIds: new Set(),
   checkedItemIds: new Set(),
@@ -126,6 +126,7 @@ export const initialSettingsState: SettingsState = {
     excluded: rational.zero,
     surplus: rational.zero,
     maximize: rational(-1000000n),
+    recycling: rational(1000n),
   },
 };
 

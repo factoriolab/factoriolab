@@ -750,6 +750,9 @@ export class RecipeService {
             }
           }
         }
+
+        if (recipe.flags.has('recycling'))
+          recipe.cost = recipe.cost.mul(costs.recycling);
       });
   }
 
@@ -772,7 +775,7 @@ export class RecipeService {
       .map((i) => adjustedRecipe[i])
       .forEach((recipe) => {
         finalizeRecipe(recipe);
-        recipe.produces.forEach((productId) =>
+        Object.keys(recipe.out).forEach((productId) =>
           itemRecipeIds[productId].push(recipe.id),
         );
 

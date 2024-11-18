@@ -8,7 +8,7 @@
       <table>
         @if (!effects.consumption.eq(rational.one)) {
           <tr
-            [class.maximum-effect]="
+            [class.error-text]="
               data().flags.has('minimumFactor') &&
               effects.consumption.eq(recipeSvc.minFactor)
             "
@@ -19,7 +19,7 @@
         }
         @if (!effects.speed.eq(rational.one)) {
           <tr
-            [class.maximum-effect]="
+            [class.error-text]="
               data().flags.has('minimumFactor') &&
               effects.speed.eq(recipeSvc.minFactor)
             "
@@ -30,7 +30,7 @@
         }
         @if (!effects.productivity.eq(rational.one)) {
           <tr
-            [class.maximum-effect]="
+            [class.error-text]="
               data().flags.has('maximumFactor') &&
               effects.productivity.eq(recipeSvc.maxFactor)
             "
@@ -41,7 +41,7 @@
         }
         @if (!effects.pollution.eq(rational.one)) {
           <tr
-            [class.maximum-effect]="
+            [class.error-text]="
               data().flags.has('minimumFactor') &&
               effects.pollution.eq(recipeSvc.minFactor)
             "

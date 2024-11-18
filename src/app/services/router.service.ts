@@ -873,7 +873,7 @@ export class RouterService {
     // Zip state
     sub('och', (s) => s.checkedObjectiveIds, objectiveIds);
     num('omt', (s) => s.maximizeType);
-    bln('osm', (s) => s.surplusMachinesOutput);
+    bln('orm', (s) => s.requireMachinesOutput);
     num('odr', (s) => s.displayRate);
     sub('iex', (s) => s.excludedItemIds, data.itemIds, hash.items);
     sub('ich', (s) => s.checkedItemIds, data.itemIds, hash.items);
@@ -912,6 +912,7 @@ export class RouterService {
     rat('cex', (s) => s.costs.excluded);
     rat('csu', (s) => s.costs.surplus);
     rat('cmx', (s) => s.costs.maximize);
+    rat('cre', (s) => s.costs.recycling);
   }
 
   unzipSettings(
@@ -949,7 +950,7 @@ export class RouterService {
       modId,
       checkedObjectiveIds: sub('och', objectiveIds),
       maximizeType: num('omt'),
-      surplusMachinesOutput: bln('osm'),
+      requireMachinesOutput: bln('orm'),
       displayRate: num('odr'),
       excludedItemIds: sub('iex', modHash.items, itemIds),
       checkedItemIds: sub('ich', modHash.items, itemIds),
@@ -986,6 +987,7 @@ export class RouterService {
       excluded: rat('cex'),
       surplus: rat('csu'),
       maximize: rat('cmx'),
+      recycling: rat('cre'),
     };
 
     const mps = this.migrationSvc.parseSet.bind(this.migrationSvc);

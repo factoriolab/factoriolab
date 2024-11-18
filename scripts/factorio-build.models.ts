@@ -49,6 +49,7 @@ export function isResearchProduct(
 }
 
 export interface DataRawDump {
+  'agricultural-tower': Entities<M.AgriculturalTowerPrototype>;
   ammo: Entities<M.AmmoItemPrototype>;
   armor: Entities<M.ArmorPrototype>;
   'assembling-machine': Entities<M.AssemblingMachinePrototype>;
@@ -72,6 +73,7 @@ export interface DataRawDump {
   module: Entities<M.ModulePrototype>;
   'offshore-pump': Entities<M.OffshorePumpPrototype>;
   planet: Entities<M.PlanetPrototype>;
+  plant: Entities<M.PlantPrototype>;
   pump: Entities<M.PumpPrototype>;
   'rail-planner': Entities<M.RailPlannerPrototype>;
   reactor: Entities<M.ReactorPrototype>;
@@ -146,14 +148,14 @@ export type AnyEntityPrototype =
   | M.CargoWagonPrototype
   | M.FluidWagonPrototype
   | M.PumpPrototype
-  | M.AsteroidCollectorPrototype;
+  | M.AsteroidCollectorPrototype
+  | M.AgriculturalTowerPrototype;
 
 export type AnyLocationPrototype = M.PlanetPrototype | M.SurfacePrototype;
 
 export interface ModDataReport {
   machineSpeedZero: string[];
   noProducers: string[];
-  noProducts: string[];
   resourceNoMinableProducts: string[];
   resourceDuplicate: string[];
 }
@@ -167,7 +169,8 @@ export type MachineProto =
   | M.MiningDrillPrototype
   | M.OffshorePumpPrototype
   | M.ReactorPrototype
-  | M.AsteroidCollectorPrototype;
+  | M.AsteroidCollectorPrototype
+  | M.AgriculturalTowerPrototype;
 
 export const anyEntityKeys = [
   'beacon',
@@ -184,6 +187,7 @@ export const anyEntityKeys = [
   'fluid-wagon',
   'pump',
   'asteroid-collector',
+  'agricultural-tower',
 ] as const;
 
 export const anyItemKeys = [

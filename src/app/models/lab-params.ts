@@ -21,8 +21,8 @@ export interface LabParams {
   och?: string;
   /** `number` Maximize type */
   omt?: string;
-  /** `boolean` Surplus machines output */
-  osm?: string;
+  /** `boolean` Require machines output */
+  orm?: string;
   /** `number` Display rate */
   odr?: string;
   /** `Set` Excluded items */
@@ -99,4 +99,6 @@ export interface LabParams {
   csu?: string;
   /** `Rational` Cost maximize */
   cmx?: string;
+  /** `Rational` Cost recycling */
+  cre?: string;
 }

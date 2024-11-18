@@ -28,7 +28,7 @@ describe('InserterSpeedPipe', () => {
       expect(
         pipe.transform(rational(1000n), Mocks.settingsStateInitial),
       ).toEqual({
-        id: ItemId.StackInserter,
+        id: ItemId.BulkInserter,
         value: rational(20000n, 277n),
       });
     });

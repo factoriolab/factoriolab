@@ -21,6 +21,7 @@ import {
   AsteroidPrototype,
   FluidBox,
   FluidPrototype,
+  isAgriculturalTowerPrototype,
   isAssemblingMachinePrototype,
   isAsteroidCollectorPrototype,
   isBeaconPrototype,
@@ -33,8 +34,6 @@ import {
   isFluidWagonPrototype,
   isFurnacePrototype,
   isItemGroup,
-  isItemIngredientPrototype,
-  isItemProductPrototype,
   isLabPrototype,
   isMiningDrillPrototype,
   isModulePrototype,
@@ -52,6 +51,7 @@ import {
   isTransportBeltPrototype,
   isUnlockRecipeModifier,
   ItemGroup,
+  PlantPrototype,
   ProductPrototype,
   RecipePrototype,
   SpaceConnectionPrototype,
@@ -184,7 +184,7 @@ async function processMod(): Promise<void> {
 
   function getDataAllowedLocations(
     surface_conditions: Optional<SurfaceCondition[]>,
-  ): Optional<string[]> {
+  ): Optional<AnyLocationPrototype[]> {
     return getAllowedLocations(
       surface_conditions,
       allLocations,
@@ -246,7 +246,8 @@ async function processMod(): Promise<void> {
       | FluidPrototype
       | RecipePrototype
       | SpaceLocationPrototype
-      | SpaceConnectionPrototype,
+      | SpaceConnectionPrototype
+      | PlantPrototype,
   ): string {
     if (proto.subgroup) return proto.subgroup;
 
@@ -281,7 +282,8 @@ async function processMod(): Promise<void> {
       | AnyEntityPrototype
       | FluidPrototype
       | SpaceLocationPrototype
-      | SpaceConnectionPrototype,
+      | SpaceConnectionPrototype
+      | PlantPrototype,
   ): number {
     const subgroupId = getSubgroup(proto);
     const subgroup = dataRaw['item-subgroup'][subgroupId];
@@ -319,7 +321,8 @@ async function processMod(): Promise<void> {
       | RecipePrototype
       | TechnologyPrototype
       | SpaceConnectionPrototype
-      | SpaceLocationPrototype,
+      | SpaceLocationPrototype
+      | PlantPrototype,
   ): Promise<string | undefined> {
     const id = isTechnologyPrototype(spec) ? techId[spec.name] : spec.name;
 
@@ -398,13 +401,20 @@ async function processMod(): Promise<void> {
   }
 
   // Records of producer categories to producers
-  type ProducerType = 'burner' | 'crafting' | 'resource' | 'asteroid' | 'spoil';
+  type ProducerType =
+    | 'burner'
+    | 'crafting'
+    | 'resource'
+    | 'asteroid'
+    | 'spoil'
+    | 'agriculture';
   const producersMap: Record<ProducerType, Record<string, string[]>> = {
     burner: {},
     crafting: {},
     resource: {},
     asteroid: {},
     spoil: { ['']: ['spoilage'] },
+    agriculture: {},
   };
   function addProducers(
     id: string,
@@ -458,6 +468,9 @@ async function processMod(): Promise<void> {
 
     if (isAsteroidCollectorPrototype(proto))
       addProducers(name, [''], 'asteroid');
+
+    if (isAgriculturalTowerPrototype(proto))
+      addProducers(name, [''], 'agriculture');
   }
 
   const ANY_FLUID_BURN = 'fluid';
@@ -566,7 +579,9 @@ async function processMod(): Promise<void> {
       baseEffect: getMachineBaseEffect(proto),
       entityType: proto.type,
       hideRate: getMachineHideRate(proto),
-      locations: getDataAllowedLocations(proto.surface_conditions),
+      locations: getDataAllowedLocations(proto.surface_conditions)?.map(
+        (l) => l.name,
+      ),
       ingredientUsage: getMachineIngredientUsage(proto),
     };
 
@@ -590,7 +605,6 @@ async function processMod(): Promise<void> {
 
   const modDataReport: ModDataReport = {
     machineSpeedZero: [],
-    noProducts: [],
     noProducers: [],
     resourceNoMinableProducts: [],
     resourceDuplicate: [],
@@ -735,16 +749,6 @@ async function processMod(): Promise<void> {
   for (const key of Object.keys(dataRaw.recipe)) {
     const recipe = dataRaw.recipe[key];
 
-    // Skip recipes that don't have results
-    const results = getProducts(recipe.results);
-
-    if (results[2] === 0) {
-      modDataReport.noProducts.push(key);
-      continue;
-    }
-
-    recipeResultsMap[key] = results;
-
     // Always include fixed recipes that have outputs
     if (!fixedRecipe.has(key)) {
       // Skip recipes that are not unlocked / enabled
@@ -752,31 +756,23 @@ async function processMod(): Promise<void> {
 
       // Skip recipes that are hidden and disabled
       if (recipe.hidden && recipe.enabled === false) continue;
-
-      // Skip bad recycling
-      if (recipe.category === 'recycling') {
-        if (!recipe.ingredients?.length || !recipe.results?.length) continue;
-        const ingredient = recipe.ingredients[0];
-
-        if (isItemIngredientPrototype(ingredient)) {
-          const item = dataRaw.item[ingredient.name];
-          if (item && item.hidden) continue;
-
-          const result = recipe.results[0];
-          if (isItemProductPrototype(result) && result.name === ingredient.name)
-            continue;
-        }
-
-        const recyclingId = techId['recycling'];
-        if (recyclingId) {
-          recipesLocked.add(key);
-          pushEntityValue(technologyUnlocks, recyclingId, key);
-        }
-      }
     }
 
-    recipesEnabled[key] = recipe;
-    recipeIngredientsMap[key] = getIngredients(recipe.ingredients);
+    // Process recycling recipes later, after determining included items
+    if (recipe.category === 'recycling') continue;
+
+    // Don't include recipes with no inputs/outputs
+    const ingredients = getIngredients(recipe.ingredients);
+    const products = getProducts(recipe.results);
+    if (
+      Object.keys(ingredients[0]).length === 0 &&
+      Object.keys(products[0]).length === 0
+    )
+      continue;
+
+    recipesEnabled[recipe.name] = recipe;
+    recipeIngredientsMap[recipe.name] = ingredients;
+    recipeResultsMap[recipe.name] = products;
   }
 
   logTime('Processing data');
@@ -859,6 +855,28 @@ async function processMod(): Promise<void> {
       itemsUsed.add(ingredient);
 
     techIngredientsMap[tech.name] = techIngredients;
+  }
+
+  // Add relevant recycling recipes
+  for (const key of Object.keys(dataRaw.recipe)) {
+    if (recipesEnabled[key]) continue;
+
+    const recipe = dataRaw.recipe[key];
+    if (recipe.category !== 'recycling') continue;
+
+    // Only include recycling recipes with used items
+    const ingredients = getIngredients(recipe.ingredients);
+    const products = getProducts(recipe.results);
+
+    if (
+      !Object.keys(ingredients[0]).every((i) => itemsUsed.has(i)) ||
+      !Object.keys(products[0]).every((i) => itemsUsed.has(i))
+    )
+      continue;
+
+    recipesEnabled[recipe.name] = recipe;
+    recipeIngredientsMap[recipe.name] = ingredients;
+    recipeResultsMap[recipe.name] = products;
   }
 
   const itemsUsedProtos = Array.from(itemsUsed.values()).map(
@@ -1031,7 +1049,8 @@ async function processMod(): Promise<void> {
       isOffshorePumpPrototype(proto) ||
       isReactorPrototype(proto) ||
       isRocketSiloPrototype(proto) ||
-      isAsteroidCollectorPrototype(proto)
+      isAsteroidCollectorPrototype(proto) ||
+      isAgriculturalTowerPrototype(proto)
     ) {
       modData.items.push({
         id: proto.name,
@@ -1132,6 +1151,9 @@ async function processMod(): Promise<void> {
           item.machine = getMachine(entity, proto.name);
         } else if (dataRaw['asteroid-collector']?.[result]) {
           const entity = dataRaw['asteroid-collector'][result];
+          item.machine = getMachine(entity, proto.name);
+        } else if (dataRaw['agricultural-tower'][result]) {
+          const entity = dataRaw['agricultural-tower'][result];
           item.machine = getMachine(entity, proto.name);
         }
 
@@ -1374,7 +1396,9 @@ async function processMod(): Promise<void> {
         }
 
         const recipeInOptions = getRecipeInOptions(recipeIn, recipeInTemp);
-        const locations = getDataAllowedLocations(proto.surface_conditions);
+        const locations = getDataAllowedLocations(
+          proto.surface_conditions,
+        )?.map((l) => l.name);
         // For each set of valid fluid temperature inputs, generate a recipe
         const icon = await getIcon(proto);
         for (let i = 0; i < recipeInOptions.length; i++) {
@@ -1405,6 +1429,7 @@ async function processMod(): Promise<void> {
           if (recipesLocked.has(proto.name)) flags.push('locked');
           const canProdUpgrade = recipesCanProdUpgrade.has(proto.name);
           if (canProdUpgrade) flags.push('canProdUpgrade');
+          if (proto.category === 'recycling') flags.push('recycling');
 
           if (flags.length) recipe.flags = flags;
 
@@ -1639,6 +1664,72 @@ async function processMod(): Promise<void> {
         };
         modData.recipes.push(recipe);
       }
+
+      // Check for agriculture recipes
+      if (isAnyItemPrototype(proto) && proto.plant_result) {
+        const plantProto = dataRaw.plant[proto.plant_result];
+        const minable = plantProto.minable;
+        if (minable != null) {
+          const icon = await getIcon(plantProto);
+          const name = entityLocale.names[plantProto.name];
+          const producers = producersMap.agriculture[''];
+          const category =
+            dataRaw['item-subgroup'][getSubgroup(plantProto)].group;
+          const time = plantProto.growth_ticks / 60;
+          const [recipeOut, recipeCatalyst] = getProducts(
+            minable.results,
+            minable.result,
+            minable.count,
+          );
+
+          const baseLocations =
+            getDataAllowedLocations(plantProto.surface_conditions) ??
+            allLocations;
+          const locations = baseLocations
+            .filter((l) => {
+              const tiles = plantProto.autoplace?.tile_restriction;
+
+              if (tiles == null) return true;
+
+              if (!isPlanetPrototype(l)) return false;
+              return tiles.some(
+                (t) =>
+                  typeof t === 'string' &&
+                  l.map_gen_settings?.autoplace_settings?.tile?.settings?.[t] !=
+                    null,
+              );
+            })
+            .map((l) => l.name);
+
+          const TREES_PER_TOWER = 46;
+          Object.keys(recipeOut).forEach((k) => {
+            recipeOut[k] *= TREES_PER_TOWER;
+          });
+          if (recipeCatalyst) {
+            Object.keys(recipeCatalyst).forEach((k) => {
+              recipeCatalyst[k] *= TREES_PER_TOWER;
+            });
+          }
+
+          const recipe: RecipeJson = {
+            id: plantProto.name,
+            name,
+            category,
+            row: getRecipeRow(plantProto),
+            time,
+            producers,
+            in: { [proto.name]: TREES_PER_TOWER },
+            out: recipeOut,
+            catalyst: recipeCatalyst,
+            cost: 100,
+            icon,
+            locations,
+            flags: ['grow'],
+          };
+
+          modData.recipes.push(recipe);
+        }
+      }
     }
   }
 
@@ -1733,8 +1824,8 @@ async function processMod(): Promise<void> {
     }
   }
 
+  // Add asteroid recipes
   const asteroidResults: Entities<Entities<number>> = {};
-
   if (dataRaw.asteroid) {
     const rawAsteroid = dataRaw.asteroid;
 
@@ -2037,13 +2128,6 @@ async function processMod(): Promise<void> {
     if (modDataReport.noProducers.length) {
       logWarn(
         `Recipes with no producers: ${modDataReport.noProducers.length.toString()}`,
-      );
-      console.log('These recipes have been removed.');
-    }
-
-    if (modDataReport.noProducts.length) {
-      logWarn(
-        `Recipes with no products: ${modDataReport.noProducts.length.toString()}`,
       );
       console.log('These recipes have been removed.');
     }

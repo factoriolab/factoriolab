@@ -340,6 +340,12 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
             label: data.recipeEntities[r].name,
           }),
         );
+      } else if (s.recipeId != null) {
+        recipeIds = [s.recipeId];
+        recipesEnabled = [s.recipeId];
+        recipeOptions = [
+          { label: data.recipeEntities[s.recipeId].name, value: s.recipeId },
+        ];
       }
 
       e[s.id] = {
