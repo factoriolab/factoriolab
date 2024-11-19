@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { spread } from '~/helpers';
-import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
+import { AdjustedRecipe, Recipe, RecipeFlag } from '~/models/data/recipe';
 import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
@@ -1196,14 +1196,9 @@ describe('RecipeService', () => {
     });
 
     it('should adjust recycling cost', () => {
-      const adjustedRecipe = service.adjustRecipes(
-        Mocks.adjustedDataset.recipeIds,
-        Mocks.recipesStateInitial,
-        Mocks.itemsStateInitial,
-        Mocks.settingsStateInitial,
-        Mocks.adjustedDataset,
-      );
-      adjustedRecipe[RecipeId.Coal].flags.add('recycling');
+      adjustedRecipe[RecipeId.Coal] = spread(adjustedRecipe[RecipeId.Coal], {
+        flags: new Set<RecipeFlag>(['recycling']),
+      });
       service.adjustCosts(
         [RecipeId.Coal],
         adjustedRecipe,
