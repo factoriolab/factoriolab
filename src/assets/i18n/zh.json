@@ -153,6 +153,8 @@
     "recipe": "配方",
     "machineTooltip": "将运行配方的机器数量与定义的权重相乘",
     "machine": "设备",
+    "recyclingTooltip": "将回收配方的成本与定义的权重相乘",
+    "recycling": "回收",
     "footprintTooltip": "是否将设备的占地面积乘以权重",
     "footprint": "空间占用",
     "unproduceableTooltip": "不可制造的物品的权重",
@@ -165,7 +167,8 @@
     "maximize": "最大化目标"
   },
   "picker": {
-    "includeAll": "包含全部"
+    "includeAll": "包含全部",
+    "toggleVisible": "切换可见性"
   },
   "techPicker": {
     "header": "设置已经研究的科技",
@@ -314,8 +317,8 @@
     "disablePaginator": "禁用列表分页",
     "netProductionOnly": "仅显示净产量",
     "netProductionOnlyTooltip": "如果勾选，生产和消耗的相同物品会按净产量统计显示",
-    "surplusMachinesOutput": "过剩产量",
-    "surplusMachinesOutputTooltip": "如果勾选，机器目标的输出将被视为过剩，而不是必需",
+    "requireMachinesOutput": "将机器输出设为必需",
+    "requireMachinesOutputTooltip": "如果勾选，机器的目标输出将被视为必需品，而不是多余的产出",
     "convertObjectiveValues": "转换目标值",
     "convertObjectiveValuesTooltip": "如果勾选，当类型改变时，目标值将被转换以保留物品数量",
     "locations": "地点",
