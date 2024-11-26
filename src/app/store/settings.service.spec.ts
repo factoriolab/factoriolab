@@ -360,7 +360,9 @@ describe('SettingsService', () => {
                   entityType: 'assembling-machine',
                 }),
               })
-            : i,
+            : i.id === ItemId.Pump
+              ? spread(i, { pipe: { speed: 1200 } })
+              : i,
       );
       spyOn(service, 'mod').and.returnValue(
         spread(Mocks.mod, { flags: 'spa', items }),
