@@ -266,7 +266,7 @@ export class SettingsService extends Store<SettingsState> {
       items: itemOptions(data.itemIds),
       beacons: itemOptions(data.beaconIds),
       belts: itemOptions(data.beltIds, data.itemQIds),
-      pipes: itemOptions(data.pipeIds, data.itemQIds),
+      pipes: itemOptions(data.pipeIds),
       cargoWagons: itemOptions(data.cargoWagonIds, data.itemQIds),
       fluidWagons: itemOptions(data.fluidWagonIds, data.itemQIds),
       fuels: itemOptions(data.fuelIds, data.itemQIds),
@@ -563,6 +563,14 @@ export class SettingsService extends Store<SettingsState> {
                 .mul(qItem.beacon.usage);
               qItem.beacon = spread(qItem.beacon, { usage });
             }
+          }
+
+          if (qItem.pipe) {
+            const factor = rational(quality)
+              .mul(rational(3n, 10n))
+              .add(rational.one);
+            const speed = qItem.pipe.speed.mul(factor);
+            qItem.pipe = spread(qItem.pipe, { speed });
           }
 
           items.push(qItem);
