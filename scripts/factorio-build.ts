@@ -874,6 +874,7 @@ async function processMod(): Promise<void> {
     )
       continue;
 
+    technologyUnlocks['recycling'].push(recipe.name);
     recipesEnabled[recipe.name] = recipe;
     recipeIngredientsMap[recipe.name] = ingredients;
     recipeResultsMap[recipe.name] = products;
