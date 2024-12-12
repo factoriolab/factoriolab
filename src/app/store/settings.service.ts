@@ -177,11 +177,7 @@ export class SettingsService extends Store<SettingsState> {
     const modId = this.modId();
     if (modId == null) return {};
     const states = this.preferencesSvc.states();
-    let result = coalesce(states[modId], {});
-    // Migrate game-based states
-    const game = this.game();
-    if (states[game]) result = spread(states[game], result);
-    return result;
+    return coalesce(states[modId], {});
   });
 
   stateOptions = computed(() => {

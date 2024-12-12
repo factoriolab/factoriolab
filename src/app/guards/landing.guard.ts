@@ -27,5 +27,8 @@ export const canActivateLanding: CanActivateFn = (
     });
   }
 
+  // If we are at root, redirect to default mod
+  if (route.params['id'] == null) return router.createUrlTree([DEFAULT_MOD]);
+
   return true;
 };
