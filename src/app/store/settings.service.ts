@@ -470,9 +470,6 @@ export class SettingsService extends Store<SettingsState> {
     // Generate temporary object arrays
     const items = itemIds.map((i) => parseItem(itemData[i]));
     const recipes = recipeIds.map((r) => parseRecipe(recipeData[r]));
-    const canProdUpgradeRecipeIds = recipes
-      .filter((r) => r.flags.has('canProdUpgrade'))
-      .map((r) => r.id);
 
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output item
@@ -614,6 +611,9 @@ export class SettingsService extends Store<SettingsState> {
         }
       });
     }
+    const canProdUpgradeRecipeIds = recipes
+      .filter((r) => r.flags.has('canProdUpgrade'))
+      .map((r) => r.id);
 
     // Filter for item types
     const beaconIds = items
