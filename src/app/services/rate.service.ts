@@ -155,7 +155,12 @@ export class RateService {
           const amount = recipe.in[itemId].mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
           if (itemStep != null)
-            this.addEntityValue(itemStep, 'parents', step.id, amount);
+            this.addEntityValue(
+              itemStep,
+              'parents',
+              step.id,
+              amount.simplify(),
+            );
         }
       }
       for (const itemId of Object.keys(recipe.out)) {
@@ -167,7 +172,7 @@ export class RateService {
               step,
               'outputs',
               itemId,
-              amount.div(itemStep.items),
+              amount.div(itemStep.items).simplify(),
             );
           }
         }
