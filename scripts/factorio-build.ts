@@ -1153,7 +1153,7 @@ async function processMod(): Promise<void> {
         } else if (dataRaw['asteroid-collector']?.[result]) {
           const entity = dataRaw['asteroid-collector'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['agricultural-tower'][result]) {
+        } else if (dataRaw['agricultural-tower']?.[result]) {
           const entity = dataRaw['agricultural-tower'][result];
           item.machine = getMachine(entity, proto.name);
         }
