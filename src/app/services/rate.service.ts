@@ -422,6 +422,15 @@ export class RateService {
     // Perform recursive sort
     const sorted = this.sortRecursive(groups, ROOT_ID, []);
 
+    // Try to add any remaining steps back including their corresponding group
+    while (sorted.length < steps.length) {
+      const step = steps.find((s) => !sorted.includes(s));
+      if (step == null) break;
+      sorted.push(step);
+      const group = groups[step.id];
+      if (group) sorted.push(...group);
+    }
+
     // Add back any steps left out (potentially circular loops)
     sorted.push(...steps.filter((s) => !sorted.includes(s)));
 
