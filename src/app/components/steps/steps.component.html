@@ -381,9 +381,11 @@
                         : null;
                     as type
                   ) {
+                    @let stack = data().itemEntities[step.itemId].stack;
                     @if (
                       data().flags.has('beltStack') &&
-                      data().itemEntities[step.itemId].stack
+                      stack &&
+                      stack.gt(rational.one)
                     ) {
                       <button
                         pButton
@@ -391,9 +393,7 @@
                         type="button"
                         class="hover-action p-button-text"
                         [pTooltip]="tooltip"
-                        (click)="
-                          beltPicker.show($event, itemSettings, $any(type))
-                        "
+                        (click)="beltPicker.show($event, stack, itemSettings)"
                       >
                         <i class="p-button-icon" [class]="beltId | iconSmClass">
                           @if (itemSettings.stack?.gt(rational.one)) {
