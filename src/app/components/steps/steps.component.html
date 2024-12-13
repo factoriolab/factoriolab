@@ -1358,8 +1358,8 @@
                             @if (data().flags.has('inserterEstimation')) {
                               <td>
                                 @if (
-                                  itemsState()[input.key].beltId !==
-                                    ItemId.Pipe && row.step.items
+                                  data().itemEntities[input.key].stack &&
+                                  row.step.items
                                 ) {
                                   @if (
                                     row.step.items
@@ -1446,9 +1446,7 @@
                         <tr>
                           @if (data().flags.has('inserterEstimation')) {
                             <td>
-                              @if (
-                                itemsState()[output.key].beltId !== ItemId.Pipe
-                              ) {
+                              @if (data().itemEntities[output.key].stack) {
                                 @if (
                                   items | inserterSpeed: settings();
                                   as ins
