@@ -75,7 +75,7 @@ describe('SettingsService', () => {
         Mocks.preferencesState.states,
       );
       expect(service.modStates()).toEqual(
-        Mocks.preferencesState.states[Game.Factorio],
+        Mocks.preferencesState.states[Mocks.modId],
       );
     });
   });

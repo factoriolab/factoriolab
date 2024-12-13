@@ -934,34 +934,22 @@ export class RouterService {
     const rnk = get(this.zipSvc.parseArray.bind(this.zipSvc));
     const arr = get(this.zipSvc.parseIndices.bind(this.zipSvc));
 
-    const itemIds = new Set(modData.items.map((i) => i.id));
-    const recipeIds = new Set(modData.recipes.map((r) => r.id));
-    const techIds = new Set(
-      modData.items.filter((i) => i.technology != null).map((i) => i.id),
-    );
-    const locationIds = new Set<string>(
-      coalesce(
-        modData.locations?.map((l) => l.id),
-        [],
-      ),
-    );
-
     const obj: PartialSettingsState = {
       modId,
       checkedObjectiveIds: sub('och', objectiveIds),
       maximizeType: num('omt'),
       requireMachinesOutput: bln('orm'),
       displayRate: num('odr'),
-      excludedItemIds: sub('iex', modHash.items, itemIds),
-      checkedItemIds: sub('ich', modHash.items, itemIds),
+      excludedItemIds: sub('iex', modHash.items),
+      checkedItemIds: sub('ich', modHash.items),
       beltId: str('ibe', hash?.belts),
       pipeId: str('ipi', hash?.belts),
       cargoWagonId: str('icw', hash?.wagons),
       fluidWagonId: str('ifw', hash?.wagons),
       flowRate: rat('ifr'),
       stack: rat('ist'),
-      excludedRecipeIds: sub('rex', modHash.recipes, recipeIds),
-      checkedRecipeIds: sub('rch', modHash.recipes, recipeIds),
+      excludedRecipeIds: sub('rex', modHash.recipes),
+      checkedRecipeIds: sub('rch', modHash.recipes),
       netProductionOnly: bln('rnp'),
       preset: num('mpr'),
       machineRankIds: rnk('mmr', hash?.machines),
@@ -975,8 +963,8 @@ export class RouterService {
       miningBonus: rat('bmi'),
       researchBonus: rat('bre'),
       inserterCapacity: num('bic'),
-      researchedTechnologyIds: sub('tre', modHash.technologies, techIds),
-      locationIds: sub('loc', modHash.locations ?? [], locationIds),
+      researchedTechnologyIds: sub('tre', modHash.technologies),
+      locationIds: sub('loc', modHash.locations ?? []),
     };
 
     const costs: Partial<CostSettings> = {

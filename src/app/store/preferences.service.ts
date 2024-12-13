@@ -2,7 +2,6 @@ import { effect, inject, Injectable } from '@angular/core';
 
 import { spread } from '~/helpers';
 import { FlowDiagram } from '~/models/enum/flow-diagram';
-import { Game } from '~/models/enum/game';
 import { Language } from '~/models/enum/language';
 import { LinkValue } from '~/models/enum/link-value';
 import { PowerUnit } from '~/models/enum/power-unit';
@@ -37,14 +36,7 @@ export interface PreferencesState {
 }
 
 export const initialPreferencesState: PreferencesState = {
-  states: {
-    [Game.Factorio]: {},
-    [Game.DysonSphereProgram]: {},
-    [Game.Satisfactory]: {},
-    [Game.CaptainOfIndustry]: {},
-    [Game.Techtonica]: {},
-    [Game.FinalFactory]: {},
-  },
+  states: {},
   columns: initialColumnsState,
   language: Language.English,
   powerUnit: PowerUnit.Auto,

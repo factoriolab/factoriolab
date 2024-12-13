@@ -135,7 +135,7 @@ describe('SettingsComponent', () => {
   describe('setState', () => {
     it('should call the router to navigate', () => {
       spyOn(component.router, 'navigate');
-      component.setState('name', Mocks.preferencesState.states[Game.Factorio]);
+      component.setState('name', Mocks.preferencesState.states[Mocks.modId]);
       expect(component.state).toEqual('name');
       expect(component.router.navigate).toHaveBeenCalledWith([], {
         queryParams: { z: 'zip' },

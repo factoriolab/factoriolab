@@ -212,12 +212,7 @@ export const flowSettings: FlowSettings = {
 };
 export const preferencesState: PreferencesState = {
   states: {
-    [Game.Factorio]: { ['name']: 'z=zip' },
-    [Game.DysonSphereProgram]: {},
-    [Game.Satisfactory]: {},
-    [Game.CaptainOfIndustry]: {},
-    [Game.Techtonica]: {},
-    [Game.FinalFactory]: {},
+    [modId]: { ['name']: 'z=zip' },
   },
   columns: initialColumnsState,
   rows: 50,
