@@ -1671,8 +1671,6 @@ async function processMod(): Promise<void> {
           const icon = await getIcon(plantProto);
           const name = entityLocale.names[plantProto.name];
           const producers = producersMap.agriculture[''];
-          const category =
-            dataRaw['item-subgroup'][getSubgroup(plantProto)].group;
           const time = plantProto.growth_ticks / 60;
           const [recipeOut, recipeCatalyst] = getProducts(
             minable.results,
@@ -1712,7 +1710,7 @@ async function processMod(): Promise<void> {
           const recipe: RecipeJson = {
             id: plantProto.name,
             name,
-            category,
+            category: group.name,
             row: getRecipeRow(plantProto),
             time,
             producers,
