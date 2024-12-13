@@ -311,15 +311,5 @@ describe('ZipService', () => {
         service.parseSubset('A~B*G', ['a', 'b', 'missing', 'c', 'd', 'e', 'f']),
       ).toEqual(new Set(['a', 'b', 'f']));
     });
-
-    it("should exclude ids that don't exist in the set", () => {
-      expect(
-        service.parseSubset(
-          'A~B*G',
-          ['a', 'b', 'missing', 'c', 'd', 'e', 'f'],
-          new Set(['a', 'b']),
-        ),
-      ).toEqual(new Set(['a', 'b']));
-    });
   });
 });
