@@ -230,12 +230,9 @@ async function processMod(): Promise<void> {
     if (recipe.subgroup) return recipe.subgroup;
 
     const product = getRecipeProduct(recipe);
-    if (product == null)
-      throw new Error(
-        `Recipe '${recipe.name}' declares no subgroup though it is required`,
-      );
+    if (product) return getSubgroup(product);
 
-    return getSubgroup(product);
+    return 'other';
   }
 
   function getSubgroup(
