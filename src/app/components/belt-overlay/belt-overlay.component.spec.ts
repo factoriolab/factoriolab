@@ -42,6 +42,15 @@ describe('BeltOverlayComponent', () => {
       );
       expect(component['_show']).toHaveBeenCalledWith(event);
     });
+
+    it('should fall back to stack size', () => {
+      component.show(
+        {} as any,
+        rational.one,
+        Mocks.itemsStateInitial[ItemId.Coal],
+      );
+      expect(component.maximum()).toEqual(rational.one);
+    });
   });
 
   describe('setStack', () => {

@@ -425,6 +425,7 @@ export class RateService {
     // Try to add any remaining steps back including their corresponding group
     while (sorted.length < steps.length) {
       const step = steps.find((s) => !sorted.includes(s));
+      // istanbul ignore next: Should be impossible inside this while statement
       if (step == null) break;
       sorted.push(step);
       const group = groups[step.id];
