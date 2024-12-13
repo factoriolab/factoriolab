@@ -916,24 +916,28 @@ export class SimplexService {
     }
 
     // Find best recipe match for remaining steps
-    const potentials: Entities<string[]> = {};
+    const outputRecipes: Entities<string[]> = {};
+    const allRecipes: Entities<string[]> = {};
     for (const step of steps.filter((s) => s.recipeId == null)) {
       if (step.itemId) {
         const itemId = step.itemId;
-        const potentialRecipes = recipes.filter(
-          (r) => r.output[itemId] != null,
+        const potentialRecipes = recipes.filter((r) => r.output[itemId]);
+        const order = potentialRecipes.sort((a, b) =>
+          b.output[itemId].sub(a.output[itemId]).toNumber(),
         );
-        potentials[itemId] = potentialRecipes
-          .sort((a, b) => b.output[itemId].sub(a.output[itemId]).toNumber())
+        outputRecipes[itemId] = order
+          .filter((r) => r.output[itemId].gt(rational.zero))
           .map((r) => r.id);
+        allRecipes[itemId] = order.map((r) => r.id);
       }
     }
 
-    const order = Object.keys(potentials).sort(
-      (a, b) => potentials[a].length - potentials[b].length,
+    // Sort only based on output recipes, ignore input recipes
+    const order = Object.keys(outputRecipes).sort(
+      (a, b) => outputRecipes[a].length - outputRecipes[b].length,
     );
     for (const itemId of order) {
-      for (const option of potentials[itemId]) {
+      for (const option of allRecipes[itemId]) {
         if (!steps.some((s) => s.recipeId === option)) {
           const step = steps.find((s) => s.itemId === itemId);
           if (step) {
@@ -952,6 +956,14 @@ export class SimplexService {
     state: MatrixState,
     recipeObjective?: RecipeObjective,
   ): void {
+    // Don't add a step for maximize or limit objectives
+    if (
+      recipeObjective &&
+      (recipeObjective.type === ObjectiveType.Maximize ||
+        recipeObjective.type === ObjectiveType.Limit)
+    )
+      return;
+
     const steps = state.steps;
     // Don't assign to any step that already has a recipe or objective assigned
     // (Those steps should have non-nullish machines)

@@ -7,6 +7,7 @@ export enum ItemId {
   Automation = 'automation',
   Beacon = 'beacon',
   BurnerMiningDrill = 'burner-mining-drill',
+  Car = 'car',
   CargoWagon = 'cargo-wagon',
   Coal = 'coal',
   Concrete = 'concrete',

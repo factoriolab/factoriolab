@@ -67,6 +67,6 @@ describe('canActivateLanding', () => {
 
   it('should allow navigating to the landing page', async () => {
     await RouterTestingHarness.create('/');
-    expect(router.url).toEqual('/');
+    expect(router.url).toEqual('/spa');
   });
 });

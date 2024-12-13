@@ -4,7 +4,6 @@ import { coalesce } from '~/helpers';
 import { Item } from '~/models/data/item';
 import { Dataset } from '~/models/dataset';
 import { ItemId } from '~/models/enum/item-id';
-import { Rational } from '~/models/rational';
 import { ItemSettings, ItemState } from '~/models/settings/item-settings';
 import { Settings } from '~/models/settings/settings';
 import { Entities, Optional } from '~/models/utils';
@@ -50,8 +49,9 @@ export class ItemsService extends EntityStore<ItemState> {
       const defaultWagonId = this.defaultWagon(item, settings);
       const beltId = coalesce(s?.beltId, defaultBeltId);
       const wagonId = coalesce(s?.wagonId, defaultWagonId);
-      let stack: Rational | undefined;
-      if (item.stack) stack = coalesce(s?.stack, settings.stack);
+      let stack = s?.stack;
+      if (stack == null && item.stack && settings.stack)
+        stack = item.stack.lt(settings.stack) ? item.stack : settings.stack;
 
       value[item.id] = {
         beltId,

@@ -191,7 +191,6 @@ export class ZipService {
   parseSubset(
     value: Optional<string>,
     hash: string[],
-    all?: Set<string>,
   ): Set<string> | undefined {
     if (!value?.length) return undefined;
     if (value === ZEMPTY) return new Set();
@@ -204,9 +203,7 @@ export class ZipService {
         .map((i) => this.compressionSvc.idToN(i));
       const sliceEnd = end != null ? end + 1 : start + 1;
       const slice = hash.slice(start, sliceEnd);
-      slice.forEach((i) => {
-        if (all == null || all.has(i)) result.add(i);
-      });
+      slice.forEach((i) => result.add(i));
     }
 
     return result;
