@@ -12,7 +12,10 @@
     "reset": "Réinitialiser",
     "simplexSolved": "Simplexe {{ resultType }}: {{ time }}ms, Coût: {{ cost }}",
     "simplexUnsolved": "Simplexe {{ resultType }}",
-    "dontShowAgain": "Ne plus afficher"
+    "dontShowAgain": "Ne plus afficher",
+    "data": "Donnée",
+    "resetTooltip": "Appuyer pour réinitialiser",
+    "migrationWarning": "Migration"
   },
   "options": {
     "column": {
@@ -25,19 +28,31 @@
       "beacons": "Balises",
       "power": "Energie",
       "pollution": "Pollution",
-      "link": "Lien"
+      "link": "Lien",
+      "options": {
+        "checkbox": "Boite",
+        "wagons": "Wagons",
+        "pollution": "Pollution"
+      }
     },
     "displayRate": {
       "perSecond": "Unités par seconde",
       "perMinute": "Unités par minute",
-      "perHour": "Unités par heure"
+      "perHour": "Unités par heure",
+      "options": {
+        "perSecondSuffix": "/s",
+        "perMinuteSuffix": "/m",
+        "perHourSuffix": "/h"
+      }
     },
     "game": {
       "factorio": "Factorio",
+      "factorio2": "Factorio 2.0",
       "dysonSphereProgram": "Dyson Sphere Program",
       "satisfactory": "Satisfactory",
       "captainOfIndustry": "Captain of Industry",
-      "techtonica": "Techtonica"
+      "techtonica": "Techtonica",
+      "finalFactory": "Final Factory"
     },
     "inserterCapacity": {
       "capacity0": "Pas de bonus de capacité",
@@ -77,6 +92,72 @@
       "system": "Système",
       "light": "Clair",
       "dark": "Sombre"
+    },
+    "maximizeType": {
+      "weight": "Poid",
+      "ratio": "Ratio"
+    },
+    "objectiveType": {
+      "options": {
+        "output": "Sortie",
+        "input": "Entrée",
+        "maximize": "Maximiser",
+        "limit": "Limiter"
+      }
+    },
+    "objectiveUnit": {
+      "itemsPerSecond": "Articles/s",
+      "itemsPerMinute": "Articles/m",
+      "itemsPerHour": "Articles/h",
+      "belts": "Tapis",
+      "wagonsPerSecond": "Wagons/s",
+      "wagonsPerMinute": "Wagons/m",
+      "wagonsPerHour": "Wagons/h",
+      "machines": "Machines",
+      "pollutionPerSecond": "Pollution/s",
+      "pollutionPerMinute": "Pollution/m",
+      "pollutionPerHour": "Pollution/h"
+    },
+    "simplexResultType": {
+      "options": {
+        "failed": "Échouer",
+        "paused": "En pause",
+        "skipped": "Sauter",
+        "solved": "Résolu"
+      }
+    },
+    "flowDiagram": {
+      "sankey": "Sankey",
+      "boxLine": "Box-line"
+    },
+    "linkValue": {
+      "none": "None",
+      "percent": "Percent",
+      "items": "Items",
+      "belts": "Belts",
+      "wagons": "Wagons",
+      "machines": "Machines"
+    },
+    "powerUnit": {
+      "auto": "Auto",
+      "kW": "kW",
+      "MW": "MW",
+      "GW": "GW"
+    },
+    "checkbox": "Boite",
+    "sankeyAlign": {
+      "justify": "Justifier",
+      "left": "Gauche",
+      "right": "Droite",
+      "center": "Centrer"
+    },
+    "quality": {
+      "any": "Tout",
+      "normal": "Normal",
+      "uncommon": "Noncommun",
+      "rare": "Rare",
+      "epic": "Epique",
+      "legendary": "Legendaire"
     }
   },
   "columns": {
@@ -87,6 +168,74 @@
     "fractions": "Fractions",
     "example": "Exemples",
     "notApplicable": "N/A"
+  },
+  "costs": {
+    "header": "Paremetre de cout",
+    "recipeTooltip": "Recette a cout definit multipliable, généralement du minage",
+    "recipe": "Recette",
+    "machineTooltip": "Multiplie le cout par le nombre de machine utilisant la recette",
+    "machine": "Machine",
+    "recyclingTooltip": "Multiplie le cout des recette de recyclage par ce nombre",
+    "recycling": "Recylcage",
+    "footprintTooltip": "Si il faut multiplier le cout par la surface en tuile de la machine",
+    "footprint": "Surface au sol",
+    "unproduceableTooltip": "Cout d'un article qui ne peu etre produit par auccune des recette incluse",
+    "unproduceable": "Non productible",
+    "excludedTooltip": "Cout d'Article exclu explicitement",
+    "excluded": "Exclu",
+    "surplusTooltip": "Cout de production des article en surplus",
+    "surplus": "Surplus",
+    "maximizeTooltip": "Cout de maximisation des objectif (doit etre négatif)",
+    "maximize": "Maximiser"
+  },
+  "picker": {
+    "includeAll": "Tout inclure",
+    "toggleVisible": "Basculer la visibilité"
+  },
+  "techPicker": {
+    "header": "Selectioner les technologies recherchées",
+    "unlockAll": "Débloquer tout",
+    "showLabels": "Afficher les étiquettes",
+    "import": "Importer",
+    "importTooltip": "Importer une liste separer par des virgules d'identifiant de technologie de votre jeu",
+    "importHeader": "Importer les technologies recherchées",
+    "exportFromFactorio": "Exporter depuis Factorio",
+    "exportCopyScript": "Copier le script de console",
+    "exportScriptCopied": "Copier dans le presse-papier",
+    "exportUseMod": "Utiliser un mod",
+    "importInstructions": "Enter a comma-separated list of technology ids from your game:",
+    "exportMod": "Exporter un mod",
+    "exportScript": "Copier le script de console",
+    "available": "Disponible",
+    "locked": "Verouillé",
+    "researched": "Recherché"
+  },
+  "header": {
+    "source": "Source",
+    "discord": "Discord",
+    "support": "Support"
+  },
+  "landing": {
+    "welcome": "Bienvenue sur <b>FactorioLab</b>! Mettons-nous au travail.",
+    "addItems": "Ajouter des Articles",
+    "addMachines": "Ajouter des Machines",
+    "selectAnItem": "Selectioner un article",
+    "selectARecipe": "Selectioner une recette",
+    "loadSavedState": "Charger un état sauvegardé",
+    "loadLastState": "Charger la derniere sauvegarde",
+    "help": "Aide moi a commencer",
+    "skip": "Passer",
+    "bypass": "Ne plus afficher cet écran"
+  },
+  "wizard": {
+    "back": "Retour",
+    "objectiveType": "Quel est votre objectif?",
+    "produceItems": "Je veux produire des articles ou de la recherce",
+    "produceItemsButton": "Selectioner quel article",
+    "runMachines": "Je veux utiliser un nombre de machines",
+    "runMachinesButton": "Choisir quelle recette",
+    "itemObjectiveItems": "Quel quantité voulez vous produire?",
+    "recipeObjectiveMachines": "Combien de machine voulez vous utiliser?"
   },
   "settings": {
     "header": "Paramètres",
@@ -188,7 +337,6 @@
     "addARecipeTooltip": "Séléctionner une recette à produire",
     "selectDisplayRate": "Séléctionner la cadence affiché"
   },
-  "picker": {},
   "steps": {
     "columnSettings": "Ouvrir les paramètres de colonnes",
     "tree": "Arbre",
