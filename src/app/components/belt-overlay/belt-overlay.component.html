@@ -9,7 +9,7 @@
             tooltipPosition="top"
             [value]="settings?.stack ?? rational.one"
             [minimum]="rational.one"
-            [maximum]="maximum"
+            [maximum]="maximum()"
             (setValue)="setStack($event)"
           >
           </lab-input-number>
@@ -18,7 +18,7 @@
               labDropdownBase="icon"
               [pTooltip]="tooltip"
               [ngModel]="beltId"
-              [options]="type() === 'belt' ? options().belts : options().pipes"
+              [options]="options().belts"
               (onChange)="setBelt($event.value)"
             >
               <ng-template pTemplate="selectedItem" let-item>
@@ -36,15 +36,12 @@
                     {{ item.label }}
                   </div>
                   <ng-template #tooltip>
-                    <lab-tooltip
-                      [id]="item.value"
-                      [type]="$any(type)"
-                    ></lab-tooltip>
+                    <lab-tooltip [id]="item.value" type="belt"></lab-tooltip>
                   </ng-template>
                 </div>
               </ng-template>
               <ng-template #tooltip>
-                <lab-tooltip [id]="beltId" [type]="$any(type)"></lab-tooltip>
+                <lab-tooltip [id]="beltId" type="belt"></lab-tooltip>
               </ng-template>
             </p-dropdown>
           }

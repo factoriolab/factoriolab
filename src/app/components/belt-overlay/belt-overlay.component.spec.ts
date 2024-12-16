@@ -17,7 +17,11 @@ describe('BeltOverlayComponent', () => {
     fixture = TestBed.createComponent(BeltOverlayComponent);
     component = fixture.componentInstance;
     spyOn(component as any, '_show');
-    component.show({} as any, Mocks.itemsStateInitial[ItemId.Coal], 'belt');
+    component.show(
+      {} as any,
+      rational(50n),
+      Mocks.itemsStateInitial[ItemId.Coal],
+    );
     fixture.detectChanges();
   });
 
@@ -28,12 +32,24 @@ describe('BeltOverlayComponent', () => {
   describe('show', () => {
     it('should show the overlay', () => {
       const event = {} as any;
-      component.show(event, Mocks.itemsStateInitial[ItemId.Coal], 'belt');
+      component.show(
+        event,
+        rational(50n),
+        Mocks.itemsStateInitial[ItemId.Coal],
+      );
       expect(component.settings()).toEqual(
         Mocks.itemsStateInitial[ItemId.Coal],
       );
-      expect(component.type()).toEqual('belt');
       expect(component['_show']).toHaveBeenCalledWith(event);
+    });
+
+    it('should fall back to stack size', () => {
+      component.show(
+        {} as any,
+        rational.one,
+        Mocks.itemsStateInitial[ItemId.Coal],
+      );
+      expect(component.maximum()).toEqual(rational.one);
     });
   });
 

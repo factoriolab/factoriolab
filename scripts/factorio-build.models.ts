@@ -49,7 +49,7 @@ export function isResearchProduct(
 }
 
 export interface DataRawDump {
-  'agricultural-tower': Entities<M.AgriculturalTowerPrototype>;
+  'agricultural-tower'?: Entities<M.AgriculturalTowerPrototype>;
   ammo: Entities<M.AmmoItemPrototype>;
   armor: Entities<M.ArmorPrototype>;
   'assembling-machine': Entities<M.AssemblingMachinePrototype>;

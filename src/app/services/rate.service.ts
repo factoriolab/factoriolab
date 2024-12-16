@@ -155,7 +155,12 @@ export class RateService {
           const amount = recipe.in[itemId].mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
           if (itemStep != null)
-            this.addEntityValue(itemStep, 'parents', step.id, amount);
+            this.addEntityValue(
+              itemStep,
+              'parents',
+              step.id,
+              amount.simplify(),
+            );
         }
       }
       for (const itemId of Object.keys(recipe.out)) {
@@ -167,7 +172,7 @@ export class RateService {
               step,
               'outputs',
               itemId,
-              amount.div(itemStep.items),
+              amount.div(itemStep.items).simplify(),
             );
           }
         }
@@ -416,6 +421,16 @@ export class RateService {
 
     // Perform recursive sort
     const sorted = this.sortRecursive(groups, ROOT_ID, []);
+
+    // Try to add any remaining steps back including their corresponding group
+    while (sorted.length < steps.length) {
+      const step = steps.find((s) => !sorted.includes(s));
+      // istanbul ignore next: Should be impossible inside this while statement
+      if (step == null) break;
+      sorted.push(step);
+      const group = groups[step.id];
+      if (group) sorted.push(...group);
+    }
 
     // Add back any steps left out (potentially circular loops)
     sorted.push(...steps.filter((s) => !sorted.includes(s)));

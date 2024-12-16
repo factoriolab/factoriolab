@@ -381,9 +381,11 @@
                         : null;
                     as type
                   ) {
+                    @let stack = data().itemEntities[step.itemId].stack;
                     @if (
                       data().flags.has('beltStack') &&
-                      data().itemEntities[step.itemId].stack
+                      stack &&
+                      stack.gt(rational.one)
                     ) {
                       <button
                         pButton
@@ -391,9 +393,7 @@
                         type="button"
                         class="hover-action p-button-text"
                         [pTooltip]="tooltip"
-                        (click)="
-                          beltPicker.show($event, itemSettings, $any(type))
-                        "
+                        (click)="beltPicker.show($event, stack, itemSettings)"
                       >
                         <i class="p-button-icon" [class]="beltId | iconSmClass">
                           @if (itemSettings.stack?.gt(rational.one)) {
@@ -1358,8 +1358,8 @@
                             @if (data().flags.has('inserterEstimation')) {
                               <td>
                                 @if (
-                                  itemsState()[input.key].beltId !==
-                                    ItemId.Pipe && row.step.items
+                                  data().itemEntities[input.key].stack &&
+                                  row.step.items
                                 ) {
                                   @if (
                                     row.step.items
@@ -1446,9 +1446,7 @@
                         <tr>
                           @if (data().flags.has('inserterEstimation')) {
                             <td>
-                              @if (
-                                itemsState()[output.key].beltId !== ItemId.Pipe
-                              ) {
+                              @if (data().itemEntities[output.key].stack) {
                                 @if (
                                   items | inserterSpeed: settings();
                                   as ins
@@ -1666,16 +1664,16 @@
                 {{ 'steps.inputs' | translate }}
               </div>
             }
-            <i [class]="recipeId | iconClass: 'recipe'" [pTooltip]="tooltip">
+            <i [class]="recipeId | iconClass: 'recipe'" [pTooltip]="tooltipObj">
               @if (recipeObjectiveId) {
                 <span>#{{ recipeObjectiveId }}</span>
               }
-              <ng-template #tooltip>
+              <ng-template #tooltipObj>
                 <lab-tooltip [id]="recipeId" type="recipe"></lab-tooltip>
               </ng-template>
             </i>
-            <i [class]="machineId | iconClass" [pTooltip]="tooltip">
-              <ng-template #tooltip>
+            <i [class]="machineId | iconClass" [pTooltip]="tooltipMach">
+              <ng-template #tooltipMach>
                 <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
               </ng-template>
             </i>

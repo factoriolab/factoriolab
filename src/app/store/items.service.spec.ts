@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { spread } from '~/helpers';
+import { rational } from '~/models/rational';
 import { ItemId, Mocks, TestModule } from '~/tests';
 
 import { ItemsService } from './items.service';
@@ -22,12 +23,14 @@ describe('ItemsService', () => {
       spyOn(service.settingsSvc, 'settings').and.returnValue(
         spread(Mocks.settingsStateInitial, {
           pipeId: ItemId.Pipe,
+          stack: rational(4n),
         }),
       );
       const result = service.settings();
       expect(Object.keys(result).length).toEqual(
         Mocks.adjustedDataset.itemIds.length,
       );
+      expect(result[ItemId.Car].stack).toEqual(rational.one);
     });
   });
 
