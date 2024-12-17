@@ -52,7 +52,6 @@ export function recipeHasQuality(
     (!flags.has('technology') || Object.keys(recipe.in).length > 0) &&
     !flags.has('burn') &&
     !flags.has('grow') &&
-    (Object.keys(recipe.in).some((k) => itemData[k].stack) ||
-      Object.keys(recipe.out).some((k) => itemData[k].stack))
+    Object.keys(recipe.in).some((k) => itemData[k].stack)
   );
 }
