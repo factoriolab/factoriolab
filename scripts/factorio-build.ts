@@ -230,12 +230,9 @@ async function processMod(): Promise<void> {
     if (recipe.subgroup) return recipe.subgroup;
 
     const product = getRecipeProduct(recipe);
-    if (product == null)
-      throw new Error(
-        `Recipe '${recipe.name}' declares no subgroup though it is required`,
-      );
+    if (product) return getSubgroup(product);
 
-    return getSubgroup(product);
+    return 'other';
   }
 
   function getSubgroup(
@@ -1153,7 +1150,7 @@ async function processMod(): Promise<void> {
         } else if (dataRaw['asteroid-collector']?.[result]) {
           const entity = dataRaw['asteroid-collector'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['agricultural-tower'][result]) {
+        } else if (dataRaw['agricultural-tower']?.[result]) {
           const entity = dataRaw['agricultural-tower'][result];
           item.machine = getMachine(entity, proto.name);
         }
@@ -1674,8 +1671,6 @@ async function processMod(): Promise<void> {
           const icon = await getIcon(plantProto);
           const name = entityLocale.names[plantProto.name];
           const producers = producersMap.agriculture[''];
-          const category =
-            dataRaw['item-subgroup'][getSubgroup(plantProto)].group;
           const time = plantProto.growth_ticks / 60;
           const [recipeOut, recipeCatalyst] = getProducts(
             minable.results,
@@ -1715,7 +1710,7 @@ async function processMod(): Promise<void> {
           const recipe: RecipeJson = {
             id: plantProto.name,
             name,
-            category,
+            category: group.name,
             row: getRecipeRow(plantProto),
             time,
             producers,

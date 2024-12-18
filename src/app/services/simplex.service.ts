@@ -920,15 +920,14 @@ export class SimplexService {
     for (const step of steps.filter((s) => s.recipeId == null)) {
       if (step.itemId) {
         const itemId = step.itemId;
-        const potentialRecipes = recipes.filter(
-          (r) => r.output[itemId] != null,
-        );
-        potentials[itemId] = potentialRecipes
+        potentials[itemId] = recipes
+          .filter((r) => r.output[itemId]?.gt(rational.zero))
           .sort((a, b) => b.output[itemId].sub(a.output[itemId]).toNumber())
           .map((r) => r.id);
       }
     }
 
+    // Sort only based on output recipes, ignore input recipes
     const order = Object.keys(potentials).sort(
       (a, b) => potentials[a].length - potentials[b].length,
     );
@@ -952,6 +951,14 @@ export class SimplexService {
     state: MatrixState,
     recipeObjective?: RecipeObjective,
   ): void {
+    // Don't add a step for maximize or limit objectives
+    if (
+      recipeObjective &&
+      (recipeObjective.type === ObjectiveType.Maximize ||
+        recipeObjective.type === ObjectiveType.Limit)
+    )
+      return;
+
     const steps = state.steps;
     // Don't assign to any step that already has a recipe or objective assigned
     // (Those steps should have non-nullish machines)

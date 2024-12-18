@@ -177,11 +177,7 @@ export class SettingsService extends Store<SettingsState> {
     const modId = this.modId();
     if (modId == null) return {};
     const states = this.preferencesSvc.states();
-    let result = coalesce(states[modId], {});
-    // Migrate game-based states
-    const game = this.game();
-    if (states[game]) result = spread(states[game], result);
-    return result;
+    return coalesce(states[modId], {});
   });
 
   stateOptions = computed(() => {
@@ -470,9 +466,6 @@ export class SettingsService extends Store<SettingsState> {
     // Generate temporary object arrays
     const items = itemIds.map((i) => parseItem(itemData[i]));
     const recipes = recipeIds.map((r) => parseRecipe(recipeData[r]));
-    const canProdUpgradeRecipeIds = recipes
-      .filter((r) => r.flags.has('canProdUpgrade'))
-      .map((r) => r.id);
 
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output item
@@ -614,6 +607,9 @@ export class SettingsService extends Store<SettingsState> {
         }
       });
     }
+    const canProdUpgradeRecipeIds = recipes
+      .filter((r) => r.flags.has('canProdUpgrade'))
+      .map((r) => r.id);
 
     // Filter for item types
     const beaconIds = items
