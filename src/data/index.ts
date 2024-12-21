@@ -5,6 +5,7 @@ export const data: AppData = {
   mods: [
     { id: 'spa', name: 'Space Age', game: Game.Factorio, flags: 'spa' },
     { id: '2.0', name: '2.0', game: Game.Factorio, flags: '2.0' },
+    { id: '2.0q', name: '2.0 + Quality', game: Game.Factorio, flags: '2.0q' },
     { id: '1.1', name: '1.1', game: Game.Factorio, flags: '1.1' },
     { id: '1.1e', name: '1.1 Expensive', game: Game.Factorio, flags: '1.1' },
     { id: '1.0', name: '1.0', game: Game.Factorio, flags: '1.1' },
@@ -208,5 +209,6 @@ export const data: AppData = {
     'ulc',
     'ps2',
     '2.0',
+    '2.0q',
   ],
 };
