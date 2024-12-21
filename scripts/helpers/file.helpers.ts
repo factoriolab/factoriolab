@@ -10,8 +10,11 @@ export function getJsonData(file: string): unknown {
 const appDataPath =
   process.env['AppData'] ||
   `${process.env['HOME'] ?? ''}/Library/Application Support`;
-const scriptOutputPath = `${appDataPath}/Factorio/script-output`;
+const flatpakSteamPath = `${process.env['HOME'] ?? ''}/.var/app/com.valvesoftware.Steam`;
+export const factorioPath = fs.existsSync(flatpakSteamPath)
+  ? `${flatpakSteamPath}/.factorio`
+  : `${appDataPath}/Factorio`;
 export function getLocale(file: string): Locale {
-  const path = `${scriptOutputPath}/${file}`;
+  const path = `${factorioPath}/script-output/${file}`;
   return getJsonData(path) as Locale;
 }

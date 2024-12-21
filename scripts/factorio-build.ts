@@ -88,7 +88,7 @@ import {
   pushEntityValue,
   updateHash,
 } from './helpers/data.helpers';
-import { getJsonData, getLocale } from './helpers/file.helpers';
+import { factorioPath, getJsonData, getLocale } from './helpers/file.helpers';
 import { logTime, logWarn } from './helpers/log.helpers';
 import { getEnergyInMJ, round } from './helpers/power.helpers';
 import {
@@ -133,10 +133,6 @@ if (!mod)
   );
 
 // Set up paths
-const appDataPath =
-  process.env['AppData'] ||
-  `${process.env['HOME'] ?? ''}/Library/Application Support`;
-const factorioPath = `${appDataPath}/Factorio`;
 const modsPath = `${factorioPath}/mods`;
 const scriptOutputPath = `${factorioPath}/script-output`;
 const dataRawPath = `${scriptOutputPath}/data-raw-dump.json`;
