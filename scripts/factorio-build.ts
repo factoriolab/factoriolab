@@ -159,6 +159,14 @@ async function processMod(): Promise<void> {
   fs.mkdirSync(tempPath);
   fs.mkdirSync(tempIconsPath);
 
+  try {
+    fs.mkdirSync(modPath);
+  } catch (err) {
+    if ((err as any).code !== 'EEXIST') {
+      throw err;
+    }
+  }
+
   // Read locale data
   const groupLocale = getLocale('item-group-locale.json');
   const itemLocale = getLocale('item-locale.json');

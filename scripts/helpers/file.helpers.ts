@@ -3,8 +3,17 @@ import fs from 'fs';
 import { Locale } from '../factorio-build.models';
 
 export function getJsonData(file: string): unknown {
-  const str = fs.readFileSync(file).toString();
-  return JSON.parse(str);
+  try {
+    const str = fs.readFileSync(file).toString();
+    return JSON.parse(str);
+  } catch (err) {
+    if ((err as any).code === 'ENOENT') {
+      // space-connection-locale.json is not generated when spaceage mod is disabled
+      return {};
+    } else {
+      throw err;
+    }
+  }
 }
 
 const appDataPath =
