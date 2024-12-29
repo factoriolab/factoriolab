@@ -9,6 +9,6 @@ export class BonusPercentPipe implements PipeTransform {
   displaySvc = inject(DisplayService);
 
   transform(value: Rational): string {
-    return this.displaySvc.toBonusPercent(value);
+    return value.toString();
   }
 }
