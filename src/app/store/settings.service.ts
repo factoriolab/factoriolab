@@ -536,7 +536,7 @@ export class SettingsService extends Store<SettingsState> {
             for (const eff of effs) {
               if (qItem.module[eff] && !filterEffect(qItem.module, eff)) {
                 let value = qItem.module[eff].mul(factor);
-                value = value.mul(rational(100n)).floor().div(rational(100n));
+                value = value.mul(rational(1000n)).floor().div(rational(1000n));
                 qItem.module = spread(qItem.module, { [eff]: value });
               }
             }
