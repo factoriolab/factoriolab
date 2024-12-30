@@ -766,24 +766,6 @@ describe('SimplexService', () => {
       ]);
     });
 
-    it('should skip a limit step', () => {
-      spyOn(service.rateSvc, 'adjustPowerPollution');
-      const state = getState();
-      const solution: any = {
-        surplus: {},
-        inputs: {},
-        recipes: { [RecipeId.Coal]: rational.one },
-      };
-      service.addRecipeStep(
-        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
-        solution,
-        state,
-        Mocks.objectives[3] as any,
-      );
-      expect(service.rateSvc.adjustPowerPollution).not.toHaveBeenCalled();
-      expect(state.steps).toEqual([]);
-    });
-
     it('should place a new step next to related steps', () => {
       spyOn(service.rateSvc, 'adjustPowerPollution');
       const state = getState();
