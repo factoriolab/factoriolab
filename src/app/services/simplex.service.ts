@@ -951,14 +951,6 @@ export class SimplexService {
     state: MatrixState,
     recipeObjective?: RecipeObjective,
   ): void {
-    // Don't add a step for maximize or limit objectives
-    if (
-      recipeObjective &&
-      (recipeObjective.type === ObjectiveType.Maximize ||
-        recipeObjective.type === ObjectiveType.Limit)
-    )
-      return;
-
     const steps = state.steps;
     // Don't assign to any step that already has a recipe or objective assigned
     // (Those steps should have non-nullish machines)
