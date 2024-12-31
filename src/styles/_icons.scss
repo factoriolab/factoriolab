@@ -147,7 +147,7 @@ body.light .module::before {
 }
 
 .transparent::before {
-  background-position: 0 -256px;
+  background-position: -64px -256px;
 }
 
 .q-1,
@@ -193,4 +193,8 @@ body.light .module::before {
 
 .q5::after {
   background-position: -256px -192px;
+}
+
+.factor-y::before {
+  background-position: 0 -256px;
 }

@@ -1,0 +1,39 @@
+{
+    "version": {
+        "Factor Y": "0.1"
+    },
+    "categories": [
+        {
+            "id": "belts",
+            "name": "Belts",
+            "icon": "belt"
+        },
+        {
+            "id": "arms",
+            "name": "Arms",
+            "icon": "arm"
+        }
+    ],
+    "icons": [
+        {
+            "id": "belt",
+            "position": "0 -256px",
+            "color": "#bc7d7d"
+        },
+        {
+            "id": "arm",
+            "position": "-0px -512px",
+            "color": "#bc7d7d" 
+        }
+    ],
+    "items": [
+        {
+            "id": "belt1",
+            "name": "Belt I",
+            "category": "belts",
+            "row": 1,
+            "belt": 1,
+            "icon": "belt"
+        }
+    ]
+}
