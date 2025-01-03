@@ -88,7 +88,12 @@ import {
   pushEntityValue,
   updateHash,
 } from './helpers/data.helpers';
-import { factorioPath, getJsonData, getLocale } from './helpers/file.helpers';
+import {
+  factorioPath,
+  getJsonData,
+  getLocale,
+  tryGetLocale,
+} from './helpers/file.helpers';
 import { logTime, logWarn } from './helpers/log.helpers';
 import { getEnergyInMJ, round } from './helpers/power.helpers';
 import {
@@ -160,11 +165,12 @@ async function processMod(): Promise<void> {
   const itemLocale = getLocale('item-locale.json');
   const fluidLocale = getLocale('fluid-locale.json');
   const recipeLocale = getLocale('recipe-locale.json');
-  const spaceConnectionLocale = getLocale('space-connection-locale.json');
   const spaceLocationLocale = getLocale('space-location-locale.json');
-  const surfaceLocale = getLocale('surface-locale.json');
   const techLocale = getLocale('technology-locale.json');
   const entityLocale = getLocale('entity-locale.json');
+  // Not generated when the `space-age` mod is disabled:
+  const spaceConnectionLocale = tryGetLocale('space-connection-locale.json');
+  const surfaceLocale = tryGetLocale('surface-locale.json');
 
   // Read main data JSON
   const dataRaw = getJsonData(dataRawPath) as DataRawDump;

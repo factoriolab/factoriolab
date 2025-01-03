@@ -32,6 +32,7 @@ export type Flag =
 export type FlagSet =
   | 'spa'
   | '2.0'
+  | '2.0q'
   | '1.1'
   | '1.1e'
   | 'dsp'
@@ -72,6 +73,23 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'mods',
     'pollution',
     'power',
+    'researchSpeed',
+    'wagons',
+  ]),
+  '2.0q': new Set([
+    'beacons',
+    'diminishingBeacons',
+    'fluidCostRatio',
+    'fuels',
+    'inserterEstimation',
+    'maximumFactor',
+    'minimumFactor',
+    'miningDepletion',
+    'miningProductivity',
+    'mods',
+    'pollution',
+    'power',
+    'quality',
     'researchSpeed',
     'wagons',
   ]),
