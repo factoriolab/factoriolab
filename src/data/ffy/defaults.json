@@ -1,0 +1,17 @@
+{
+  "minBelt": "connector",
+  "maxBelt": "high-energy-connector",
+  "minMachineRank": [
+    "assembler",
+    "ship-assembler",
+    "atomic-printer"
+  ],
+  "maxMachineRank": [
+    "advanced-assembler",
+    "advanced-ship-assembler",
+    "quantum-printer"
+  ],
+  "moduleRank": [
+    "duplicator-artifact"
+  ]
+}

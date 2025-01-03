@@ -1,0 +1,72 @@
+{
+  "beacon": "beacon",
+  "minBelt": "transport-belt",
+  "maxBelt": "se-deep-space-transport-belt-black",
+  "fuelRank": [
+    "coal"
+  ],
+  "cargoWagon": "cargo-wagon",
+  "fluidWagon": "fluid-wagon",
+  "excludedRecipes": [
+    "se-recycle-big-electric-pole",
+    "se-recycle-medium-electric-pole",
+    "se-recycle-radar",
+    "se-recycle-small-electric-pole",
+    "se-recycle-small-iron-electric-pole",
+    "se-recycle-substation",
+    "se-scrap-decontamination",
+    "se-space-capsule-scorched-scrapping",
+    "se-space-capsule-scrapping",
+    "se-empty-barrel-reprocessing",
+    "se-scrap-recycling",
+    "se-broken-data-scrapping",
+    "se-cargo-pod-scrapping",
+    "se-matter-fusion-dirty",
+    "se-matter-fusion-iron",
+    "se-matter-fusion-copper",
+    "se-matter-fusion-stone",
+    "se-matter-fusion-uranium",
+    "se-matter-fusion-vulcanite",
+    "se-matter-fusion-cryonite",
+    "se-matter-fusion-beryllium",
+    "se-matter-fusion-holmium",
+    "se-matter-fusion-iridium",
+    "se-big-turbine-internal",
+    "se-condenser-turbine-reclaim-water-100-165",
+    "se-condenser-turbine-reclaim-water-165-200",
+    "se-condenser-turbine-reclaim-water-500-600",
+    "se-core-fragment-omni",
+    "se-core-fragment-iron-ore",
+    "se-core-fragment-copper-ore",
+    "se-core-fragment-coal",
+    "se-core-fragment-stone",
+    "se-core-fragment-uranium-ore",
+    "se-core-fragment-crude-oil",
+    "se-core-fragment-se-beryllium-ore",
+    "se-core-fragment-se-cryonite",
+    "se-core-fragment-se-holmium-ore",
+    "se-core-fragment-se-iridium-ore",
+    "se-core-fragment-se-vulcanite",
+    "se-core-fragment-se-vitamelange",
+    "se-bio-sludge-crude-oil",
+    "se-bio-sludge-from-wood",
+    "se-bio-sludge-from-fish",
+    "se-pyroflux-steam",
+    "se-vitalic-hydrocarbon-extraction"
+  ],
+  "minMachineRank": [
+    "assembling-machine-1",
+    "electric-furnace",
+    "electric-mining-drill"
+  ],
+  "maxMachineRank": [
+    "assembling-machine-3",
+    "industrial-furnace",
+    "area-mining-drill"
+  ],
+  "moduleRank": [
+    "productivity-module-3",
+    "speed-module-3"
+  ],
+  "beaconModule": "speed-module-3"
+}

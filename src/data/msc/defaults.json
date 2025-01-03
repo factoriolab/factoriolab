@@ -1,0 +1,28 @@
+{
+  "beacon": "beacon",
+  "minBelt": "transport-belt",
+  "maxBelt": "express-transport-belt",
+  "fuelRank": [
+    "coal"
+  ],
+  "cargoWagon": "cargo-wagon",
+  "fluidWagon": "fluid-wagon",
+  "excludedRecipes": [],
+  "minMachineRank": [
+    "assembling-machine-1",
+    "electric-furnace",
+    "electric-mining-drill",
+    "lab"
+  ],
+  "maxMachineRank": [
+    "assembling-machine-3",
+    "electric-furnace",
+    "electric-mining-drill",
+    "lab-mk2"
+  ],
+  "moduleRank": [
+    "productivity-module-3",
+    "speed-module-3"
+  ],
+  "beaconModule": "speed-module-3"
+}
