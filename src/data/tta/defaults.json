@@ -1,0 +1,20 @@
+{
+  "minBelt": "conveyor-1",
+  "maxBelt": "conveyor-1",
+  "excludedRecipes": [],
+  "minMachineRank": [
+    "drill-1",
+    "smelter-1",
+    "assembler-1",
+    "thresher-1"
+  ],
+  "maxMachineRank": [
+    "drill-3",
+    "smelter-3",
+    "assembler-2",
+    "thresher-2"
+  ],
+  "fuelRank": [
+    "plantmatter"
+  ]
+}
