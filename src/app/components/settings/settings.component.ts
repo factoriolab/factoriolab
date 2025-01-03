@@ -191,7 +191,6 @@ export class SettingsComponent {
 
   ItemId = ItemId;
   rational = rational;
-  maximumStack = rational(4n);
   isStandalone = window.matchMedia('(display-mode: standalone)').matches;
 
   get search(): string {

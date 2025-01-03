@@ -24,7 +24,7 @@ import { InputNumberComponent } from '../input-number/input-number.component';
 import { OverlayComponent } from '../modal';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 
-const MAX = rational(4n);
+const MAX = rational(99n);
 
 @Component({
   selector: 'lab-belt-overlay',
