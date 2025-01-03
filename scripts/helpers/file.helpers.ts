@@ -18,3 +18,15 @@ export function getLocale(file: string): Locale {
   const path = `${factorioPath}/script-output/${file}`;
   return getJsonData(path) as Locale;
 }
+
+export function tryGetLocale(file: string): Locale {
+  try {
+    return getLocale(file);
+  } catch (err) {
+    if ((err as any).code === 'ENOENT') {
+      return { names: {} };
+    } else {
+      throw err;
+    }
+  }
+}
