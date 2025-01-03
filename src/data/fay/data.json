@@ -44,563 +44,553 @@
       "id": "special",
       "name": "Special",
       "icon": "starteritem"
-    },
-    {
-      "id": "ores",
-      "name": "Ores",
-      "icon": "irono"
-    },
-    {
-      "id": "parts",
-      "name": "Parts",
-      "icon": "ironp"
     }
   ],
   "icons": [
     {
       "id": "beltmk1item",
       "position": "-0px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "beltmk2item",
       "position": "-64px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "beltmk3item",
       "position": "-128px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "crossingmk1item",
       "position": "-192px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "crossingmk2item",
       "position": "-256px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "crossingmk3item",
       "position": "-320px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "mergermk1item",
       "position": "-384px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "mergermk2item",
       "position": "-448px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "mergermk3item",
       "position": "-512px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "splittermk1item",
       "position": "-576px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "splittermk2item",
       "position": "-640px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "splittermk3item",
       "position": "-704px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "overflowmk1item",
       "position": "-768px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "overflowmk2item",
       "position": "-832px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "overflowmk3item",
       "position": "-896px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "underflowmk1item",
       "position": "-960px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "underflowmk2item",
       "position": "-1024px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "underflowmk3item",
       "position": "-1088px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "minerbothmk1item",
       "position": "-1152px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "minerbothmk2item",
       "position": "-1216px -0px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "minerbothmk3item",
       "position": "-0px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "minerbothmk4item",
       "position": "-64px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "minerbothmk5item",
       "position": "-128px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "sourcechestitem",
       "position": "-192px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "sourcebeltitem",
       "position": "-256px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "sinkchestitem",
       "position": "-320px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "sinkbeltitem",
       "position": "-384px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "influencemk1item",
       "position": "-448px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "influencemk2item",
       "position": "-512px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "influencemk3item",
       "position": "-576px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "influencemk4item",
       "position": "-640px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "itemstorageitem",
       "position": "-704px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "provideritem",
       "position": "-768px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "swappermk1item",
       "position": "-832px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "swappermk2item",
       "position": "-896px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "swappermk3item",
       "position": "-960px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "mixermk1item",
       "position": "-1024px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "mixermk2item",
       "position": "-1088px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "mixermk3item",
       "position": "-1152px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "armbothmk1item",
       "position": "-1216px -64px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "armbothmk2item",
       "position": "-0px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "armbothmk3item",
       "position": "-64px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "armbothmk4item",
       "position": "-128px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "longarmbothmk1item",
       "position": "-192px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "longarmbothmk2item",
       "position": "-256px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "longarmbothmk3item",
       "position": "-320px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "longarmbothmk4item",
       "position": "-384px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "solaritem",
       "position": "-448px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "batteryitem",
       "position": "-512px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "burnerpowermk1item",
       "position": "-576px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "burnerpowermk2item",
       "position": "-640px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "burnerpowermk3item",
       "position": "-704px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "burnerpowermk4item",
       "position": "-768px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "burnerpowermk5item",
       "position": "-832px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "assemblermk1item",
       "position": "-896px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "assemblermk2item",
       "position": "-960px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "assemblermk3item",
       "position": "-1024px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "assemblermk4item",
       "position": "-1088px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "assemblermk5item",
       "position": "-1152px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "furnaceburnermk1item",
       "position": "-1216px -128px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "furnaceburnermk2item",
       "position": "-0px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "furnaceburnermk3item",
       "position": "-64px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "furnaceburnermk4item",
       "position": "-128px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "furnaceburnermk5item",
       "position": "-192px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "furnaceelectricmk1item",
       "position": "-256px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "furnaceelectricmk2item",
       "position": "-320px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "furnaceelectricmk3item",
       "position": "-384px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "furnaceelectricmk4item",
       "position": "-448px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "furnaceelectricmk5item",
       "position": "-512px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "labitem",
       "position": "-576px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "launchpaditem",
       "position": "-640px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "landingzoneitem",
       "position": "-704px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "stackermk1item",
       "position": "-768px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "stackermk2item",
       "position": "-832px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "unstackeritem",
       "position": "-896px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "distributormk1item",
       "position": "-960px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "distributormk2item",
       "position": "-1024px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "distributormk3item",
       "position": "-1088px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "centrifugeitem",
       "position": "-1152px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "nuclearreactoritem",
       "position": "-1216px -192px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "nuclearwastereactoritem",
       "position": "-0px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "researchtokenmk1",
       "position": "-64px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "researchtokenmk2",
       "position": "-128px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "researchtokenmk3",
       "position": "-192px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "researchtokenmk4",
       "position": "-256px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "researchtokenmk5",
       "position": "-320px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "wire",
       "position": "-384px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "gear",
       "position": "-448px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "chip",
       "position": "-512px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "motor",
       "position": "-576px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "screw",
       "position": "-640px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "cable",
       "position": "-704px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "computer",
       "position": "-768px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "rod",
       "position": "-832px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "rocketfuel",
       "position": "-896px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "cargoshipmk1item",
       "position": "-960px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "cargoshipmk2item",
       "position": "-1024px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "colonizershipitem",
       "position": "-1088px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "module",
       "position": "-1152px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "irono",
       "position": "-1216px -256px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "coppero",
       "position": "-0px -320px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "titaniumo",
       "position": "-64px -320px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "stoneo",
       "position": "-128px -320px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "coal",
       "position": "-192px -320px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "ironp",
       "position": "-256px -320px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "copperp",
       "position": "-320px -320px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "titaniump",
       "position": "-384px -320px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "stonep",
       "position": "-448px -320px",
-      "color": "#437ac4"
+      "color": "#000000"
     },
     {
       "id": "starteritem",
       "position": "-512px -320px",
-      "color": "#437ac4"
+      "color": "#000000"
     }
   ],
   "items": [
@@ -610,7 +600,13 @@
       "category": "belts",
       "row": 0,
       "icon": "beltmk1item",
-      "machine": null
+      "machine": null,
+      "belt": {
+        "speed": 3.125
+      },
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "beltmk2",
@@ -618,7 +614,13 @@
       "category": "belts",
       "row": 0,
       "icon": "beltmk2item",
-      "machine": null
+      "machine": null,
+      "belt": {
+        "speed": 6.25
+      },
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "beltmk3",
@@ -626,7 +628,13 @@
       "category": "belts",
       "row": 0,
       "icon": "beltmk3item",
-      "machine": null
+      "machine": null,
+      "belt": {
+        "speed": 12.5
+      },
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "crossingmk1",
@@ -634,7 +642,11 @@
       "category": "belts",
       "row": 0,
       "icon": "crossingmk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "crossingmk2",
@@ -642,7 +654,11 @@
       "category": "belts",
       "row": 0,
       "icon": "crossingmk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "crossingmk3",
@@ -650,7 +666,11 @@
       "category": "belts",
       "row": 0,
       "icon": "crossingmk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "mergermk1",
@@ -658,7 +678,11 @@
       "category": "belts",
       "row": 1,
       "icon": "mergermk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "mergermk2",
@@ -666,7 +690,11 @@
       "category": "belts",
       "row": 1,
       "icon": "mergermk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "mergermk3",
@@ -674,7 +702,11 @@
       "category": "belts",
       "row": 1,
       "icon": "mergermk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "splittermk1",
@@ -682,7 +714,11 @@
       "category": "belts",
       "row": 1,
       "icon": "splittermk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "splittermk2",
@@ -690,7 +726,11 @@
       "category": "belts",
       "row": 1,
       "icon": "splittermk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "splittermk3",
@@ -698,7 +738,11 @@
       "category": "belts",
       "row": 1,
       "icon": "splittermk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "overflowmk1",
@@ -706,7 +750,11 @@
       "category": "belts",
       "row": 2,
       "icon": "overflowmk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "overflowmk2",
@@ -714,7 +762,11 @@
       "category": "belts",
       "row": 2,
       "icon": "overflowmk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "overflowmk3",
@@ -722,7 +774,11 @@
       "category": "belts",
       "row": 2,
       "icon": "overflowmk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "underflowmk1",
@@ -730,7 +786,11 @@
       "category": "belts",
       "row": 2,
       "icon": "underflowmk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "underflowmk2",
@@ -738,7 +798,11 @@
       "category": "belts",
       "row": 2,
       "icon": "underflowmk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "underflowmk3",
@@ -746,7 +810,11 @@
       "category": "belts",
       "row": 2,
       "icon": "underflowmk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "minermk1",
@@ -756,8 +824,13 @@
       "icon": "minerbothmk1item",
       "machine": {
         "speed": 1,
-        "type": "electric"
-      }
+        "type": "electric",
+        "usage": 10
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "minermk2",
@@ -766,9 +839,14 @@
       "row": 0,
       "icon": "minerbothmk2item",
       "machine": {
-        "speed": 1,
-        "type": "electric"
-      }
+        "speed": 2,
+        "type": "electric",
+        "usage": 40
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "minermk3",
@@ -777,9 +855,14 @@
       "row": 0,
       "icon": "minerbothmk3item",
       "machine": {
-        "speed": 1,
-        "type": "electric"
-      }
+        "speed": 3,
+        "type": "electric",
+        "usage": 160
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "minermk4",
@@ -788,9 +871,13 @@
       "row": 0,
       "icon": "minerbothmk4item",
       "machine": {
-        "speed": 1,
+        "speed": 4,
         "type": "electric"
-      }
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "minermk5",
@@ -799,9 +886,13 @@
       "row": 0,
       "icon": "minerbothmk5item",
       "machine": {
-        "speed": 1,
+        "speed": 5,
         "type": "electric"
-      }
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "sourcechest",
@@ -809,7 +900,11 @@
       "category": "modules",
       "row": 0,
       "icon": "sourcechestitem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "sourcebelt",
@@ -817,7 +912,11 @@
       "category": "modules",
       "row": 0,
       "icon": "sourcebeltitem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "sinkchest",
@@ -825,7 +924,11 @@
       "category": "modules",
       "row": 0,
       "icon": "sinkchestitem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "sinkbelt",
@@ -833,7 +936,11 @@
       "category": "modules",
       "row": 0,
       "icon": "sinkbeltitem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "influencemk1",
@@ -841,7 +948,11 @@
       "category": "special",
       "row": 0,
       "icon": "influencemk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "influencemk2",
@@ -849,7 +960,11 @@
       "category": "special",
       "row": 0,
       "icon": "influencemk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "influencemk3",
@@ -857,7 +972,11 @@
       "category": "special",
       "row": 0,
       "icon": "influencemk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "influencemk4",
@@ -865,7 +984,11 @@
       "category": "special",
       "row": 0,
       "icon": "influencemk4item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "itemstorage",
@@ -873,7 +996,11 @@
       "category": "special",
       "row": 0,
       "icon": "itemstorageitem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "provider",
@@ -881,7 +1008,11 @@
       "category": "special",
       "row": 0,
       "icon": "provideritem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "swappermk1",
@@ -889,7 +1020,11 @@
       "category": "belts",
       "row": 2,
       "icon": "swappermk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "swappermk2",
@@ -897,7 +1032,11 @@
       "category": "belts",
       "row": 2,
       "icon": "swappermk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "swappermk3",
@@ -905,7 +1044,11 @@
       "category": "belts",
       "row": 2,
       "icon": "swappermk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "mixermk1",
@@ -913,7 +1056,11 @@
       "category": "belts",
       "row": 2,
       "icon": "mixermk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "mixermk2",
@@ -921,7 +1068,11 @@
       "category": "belts",
       "row": 2,
       "icon": "mixermk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "mixermk3",
@@ -929,7 +1080,11 @@
       "category": "belts",
       "row": 2,
       "icon": "mixermk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "armmk1",
@@ -937,7 +1092,11 @@
       "category": "arms",
       "row": 0,
       "icon": "armbothmk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "armmk2",
@@ -945,7 +1104,11 @@
       "category": "arms",
       "row": 0,
       "icon": "armbothmk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "armmk3",
@@ -953,7 +1116,11 @@
       "category": "arms",
       "row": 0,
       "icon": "armbothmk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "armmk4",
@@ -961,7 +1128,11 @@
       "category": "arms",
       "row": 0,
       "icon": "armbothmk4item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "longarmmk1",
@@ -969,7 +1140,11 @@
       "category": "arms",
       "row": 0,
       "icon": "longarmbothmk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "longarmmk2",
@@ -977,7 +1152,11 @@
       "category": "arms",
       "row": 0,
       "icon": "longarmbothmk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "longarmmk3",
@@ -985,7 +1164,11 @@
       "category": "arms",
       "row": 0,
       "icon": "longarmbothmk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "longarmmk4",
@@ -993,7 +1176,11 @@
       "category": "arms",
       "row": 0,
       "icon": "longarmbothmk4item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "solar",
@@ -1001,7 +1188,11 @@
       "category": "energy",
       "row": 0,
       "icon": "solaritem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "battery",
@@ -1009,7 +1200,11 @@
       "category": "energy",
       "row": 0,
       "icon": "batteryitem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "burnerpowermk1",
@@ -1017,7 +1212,11 @@
       "category": "energy",
       "row": 0,
       "icon": "burnerpowermk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "burnerpowermk2",
@@ -1025,7 +1224,11 @@
       "category": "energy",
       "row": 0,
       "icon": "burnerpowermk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "burnerpowermk3",
@@ -1033,7 +1236,11 @@
       "category": "energy",
       "row": 0,
       "icon": "burnerpowermk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "burnerpowermk4",
@@ -1041,7 +1248,11 @@
       "category": "energy",
       "row": 0,
       "icon": "burnerpowermk4item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "burnerpowermk5",
@@ -1049,7 +1260,11 @@
       "category": "energy",
       "row": 0,
       "icon": "burnerpowermk5item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "assemblermk1",
@@ -1059,8 +1274,13 @@
       "icon": "assemblermk1item",
       "machine": {
         "speed": 1,
-        "type": "electric"
-      }
+        "type": "electric",
+        "usage": 5
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "assemblermk2",
@@ -1069,9 +1289,14 @@
       "row": 0,
       "icon": "assemblermk2item",
       "machine": {
-        "speed": 1,
-        "type": "electric"
-      }
+        "speed": 2,
+        "type": "electric",
+        "usage": 20
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "assemblermk3",
@@ -1080,9 +1305,14 @@
       "row": 0,
       "icon": "assemblermk3item",
       "machine": {
-        "speed": 1,
-        "type": "electric"
-      }
+        "speed": 3,
+        "type": "electric",
+        "usage": 80
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "assemblermk4",
@@ -1091,9 +1321,13 @@
       "row": 0,
       "icon": "assemblermk4item",
       "machine": {
-        "speed": 1,
+        "speed": 4,
         "type": "electric"
-      }
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "assemblermk5",
@@ -1102,9 +1336,13 @@
       "row": 0,
       "icon": "assemblermk5item",
       "machine": {
-        "speed": 1,
+        "speed": 5,
         "type": "electric"
-      }
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "furnaceburnermk1",
@@ -1114,8 +1352,16 @@
       "icon": "furnaceburnermk1item",
       "machine": {
         "speed": 1,
-        "type": "electric"
-      }
+        "type": "burner",
+        "fuelCategories": [
+          "chemical"
+        ],
+        "usage": 31.25
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": "furnace"
     },
     {
       "id": "furnaceburnermk2",
@@ -1124,9 +1370,17 @@
       "row": 0,
       "icon": "furnaceburnermk2item",
       "machine": {
-        "speed": 1,
-        "type": "electric"
-      }
+        "speed": 2,
+        "type": "burner",
+        "fuelCategories": [
+          "chemical"
+        ],
+        "usage": 62.5
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": "furnace"
     },
     {
       "id": "furnaceburnermk3",
@@ -1135,9 +1389,17 @@
       "row": 0,
       "icon": "furnaceburnermk3item",
       "machine": {
-        "speed": 1,
-        "type": "electric"
-      }
+        "speed": 3,
+        "type": "burner",
+        "fuelCategories": [
+          "chemical"
+        ],
+        "usage": 3
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": "furnace"
     },
     {
       "id": "furnaceburnermk4",
@@ -1146,9 +1408,17 @@
       "row": 0,
       "icon": "furnaceburnermk4item",
       "machine": {
-        "speed": 1,
-        "type": "electric"
-      }
+        "speed": 4,
+        "type": "burner",
+        "fuelCategories": [
+          "chemical"
+        ],
+        "usage": 4
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": "furnace"
     },
     {
       "id": "furnaceburnermk5",
@@ -1157,9 +1427,17 @@
       "row": 0,
       "icon": "furnaceburnermk5item",
       "machine": {
-        "speed": 1,
-        "type": "electric"
-      }
+        "speed": 5,
+        "type": "burner",
+        "fuelCategories": [
+          "chemical"
+        ],
+        "usage": 5
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": "furnace"
     },
     {
       "id": "furnaceelectricmk1",
@@ -1170,7 +1448,11 @@
       "machine": {
         "speed": 1,
         "type": "electric"
-      }
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": "furnace"
     },
     {
       "id": "furnaceelectricmk2",
@@ -1179,9 +1461,13 @@
       "row": 0,
       "icon": "furnaceelectricmk2item",
       "machine": {
-        "speed": 1,
+        "speed": 2,
         "type": "electric"
-      }
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": "furnace"
     },
     {
       "id": "furnaceelectricmk3",
@@ -1190,9 +1476,13 @@
       "row": 0,
       "icon": "furnaceelectricmk3item",
       "machine": {
-        "speed": 1,
+        "speed": 3,
         "type": "electric"
-      }
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": "furnace"
     },
     {
       "id": "furnaceelectricmk4",
@@ -1201,9 +1491,13 @@
       "row": 0,
       "icon": "furnaceelectricmk4item",
       "machine": {
-        "speed": 1,
+        "speed": 4,
         "type": "electric"
-      }
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": "furnace"
     },
     {
       "id": "furnaceelectricmk5",
@@ -1212,9 +1506,13 @@
       "row": 0,
       "icon": "furnaceelectricmk5item",
       "machine": {
-        "speed": 1,
+        "speed": 5,
         "type": "electric"
-      }
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": "furnace"
     },
     {
       "id": "lab",
@@ -1222,7 +1520,11 @@
       "category": "special",
       "row": 0,
       "icon": "labitem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "launchpad",
@@ -1230,7 +1532,11 @@
       "category": "space",
       "row": 0,
       "icon": "launchpaditem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "landingzone",
@@ -1238,7 +1544,11 @@
       "category": "space",
       "row": 0,
       "icon": "landingzoneitem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "stackermk1",
@@ -1246,7 +1556,11 @@
       "category": "belts",
       "row": 0,
       "icon": "stackermk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "stackermk2",
@@ -1254,7 +1568,11 @@
       "category": "belts",
       "row": 0,
       "icon": "stackermk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "unstacker",
@@ -1262,7 +1580,11 @@
       "category": "belts",
       "row": 0,
       "icon": "unstackeritem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "distributormk1",
@@ -1270,7 +1592,11 @@
       "category": "belts",
       "row": 0,
       "icon": "distributormk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "distributormk2",
@@ -1278,7 +1604,11 @@
       "category": "belts",
       "row": 0,
       "icon": "distributormk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "distributormk3",
@@ -1286,7 +1616,11 @@
       "category": "belts",
       "row": 0,
       "icon": "distributormk3item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "centrifuge",
@@ -1294,7 +1628,11 @@
       "category": "energy",
       "row": 0,
       "icon": "centrifugeitem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "nuclearreactor",
@@ -1302,7 +1640,11 @@
       "category": "energy",
       "row": 0,
       "icon": "nuclearreactoritem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "nuclearwastereactor",
@@ -1310,7 +1652,11 @@
       "category": "energy",
       "row": 0,
       "icon": "nuclearwastereactoritem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "researchtokenmk1",
@@ -1318,7 +1664,11 @@
       "category": "special",
       "row": 0,
       "icon": "researchtokenmk1",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "researchtokenmk2",
@@ -1326,7 +1676,11 @@
       "category": "special",
       "row": 0,
       "icon": "researchtokenmk2",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "researchtokenmk3",
@@ -1334,7 +1688,11 @@
       "category": "special",
       "row": 0,
       "icon": "researchtokenmk3",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "researchtokenmk4",
@@ -1342,7 +1700,11 @@
       "category": "special",
       "row": 0,
       "icon": "researchtokenmk4",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "researchtokenmk5",
@@ -1350,7 +1712,11 @@
       "category": "special",
       "row": 0,
       "icon": "researchtokenmk5",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "wire",
@@ -1358,7 +1724,11 @@
       "category": "processing",
       "row": 1,
       "icon": "wire",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "gear",
@@ -1366,7 +1736,11 @@
       "category": "processing",
       "row": 1,
       "icon": "gear",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "chip",
@@ -1374,7 +1748,11 @@
       "category": "processing",
       "row": 1,
       "icon": "chip",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "motor",
@@ -1382,7 +1760,11 @@
       "category": "processing",
       "row": 1,
       "icon": "motor",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "screw",
@@ -1390,7 +1772,11 @@
       "category": "processing",
       "row": 1,
       "icon": "screw",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "cable",
@@ -1398,7 +1784,11 @@
       "category": "processing",
       "row": 1,
       "icon": "cable",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "computer",
@@ -1406,7 +1796,11 @@
       "category": "processing",
       "row": 1,
       "icon": "computer",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "rod",
@@ -1414,7 +1808,11 @@
       "category": "processing",
       "row": 1,
       "icon": "rod",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "rocketfuel",
@@ -1422,7 +1820,11 @@
       "category": "space",
       "row": 0,
       "icon": "rocketfuel",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "cargoshipmk1",
@@ -1430,7 +1832,11 @@
       "category": "space",
       "row": 0,
       "icon": "cargoshipmk1item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "cargoshipmk2",
@@ -1438,7 +1844,11 @@
       "category": "space",
       "row": 0,
       "icon": "cargoshipmk2item",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "colonizership",
@@ -1446,79 +1856,122 @@
       "category": "space",
       "row": 0,
       "icon": "colonizershipitem",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "ironplate",
       "name": "Iron Plate",
-      "category": "parts",
+      "category": "materials",
       "row": 0,
       "icon": "ironp",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "copperplate",
       "name": "Copper Plate",
-      "category": "parts",
+      "category": "materials",
       "row": 0,
       "icon": "copperp",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "titaniumplate",
       "name": "Titanium Plate",
-      "category": "parts",
+      "category": "materials",
       "row": 0,
       "icon": "titaniump",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "stonebrick",
       "name": "Stone Brick",
-      "category": "parts",
+      "category": "materials",
       "row": 0,
       "icon": "stonep",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "ironore",
       "name": "Iron Ore",
-      "category": "ores",
+      "category": "materials",
       "row": 0,
       "icon": "irono",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "copperore",
       "name": "Copper Ore",
-      "category": "ores",
+      "category": "materials",
       "row": 0,
       "icon": "coppero",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "titaniumore",
       "name": "Titanium Ore",
-      "category": "ores",
+      "category": "materials",
       "row": 0,
       "icon": "titaniumo",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "stone",
       "name": "Stone",
-      "category": "ores",
+      "category": "materials",
       "row": 0,
       "icon": "stoneo",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "entityType": null
     },
     {
       "id": "coal",
       "name": "Coal",
-      "category": "ores",
+      "category": "materials",
       "row": 0,
       "icon": "coal",
-      "machine": null
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": {
+        "category": "chemical",
+        "value": 0.1
+      },
+      "entityType": null
     }
   ],
   "recipes": [
@@ -1527,7 +1980,8 @@
       "name": "Belt I",
       "category": "belts",
       "row": 0,
-      "time": 256,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1541,14 +1995,16 @@
       },
       "out": {
         "beltmk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "beltmk2",
       "name": "Belt II",
       "category": "belts",
       "row": 0,
-      "time": 512,
+      "ticks": 512,
+      "time": 8.192,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1562,14 +2018,16 @@
       },
       "out": {
         "beltmk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "beltmk3",
       "name": "Belt III",
       "category": "belts",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1583,14 +2041,16 @@
       },
       "out": {
         "beltmk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "crossingmk1",
       "name": "Crossing I",
       "category": "belts",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1604,14 +2064,16 @@
       },
       "out": {
         "crossingmk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "crossingmk2",
       "name": "Crossing II",
       "category": "belts",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1625,14 +2087,16 @@
       },
       "out": {
         "crossingmk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "crossingmk3",
       "name": "Crossing III",
       "category": "belts",
       "row": 0,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1646,14 +2110,16 @@
       },
       "out": {
         "crossingmk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "mergermk1",
       "name": "Merger I",
       "category": "belts",
       "row": 1,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1667,14 +2133,16 @@
       },
       "out": {
         "mergermk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "mergermk2",
       "name": "Merger II",
       "category": "belts",
       "row": 1,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1688,14 +2156,16 @@
       },
       "out": {
         "mergermk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "mergermk3",
       "name": "Merger III",
       "category": "belts",
       "row": 1,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1709,14 +2179,16 @@
       },
       "out": {
         "mergermk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "splittermk1",
       "name": "Splitter I",
       "category": "belts",
       "row": 1,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1730,14 +2202,16 @@
       },
       "out": {
         "splittermk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "splittermk2",
       "name": "Splitter II",
       "category": "belts",
       "row": 1,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1751,14 +2225,16 @@
       },
       "out": {
         "splittermk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "splittermk3",
       "name": "Splitter III",
       "category": "belts",
       "row": 1,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1772,14 +2248,16 @@
       },
       "out": {
         "splittermk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "overflowmk1",
       "name": "Overflow I",
       "category": "belts",
       "row": 2,
-      "time": 512,
+      "ticks": 512,
+      "time": 8.192,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1793,14 +2271,16 @@
       },
       "out": {
         "overflowmk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "overflowmk2",
       "name": "Overflow II",
       "category": "belts",
       "row": 2,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1814,14 +2294,16 @@
       },
       "out": {
         "overflowmk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "overflowmk3",
       "name": "Overflow III",
       "category": "belts",
       "row": 2,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1835,14 +2317,16 @@
       },
       "out": {
         "overflowmk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "underflowmk1",
       "name": "Underflow I",
       "category": "belts",
       "row": 2,
-      "time": 512,
+      "ticks": 512,
+      "time": 8.192,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1856,14 +2340,16 @@
       },
       "out": {
         "underflowmk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "underflowmk2",
       "name": "Underflow II",
       "category": "belts",
       "row": 2,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1877,14 +2363,16 @@
       },
       "out": {
         "underflowmk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "underflowmk3",
       "name": "Underflow III",
       "category": "belts",
       "row": 2,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1898,14 +2386,16 @@
       },
       "out": {
         "underflowmk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "minermk1",
       "name": "Miner I",
       "category": "materials",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1918,14 +2408,16 @@
       },
       "out": {
         "minermk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "minermk2",
       "name": "Miner II",
       "category": "materials",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1940,14 +2432,16 @@
       },
       "out": {
         "minermk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "minermk3",
       "name": "Miner III",
       "category": "materials",
       "row": 0,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1962,14 +2456,16 @@
       },
       "out": {
         "minermk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "minermk4",
       "name": "Miner IV",
       "category": "materials",
       "row": 0,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -1983,14 +2479,16 @@
       },
       "out": {
         "minermk4": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "minermk5",
       "name": "Miner V",
       "category": "materials",
       "row": 0,
-      "time": 8192,
+      "ticks": 8192,
+      "time": 131.072,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2004,14 +2502,16 @@
       },
       "out": {
         "minermk5": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "sourcechest",
       "name": "Source ChestLike",
       "category": "modules",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2024,14 +2524,16 @@
       },
       "out": {
         "sourcechest": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "sourcebelt",
       "name": "Source BeltLike",
       "category": "modules",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2046,14 +2548,16 @@
       },
       "out": {
         "sourcebelt": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "sinkchest",
       "name": "Sink ChestLike",
       "category": "modules",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2066,14 +2570,16 @@
       },
       "out": {
         "sinkchest": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "sinkbelt",
       "name": "Sink BeltLike",
       "category": "modules",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2088,14 +2594,16 @@
       },
       "out": {
         "sinkbelt": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "influencemk1",
       "name": "Influence I",
       "category": "special",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2109,14 +2617,16 @@
       },
       "out": {
         "influencemk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "influencemk2",
       "name": "Influence II",
       "category": "special",
       "row": 0,
-      "time": 2560,
+      "ticks": 2560,
+      "time": 40.96,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2130,14 +2640,16 @@
       },
       "out": {
         "influencemk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "influencemk3",
       "name": "Influence III",
       "category": "special",
       "row": 0,
-      "time": 2560,
+      "ticks": 2560,
+      "time": 40.96,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2151,14 +2663,16 @@
       },
       "out": {
         "influencemk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "influencemk4",
       "name": "Influence IV",
       "category": "special",
       "row": 0,
-      "time": 5120,
+      "ticks": 5120,
+      "time": 81.92,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2172,14 +2686,16 @@
       },
       "out": {
         "influencemk4": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "itemstorage",
       "name": "Chest",
       "category": "special",
       "row": 0,
-      "time": 1536,
+      "ticks": 1536,
+      "time": 24.576,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2193,14 +2709,16 @@
       },
       "out": {
         "itemstorage": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "provider",
       "name": "Provider",
       "category": "special",
       "row": 0,
-      "time": 512,
+      "ticks": 512,
+      "time": 8.192,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2214,14 +2732,16 @@
       },
       "out": {
         "provider": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "swappermk1",
       "name": "Swapper I",
       "category": "belts",
       "row": 2,
-      "time": 1536,
+      "ticks": 1536,
+      "time": 24.576,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2235,14 +2755,16 @@
       },
       "out": {
         "swappermk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "swappermk2",
       "name": "Swapper II",
       "category": "belts",
       "row": 2,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2256,14 +2778,16 @@
       },
       "out": {
         "swappermk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "swappermk3",
       "name": "Swapper III",
       "category": "belts",
       "row": 2,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2277,14 +2801,16 @@
       },
       "out": {
         "swappermk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "mixermk1",
       "name": "Mixer I",
       "category": "belts",
       "row": 2,
-      "time": 1536,
+      "ticks": 1536,
+      "time": 24.576,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2298,14 +2824,16 @@
       },
       "out": {
         "mixermk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "mixermk2",
       "name": "Mixer II",
       "category": "belts",
       "row": 2,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2319,14 +2847,16 @@
       },
       "out": {
         "mixermk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "mixermk3",
       "name": "Mixer III",
       "category": "belts",
       "row": 2,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2340,14 +2870,16 @@
       },
       "out": {
         "mixermk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "armmk1",
       "name": "Arm Short I",
       "category": "arms",
       "row": 0,
-      "time": 512,
+      "ticks": 512,
+      "time": 8.192,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2361,14 +2893,16 @@
       },
       "out": {
         "armmk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "armmk2",
       "name": "Arm Short II",
       "category": "arms",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2383,14 +2917,16 @@
       },
       "out": {
         "armmk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "armmk3",
       "name": "Arm Short III",
       "category": "arms",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2405,14 +2941,16 @@
       },
       "out": {
         "armmk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "armmk4",
       "name": "Arm Short IV",
       "category": "arms",
       "row": 0,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2427,14 +2965,16 @@
       },
       "out": {
         "armmk4": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "longarmmk1",
       "name": "Arm Long I",
       "category": "arms",
       "row": 0,
-      "time": 512,
+      "ticks": 512,
+      "time": 8.192,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2449,14 +2989,16 @@
       },
       "out": {
         "longarmmk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "longarmmk2",
       "name": "Arm Long II",
       "category": "arms",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2471,14 +3013,16 @@
       },
       "out": {
         "longarmmk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "longarmmk3",
       "name": "Arm Long III",
       "category": "arms",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2493,14 +3037,16 @@
       },
       "out": {
         "longarmmk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "longarmmk4",
       "name": "Arm Long IV",
       "category": "arms",
       "row": 0,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2515,14 +3061,16 @@
       },
       "out": {
         "longarmmk4": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "solar",
       "name": "Solar",
       "category": "energy",
       "row": 0,
-      "time": 5120,
+      "ticks": 5120,
+      "time": 81.92,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2537,14 +3085,16 @@
       },
       "out": {
         "solar": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "battery",
       "name": "Battery",
       "category": "energy",
       "row": 0,
-      "time": 2560,
+      "ticks": 2560,
+      "time": 40.96,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2559,14 +3109,16 @@
       },
       "out": {
         "battery": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "burnerpowermk1",
       "name": "Burner I",
       "category": "energy",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2579,14 +3131,16 @@
       },
       "out": {
         "burnerpowermk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "burnerpowermk2",
       "name": "Burner II",
       "category": "energy",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2601,14 +3155,16 @@
       },
       "out": {
         "burnerpowermk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "burnerpowermk3",
       "name": "Burner III",
       "category": "energy",
       "row": 0,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2623,14 +3179,16 @@
       },
       "out": {
         "burnerpowermk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "burnerpowermk4",
       "name": "Burner IV",
       "category": "energy",
       "row": 0,
-      "time": 8192,
+      "ticks": 8192,
+      "time": 131.072,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2645,14 +3203,16 @@
       },
       "out": {
         "burnerpowermk4": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "burnerpowermk5",
       "name": "Burner V",
       "category": "energy",
       "row": 0,
-      "time": 16384,
+      "ticks": 16384,
+      "time": 262.144,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2667,14 +3227,16 @@
       },
       "out": {
         "burnerpowermk5": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "assemblermk1",
       "name": "Assembler I",
       "category": "processing",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2688,14 +3250,16 @@
       },
       "out": {
         "assemblermk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "assemblermk2",
       "name": "Assembler II",
       "category": "processing",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2709,14 +3273,16 @@
       },
       "out": {
         "assemblermk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "assemblermk3",
       "name": "Assembler III",
       "category": "processing",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2731,14 +3297,16 @@
       },
       "out": {
         "assemblermk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "assemblermk4",
       "name": "Assembler IV",
       "category": "processing",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2753,14 +3321,16 @@
       },
       "out": {
         "assemblermk4": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "assemblermk5",
       "name": "Assembler V",
       "category": "processing",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2774,14 +3344,16 @@
       },
       "out": {
         "assemblermk5": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "furnaceburnermk1",
       "name": "Furnace Burner I",
       "category": "processing",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2794,14 +3366,16 @@
       },
       "out": {
         "furnaceburnermk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "furnaceburnermk2",
       "name": "Furnace Burner II",
       "category": "processing",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2816,14 +3390,16 @@
       },
       "out": {
         "furnaceburnermk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "furnaceburnermk3",
       "name": "Furnace Burner III",
       "category": "processing",
       "row": 0,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2838,14 +3414,16 @@
       },
       "out": {
         "furnaceburnermk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "furnaceburnermk4",
       "name": "Furnace Burner IV",
       "category": "processing",
       "row": 0,
-      "time": 8192,
+      "ticks": 8192,
+      "time": 131.072,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2860,14 +3438,16 @@
       },
       "out": {
         "furnaceburnermk4": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "furnaceburnermk5",
       "name": "Furnace Burner V",
       "category": "processing",
       "row": 0,
-      "time": 16384,
+      "ticks": 16384,
+      "time": 262.144,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2881,14 +3461,16 @@
       },
       "out": {
         "furnaceburnermk5": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "furnaceelectricmk1",
       "name": "Furnace Electric I",
       "category": "processing",
       "row": 0,
-      "time": 2560,
+      "ticks": 2560,
+      "time": 40.96,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2902,14 +3484,16 @@
       },
       "out": {
         "furnaceelectricmk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "furnaceelectricmk2",
       "name": "Furnace Electric II",
       "category": "processing",
       "row": 0,
-      "time": 5120,
+      "ticks": 5120,
+      "time": 81.92,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2923,14 +3507,16 @@
       },
       "out": {
         "furnaceelectricmk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "furnaceelectricmk3",
       "name": "Furnace Electric III",
       "category": "processing",
       "row": 0,
-      "time": 5120,
+      "ticks": 5120,
+      "time": 81.92,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2944,14 +3530,16 @@
       },
       "out": {
         "furnaceelectricmk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "furnaceelectricmk4",
       "name": "Furnace Electric IV",
       "category": "processing",
       "row": 0,
-      "time": 5120,
+      "ticks": 5120,
+      "time": 81.92,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2966,14 +3554,16 @@
       },
       "out": {
         "furnaceelectricmk4": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "furnaceelectricmk5",
       "name": "Furnace Electric V",
       "category": "processing",
       "row": 0,
-      "time": 10240,
+      "ticks": 10240,
+      "time": 163.84,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -2988,14 +3578,16 @@
       },
       "out": {
         "furnaceelectricmk5": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "lab",
       "name": "Lab",
       "category": "special",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3009,14 +3601,16 @@
       },
       "out": {
         "lab": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "launchpad",
       "name": "Launch Pad",
       "category": "space",
       "row": 0,
-      "time": 10240,
+      "ticks": 10240,
+      "time": 163.84,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3032,14 +3626,16 @@
       },
       "out": {
         "launchpad": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "landingzone",
       "name": "Landing Zone",
       "category": "space",
       "row": 0,
-      "time": 5120,
+      "ticks": 5120,
+      "time": 81.92,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3052,14 +3648,16 @@
       },
       "out": {
         "landingzone": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "stackermk1",
       "name": "Stacker I",
       "category": "belts",
       "row": 0,
-      "time": 8192,
+      "ticks": 8192,
+      "time": 131.072,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3074,14 +3672,16 @@
       },
       "out": {
         "stackermk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "stackermk2",
       "name": "Stacker II",
       "category": "belts",
       "row": 0,
-      "time": 16384,
+      "ticks": 16384,
+      "time": 262.144,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3095,14 +3695,16 @@
       },
       "out": {
         "stackermk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "unstacker",
       "name": "Unstacker",
       "category": "belts",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3116,14 +3718,16 @@
       },
       "out": {
         "unstacker": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "distributormk1",
       "name": "Distributor I",
       "category": "belts",
       "row": 0,
-      "time": 2048,
+      "ticks": 2048,
+      "time": 32.768,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3139,14 +3743,16 @@
       },
       "out": {
         "distributormk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "distributormk2",
       "name": "Distributor II",
       "category": "belts",
       "row": 0,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3162,14 +3768,16 @@
       },
       "out": {
         "distributormk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "distributormk3",
       "name": "Distributor III",
       "category": "belts",
       "row": 0,
-      "time": 8192,
+      "ticks": 8192,
+      "time": 131.072,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3185,14 +3793,16 @@
       },
       "out": {
         "distributormk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "centrifuge",
       "name": "Centrifuge",
       "category": "energy",
       "row": 0,
-      "time": 8192,
+      "ticks": 8192,
+      "time": 131.072,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3206,14 +3816,16 @@
       },
       "out": {
         "centrifuge": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "nuclearreactor",
       "name": "Nuclear Reactor",
       "category": "energy",
       "row": 0,
-      "time": 8192,
+      "ticks": 8192,
+      "time": 131.072,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3228,14 +3840,16 @@
       },
       "out": {
         "nuclearreactor": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "nuclearwastereactor",
       "name": "Nuclear Waste Reactor",
       "category": "energy",
       "row": 0,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3250,14 +3864,16 @@
       },
       "out": {
         "nuclearwastereactor": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "researchtokenmk1",
       "name": "RT I",
       "category": "special",
       "row": 0,
-      "time": 256,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3270,14 +3886,16 @@
       },
       "out": {
         "researchtokenmk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "researchtokenmk2",
       "name": "RT II",
       "category": "special",
       "row": 0,
-      "time": 512,
+      "ticks": 512,
+      "time": 8.192,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3292,14 +3910,16 @@
       },
       "out": {
         "researchtokenmk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "researchtokenmk3",
       "name": "RT III",
       "category": "special",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3314,14 +3934,16 @@
       },
       "out": {
         "researchtokenmk3": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "researchtokenmk4",
       "name": "RT IV",
       "category": "special",
       "row": 0,
-      "time": 2056,
+      "ticks": 2056,
+      "time": 32.896,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3336,14 +3958,16 @@
       },
       "out": {
         "researchtokenmk4": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "researchtokenmk5",
       "name": "RT V",
       "category": "special",
       "row": 0,
-      "time": 4096,
+      "ticks": 4096,
+      "time": 65.536,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3358,14 +3982,16 @@
       },
       "out": {
         "researchtokenmk5": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "wire",
       "name": "Wire",
       "category": "processing",
       "row": 1,
-      "time": 512,
+      "ticks": 512,
+      "time": 8.192,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3378,14 +4004,16 @@
       },
       "out": {
         "wire": 2
-      }
+      },
+      "flags": null
     },
     {
       "id": "gear",
       "name": "Gear",
       "category": "processing",
       "row": 1,
-      "time": 256,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3398,14 +4026,16 @@
       },
       "out": {
         "gear": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "chip",
       "name": "Chip",
       "category": "processing",
       "row": 1,
-      "time": 256,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3419,14 +4049,16 @@
       },
       "out": {
         "chip": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "motor",
       "name": "Motor",
       "category": "processing",
       "row": 1,
-      "time": 512,
+      "ticks": 512,
+      "time": 8.192,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3440,14 +4072,16 @@
       },
       "out": {
         "motor": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "screw",
       "name": "Screw",
       "category": "processing",
       "row": 1,
-      "time": 256,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3460,14 +4094,16 @@
       },
       "out": {
         "screw": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "cable",
       "name": "Cable",
       "category": "processing",
       "row": 1,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3480,14 +4116,16 @@
       },
       "out": {
         "cable": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "computer",
       "name": "Computer",
       "category": "processing",
       "row": 1,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3503,14 +4141,16 @@
       },
       "out": {
         "computer": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "rod",
       "name": "Rod",
       "category": "processing",
       "row": 1,
-      "time": 256,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3523,14 +4163,16 @@
       },
       "out": {
         "rod": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "rocketfuel",
       "name": "Rocket Fuel",
       "category": "space",
       "row": 0,
-      "time": 1024,
+      "ticks": 1024,
+      "time": 16.384,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3545,14 +4187,16 @@
       },
       "out": {
         "rocketfuel": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "cargoshipmk1",
       "name": "Cargo Ship I",
       "category": "space",
       "row": 0,
-      "time": 8192,
+      "ticks": 8192,
+      "time": 131.072,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3567,14 +4211,16 @@
       },
       "out": {
         "cargoshipmk1": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "cargoshipmk2",
       "name": "Cargo Ship II",
       "category": "space",
       "row": 0,
-      "time": 8192,
+      "ticks": 8192,
+      "time": 131.072,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3588,14 +4234,16 @@
       },
       "out": {
         "cargoshipmk2": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "colonizership",
       "name": "Colonizer Ship",
       "category": "space",
       "row": 0,
-      "time": 8192,
+      "ticks": 8192,
+      "time": 131.072,
       "producers": [
         "assemblermk1",
         "assemblermk2",
@@ -3610,14 +4258,16 @@
       },
       "out": {
         "colonizership": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "ironplate",
       "name": "Iron Plate",
-      "category": "parts",
+      "category": "materials",
       "row": 0,
-      "time": 1,
+      "ticks": 200,
+      "time": 3.2,
       "producers": [
         "furnaceburnermk1",
         "furnaceburnermk2",
@@ -3631,18 +4281,20 @@
         "furnaceelectricmk5"
       ],
       "in": {
-        "ironore": 2
+        "ironore": 1
       },
       "out": {
         "ironplate": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "copperplate",
       "name": "Copper Plate",
-      "category": "parts",
+      "category": "materials",
       "row": 0,
-      "time": 1,
+      "ticks": 200,
+      "time": 3.2,
       "producers": [
         "furnaceburnermk1",
         "furnaceburnermk2",
@@ -3656,18 +4308,20 @@
         "furnaceelectricmk5"
       ],
       "in": {
-        "copperore": 2
+        "copperore": 1
       },
       "out": {
         "copperplate": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "titaniumplate",
       "name": "Titanium Plate",
-      "category": "parts",
+      "category": "materials",
       "row": 0,
-      "time": 1,
+      "ticks": 200,
+      "time": 3.2,
       "producers": [
         "furnaceburnermk1",
         "furnaceburnermk2",
@@ -3681,18 +4335,20 @@
         "furnaceelectricmk5"
       ],
       "in": {
-        "titaniumore": 2
+        "titaniumore": 1
       },
       "out": {
         "titaniumplate": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "stonebrick",
       "name": "Stone Brick",
-      "category": "parts",
+      "category": "materials",
       "row": 0,
-      "time": 1,
+      "ticks": 200,
+      "time": 3.2,
       "producers": [
         "furnaceburnermk1",
         "furnaceburnermk2",
@@ -3706,18 +4362,20 @@
         "furnaceelectricmk5"
       ],
       "in": {
-        "stone": 2
+        "stone": 1
       },
       "out": {
         "stonebrick": 1
-      }
+      },
+      "flags": null
     },
     {
       "id": "ironore",
       "name": "Iron Ore",
-      "category": "ores",
+      "category": "materials",
       "row": 0,
-      "time": 1,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "minermk1",
         "minermk2",
@@ -3728,14 +4386,18 @@
       "in": {},
       "out": {
         "ironore": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     },
     {
       "id": "copperore",
       "name": "Copper Ore",
-      "category": "ores",
+      "category": "materials",
       "row": 0,
-      "time": 1,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "minermk1",
         "minermk2",
@@ -3746,14 +4408,18 @@
       "in": {},
       "out": {
         "copperore": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     },
     {
       "id": "titaniumore",
       "name": "Titanium Ore",
-      "category": "ores",
+      "category": "materials",
       "row": 0,
-      "time": 1,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "minermk1",
         "minermk2",
@@ -3764,14 +4430,18 @@
       "in": {},
       "out": {
         "titaniumore": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     },
     {
       "id": "stone",
       "name": "Stone",
-      "category": "ores",
+      "category": "materials",
       "row": 0,
-      "time": 1,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "minermk1",
         "minermk2",
@@ -3782,14 +4452,18 @@
       "in": {},
       "out": {
         "stone": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     },
     {
       "id": "coal",
       "name": "Coal",
-      "category": "ores",
+      "category": "materials",
       "row": 0,
-      "time": 1,
+      "ticks": 256,
+      "time": 4.096,
       "producers": [
         "minermk1",
         "minermk2",
@@ -3800,7 +4474,14 @@
       "in": {},
       "out": {
         "coal": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     }
-  ]
+  ],
+  "defaults": {
+    "minBelt": "beltmk1",
+    "maxBelt": "beltmk3"
+  }
 }
