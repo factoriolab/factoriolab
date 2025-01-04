@@ -1319,15 +1319,15 @@ async function processMod(): Promise<void> {
       }
 
       // Check for calculated catalysts
-      for (const outId of Object.keys(recipeOut)) {
-        if (recipeIn[outId] && !recipeCatalyst?.[outId]) {
-          // Need to manually calculate and add catalyst amount for this item
-          if (recipeCatalyst == null) recipeCatalyst = {};
+      // for (const outId of Object.keys(recipeOut)) {
+      //   if (recipeIn[outId] && !recipeCatalyst?.[outId]) {
+      //     // Need to manually calculate and add catalyst amount for this item
+      //     if (recipeCatalyst == null) recipeCatalyst = {};
 
-          const amount = Math.min(recipeOut[outId], recipeIn[outId]);
-          recipeCatalyst[outId] = amount;
-        }
-      }
+      //     const amount = Math.min(recipeOut[outId], recipeIn[outId]);
+      //     recipeCatalyst[outId] = amount;
+      //   }
+      // }
 
       let producers = producersMap.crafting[proto.category ?? 'crafting'];
       if (producers != null) {
