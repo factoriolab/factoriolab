@@ -1447,7 +1447,8 @@
       "icon": "furnaceelectricmk1item",
       "machine": {
         "speed": 1,
-        "type": "electric"
+        "type": "electric",
+        "usage": 500
       },
       "belt": null,
       "stack": 5,
@@ -1462,7 +1463,8 @@
       "icon": "furnaceelectricmk2item",
       "machine": {
         "speed": 2,
-        "type": "electric"
+        "type": "electric",
+        "usage": 1000
       },
       "belt": null,
       "stack": 5,
