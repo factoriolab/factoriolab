@@ -631,7 +631,10 @@ async function processMod(): Promise<void> {
       return;
     }
 
-    modData.defaults = getJsonData(modDefaultsPath) as DefaultsJson;
+    const modDefaults = getJsonData(modDefaultsPath) as DefaultsJson | null;
+    if (modDefaults) {
+      modData.defaults = modDefaults;
+    }
     if (fs.existsSync(modDataPath)) {
       const oldHash = getJsonData(modHashPath) as ModHash;
 

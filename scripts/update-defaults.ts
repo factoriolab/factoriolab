@@ -11,7 +11,7 @@ data.mods.forEach((mod) => {
   const modDataPath = `${modPath}/data.json`;
   const modDefaultsPath = `${modPath}/defaults.json`;
   const modData = getJsonData(modDataPath) as ModData;
-  const modDefaults = getJsonData(modDefaultsPath) as DefaultsJson;
+  const modDefaults = getJsonData(modDefaultsPath) as DefaultsJson | null;
   if (modDefaults) {
     modData.defaults = modDefaults;
   }
