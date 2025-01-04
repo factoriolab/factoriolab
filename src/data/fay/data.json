@@ -50,22 +50,22 @@
     {
       "id": "beltmk1item",
       "position": "-0px -0px",
-      "color": "#000000"
+      "color": "#3b742c"
     },
     {
       "id": "beltmk2item",
       "position": "-64px -0px",
-      "color": "#000000"
+      "color": "#5c5c35"
     },
     {
       "id": "beltmk3item",
       "position": "-128px -0px",
-      "color": "#000000"
+      "color": "#603448"
     },
     {
       "id": "crossingmk1item",
       "position": "-192px -0px",
-      "color": "#000000"
+      "color": "#476e36"
     },
     {
       "id": "crossingmk2item",
