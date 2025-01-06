@@ -1,7 +1,7 @@
 name: staging
 on:
   push:
-    branches: [workflow-test]
+    branches: [fay]
 jobs:
   build:
     runs-on: ubuntu-latest
