@@ -68,6 +68,7 @@
     "preset": {
       "minimum": "最小限",
       "modules": "モジュール",
+      "beacon2": "ビーコン2台",
       "beacon8": "ビーコン8台",
       "beacon12": "ビーコン12台",
       "upgraded": "アップグレード済",

@@ -153,10 +153,9 @@ describe('SettingsService', () => {
       spyOn(service, 'preset').and.returnValue(Preset.Minimum);
       const result = service.defaults();
       assert(result != null);
-      expect(result.beltId).toEqual(Mocks.mod.defaults!.minBelt);
-      expect(result.machineRankIds).toEqual(
-        Mocks.mod.defaults!.minMachineRank!,
-      );
+      const defaults = Mocks.mod.defaults as any;
+      expect(result.beltId).toEqual(defaults.minBelt);
+      expect(result.machineRankIds).toEqual(defaults.minMachineRank);
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beacons).toEqual([
         {
