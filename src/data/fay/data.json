@@ -42,363 +42,368 @@
       "id": "special",
       "name": "Special",
       "icon": "starteritem"
+    },
+    {
+      "id": "technology",
+      "name": "Technology",
+      "icon": "labitem"
     }
   ],
   "icons": [
     {
       "id": "armbothmk1item",
       "position": "-0px -0px",
-      "color": "#000000"
+      "color": "#11170b"
     },
     {
       "id": "armbothmk2item",
       "position": "-66px -0px",
-      "color": "#000000"
+      "color": "#16140c"
     },
     {
       "id": "armbothmk3item",
       "position": "-132px -0px",
-      "color": "#000000"
+      "color": "#150d0e"
     },
     {
       "id": "armbothmk4item",
       "position": "-198px -0px",
-      "color": "#000000"
+      "color": "#0a1118"
     },
     {
       "id": "assemblermk1item",
       "position": "-264px -0px",
-      "color": "#000000"
+      "color": "#151712"
     },
     {
       "id": "assemblermk2item",
       "position": "-330px -0px",
-      "color": "#000000"
+      "color": "#181512"
     },
     {
       "id": "assemblermk3item",
       "position": "-396px -0px",
-      "color": "#000000"
+      "color": "#171113"
     },
     {
       "id": "assemblermk4item",
       "position": "-462px -0px",
-      "color": "#000000"
+      "color": "#121418"
     },
     {
       "id": "assemblermk5item",
       "position": "-528px -0px",
-      "color": "#000000"
+      "color": "#151318"
     },
     {
       "id": "batteryitem",
       "position": "-594px -0px",
-      "color": "#000000"
+      "color": "#1a1f1e"
     },
     {
       "id": "beltmk1item",
       "position": "-660px -0px",
-      "color": "#000000"
+      "color": "#0c110c"
     },
     {
       "id": "beltmk2item",
       "position": "-0px -66px",
-      "color": "#000000"
+      "color": "#0e0f0c"
     },
     {
       "id": "beltmk3item",
       "position": "-66px -66px",
-      "color": "#000000"
+      "color": "#0e0b0d"
     },
     {
       "id": "burnerpowermk1item",
       "position": "-132px -66px",
-      "color": "#000000"
+      "color": "#1d2315"
     },
     {
       "id": "burnerpowermk2item",
       "position": "-198px -66px",
-      "color": "#000000"
+      "color": "#242016"
     },
     {
       "id": "burnerpowermk3item",
       "position": "-264px -66px",
-      "color": "#000000"
+      "color": "#241819"
     },
     {
       "id": "burnerpowermk4item",
       "position": "-330px -66px",
-      "color": "#000000"
+      "color": "#141e26"
     },
     {
       "id": "burnerpowermk5item",
       "position": "-396px -66px",
-      "color": "#000000"
+      "color": "#201c26"
     },
     {
       "id": "cable",
       "position": "-462px -66px",
-      "color": "#000000"
+      "color": "#141415"
     },
     {
       "id": "cargoshipmk1item",
       "position": "-528px -66px",
-      "color": "#000000"
+      "color": "#181b16"
     },
     {
       "id": "cargoshipmk2item",
       "position": "-594px -66px",
-      "color": "#000000"
+      "color": "#1a1917"
     },
     {
       "id": "centrifugeitem",
       "position": "-660px -66px",
-      "color": "#000000"
+      "color": "#2e2d2b"
     },
     {
       "id": "chip",
       "position": "-0px -132px",
-      "color": "#000000"
+      "color": "#0d0d0c"
     },
     {
       "id": "coal",
       "position": "-66px -132px",
-      "color": "#000000"
+      "color": "#17191d"
     },
     {
       "id": "colonizershipitem",
       "position": "-132px -132px",
-      "color": "#000000"
+      "color": "#1a130f"
     },
     {
       "id": "computer",
       "position": "-198px -132px",
-      "color": "#000000"
+      "color": "#181e24"
     },
     {
       "id": "coppero",
       "position": "-264px -132px",
-      "color": "#000000"
+      "color": "#63331e"
     },
     {
       "id": "copperp",
       "position": "-330px -132px",
-      "color": "#000000"
+      "color": "#29130c"
     },
     {
       "id": "crossingmk1item",
       "position": "-396px -132px",
-      "color": "#000000"
+      "color": "#111911"
     },
     {
       "id": "crossingmk2item",
       "position": "-462px -132px",
-      "color": "#000000"
+      "color": "#151511"
     },
     {
       "id": "crossingmk3item",
       "position": "-528px -132px",
-      "color": "#000000"
+      "color": "#151013"
     },
     {
       "id": "distributormk1item",
       "position": "-594px -132px",
-      "color": "#000000"
+      "color": "#0f1412"
     },
     {
       "id": "distributormk2item",
       "position": "-660px -132px",
-      "color": "#000000"
+      "color": "#111313"
     },
     {
       "id": "distributormk3item",
       "position": "-0px -198px",
-      "color": "#000000"
+      "color": "#111113"
     },
     {
       "id": "furnaceburnermk1item",
       "position": "-66px -198px",
-      "color": "#000000"
+      "color": "#212612"
     },
     {
       "id": "furnaceburnermk2item",
       "position": "-132px -198px",
-      "color": "#000000"
+      "color": "#2a2013"
     },
     {
       "id": "furnaceburnermk3item",
       "position": "-198px -198px",
-      "color": "#000000"
+      "color": "#281516"
     },
     {
       "id": "furnaceburnermk4item",
       "position": "-264px -198px",
-      "color": "#000000"
+      "color": "#131d26"
     },
     {
       "id": "furnaceburnermk5item",
       "position": "-330px -198px",
-      "color": "#000000"
+      "color": "#211a27"
     },
     {
       "id": "furnaceelectricmk1item",
       "position": "-396px -198px",
-      "color": "#000000"
+      "color": "#1e1f0c"
     },
     {
       "id": "furnaceelectricmk2item",
       "position": "-462px -198px",
-      "color": "#000000"
+      "color": "#271a0c"
     },
     {
       "id": "furnaceelectricmk3item",
       "position": "-528px -198px",
-      "color": "#000000"
+      "color": "#26110f"
     },
     {
       "id": "furnaceelectricmk4item",
       "position": "-594px -198px",
-      "color": "#000000"
+      "color": "#12171c"
     },
     {
       "id": "furnaceelectricmk5item",
       "position": "-660px -198px",
-      "color": "#000000"
+      "color": "#20151d"
     },
     {
       "id": "gear",
       "position": "-0px -264px",
-      "color": "#000000"
+      "color": "#323336"
     },
     {
       "id": "genericg",
       "position": "-66px -264px",
-      "color": "#000000"
+      "color": "#3d3843"
     },
     {
       "id": "influencemk1item",
       "position": "-132px -264px",
-      "color": "#000000"
+      "color": "#1a1913"
     },
     {
       "id": "influencemk2item",
       "position": "-198px -264px",
-      "color": "#000000"
+      "color": "#1c1813"
     },
     {
       "id": "influencemk3item",
       "position": "-264px -264px",
-      "color": "#000000"
+      "color": "#1c1614"
     },
     {
       "id": "influencemk4item",
       "position": "-330px -264px",
-      "color": "#000000"
+      "color": "#181818"
     },
     {
       "id": "irono",
       "position": "-396px -264px",
-      "color": "#000000"
+      "color": "#252e4e"
     },
     {
       "id": "ironp",
       "position": "-462px -264px",
-      "color": "#000000"
+      "color": "#121627"
     },
     {
       "id": "itemstorageitem",
       "position": "-528px -264px",
-      "color": "#000000"
+      "color": "#161a19"
     },
     {
       "id": "labitem",
       "position": "-594px -264px",
-      "color": "#000000"
+      "color": "#1d1b1a"
     },
     {
       "id": "landingzoneitem",
       "position": "-660px -264px",
-      "color": "#000000"
+      "color": "#242629"
     },
     {
       "id": "launchpaditem",
       "position": "-0px -330px",
-      "color": "#000000"
+      "color": "#171b1d"
     },
     {
       "id": "longarmbothmk1item",
       "position": "-66px -330px",
-      "color": "#000000"
+      "color": "#0f1409"
     },
     {
       "id": "longarmbothmk2item",
       "position": "-132px -330px",
-      "color": "#000000"
+      "color": "#141209"
     },
     {
       "id": "longarmbothmk3item",
       "position": "-198px -330px",
-      "color": "#000000"
+      "color": "#130a0b"
     },
     {
       "id": "longarmbothmk4item",
       "position": "-264px -330px",
-      "color": "#000000"
+      "color": "#070f15"
     },
     {
       "id": "mergermk1item",
       "position": "-330px -330px",
-      "color": "#000000"
+      "color": "#121810"
     },
     {
       "id": "mergermk2item",
       "position": "-396px -330px",
-      "color": "#000000"
+      "color": "#151510"
     },
     {
       "id": "mergermk3item",
       "position": "-462px -330px",
-      "color": "#000000"
+      "color": "#160f12"
     },
     {
       "id": "minerbothmk1item",
       "position": "-528px -330px",
-      "color": "#000000"
+      "color": "#333b3a"
     },
     {
       "id": "minerbothmk2item",
       "position": "-594px -330px",
-      "color": "#000000"
+      "color": "#363a3a"
     },
     {
       "id": "minerbothmk3item",
       "position": "-660px -330px",
-      "color": "#000000"
+      "color": "#35353b"
     },
     {
       "id": "minerbothmk4item",
       "position": "-0px -396px",
-      "color": "#000000"
+      "color": "#303841"
     },
     {
       "id": "minerbothmk5item",
       "position": "-66px -396px",
-      "color": "#000000"
+      "color": "#333741"
     },
     {
       "id": "mixermk1item",
       "position": "-132px -396px",
-      "color": "#000000"
+      "color": "#17190f"
     },
     {
       "id": "mixermk2item",
       "position": "-198px -396px",
-      "color": "#000000"
+      "color": "#1b160f"
     },
     {
       "id": "mixermk3item",
       "position": "-264px -396px",
-      "color": "#000000"
+      "color": "#1a1210"
     },
     {
       "id": "module",
@@ -408,217 +413,217 @@
     {
       "id": "motor",
       "position": "-396px -396px",
-      "color": "#000000"
+      "color": "#23262b"
     },
     {
       "id": "nuclearreactor0",
       "position": "-462px -396px",
-      "color": "#000000"
+      "color": "#1f2425"
     },
     {
       "id": "nuclearreactoritem",
       "position": "-528px -396px",
-      "color": "#000000"
+      "color": "#1f2728"
     },
     {
       "id": "nuclearwastereactoritem",
       "position": "-594px -396px",
-      "color": "#000000"
+      "color": "#1e2426"
     },
     {
       "id": "overflowmk1item",
       "position": "-660px -396px",
-      "color": "#000000"
+      "color": "#131912"
     },
     {
       "id": "overflowmk2item",
       "position": "-0px -462px",
-      "color": "#000000"
+      "color": "#161612"
     },
     {
       "id": "overflowmk3item",
       "position": "-66px -462px",
-      "color": "#000000"
+      "color": "#161114"
     },
     {
       "id": "pluginthroughput",
       "position": "-132px -462px",
-      "color": "#000000"
+      "color": "#384046"
     },
     {
       "id": "provideritem",
       "position": "-198px -462px",
-      "color": "#000000"
+      "color": "#232621"
     },
     {
       "id": "researchtokenmk1",
       "position": "-264px -462px",
-      "color": "#000000"
+      "color": "#141d07"
     },
     {
       "id": "researchtokenmk2",
       "position": "-330px -462px",
-      "color": "#000000"
+      "color": "#1e1a08"
     },
     {
       "id": "researchtokenmk3",
       "position": "-396px -462px",
-      "color": "#000000"
+      "color": "#1e0c0e"
     },
     {
       "id": "researchtokenmk4",
       "position": "-462px -462px",
-      "color": "#000000"
+      "color": "#061720"
     },
     {
       "id": "researchtokenmk5",
       "position": "-528px -462px",
-      "color": "#000000"
+      "color": "#181320"
     },
     {
       "id": "rocketfuel",
       "position": "-594px -462px",
-      "color": "#000000"
+      "color": "#212c2e"
     },
     {
       "id": "rod",
       "position": "-660px -462px",
-      "color": "#000000"
+      "color": "#1f2021"
     },
     {
       "id": "screw",
       "position": "-0px -528px",
-      "color": "#000000"
+      "color": "#2f3235"
     },
     {
       "id": "sinkbeltitem",
       "position": "-66px -528px",
-      "color": "#000000"
+      "color": "#160f0a"
     },
     {
       "id": "sinkchestitem",
       "position": "-132px -528px",
-      "color": "#000000"
+      "color": "#341d0c"
     },
     {
       "id": "solaritem",
       "position": "-198px -528px",
-      "color": "#000000"
+      "color": "#131e34"
     },
     {
       "id": "sourcebeltitem",
       "position": "-264px -528px",
-      "color": "#000000"
+      "color": "#081117"
     },
     {
       "id": "sourcechestitem",
       "position": "-330px -528px",
-      "color": "#000000"
+      "color": "#0d2a3d"
     },
     {
       "id": "splittermk1item",
       "position": "-396px -528px",
-      "color": "#000000"
+      "color": "#121910"
     },
     {
       "id": "splittermk2item",
       "position": "-462px -528px",
-      "color": "#000000"
+      "color": "#161510"
     },
     {
       "id": "splittermk3item",
       "position": "-528px -528px",
-      "color": "#000000"
+      "color": "#160f12"
     },
     {
       "id": "stackermk1item",
       "position": "-594px -528px",
-      "color": "#000000"
+      "color": "#0f1513"
     },
     {
       "id": "stackermk2item",
       "position": "-660px -528px",
-      "color": "#000000"
+      "color": "#111313"
     },
     {
       "id": "starteritem",
       "position": "-0px -594px",
-      "color": "#000000"
+      "color": "#273134"
     },
     {
       "id": "stoneo",
       "position": "-66px -594px",
-      "color": "#000000"
+      "color": "#322f33"
     },
     {
       "id": "stonep",
       "position": "-132px -594px",
-      "color": "#000000"
+      "color": "#1e2024"
     },
     {
       "id": "swappermk1item",
       "position": "-198px -594px",
-      "color": "#000000"
+      "color": "#18180f"
     },
     {
       "id": "swappermk2item",
       "position": "-264px -594px",
-      "color": "#000000"
+      "color": "#1b150f"
     },
     {
       "id": "swappermk3item",
       "position": "-330px -594px",
-      "color": "#000000"
+      "color": "#1b1110"
     },
     {
       "id": "titaniumo",
       "position": "-396px -594px",
-      "color": "#000000"
+      "color": "#4e4f55"
     },
     {
       "id": "titaniump",
       "position": "-462px -594px",
-      "color": "#000000"
+      "color": "#28292e"
     },
     {
       "id": "u235",
       "position": "-528px -594px",
-      "color": "#000000"
+      "color": "#3a6525"
     },
     {
       "id": "u238",
       "position": "-594px -594px",
-      "color": "#000000"
+      "color": "#1a3125"
     },
     {
       "id": "underflowmk1item",
       "position": "-660px -594px",
-      "color": "#000000"
+      "color": "#141a14"
     },
     {
       "id": "underflowmk2item",
       "position": "-0px -660px",
-      "color": "#000000"
+      "color": "#171714"
     },
     {
       "id": "underflowmk3item",
       "position": "-66px -660px",
-      "color": "#000000"
+      "color": "#171316"
     },
     {
       "id": "unstackeritem",
       "position": "-132px -660px",
-      "color": "#000000"
+      "color": "#141312"
     },
     {
       "id": "uraniumo",
       "position": "-198px -660px",
-      "color": "#000000"
+      "color": "#215335"
     },
     {
       "id": "wire",
       "position": "-264px -660px",
-      "color": "#000000"
+      "color": "#1c110d"
     }
   ],
   "items": [
