@@ -1,0 +1,40 @@
+{
+  "beacon": "beacon",
+  "minBelt": "transport-belt",
+  "maxBelt": "rapid-transport-belt-mk2",
+  "fuelRank": [
+    "coal"
+  ],
+  "cargoWagon": "cargo-wagon",
+  "fluidWagon": "fluid-wagon",
+  "excludedRecipes": [],
+  "minMachineRank": [
+    "assembling-machine-1",
+    "electric-furnace",
+    "electric-mining-drill",
+    "boiler",
+    "pumpjack",
+    "centrifuge",
+    "lab",
+    "offshore-pump",
+    "oil-refinery",
+    "chemical-plant"
+  ],
+  "maxMachineRank": [
+    "assembling-machine-5",
+    "electric-furnace-mk3",
+    "electric-mining-drill-mk3",
+    "boiler-mk3",
+    "pumpjack-mk2",
+    "centrifuge-mk3",
+    "lab-mk3",
+    "offshore-pump-mk2",
+    "oil-refinery-mk3",
+    "chemical-plant-mk3"
+  ],
+  "moduleRank": [
+    "productivity-module-3",
+    "speed-module-3"
+  ],
+  "beaconModule": "speed-module-3"
+}
