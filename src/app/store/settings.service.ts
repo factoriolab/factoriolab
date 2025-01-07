@@ -535,7 +535,15 @@ export class SettingsService extends Store<SettingsState> {
             ];
             for (const eff of effs) {
               if (qItem.module[eff] && !filterEffect(qItem.module, eff)) {
-                const value = qItem.module[eff].mul(factor);
+                let value = qItem.module[eff].mul(factor);
+
+                /**
+                 * Quality is apparently allowed to have decimals while other
+                 * effects are floored to the nearest percent
+                 */
+                if (eff !== 'quality')
+                  value = value.mul(rational(100n)).floor().div(rational(100n));
+
                 qItem.module = spread(qItem.module, { [eff]: value });
               }
             }
