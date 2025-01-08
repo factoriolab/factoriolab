@@ -1,11 +1,11 @@
 name: staging
 on:
-  push:
-    branches: [fay]
+  pull_request:
+    branches: [main]
 jobs:
   build:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    environment: staging
     steps:
       - uses: actions/checkout@v4
 
@@ -20,23 +20,14 @@ jobs:
       - name: Run build
         run: npm run build -- -c=staging
 
-      # - name: Copy index to 404
-      #   run: cp dist/browser/index.html dist/browser/404.html
+      - name: Copy index to 404
+        run: cp dist/browser/index.html dist/browser/404.html
 
-      - name: Deploy to server
-        env:
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          # Set up SSH key
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-          # Rsync build artifacts to the server
-          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" dist/browser/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
-
-          # Clean up
-          rm -rf ~/.ssh/id_rsa
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository-name: factoriolab/staging
+          branch: main
+          folder: dist/browser
+          clean: true
