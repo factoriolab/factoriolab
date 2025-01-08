@@ -9187,5 +9187,9 @@
         "technology"
       ]
     }
-  ]
+  ],
+  "defaults": {
+    "minBelt": "belt-i",
+    "maxBelt": "belt-iii"
+  }
 }
