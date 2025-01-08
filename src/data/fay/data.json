@@ -4263,7 +4263,8 @@
       },
       "out": {
         "gear": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "chip",
@@ -4284,7 +4285,8 @@
       },
       "out": {
         "chip": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "rod",
@@ -4304,7 +4306,8 @@
       },
       "out": {
         "rod": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "screw",
@@ -4324,7 +4327,8 @@
       },
       "out": {
         "screw": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "cable",
@@ -4344,7 +4348,8 @@
       },
       "out": {
         "cable": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "computer",
@@ -4367,7 +4372,8 @@
       },
       "out": {
         "computer": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "motor",
@@ -4388,7 +4394,8 @@
       },
       "out": {
         "motor": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "beltmk1",
@@ -4409,7 +4416,8 @@
       },
       "out": {
         "belt-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "beltmk2",
@@ -4430,7 +4438,8 @@
       },
       "out": {
         "belt-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "beltmk3",
@@ -4451,7 +4460,8 @@
       },
       "out": {
         "belt-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "armmk1",
@@ -4472,7 +4482,8 @@
       },
       "out": {
         "arm-short-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "armmk2",
@@ -4494,7 +4505,8 @@
       },
       "out": {
         "arm-short-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "armmk3",
@@ -4516,7 +4528,8 @@
       },
       "out": {
         "arm-short-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "armmk4",
@@ -4538,7 +4551,8 @@
       },
       "out": {
         "arm-short-iv": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "longarmmk1",
@@ -4560,7 +4574,8 @@
       },
       "out": {
         "arm-long-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "longarmmk2",
@@ -4582,7 +4597,8 @@
       },
       "out": {
         "arm-long-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "longarmmk3",
@@ -4604,7 +4620,8 @@
       },
       "out": {
         "arm-long-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "longarmmk4",
@@ -4626,7 +4643,8 @@
       },
       "out": {
         "arm-long-iv": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "research1",
@@ -4646,7 +4664,8 @@
       },
       "out": {
         "rt-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "research2",
@@ -4668,7 +4687,8 @@
       },
       "out": {
         "rt-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "research3",
@@ -4690,7 +4710,8 @@
       },
       "out": {
         "rt-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "research4",
@@ -4712,7 +4733,8 @@
       },
       "out": {
         "rt-iv": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "research5",
@@ -4734,7 +4756,8 @@
       },
       "out": {
         "rt-v": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "crossingmk1",
@@ -4755,7 +4778,8 @@
       },
       "out": {
         "crossing-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "crossingmk2",
@@ -4776,7 +4800,8 @@
       },
       "out": {
         "crossing-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "crossingmk3",
@@ -4797,7 +4822,8 @@
       },
       "out": {
         "crossing-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "splittermk1",
@@ -4818,7 +4844,8 @@
       },
       "out": {
         "splitter-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "splittermk2",
@@ -4839,7 +4866,8 @@
       },
       "out": {
         "splitter-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "splittermk3",
@@ -4860,7 +4888,8 @@
       },
       "out": {
         "splitter-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "overflowmk1",
@@ -4881,7 +4910,8 @@
       },
       "out": {
         "overflow-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "overflowmk2",
@@ -4902,7 +4932,8 @@
       },
       "out": {
         "overflow-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "overflowmk3",
@@ -4923,7 +4954,8 @@
       },
       "out": {
         "overflow-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "underflowmk1",
@@ -4944,7 +4976,8 @@
       },
       "out": {
         "underflow-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "underflowmk2",
@@ -4965,7 +4998,8 @@
       },
       "out": {
         "underflow-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "underflowmk3",
@@ -4986,7 +5020,8 @@
       },
       "out": {
         "underflow-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "distributormk1",
@@ -5009,7 +5044,8 @@
       },
       "out": {
         "distributor-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "distributormk2",
@@ -5032,7 +5068,8 @@
       },
       "out": {
         "distributor-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "distributormk3",
@@ -5055,7 +5092,8 @@
       },
       "out": {
         "distributor-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "mergermk1",
@@ -5076,7 +5114,8 @@
       },
       "out": {
         "merger-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "mergermk2",
@@ -5097,7 +5136,8 @@
       },
       "out": {
         "merger-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "mergermk3",
@@ -5118,7 +5158,8 @@
       },
       "out": {
         "merger-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "furnacemk1",
@@ -5138,7 +5179,8 @@
       },
       "out": {
         "furnace-burner-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "furnacemk2",
@@ -5160,7 +5202,8 @@
       },
       "out": {
         "furnace-burner-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "furnacemk3",
@@ -5182,7 +5225,8 @@
       },
       "out": {
         "furnace-burner-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "furnacemk4",
@@ -5204,7 +5248,8 @@
       },
       "out": {
         "furnace-burner-iv": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "furnacemk5",
@@ -5225,7 +5270,8 @@
       },
       "out": {
         "furnace-burner-v": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "efurnacemk1",
@@ -5246,7 +5292,8 @@
       },
       "out": {
         "furnace-electric-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "efurnacemk2",
@@ -5267,7 +5314,8 @@
       },
       "out": {
         "furnace-electric-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "efurnacemk3",
@@ -5288,7 +5336,8 @@
       },
       "out": {
         "furnace-electric-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "efurnacemk4",
@@ -5310,7 +5359,8 @@
       },
       "out": {
         "furnace-electric-iv": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "efurnacemk5",
@@ -5332,7 +5382,8 @@
       },
       "out": {
         "furnace-electric-v": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "burnerpowermk1",
@@ -5352,7 +5403,8 @@
       },
       "out": {
         "burner-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "burnerpowermk2",
@@ -5374,7 +5426,8 @@
       },
       "out": {
         "burner-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "burnerpowermk3",
@@ -5396,7 +5449,8 @@
       },
       "out": {
         "burner-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "burnerpowermk4",
@@ -5418,7 +5472,8 @@
       },
       "out": {
         "burner-iv": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "burnerpowermk5",
@@ -5439,7 +5494,8 @@
       },
       "out": {
         "burner-v": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "assemblermk1",
@@ -5460,7 +5516,8 @@
       },
       "out": {
         "assembler-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "assemblermk2",
@@ -5481,7 +5538,8 @@
       },
       "out": {
         "assembler-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "assemblermk3",
@@ -5503,7 +5561,8 @@
       },
       "out": {
         "assembler-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "assemblermk4",
@@ -5525,7 +5584,8 @@
       },
       "out": {
         "assembler-iv": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "assemblermk5",
@@ -5546,7 +5606,8 @@
       },
       "out": {
         "assembler-v": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "stackermk1",
@@ -5568,7 +5629,8 @@
       },
       "out": {
         "stacker-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "stackermk2",
@@ -5589,7 +5651,8 @@
       },
       "out": {
         "stacker-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "unstacker",
@@ -5610,7 +5673,8 @@
       },
       "out": {
         "unstacker": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "mixermk1",
@@ -5631,7 +5695,8 @@
       },
       "out": {
         "mixer-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "mixermk2",
@@ -5652,7 +5717,8 @@
       },
       "out": {
         "mixer-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "mixermk3",
@@ -5673,7 +5739,8 @@
       },
       "out": {
         "mixer-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "swappermk1",
@@ -5694,7 +5761,8 @@
       },
       "out": {
         "swapper-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "swappermk2",
@@ -5715,7 +5783,8 @@
       },
       "out": {
         "swapper-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "swappermk3",
@@ -5736,7 +5805,8 @@
       },
       "out": {
         "swapper-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "minermk1",
@@ -5756,7 +5826,8 @@
       },
       "out": {
         "miner-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "minermk2",
@@ -5778,7 +5849,8 @@
       },
       "out": {
         "miner-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "minermk3",
@@ -5800,7 +5872,8 @@
       },
       "out": {
         "miner-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "minermk4",
@@ -5821,7 +5894,8 @@
       },
       "out": {
         "miner-iv": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "minermk5",
@@ -5842,7 +5916,8 @@
       },
       "out": {
         "miner-v": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "influencemk1",
@@ -5863,7 +5938,8 @@
       },
       "out": {
         "influence-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "influencemk2",
@@ -5884,7 +5960,8 @@
       },
       "out": {
         "influence-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "influencemk3",
@@ -5905,7 +5982,8 @@
       },
       "out": {
         "influence-iii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "influencemk4",
@@ -5926,7 +6004,8 @@
       },
       "out": {
         "influence-iv": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "lab",
@@ -5947,7 +6026,8 @@
       },
       "out": {
         "lab": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "sourcechest",
@@ -5967,7 +6047,8 @@
       },
       "out": {
         "source-chestlike": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "sourcebelt",
@@ -5989,7 +6070,8 @@
       },
       "out": {
         "source-beltlike": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "sinkchest",
@@ -6009,7 +6091,8 @@
       },
       "out": {
         "sink-chestlike": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "sinkbelt",
@@ -6031,7 +6114,8 @@
       },
       "out": {
         "sink-beltlike": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "solar",
@@ -6053,7 +6137,8 @@
       },
       "out": {
         "solar": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "ebattery",
@@ -6075,7 +6160,8 @@
       },
       "out": {
         "battery": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "launchpad",
@@ -6098,7 +6184,8 @@
       },
       "out": {
         "launch-pad": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "landingzone",
@@ -6118,7 +6205,8 @@
       },
       "out": {
         "landing-zone": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "itemstorage",
@@ -6139,7 +6227,8 @@
       },
       "out": {
         "chest": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "provider",
@@ -6160,7 +6249,8 @@
       },
       "out": {
         "provider": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "cargoshipmk1",
@@ -6182,7 +6272,8 @@
       },
       "out": {
         "cargo-ship-i": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "cargoshipmk2",
@@ -6203,7 +6294,8 @@
       },
       "out": {
         "cargo-ship-ii": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "colonizership",
@@ -6225,7 +6317,8 @@
       },
       "out": {
         "colonizer-ship": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "rocketfuel",
@@ -6247,7 +6340,8 @@
       },
       "out": {
         "rocket-fuel": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "centrifuge",
@@ -6268,7 +6362,8 @@
       },
       "out": {
         "centrifuge": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "nuclearwastereactor",
@@ -6290,7 +6385,8 @@
       },
       "out": {
         "nuclear-waste-reactor": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "nuclearreactor",
@@ -6312,7 +6408,8 @@
       },
       "out": {
         "nuclear-reactor": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "iron-ore",
@@ -6330,7 +6427,10 @@
       "in": {},
       "out": {
         "iron-ore": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     },
     {
       "id": "iron-plate",
@@ -6355,7 +6455,8 @@
       },
       "out": {
         "iron-plate": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "copper-ore",
@@ -6373,7 +6474,10 @@
       "in": {},
       "out": {
         "copper-ore": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     },
     {
       "id": "copper-plate",
@@ -6398,7 +6502,8 @@
       },
       "out": {
         "copper-plate": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "stone",
@@ -6416,7 +6521,10 @@
       "in": {},
       "out": {
         "stone": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     },
     {
       "id": "stone-brick",
@@ -6441,7 +6549,8 @@
       },
       "out": {
         "stone-brick": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "titanium-ore",
@@ -6459,7 +6568,10 @@
       "in": {},
       "out": {
         "titanium-ore": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     },
     {
       "id": "titanium-plate",
@@ -6484,7 +6596,8 @@
       },
       "out": {
         "titanium-plate": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "coal",
@@ -6502,7 +6615,10 @@
       "in": {},
       "out": {
         "coal": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     },
     {
       "id": "uranium",
@@ -6520,7 +6636,10 @@
       "in": {},
       "out": {
         "uranium": 1
-      }
+      },
+      "flags": [
+        "mining"
+      ]
     },
     {
       "id": "u235",
@@ -6536,7 +6655,8 @@
       },
       "out": {
         "u235": 1
-      }
+      },
+      "flags": []
     },
     {
       "id": "u238",
@@ -6552,7 +6672,8 @@
       },
       "out": {
         "u238": 99
-      }
+      },
+      "flags": []
     },
     {
       "id": "crossings-i-tech",
@@ -6568,7 +6689,10 @@
       },
       "out": {
         "crossings-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "crossings-ii-tech",
@@ -6585,7 +6709,10 @@
       },
       "out": {
         "crossings-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "crossings-iii-tech",
@@ -6605,7 +6732,10 @@
       },
       "out": {
         "crossings-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "two-belt-mixing-i-tech",
@@ -6621,7 +6751,10 @@
       },
       "out": {
         "two-belt-mixing-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "two-belt-mixing-ii-tech",
@@ -6638,7 +6771,10 @@
       },
       "out": {
         "two-belt-mixing-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "two-belt-mixing-iii-tech",
@@ -6658,7 +6794,10 @@
       },
       "out": {
         "two-belt-mixing-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "three-belt-mixing-i-tech",
@@ -6674,7 +6813,10 @@
       },
       "out": {
         "three-belt-mixing-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "three-belt-mixing-ii-tech",
@@ -6691,7 +6833,10 @@
       },
       "out": {
         "three-belt-mixing-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "three-belt-mixing-iii-tech",
@@ -6711,7 +6856,10 @@
       },
       "out": {
         "three-belt-mixing-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "flow-control-i-tech",
@@ -6727,7 +6875,10 @@
       },
       "out": {
         "flow-control-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "flow-control-ii-tech",
@@ -6744,7 +6895,10 @@
       },
       "out": {
         "flow-control-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "flow-control-iii-tech",
@@ -6764,7 +6918,10 @@
       },
       "out": {
         "flow-control-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "belts-ii-tech",
@@ -6781,7 +6938,10 @@
       },
       "out": {
         "belts-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "belts-iii-tech",
@@ -6801,7 +6961,10 @@
       },
       "out": {
         "belts-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "short-arms-ii-tech",
@@ -6817,7 +6980,10 @@
       },
       "out": {
         "short-arms-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "short-arms-iii-tech",
@@ -6835,7 +7001,10 @@
       },
       "out": {
         "short-arms-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "short-arms-iv-tech",
@@ -6854,7 +7023,10 @@
       },
       "out": {
         "short-arms-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "long-arms-ii-tech",
@@ -6872,7 +7044,10 @@
       },
       "out": {
         "long-arms-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "long-arms-iii-tech",
@@ -6891,7 +7066,10 @@
       },
       "out": {
         "long-arms-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "long-arms-iv-tech",
@@ -6911,7 +7089,10 @@
       },
       "out": {
         "long-arms-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "assembly-ii-tech",
@@ -6928,7 +7109,10 @@
       },
       "out": {
         "assembly-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "assembly-iii-tech",
@@ -6946,7 +7130,10 @@
       },
       "out": {
         "assembly-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "assembly-iv-tech",
@@ -6965,7 +7152,10 @@
       },
       "out": {
         "assembly-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "assembly-v-tech",
@@ -6985,7 +7175,10 @@
       },
       "out": {
         "assembly-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "smelting-ii-tech",
@@ -7002,7 +7195,10 @@
       },
       "out": {
         "smelting-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "smelting-iii-tech",
@@ -7020,7 +7216,10 @@
       },
       "out": {
         "smelting-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "smelting-iv-tech",
@@ -7039,7 +7238,10 @@
       },
       "out": {
         "smelting-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "smelting-v-tech",
@@ -7058,7 +7260,10 @@
       },
       "out": {
         "smelting-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "electric-furnaces-i-tech",
@@ -7075,7 +7280,10 @@
       },
       "out": {
         "electric-furnaces-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "electric-furnaces-ii-tech",
@@ -7093,7 +7301,10 @@
       },
       "out": {
         "electric-furnaces-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "electric-furnaces-iii-tech",
@@ -7112,7 +7323,10 @@
       },
       "out": {
         "electric-furnaces-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "electric-furnaces-iv-tech",
@@ -7132,7 +7346,10 @@
       },
       "out": {
         "electric-furnaces-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "electric-furnaces-v-tech",
@@ -7152,7 +7369,10 @@
       },
       "out": {
         "electric-furnaces-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "miners-ii-tech",
@@ -7169,7 +7389,10 @@
       },
       "out": {
         "miners-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "miners-iii-tech",
@@ -7187,7 +7410,10 @@
       },
       "out": {
         "miners-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "miners-iv-tech",
@@ -7206,7 +7432,10 @@
       },
       "out": {
         "miners-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "miners-v-tech",
@@ -7226,7 +7455,10 @@
       },
       "out": {
         "miners-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "influence-ii-tech",
@@ -7243,7 +7475,10 @@
       },
       "out": {
         "influence-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "influence-iii-tech",
@@ -7262,7 +7497,10 @@
       },
       "out": {
         "influence-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "influence-iv-tech",
@@ -7282,7 +7520,10 @@
       },
       "out": {
         "influence-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-tech",
@@ -7300,7 +7541,10 @@
       },
       "out": {
         "solar-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "space-tech",
@@ -7319,7 +7563,10 @@
       },
       "out": {
         "space-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "generic-modules-tech",
@@ -7338,7 +7585,10 @@
       },
       "out": {
         "generic-modules-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "distribution-i-tech",
@@ -7358,7 +7608,10 @@
       },
       "out": {
         "distribution-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "distribution-ii-tech",
@@ -7378,7 +7631,10 @@
       },
       "out": {
         "distribution-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "distribution-iii-tech",
@@ -7398,7 +7654,10 @@
       },
       "out": {
         "distribution-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "research-ii-tech",
@@ -7414,7 +7673,10 @@
       },
       "out": {
         "research-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "research-iii-tech",
@@ -7430,7 +7692,10 @@
       },
       "out": {
         "research-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "research-iv-tech",
@@ -7446,7 +7711,10 @@
       },
       "out": {
         "research-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "research-v-tech",
@@ -7462,7 +7730,10 @@
       },
       "out": {
         "research-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "item-stacking-i-tech",
@@ -7481,7 +7752,10 @@
       },
       "out": {
         "item-stacking-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "item-stacking-ii-tech",
@@ -7501,7 +7775,10 @@
       },
       "out": {
         "item-stacking-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "plugins-tech",
@@ -7518,7 +7795,10 @@
       },
       "out": {
         "plugins-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-tech",
@@ -7538,7 +7818,10 @@
       },
       "out": {
         "nuclear-power-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-power-production-i-tech",
@@ -7557,7 +7840,10 @@
       },
       "out": {
         "solar-power-production-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-power-production-ii-tech",
@@ -7576,7 +7862,10 @@
       },
       "out": {
         "solar-power-production-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-power-production-iii-tech",
@@ -7595,7 +7884,10 @@
       },
       "out": {
         "solar-power-production-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-power-production-iv-tech",
@@ -7614,7 +7906,10 @@
       },
       "out": {
         "solar-power-production-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-power-production-v-tech",
@@ -7634,7 +7929,10 @@
       },
       "out": {
         "solar-power-production-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-power-production-vi-tech",
@@ -7654,7 +7952,10 @@
       },
       "out": {
         "solar-power-production-vi-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-power-production-vii-tech",
@@ -7674,7 +7975,10 @@
       },
       "out": {
         "solar-power-production-vii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-power-production-viii-tech",
@@ -7694,7 +7998,10 @@
       },
       "out": {
         "solar-power-production-viii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-power-production-ix-tech",
@@ -7714,7 +8021,10 @@
       },
       "out": {
         "solar-power-production-ix-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "solar-power-production-x-tech",
@@ -7734,7 +8044,10 @@
       },
       "out": {
         "solar-power-production-x-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "burner-power-production-i-tech",
@@ -7753,7 +8066,10 @@
       },
       "out": {
         "burner-power-production-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "burner-power-production-ii-tech",
@@ -7772,7 +8088,10 @@
       },
       "out": {
         "burner-power-production-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "burner-power-production-iii-tech",
@@ -7791,7 +8110,10 @@
       },
       "out": {
         "burner-power-production-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "burner-power-production-iv-tech",
@@ -7810,7 +8132,10 @@
       },
       "out": {
         "burner-power-production-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "burner-power-production-v-tech",
@@ -7830,7 +8155,10 @@
       },
       "out": {
         "burner-power-production-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "burner-power-production-vi-tech",
@@ -7850,7 +8178,10 @@
       },
       "out": {
         "burner-power-production-vi-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "burner-power-production-vii-tech",
@@ -7870,7 +8201,10 @@
       },
       "out": {
         "burner-power-production-vii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "burner-power-production-viii-tech",
@@ -7890,7 +8224,10 @@
       },
       "out": {
         "burner-power-production-viii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "burner-power-production-ix-tech",
@@ -7910,7 +8247,10 @@
       },
       "out": {
         "burner-power-production-ix-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "burner-power-production-x-tech",
@@ -7930,7 +8270,10 @@
       },
       "out": {
         "burner-power-production-x-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "energy-storage-capacity-i-tech",
@@ -7949,7 +8292,10 @@
       },
       "out": {
         "energy-storage-capacity-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "energy-storage-capacity-ii-tech",
@@ -7968,7 +8314,10 @@
       },
       "out": {
         "energy-storage-capacity-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "energy-storage-capacity-iii-tech",
@@ -7987,7 +8336,10 @@
       },
       "out": {
         "energy-storage-capacity-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "energy-storage-capacity-iv-tech",
@@ -8006,7 +8358,10 @@
       },
       "out": {
         "energy-storage-capacity-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "energy-storage-capacity-v-tech",
@@ -8026,7 +8381,10 @@
       },
       "out": {
         "energy-storage-capacity-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "energy-storage-capacity-vi-tech",
@@ -8046,7 +8404,10 @@
       },
       "out": {
         "energy-storage-capacity-vi-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "energy-storage-capacity-vii-tech",
@@ -8066,7 +8427,10 @@
       },
       "out": {
         "energy-storage-capacity-vii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "energy-storage-capacity-viii-tech",
@@ -8086,7 +8450,10 @@
       },
       "out": {
         "energy-storage-capacity-viii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "energy-storage-capacity-ix-tech",
@@ -8106,7 +8473,10 @@
       },
       "out": {
         "energy-storage-capacity-ix-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "energy-storage-capacity-x-tech",
@@ -8126,7 +8496,10 @@
       },
       "out": {
         "energy-storage-capacity-x-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "ship-fuel-cost-i-tech",
@@ -8146,7 +8519,10 @@
       },
       "out": {
         "ship-fuel-cost-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "ship-fuel-cost-ii-tech",
@@ -8166,7 +8542,10 @@
       },
       "out": {
         "ship-fuel-cost-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "ship-fuel-cost-iii-tech",
@@ -8186,7 +8565,10 @@
       },
       "out": {
         "ship-fuel-cost-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "ship-fuel-cost-iv-tech",
@@ -8206,7 +8588,10 @@
       },
       "out": {
         "ship-fuel-cost-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "ship-fuel-cost-v-tech",
@@ -8226,7 +8611,10 @@
       },
       "out": {
         "ship-fuel-cost-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "ship-fuel-cost-vi-tech",
@@ -8246,7 +8634,10 @@
       },
       "out": {
         "ship-fuel-cost-vi-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "ship-fuel-cost-vii-tech",
@@ -8266,7 +8657,10 @@
       },
       "out": {
         "ship-fuel-cost-vii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "ship-fuel-cost-viii-tech",
@@ -8286,7 +8680,10 @@
       },
       "out": {
         "ship-fuel-cost-viii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "ship-fuel-cost-ix-tech",
@@ -8306,7 +8703,10 @@
       },
       "out": {
         "ship-fuel-cost-ix-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "ship-fuel-cost-x-tech",
@@ -8326,7 +8726,10 @@
       },
       "out": {
         "ship-fuel-cost-x-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "mining-time-i-tech",
@@ -8345,7 +8748,10 @@
       },
       "out": {
         "mining-time-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "mining-time-ii-tech",
@@ -8364,7 +8770,10 @@
       },
       "out": {
         "mining-time-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "mining-time-iii-tech",
@@ -8383,7 +8792,10 @@
       },
       "out": {
         "mining-time-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "mining-time-iv-tech",
@@ -8402,7 +8814,10 @@
       },
       "out": {
         "mining-time-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "mining-time-v-tech",
@@ -8422,7 +8837,10 @@
       },
       "out": {
         "mining-time-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "mining-time-vi-tech",
@@ -8442,7 +8860,10 @@
       },
       "out": {
         "mining-time-vi-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "mining-time-vii-tech",
@@ -8462,7 +8883,10 @@
       },
       "out": {
         "mining-time-vii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "mining-time-viii-tech",
@@ -8482,7 +8906,10 @@
       },
       "out": {
         "mining-time-viii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "mining-time-ix-tech",
@@ -8502,7 +8929,10 @@
       },
       "out": {
         "mining-time-ix-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "mining-time-x-tech",
@@ -8522,7 +8952,10 @@
       },
       "out": {
         "mining-time-x-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-production-i-tech",
@@ -8542,7 +8975,10 @@
       },
       "out": {
         "nuclear-power-production-i-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-production-ii-tech",
@@ -8562,7 +8998,10 @@
       },
       "out": {
         "nuclear-power-production-ii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-production-iii-tech",
@@ -8582,7 +9021,10 @@
       },
       "out": {
         "nuclear-power-production-iii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-production-iv-tech",
@@ -8602,7 +9044,10 @@
       },
       "out": {
         "nuclear-power-production-iv-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-production-v-tech",
@@ -8622,7 +9067,10 @@
       },
       "out": {
         "nuclear-power-production-v-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-production-vi-tech",
@@ -8642,7 +9090,10 @@
       },
       "out": {
         "nuclear-power-production-vi-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-production-vii-tech",
@@ -8662,7 +9113,10 @@
       },
       "out": {
         "nuclear-power-production-vii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-production-viii-tech",
@@ -8682,7 +9136,10 @@
       },
       "out": {
         "nuclear-power-production-viii-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-production-ix-tech",
@@ -8702,7 +9159,10 @@
       },
       "out": {
         "nuclear-power-production-ix-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     },
     {
       "id": "nuclear-power-production-x-tech",
@@ -8722,11 +9182,10 @@
       },
       "out": {
         "nuclear-power-production-x-tech": 1
-      }
+      },
+      "flags": [
+        "technology"
+      ]
     }
-  ],
-  "defaults": {
-    "minBelt": "belt-i",
-    "maxBelt": "belt-iii"
-  }
+  ]
 }
