@@ -1263,7 +1263,7 @@
                     [ngModel]="
                       settings().miningBonus.add(rational(100)).toNumber()
                     "
-                    (onBlur)="
+                    (onInput)="
                       settingsSvc.apply({
                         miningBonus: rational(
                           (miningBonusInput.value ?? 100) - 100
