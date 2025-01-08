@@ -1,6 +1,6 @@
 {
   "version": {
-    "FactorY": "1.4.0"
+    "FactorY": "1.3.0"
   },
   "categories": [
     {
@@ -2203,7 +2203,7 @@
       "icon": "crossingmk1item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2220,7 +2220,7 @@
       "icon": "crossingmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2239,7 +2239,7 @@
       "icon": "crossingmk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2258,7 +2258,7 @@
       "icon": "swappermk1item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2276,7 +2276,7 @@
       "icon": "swappermk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2296,7 +2296,7 @@
       "icon": "swappermk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2316,7 +2316,7 @@
       "icon": "mergermk1item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2336,7 +2336,7 @@
       "icon": "mergermk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2356,7 +2356,7 @@
       "icon": "mergermk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2376,7 +2376,7 @@
       "icon": "overflowmk1item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2396,7 +2396,7 @@
       "icon": "overflowmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2416,7 +2416,7 @@
       "icon": "overflowmk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2436,7 +2436,7 @@
       "icon": "beltmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2453,7 +2453,7 @@
       "icon": "beltmk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2472,7 +2472,7 @@
       "icon": "armbothmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2489,7 +2489,7 @@
       "icon": "armbothmk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2508,7 +2508,7 @@
       "icon": "armbothmk4item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2527,7 +2527,7 @@
       "icon": "longarmbothmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2544,7 +2544,7 @@
       "icon": "longarmbothmk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2563,7 +2563,7 @@
       "icon": "longarmbothmk4item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2582,7 +2582,7 @@
       "icon": "assemblermk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2599,7 +2599,7 @@
       "icon": "assemblermk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2618,7 +2618,7 @@
       "icon": "assemblermk4item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2637,7 +2637,7 @@
       "icon": "assemblermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2656,7 +2656,7 @@
       "icon": "furnaceburnermk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2674,7 +2674,7 @@
       "icon": "furnaceburnermk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2694,7 +2694,7 @@
       "icon": "furnaceburnermk4item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2714,7 +2714,7 @@
       "icon": "furnaceburnermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2734,7 +2734,7 @@
       "icon": "furnaceelectricmk1item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2753,7 +2753,7 @@
       "icon": "furnaceelectricmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2772,7 +2772,7 @@
       "icon": "furnaceelectricmk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2791,7 +2791,7 @@
       "icon": "furnaceelectricmk4item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2810,7 +2810,7 @@
       "icon": "furnaceelectricmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2829,7 +2829,7 @@
       "icon": "minerbothmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2846,7 +2846,7 @@
       "icon": "minerbothmk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2865,7 +2865,7 @@
       "icon": "minerbothmk4item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2884,7 +2884,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2903,7 +2903,7 @@
       "icon": "influencemk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2920,7 +2920,7 @@
       "icon": "influencemk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2939,7 +2939,7 @@
       "icon": "influencemk4item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -2958,7 +2958,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2976,7 +2976,7 @@
       "icon": "launchpaditem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -2998,7 +2998,7 @@
       "icon": "genericg",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -3013,7 +3013,7 @@
       "icon": "distributormk1item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3032,7 +3032,7 @@
       "icon": "distributormk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3051,7 +3051,7 @@
       "icon": "distributormk3item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3070,7 +3070,7 @@
       "icon": "researchtokenmk2",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -3087,7 +3087,7 @@
       "icon": "researchtokenmk3",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3106,7 +3106,7 @@
       "icon": "researchtokenmk4",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3125,7 +3125,7 @@
       "icon": "researchtokenmk5",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3144,7 +3144,7 @@
       "icon": "stackermk1item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -3162,7 +3162,7 @@
       "icon": "stackermk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3181,7 +3181,7 @@
       "icon": "pluginthroughput",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -3196,7 +3196,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -3215,7 +3215,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3232,7 +3232,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3249,7 +3249,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3266,7 +3266,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3283,7 +3283,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3300,7 +3300,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3317,7 +3317,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3334,7 +3334,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3351,7 +3351,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3368,7 +3368,7 @@
       "icon": "solaritem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3385,7 +3385,7 @@
       "icon": "burnerpowermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -3400,7 +3400,7 @@
       "icon": "burnerpowermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3417,7 +3417,7 @@
       "icon": "burnerpowermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3434,7 +3434,7 @@
       "icon": "burnerpowermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3451,7 +3451,7 @@
       "icon": "burnerpowermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3468,7 +3468,7 @@
       "icon": "burnerpowermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3485,7 +3485,7 @@
       "icon": "burnerpowermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3502,7 +3502,7 @@
       "icon": "burnerpowermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3519,7 +3519,7 @@
       "icon": "burnerpowermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3536,7 +3536,7 @@
       "icon": "burnerpowermk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3553,7 +3553,7 @@
       "icon": "batteryitem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3570,7 +3570,7 @@
       "icon": "batteryitem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3587,7 +3587,7 @@
       "icon": "batteryitem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3604,7 +3604,7 @@
       "icon": "batteryitem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3621,7 +3621,7 @@
       "icon": "batteryitem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3638,7 +3638,7 @@
       "icon": "batteryitem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3655,7 +3655,7 @@
       "icon": "batteryitem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3672,7 +3672,7 @@
       "icon": "batteryitem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3689,7 +3689,7 @@
       "icon": "batteryitem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3706,7 +3706,7 @@
       "icon": "batteryitem",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3723,7 +3723,7 @@
       "icon": "cargoshipmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3740,7 +3740,7 @@
       "icon": "cargoshipmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3757,7 +3757,7 @@
       "icon": "cargoshipmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3774,7 +3774,7 @@
       "icon": "cargoshipmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3791,7 +3791,7 @@
       "icon": "cargoshipmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3808,7 +3808,7 @@
       "icon": "cargoshipmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3825,7 +3825,7 @@
       "icon": "cargoshipmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3842,7 +3842,7 @@
       "icon": "cargoshipmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3859,7 +3859,7 @@
       "icon": "cargoshipmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3876,7 +3876,7 @@
       "icon": "cargoshipmk2item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3893,7 +3893,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [],
@@ -3908,7 +3908,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3925,7 +3925,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3942,7 +3942,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3959,7 +3959,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3976,7 +3976,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -3993,7 +3993,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4010,7 +4010,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4027,7 +4027,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4044,7 +4044,7 @@
       "icon": "minerbothmk5item",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4061,7 +4061,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4078,7 +4078,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4095,7 +4095,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4112,7 +4112,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4129,7 +4129,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4146,7 +4146,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4163,7 +4163,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4180,7 +4180,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4197,7 +4197,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4214,7 +4214,7 @@
       "icon": "nuclearreactor0",
       "machine": null,
       "belt": null,
-      "stack": 0,
+      "stack": 1,
       "fuel": null,
       "technology": {
         "prerequisites": [
@@ -4243,7 +4243,8 @@
       },
       "out": {
         "wire": 2
-      }
+      },
+      "flags": []
     },
     {
       "id": "gear",
@@ -4439,7 +4440,9 @@
       "out": {
         "belt-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "beltmk3",
@@ -4461,7 +4464,9 @@
       "out": {
         "belt-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "armmk1",
@@ -4506,7 +4511,9 @@
       "out": {
         "arm-short-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "armmk3",
@@ -4529,7 +4536,9 @@
       "out": {
         "arm-short-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "armmk4",
@@ -4552,7 +4561,9 @@
       "out": {
         "arm-short-iv": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "longarmmk1",
@@ -4598,7 +4609,9 @@
       "out": {
         "arm-long-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "longarmmk3",
@@ -4621,7 +4634,9 @@
       "out": {
         "arm-long-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "longarmmk4",
@@ -4644,7 +4659,9 @@
       "out": {
         "arm-long-iv": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "research1",
@@ -4688,7 +4705,9 @@
       "out": {
         "rt-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "research3",
@@ -4711,7 +4730,9 @@
       "out": {
         "rt-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "research4",
@@ -4734,7 +4755,9 @@
       "out": {
         "rt-iv": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "research5",
@@ -4757,7 +4780,9 @@
       "out": {
         "rt-v": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "crossingmk1",
@@ -4779,7 +4804,9 @@
       "out": {
         "crossing-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "crossingmk2",
@@ -4801,7 +4828,9 @@
       "out": {
         "crossing-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "crossingmk3",
@@ -4823,7 +4852,9 @@
       "out": {
         "crossing-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "splittermk1",
@@ -4845,7 +4876,9 @@
       "out": {
         "splitter-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "splittermk2",
@@ -4867,7 +4900,9 @@
       "out": {
         "splitter-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "splittermk3",
@@ -4889,7 +4924,9 @@
       "out": {
         "splitter-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "overflowmk1",
@@ -4911,7 +4948,9 @@
       "out": {
         "overflow-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "overflowmk2",
@@ -4933,7 +4972,9 @@
       "out": {
         "overflow-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "overflowmk3",
@@ -4955,7 +4996,9 @@
       "out": {
         "overflow-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "underflowmk1",
@@ -4977,7 +5020,9 @@
       "out": {
         "underflow-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "underflowmk2",
@@ -4999,7 +5044,9 @@
       "out": {
         "underflow-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "underflowmk3",
@@ -5021,7 +5068,9 @@
       "out": {
         "underflow-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "distributormk1",
@@ -5045,7 +5094,9 @@
       "out": {
         "distributor-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "distributormk2",
@@ -5069,7 +5120,9 @@
       "out": {
         "distributor-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "distributormk3",
@@ -5093,7 +5146,9 @@
       "out": {
         "distributor-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "mergermk1",
@@ -5115,7 +5170,9 @@
       "out": {
         "merger-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "mergermk2",
@@ -5137,7 +5194,9 @@
       "out": {
         "merger-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "mergermk3",
@@ -5159,7 +5218,9 @@
       "out": {
         "merger-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "furnacemk1",
@@ -5203,7 +5264,9 @@
       "out": {
         "furnace-burner-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "furnacemk3",
@@ -5226,7 +5289,9 @@
       "out": {
         "furnace-burner-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "furnacemk4",
@@ -5249,7 +5314,9 @@
       "out": {
         "furnace-burner-iv": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "furnacemk5",
@@ -5271,7 +5338,9 @@
       "out": {
         "furnace-burner-v": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "efurnacemk1",
@@ -5293,7 +5362,9 @@
       "out": {
         "furnace-electric-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "efurnacemk2",
@@ -5315,7 +5386,9 @@
       "out": {
         "furnace-electric-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "efurnacemk3",
@@ -5337,7 +5410,9 @@
       "out": {
         "furnace-electric-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "efurnacemk4",
@@ -5360,7 +5435,9 @@
       "out": {
         "furnace-electric-iv": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "efurnacemk5",
@@ -5383,7 +5460,9 @@
       "out": {
         "furnace-electric-v": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "burnerpowermk1",
@@ -5427,7 +5506,9 @@
       "out": {
         "burner-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "burnerpowermk3",
@@ -5450,7 +5531,9 @@
       "out": {
         "burner-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "burnerpowermk4",
@@ -5473,7 +5556,9 @@
       "out": {
         "burner-iv": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "burnerpowermk5",
@@ -5495,7 +5580,9 @@
       "out": {
         "burner-v": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "assemblermk1",
@@ -5539,7 +5626,9 @@
       "out": {
         "assembler-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "assemblermk3",
@@ -5562,7 +5651,9 @@
       "out": {
         "assembler-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "assemblermk4",
@@ -5585,7 +5676,9 @@
       "out": {
         "assembler-iv": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "assemblermk5",
@@ -5607,7 +5700,9 @@
       "out": {
         "assembler-v": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "stackermk1",
@@ -5630,7 +5725,9 @@
       "out": {
         "stacker-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "stackermk2",
@@ -5652,7 +5749,9 @@
       "out": {
         "stacker-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "unstacker",
@@ -5674,7 +5773,9 @@
       "out": {
         "unstacker": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "mixermk1",
@@ -5696,7 +5797,9 @@
       "out": {
         "mixer-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "mixermk2",
@@ -5718,7 +5821,9 @@
       "out": {
         "mixer-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "mixermk3",
@@ -5740,7 +5845,9 @@
       "out": {
         "mixer-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "swappermk1",
@@ -5762,7 +5869,9 @@
       "out": {
         "swapper-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "swappermk2",
@@ -5784,7 +5893,9 @@
       "out": {
         "swapper-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "swappermk3",
@@ -5806,7 +5917,9 @@
       "out": {
         "swapper-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "minermk1",
@@ -5850,7 +5963,9 @@
       "out": {
         "miner-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "minermk3",
@@ -5873,7 +5988,9 @@
       "out": {
         "miner-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "minermk4",
@@ -5895,7 +6012,9 @@
       "out": {
         "miner-iv": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "minermk5",
@@ -5917,7 +6036,9 @@
       "out": {
         "miner-v": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "influencemk1",
@@ -5961,7 +6082,9 @@
       "out": {
         "influence-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "influencemk3",
@@ -5983,7 +6106,9 @@
       "out": {
         "influence-iii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "influencemk4",
@@ -6005,7 +6130,9 @@
       "out": {
         "influence-iv": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "lab",
@@ -6138,7 +6265,9 @@
       "out": {
         "solar": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "ebattery",
@@ -6161,7 +6290,9 @@
       "out": {
         "battery": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "launchpad",
@@ -6185,7 +6316,9 @@
       "out": {
         "launch-pad": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "landingzone",
@@ -6206,7 +6339,9 @@
       "out": {
         "landing-zone": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "itemstorage",
@@ -6273,7 +6408,9 @@
       "out": {
         "cargo-ship-i": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "cargoshipmk2",
@@ -6295,7 +6432,9 @@
       "out": {
         "cargo-ship-ii": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "colonizership",
@@ -6318,7 +6457,9 @@
       "out": {
         "colonizer-ship": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "rocketfuel",
@@ -6341,7 +6482,9 @@
       "out": {
         "rocket-fuel": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "centrifuge",
@@ -6363,7 +6506,9 @@
       "out": {
         "centrifuge": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "nuclearwastereactor",
@@ -6386,7 +6531,9 @@
       "out": {
         "nuclear-waste-reactor": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "nuclearreactor",
@@ -6409,7 +6556,9 @@
       "out": {
         "nuclear-reactor": 1
       },
-      "flags": []
+      "flags": [
+        "locked"
+      ]
     },
     {
       "id": "iron-ore",
