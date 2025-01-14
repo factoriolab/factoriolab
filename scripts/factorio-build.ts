@@ -6,6 +6,7 @@ import { data } from 'src/data';
 
 import { coalesce, spread } from '~/helpers';
 import { CategoryJson } from '~/models/data/category';
+import { DefaultsJson } from '~/models/data/defaults';
 import { FuelJson } from '~/models/data/fuel';
 import { ItemJson } from '~/models/data/item';
 import { MachineJson } from '~/models/data/machine';
@@ -146,6 +147,7 @@ const tempIconsPath = `${tempPath}/icons`;
 const modPath = `./src/data/${modId}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
+const modDefaultsPath = `${modPath}/defaults.json`;
 const modFlags = flags[mod.flags];
 
 async function processMod(): Promise<void> {
@@ -629,11 +631,12 @@ async function processMod(): Promise<void> {
       return;
     }
 
+    const modDefaults = getJsonData(modDefaultsPath) as DefaultsJson | null;
+    if (modDefaults) {
+      modData.defaults = modDefaults;
+    }
     if (fs.existsSync(modDataPath)) {
-      const oldData = getJsonData(modDataPath) as ModData;
       const oldHash = getJsonData(modHashPath) as ModHash;
-
-      modData.defaults = oldData.defaults;
 
       if (modData.defaults?.excludedRecipes) {
         // Filter excluded recipes for only recipes that exist
@@ -1315,17 +1318,6 @@ async function processMod(): Promise<void> {
             recipeOut[`${outId}-${temp.toString()}`] = recipeOut[outId];
             delete recipeOut[outId];
           }
-        }
-      }
-
-      // Check for calculated catalysts
-      for (const outId of Object.keys(recipeOut)) {
-        if (recipeIn[outId] && !recipeCatalyst?.[outId]) {
-          // Need to manually calculate and add catalyst amount for this item
-          if (recipeCatalyst == null) recipeCatalyst = {};
-
-          const amount = Math.min(recipeOut[outId], recipeIn[outId]);
-          recipeCatalyst[outId] = amount;
         }
       }
 
