@@ -1,0 +1,9344 @@
+{
+  "version": {
+    "FactorY": "1.3.0"
+  },
+  "categories": [
+    {
+      "id": "belts",
+      "name": "Belts",
+      "icon": "beltmk1item"
+    },
+    {
+      "id": "arms",
+      "name": "Arms",
+      "icon": "armbothmk1item"
+    },
+    {
+      "id": "processing",
+      "name": "Processing",
+      "icon": "assemblermk1item"
+    },
+    {
+      "id": "materials",
+      "name": "Materials",
+      "icon": "minerbothmk1item"
+    },
+    {
+      "id": "modules",
+      "name": "Modules",
+      "icon": "module"
+    },
+    {
+      "id": "energy",
+      "name": "Energy",
+      "icon": "solaritem"
+    },
+    {
+      "id": "space",
+      "name": "Space",
+      "icon": "cargoshipmk1item"
+    },
+    {
+      "id": "special",
+      "name": "Special",
+      "icon": "starteritem"
+    },
+    {
+      "id": "technology",
+      "name": "Technology",
+      "icon": "labitem"
+    }
+  ],
+  "icons": [
+    {
+      "id": "armbothmk1item",
+      "position": "-0px -0px",
+      "color": "#11170b"
+    },
+    {
+      "id": "armbothmk2item",
+      "position": "-66px -0px",
+      "color": "#16140c"
+    },
+    {
+      "id": "armbothmk3item",
+      "position": "-132px -0px",
+      "color": "#150d0e"
+    },
+    {
+      "id": "armbothmk4item",
+      "position": "-198px -0px",
+      "color": "#0a1118"
+    },
+    {
+      "id": "assemblermk1item",
+      "position": "-264px -0px",
+      "color": "#151712"
+    },
+    {
+      "id": "assemblermk2item",
+      "position": "-330px -0px",
+      "color": "#181512"
+    },
+    {
+      "id": "assemblermk3item",
+      "position": "-396px -0px",
+      "color": "#171113"
+    },
+    {
+      "id": "assemblermk4item",
+      "position": "-462px -0px",
+      "color": "#121418"
+    },
+    {
+      "id": "assemblermk5item",
+      "position": "-528px -0px",
+      "color": "#151318"
+    },
+    {
+      "id": "batteryitem",
+      "position": "-594px -0px",
+      "color": "#1a1f1e"
+    },
+    {
+      "id": "beltmk1item",
+      "position": "-660px -0px",
+      "color": "#0c110c"
+    },
+    {
+      "id": "beltmk2item",
+      "position": "-0px -66px",
+      "color": "#0e0f0c"
+    },
+    {
+      "id": "beltmk3item",
+      "position": "-66px -66px",
+      "color": "#0e0b0d"
+    },
+    {
+      "id": "burnerpowermk1item",
+      "position": "-132px -66px",
+      "color": "#1d2315"
+    },
+    {
+      "id": "burnerpowermk2item",
+      "position": "-198px -66px",
+      "color": "#242016"
+    },
+    {
+      "id": "burnerpowermk3item",
+      "position": "-264px -66px",
+      "color": "#241819"
+    },
+    {
+      "id": "burnerpowermk4item",
+      "position": "-330px -66px",
+      "color": "#141e26"
+    },
+    {
+      "id": "burnerpowermk5item",
+      "position": "-396px -66px",
+      "color": "#201c26"
+    },
+    {
+      "id": "cable",
+      "position": "-462px -66px",
+      "color": "#141415"
+    },
+    {
+      "id": "cargoshipmk1item",
+      "position": "-528px -66px",
+      "color": "#181b16"
+    },
+    {
+      "id": "cargoshipmk2item",
+      "position": "-594px -66px",
+      "color": "#1a1917"
+    },
+    {
+      "id": "centrifugeitem",
+      "position": "-660px -66px",
+      "color": "#2e2d2b"
+    },
+    {
+      "id": "chip",
+      "position": "-0px -132px",
+      "color": "#0d0d0c"
+    },
+    {
+      "id": "coal",
+      "position": "-66px -132px",
+      "color": "#17191d"
+    },
+    {
+      "id": "colonizershipitem",
+      "position": "-132px -132px",
+      "color": "#1a130f"
+    },
+    {
+      "id": "computer",
+      "position": "-198px -132px",
+      "color": "#181e24"
+    },
+    {
+      "id": "coppero",
+      "position": "-264px -132px",
+      "color": "#63331e"
+    },
+    {
+      "id": "copperp",
+      "position": "-330px -132px",
+      "color": "#29130c"
+    },
+    {
+      "id": "crossingmk1item",
+      "position": "-396px -132px",
+      "color": "#111911"
+    },
+    {
+      "id": "crossingmk2item",
+      "position": "-462px -132px",
+      "color": "#151511"
+    },
+    {
+      "id": "crossingmk3item",
+      "position": "-528px -132px",
+      "color": "#151013"
+    },
+    {
+      "id": "distributormk1item",
+      "position": "-594px -132px",
+      "color": "#0f1412"
+    },
+    {
+      "id": "distributormk2item",
+      "position": "-660px -132px",
+      "color": "#111313"
+    },
+    {
+      "id": "distributormk3item",
+      "position": "-0px -198px",
+      "color": "#111113"
+    },
+    {
+      "id": "furnaceburnermk1item",
+      "position": "-66px -198px",
+      "color": "#212612"
+    },
+    {
+      "id": "furnaceburnermk2item",
+      "position": "-132px -198px",
+      "color": "#2a2013"
+    },
+    {
+      "id": "furnaceburnermk3item",
+      "position": "-198px -198px",
+      "color": "#281516"
+    },
+    {
+      "id": "furnaceburnermk4item",
+      "position": "-264px -198px",
+      "color": "#131d26"
+    },
+    {
+      "id": "furnaceburnermk5item",
+      "position": "-330px -198px",
+      "color": "#211a27"
+    },
+    {
+      "id": "furnaceelectricmk1item",
+      "position": "-396px -198px",
+      "color": "#1e1f0c"
+    },
+    {
+      "id": "furnaceelectricmk2item",
+      "position": "-462px -198px",
+      "color": "#271a0c"
+    },
+    {
+      "id": "furnaceelectricmk3item",
+      "position": "-528px -198px",
+      "color": "#26110f"
+    },
+    {
+      "id": "furnaceelectricmk4item",
+      "position": "-594px -198px",
+      "color": "#12171c"
+    },
+    {
+      "id": "furnaceelectricmk5item",
+      "position": "-660px -198px",
+      "color": "#20151d"
+    },
+    {
+      "id": "gear",
+      "position": "-0px -264px",
+      "color": "#323336"
+    },
+    {
+      "id": "genericg",
+      "position": "-66px -264px",
+      "color": "#3d3843"
+    },
+    {
+      "id": "influencemk1item",
+      "position": "-132px -264px",
+      "color": "#1a1913"
+    },
+    {
+      "id": "influencemk2item",
+      "position": "-198px -264px",
+      "color": "#1c1813"
+    },
+    {
+      "id": "influencemk3item",
+      "position": "-264px -264px",
+      "color": "#1c1614"
+    },
+    {
+      "id": "influencemk4item",
+      "position": "-330px -264px",
+      "color": "#181818"
+    },
+    {
+      "id": "irono",
+      "position": "-396px -264px",
+      "color": "#252e4e"
+    },
+    {
+      "id": "ironp",
+      "position": "-462px -264px",
+      "color": "#121627"
+    },
+    {
+      "id": "itemstorageitem",
+      "position": "-528px -264px",
+      "color": "#161a19"
+    },
+    {
+      "id": "labitem",
+      "position": "-594px -264px",
+      "color": "#1d1b1a"
+    },
+    {
+      "id": "landingzoneitem",
+      "position": "-660px -264px",
+      "color": "#242629"
+    },
+    {
+      "id": "launchpaditem",
+      "position": "-0px -330px",
+      "color": "#171b1d"
+    },
+    {
+      "id": "longarmbothmk1item",
+      "position": "-66px -330px",
+      "color": "#0f1409"
+    },
+    {
+      "id": "longarmbothmk2item",
+      "position": "-132px -330px",
+      "color": "#141209"
+    },
+    {
+      "id": "longarmbothmk3item",
+      "position": "-198px -330px",
+      "color": "#130a0b"
+    },
+    {
+      "id": "longarmbothmk4item",
+      "position": "-264px -330px",
+      "color": "#070f15"
+    },
+    {
+      "id": "mergermk1item",
+      "position": "-330px -330px",
+      "color": "#121810"
+    },
+    {
+      "id": "mergermk2item",
+      "position": "-396px -330px",
+      "color": "#151510"
+    },
+    {
+      "id": "mergermk3item",
+      "position": "-462px -330px",
+      "color": "#160f12"
+    },
+    {
+      "id": "minerbothmk1item",
+      "position": "-528px -330px",
+      "color": "#333b3a"
+    },
+    {
+      "id": "minerbothmk2item",
+      "position": "-594px -330px",
+      "color": "#363a3a"
+    },
+    {
+      "id": "minerbothmk3item",
+      "position": "-660px -330px",
+      "color": "#35353b"
+    },
+    {
+      "id": "minerbothmk4item",
+      "position": "-0px -396px",
+      "color": "#303841"
+    },
+    {
+      "id": "minerbothmk5item",
+      "position": "-66px -396px",
+      "color": "#333741"
+    },
+    {
+      "id": "mixermk1item",
+      "position": "-132px -396px",
+      "color": "#17190f"
+    },
+    {
+      "id": "mixermk2item",
+      "position": "-198px -396px",
+      "color": "#1b160f"
+    },
+    {
+      "id": "mixermk3item",
+      "position": "-264px -396px",
+      "color": "#1a1210"
+    },
+    {
+      "id": "module",
+      "position": "-330px -396px",
+      "color": "#000000"
+    },
+    {
+      "id": "motor",
+      "position": "-396px -396px",
+      "color": "#23262b"
+    },
+    {
+      "id": "nuclearreactor0",
+      "position": "-462px -396px",
+      "color": "#1f2425"
+    },
+    {
+      "id": "nuclearreactoritem",
+      "position": "-528px -396px",
+      "color": "#1f2728"
+    },
+    {
+      "id": "nuclearwastereactoritem",
+      "position": "-594px -396px",
+      "color": "#1e2426"
+    },
+    {
+      "id": "overflowmk1item",
+      "position": "-660px -396px",
+      "color": "#131912"
+    },
+    {
+      "id": "overflowmk2item",
+      "position": "-0px -462px",
+      "color": "#161612"
+    },
+    {
+      "id": "overflowmk3item",
+      "position": "-66px -462px",
+      "color": "#161114"
+    },
+    {
+      "id": "pluginthroughput",
+      "position": "-132px -462px",
+      "color": "#384046"
+    },
+    {
+      "id": "provideritem",
+      "position": "-198px -462px",
+      "color": "#232621"
+    },
+    {
+      "id": "researchtokenmk1",
+      "position": "-264px -462px",
+      "color": "#141d07"
+    },
+    {
+      "id": "researchtokenmk2",
+      "position": "-330px -462px",
+      "color": "#1e1a08"
+    },
+    {
+      "id": "researchtokenmk3",
+      "position": "-396px -462px",
+      "color": "#1e0c0e"
+    },
+    {
+      "id": "researchtokenmk4",
+      "position": "-462px -462px",
+      "color": "#061720"
+    },
+    {
+      "id": "researchtokenmk5",
+      "position": "-528px -462px",
+      "color": "#181320"
+    },
+    {
+      "id": "rocketfuel",
+      "position": "-594px -462px",
+      "color": "#212c2e"
+    },
+    {
+      "id": "rod",
+      "position": "-660px -462px",
+      "color": "#1f2021"
+    },
+    {
+      "id": "screw",
+      "position": "-0px -528px",
+      "color": "#2f3235"
+    },
+    {
+      "id": "sinkbeltitem",
+      "position": "-66px -528px",
+      "color": "#160f0a"
+    },
+    {
+      "id": "sinkchestitem",
+      "position": "-132px -528px",
+      "color": "#341d0c"
+    },
+    {
+      "id": "solaritem",
+      "position": "-198px -528px",
+      "color": "#131e34"
+    },
+    {
+      "id": "sourcebeltitem",
+      "position": "-264px -528px",
+      "color": "#081117"
+    },
+    {
+      "id": "sourcechestitem",
+      "position": "-330px -528px",
+      "color": "#0d2a3d"
+    },
+    {
+      "id": "splittermk1item",
+      "position": "-396px -528px",
+      "color": "#121910"
+    },
+    {
+      "id": "splittermk2item",
+      "position": "-462px -528px",
+      "color": "#161510"
+    },
+    {
+      "id": "splittermk3item",
+      "position": "-528px -528px",
+      "color": "#160f12"
+    },
+    {
+      "id": "stackermk1item",
+      "position": "-594px -528px",
+      "color": "#0f1513"
+    },
+    {
+      "id": "stackermk2item",
+      "position": "-660px -528px",
+      "color": "#111313"
+    },
+    {
+      "id": "starteritem",
+      "position": "-0px -594px",
+      "color": "#273134"
+    },
+    {
+      "id": "stoneo",
+      "position": "-66px -594px",
+      "color": "#322f33"
+    },
+    {
+      "id": "stonep",
+      "position": "-132px -594px",
+      "color": "#1e2024"
+    },
+    {
+      "id": "swappermk1item",
+      "position": "-198px -594px",
+      "color": "#18180f"
+    },
+    {
+      "id": "swappermk2item",
+      "position": "-264px -594px",
+      "color": "#1b150f"
+    },
+    {
+      "id": "swappermk3item",
+      "position": "-330px -594px",
+      "color": "#1b1110"
+    },
+    {
+      "id": "titaniumo",
+      "position": "-396px -594px",
+      "color": "#4e4f55"
+    },
+    {
+      "id": "titaniump",
+      "position": "-462px -594px",
+      "color": "#28292e"
+    },
+    {
+      "id": "u235",
+      "position": "-528px -594px",
+      "color": "#3a6525"
+    },
+    {
+      "id": "u238",
+      "position": "-594px -594px",
+      "color": "#1a3125"
+    },
+    {
+      "id": "underflowmk1item",
+      "position": "-660px -594px",
+      "color": "#141a14"
+    },
+    {
+      "id": "underflowmk2item",
+      "position": "-0px -660px",
+      "color": "#171714"
+    },
+    {
+      "id": "underflowmk3item",
+      "position": "-66px -660px",
+      "color": "#171316"
+    },
+    {
+      "id": "unstackeritem",
+      "position": "-132px -660px",
+      "color": "#141312"
+    },
+    {
+      "id": "uraniumo",
+      "position": "-198px -660px",
+      "color": "#215335"
+    },
+    {
+      "id": "wire",
+      "position": "-264px -660px",
+      "color": "#1c110d"
+    }
+  ],
+  "items": [
+    {
+      "id": "belt-i",
+      "name": "Belt I",
+      "category": "belts",
+      "row": 0,
+      "icon": "beltmk1item",
+      "machine": null,
+      "belt": {
+        "speed": 3.125
+      },
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "belt-ii",
+      "name": "Belt II",
+      "category": "belts",
+      "row": 0,
+      "icon": "beltmk2item",
+      "machine": null,
+      "belt": {
+        "speed": 6.25
+      },
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "belt-iii",
+      "name": "Belt III",
+      "category": "belts",
+      "row": 0,
+      "icon": "beltmk3item",
+      "machine": null,
+      "belt": {
+        "speed": 12.5
+      },
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "crossing-i",
+      "name": "Crossing I",
+      "category": "belts",
+      "row": 0,
+      "icon": "crossingmk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "crossing-ii",
+      "name": "Crossing II",
+      "category": "belts",
+      "row": 0,
+      "icon": "crossingmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "crossing-iii",
+      "name": "Crossing III",
+      "category": "belts",
+      "row": 0,
+      "icon": "crossingmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "merger-i",
+      "name": "Merger I",
+      "category": "belts",
+      "row": 0,
+      "icon": "mergermk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "merger-ii",
+      "name": "Merger II",
+      "category": "belts",
+      "row": 0,
+      "icon": "mergermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "merger-iii",
+      "name": "Merger III",
+      "category": "belts",
+      "row": 0,
+      "icon": "mergermk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "splitter-i",
+      "name": "Splitter I",
+      "category": "belts",
+      "row": 0,
+      "icon": "splittermk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "splitter-ii",
+      "name": "Splitter II",
+      "category": "belts",
+      "row": 0,
+      "icon": "splittermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "splitter-iii",
+      "name": "Splitter III",
+      "category": "belts",
+      "row": 0,
+      "icon": "splittermk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "overflow-i",
+      "name": "Overflow I",
+      "category": "belts",
+      "row": 0,
+      "icon": "overflowmk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "overflow-ii",
+      "name": "Overflow II",
+      "category": "belts",
+      "row": 0,
+      "icon": "overflowmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "overflow-iii",
+      "name": "Overflow III",
+      "category": "belts",
+      "row": 0,
+      "icon": "overflowmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "underflow-i",
+      "name": "Underflow I",
+      "category": "belts",
+      "row": 0,
+      "icon": "underflowmk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "underflow-ii",
+      "name": "Underflow II",
+      "category": "belts",
+      "row": 0,
+      "icon": "underflowmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "underflow-iii",
+      "name": "Underflow III",
+      "category": "belts",
+      "row": 0,
+      "icon": "underflowmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "miner-i",
+      "name": "Miner I",
+      "category": "materials",
+      "row": 0,
+      "icon": "minerbothmk1item",
+      "machine": {
+        "speed": 1.0,
+        "type": "electric",
+        "usage": 10,
+        "size": [
+          1,
+          1
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "miner-ii",
+      "name": "Miner II",
+      "category": "materials",
+      "row": 0,
+      "icon": "minerbothmk2item",
+      "machine": {
+        "speed": 2.0,
+        "type": "electric",
+        "usage": 40,
+        "size": [
+          1,
+          1
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "miner-iii",
+      "name": "Miner III",
+      "category": "materials",
+      "row": 0,
+      "icon": "minerbothmk3item",
+      "machine": {
+        "speed": 4.0,
+        "type": "electric",
+        "usage": 160,
+        "size": [
+          1,
+          1
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "miner-iv",
+      "name": "Miner IV",
+      "category": "materials",
+      "row": 0,
+      "icon": "minerbothmk4item",
+      "machine": {
+        "speed": 8.0,
+        "type": "electric",
+        "usage": 640,
+        "size": [
+          1,
+          1
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "miner-v",
+      "name": "Miner V",
+      "category": "materials",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": {
+        "speed": 16.0,
+        "type": "electric",
+        "usage": 2560,
+        "size": [
+          1,
+          1
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "source-chestlike",
+      "name": "Source ChestLike",
+      "category": "modules",
+      "row": 0,
+      "icon": "sourcechestitem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "source-beltlike",
+      "name": "Source BeltLike",
+      "category": "modules",
+      "row": 0,
+      "icon": "sourcebeltitem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "sink-chestlike",
+      "name": "Sink ChestLike",
+      "category": "modules",
+      "row": 0,
+      "icon": "sinkchestitem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "sink-beltlike",
+      "name": "Sink BeltLike",
+      "category": "modules",
+      "row": 0,
+      "icon": "sinkbeltitem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "influence-i",
+      "name": "Influence I",
+      "category": "special",
+      "row": 0,
+      "icon": "influencemk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "influence-ii",
+      "name": "Influence II",
+      "category": "special",
+      "row": 0,
+      "icon": "influencemk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "influence-iii",
+      "name": "Influence III",
+      "category": "special",
+      "row": 0,
+      "icon": "influencemk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "influence-iv",
+      "name": "Influence IV",
+      "category": "special",
+      "row": 0,
+      "icon": "influencemk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "chest",
+      "name": "Chest",
+      "category": "special",
+      "row": 0,
+      "icon": "itemstorageitem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "provider",
+      "name": "Provider",
+      "category": "special",
+      "row": 0,
+      "icon": "provideritem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "swapper-i",
+      "name": "Swapper I",
+      "category": "belts",
+      "row": 0,
+      "icon": "swappermk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "swapper-ii",
+      "name": "Swapper II",
+      "category": "belts",
+      "row": 0,
+      "icon": "swappermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "swapper-iii",
+      "name": "Swapper III",
+      "category": "belts",
+      "row": 0,
+      "icon": "swappermk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "mixer-i",
+      "name": "Mixer I",
+      "category": "belts",
+      "row": 0,
+      "icon": "mixermk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "mixer-ii",
+      "name": "Mixer II",
+      "category": "belts",
+      "row": 0,
+      "icon": "mixermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "mixer-iii",
+      "name": "Mixer III",
+      "category": "belts",
+      "row": 0,
+      "icon": "mixermk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "arm-short-i",
+      "name": "Arm Short I",
+      "category": "arms",
+      "row": 0,
+      "icon": "armbothmk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "arm-short-ii",
+      "name": "Arm Short II",
+      "category": "arms",
+      "row": 0,
+      "icon": "armbothmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "arm-short-iii",
+      "name": "Arm Short III",
+      "category": "arms",
+      "row": 0,
+      "icon": "armbothmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "arm-short-iv",
+      "name": "Arm Short IV",
+      "category": "arms",
+      "row": 0,
+      "icon": "armbothmk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "arm-long-i",
+      "name": "Arm Long I",
+      "category": "arms",
+      "row": 0,
+      "icon": "longarmbothmk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "arm-long-ii",
+      "name": "Arm Long II",
+      "category": "arms",
+      "row": 0,
+      "icon": "longarmbothmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "arm-long-iii",
+      "name": "Arm Long III",
+      "category": "arms",
+      "row": 0,
+      "icon": "longarmbothmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "arm-long-iv",
+      "name": "Arm Long IV",
+      "category": "arms",
+      "row": 0,
+      "icon": "longarmbothmk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "solar",
+      "name": "Solar",
+      "category": "energy",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "battery",
+      "name": "Battery",
+      "category": "energy",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "burner-i",
+      "name": "Burner I",
+      "category": "energy",
+      "row": 0,
+      "icon": "burnerpowermk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "burner-ii",
+      "name": "Burner II",
+      "category": "energy",
+      "row": 0,
+      "icon": "burnerpowermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "burner-iii",
+      "name": "Burner III",
+      "category": "energy",
+      "row": 0,
+      "icon": "burnerpowermk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "burner-iv",
+      "name": "Burner IV",
+      "category": "energy",
+      "row": 0,
+      "icon": "burnerpowermk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "burner-v",
+      "name": "Burner V",
+      "category": "energy",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "assembler-i",
+      "name": "Assembler I",
+      "category": "processing",
+      "row": 0,
+      "icon": "assemblermk1item",
+      "machine": {
+        "speed": 1.0,
+        "type": "electric",
+        "usage": 5,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "assembler-ii",
+      "name": "Assembler II",
+      "category": "processing",
+      "row": 0,
+      "icon": "assemblermk2item",
+      "machine": {
+        "speed": 2.0,
+        "type": "electric",
+        "usage": 20,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "assembler-iii",
+      "name": "Assembler III",
+      "category": "processing",
+      "row": 0,
+      "icon": "assemblermk3item",
+      "machine": {
+        "speed": 4.0,
+        "type": "electric",
+        "usage": 80,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "assembler-iv",
+      "name": "Assembler IV",
+      "category": "processing",
+      "row": 0,
+      "icon": "assemblermk4item",
+      "machine": {
+        "speed": 8.0,
+        "type": "electric",
+        "usage": 320,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "assembler-v",
+      "name": "Assembler V",
+      "category": "processing",
+      "row": 0,
+      "icon": "assemblermk5item",
+      "machine": {
+        "speed": 16.0,
+        "type": "electric",
+        "usage": 1280,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "furnace-burner-i",
+      "name": "Furnace Burner I",
+      "category": "processing",
+      "row": 0,
+      "icon": "furnaceburnermk1item",
+      "machine": {
+        "speed": 1.0,
+        "type": "burner",
+        "usage": 0,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": [
+          "thermal"
+        ]
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "furnace-burner-ii",
+      "name": "Furnace Burner II",
+      "category": "processing",
+      "row": 0,
+      "icon": "furnaceburnermk2item",
+      "machine": {
+        "speed": 2.0,
+        "type": "burner",
+        "usage": 0,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": [
+          "thermal"
+        ]
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "furnace-burner-iii",
+      "name": "Furnace Burner III",
+      "category": "processing",
+      "row": 0,
+      "icon": "furnaceburnermk3item",
+      "machine": {
+        "speed": 3.0,
+        "type": "burner",
+        "usage": 0,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": [
+          "thermal"
+        ]
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "furnace-burner-iv",
+      "name": "Furnace Burner IV",
+      "category": "processing",
+      "row": 0,
+      "icon": "furnaceburnermk4item",
+      "machine": {
+        "speed": 4.0,
+        "type": "burner",
+        "usage": 0,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": [
+          "thermal"
+        ]
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "furnace-burner-v",
+      "name": "Furnace Burner V",
+      "category": "processing",
+      "row": 0,
+      "icon": "furnaceburnermk5item",
+      "machine": {
+        "speed": 5.0,
+        "type": "burner",
+        "usage": 0,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": [
+          "thermal"
+        ]
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "furnace-electric-i",
+      "name": "Furnace Electric I",
+      "category": "processing",
+      "row": 0,
+      "icon": "furnaceelectricmk1item",
+      "machine": {
+        "speed": 1.0,
+        "type": "electric",
+        "usage": 500,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": [
+          "thermal"
+        ]
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "furnace-electric-ii",
+      "name": "Furnace Electric II",
+      "category": "processing",
+      "row": 0,
+      "icon": "furnaceelectricmk2item",
+      "machine": {
+        "speed": 2.0,
+        "type": "electric",
+        "usage": 1000,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": [
+          "thermal"
+        ]
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "furnace-electric-iii",
+      "name": "Furnace Electric III",
+      "category": "processing",
+      "row": 0,
+      "icon": "furnaceelectricmk3item",
+      "machine": {
+        "speed": 3.0,
+        "type": "electric",
+        "usage": 2000,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": [
+          "thermal"
+        ]
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "furnace-electric-iv",
+      "name": "Furnace Electric IV",
+      "category": "processing",
+      "row": 0,
+      "icon": "furnaceelectricmk4item",
+      "machine": {
+        "speed": 4.0,
+        "type": "electric",
+        "usage": 4000,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": [
+          "thermal"
+        ]
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "furnace-electric-v",
+      "name": "Furnace Electric V",
+      "category": "processing",
+      "row": 0,
+      "icon": "furnaceelectricmk5item",
+      "machine": {
+        "speed": 5.0,
+        "type": "electric",
+        "usage": 8000,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": [
+          "thermal"
+        ]
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "lab",
+      "name": "Lab",
+      "category": "special",
+      "row": 0,
+      "icon": "labitem",
+      "machine": {
+        "speed": 1.0,
+        "type": "electric",
+        "usage": 50,
+        "size": [
+          3,
+          3
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "starter",
+      "name": "Starter",
+      "category": "special",
+      "row": 0,
+      "icon": "starteritem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "launch-pad",
+      "name": "Launch Pad",
+      "category": "space",
+      "row": 0,
+      "icon": "launchpaditem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "landing-zone",
+      "name": "Landing Zone",
+      "category": "space",
+      "row": 0,
+      "icon": "landingzoneitem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "stacker-i",
+      "name": "Stacker I",
+      "category": "special",
+      "row": 0,
+      "icon": "stackermk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "stacker-ii",
+      "name": "Stacker II",
+      "category": "special",
+      "row": 0,
+      "icon": "stackermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "unstacker",
+      "name": "Unstacker",
+      "category": "special",
+      "row": 0,
+      "icon": "unstackeritem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "distributor-i",
+      "name": "Distributor I",
+      "category": "belts",
+      "row": 0,
+      "icon": "distributormk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "distributor-ii",
+      "name": "Distributor II",
+      "category": "belts",
+      "row": 0,
+      "icon": "distributormk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "distributor-iii",
+      "name": "Distributor III",
+      "category": "belts",
+      "row": 0,
+      "icon": "distributormk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "centrifuge",
+      "name": "Centrifuge",
+      "category": "energy",
+      "row": 0,
+      "icon": "centrifugeitem",
+      "machine": {
+        "speed": 1.0,
+        "type": "electric",
+        "usage": 2500,
+        "size": [
+          4,
+          4
+        ],
+        "fuelCategories": []
+      },
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "nuclear-reactor",
+      "name": "Nuclear Reactor",
+      "category": "energy",
+      "row": 0,
+      "icon": "nuclearreactoritem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "nuclear-waste-reactor",
+      "name": "Nuclear Waste Reactor",
+      "category": "energy",
+      "row": 0,
+      "icon": "nuclearwastereactoritem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "iron-ore",
+      "name": "Iron Ore",
+      "category": "materials",
+      "row": 0,
+      "icon": "irono",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "copper-ore",
+      "name": "Copper Ore",
+      "category": "materials",
+      "row": 0,
+      "icon": "coppero",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "stone",
+      "name": "Stone",
+      "category": "materials",
+      "row": 0,
+      "icon": "stoneo",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "titanium-ore",
+      "name": "Titanium Ore",
+      "category": "materials",
+      "row": 0,
+      "icon": "titaniumo",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "iron-plate",
+      "name": "Iron Plate",
+      "category": "materials",
+      "row": 0,
+      "icon": "ironp",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "copper-plate",
+      "name": "Copper Plate",
+      "category": "materials",
+      "row": 0,
+      "icon": "copperp",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "stone-brick",
+      "name": "Stone Brick",
+      "category": "materials",
+      "row": 0,
+      "icon": "stonep",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "titanium-plate",
+      "name": "Titanium Plate",
+      "category": "materials",
+      "row": 0,
+      "icon": "titaniump",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "rt-i",
+      "name": "RT I",
+      "category": "special",
+      "row": 0,
+      "icon": "researchtokenmk1",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "rt-ii",
+      "name": "RT II",
+      "category": "special",
+      "row": 0,
+      "icon": "researchtokenmk2",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "rt-iii",
+      "name": "RT III",
+      "category": "special",
+      "row": 0,
+      "icon": "researchtokenmk3",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "rt-iv",
+      "name": "RT IV",
+      "category": "special",
+      "row": 0,
+      "icon": "researchtokenmk4",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "rt-v",
+      "name": "RT V",
+      "category": "special",
+      "row": 0,
+      "icon": "researchtokenmk5",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "wire",
+      "name": "Wire",
+      "category": "processing",
+      "row": 0,
+      "icon": "wire",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "gear",
+      "name": "Gear",
+      "category": "processing",
+      "row": 0,
+      "icon": "gear",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "coal",
+      "name": "Coal",
+      "category": "materials",
+      "row": 0,
+      "icon": "coal",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": {
+        "category": "thermal",
+        "value": 100000
+      },
+      "technology": null
+    },
+    {
+      "id": "chip",
+      "name": "Chip",
+      "category": "processing",
+      "row": 0,
+      "icon": "chip",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "motor",
+      "name": "Motor",
+      "category": "processing",
+      "row": 0,
+      "icon": "motor",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "screw",
+      "name": "Screw",
+      "category": "processing",
+      "row": 0,
+      "icon": "screw",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "cable",
+      "name": "Cable",
+      "category": "processing",
+      "row": 0,
+      "icon": "cable",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "computer",
+      "name": "Computer",
+      "category": "processing",
+      "row": 0,
+      "icon": "computer",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "rod",
+      "name": "Rod",
+      "category": "processing",
+      "row": 0,
+      "icon": "rod",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "rocket-fuel",
+      "name": "Rocket Fuel",
+      "category": "materials",
+      "row": 0,
+      "icon": "rocketfuel",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": {
+        "category": "thermal",
+        "value": 5000000
+      },
+      "technology": null
+    },
+    {
+      "id": "uranium",
+      "name": "Uranium",
+      "category": "materials",
+      "row": 0,
+      "icon": "uraniumo",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "u235",
+      "name": "U235",
+      "category": "materials",
+      "row": 0,
+      "icon": "u235",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": {
+        "category": "nuclear",
+        "value": 1000000000
+      },
+      "technology": null
+    },
+    {
+      "id": "u238",
+      "name": "U238",
+      "category": "materials",
+      "row": 0,
+      "icon": "u238",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": {
+        "category": "nuclear",
+        "value": 20000
+      },
+      "technology": null
+    },
+    {
+      "id": "cargo-ship-i",
+      "name": "Cargo Ship I",
+      "category": "space",
+      "row": 0,
+      "icon": "cargoshipmk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "cargo-ship-ii",
+      "name": "Cargo Ship II",
+      "category": "space",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "colonizer-ship",
+      "name": "Colonizer Ship",
+      "category": "space",
+      "row": 0,
+      "icon": "colonizershipitem",
+      "machine": null,
+      "belt": null,
+      "stack": 5,
+      "fuel": null,
+      "technology": null
+    },
+    {
+      "id": "crossings-i-tech",
+      "name": "Crossings I",
+      "category": "technology",
+      "row": 0,
+      "icon": "crossingmk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "crossingmk1"
+        ]
+      }
+    },
+    {
+      "id": "crossings-ii-tech",
+      "name": "Crossings II",
+      "category": "technology",
+      "row": 0,
+      "icon": "crossingmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "crossings-i-tech"
+        ],
+        "unlockedRecipes": [
+          "crossingmk2"
+        ]
+      }
+    },
+    {
+      "id": "crossings-iii-tech",
+      "name": "Crossings III",
+      "category": "technology",
+      "row": 0,
+      "icon": "crossingmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "crossings-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "crossingmk3"
+        ]
+      }
+    },
+    {
+      "id": "two-belt-mixing-i-tech",
+      "name": "Two Belt Mixing I",
+      "category": "technology",
+      "row": 0,
+      "icon": "swappermk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "swappermk1",
+          "mixermk1"
+        ]
+      }
+    },
+    {
+      "id": "two-belt-mixing-ii-tech",
+      "name": "Two Belt Mixing II",
+      "category": "technology",
+      "row": 0,
+      "icon": "swappermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "two-belt-mixing-i-tech"
+        ],
+        "unlockedRecipes": [
+          "swappermk2",
+          "mixermk2"
+        ]
+      }
+    },
+    {
+      "id": "two-belt-mixing-iii-tech",
+      "name": "Two Belt Mixing III",
+      "category": "technology",
+      "row": 0,
+      "icon": "swappermk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "two-belt-mixing-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "swappermk3",
+          "mixermk3"
+        ]
+      }
+    },
+    {
+      "id": "three-belt-mixing-i-tech",
+      "name": "Three Belt Mixing I",
+      "category": "technology",
+      "row": 0,
+      "icon": "mergermk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "two-belt-mixing-i-tech"
+        ],
+        "unlockedRecipes": [
+          "mergermk1",
+          "splittermk1"
+        ]
+      }
+    },
+    {
+      "id": "three-belt-mixing-ii-tech",
+      "name": "Three Belt Mixing II",
+      "category": "technology",
+      "row": 0,
+      "icon": "mergermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "three-belt-mixing-i-tech"
+        ],
+        "unlockedRecipes": [
+          "mergermk2",
+          "splittermk2"
+        ]
+      }
+    },
+    {
+      "id": "three-belt-mixing-iii-tech",
+      "name": "Three Belt Mixing III",
+      "category": "technology",
+      "row": 0,
+      "icon": "mergermk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "three-belt-mixing-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "mergermk3",
+          "splittermk3"
+        ]
+      }
+    },
+    {
+      "id": "flow-control-i-tech",
+      "name": "Flow Control I",
+      "category": "technology",
+      "row": 0,
+      "icon": "overflowmk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "three-belt-mixing-i-tech"
+        ],
+        "unlockedRecipes": [
+          "overflowmk1",
+          "underflowmk1"
+        ]
+      }
+    },
+    {
+      "id": "flow-control-ii-tech",
+      "name": "Flow Control II",
+      "category": "technology",
+      "row": 0,
+      "icon": "overflowmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "flow-control-i-tech"
+        ],
+        "unlockedRecipes": [
+          "overflowmk2",
+          "underflowmk2"
+        ]
+      }
+    },
+    {
+      "id": "flow-control-iii-tech",
+      "name": "Flow Control III",
+      "category": "technology",
+      "row": 0,
+      "icon": "overflowmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "flow-control-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "overflowmk3",
+          "underflowmk3"
+        ]
+      }
+    },
+    {
+      "id": "belts-ii-tech",
+      "name": "Belts II",
+      "category": "technology",
+      "row": 0,
+      "icon": "beltmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "beltmk2"
+        ]
+      }
+    },
+    {
+      "id": "belts-iii-tech",
+      "name": "Belts III",
+      "category": "technology",
+      "row": 0,
+      "icon": "beltmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "belts-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "beltmk3"
+        ]
+      }
+    },
+    {
+      "id": "short-arms-ii-tech",
+      "name": "Short Arms II",
+      "category": "technology",
+      "row": 0,
+      "icon": "armbothmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "armmk2"
+        ]
+      }
+    },
+    {
+      "id": "short-arms-iii-tech",
+      "name": "Short Arms III",
+      "category": "technology",
+      "row": 0,
+      "icon": "armbothmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "short-arms-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "armmk3"
+        ]
+      }
+    },
+    {
+      "id": "short-arms-iv-tech",
+      "name": "Short Arms IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "armbothmk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "short-arms-iii-tech"
+        ],
+        "unlockedRecipes": [
+          "armmk4"
+        ]
+      }
+    },
+    {
+      "id": "long-arms-ii-tech",
+      "name": "Long Arms II",
+      "category": "technology",
+      "row": 0,
+      "icon": "longarmbothmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "longarmmk2"
+        ]
+      }
+    },
+    {
+      "id": "long-arms-iii-tech",
+      "name": "Long Arms III",
+      "category": "technology",
+      "row": 0,
+      "icon": "longarmbothmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "long-arms-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "longarmmk3"
+        ]
+      }
+    },
+    {
+      "id": "long-arms-iv-tech",
+      "name": "Long Arms IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "longarmbothmk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "long-arms-iii-tech"
+        ],
+        "unlockedRecipes": [
+          "longarmmk4"
+        ]
+      }
+    },
+    {
+      "id": "assembly-ii-tech",
+      "name": "Assembly II",
+      "category": "technology",
+      "row": 0,
+      "icon": "assemblermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "assemblermk2"
+        ]
+      }
+    },
+    {
+      "id": "assembly-iii-tech",
+      "name": "Assembly III",
+      "category": "technology",
+      "row": 0,
+      "icon": "assemblermk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "assembly-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "assemblermk3"
+        ]
+      }
+    },
+    {
+      "id": "assembly-iv-tech",
+      "name": "Assembly IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "assemblermk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "assembly-iii-tech"
+        ],
+        "unlockedRecipes": [
+          "assemblermk4"
+        ]
+      }
+    },
+    {
+      "id": "assembly-v-tech",
+      "name": "Assembly V",
+      "category": "technology",
+      "row": 0,
+      "icon": "assemblermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "assembly-iv-tech"
+        ],
+        "unlockedRecipes": [
+          "assemblermk5"
+        ]
+      }
+    },
+    {
+      "id": "smelting-ii-tech",
+      "name": "Smelting II",
+      "category": "technology",
+      "row": 0,
+      "icon": "furnaceburnermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "burnerpowermk2",
+          "furnacemk2"
+        ]
+      }
+    },
+    {
+      "id": "smelting-iii-tech",
+      "name": "Smelting III",
+      "category": "technology",
+      "row": 0,
+      "icon": "furnaceburnermk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "smelting-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "burnerpowermk3",
+          "furnacemk3"
+        ]
+      }
+    },
+    {
+      "id": "smelting-iv-tech",
+      "name": "Smelting IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "furnaceburnermk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "smelting-iii-tech"
+        ],
+        "unlockedRecipes": [
+          "burnerpowermk4",
+          "furnacemk4"
+        ]
+      }
+    },
+    {
+      "id": "smelting-v-tech",
+      "name": "Smelting V",
+      "category": "technology",
+      "row": 0,
+      "icon": "furnaceburnermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "smelting-iv-tech"
+        ],
+        "unlockedRecipes": [
+          "burnerpowermk5",
+          "furnacemk5"
+        ]
+      }
+    },
+    {
+      "id": "electric-furnaces-i-tech",
+      "name": "Electric Furnaces I",
+      "category": "technology",
+      "row": 0,
+      "icon": "furnaceelectricmk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "smelting-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "efurnacemk1"
+        ]
+      }
+    },
+    {
+      "id": "electric-furnaces-ii-tech",
+      "name": "Electric Furnaces II",
+      "category": "technology",
+      "row": 0,
+      "icon": "furnaceelectricmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "electric-furnaces-i-tech"
+        ],
+        "unlockedRecipes": [
+          "efurnacemk2"
+        ]
+      }
+    },
+    {
+      "id": "electric-furnaces-iii-tech",
+      "name": "Electric Furnaces III",
+      "category": "technology",
+      "row": 0,
+      "icon": "furnaceelectricmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "electric-furnaces-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "efurnacemk3"
+        ]
+      }
+    },
+    {
+      "id": "electric-furnaces-iv-tech",
+      "name": "Electric Furnaces IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "furnaceelectricmk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "electric-furnaces-iii-tech"
+        ],
+        "unlockedRecipes": [
+          "efurnacemk4"
+        ]
+      }
+    },
+    {
+      "id": "electric-furnaces-v-tech",
+      "name": "Electric Furnaces V",
+      "category": "technology",
+      "row": 0,
+      "icon": "furnaceelectricmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "electric-furnaces-iv-tech"
+        ],
+        "unlockedRecipes": [
+          "efurnacemk5"
+        ]
+      }
+    },
+    {
+      "id": "miners-ii-tech",
+      "name": "Miners II",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "minermk2"
+        ]
+      }
+    },
+    {
+      "id": "miners-iii-tech",
+      "name": "Miners III",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "miners-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "minermk3"
+        ]
+      }
+    },
+    {
+      "id": "miners-iv-tech",
+      "name": "Miners IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "miners-iii-tech"
+        ],
+        "unlockedRecipes": [
+          "minermk4"
+        ]
+      }
+    },
+    {
+      "id": "miners-v-tech",
+      "name": "Miners V",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "miners-iv-tech"
+        ],
+        "unlockedRecipes": [
+          "minermk5"
+        ]
+      }
+    },
+    {
+      "id": "influence-ii-tech",
+      "name": "Influence II",
+      "category": "technology",
+      "row": 0,
+      "icon": "influencemk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "influencemk2"
+        ]
+      }
+    },
+    {
+      "id": "influence-iii-tech",
+      "name": "Influence III",
+      "category": "technology",
+      "row": 0,
+      "icon": "influencemk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "influence-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "influencemk3"
+        ]
+      }
+    },
+    {
+      "id": "influence-iv-tech",
+      "name": "Influence IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "influencemk4item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "influence-iii-tech"
+        ],
+        "unlockedRecipes": [
+          "influencemk4"
+        ]
+      }
+    },
+    {
+      "id": "solar-tech",
+      "name": "Solar",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "solar",
+          "ebattery"
+        ]
+      }
+    },
+    {
+      "id": "space-tech",
+      "name": "Space",
+      "category": "technology",
+      "row": 0,
+      "icon": "launchpaditem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "launchpad",
+          "landingzone",
+          "rocketfuel",
+          "cargoshipmk1",
+          "cargoshipmk2",
+          "colonizership"
+        ]
+      }
+    },
+    {
+      "id": "generic-modules-tech",
+      "name": "Generic Modules",
+      "category": "technology",
+      "row": 0,
+      "icon": "genericg",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "distribution-i-tech",
+      "name": "Distribution I",
+      "category": "technology",
+      "row": 0,
+      "icon": "distributormk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "flow-control-i-tech"
+        ],
+        "unlockedRecipes": [
+          "distributormk1"
+        ]
+      }
+    },
+    {
+      "id": "distribution-ii-tech",
+      "name": "Distribution II",
+      "category": "technology",
+      "row": 0,
+      "icon": "distributormk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "distribution-i-tech"
+        ],
+        "unlockedRecipes": [
+          "distributormk2"
+        ]
+      }
+    },
+    {
+      "id": "distribution-iii-tech",
+      "name": "Distribution III",
+      "category": "technology",
+      "row": 0,
+      "icon": "distributormk3item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "distribution-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "distributormk3"
+        ]
+      }
+    },
+    {
+      "id": "research-ii-tech",
+      "name": "Research II",
+      "category": "technology",
+      "row": 0,
+      "icon": "researchtokenmk2",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "research2"
+        ]
+      }
+    },
+    {
+      "id": "research-iii-tech",
+      "name": "Research III",
+      "category": "technology",
+      "row": 0,
+      "icon": "researchtokenmk3",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "research-ii-tech"
+        ],
+        "unlockedRecipes": [
+          "research3"
+        ]
+      }
+    },
+    {
+      "id": "research-iv-tech",
+      "name": "Research IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "researchtokenmk4",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "research-iii-tech"
+        ],
+        "unlockedRecipes": [
+          "research4"
+        ]
+      }
+    },
+    {
+      "id": "research-v-tech",
+      "name": "Research V",
+      "category": "technology",
+      "row": 0,
+      "icon": "researchtokenmk5",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "research-iv-tech"
+        ],
+        "unlockedRecipes": [
+          "research5"
+        ]
+      }
+    },
+    {
+      "id": "item-stacking-i-tech",
+      "name": "Item Stacking I",
+      "category": "technology",
+      "row": 0,
+      "icon": "stackermk1item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "stackermk1",
+          "unstacker"
+        ]
+      }
+    },
+    {
+      "id": "item-stacking-ii-tech",
+      "name": "Item Stacking II",
+      "category": "technology",
+      "row": 0,
+      "icon": "stackermk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "item-stacking-i-tech"
+        ],
+        "unlockedRecipes": [
+          "stackermk2"
+        ]
+      }
+    },
+    {
+      "id": "plugins-tech",
+      "name": "Plugins",
+      "category": "technology",
+      "row": 0,
+      "icon": "pluginthroughput",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-tech",
+      "name": "Nuclear Power",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": [
+          "centrifuge",
+          "nuclearreactor",
+          "nuclearwastereactor"
+        ]
+      }
+    },
+    {
+      "id": "solar-power-production-i-tech",
+      "name": "Solar Power Production I",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "solar-power-production-ii-tech",
+      "name": "Solar Power Production II",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-power-production-i-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "solar-power-production-iii-tech",
+      "name": "Solar Power Production III",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-power-production-ii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "solar-power-production-iv-tech",
+      "name": "Solar Power Production IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-power-production-iii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "solar-power-production-v-tech",
+      "name": "Solar Power Production V",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-power-production-iv-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "solar-power-production-vi-tech",
+      "name": "Solar Power Production VI",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-power-production-v-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "solar-power-production-vii-tech",
+      "name": "Solar Power Production VII",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-power-production-vi-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "solar-power-production-viii-tech",
+      "name": "Solar Power Production VIII",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-power-production-vii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "solar-power-production-ix-tech",
+      "name": "Solar Power Production IX",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-power-production-viii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "solar-power-production-x-tech",
+      "name": "Solar Power Production X",
+      "category": "technology",
+      "row": 0,
+      "icon": "solaritem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-power-production-ix-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "burner-power-production-i-tech",
+      "name": "Burner Power Production I",
+      "category": "technology",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "burner-power-production-ii-tech",
+      "name": "Burner Power Production II",
+      "category": "technology",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "burner-power-production-i-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "burner-power-production-iii-tech",
+      "name": "Burner Power Production III",
+      "category": "technology",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "burner-power-production-ii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "burner-power-production-iv-tech",
+      "name": "Burner Power Production IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "burner-power-production-iii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "burner-power-production-v-tech",
+      "name": "Burner Power Production V",
+      "category": "technology",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "burner-power-production-iv-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "burner-power-production-vi-tech",
+      "name": "Burner Power Production VI",
+      "category": "technology",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "burner-power-production-v-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "burner-power-production-vii-tech",
+      "name": "Burner Power Production VII",
+      "category": "technology",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "burner-power-production-vi-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "burner-power-production-viii-tech",
+      "name": "Burner Power Production VIII",
+      "category": "technology",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "burner-power-production-vii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "burner-power-production-ix-tech",
+      "name": "Burner Power Production IX",
+      "category": "technology",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "burner-power-production-viii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "burner-power-production-x-tech",
+      "name": "Burner Power Production X",
+      "category": "technology",
+      "row": 0,
+      "icon": "burnerpowermk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "burner-power-production-ix-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "energy-storage-capacity-i-tech",
+      "name": "Energy Storage Capacity I",
+      "category": "technology",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "solar-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "energy-storage-capacity-ii-tech",
+      "name": "Energy Storage Capacity II",
+      "category": "technology",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "energy-storage-capacity-i-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "energy-storage-capacity-iii-tech",
+      "name": "Energy Storage Capacity III",
+      "category": "technology",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "energy-storage-capacity-ii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "energy-storage-capacity-iv-tech",
+      "name": "Energy Storage Capacity IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "energy-storage-capacity-iii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "energy-storage-capacity-v-tech",
+      "name": "Energy Storage Capacity V",
+      "category": "technology",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "energy-storage-capacity-iv-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "energy-storage-capacity-vi-tech",
+      "name": "Energy Storage Capacity VI",
+      "category": "technology",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "energy-storage-capacity-v-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "energy-storage-capacity-vii-tech",
+      "name": "Energy Storage Capacity VII",
+      "category": "technology",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "energy-storage-capacity-vi-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "energy-storage-capacity-viii-tech",
+      "name": "Energy Storage Capacity VIII",
+      "category": "technology",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "energy-storage-capacity-vii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "energy-storage-capacity-ix-tech",
+      "name": "Energy Storage Capacity IX",
+      "category": "technology",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "energy-storage-capacity-viii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "energy-storage-capacity-x-tech",
+      "name": "Energy Storage Capacity X",
+      "category": "technology",
+      "row": 0,
+      "icon": "batteryitem",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "energy-storage-capacity-ix-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "ship-fuel-cost-i-tech",
+      "name": "Ship Fuel Cost I",
+      "category": "technology",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "space-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "ship-fuel-cost-ii-tech",
+      "name": "Ship Fuel Cost II",
+      "category": "technology",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "ship-fuel-cost-i-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "ship-fuel-cost-iii-tech",
+      "name": "Ship Fuel Cost III",
+      "category": "technology",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "ship-fuel-cost-ii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "ship-fuel-cost-iv-tech",
+      "name": "Ship Fuel Cost IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "ship-fuel-cost-iii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "ship-fuel-cost-v-tech",
+      "name": "Ship Fuel Cost V",
+      "category": "technology",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "ship-fuel-cost-iv-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "ship-fuel-cost-vi-tech",
+      "name": "Ship Fuel Cost VI",
+      "category": "technology",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "ship-fuel-cost-v-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "ship-fuel-cost-vii-tech",
+      "name": "Ship Fuel Cost VII",
+      "category": "technology",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "ship-fuel-cost-vi-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "ship-fuel-cost-viii-tech",
+      "name": "Ship Fuel Cost VIII",
+      "category": "technology",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "ship-fuel-cost-vii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "ship-fuel-cost-ix-tech",
+      "name": "Ship Fuel Cost IX",
+      "category": "technology",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "ship-fuel-cost-viii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "ship-fuel-cost-x-tech",
+      "name": "Ship Fuel Cost X",
+      "category": "technology",
+      "row": 0,
+      "icon": "cargoshipmk2item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "ship-fuel-cost-ix-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "mining-time-i-tech",
+      "name": "Mining Time I",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "mining-time-ii-tech",
+      "name": "Mining Time II",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "mining-time-i-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "mining-time-iii-tech",
+      "name": "Mining Time III",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "mining-time-ii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "mining-time-iv-tech",
+      "name": "Mining Time IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "mining-time-iii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "mining-time-v-tech",
+      "name": "Mining Time V",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "mining-time-iv-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "mining-time-vi-tech",
+      "name": "Mining Time VI",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "mining-time-v-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "mining-time-vii-tech",
+      "name": "Mining Time VII",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "mining-time-vi-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "mining-time-viii-tech",
+      "name": "Mining Time VIII",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "mining-time-vii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "mining-time-ix-tech",
+      "name": "Mining Time IX",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "mining-time-viii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "mining-time-x-tech",
+      "name": "Mining Time X",
+      "category": "technology",
+      "row": 0,
+      "icon": "minerbothmk5item",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "mining-time-ix-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-production-i-tech",
+      "name": "Nuclear Power Production I",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "nuclear-power-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-production-ii-tech",
+      "name": "Nuclear Power Production II",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "nuclear-power-production-i-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-production-iii-tech",
+      "name": "Nuclear Power Production III",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "nuclear-power-production-ii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-production-iv-tech",
+      "name": "Nuclear Power Production IV",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "nuclear-power-production-iii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-production-v-tech",
+      "name": "Nuclear Power Production V",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "nuclear-power-production-iv-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-production-vi-tech",
+      "name": "Nuclear Power Production VI",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "nuclear-power-production-v-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-production-vii-tech",
+      "name": "Nuclear Power Production VII",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "nuclear-power-production-vi-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-production-viii-tech",
+      "name": "Nuclear Power Production VIII",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "nuclear-power-production-vii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-production-ix-tech",
+      "name": "Nuclear Power Production IX",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "nuclear-power-production-viii-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    },
+    {
+      "id": "nuclear-power-production-x-tech",
+      "name": "Nuclear Power Production X",
+      "category": "technology",
+      "row": 0,
+      "icon": "nuclearreactor0",
+      "machine": null,
+      "belt": null,
+      "stack": 1,
+      "fuel": null,
+      "technology": {
+        "prerequisites": [
+          "nuclear-power-production-ix-tech"
+        ],
+        "unlockedRecipes": []
+      }
+    }
+  ],
+  "recipes": [
+    {
+      "id": "wire",
+      "name": "Wire",
+      "category": "processing",
+      "row": 0,
+      "time": 8.192,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "copper-plate": 1
+      },
+      "out": {
+        "wire": 2
+      },
+      "flags": []
+    },
+    {
+      "id": "gear",
+      "name": "Gear",
+      "category": "processing",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "iron-plate": 1
+      },
+      "out": {
+        "gear": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "chip",
+      "name": "Chip",
+      "category": "processing",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "iron-plate": 1,
+        "wire": 1
+      },
+      "out": {
+        "chip": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "rod",
+      "name": "Rod",
+      "category": "processing",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "iron-plate": 1
+      },
+      "out": {
+        "rod": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "screw",
+      "name": "Screw",
+      "category": "processing",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "iron-plate": 1
+      },
+      "out": {
+        "screw": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "cable",
+      "name": "Cable",
+      "category": "processing",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "wire": 4
+      },
+      "out": {
+        "cable": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "computer",
+      "name": "Computer",
+      "category": "processing",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "cable": 1,
+        "chip": 2,
+        "iron-plate": 2,
+        "wire": 4
+      },
+      "out": {
+        "computer": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "motor",
+      "name": "Motor",
+      "category": "processing",
+      "row": 0,
+      "time": 8.192,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "gear": 2,
+        "wire": 2
+      },
+      "out": {
+        "motor": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "beltmk1",
+      "name": "BeltMk1",
+      "category": "belts",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "gear": 1,
+        "iron-plate": 1
+      },
+      "out": {
+        "belt-i": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "beltmk2",
+      "name": "BeltMk2",
+      "category": "belts",
+      "row": 0,
+      "time": 8.192,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-i": 1,
+        "motor": 1
+      },
+      "out": {
+        "belt-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "beltmk3",
+      "name": "BeltMk3",
+      "category": "belts",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-ii": 1,
+        "motor": 2
+      },
+      "out": {
+        "belt-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "armmk1",
+      "name": "ArmMk1",
+      "category": "arms",
+      "row": 0,
+      "time": 8.192,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "gear": 2,
+        "iron-plate": 2
+      },
+      "out": {
+        "arm-short-i": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "armmk2",
+      "name": "ArmMk2",
+      "category": "arms",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "arm-short-i": 1,
+        "gear": 4,
+        "motor": 2
+      },
+      "out": {
+        "arm-short-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "armmk3",
+      "name": "ArmMk3",
+      "category": "arms",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "arm-short-ii": 1,
+        "computer": 2,
+        "motor": 4
+      },
+      "out": {
+        "arm-short-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "armmk4",
+      "name": "ArmMk4",
+      "category": "arms",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "arm-short-iii": 1,
+        "computer": 4,
+        "motor": 8
+      },
+      "out": {
+        "arm-short-iv": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "longarmmk1",
+      "name": "LongArmMk1",
+      "category": "arms",
+      "row": 0,
+      "time": 8.192,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "arm-short-i": 1,
+        "gear": 2,
+        "rod": 2
+      },
+      "out": {
+        "arm-long-i": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "longarmmk2",
+      "name": "LongArmMk2",
+      "category": "arms",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "arm-short-ii": 1,
+        "gear": 4,
+        "rod": 4
+      },
+      "out": {
+        "arm-long-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "longarmmk3",
+      "name": "LongArmMk3",
+      "category": "arms",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "arm-short-iii": 1,
+        "gear": 8,
+        "rod": 8
+      },
+      "out": {
+        "arm-long-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "longarmmk4",
+      "name": "LongArmMk4",
+      "category": "arms",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "arm-short-iv": 1,
+        "gear": 16,
+        "rod": 16
+      },
+      "out": {
+        "arm-long-iv": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "research1",
+      "name": "Research1",
+      "category": "special",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "gear": 1
+      },
+      "out": {
+        "rt-i": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "research2",
+      "name": "Research2",
+      "category": "special",
+      "row": 0,
+      "time": 8.192,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-i": 1,
+        "rt-i": 1,
+        "wire": 2
+      },
+      "out": {
+        "rt-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "research3",
+      "name": "Research3",
+      "category": "special",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "arm-long-i": 1,
+        "computer": 2,
+        "rt-ii": 1
+      },
+      "out": {
+        "rt-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "research4",
+      "name": "Research4",
+      "category": "special",
+      "row": 0,
+      "time": 32.896,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "furnace-electric-ii": 1,
+        "rt-iii": 1,
+        "solar": 1
+      },
+      "out": {
+        "rt-iv": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "research5",
+      "name": "Research5",
+      "category": "special",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "cargo-ship-i": 1,
+        "rt-iv": 1,
+        "titanium-plate": 100
+      },
+      "out": {
+        "rt-v": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "crossingmk1",
+      "name": "CrossingMk1",
+      "category": "belts",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-i": 4,
+        "screw": 4
+      },
+      "out": {
+        "crossing-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "crossingmk2",
+      "name": "CrossingMk2",
+      "category": "belts",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-ii": 4,
+        "motor": 2
+      },
+      "out": {
+        "crossing-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "crossingmk3",
+      "name": "CrossingMk3",
+      "category": "belts",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-iii": 4,
+        "motor": 8
+      },
+      "out": {
+        "crossing-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "splittermk1",
+      "name": "SplitterMk1",
+      "category": "belts",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-i": 4,
+        "rod": 2
+      },
+      "out": {
+        "splitter-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "splittermk2",
+      "name": "SplitterMk2",
+      "category": "belts",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-ii": 4,
+        "motor": 2
+      },
+      "out": {
+        "splitter-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "splittermk3",
+      "name": "SplitterMk3",
+      "category": "belts",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-iii": 4,
+        "motor": 8
+      },
+      "out": {
+        "splitter-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "overflowmk1",
+      "name": "OverflowMk1",
+      "category": "belts",
+      "row": 0,
+      "time": 8.192,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 1,
+        "splitter-i": 1
+      },
+      "out": {
+        "overflow-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "overflowmk2",
+      "name": "OverflowMk2",
+      "category": "belts",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 4,
+        "splitter-ii": 1
+      },
+      "out": {
+        "overflow-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "overflowmk3",
+      "name": "OverflowMk3",
+      "category": "belts",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "computer": 1,
+        "splitter-iii": 1
+      },
+      "out": {
+        "overflow-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "underflowmk1",
+      "name": "UnderflowMk1",
+      "category": "belts",
+      "row": 0,
+      "time": 8.192,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 1,
+        "splitter-i": 1
+      },
+      "out": {
+        "underflow-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "underflowmk2",
+      "name": "UnderflowMk2",
+      "category": "belts",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 4,
+        "splitter-ii": 1
+      },
+      "out": {
+        "underflow-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "underflowmk3",
+      "name": "UnderflowMk3",
+      "category": "belts",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "computer": 1,
+        "splitter-iii": 1
+      },
+      "out": {
+        "underflow-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "distributormk1",
+      "name": "DistributorMk1",
+      "category": "belts",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "computer": 1,
+        "merger-i": 1,
+        "overflow-i": 1,
+        "underflow-i": 1
+      },
+      "out": {
+        "distributor-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "distributormk2",
+      "name": "DistributorMk2",
+      "category": "belts",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "computer": 4,
+        "merger-ii": 1,
+        "overflow-ii": 1,
+        "underflow-ii": 1
+      },
+      "out": {
+        "distributor-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "distributormk3",
+      "name": "DistributorMk3",
+      "category": "belts",
+      "row": 0,
+      "time": 131.072,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "computer": 20,
+        "merger-iii": 1,
+        "overflow-iii": 1,
+        "underflow-iii": 1
+      },
+      "out": {
+        "distributor-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "mergermk1",
+      "name": "MergerMk1",
+      "category": "belts",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-i": 4,
+        "rod": 2
+      },
+      "out": {
+        "merger-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "mergermk2",
+      "name": "MergerMk2",
+      "category": "belts",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-ii": 4,
+        "motor": 2
+      },
+      "out": {
+        "merger-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "mergermk3",
+      "name": "MergerMk3",
+      "category": "belts",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-iii": 4,
+        "motor": 8
+      },
+      "out": {
+        "merger-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "furnacemk1",
+      "name": "FurnaceMk1",
+      "category": "processing",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "stone-brick": 8
+      },
+      "out": {
+        "furnace-burner-i": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "furnacemk2",
+      "name": "FurnaceMk2",
+      "category": "processing",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "furnace-burner-i": 1,
+        "rod": 4,
+        "stone-brick": 32
+      },
+      "out": {
+        "furnace-burner-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "furnacemk3",
+      "name": "FurnaceMk3",
+      "category": "processing",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "furnace-burner-ii": 1,
+        "rod": 8,
+        "stone-brick": 64
+      },
+      "out": {
+        "furnace-burner-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "furnacemk4",
+      "name": "FurnaceMk4",
+      "category": "processing",
+      "row": 0,
+      "time": 131.072,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "furnace-burner-iii": 1,
+        "rod": 16,
+        "stone-brick": 128
+      },
+      "out": {
+        "furnace-burner-iv": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "furnacemk5",
+      "name": "FurnaceMk5",
+      "category": "processing",
+      "row": 0,
+      "time": 262.144,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "furnace-burner-iv": 1,
+        "titanium-plate": 512
+      },
+      "out": {
+        "furnace-burner-v": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "efurnacemk1",
+      "name": "EFurnaceMk1",
+      "category": "processing",
+      "row": 0,
+      "time": 40.96,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "furnace-burner-i": 1,
+        "wire": 10
+      },
+      "out": {
+        "furnace-electric-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "efurnacemk2",
+      "name": "EFurnaceMk2",
+      "category": "processing",
+      "row": 0,
+      "time": 81.92,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "furnace-burner-ii": 1,
+        "wire": 20
+      },
+      "out": {
+        "furnace-electric-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "efurnacemk3",
+      "name": "EFurnaceMk3",
+      "category": "processing",
+      "row": 0,
+      "time": 81.92,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "furnace-burner-iii": 1,
+        "wire": 40
+      },
+      "out": {
+        "furnace-electric-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "efurnacemk4",
+      "name": "EFurnaceMk4",
+      "category": "processing",
+      "row": 0,
+      "time": 81.92,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "furnace-burner-iv": 1,
+        "titanium-plate": 40,
+        "wire": 40
+      },
+      "out": {
+        "furnace-electric-iv": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "efurnacemk5",
+      "name": "EFurnaceMk5",
+      "category": "processing",
+      "row": 0,
+      "time": 163.84,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "furnace-burner-v": 1,
+        "titanium-plate": 80,
+        "wire": 80
+      },
+      "out": {
+        "furnace-electric-v": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "burnerpowermk1",
+      "name": "BurnerPowerMk1",
+      "category": "energy",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "stone-brick": 8
+      },
+      "out": {
+        "burner-i": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "burnerpowermk2",
+      "name": "BurnerPowerMk2",
+      "category": "energy",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "burner-i": 1,
+        "rod": 4,
+        "stone-brick": 32
+      },
+      "out": {
+        "burner-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "burnerpowermk3",
+      "name": "BurnerPowerMk3",
+      "category": "energy",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "burner-ii": 1,
+        "rod": 8,
+        "stone-brick": 64
+      },
+      "out": {
+        "burner-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "burnerpowermk4",
+      "name": "BurnerPowerMk4",
+      "category": "energy",
+      "row": 0,
+      "time": 131.072,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "burner-iii": 1,
+        "rod": 16,
+        "stone-brick": 128
+      },
+      "out": {
+        "burner-iv": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "burnerpowermk5",
+      "name": "BurnerPowerMk5",
+      "category": "energy",
+      "row": 0,
+      "time": 262.144,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "burner-iv": 1,
+        "titanium-plate": 512
+      },
+      "out": {
+        "burner-v": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "assemblermk1",
+      "name": "AssemblerMk1",
+      "category": "processing",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "gear": 8,
+        "stone-brick": 8
+      },
+      "out": {
+        "assembler-i": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "assemblermk2",
+      "name": "AssemblerMk2",
+      "category": "processing",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "assembler-i": 1,
+        "motor": 4
+      },
+      "out": {
+        "assembler-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "assemblermk3",
+      "name": "AssemblerMk3",
+      "category": "processing",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "assembler-ii": 1,
+        "computer": 2,
+        "motor": 4
+      },
+      "out": {
+        "assembler-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "assemblermk4",
+      "name": "AssemblerMk4",
+      "category": "processing",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "assembler-iii": 1,
+        "computer": 2,
+        "stone-brick": 32
+      },
+      "out": {
+        "assembler-iv": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "assemblermk5",
+      "name": "AssemblerMk5",
+      "category": "processing",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "assembler-iv": 1,
+        "titanium-plate": 256
+      },
+      "out": {
+        "assembler-v": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "stackermk1",
+      "name": "StackerMk1",
+      "category": "special",
+      "row": 0,
+      "time": 131.072,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-iii": 5,
+        "computer": 10,
+        "motor": 20
+      },
+      "out": {
+        "stacker-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "stackermk2",
+      "name": "StackerMk2",
+      "category": "special",
+      "row": 0,
+      "time": 262.144,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "stacker-i": 1,
+        "titanium-plate": 512
+      },
+      "out": {
+        "stacker-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "unstacker",
+      "name": "Unstacker",
+      "category": "special",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-iii": 2,
+        "motor": 5
+      },
+      "out": {
+        "unstacker": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "mixermk1",
+      "name": "MixerMk1",
+      "category": "belts",
+      "row": 0,
+      "time": 24.576,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-i": 2,
+        "rod": 6
+      },
+      "out": {
+        "mixer-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "mixermk2",
+      "name": "MixerMk2",
+      "category": "belts",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-ii": 2,
+        "motor": 2
+      },
+      "out": {
+        "mixer-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "mixermk3",
+      "name": "MixerMk3",
+      "category": "belts",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-iii": 2,
+        "motor": 8
+      },
+      "out": {
+        "mixer-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "swappermk1",
+      "name": "SwapperMk1",
+      "category": "belts",
+      "row": 0,
+      "time": 24.576,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-i": 2,
+        "rod": 6
+      },
+      "out": {
+        "swapper-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "swappermk2",
+      "name": "SwapperMk2",
+      "category": "belts",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-ii": 2,
+        "motor": 2
+      },
+      "out": {
+        "swapper-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "swappermk3",
+      "name": "SwapperMk3",
+      "category": "belts",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-iii": 2,
+        "motor": 8
+      },
+      "out": {
+        "swapper-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "minermk1",
+      "name": "MinerMk1",
+      "category": "materials",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "screw": 4
+      },
+      "out": {
+        "miner-i": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "minermk2",
+      "name": "MinerMk2",
+      "category": "materials",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "miner-i": 1,
+        "motor": 4,
+        "stone-brick": 4
+      },
+      "out": {
+        "miner-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "minermk3",
+      "name": "MinerMk3",
+      "category": "materials",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 6,
+        "miner-ii": 1,
+        "motor": 2
+      },
+      "out": {
+        "miner-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "minermk4",
+      "name": "MinerMk4",
+      "category": "materials",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "miner-iii": 1,
+        "motor": 10
+      },
+      "out": {
+        "miner-iv": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "minermk5",
+      "name": "MinerMk5",
+      "category": "materials",
+      "row": 0,
+      "time": 131.072,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "miner-iv": 1,
+        "titanium-plate": 100
+      },
+      "out": {
+        "miner-v": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "influencemk1",
+      "name": "InfluenceMk1",
+      "category": "special",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "cable": 4,
+        "wire": 4
+      },
+      "out": {
+        "influence-i": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "influencemk2",
+      "name": "InfluenceMk2",
+      "category": "special",
+      "row": 0,
+      "time": 40.96,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 2,
+        "influence-i": 1
+      },
+      "out": {
+        "influence-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "influencemk3",
+      "name": "InfluenceMk3",
+      "category": "special",
+      "row": 0,
+      "time": 40.96,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "computer": 2,
+        "influence-ii": 1
+      },
+      "out": {
+        "influence-iii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "influencemk4",
+      "name": "InfluenceMk4",
+      "category": "special",
+      "row": 0,
+      "time": 81.92,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "computer": 10,
+        "influence-iii": 1
+      },
+      "out": {
+        "influence-iv": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "lab",
+      "name": "Lab",
+      "category": "special",
+      "row": 0,
+      "time": 32.768,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 8,
+        "wire": 4
+      },
+      "out": {
+        "lab": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "sourcechest",
+      "name": "SourceChest",
+      "category": "modules",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 4
+      },
+      "out": {
+        "source-chestlike": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "sourcebelt",
+      "name": "SourceBelt",
+      "category": "modules",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-i": 1,
+        "motor": 1,
+        "source-chestlike": 1
+      },
+      "out": {
+        "source-beltlike": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "sinkchest",
+      "name": "SinkChest",
+      "category": "modules",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 4
+      },
+      "out": {
+        "sink-chestlike": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "sinkbelt",
+      "name": "SinkBelt",
+      "category": "modules",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "belt-i": 1,
+        "motor": 1,
+        "sink-chestlike": 1
+      },
+      "out": {
+        "sink-beltlike": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "solar",
+      "name": "Solar",
+      "category": "energy",
+      "row": 0,
+      "time": 81.92,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 2,
+        "copper-plate": 30,
+        "iron-plate": 10
+      },
+      "out": {
+        "solar": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "ebattery",
+      "name": "EBattery",
+      "category": "energy",
+      "row": 0,
+      "time": 40.96,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "cable": 5,
+        "chip": 1,
+        "wire": 10
+      },
+      "out": {
+        "battery": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "launchpad",
+      "name": "LaunchPad",
+      "category": "space",
+      "row": 0,
+      "time": 163.84,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "cable": 100,
+        "gear": 100,
+        "rod": 1000,
+        "stone-brick": 1000
+      },
+      "out": {
+        "launch-pad": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "landingzone",
+      "name": "LandingZone",
+      "category": "space",
+      "row": 0,
+      "time": 81.92,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "stone-brick": 1000
+      },
+      "out": {
+        "landing-zone": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "itemstorage",
+      "name": "ItemStorage",
+      "category": "special",
+      "row": 0,
+      "time": 24.576,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "rod": 6,
+        "screw": 4
+      },
+      "out": {
+        "chest": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "provider",
+      "name": "Provider",
+      "category": "special",
+      "row": 0,
+      "time": 8.192,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chest": 1,
+        "chip": 4
+      },
+      "out": {
+        "provider": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "cargoshipmk1",
+      "name": "CargoShipMk1",
+      "category": "space",
+      "row": 0,
+      "time": 131.072,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 100,
+        "computer": 100,
+        "motor": 30
+      },
+      "out": {
+        "cargo-ship-i": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "cargoshipmk2",
+      "name": "CargoShipMk2",
+      "category": "space",
+      "row": 0,
+      "time": 131.072,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "cargo-ship-i": 1,
+        "titanium-plate": 5000
+      },
+      "out": {
+        "cargo-ship-ii": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "colonizership",
+      "name": "ColonizerShip",
+      "category": "space",
+      "row": 0,
+      "time": 131.072,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "chip": 1000,
+        "computer": 1000,
+        "motor": 1000
+      },
+      "out": {
+        "colonizer-ship": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "rocketfuel",
+      "name": "RocketFuel",
+      "category": "materials",
+      "row": 0,
+      "time": 16.384,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "coal": 40,
+        "rod": 4,
+        "screw": 4
+      },
+      "out": {
+        "rocket-fuel": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "centrifuge",
+      "name": "Centrifuge",
+      "category": "energy",
+      "row": 0,
+      "time": 131.072,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "motor": 20,
+        "stone-brick": 200
+      },
+      "out": {
+        "centrifuge": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "nuclearwastereactor",
+      "name": "NuclearWasteReactor",
+      "category": "energy",
+      "row": 0,
+      "time": 65.536,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "rod": 250,
+        "stone-brick": 600,
+        "titanium-plate": 100
+      },
+      "out": {
+        "nuclear-waste-reactor": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "nuclearreactor",
+      "name": "NuclearReactor",
+      "category": "energy",
+      "row": 0,
+      "time": 131.072,
+      "producers": [
+        "assembler-i",
+        "assembler-ii",
+        "assembler-iii",
+        "assembler-iv",
+        "assembler-v"
+      ],
+      "in": {
+        "computer": 5000,
+        "stone-brick": 5000,
+        "titanium-plate": 5000
+      },
+      "out": {
+        "nuclear-reactor": 1
+      },
+      "flags": [
+        "locked"
+      ]
+    },
+    {
+      "id": "iron-ore",
+      "name": "Iron Ore",
+      "category": "materials",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "miner-i",
+        "miner-ii",
+        "miner-iii",
+        "miner-iv",
+        "miner-v"
+      ],
+      "in": {},
+      "out": {
+        "iron-ore": 1
+      },
+      "flags": [
+        "mining"
+      ]
+    },
+    {
+      "id": "iron-plate",
+      "name": "Iron Plate",
+      "category": "materials",
+      "row": 0,
+      "time": 3.2,
+      "producers": [
+        "furnace-burner-i",
+        "furnace-burner-ii",
+        "furnace-burner-iii",
+        "furnace-burner-iv",
+        "furnace-burner-v",
+        "furnace-electric-i",
+        "furnace-electric-ii",
+        "furnace-electric-iii",
+        "furnace-electric-iv",
+        "furnace-electric-v"
+      ],
+      "in": {
+        "iron-ore": 1
+      },
+      "out": {
+        "iron-plate": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "copper-ore",
+      "name": "Copper Ore",
+      "category": "materials",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "miner-i",
+        "miner-ii",
+        "miner-iii",
+        "miner-iv",
+        "miner-v"
+      ],
+      "in": {},
+      "out": {
+        "copper-ore": 1
+      },
+      "flags": [
+        "mining"
+      ]
+    },
+    {
+      "id": "copper-plate",
+      "name": "Copper Plate",
+      "category": "materials",
+      "row": 0,
+      "time": 3.2,
+      "producers": [
+        "furnace-burner-i",
+        "furnace-burner-ii",
+        "furnace-burner-iii",
+        "furnace-burner-iv",
+        "furnace-burner-v",
+        "furnace-electric-i",
+        "furnace-electric-ii",
+        "furnace-electric-iii",
+        "furnace-electric-iv",
+        "furnace-electric-v"
+      ],
+      "in": {
+        "copper-ore": 1
+      },
+      "out": {
+        "copper-plate": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "stone",
+      "name": "Stone",
+      "category": "materials",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "miner-i",
+        "miner-ii",
+        "miner-iii",
+        "miner-iv",
+        "miner-v"
+      ],
+      "in": {},
+      "out": {
+        "stone": 1
+      },
+      "flags": [
+        "mining"
+      ]
+    },
+    {
+      "id": "stone-brick",
+      "name": "Stone Brick",
+      "category": "materials",
+      "row": 0,
+      "time": 3.2,
+      "producers": [
+        "furnace-burner-i",
+        "furnace-burner-ii",
+        "furnace-burner-iii",
+        "furnace-burner-iv",
+        "furnace-burner-v",
+        "furnace-electric-i",
+        "furnace-electric-ii",
+        "furnace-electric-iii",
+        "furnace-electric-iv",
+        "furnace-electric-v"
+      ],
+      "in": {
+        "stone": 1
+      },
+      "out": {
+        "stone-brick": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "titanium-ore",
+      "name": "Titanium Ore",
+      "category": "materials",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "miner-i",
+        "miner-ii",
+        "miner-iii",
+        "miner-iv",
+        "miner-v"
+      ],
+      "in": {},
+      "out": {
+        "titanium-ore": 1
+      },
+      "flags": [
+        "mining"
+      ]
+    },
+    {
+      "id": "titanium-plate",
+      "name": "Titanium Plate",
+      "category": "materials",
+      "row": 0,
+      "time": 3.2,
+      "producers": [
+        "furnace-burner-i",
+        "furnace-burner-ii",
+        "furnace-burner-iii",
+        "furnace-burner-iv",
+        "furnace-burner-v",
+        "furnace-electric-i",
+        "furnace-electric-ii",
+        "furnace-electric-iii",
+        "furnace-electric-iv",
+        "furnace-electric-v"
+      ],
+      "in": {
+        "titanium-ore": 1
+      },
+      "out": {
+        "titanium-plate": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "coal",
+      "name": "Coal",
+      "category": "materials",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "miner-i",
+        "miner-ii",
+        "miner-iii",
+        "miner-iv",
+        "miner-v"
+      ],
+      "in": {},
+      "out": {
+        "coal": 1
+      },
+      "flags": [
+        "mining"
+      ]
+    },
+    {
+      "id": "uranium",
+      "name": "Uranium",
+      "category": "materials",
+      "row": 0,
+      "time": 4.096,
+      "producers": [
+        "miner-i",
+        "miner-ii",
+        "miner-iii",
+        "miner-iv",
+        "miner-v"
+      ],
+      "in": {},
+      "out": {
+        "uranium": 1
+      },
+      "flags": [
+        "mining"
+      ]
+    },
+    {
+      "id": "u235",
+      "name": "U235",
+      "category": "materials",
+      "row": 0,
+      "time": 160.0,
+      "producers": [
+        "centrifuge"
+      ],
+      "in": {
+        "uranium": 100
+      },
+      "out": {
+        "u235": 1
+      },
+      "flags": []
+    },
+    {
+      "id": "u238",
+      "name": "U238",
+      "category": "materials",
+      "row": 0,
+      "time": 160.0,
+      "producers": [
+        "centrifuge"
+      ],
+      "in": {
+        "uranium": 100
+      },
+      "out": {
+        "u238": 99
+      },
+      "flags": []
+    },
+    {
+      "id": "crossings-i-tech",
+      "name": "Crossings I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 10
+      },
+      "out": {
+        "crossings-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "crossings-ii-tech",
+      "name": "Crossings II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1300,
+        "rt-ii": 20
+      },
+      "out": {
+        "crossings-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "crossings-iii-tech",
+      "name": "Crossings III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 3000,
+        "rt-ii": 200,
+        "rt-iii": 50,
+        "rt-iv": 10,
+        "rt-v": 5
+      },
+      "out": {
+        "crossings-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "two-belt-mixing-i-tech",
+      "name": "Two Belt Mixing I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 10
+      },
+      "out": {
+        "two-belt-mixing-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "two-belt-mixing-ii-tech",
+      "name": "Two Belt Mixing II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1500,
+        "rt-ii": 20
+      },
+      "out": {
+        "two-belt-mixing-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "two-belt-mixing-iii-tech",
+      "name": "Two Belt Mixing III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 3000,
+        "rt-ii": 200,
+        "rt-iii": 50,
+        "rt-iv": 10,
+        "rt-v": 5
+      },
+      "out": {
+        "two-belt-mixing-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "three-belt-mixing-i-tech",
+      "name": "Three Belt Mixing I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 100
+      },
+      "out": {
+        "three-belt-mixing-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "three-belt-mixing-ii-tech",
+      "name": "Three Belt Mixing II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1700,
+        "rt-ii": 25
+      },
+      "out": {
+        "three-belt-mixing-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "three-belt-mixing-iii-tech",
+      "name": "Three Belt Mixing III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 3000,
+        "rt-ii": 200,
+        "rt-iii": 50,
+        "rt-iv": 10,
+        "rt-v": 5
+      },
+      "out": {
+        "three-belt-mixing-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "flow-control-i-tech",
+      "name": "Flow Control I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 300
+      },
+      "out": {
+        "flow-control-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "flow-control-ii-tech",
+      "name": "Flow Control II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 3000,
+        "rt-ii": 100
+      },
+      "out": {
+        "flow-control-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "flow-control-iii-tech",
+      "name": "Flow Control III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 7000,
+        "rt-ii": 500,
+        "rt-iii": 100,
+        "rt-iv": 25,
+        "rt-v": 20
+      },
+      "out": {
+        "flow-control-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "belts-ii-tech",
+      "name": "Belts II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1000,
+        "rt-ii": 20
+      },
+      "out": {
+        "belts-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "belts-iii-tech",
+      "name": "Belts III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2000,
+        "rt-ii": 100,
+        "rt-iii": 30,
+        "rt-iv": 5,
+        "rt-v": 2
+      },
+      "out": {
+        "belts-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "short-arms-ii-tech",
+      "name": "Short Arms II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 300
+      },
+      "out": {
+        "short-arms-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "short-arms-iii-tech",
+      "name": "Short Arms III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 3000,
+        "rt-ii": 400,
+        "rt-iii": 50
+      },
+      "out": {
+        "short-arms-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "short-arms-iv-tech",
+      "name": "Short Arms IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 5000,
+        "rt-ii": 200,
+        "rt-iii": 500,
+        "rt-iv": 100
+      },
+      "out": {
+        "short-arms-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "long-arms-ii-tech",
+      "name": "Long Arms II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 5000,
+        "rt-ii": 500,
+        "rt-iii": 30
+      },
+      "out": {
+        "long-arms-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "long-arms-iii-tech",
+      "name": "Long Arms III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 7000,
+        "rt-ii": 2000,
+        "rt-iii": 100,
+        "rt-iv": 20
+      },
+      "out": {
+        "long-arms-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "long-arms-iv-tech",
+      "name": "Long Arms IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 20000,
+        "rt-ii": 5000,
+        "rt-iii": 500,
+        "rt-iv": 100,
+        "rt-v": 10
+      },
+      "out": {
+        "long-arms-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "assembly-ii-tech",
+      "name": "Assembly II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 3000,
+        "rt-ii": 50
+      },
+      "out": {
+        "assembly-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "assembly-iii-tech",
+      "name": "Assembly III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 6000,
+        "rt-ii": 700,
+        "rt-iii": 30
+      },
+      "out": {
+        "assembly-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "assembly-iv-tech",
+      "name": "Assembly IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 20000,
+        "rt-ii": 1200,
+        "rt-iii": 200,
+        "rt-iv": 10
+      },
+      "out": {
+        "assembly-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "assembly-v-tech",
+      "name": "Assembly V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 50000,
+        "rt-ii": 5000,
+        "rt-iii": 1000,
+        "rt-iv": 100,
+        "rt-v": 20
+      },
+      "out": {
+        "assembly-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "smelting-ii-tech",
+      "name": "Smelting II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 500,
+        "rt-ii": 50
+      },
+      "out": {
+        "smelting-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "smelting-iii-tech",
+      "name": "Smelting III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2000,
+        "rt-ii": 100,
+        "rt-iii": 20
+      },
+      "out": {
+        "smelting-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "smelting-iv-tech",
+      "name": "Smelting IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 10000,
+        "rt-ii": 500,
+        "rt-iii": 130,
+        "rt-iv": 20
+      },
+      "out": {
+        "smelting-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "smelting-v-tech",
+      "name": "Smelting V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 40000,
+        "rt-ii": 2000,
+        "rt-iii": 300,
+        "rt-iv": 80
+      },
+      "out": {
+        "smelting-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "electric-furnaces-i-tech",
+      "name": "Electric Furnaces I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1000,
+        "rt-ii": 100
+      },
+      "out": {
+        "electric-furnaces-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "electric-furnaces-ii-tech",
+      "name": "Electric Furnaces II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 6000,
+        "rt-ii": 500,
+        "rt-iii": 20
+      },
+      "out": {
+        "electric-furnaces-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "electric-furnaces-iii-tech",
+      "name": "Electric Furnaces III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 10000,
+        "rt-ii": 2000,
+        "rt-iii": 100,
+        "rt-iv": 50
+      },
+      "out": {
+        "electric-furnaces-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "electric-furnaces-iv-tech",
+      "name": "Electric Furnaces IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 40000,
+        "rt-ii": 6000,
+        "rt-iii": 500,
+        "rt-iv": 50,
+        "rt-v": 10
+      },
+      "out": {
+        "electric-furnaces-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "electric-furnaces-v-tech",
+      "name": "Electric Furnaces V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 100000,
+        "rt-ii": 30000,
+        "rt-iii": 5000,
+        "rt-iv": 300,
+        "rt-v": 100
+      },
+      "out": {
+        "electric-furnaces-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "miners-ii-tech",
+      "name": "Miners II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2000,
+        "rt-ii": 125
+      },
+      "out": {
+        "miners-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "miners-iii-tech",
+      "name": "Miners III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 8000,
+        "rt-ii": 5000,
+        "rt-iii": 400
+      },
+      "out": {
+        "miners-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "miners-iv-tech",
+      "name": "Miners IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 30000,
+        "rt-ii": 6000,
+        "rt-iii": 1000,
+        "rt-iv": 200
+      },
+      "out": {
+        "miners-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "miners-v-tech",
+      "name": "Miners V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 70000,
+        "rt-ii": 20000,
+        "rt-iii": 3000,
+        "rt-iv": 1000,
+        "rt-v": 200
+      },
+      "out": {
+        "miners-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "influence-ii-tech",
+      "name": "Influence II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2000,
+        "rt-ii": 200
+      },
+      "out": {
+        "influence-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "influence-iii-tech",
+      "name": "Influence III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 8000,
+        "rt-ii": 2000,
+        "rt-iii": 100,
+        "rt-iv": 10
+      },
+      "out": {
+        "influence-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "influence-iv-tech",
+      "name": "Influence IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 30000,
+        "rt-ii": 6000,
+        "rt-iii": 500,
+        "rt-iv": 50,
+        "rt-v": 10
+      },
+      "out": {
+        "influence-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-tech",
+      "name": "Solar",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2000,
+        "rt-ii": 300,
+        "rt-iii": 100
+      },
+      "out": {
+        "solar-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "space-tech",
+      "name": "Space",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 10000,
+        "rt-ii": 2000,
+        "rt-iii": 500,
+        "rt-iv": 100
+      },
+      "out": {
+        "space-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "generic-modules-tech",
+      "name": "Generic Modules",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 50000,
+        "rt-ii": 10000,
+        "rt-iii": 5000,
+        "rt-iv": 100
+      },
+      "out": {
+        "generic-modules-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "distribution-i-tech",
+      "name": "Distribution I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 5000,
+        "rt-ii": 250,
+        "rt-iii": 50,
+        "rt-iv": 5,
+        "rt-v": 1
+      },
+      "out": {
+        "distribution-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "distribution-ii-tech",
+      "name": "Distribution II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 10000,
+        "rt-ii": 1000,
+        "rt-iii": 200,
+        "rt-iv": 50,
+        "rt-v": 10
+      },
+      "out": {
+        "distribution-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "distribution-iii-tech",
+      "name": "Distribution III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 200000,
+        "rt-ii": 50000,
+        "rt-iii": 7000,
+        "rt-iv": 500,
+        "rt-v": 100
+      },
+      "out": {
+        "distribution-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "research-ii-tech",
+      "name": "Research II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 100
+      },
+      "out": {
+        "research-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "research-iii-tech",
+      "name": "Research III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-ii": 100
+      },
+      "out": {
+        "research-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "research-iv-tech",
+      "name": "Research IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-iii": 100
+      },
+      "out": {
+        "research-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "research-v-tech",
+      "name": "Research V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-iv": 100
+      },
+      "out": {
+        "research-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "item-stacking-i-tech",
+      "name": "Item Stacking I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 30000,
+        "rt-ii": 5000,
+        "rt-iii": 500,
+        "rt-iv": 30
+      },
+      "out": {
+        "item-stacking-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "item-stacking-ii-tech",
+      "name": "Item Stacking II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 100000,
+        "rt-ii": 10000,
+        "rt-iii": 5000,
+        "rt-iv": 500,
+        "rt-v": 100
+      },
+      "out": {
+        "item-stacking-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "plugins-tech",
+      "name": "Plugins",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 5000,
+        "rt-ii": 1000
+      },
+      "out": {
+        "plugins-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-tech",
+      "name": "Nuclear Power",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 80000,
+        "rt-ii": 10000,
+        "rt-iii": 1000,
+        "rt-iv": 100,
+        "rt-v": 15
+      },
+      "out": {
+        "nuclear-power-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-power-production-i-tech",
+      "name": "Solar Power Production I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 5000,
+        "rt-ii": 500,
+        "rt-iii": 200,
+        "rt-iv": 10
+      },
+      "out": {
+        "solar-power-production-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-power-production-ii-tech",
+      "name": "Solar Power Production II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 10000,
+        "rt-ii": 1000,
+        "rt-iii": 400,
+        "rt-iv": 20
+      },
+      "out": {
+        "solar-power-production-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-power-production-iii-tech",
+      "name": "Solar Power Production III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 20000,
+        "rt-ii": 2000,
+        "rt-iii": 800,
+        "rt-iv": 40
+      },
+      "out": {
+        "solar-power-production-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-power-production-iv-tech",
+      "name": "Solar Power Production IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 40000,
+        "rt-ii": 4000,
+        "rt-iii": 1600,
+        "rt-iv": 80
+      },
+      "out": {
+        "solar-power-production-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-power-production-v-tech",
+      "name": "Solar Power Production V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 80000,
+        "rt-ii": 8000,
+        "rt-iii": 3200,
+        "rt-iv": 160,
+        "rt-v": 10
+      },
+      "out": {
+        "solar-power-production-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-power-production-vi-tech",
+      "name": "Solar Power Production VI",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 160000,
+        "rt-ii": 16000,
+        "rt-iii": 6400,
+        "rt-iv": 320,
+        "rt-v": 20
+      },
+      "out": {
+        "solar-power-production-vi-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-power-production-vii-tech",
+      "name": "Solar Power Production VII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 320000,
+        "rt-ii": 32000,
+        "rt-iii": 12800,
+        "rt-iv": 640,
+        "rt-v": 40
+      },
+      "out": {
+        "solar-power-production-vii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-power-production-viii-tech",
+      "name": "Solar Power Production VIII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 640000,
+        "rt-ii": 64000,
+        "rt-iii": 25600,
+        "rt-iv": 1280,
+        "rt-v": 80
+      },
+      "out": {
+        "solar-power-production-viii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-power-production-ix-tech",
+      "name": "Solar Power Production IX",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1280000,
+        "rt-ii": 128000,
+        "rt-iii": 51200,
+        "rt-iv": 2560,
+        "rt-v": 160
+      },
+      "out": {
+        "solar-power-production-ix-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "solar-power-production-x-tech",
+      "name": "Solar Power Production X",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2560000,
+        "rt-ii": 256000,
+        "rt-iii": 102400,
+        "rt-iv": 5120,
+        "rt-v": 320
+      },
+      "out": {
+        "solar-power-production-x-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "burner-power-production-i-tech",
+      "name": "Burner Power Production I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2000,
+        "rt-ii": 50,
+        "rt-iii": 10,
+        "rt-iv": 5
+      },
+      "out": {
+        "burner-power-production-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "burner-power-production-ii-tech",
+      "name": "Burner Power Production II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 4000,
+        "rt-ii": 100,
+        "rt-iii": 20,
+        "rt-iv": 10
+      },
+      "out": {
+        "burner-power-production-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "burner-power-production-iii-tech",
+      "name": "Burner Power Production III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 8000,
+        "rt-ii": 200,
+        "rt-iii": 40,
+        "rt-iv": 20
+      },
+      "out": {
+        "burner-power-production-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "burner-power-production-iv-tech",
+      "name": "Burner Power Production IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 16000,
+        "rt-ii": 400,
+        "rt-iii": 80,
+        "rt-iv": 40
+      },
+      "out": {
+        "burner-power-production-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "burner-power-production-v-tech",
+      "name": "Burner Power Production V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 32000,
+        "rt-ii": 800,
+        "rt-iii": 160,
+        "rt-iv": 80,
+        "rt-v": 5
+      },
+      "out": {
+        "burner-power-production-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "burner-power-production-vi-tech",
+      "name": "Burner Power Production VI",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 64000,
+        "rt-ii": 1600,
+        "rt-iii": 320,
+        "rt-iv": 160,
+        "rt-v": 10
+      },
+      "out": {
+        "burner-power-production-vi-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "burner-power-production-vii-tech",
+      "name": "Burner Power Production VII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 128000,
+        "rt-ii": 3200,
+        "rt-iii": 640,
+        "rt-iv": 320,
+        "rt-v": 20
+      },
+      "out": {
+        "burner-power-production-vii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "burner-power-production-viii-tech",
+      "name": "Burner Power Production VIII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 256000,
+        "rt-ii": 6400,
+        "rt-iii": 1280,
+        "rt-iv": 640,
+        "rt-v": 40
+      },
+      "out": {
+        "burner-power-production-viii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "burner-power-production-ix-tech",
+      "name": "Burner Power Production IX",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 512000,
+        "rt-ii": 12800,
+        "rt-iii": 2560,
+        "rt-iv": 1280,
+        "rt-v": 80
+      },
+      "out": {
+        "burner-power-production-ix-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "burner-power-production-x-tech",
+      "name": "Burner Power Production X",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1024000,
+        "rt-ii": 25600,
+        "rt-iii": 5120,
+        "rt-iv": 2560,
+        "rt-v": 160
+      },
+      "out": {
+        "burner-power-production-x-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "energy-storage-capacity-i-tech",
+      "name": "Energy Storage Capacity I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 5000,
+        "rt-ii": 500,
+        "rt-iii": 200,
+        "rt-iv": 10
+      },
+      "out": {
+        "energy-storage-capacity-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "energy-storage-capacity-ii-tech",
+      "name": "Energy Storage Capacity II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 10000,
+        "rt-ii": 1000,
+        "rt-iii": 400,
+        "rt-iv": 20
+      },
+      "out": {
+        "energy-storage-capacity-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "energy-storage-capacity-iii-tech",
+      "name": "Energy Storage Capacity III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 20000,
+        "rt-ii": 2000,
+        "rt-iii": 800,
+        "rt-iv": 40
+      },
+      "out": {
+        "energy-storage-capacity-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "energy-storage-capacity-iv-tech",
+      "name": "Energy Storage Capacity IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 40000,
+        "rt-ii": 4000,
+        "rt-iii": 1600,
+        "rt-iv": 80
+      },
+      "out": {
+        "energy-storage-capacity-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "energy-storage-capacity-v-tech",
+      "name": "Energy Storage Capacity V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 80000,
+        "rt-ii": 8000,
+        "rt-iii": 3200,
+        "rt-iv": 160,
+        "rt-v": 10
+      },
+      "out": {
+        "energy-storage-capacity-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "energy-storage-capacity-vi-tech",
+      "name": "Energy Storage Capacity VI",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 160000,
+        "rt-ii": 16000,
+        "rt-iii": 6400,
+        "rt-iv": 320,
+        "rt-v": 20
+      },
+      "out": {
+        "energy-storage-capacity-vi-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "energy-storage-capacity-vii-tech",
+      "name": "Energy Storage Capacity VII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 320000,
+        "rt-ii": 32000,
+        "rt-iii": 12800,
+        "rt-iv": 640,
+        "rt-v": 40
+      },
+      "out": {
+        "energy-storage-capacity-vii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "energy-storage-capacity-viii-tech",
+      "name": "Energy Storage Capacity VIII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 640000,
+        "rt-ii": 64000,
+        "rt-iii": 25600,
+        "rt-iv": 1280,
+        "rt-v": 80
+      },
+      "out": {
+        "energy-storage-capacity-viii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "energy-storage-capacity-ix-tech",
+      "name": "Energy Storage Capacity IX",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1280000,
+        "rt-ii": 128000,
+        "rt-iii": 51200,
+        "rt-iv": 2560,
+        "rt-v": 160
+      },
+      "out": {
+        "energy-storage-capacity-ix-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "energy-storage-capacity-x-tech",
+      "name": "Energy Storage Capacity X",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2560000,
+        "rt-ii": 256000,
+        "rt-iii": 102400,
+        "rt-iv": 5120,
+        "rt-v": 320
+      },
+      "out": {
+        "energy-storage-capacity-x-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "ship-fuel-cost-i-tech",
+      "name": "Ship Fuel Cost I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 5000,
+        "rt-ii": 100,
+        "rt-iii": 50,
+        "rt-iv": 10,
+        "rt-v": 1
+      },
+      "out": {
+        "ship-fuel-cost-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "ship-fuel-cost-ii-tech",
+      "name": "Ship Fuel Cost II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 10000,
+        "rt-ii": 200,
+        "rt-iii": 100,
+        "rt-iv": 20,
+        "rt-v": 2
+      },
+      "out": {
+        "ship-fuel-cost-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "ship-fuel-cost-iii-tech",
+      "name": "Ship Fuel Cost III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 20000,
+        "rt-ii": 400,
+        "rt-iii": 200,
+        "rt-iv": 40,
+        "rt-v": 4
+      },
+      "out": {
+        "ship-fuel-cost-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "ship-fuel-cost-iv-tech",
+      "name": "Ship Fuel Cost IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 40000,
+        "rt-ii": 800,
+        "rt-iii": 400,
+        "rt-iv": 80,
+        "rt-v": 8
+      },
+      "out": {
+        "ship-fuel-cost-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "ship-fuel-cost-v-tech",
+      "name": "Ship Fuel Cost V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 80000,
+        "rt-ii": 1600,
+        "rt-iii": 800,
+        "rt-iv": 160,
+        "rt-v": 16
+      },
+      "out": {
+        "ship-fuel-cost-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "ship-fuel-cost-vi-tech",
+      "name": "Ship Fuel Cost VI",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 160000,
+        "rt-ii": 3200,
+        "rt-iii": 1600,
+        "rt-iv": 320,
+        "rt-v": 32
+      },
+      "out": {
+        "ship-fuel-cost-vi-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "ship-fuel-cost-vii-tech",
+      "name": "Ship Fuel Cost VII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 320000,
+        "rt-ii": 6400,
+        "rt-iii": 3200,
+        "rt-iv": 640,
+        "rt-v": 64
+      },
+      "out": {
+        "ship-fuel-cost-vii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "ship-fuel-cost-viii-tech",
+      "name": "Ship Fuel Cost VIII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 640000,
+        "rt-ii": 12800,
+        "rt-iii": 6400,
+        "rt-iv": 1280,
+        "rt-v": 128
+      },
+      "out": {
+        "ship-fuel-cost-viii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "ship-fuel-cost-ix-tech",
+      "name": "Ship Fuel Cost IX",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1280000,
+        "rt-ii": 25600,
+        "rt-iii": 12800,
+        "rt-iv": 2560,
+        "rt-v": 256
+      },
+      "out": {
+        "ship-fuel-cost-ix-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "ship-fuel-cost-x-tech",
+      "name": "Ship Fuel Cost X",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2560000,
+        "rt-ii": 51200,
+        "rt-iii": 25600,
+        "rt-iv": 5120,
+        "rt-v": 512
+      },
+      "out": {
+        "ship-fuel-cost-x-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "mining-time-i-tech",
+      "name": "Mining Time I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 5000,
+        "rt-ii": 500,
+        "rt-iii": 200,
+        "rt-iv": 10
+      },
+      "out": {
+        "mining-time-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "mining-time-ii-tech",
+      "name": "Mining Time II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 10000,
+        "rt-ii": 1000,
+        "rt-iii": 400,
+        "rt-iv": 20
+      },
+      "out": {
+        "mining-time-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "mining-time-iii-tech",
+      "name": "Mining Time III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 20000,
+        "rt-ii": 2000,
+        "rt-iii": 800,
+        "rt-iv": 40
+      },
+      "out": {
+        "mining-time-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "mining-time-iv-tech",
+      "name": "Mining Time IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 40000,
+        "rt-ii": 4000,
+        "rt-iii": 1600,
+        "rt-iv": 80
+      },
+      "out": {
+        "mining-time-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "mining-time-v-tech",
+      "name": "Mining Time V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 80000,
+        "rt-ii": 8000,
+        "rt-iii": 3200,
+        "rt-iv": 160,
+        "rt-v": 10
+      },
+      "out": {
+        "mining-time-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "mining-time-vi-tech",
+      "name": "Mining Time VI",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 160000,
+        "rt-ii": 16000,
+        "rt-iii": 6400,
+        "rt-iv": 320,
+        "rt-v": 20
+      },
+      "out": {
+        "mining-time-vi-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "mining-time-vii-tech",
+      "name": "Mining Time VII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 320000,
+        "rt-ii": 32000,
+        "rt-iii": 12800,
+        "rt-iv": 640,
+        "rt-v": 40
+      },
+      "out": {
+        "mining-time-vii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "mining-time-viii-tech",
+      "name": "Mining Time VIII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 640000,
+        "rt-ii": 64000,
+        "rt-iii": 25600,
+        "rt-iv": 1280,
+        "rt-v": 80
+      },
+      "out": {
+        "mining-time-viii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "mining-time-ix-tech",
+      "name": "Mining Time IX",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1280000,
+        "rt-ii": 128000,
+        "rt-iii": 51200,
+        "rt-iv": 2560,
+        "rt-v": 160
+      },
+      "out": {
+        "mining-time-ix-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "mining-time-x-tech",
+      "name": "Mining Time X",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2560000,
+        "rt-ii": 256000,
+        "rt-iii": 102400,
+        "rt-iv": 5120,
+        "rt-v": 320
+      },
+      "out": {
+        "mining-time-x-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-production-i-tech",
+      "name": "Nuclear Power Production I",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 150000,
+        "rt-ii": 30000,
+        "rt-iii": 5000,
+        "rt-iv": 500,
+        "rt-v": 100
+      },
+      "out": {
+        "nuclear-power-production-i-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-production-ii-tech",
+      "name": "Nuclear Power Production II",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 250000,
+        "rt-ii": 50000,
+        "rt-iii": 7500,
+        "rt-iv": 1000,
+        "rt-v": 200
+      },
+      "out": {
+        "nuclear-power-production-ii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-production-iii-tech",
+      "name": "Nuclear Power Production III",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 400000,
+        "rt-ii": 75000,
+        "rt-iii": 10000,
+        "rt-iv": 1500,
+        "rt-v": 300
+      },
+      "out": {
+        "nuclear-power-production-iii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-production-iv-tech",
+      "name": "Nuclear Power Production IV",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 600000,
+        "rt-ii": 100000,
+        "rt-iii": 25000,
+        "rt-iv": 2500,
+        "rt-v": 500
+      },
+      "out": {
+        "nuclear-power-production-iv-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-production-v-tech",
+      "name": "Nuclear Power Production V",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 750000,
+        "rt-ii": 200000,
+        "rt-iii": 40000,
+        "rt-iv": 6000,
+        "rt-v": 750
+      },
+      "out": {
+        "nuclear-power-production-v-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-production-vi-tech",
+      "name": "Nuclear Power Production VI",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 950000,
+        "rt-ii": 250000,
+        "rt-iii": 60000,
+        "rt-iv": 10000,
+        "rt-v": 1000
+      },
+      "out": {
+        "nuclear-power-production-vi-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-production-vii-tech",
+      "name": "Nuclear Power Production VII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1250000,
+        "rt-ii": 350000,
+        "rt-iii": 80000,
+        "rt-iv": 15000,
+        "rt-v": 1300
+      },
+      "out": {
+        "nuclear-power-production-vii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-production-viii-tech",
+      "name": "Nuclear Power Production VIII",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 1500000,
+        "rt-ii": 500000,
+        "rt-iii": 100000,
+        "rt-iv": 30000,
+        "rt-v": 3000
+      },
+      "out": {
+        "nuclear-power-production-viii-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-production-ix-tech",
+      "name": "Nuclear Power Production IX",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 2000000,
+        "rt-ii": 700000,
+        "rt-iii": 150000,
+        "rt-iv": 50000,
+        "rt-v": 5000
+      },
+      "out": {
+        "nuclear-power-production-ix-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    },
+    {
+      "id": "nuclear-power-production-x-tech",
+      "name": "Nuclear Power Production X",
+      "category": "technology",
+      "row": 0,
+      "time": 1.0,
+      "producers": [
+        "lab"
+      ],
+      "in": {
+        "rt-i": 5000000,
+        "rt-ii": 1000000,
+        "rt-iii": 300000,
+        "rt-iv": 100000,
+        "rt-v": 10000
+      },
+      "out": {
+        "nuclear-power-production-x-tech": 1
+      },
+      "flags": [
+        "technology"
+      ]
+    }
+  ],
+  "defaults": {
+    "minBelt": "belt-i",
+    "maxBelt": "belt-iii"
+  }
+}

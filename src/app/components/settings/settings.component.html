@@ -1032,7 +1032,6 @@
                 [pTooltip]="'settings.defaultStackTooltip' | translate"
                 [value]="settings().stack ?? rational.one"
                 [minimum]="rational.one"
-                [maximum]="maximumStack"
                 (setValue)="settingsSvc.apply({ stack: $event })"
               ></lab-input-number>
             </div>
@@ -1264,7 +1263,7 @@
                     [ngModel]="
                       settings().miningBonus.add(rational(100)).toNumber()
                     "
-                    (onBlur)="
+                    (onInput)="
                       settingsSvc.apply({
                         miningBonus: rational(
                           (miningBonusInput.value ?? 100) - 100
