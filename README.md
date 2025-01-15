@@ -4,14 +4,15 @@
 
 This is the repository for the [FactorioLab](https://factoriolab.github.io) project, a tool for calculating resource and factory requirements for factory games.
 
-| Supported games                                             |                                                           |                                                                           |
-| ----------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [Factorio](https://factorio.com)                            | [Calculator](https://factoriolab.github.io/factorio)      | [Steam](https://store.steampowered.com/app/427520/Factorio/)              |
-| Dyson Sphere Program                                        | [Calculator](https://factoriolab.github.io/dsp)           | [Steam](https://store.steampowered.com/app/1366540/Dyson_Sphere_Program/) |
-| [Satisfactory](https://www.satisfactorygame.com/)           | [Calculator](https://factoriolab.github.io/satisfactory)  | [Steam](https://store.steampowered.com/app/526870/Satisfactory/)          |
-| [Captain of Industry](https://www.captain-of-industry.com/) | [Calculator](https://factoriolab.github.io/coi)           | [Steam](https://store.steampowered.com/app/1594320/Captain_of_Industry/)  |
-| [Techtonica](https://techtonicagame.com/)                   | [Calculator](https://factoriolab.github.io/techtonica)    | [Steam](https://store.steampowered.com/app/1457320/Techtonica/)           |
-| Final Factory                                               | [Calculator](https://factoriolab.github.io/final-factory) | [Steam](https://store.steampowered.com/app/1383150/Final_Factory/)        |
+| Supported games                                             |                                                           |                                                                            |
+| ----------------------------------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [Factorio](https://factorio.com)                            | [Calculator](https://factoriolab.github.io/factorio)      | [Steam](https://store.steampowered.com/app/427520/Factorio/)               |
+| Dyson Sphere Program                                        | [Calculator](https://factoriolab.github.io/dsp)           | [Steam](https://store.steampowered.com/app/1366540/Dyson_Sphere_Program/)  |
+| [Satisfactory](https://www.satisfactorygame.com/)           | [Calculator](https://factoriolab.github.io/satisfactory)  | [Steam](https://store.steampowered.com/app/526870/Satisfactory/)           |
+| [Captain of Industry](https://www.captain-of-industry.com/) | [Calculator](https://factoriolab.github.io/coi)           | [Steam](https://store.steampowered.com/app/1594320/Captain_of_Industry/)   |
+| [Techtonica](https://techtonicagame.com/)                   | [Calculator](https://factoriolab.github.io/techtonica)    | [Steam](https://store.steampowered.com/app/1457320/Techtonica/)            |
+| Final Factory                                               | [Calculator](https://factoriolab.github.io/final-factory) | [Steam](https://store.steampowered.com/app/1383150/Final_Factory/)         |
+| [Factor Y](https://buckmartin.de/products/factor-y.html)    | [Calculator](https://factoriolab.github.io/fay)           | [Steam](https://store.steampowered.com/app/2220850?utm_source=FactorioLab) |
 
 This project is intended to build on the features of the Kirk McDonald [Factorio Calculator](https://kirkmcdonald.github.io) ([GitHub](https://github.com/KirkMcDonald/kirkmcdonald.github.io)). It is built from the ground up using Angular, Redux, and TypeScript.
 

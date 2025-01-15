@@ -12,6 +12,7 @@
       <div class="mt-2" [innerHTML]="'landing.welcome' | translate"></div>
       <p-dropdown
         styleClass="my-2 w-100"
+        scrollHeight="260px"
         [ngModel]="data().game"
         [options]="gameOptions"
         (onChange)="setGame($event.value)"
