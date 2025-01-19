@@ -145,7 +145,7 @@ export class TechPickerComponent extends DialogComponent {
   copyScriptToClipboard(): void {
     const script = `/c local list = {}
 for _, tech in pairs(game.player.force.technologies) do
-    if tech.researched then
+    if tech.researched or tech.level > tech.prototype.level then
         list[#list + 1] = tech.name
     end
 end
