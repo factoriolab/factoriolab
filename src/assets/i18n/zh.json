@@ -70,6 +70,7 @@
     "preset": {
       "minimum": "最小化",
       "modules": "插件",
+      "beacon2": "2 个插件效果分享塔",
       "beacon8": "8 个插件效果分享塔",
       "beacon12": "12 个插件效果分享塔",
       "upgraded": "已升级",
