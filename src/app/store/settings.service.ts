@@ -952,7 +952,7 @@ export class SettingsService extends Store<SettingsState> {
     return spread(state as Settings, {
       beltId,
       defaultBeltId,
-      stack: state.overclock ?? defaults?.beltStack,
+      stack: coalesce(state.overclock, defaults?.beltStack),
       pipeId,
       defaultPipeId,
       cargoWagonId,
