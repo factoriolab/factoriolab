@@ -65,6 +65,7 @@
     "preset": {
       "minimum": "Minimum",
       "modules": "Module",
+      "beacon2": "2 Effektverteiler",
       "beacon8": "8 Effektverteiler",
       "beacon12": "12 Effektverteiler",
       "upgraded": "mit Upgrade",
