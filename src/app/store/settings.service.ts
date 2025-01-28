@@ -81,7 +81,7 @@ export interface SettingsState {
   excludedRecipeIds?: Set<string>;
   checkedRecipeIds: Set<string>;
   netProductionOnly: boolean;
-  preset: Preset;
+  preset: number;
   machineRankIds?: string[];
   fuelRankIds?: string[];
   moduleRankIds?: string[];
@@ -339,12 +339,16 @@ export class SettingsService extends Store<SettingsState> {
     });
   }
 
-  computeDefaults(mod: Optional<Mod>, preset: Preset): Optional<Defaults> {
+  computeDefaults(
+    mod: Optional<Mod>,
+    presetSetting: number,
+  ): Optional<Defaults> {
     if (mod?.defaults == null) return;
 
     const m = mod.defaults;
     if ('presets' in m) {
-      const p = m.presets.find((p) => p.id === preset) ?? m.presets[0] ?? {};
+      const p =
+        m.presets.find((p) => p.id === presetSetting) ?? m.presets[0] ?? {};
       let beacons: BeaconSettings[] = [];
       const beaconId = coalesce(p.beacon, m.beacon);
       if (beaconId) {
@@ -381,6 +385,7 @@ export class SettingsService extends Store<SettingsState> {
       };
     }
 
+    const preset = presetSetting as Preset;
     let beacons: BeaconSettings[] = [];
     let moduleRank: string[] | undefined;
     let overclock: Rational | undefined;
