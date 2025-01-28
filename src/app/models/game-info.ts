@@ -46,4 +46,10 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.techtonica',
     modId: 'tta',
   },
+  [Game.FactorY]: {
+    icon: 'factor-y',
+    route: '/fay',
+    label: 'options.game.factorY',
+    modId: 'fay',
+  },
 };

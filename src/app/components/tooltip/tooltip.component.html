@@ -362,7 +362,7 @@
       class="d-flex align-items-center justify-content-center flex-wrap mt-2"
     >
       <i [class]="'time' | iconSmClass"
-        ><span>{{ recipe.time }}</span></i
+        ><span>{{ recipe.time.toNumber() | round }}</span></i
       >
       @for (input of recipe.in | keyvalue; track input.key) {
         <i [class]="input.key | iconSmClass"
