@@ -15,8 +15,8 @@ export function presetOptions(
   defaults: DefaultsJson | undefined = undefined,
 ): SelectItem<Preset>[] {
   if (defaults && 'presets' in defaults) {
-    return defaults.presets.map((preset, i) => ({
-      value: i,
+    return defaults.presets.map((preset) => ({
+      value: preset.id,
       label: preset.label,
     }));
   }

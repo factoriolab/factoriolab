@@ -8,6 +8,7 @@
   "pipe": "pump",
   "presets": [
     {
+      "id": 0,
       "label": "options.preset.minimum",
       "belt": "transport-belt",
       "machineRank": [
@@ -18,6 +19,7 @@
       ]
     },
     {
+      "id": 1,
       "label": "options.preset.upgraded",
       "moduleRank": [],
       "belt": "express-transport-belt",
@@ -29,6 +31,7 @@
       ]
     },
     {
+      "id": 2,
       "label": "options.preset.beacon2",
       "belt": "turbo-transport-belt",
       "beltStack": 4,
@@ -49,6 +52,7 @@
       "beaconModule": "speed-module-3"
     },
     {
+      "id": 5,
       "label": "options.quality.legendary",
       "belt": "turbo-transport-belt",
       "beltStack": 4,

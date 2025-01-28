@@ -15,6 +15,7 @@
   "pipe": "pump",
   "presets": [
     {
+      "id": 0,
       "label": "options.preset.minimum",
       "belt": "transport-belt",
       "moduleRank": [],
@@ -25,18 +26,22 @@
       ]
     },
     {
+      "id": 1,
       "label": "options.preset.upgraded",
       "moduleRank": []
     },
     {
+      "id": 2,
       "label": "options.preset.beacon2",
       "beaconCount": 2
     },
     {
+      "id": 8,
       "label": "options.preset.beacon8",
       "beaconCount": 8
     },
     {
+      "id": 12,
       "label": "options.preset.beacon12",
       "beaconCount": 12
     }
