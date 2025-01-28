@@ -347,8 +347,10 @@ export class SettingsService extends Store<SettingsState> {
 
     const m = mod.defaults;
     if ('presets' in m) {
-      const p =
-        m.presets.find((p) => p.id === presetSetting) ?? m.presets[0] ?? {};
+      const p = coalesce(
+        m.presets.find((p) => p.id === presetSetting),
+        coalesce(m.presets[0], { id: 0, label: '' }),
+      );
       let beacons: BeaconSettings[] = [];
       const beaconId = coalesce(p.beacon, m.beacon);
       if (beaconId) {
