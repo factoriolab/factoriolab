@@ -3,6 +3,13 @@ import { presetOptions } from './preset';
 
 describe('Preset', () => {
   describe('presetOptions', () => {
+    it('should return values from the JSON data', () => {
+      expect(
+        presetOptions(flags['2.0'], { presets: [{ id: 1, label: 'label' }] })
+          .length,
+      ).toEqual(1);
+    });
+
     it('should return the correct options for Factorio', () => {
       expect(presetOptions(flags['1.1']).length).toEqual(4);
     });

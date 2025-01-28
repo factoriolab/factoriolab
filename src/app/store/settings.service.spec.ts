@@ -228,6 +228,18 @@ describe('SettingsService', () => {
       assert(result != null);
       expect(result.moduleRankIds).toEqual(Mocks.defaults.moduleRankIds);
     });
+    it('should handle custom presets', () => {
+      spyOn(service, 'mod').and.returnValue(
+        spread(Mocks.mod, {
+          defaults: spread(Mocks.mod.defaults, {
+            presets: [{ id: 1, label: 'label', fuelRank: ['test'] }],
+          }),
+        }),
+      );
+      const result = service.defaults();
+      assert(result != null);
+      expect(result.fuelRankIds).toEqual(['test']);
+    });
   });
 
   describe('dataset', () => {
