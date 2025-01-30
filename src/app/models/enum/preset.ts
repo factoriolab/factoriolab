@@ -1,5 +1,6 @@
 import { SelectItem } from 'primeng/api';
 
+import { DefaultsJson } from '../data/defaults';
 import { Flag } from '../flags';
 
 export enum Preset {
@@ -9,7 +10,17 @@ export enum Preset {
   Beacon12 = 3,
 }
 
-export function presetOptions(flags: Set<Flag>): SelectItem<Preset>[] {
+export function presetOptions(
+  flags: Set<Flag>,
+  defaults: DefaultsJson | undefined = undefined,
+): SelectItem<Preset>[] {
+  if (defaults && 'presets' in defaults) {
+    return defaults.presets.map((preset) => ({
+      value: preset.id,
+      label: preset.label,
+    }));
+  }
+
   const options: SelectItem<Preset>[] = [
     { value: Preset.Minimum, label: 'options.preset.minimum' },
     { value: Preset.Modules, label: 'options.preset.upgraded' },

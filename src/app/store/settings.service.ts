@@ -81,7 +81,7 @@ export interface SettingsState {
   excludedRecipeIds?: Set<string>;
   checkedRecipeIds: Set<string>;
   netProductionOnly: boolean;
-  preset: Preset;
+  preset: number;
   machineRankIds?: string[];
   fuelRankIds?: string[];
   moduleRankIds?: string[];
@@ -226,8 +226,9 @@ export class SettingsService extends Store<SettingsState> {
   });
 
   presetOptions = computed(() => {
+    const mod = this.mod();
     const data = this.dataset();
-    return presetOptions(data.flags);
+    return presetOptions(data.flags, mod?.defaults);
   });
 
   columnOptions = computed(() => {
@@ -338,10 +339,55 @@ export class SettingsService extends Store<SettingsState> {
     });
   }
 
-  computeDefaults(mod: Optional<Mod>, preset: Preset): Optional<Defaults> {
+  computeDefaults(
+    mod: Optional<Mod>,
+    presetSetting: number,
+  ): Optional<Defaults> {
     if (mod?.defaults == null) return;
 
     const m = mod.defaults;
+    if ('presets' in m) {
+      const p = coalesce(
+        m.presets.find((p) => p.id === presetSetting),
+        coalesce(m.presets[0], { id: 0, label: '' }),
+      );
+      let beacons: BeaconSettings[] = [];
+      const beaconId = coalesce(p.beacon, m.beacon);
+      if (beaconId) {
+        const beaconBaseId = baseId(beaconId);
+        const beacon = mod.items.find((i) => i.id === beaconBaseId)?.beacon;
+        if (beacon) {
+          const beaconModule = coalesce(p.beaconModule, m.beaconModule);
+          const modules: ModuleSettings[] = [
+            {
+              count: rational(beacon.modules),
+              id: coalesce(beaconModule, ItemId.Module),
+            },
+          ];
+          const count = rational(coalesce(p.beaconCount, 0));
+          beacons = [{ count, id: beaconId, modules }];
+        }
+      }
+      const excludedRecipe = coalesce(p.excludedRecipes, m.excludedRecipes);
+      const machineRank = coalesce(p.machineRank, m.machineRank);
+      const fuelRank = coalesce(p.fuelRank, m.fuelRank);
+      const moduleRank = coalesce(p.moduleRank, m.moduleRank);
+      return {
+        locations: coalesce(p.locations, m.locations),
+        beltId: coalesce(p.belt, m.belt),
+        beltStack: rational(coalesce(p.beltStack, m.beltStack)),
+        pipeId: coalesce(p.pipe, m.pipe),
+        cargoWagonId: coalesce(p.cargoWagon, m.cargoWagon),
+        fluidWagonId: coalesce(p.fluidWagon, m.fluidWagon),
+        excludedRecipeIds: coalesce(excludedRecipe, []),
+        machineRankIds: coalesce(machineRank, []),
+        fuelRankIds: coalesce(fuelRank, []),
+        moduleRankIds: coalesce(moduleRank, []),
+        beacons,
+      };
+    }
+
+    const preset = presetSetting as Preset;
     let beacons: BeaconSettings[] = [];
     let moduleRank: string[] | undefined;
     let overclock: Rational | undefined;
@@ -795,9 +841,10 @@ export class SettingsService extends Store<SettingsState> {
       researchedTechnologyIds = techIds;
 
     const locIds = state.locationIds;
-    const allLocationIds = Object.keys(data.locationEntities);
-    let locationIds = new Set(allLocationIds);
-    if (locIds != null && allLocationIds.length > 0) locationIds = locIds;
+    const defaultLocationIds =
+      defaults?.locations ?? Object.keys(data.locationEntities);
+    let locationIds = new Set(defaultLocationIds);
+    if (locIds != null && defaultLocationIds.length > 0) locationIds = locIds;
 
     let quality = Quality.Normal;
     if (data.flags.has('quality')) {
@@ -920,6 +967,7 @@ export class SettingsService extends Store<SettingsState> {
     return spread(state as Settings, {
       beltId,
       defaultBeltId,
+      stack: coalesce(state.overclock, defaults?.beltStack),
       pipeId,
       defaultPipeId,
       cargoWagonId,

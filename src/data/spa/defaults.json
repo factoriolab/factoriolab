@@ -1,30 +1,83 @@
 {
   "beacon": "beacon",
-  "minBelt": "transport-belt",
-  "maxBelt": "express-transport-belt",
-  "fuelRank": [
-    "coal"
-  ],
+  "belt": "transport-belt",
+  "fuelRank": ["coal"],
   "cargoWagon": "cargo-wagon",
   "fluidWagon": "fluid-wagon",
   "excludedRecipes": [],
-  "minMachineRank": [
-    "assembling-machine-1",
-    "electric-furnace",
-    "electric-mining-drill",
-    "chemical-plant"
-  ],
-  "maxMachineRank": [
-    "assembling-machine-3",
-    "electric-furnace",
-    "electric-mining-drill",
-    "chemical-plant"
-  ],
-  "moduleRank": [
-    "productivity-module-3",
-    "speed-module-3"
-  ],
-  "beaconModule": "speed-module-3",
-  "minPipe": "pump",
-  "maxPipe": "pump"
+  "pipe": "pump",
+  "presets": [
+    {
+      "id": 0,
+      "label": "options.preset.minimum",
+      "belt": "transport-belt",
+      "machineRank": [
+        "electric-mining-drill",
+        "stone-furnace",
+        "assembling-machine-1",
+        "chemical-plant"
+      ]
+    },
+    {
+      "id": 1,
+      "label": "options.preset.upgraded",
+      "moduleRank": [],
+      "belt": "express-transport-belt",
+      "machineRank": [
+        "electric-mining-drill",
+        "electric-furnace",
+        "assembling-machine-3",
+        "chemical-plant"
+      ]
+    },
+    {
+      "id": 2,
+      "label": "options.preset.beacon2",
+      "belt": "turbo-transport-belt",
+      "beltStack": 4,
+      "machineRank": [
+        "big-mining-drill",
+        "foundry",
+        "electric-furnace",
+        "electromagnetic-plant",
+        "cryogenic-plant",
+        "chemical-plant",
+        "biochamber",
+        "assembling-machine-3",
+        "biolab"
+      ],
+      "moduleRank": ["productivity-module-3"],
+      "beacon": "beacon",
+      "beaconCount": 2,
+      "beaconModule": "speed-module-3"
+    },
+    {
+      "id": 5,
+      "label": "options.quality.legendary",
+      "belt": "turbo-transport-belt",
+      "beltStack": 4,
+      "machineRank": [
+        "big-mining-drill(5)",
+        "pumpjack(5)",
+        "offshore-pump(5)",
+        "foundry(5)",
+        "electromagnetic-plant(5)",
+        "cryogenic-plant(5)",
+        "assembling-machine-3(5)",
+        "electric-furnace(5)",
+        "oil-refinery(5)",
+        "chemical-plant(5)",
+        "biochamber(5)",
+        "centrifuge(5)",
+        "crusher(5)",
+        "recycler(5)",
+        "biolab(5)"
+      ],
+      "moduleRank": ["productivity-module-3(5)"],
+      "beacon": "beacon(5)",
+      "beaconCount": 2,
+      "beaconModule": "speed-module-3(5)",
+      "pipe": "pump(5)"
+    }
+  ]
 }

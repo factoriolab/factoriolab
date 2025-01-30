@@ -69,6 +69,7 @@
     "preset": {
       "minimum": "Минимум",
       "modules": "Модули",
+      "beacon2": "2 Маяков",
       "beacon8": "8 Маяков",
       "beacon12": "12 Маяков",
       "upgraded": "Улучшено",
