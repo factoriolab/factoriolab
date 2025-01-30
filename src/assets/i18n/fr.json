@@ -69,6 +69,7 @@
     "preset": {
       "minimum": "Minimum",
       "modules": "Modules",
+      "beacon2": "2 Balises",
       "beacon8": "8 Balises",
       "beacon12": "12 Balises",
       "upgraded": "Amélioré",

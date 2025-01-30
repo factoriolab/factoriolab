@@ -3,6 +3,8 @@ import { BeaconSettings } from './settings/beacon-settings';
 
 export interface Defaults {
   beltId?: string;
+  beltStack?: Rational;
+  locations?: string[];
   pipeId?: string;
   fuelRankIds: string[];
   cargoWagonId?: string;

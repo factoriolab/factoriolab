@@ -153,10 +153,9 @@ describe('SettingsService', () => {
       spyOn(service, 'preset').and.returnValue(Preset.Minimum);
       const result = service.defaults();
       assert(result != null);
-      expect(result.beltId).toEqual(Mocks.mod.defaults!.minBelt);
-      expect(result.machineRankIds).toEqual(
-        Mocks.mod.defaults!.minMachineRank!,
-      );
+      const defaults = Mocks.mod.defaults as any;
+      expect(result.beltId).toEqual(defaults.minBelt);
+      expect(result.machineRankIds).toEqual(defaults.minMachineRank);
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beacons).toEqual([
         {
@@ -228,6 +227,18 @@ describe('SettingsService', () => {
       const result = service.defaults();
       assert(result != null);
       expect(result.moduleRankIds).toEqual(Mocks.defaults.moduleRankIds);
+    });
+    it('should handle custom presets', () => {
+      spyOn(service, 'mod').and.returnValue(
+        spread(Mocks.mod, {
+          defaults: spread(Mocks.mod.defaults, {
+            presets: [{ id: 1, label: 'label', fuelRank: ['test'] }],
+          }),
+        }),
+      );
+      const result = service.defaults();
+      assert(result != null);
+      expect(result.fuelRankIds).toEqual(['test']);
     });
   });
 
