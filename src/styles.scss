@@ -11,12 +11,14 @@
 @import 'styles/utils';
 
 html {
+  overflow-x: hidden;
   font-size: 14px;
 }
 
 body {
   margin: 0;
   background-color: var(--surface-ground);
+  overflow-x: hidden;
   line-height: 20px;
   color: var(--text-color);
   font-family: var(--font-family);
