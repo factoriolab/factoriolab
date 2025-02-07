@@ -766,19 +766,25 @@ describe('RecipeService', () => {
     it('should calculate machine speed based on belt speed if undefined', () => {
       const data = Mocks.getDataset();
       data.machineEntities[ItemId.AssemblingMachine2].speed = undefined;
+      const itemsState = spread(Mocks.itemsStateInitial, {
+        [ItemId.ElectronicCircuit]: spread(
+          Mocks.itemsStateInitial[ItemId.ElectronicCircuit],
+          { beltId: undefined },
+        ),
+      });
       const result = service.adjustRecipe(
-        RecipeId.SteelChest,
-        Mocks.recipesState[RecipeId.SteelChest],
-        Mocks.itemsStateInitial,
+        RecipeId.ElectronicCircuit,
+        Mocks.recipesState[RecipeId.ElectronicCircuit],
+        itemsState,
         Mocks.settingsStateInitial,
         data,
       );
       const expected = spread(
         Mocks.adjustedDataset.recipeEntities[
-          RecipeId.SteelChest
+          RecipeId.ElectronicCircuit
         ] as AdjustedRecipe,
         {
-          out: { [ItemId.SteelChest]: rational.one },
+          out: { [ItemId.ElectronicCircuit]: rational.one },
           time: rational(1n, 60n),
           drain: rational(5n),
           consumption: rational(150n),
