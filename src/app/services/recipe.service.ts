@@ -238,16 +238,23 @@ export class RecipeService {
           ...Object.keys(recipe.in).filter((i) => recipe.in[i].nonzero()),
           ...Object.keys(recipe.out).filter((i) => recipe.out[i].nonzero()),
         ];
-        const belts = ids
-          .map((i) => itemsState[i].beltId)
-          .filter(notNullish)
-          .map((beltId) => data.beltEntities[beltId]);
-        let minSpeed = rational.zero;
-        for (const b of belts.filter(notNullish)) {
-          if (minSpeed.lt(b.speed)) minSpeed = b.speed;
+        const speeds = ids
+          .map((i) => {
+            const state = itemsState[i];
+            const beltId = state.beltId;
+            if (beltId == null) return undefined;
+            return data.beltEntities[beltId].speed.mul(
+              coalesce(state.stack, rational.one),
+            );
+          })
+          .filter(notNullish);
+        let minSpeed = undefined;
+        for (const speed of speeds) {
+          if (minSpeed == null || minSpeed.lt(speed)) minSpeed = speed;
         }
 
-        recipe.time = recipe.time.div(minSpeed);
+        if (minSpeed != null && !minSpeed.isZero())
+          recipe.time = recipe.time.div(minSpeed);
       }
 
       if (recipe.flags.has('technology') && data.flags.has('researchSpeed')) {
