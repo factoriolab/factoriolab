@@ -65,10 +65,10 @@ export class AppComponent {
           acceptLabel,
           rejectVisible: false,
           accept: () => {
-            this.reload();
+            this.contentSvc.reload();
           },
           reject: () => {
-            this.reload();
+            this.contentSvc.reload();
           },
         });
       });
@@ -97,7 +97,7 @@ export class AppComponent {
           rejectLabel,
           rejectButtonStyleClass: 'p-button-outlined',
           accept: () => {
-            this.reload();
+            this.contentSvc.reload();
           },
         });
       });
@@ -106,11 +106,6 @@ export class AppComponent {
   async reset(): Promise<void> {
     this.dataSvc.error$.next(undefined);
     await this.router.navigate(['/']);
-    this.reload();
-  }
-
-  // istanbul ignore next: Helper to call browser location function
-  reload(): void {
-    location.reload();
+    this.contentSvc.reload();
   }
 }

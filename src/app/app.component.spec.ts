@@ -45,22 +45,22 @@ describe('AppComponent', () => {
     });
 
     it('should handle unrecoverable updates', () => {
-      spyOn(component, 'reload');
+      spyOn(component.contentSvc, 'reload');
       spyOn(component.contentSvc, 'confirm').and.callFake((confirm) => {
         confirm.accept?.();
         confirm.reject?.();
-        expect(component.reload).toHaveBeenCalledTimes(2);
+        expect(component.contentSvc.reload).toHaveBeenCalledTimes(2);
       });
       swUpdate.unrecoverable.next({} as any);
       expect(component.contentSvc.confirm).toHaveBeenCalled();
     });
 
     it('should handle version updates', () => {
-      spyOn(component, 'reload');
+      spyOn(component.contentSvc, 'reload');
       spyOn(component.contentSvc, 'confirm').and.callFake((confirm) => {
         confirm.accept?.();
         confirm.reject?.();
-        expect(component.reload).toHaveBeenCalledTimes(1);
+        expect(component.contentSvc.reload).toHaveBeenCalledTimes(1);
       });
       swUpdate.versionUpdates.next({ type: 'VERSION_READY' } as any);
       expect(component.contentSvc.confirm).toHaveBeenCalled();
@@ -71,11 +71,11 @@ describe('AppComponent', () => {
     it('should set loading indicator and reset application', async () => {
       spyOn(component.dataSvc.error$, 'next');
       spyOn(component.router, 'navigate');
-      spyOn(component, 'reload');
+      spyOn(component.contentSvc, 'reload');
       await component.reset();
       expect(component.dataSvc.error$.next).toHaveBeenCalledWith(undefined);
       expect(component.router.navigate).toHaveBeenCalledWith(['/']);
-      expect(component.reload).toHaveBeenCalled();
+      expect(component.contentSvc.reload).toHaveBeenCalled();
     });
   });
 });
