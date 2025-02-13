@@ -13,7 +13,11 @@
     "errorDetail": "The application has encountered an error:",
     "resetTooltip": "Click to reset",
     "simplexSolved": "Solved, {{ time }}ms, cost: {{ cost }}",
-    "migrationWarning": "Migration warning"
+    "migrationWarning": "Migration warning",
+    "updateAvailable": "Update available",
+    "updateAvailableMessage": "An update is available. Would you like to reload the page to update?",
+    "updateRequired": "Update required",
+    "updateRequiredMessage": "An update is available, and the page must be reloaded to proceed."
   },
   "options": {
     "column": {
