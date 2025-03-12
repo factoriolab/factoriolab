@@ -837,8 +837,13 @@ export class SettingsService extends Store<SettingsState> {
     const techIds = state.researchedTechnologyIds;
     const allTechnologyIds = Object.keys(data.technologyEntities);
     let researchedTechnologyIds = new Set(allTechnologyIds);
-    if (techIds != null && allTechnologyIds.length > 0)
-      researchedTechnologyIds = techIds;
+    if (techIds != null && allTechnologyIds.length > 0) {
+      // Filter for only technologies that still exist in this data set
+      const filteredTechs = Array.from(techIds).filter((i) =>
+        researchedTechnologyIds.has(i),
+      );
+      researchedTechnologyIds = new Set(filteredTechs);
+    }
 
     const locIds = state.locationIds;
     const defaultLocationIds =
@@ -862,11 +867,16 @@ export class SettingsService extends Store<SettingsState> {
       .filter(
         (r) =>
           (!r.flags.has('locked') ||
-            Array.from(researchedTechnologyIds).some((t) =>
-              data.technologyEntities[t].unlockedRecipes?.includes(
+            Array.from(researchedTechnologyIds).some((t) => {
+              const tech = data.technologyEntities[t];
+              if (tech == null) {
+                console.log(t);
+              }
+
+              return data.technologyEntities[t].unlockedRecipes?.includes(
                 baseId(r.id),
-              ),
-            )) &&
+              );
+            })) &&
           (r.quality == null || r.quality <= quality),
       );
 
