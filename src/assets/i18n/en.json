@@ -350,7 +350,7 @@
     "error": "No solution found",
     "errorDetail": "Check <b>Limit</b> and <b>Maximize</b> objectives and enabled recipes. ",
     "errorUnbounded": "Solution is unbounded",
-    "errorUnboundedDetail": "<b>Limit</b> objectives may not be restrictive enough for <b>Maximize</b> objectives.",
+    "errorUnboundedDetail": "<b>Limit</b> objectives may not be restrictive enough for <b>Maximize</b> objectives. To see why, try switching your <b>Maximize</b> objectives to <b>Output</b> objectives with extremely high values.",
     "errorInfeasible": "Solution is infeasible",
     "errorInfeasibleDetail": "<b>Limit</b> objectives may be too restrictive to satisfy <b>Output</b> objectives.",
     "errorMaximizeExcluded": "Cannot use <b>Maximize</b> with an excluded target. Choose another target or include the current target.",
