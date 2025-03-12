@@ -1132,20 +1132,17 @@
                 output of step.outputs | keyvalue: trackSvc.sortByValue;
                 track output.key
               ) {
-                @if (
-                  {
-                    step: stepByItemEntities()[output.key],
-                    percent: step.outputs?.[output.key],
-                  };
-                  as row
-                ) {
-                  @if (row.step && row.percent && row.step.items) {
+                @if (stepByItemEntities()[output.key]; as rowStep) {
+                  @if (
+                    rowStep.items && step.outputs?.[output.key];
+                    as rowPercent
+                  ) {
                     <ng-container
                       *ngTemplateOutlet="
                         detailRow;
                         context: {
-                          items: row.step.items
-                            .mul(row.percent)
+                          items: rowStep.items
+                            .mul(rowPercent)
                             .div(step.recipe.effects.productivity),
                           itemId: output.key,
                         }
@@ -1167,34 +1164,31 @@
                 input of step.recipe.in | keyvalue: trackSvc.sortByValue;
                 track input.key
               ) {
-                @if (
-                  {
-                    step: stepByItemEntities()[input.key],
-                    percent: stepByItemEntities()[input.key].parents?.[step.id],
-                  };
-                  as row
-                ) {
-                  @if (row.step.itemId && row.percent) {
+                @if (stepByItemEntities()[input.key]; as rowStep) {
+                  @if (
+                    rowStep.itemId && rowStep.parents?.[step.id];
+                    as rowPercent
+                  ) {
                     @if (
-                      stepDetails()[row.step.id].outputs.length === 1 &&
-                        stepDetails()[row.step.id].outputs[0];
+                      stepDetails()[rowStep.id].outputs.length === 1 &&
+                        stepDetails()[rowStep.id].outputs[0];
                       as output
                     ) {
                       <ng-container
                         *ngTemplateOutlet="
                           detailRow;
                           context: {
-                            items: row.step.items?.mul(row.percent),
+                            items: rowStep.items?.mul(rowPercent),
                             itemId: input.key,
-                            belts: row.step.belts?.mul(row.percent),
-                            beltId: itemsState()[row.step.itemId].beltId,
-                            wagons: row.step.wagons?.mul(row.percent),
-                            wagonId: itemsState()[row.step.itemId].wagonId,
-                            machines: output.step?.machines?.mul(row.percent),
+                            belts: rowStep.belts?.mul(rowPercent),
+                            beltId: itemsState()[rowStep.itemId].beltId,
+                            wagons: rowStep.wagons?.mul(rowPercent),
+                            wagonId: itemsState()[rowStep.itemId].wagonId,
+                            machines: output.step?.machines?.mul(rowPercent),
                             machineId: output.step?.recipeSettings?.machineId,
                             recipeId: output.step?.recipeId,
                             recipeObjectiveId: output.step?.recipeObjectiveId,
-                            percent: row.percent,
+                            percent: rowPercent,
                             destId: step.recipeId,
                             destRecipeObjectiveId: step.recipeObjectiveId,
                             destIsRecipe: true,
@@ -1207,13 +1201,13 @@
                         *ngTemplateOutlet="
                           detailRow;
                           context: {
-                            items: row.step.items?.mul(row.percent),
+                            items: rowStep.items?.mul(rowPercent),
                             itemId: input.key,
-                            belts: row.step.belts?.mul(row.percent),
-                            beltId: itemsState()[row.step.itemId].beltId,
-                            wagons: row.step.wagons?.mul(row.percent),
-                            wagonId: itemsState()[row.step.itemId].wagonId,
-                            percent: row.percent,
+                            belts: rowStep.belts?.mul(rowPercent),
+                            beltId: itemsState()[rowStep.itemId].beltId,
+                            wagons: rowStep.wagons?.mul(rowPercent),
+                            wagonId: itemsState()[rowStep.itemId].wagonId,
+                            percent: rowPercent,
                             destId: step.recipeId,
                             destRecipeObjectiveId: step.recipeObjectiveId,
                             destIsRecipe: true,
@@ -1254,29 +1248,26 @@
               output of step.recipe.out | keyvalue: trackSvc.sortByValue;
               track output.key
             ) {
-              @if (
-                {
-                  step: stepByItemEntities()[output.key],
-                  percent: step.outputs?.[output.key],
-                };
-                as row
-              ) {
-                @if (row.step.itemId && row.percent) {
+              @if (stepByItemEntities()[output.key]; as rowStep) {
+                @if (
+                  rowStep.itemId && step.outputs?.[output.key];
+                  as rowPercent
+                ) {
                   <ng-container
                     *ngTemplateOutlet="
                       detailRow;
                       context: {
-                        items: row.step.items?.mul(row.percent),
+                        items: rowStep.items?.mul(rowPercent),
                         itemId: output.key,
-                        belts: row.step.belts?.mul(row.percent),
-                        beltId: itemsState()[row.step.itemId].beltId,
-                        wagons: row.step.wagons?.mul(row.percent),
-                        wagonId: itemsState()[row.step.itemId].wagonId,
+                        belts: rowStep.belts?.mul(rowPercent),
+                        beltId: itemsState()[rowStep.itemId].beltId,
+                        wagons: rowStep.wagons?.mul(rowPercent),
+                        wagonId: itemsState()[rowStep.itemId].wagonId,
                         machines: step.machines,
                         machineId: step.recipeSettings?.machineId,
                         recipeId: step.recipeId,
                         recipeObjectiveId: step.recipeObjectiveId,
-                        percent: row.percent,
+                        percent: rowPercent,
                         percentOnDest: true,
                         destId: output.key,
                         destRecipeObjectiveId: step.recipeObjectiveId,
@@ -1301,25 +1292,18 @@
                       input of step.recipe.in | keyvalue: trackSvc.sortByValue;
                       track input.key
                     ) {
-                      @if (
-                        {
-                          step: stepByItemEntities()[input.key],
-                          percent:
-                            stepByItemEntities()[input.key].parents?.[step.id],
-                        };
-                        as row
-                      ) {
-                        @if (row.percent) {
+                      @if (stepByItemEntities()[input.key]; as rowStep) {
+                        @if (rowStep.parents?.[step.id]; as rowPercent) {
                           <tr>
                             <td>
-                              @if (row.step.items) {
+                              @if (rowStep.items) {
                                 <ng-container
                                   *ngTemplateOutlet="
                                     machineValueCell;
                                     context: {
                                       value:
-                                        row.step.items
-                                          .mul(row.percent)
+                                        rowStep.items
+                                          .mul(rowPercent)
                                           .div(step.machines)
                                         | rate: columnsState().items.precision,
                                       itemId: input.key,
@@ -1331,7 +1315,7 @@
                             </td>
                             @if (columnsState().belts.show) {
                               <td>
-                                @if (row.step.belts) {
+                                @if (rowStep.belts) {
                                   @if (
                                     itemsState()[input.key].beltId;
                                     as beltId
@@ -1341,8 +1325,8 @@
                                         machineValueCell;
                                         context: {
                                           value:
-                                            row.step.belts
-                                              .mul(row.percent)
+                                            rowStep.belts
+                                              .mul(rowPercent)
                                               .div(step.machines)
                                             | rate
                                               : columnsState().belts.precision,
@@ -1359,11 +1343,11 @@
                               <td>
                                 @if (
                                   data().itemEntities[input.key].stack &&
-                                  row.step.items
+                                  rowStep.items
                                 ) {
                                   @if (
-                                    row.step.items
-                                      .mul(row.percent)
+                                    rowStep.items
+                                      .mul(rowPercent)
                                       .div(step.machines)
                                       .div(dispRateInfo().value)
                                       | inserterSpeed: settings();

@@ -1305,7 +1305,7 @@ async function processMod(): Promise<void> {
     if (isRecipePrototype(proto)) {
       const [recipeIn, recipeInTemp] = recipeIngredientsMap[proto.name];
       const [_recipeOut, , , temps] = recipeResultsMap[proto.name];
-      let [, recipeCatalyst] = recipeResultsMap[proto.name];
+      const [, recipeCatalyst] = recipeResultsMap[proto.name];
       const disallowedEffects = getRecipeDisallowedEffects(proto);
 
       // Convert fluid outputs to use correct ids
@@ -1421,7 +1421,7 @@ async function processMod(): Promise<void> {
           if (recipesLocked.has(proto.name)) flags.push('locked');
           const canProdUpgrade = recipesCanProdUpgrade.has(proto.name);
           if (canProdUpgrade) flags.push('canProdUpgrade');
-          if (proto.category === 'recycling') flags.push('recycling');
+          if (proto.category === 'recycling') flags.push('recycling', 'locked');
 
           if (flags.length) recipe.flags = flags;
 

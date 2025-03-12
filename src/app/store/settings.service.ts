@@ -122,10 +122,10 @@ export const initialSettingsState: SettingsState = {
     factor: rational.one,
     machine: rational.one,
     footprint: rational.one,
-    unproduceable: rational(1000000n),
+    unproduceable: rational(1000000000n),
     excluded: rational.zero,
     surplus: rational.zero,
-    maximize: rational(-1000000n),
+    maximize: rational(-1000000000n),
     recycling: rational(1000n),
   },
 };
@@ -837,8 +837,13 @@ export class SettingsService extends Store<SettingsState> {
     const techIds = state.researchedTechnologyIds;
     const allTechnologyIds = Object.keys(data.technologyEntities);
     let researchedTechnologyIds = new Set(allTechnologyIds);
-    if (techIds != null && allTechnologyIds.length > 0)
-      researchedTechnologyIds = techIds;
+    if (techIds != null && allTechnologyIds.length > 0) {
+      // Filter for only technologies that still exist in this data set
+      const filteredTechs = Array.from(techIds).filter((i) =>
+        researchedTechnologyIds.has(i),
+      );
+      researchedTechnologyIds = new Set(filteredTechs);
+    }
 
     const locIds = state.locationIds;
     const defaultLocationIds =
