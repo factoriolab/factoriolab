@@ -867,16 +867,11 @@ export class SettingsService extends Store<SettingsState> {
       .filter(
         (r) =>
           (!r.flags.has('locked') ||
-            Array.from(researchedTechnologyIds).some((t) => {
-              const tech = data.technologyEntities[t];
-              if (tech == null) {
-                console.log(t);
-              }
-
-              return data.technologyEntities[t].unlockedRecipes?.includes(
+            Array.from(researchedTechnologyIds).some((t) =>
+              data.technologyEntities[t].unlockedRecipes?.includes(
                 baseId(r.id),
-              );
-            })) &&
+              ),
+            )) &&
           (r.quality == null || r.quality <= quality),
       );
 
