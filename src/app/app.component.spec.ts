@@ -39,7 +39,7 @@ describe('AppComponent', () => {
       spyOn(component.dataSvc.error$, 'next');
       spyOn(component.router, 'navigate');
       spyOn(component, 'reload');
-      component.reset();
+      void component.reset();
       expect(component.dataSvc.error$.next).toHaveBeenCalledWith(undefined);
       expect(component.router.navigate).toHaveBeenCalledWith(['/']);
       expect(component.reload).toHaveBeenCalled();
