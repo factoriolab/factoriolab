@@ -101,7 +101,7 @@ describe('SettingsComponent', () => {
   });
 
   describe('clickResetSettings', () => {
-    it('should set up a confirmation dialog and clear settings', () => {
+    it('should set up a confirmation dialog and clear settings', async () => {
       let confirm: Confirmation | undefined;
       spyOn(component.contentSvc, 'confirm').and.callFake(
         (c: Confirmation) => (confirm = c),
@@ -110,9 +110,11 @@ describe('SettingsComponent', () => {
       assert(confirm?.accept != null);
       spyOn(localStorage, 'clear');
       spyOn(component.router, 'navigate');
-      confirm.accept();
+      spyOn(component.contentSvc, 'reload');
+      await confirm.accept();
       expect(localStorage.clear).toHaveBeenCalled();
       expect(component.router.navigate).toHaveBeenCalled();
+      expect(component.contentSvc.reload).toHaveBeenCalled();
     });
   });
 
