@@ -43,7 +43,7 @@
 //   protected _getLangData(lang: string): Observable<LangData> {
 //     if (this._langDataCache[lang] == null) {
 //       this._langDataCache[lang] = this.http
-//         .get<LangData>(`assets/i18n/${lang}.json`)
+//         .get<LangData>(`i18n/${lang}.json`)
 //         .pipe(shareReplay(1));
 //     }
 

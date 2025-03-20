@@ -6,7 +6,7 @@ echo Version: $version
 echo Branch: $branch
 echo Date: $date
 
-file=./dist/browser/assets/release.json
+file=./dist/browser/public/release.json
 sed -i -e "s/\"version\": \".*\"/\"version\": \"$version\"/g" $file
 sed -i -e "s/\"branch\": \".*\"/\"branch\": \"$branch\"/g" $file
 sed -i -e "s/\"date\": \".*\"/\"date\": \"$date\"/g" $file

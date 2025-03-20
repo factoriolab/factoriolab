@@ -38,7 +38,7 @@
 //       version: string;
 //       branch: string;
 //       date: string;
-//     }>('assets/release.json')
+//     }>('release.json')
 //     .pipe(shareReplay(1));
 
 //   constructor() {

@@ -32,7 +32,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 //     ThemeService.appInitTheme();
 
 //     // Load glpk-wasm
-//     return loadModule('assets/glpk-wasm/glpk.all.wasm');
+//     return loadModule('glpk-wasm/glpk.all.wasm');
 //   };
 // }
 

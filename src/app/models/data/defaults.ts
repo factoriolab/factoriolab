@@ -36,7 +36,7 @@ export interface CustomPresetsJson {
 
 export interface PresetJson {
   /**
-   * ID in `src/assets/i18n/*.json`
+   * ID in `src/public/i18n/*.json`
    * Example: "options.preset.minimum"
    */
   id: number;

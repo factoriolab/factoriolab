@@ -24,23 +24,17 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/assets/release.json",
-              "src/assets/i18n",
-              {
-                "glob": "**/*",
-                "input": "src/assets/icons",
-                "output": "/"
-              },
+              "src/public",
               "src/data",
               {
                 "glob": "glpk.all.wasm",
                 "input": "node_modules/glpk-wasm/dist/",
-                "output": "/assets/glpk-wasm/"
+                "output": "/glpk-wasm/"
               }
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "allowedCommonJsDependencies": [
               "@sideway/formula",
@@ -120,23 +114,17 @@
             "main": "src/test.ts",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              "src/assets/release.json",
-              "src/assets/i18n",
-              {
-                "glob": "**/*",
-                "input": "src/assets/icons",
-                "output": "/"
-              },
+              "src/public",
               "src/data",
               {
                 "glob": "glpk.all.wasm",
                 "input": "node_modules/glpk-wasm/dist/",
-                "output": "/assets/glpk-wasm/"
+                "output": "/glpk-wasm/"
               }
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "codeCoverage": true,
             "codeCoverageExclude": ["src/app/tests/**/*"],

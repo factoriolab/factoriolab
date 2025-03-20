@@ -16,12 +16,12 @@
       }
     },
     {
-      "name": "assets",
+      "name": "public",
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
         "files": [
-          "/assets/**",
+          "/public/**",
           "/data/**",
           "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
