@@ -35,7 +35,6 @@ interface MenuLink {
 
 @Component({
   selector: 'lab-header',
-  standalone: true,
   imports: [
     RouterLink,
     ButtonModule,

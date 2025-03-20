@@ -24,7 +24,6 @@ import { SettingsService } from '~/store/settings.service';
 export type WizardState = 'type' | 'item' | 'recipe';
 
 @Component({
-  standalone: true,
   imports: [
     FormsModule,
     ButtonModule,

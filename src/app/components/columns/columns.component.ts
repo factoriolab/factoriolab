@@ -27,7 +27,6 @@ import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-columns',
-  standalone: true,
   imports: [
     FormsModule,
     ButtonModule,

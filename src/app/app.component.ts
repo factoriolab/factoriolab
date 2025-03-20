@@ -19,7 +19,6 @@ import { SettingsService } from './store/settings.service';
 
 @Component({
   selector: 'lab-root',
-  standalone: true,
   imports: [
     AsyncPipe,
     RouterOutlet,

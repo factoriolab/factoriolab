@@ -8,7 +8,6 @@ import { TestModule } from '~/tests';
 import { TabViewOverrideDirective } from './tabview-override.directive';
 
 @Component({
-  standalone: true,
   imports: [TabViewModule, TabViewOverrideDirective],
   template: `<p-tabView></p-tabView>`,
 })

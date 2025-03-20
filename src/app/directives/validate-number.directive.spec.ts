@@ -12,7 +12,6 @@ import { rational } from '~/models/rational';
 import { ValidateNumberDirective } from './validate-number.directive';
 
 @Component({
-  standalone: true,
   imports: [FormsModule, ValidateNumberDirective],
   template: `<form #frm="ngForm">
     <input

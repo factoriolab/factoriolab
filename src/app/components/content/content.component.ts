@@ -23,7 +23,6 @@ OrderList.prototype.onSpaceKey = function (): void {
 
 @Component({
   selector: 'lab-content',
-  standalone: true,
   imports: [ConfirmDialogModule, ToastModule, TranslatePipe],
   templateUrl: './content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

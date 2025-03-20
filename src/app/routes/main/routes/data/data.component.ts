@@ -10,7 +10,6 @@ import { SettingsService } from '~/store/settings.service';
 
 @Component({
   selector: 'lab-data',
-  standalone: true,
   imports: [
     KeyValuePipe,
     BreadcrumbModule,

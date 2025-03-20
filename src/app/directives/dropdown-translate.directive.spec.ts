@@ -10,7 +10,6 @@ import { TestModule } from '~/tests';
 import { DropdownTranslateDirective } from './dropdown-translate.directive';
 
 @Component({
-  standalone: true,
   imports: [
     FormsModule,
     DropdownModule,

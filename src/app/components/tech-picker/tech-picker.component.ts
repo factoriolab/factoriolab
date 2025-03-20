@@ -37,7 +37,6 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
 
 @Component({
   selector: 'lab-tech-picker',
-  standalone: true,
   imports: [
     FormsModule,
     NgTemplateOutlet,

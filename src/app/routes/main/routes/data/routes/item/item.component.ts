@@ -30,7 +30,6 @@ import { DetailComponent } from '../../models/detail.component';
 
 @Component({
   selector: 'lab-item',
-  standalone: true,
   imports: [
     FormsModule,
     KeyValuePipe,

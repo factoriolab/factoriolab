@@ -18,7 +18,6 @@ import { SettingsService } from '~/store/settings.service';
 
 @Component({
   selector: 'lab-main',
-  standalone: true,
   imports: [
     AsyncPipe,
     CardModule,

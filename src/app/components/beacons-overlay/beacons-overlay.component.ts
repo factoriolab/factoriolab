@@ -30,7 +30,6 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'lab-beacons-overlay',
-  standalone: true,
   imports: [
     FormsModule,
     ButtonModule,

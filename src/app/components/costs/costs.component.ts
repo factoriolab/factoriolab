@@ -20,7 +20,6 @@ import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-costs',
-  standalone: true,
   imports: [
     FormsModule,
     ButtonModule,

@@ -24,7 +24,6 @@ const initialValue = initialPreferencesState.flowSettings;
 
 @Component({
   selector: 'lab-flow-settings',
-  standalone: true,
   imports: [
     FormsModule,
     ButtonModule,

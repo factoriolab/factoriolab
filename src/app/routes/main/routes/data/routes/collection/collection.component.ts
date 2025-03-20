@@ -20,7 +20,6 @@ import { SettingsService } from '~/store/settings.service';
 
 @Component({
   selector: 'lab-collection',
-  standalone: true,
   imports: [BreadcrumbModule, CollectionTableComponent],
   templateUrl: './collection.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

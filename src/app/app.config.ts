@@ -1,9 +1,10 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import {
-  APP_INITIALIZER,
   ApplicationConfig,
   ErrorHandler,
+  inject,
+  provideAppInitializer,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -16,7 +17,6 @@ import {
 } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { loadModule } from 'glpk-ts';
-import { PrimeNGConfig } from 'primeng/api';
 import { environment } from 'src/environments';
 
 import { routes } from './app.routes';
@@ -27,11 +27,8 @@ import {
   TranslateService,
 } from './services/translate.service';
 
-function initializeApp(primengConfig: PrimeNGConfig): () => Promise<unknown> {
+function initializeApp(_: TranslateService): () => Promise<unknown> {
   return () => {
-    // Enable ripple
-    primengConfig.ripple = true;
-
     // Set up initial theme
     ThemeService.appInitTheme();
 
@@ -45,19 +42,10 @@ export const appConfig: ApplicationConfig = {
     { provide: APP_BASE_HREF, useValue: environment.baseHref },
     { provide: DEFAULT_LANGUAGE, useValue: 'en' },
     { provide: ErrorHandler, useClass: ErrorService },
-    {
-      provide: APP_INITIALIZER,
-      deps: [
-        PrimeNGConfig,
-        /**
-         * Not actually used by `initializeApp`; included to ensure service
-         * constructor is run so language data is requested immediately.
-         */
-        TranslateService,
-      ],
-      useFactory: initializeApp,
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const initializerFn = initializeApp(inject(TranslateService));
+      return initializerFn();
+    }),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideAnimations(),
     provideRouter(

@@ -10,7 +10,6 @@ import { TestModule } from '~/tests';
 import { DropdownBaseDirective } from './dropdown-base.directive';
 
 @Component({
-  standalone: true,
   imports: [
     FormsModule,
     DropdownModule,

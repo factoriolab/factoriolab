@@ -33,7 +33,6 @@ type TooltipType =
 
 @Component({
   selector: 'lab-tooltip',
-  standalone: true,
   imports: [
     KeyValuePipe,
     NgTemplateOutlet,

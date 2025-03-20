@@ -49,7 +49,6 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'lab-objectives',
-  standalone: true,
   imports: [
     AsyncPipe,
     FormsModule,

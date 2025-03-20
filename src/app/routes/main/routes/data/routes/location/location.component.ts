@@ -10,7 +10,6 @@ import { DetailComponent } from '../../models/detail.component';
 
 @Component({
   selector: 'lab-location',
-  standalone: true,
   imports: [BreadcrumbModule, IconClassPipe, TranslatePipe],
   templateUrl: './location.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

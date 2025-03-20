@@ -29,7 +29,6 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'lab-modules',
-  standalone: true,
   imports: [
     FormsModule,
     ButtonModule,

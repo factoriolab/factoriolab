@@ -26,7 +26,6 @@ type Entity = Category | Item | RecipeJson;
 
 @Component({
   selector: 'lab-collection-table',
-  standalone: true,
   imports: [
     FormsModule,
     RouterLink,

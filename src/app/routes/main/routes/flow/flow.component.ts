@@ -59,7 +59,6 @@ cytoscape.warnings(environment.debug);
 
 @Component({
   selector: 'lab-flow',
-  standalone: true,
   imports: [
     AsyncPipe,
     ButtonModule,

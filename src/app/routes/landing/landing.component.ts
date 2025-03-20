@@ -25,7 +25,6 @@ import { SettingsService } from '~/store/settings.service';
 
 @Component({
   selector: 'lab-landing',
-  standalone: true,
   imports: [
     AsyncPipe,
     FormsModule,

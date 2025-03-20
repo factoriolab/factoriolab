@@ -77,7 +77,6 @@ export type StepsMode = 'all' | 'focus';
 
 @Component({
   selector: 'lab-steps',
-  standalone: true,
   imports: [
     AsyncPipe,
     FormsModule,

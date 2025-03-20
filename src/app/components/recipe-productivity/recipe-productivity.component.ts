@@ -16,7 +16,6 @@ import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-recipe-productivity',
-  standalone: true,
   imports: [
     FormsModule,
     ButtonModule,

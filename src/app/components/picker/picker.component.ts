@@ -35,7 +35,6 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'lab-picker',
-  standalone: true,
   imports: [
     FormsModule,
     ButtonModule,

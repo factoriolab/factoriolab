@@ -26,7 +26,6 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'lab-belt-overlay',
-  standalone: true,
   imports: [
     FormsModule,
     ButtonModule,

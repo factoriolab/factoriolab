@@ -19,7 +19,6 @@ import { UsagePipe } from '~/pipes/usage.pipe';
 import { DetailComponent } from '../../models/detail.component';
 
 @Component({
-  standalone: true,
   imports: [
     FormsModule,
     BreadcrumbModule,

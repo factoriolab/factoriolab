@@ -30,7 +30,6 @@ interface Event {
 
 @Component({
   selector: 'lab-input-number',
-  standalone: true,
   imports: [
     FormsModule,
     ButtonModule,

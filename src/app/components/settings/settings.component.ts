@@ -70,7 +70,6 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'lab-settings',
-  standalone: true,
   imports: [
     FormsModule,
     KeyValuePipe,

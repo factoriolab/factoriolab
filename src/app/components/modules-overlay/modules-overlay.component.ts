@@ -18,7 +18,6 @@ import { ModulesComponent } from '../modules/modules.component';
 
 @Component({
   selector: 'lab-modules-overlay',
-  standalone: true,
   imports: [ButtonModule, OverlayPanelModule, ModulesComponent, TranslatePipe],
   templateUrl: './modules-overlay.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
