@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, isDevMode } from '@angular/core';
 import {
   Constraint,
   ConstraintProperties,
@@ -9,7 +9,6 @@ import {
   VariableProperties,
 } from 'glpk-ts';
 import { StatusSimplex } from 'node_modules/glpk-ts/dist/status';
-import { environment } from 'src/environments';
 
 import { contains, spread } from '~/helpers';
 import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
@@ -35,10 +34,9 @@ import { Entities } from '~/models/utils';
 
 import { RateService } from './rate.service';
 
-const simplexConfig: Simplex.Options = environment.debug
-  ? // istanbul ignore next: Don't test debug environment level
-    {}
-  : { msgLevel: 'off' };
+const simplexConfig: Simplex.Options = {
+  msgLevel: isDevMode() ? undefined : 'off',
+};
 
 export interface ItemValues {
   /** Sum of value from output objectives */

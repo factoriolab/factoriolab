@@ -106,10 +106,6 @@ module.exports = tseslint.config(
         'error',
         { allowNullOrUndefined: true },
       ],
-      '@angular-eslint/template/elements-content': [
-        'error',
-        { allowList: ['pButton'] },
-      ],
     },
   },
 );

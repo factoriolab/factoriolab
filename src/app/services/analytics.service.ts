@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { environment } from 'src/environments';
+import { Injectable, isDevMode } from '@angular/core';
 
 interface EventData {
   event_category?: string;
@@ -15,7 +14,6 @@ declare const gtag: (type: string, name: string, data: EventData) => void;
 export class AnalyticsService {
   event(name: string, category: string): void {
     // istanbul ignore if: Don't test calling google analytics function
-    if (environment.production)
-      gtag('event', name, { event_category: category });
+    if (!isDevMode()) gtag('event', name, { event_category: category });
   }
 }

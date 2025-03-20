@@ -8,7 +8,7 @@
       "schematics": {
         "@schematics/angular:component": {
           "changeDetection": "OnPush",
-          "style": "scss"
+          "style": "none"
         }
       },
       "root": "",
@@ -40,33 +40,11 @@
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/primeicons/primeicons.css",
-              "node_modules/primeng/resources/primeng.min.css",
-              "src/styles.scss",
-              {
-                "input": "src/styles/themes/dark/theme.css",
-                "bundleName": "theme-dark",
-                "inject": false
-              },
-              {
-                "input": "src/styles/themes/light/theme.css",
-                "bundleName": "theme-light",
-                "inject": false
-              },
-              {
-                "input": "src/styles/themes/black/theme.css",
-                "bundleName": "theme-black",
-                "inject": false
-              }
+              "src/styles.scss"
             ],
-            "stylePreprocessorOptions": {
-              "includePaths": ["node_modules"]
-            },
-            "scripts": [],
             "allowedCommonJsDependencies": [
               "@sideway/formula",
               "cytoscape-elk",
-              "deep-freeze-strict",
               "file-saver",
               "glpk-ts"
             ],
@@ -74,12 +52,6 @@
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
               "baseHref": "/",
               "outputHashing": "all",
               "budgets": [
@@ -97,12 +69,6 @@
               ]
             },
             "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.staging.ts"
-                }
-              ],
               "baseHref": "/staging/",
               "outputHashing": "all",
               "budgets": [
@@ -151,12 +117,6 @@
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
-            "fileReplacements": [
-              {
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.test.ts"
-              }
-            ],
             "main": "src/test.ts",
             "karmaConfig": "karma.conf.js",
             "assets": [
@@ -176,8 +136,6 @@
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/primeicons/primeicons.css",
-              "node_modules/primeng/resources/primeng.min.css",
               "src/styles.scss"
             ],
             "codeCoverage": true,
