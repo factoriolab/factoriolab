@@ -18,9 +18,9 @@ export function storedSignal(
 ): WritableSignal<Optional<string>> {
   const result = signal(getStoredValue(key));
 
-  effect(() => {
-    storeValue(key, result());
-  });
+  // effect(() => {
+  //   storeValue(key, result());
+  // });
 
   return result;
 }

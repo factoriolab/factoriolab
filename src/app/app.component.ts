@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -13,7 +14,7 @@ import { TranslatePipe } from './pipes/translate.pipe';
 import { AnalyticsService } from './services/analytics.service';
 import { ContentService } from './services/content.service';
 import { DataService } from './services/data.service';
-import { ThemeService } from './services/theme.service';
+// import { ThemeService } from './services/theme.service';
 import { TranslateService } from './services/translate.service';
 
 @Component({
@@ -31,10 +32,11 @@ import { TranslateService } from './services/translate.service';
 export class AppComponent {
   router = inject(Router);
   swUpdate = inject(SwUpdate);
+  dialog = inject(Dialog);
   analyticsSvc = inject(AnalyticsService);
   contentSvc = inject(ContentService);
   dataSvc = inject(DataService);
-  themeSvc = inject(ThemeService);
+  // themeSvc = inject(ThemeService);
   translateSvc = inject(TranslateService);
 
   versionUpdateVisible = false;

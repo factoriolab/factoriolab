@@ -1,7 +1,8 @@
+import { DEFAULT_DIALOG_CONFIG, DialogConfig } from '@angular/cdk/dialog';
 import { provideHttpClient } from '@angular/common/http';
 import {
   ApplicationConfig,
-  // ErrorHandler,
+  ErrorHandler,
   inject,
   isDevMode,
   provideAppInitializer,
@@ -19,31 +20,30 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { loadModule } from 'glpk-ts';
 
 import { routes } from './app.routes';
-// import { ErrorService } from './services/error.service';
+import { DialogComponent } from './components/dialog/dialog.component';
+import { ErrorService } from './services/error.service';
 // import { ThemeService } from './services/theme.service';
-import {
-  DEFAULT_LANGUAGE,
-  TranslateService,
-} from './services/translate.service';
+import { DEFAULT_LANGUAGE } from './services/translate.service';
 
-function initializeApp(_: TranslateService): () => Promise<unknown> {
-  return () => {
-    // Set up initial theme
-    //     ThemeService.appInitTheme();
+export const APP_DIALOG_CONFIG: DialogConfig = {
+  container: DialogComponent,
+  hasBackdrop: true,
+};
 
-    // Load glpk-wasm
-    return loadModule('glpk-wasm/glpk.all.wasm');
-  };
+async function initializeApp(): Promise<unknown> {
+  // Load glpk-wasm
+  return loadModule('glpk-wasm/glpk.all.wasm');
 }
 
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: DEFAULT_LANGUAGE, useValue: 'en' },
-    // { provide: ErrorHandler, useClass: ErrorService },
-    provideAppInitializer(() => {
-      const initializerFn = initializeApp(inject(TranslateService));
-      return initializerFn();
-    }),
+    {
+      provide: DEFAULT_DIALOG_CONFIG,
+      useValue: APP_DIALOG_CONFIG,
+    },
+    { provide: ErrorHandler, useClass: ErrorService },
+    provideAppInitializer(initializeApp),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideAnimations(),
     provideRouter(
