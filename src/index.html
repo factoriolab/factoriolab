@@ -14,23 +14,23 @@ desired objectives."
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="apple-touch-icon.png?v=1"
+      href="icons/apple-touch-icon.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="favicon-32x32.png?v=1"
+      href="icons/favicon-32x32.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="favicon-16x16.png?v=1"
+      href="icons/favicon-16x16.png"
     />
-    <link rel="manifest" href="site.webmanifest?v=1" />
-    <link rel="mask-icon" href="safari-pinned-tab.svg?v=0" color="#5bbad5" />
-    <link rel="shortcut icon" href="favicon.ico?v=1" />
+    <link rel="manifest" href="icons/site.webmanifest" />
+    <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#5bbad5" />
+    <link rel="shortcut icon" href="icons/favicon.ico" />
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#eb9947" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -40,7 +40,12 @@ desired objectives."
       rel="stylesheet"
     />
     <!-- Prefetch the landing image -->
-    <link rel="prefetch" href="factoriolab.webp" as="image" type="image/webp" />
+    <link
+      rel="prefetch"
+      href="icons/factoriolab.webp"
+      as="image"
+      type="image/webp"
+    />
     <!-- Google tag (gtag.js) -->
     <script
       async
@@ -68,8 +73,12 @@ desired objectives."
   <body class="dark:bg-zinc-950 dark:text-white">
     <lab-root>
       <!-- Pure CSS spinner -->
-      <div class="flex h-dvh content-center items-center justify-center">
-        <div class="lds-ring">
+      <div
+        class="flex h-dvh content-center items-center justify-center"
+        role="progressbar"
+        aria-label="Loading"
+      >
+        <div class="lab-ring">
           <div></div>
           <div></div>
           <div></div>

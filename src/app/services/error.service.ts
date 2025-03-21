@@ -10,6 +10,7 @@ export class ErrorService implements ErrorHandler {
   //   ngZone = inject(NgZone);
 
   handleError(error: string): void {
+    console.error(error);
     //     if (this.dataSvc.error$.value == null) {
     //       this.ngZone.run(() => {
     //         console.error(error);

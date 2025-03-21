@@ -10,7 +10,7 @@ import { filter, first, switchMap } from 'rxjs';
 
 // import { ContentComponent } from './components/content/content.component';
 import { versionStr } from './helpers';
-import { TranslatePipe } from './pipes/translate.pipe';
+// import { TranslatePipe } from './pipes/translate.pipe';
 import { AnalyticsService } from './services/analytics.service';
 import { ContentService } from './services/content.service';
 import { DataService } from './services/data.service';
@@ -19,15 +19,8 @@ import { TranslateService } from './services/translate.service';
 
 @Component({
   selector: 'lab-root',
-  imports: [
-    AsyncPipe,
-    RouterOutlet,
-    // ButtonModule,
-    // DialogModule,
-    // ContentComponent,
-    TranslatePipe,
-  ],
-  templateUrl: './app.component.html',
+  template: '<router-outlet></router-outlet>',
+  imports: [RouterOutlet],
 })
 export class AppComponent {
   router = inject(Router);
@@ -38,8 +31,6 @@ export class AppComponent {
   dataSvc = inject(DataService);
   // themeSvc = inject(ThemeService);
   translateSvc = inject(TranslateService);
-
-  versionUpdateVisible = false;
 
   constructor() {
     this.dataSvc.config$.pipe(first()).subscribe((c) => {

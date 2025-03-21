@@ -3,7 +3,6 @@ import { provideHttpClient } from '@angular/common/http';
 import {
   ApplicationConfig,
   ErrorHandler,
-  inject,
   isDevMode,
   provideAppInitializer,
   provideZoneChangeDetection,
@@ -22,7 +21,6 @@ import { loadModule } from 'glpk-ts';
 import { routes } from './app.routes';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { ErrorService } from './services/error.service';
-// import { ThemeService } from './services/theme.service';
 import { DEFAULT_LANGUAGE } from './services/translate.service';
 
 export const APP_DIALOG_CONFIG: DialogConfig = {
@@ -46,13 +44,13 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(initializeApp),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideAnimations(),
+    provideHttpClient(),
     provideRouter(
       routes,
       withComponentInputBinding(),
       withPreloading(PreloadAllModules),
       withRouterConfig({ paramsInheritanceStrategy: 'always' }),
     ),
-    provideHttpClient(),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',

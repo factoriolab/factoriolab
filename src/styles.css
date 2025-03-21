@@ -1,3 +1,6 @@
 @import 'tailwindcss';
 
+@import '@angular/cdk/overlay-prebuilt.css';
+
+@import './styles/icon.css';
 @import './styles/spinner.css';

@@ -5,7 +5,7 @@ import { RouterService } from '~/services/router.service';
 
 @Component({
   selector: 'lab-id',
-  template: '<router-outlet>',
+  template: '<router-outlet></router-outlet>',
   imports: [RouterOutlet],
 })
 export class IdComponent implements OnInit {

@@ -1,5 +1,5 @@
 @layer components {
-  .lds-ring {
+  .lab-ring {
     > * {
       @apply absolute size-20 rounded-full border-4 border-transparent border-t-white;
       animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;

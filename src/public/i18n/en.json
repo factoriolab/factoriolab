@@ -1,9 +1,10 @@
 {
   "cancel": "Cancel",
-  "ok": "OK",
-  "yes": "Yes",
-  "reset": "Reset",
+  "loading": "Loading",
   "none": "None",
+  "ok": "OK",
+  "reset": "Reset",
+  "yes": "Yes",
   "app": {
     "factory": "Factory",
     "list": "List",

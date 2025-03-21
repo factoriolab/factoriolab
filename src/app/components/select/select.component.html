@@ -1,0 +1,13 @@
+<div #trigger cdkOverlayOrigin #overlayOrigin="cdkOverlayOrigin">
+  hello thingy
+</div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="overlayOrigin"
+  [cdkConnectedOverlayOpen]="open()"
+>
+  <div role="listbox" class="flex flex-col">
+    <ng-content></ng-content>
+  </div>
+</ng-template>

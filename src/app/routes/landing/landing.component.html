@@ -1,16 +1,24 @@
-<!-- @if (mod() != null) {
-  <p-card>
-    <div class="d-flex flex-column">
-      <div class="d-flex justify-content-center">
-        <img
-          src="factoriolab.webp"
-          alt="FactorioLab"
-          height="128"
-          width="128"
-        />
-      </div>
-      <div class="mt-2" [innerHTML]="'landing.welcome' | translate"></div>
-      <p-dropdown
+@if (mod() != null) {
+  <!-- <p-card> -->
+  <div class="flex flex-col rounded-xl border p-4 dark:border-zinc-700">
+    <div class="flex justify-center">
+      <img
+        src="icons/factoriolab.webp"
+        alt="FactorioLab"
+        height="128"
+        width="128"
+      />
+    </div>
+    <div class="mt-2" [innerHTML]="'landing.welcome' | translate"></div>
+    <lab-select>
+      @for (kv of gameInfo | keyvalue; track kv.key) {
+        <lab-option [value]="kv.key" class="flex items-center">
+          <i [class]="kv.value.icon | iconSmClass"></i>
+          <span class="ms-3">{{ kv.value.label | translate }}</span>
+        </lab-option>
+      }
+    </lab-select>
+    <!-- <p-dropdown
         styleClass="my-2 w-100"
         scrollHeight="260px"
         [ngModel]="data().game"
@@ -124,11 +132,11 @@
         [label]="'landing.bypass' | translate"
         [ngModel]="preferencesSvc.state().bypassLanding"
         (onChange)="preferencesSvc.apply({ bypassLanding: $event.checked })"
-      ></p-checkbox>
-    </div>
-  </p-card>
+      ></p-checkbox> -->
+  </div>
+  <!-- </p-card> -->
 } @else {
-  <p-progressSpinner></p-progressSpinner>
-} -->
+  <lab-spinner size="4x"></lab-spinner>
+}
 
 <span class="absolute bottom-0 mb-3">{{ contentSvc.version$ | async }}</span>

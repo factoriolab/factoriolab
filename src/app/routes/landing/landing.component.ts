@@ -1,8 +1,9 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
+import { SelectModule } from '~/components/select/select.component';
 // import { PickerComponent } from '~/components/picker/picker.component';
 import { Game, gameOptions } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
@@ -17,15 +18,20 @@ import { ObjectivesStore } from '~/store/objectives.store';
 import { PreferencesStore } from '~/store/preferences.store';
 import { SettingsStore } from '~/store/settings.store';
 
+import { SpinnerComponent } from '../../components/spinner/spinner.component';
+
 @Component({
   selector: 'lab-landing',
   imports: [
     AsyncPipe,
     FormsModule,
+    KeyValuePipe,
     RouterLink,
     IconSmClassPipe,
     // PickerComponent,
+    SelectModule,
     TranslatePipe,
+    SpinnerComponent,
   ],
   templateUrl: './landing.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
