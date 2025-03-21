@@ -15,10 +15,10 @@ import { LabParams } from '~/models/lab-params';
 import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Zip, ZipData, ZipMachineSettings } from '~/models/zip';
-import { ItemsState } from '~/store/items.service';
-import { ObjectivesState } from '~/store/objectives.service';
-import { RecipesState } from '~/store/recipes.service';
-import { initialSettingsState, SettingsState } from '~/store/settings.service';
+import { ItemsState } from '~/store/items.store';
+import { ObjectivesState } from '~/store/objectives.store';
+import { RecipesState } from '~/store/recipes.store';
+import { initialSettingsState, SettingsState } from '~/store/settings.store';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { PartialState, RouterService } from './router.service';
@@ -251,7 +251,7 @@ describe('RouterService', () => {
 
   describe('zipState', () => {
     it('should be triggered via effect', fakeAsync(() => {
-      spyOn(service.objectivesSvc, 'state').and.returnValue(
+      spyOn(service.objectivesStr, 'state').and.returnValue(
         Mocks.objectivesState,
       );
       spyOn(service, 'updateUrl').and.returnValue(Promise.resolve(undefined));
@@ -760,11 +760,11 @@ describe('RouterService', () => {
   describe('dispatch', () => {
     it('should dispatch a state', () => {
       const load: jasmine.Spy[] = [];
-      load.push(spyOn(service.objectivesSvc, 'load'));
-      load.push(spyOn(service.itemsSvc, 'load'));
-      load.push(spyOn(service.recipesSvc, 'load'));
-      load.push(spyOn(service.machinesSvc, 'load'));
-      load.push(spyOn(service.settingsSvc, 'load'));
+      load.push(spyOn(service.objectivesStr, 'load'));
+      load.push(spyOn(service.itemsStr, 'load'));
+      load.push(spyOn(service.recipesStr, 'load'));
+      load.push(spyOn(service.machinesStr, 'load'));
+      load.push(spyOn(service.settingsStr, 'load'));
       spyOn(service.ready, 'set');
       service.dispatch(mockEmpty);
       load.forEach((s) => {

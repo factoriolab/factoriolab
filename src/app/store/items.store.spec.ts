@@ -4,29 +4,29 @@ import { spread } from '~/helpers';
 import { rational } from '~/models/rational';
 import { ItemId, Mocks, TestModule } from '~/tests';
 
-import { ItemsService } from './items.service';
+import { ItemsStore } from './items.store';
 
-describe('ItemsService', () => {
-  let service: ItemsService;
+describe('ItemsStore', () => {
+  let store: ItemsStore;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
-    service = TestBed.inject(ItemsService);
+    store = TestBed.inject(ItemsStore);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(store).toBeTruthy();
   });
 
   describe('itemsState', () => {
     it('should return the items state', () => {
-      spyOn(service.settingsSvc, 'settings').and.returnValue(
+      spyOn(store.settingsStr, 'settings').and.returnValue(
         spread(Mocks.settingsStateInitial, {
           pipeId: ItemId.Pipe,
           stack: rational(4n),
         }),
       );
-      const result = service.settings();
+      const result = store.settings();
       expect(Object.keys(result).length).toEqual(
         Mocks.adjustedDataset.itemIds.length,
       );
@@ -36,8 +36,8 @@ describe('ItemsService', () => {
 
   describe('itemsModified', () => {
     it('should determine whether columns are modified', () => {
-      spyOn(service, 'state').and.returnValue(Mocks.itemsStateInitial);
-      const result = service.itemsModified();
+      spyOn(store, 'state').and.returnValue(Mocks.itemsStateInitial);
+      const result = store.itemsModified();
       expect(result.belts).toBeTrue();
       expect(result.wagons).toBeTrue();
     });
@@ -45,13 +45,13 @@ describe('ItemsService', () => {
 
   describe('updateEntityField', () => {
     it('should update an entity field', () => {
-      service.updateEntityField(
+      store.updateEntityField(
         ItemId.Coal,
         'beltId',
         ItemId.TransportBelt,
         undefined,
       );
-      expect(service.state()[ItemId.Coal].beltId).toEqual(ItemId.TransportBelt);
+      expect(store.state()[ItemId.Coal].beltId).toEqual(ItemId.TransportBelt);
     });
   });
 });

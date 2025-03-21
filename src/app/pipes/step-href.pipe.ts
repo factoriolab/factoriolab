@@ -5,11 +5,11 @@ import { LabParams } from '~/models/lab-params';
 import { Step } from '~/models/step';
 import { Zip } from '~/models/zip';
 import { RouterService } from '~/services/router.service';
-import { RecipesService } from '~/store/recipes.service';
+import { RecipesStore } from '~/store/recipes.store';
 
 @Pipe({ name: 'stepHref', standalone: true })
 export class StepHrefPipe implements PipeTransform {
-  recipesSvc = inject(RecipesService);
+  recipesSvc = inject(RecipesStore);
   routerSvc = inject(RouterService);
 
   data = this.recipesSvc.adjustedDataset;

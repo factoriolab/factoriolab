@@ -1,4 +1,4 @@
-import { SelectItem } from 'primeng/api';
+import { Option } from '../option';
 
 export enum Game {
   Factorio = 'Factorio',
@@ -10,7 +10,7 @@ export enum Game {
   FactorY = 'FactorY',
 }
 
-export const gameOptions: SelectItem<Game>[] = [
+export const gameOptions: Option<Game>[] = [
   { value: Game.Factorio, label: 'options.game.factorio' },
   { value: Game.DysonSphereProgram, label: 'options.game.dysonSphereProgram' },
   { value: Game.Satisfactory, label: 'options.game.satisfactory' },

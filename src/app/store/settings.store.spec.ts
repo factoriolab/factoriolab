@@ -13,14 +13,14 @@ import { rational } from '~/models/rational';
 import { Settings } from '~/models/settings/settings';
 import { assert, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
-import { SettingsService } from './settings.service';
+import { SettingsStore } from './settings.store';
 
-describe('SettingsService', () => {
-  let service: SettingsService;
+describe('SettingsStore', () => {
+  let service: SettingsStore;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
-    service = TestBed.inject(SettingsService);
+    service = TestBed.inject(SettingsStore);
   });
 
   it('should be created', () => {
@@ -56,7 +56,7 @@ describe('SettingsService', () => {
     });
 
     it('should get the base i18n', () => {
-      spyOn(service.preferencesSvc, 'language').and.returnValue(
+      spyOn(service.preferencesStr, 'language').and.returnValue(
         Language.Chinese,
       );
       expect(service.i18n()).toEqual(Mocks.modI18n);
@@ -71,7 +71,7 @@ describe('SettingsService', () => {
 
   describe('modStates', () => {
     it('should return the game states', () => {
-      spyOn(service.preferencesSvc, 'states').and.returnValue(
+      spyOn(service.preferencesStr, 'states').and.returnValue(
         Mocks.preferencesState.states,
       );
       expect(service.modStates()).toEqual(
@@ -87,7 +87,7 @@ describe('SettingsService', () => {
     });
 
     it('should return the options as a list', () => {
-      spyOn(service.preferencesSvc, 'states').and.returnValue(
+      spyOn(service.preferencesStr, 'states').and.returnValue(
         Mocks.preferencesState.states,
       );
       expect(service.stateOptions()).toEqual([

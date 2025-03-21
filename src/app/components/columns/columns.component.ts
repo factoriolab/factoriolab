@@ -19,9 +19,9 @@ import { PrecisionExamplePipe } from '~/pipes/precision-example.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import {
   initialPreferencesState,
-  PreferencesService,
-} from '~/store/preferences.service';
-import { SettingsService } from '~/store/settings.service';
+  PreferencesStore,
+} from '~/store/preferences.store';
+import { SettingsStore } from '~/store/settings.store';
 
 import { DialogComponent } from '../modal';
 
@@ -42,8 +42,8 @@ import { DialogComponent } from '../modal';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnsComponent extends DialogComponent {
-  preferencesSvc = inject(PreferencesService);
-  settingsSvc = inject(SettingsService);
+  preferencesSvc = inject(PreferencesStore);
+  settingsSvc = inject(SettingsStore);
 
   columnOptions = this.settingsSvc.columnOptions;
 

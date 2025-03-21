@@ -1,8 +1,7 @@
-import { SelectItem } from 'primeng/api';
-
 import { spread } from '~/helpers';
 
 import { Flag } from '../flags';
+import { Option } from '../option';
 
 export type ColumnKey =
   | 'checkbox'
@@ -63,11 +62,11 @@ export const initialColumnsState: ColumnsState = allColumns.reduce(
 ) as ColumnsState;
 
 /** Get column options for passed game */
-export function columnOptions(flags: Set<Flag>): SelectItem<ColumnKey>[] {
+export function columnOptions(flags: Set<Flag>): Option<ColumnKey>[] {
   return allColumns
     .filter((c) => !columnsInfo[c].flag || flags.has(c as Flag))
     .map(
-      (id): SelectItem<ColumnKey> => ({
+      (id): Option<ColumnKey> => ({
         label: `options.column.${id}`,
         value: id,
         disabled: id === 'items' || id === 'machines',

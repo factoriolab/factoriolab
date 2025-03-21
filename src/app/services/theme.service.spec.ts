@@ -35,13 +35,13 @@ describe('ThemeService', () => {
     spyOn(service.head, 'appendChild');
     spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
     spyOn(service.document, 'createElement').and.returnValue(tempLink as any);
-    service.preferencesSvc.apply({ theme: Theme.Light });
+    service.preferencesStr.apply({ theme: Theme.Light });
     TestBed.flushEffects();
     expect(tempLink.href).toEqual('theme-light.css');
     expect(themeLink.href).toEqual('');
     tempLink.onload();
     expect(themeLink.href).toEqual('theme-light.css');
-    service.preferencesSvc.apply({ theme: Theme.Dark });
+    service.preferencesStr.apply({ theme: Theme.Dark });
     TestBed.flushEffects();
     expect(tempLink.href).toEqual('theme-dark.css');
     expect(themeLink.href).toEqual('theme-light.css');
@@ -55,7 +55,7 @@ describe('ThemeService', () => {
     spyOn(service.head, 'removeChild');
     spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
     spyOn(service, 'themePath').and.returnValue('theme-black.css');
-    service.preferencesSvc.apply({ theme: Theme.Black });
+    service.preferencesStr.apply({ theme: Theme.Black });
     TestBed.flushEffects();
     expect(service.updateThemeValues).toHaveBeenCalled();
   });

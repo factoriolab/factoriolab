@@ -18,7 +18,7 @@ import { ItemSettings } from '~/models/settings/item-settings';
 import { Optional } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { SettingsService } from '~/store/settings.service';
+import { SettingsStore } from '~/store/settings.store';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { OverlayComponent } from '../modal';
@@ -42,7 +42,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BeltOverlayComponent extends OverlayComponent {
-  settingsSvc = inject(SettingsService);
+  settingsSvc = inject(SettingsStore);
 
   setValue = output<ItemSettings>();
 

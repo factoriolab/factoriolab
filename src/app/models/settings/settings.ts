@@ -1,4 +1,4 @@
-import { SettingsState } from '~/store/settings.service';
+import { SettingsState } from '~/store/settings.store';
 
 import { Quality } from '../enum/quality';
 

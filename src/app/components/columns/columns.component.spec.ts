@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { initialPreferencesState } from '~/store/preferences.service';
+import { initialPreferencesState } from '~/store/preferences.store';
 import { Mocks, TestModule } from '~/tests';
 
 import { ColumnsComponent } from './columns.component';

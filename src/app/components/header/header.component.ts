@@ -23,9 +23,9 @@ import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
 import { TranslateService } from '~/services/translate.service';
-import { ObjectivesService } from '~/store/objectives.service';
-import { PreferencesService } from '~/store/preferences.service';
-import { SettingsService } from '~/store/settings.service';
+import { ObjectivesStore } from '~/store/objectives.store';
+import { PreferencesStore } from '~/store/preferences.store';
+import { SettingsStore } from '~/store/settings.store';
 
 interface MenuLink {
   label: string;
@@ -50,9 +50,9 @@ interface MenuLink {
 export class HeaderComponent {
   title = inject(Title);
   contentSvc = inject(ContentService);
-  objectivesSvc = inject(ObjectivesService);
-  preferencesSvc = inject(PreferencesService);
-  settingsSvc = inject(SettingsService);
+  objectivesSvc = inject(ObjectivesStore);
+  preferencesSvc = inject(PreferencesStore);
+  settingsSvc = inject(SettingsStore);
   translateSvc = inject(TranslateService);
 
   @HostBinding('class.sticky') @Input() sticky = false;

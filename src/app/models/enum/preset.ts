@@ -1,7 +1,6 @@
-import { SelectItem } from 'primeng/api';
-
 import { DefaultsJson } from '../data/defaults';
 import { Flag } from '../flags';
+import { Option } from '../option';
 
 export enum Preset {
   Minimum = 0,
@@ -13,7 +12,7 @@ export enum Preset {
 export function presetOptions(
   flags: Set<Flag>,
   defaults: DefaultsJson | undefined = undefined,
-): SelectItem<Preset>[] {
+): Option<Preset>[] {
   if (defaults && 'presets' in defaults) {
     return defaults.presets.map((preset) => ({
       value: preset.id,
@@ -21,7 +20,7 @@ export function presetOptions(
     }));
   }
 
-  const options: SelectItem<Preset>[] = [
+  const options: Option<Preset>[] = [
     { value: Preset.Minimum, label: 'options.preset.minimum' },
     { value: Preset.Modules, label: 'options.preset.upgraded' },
   ];

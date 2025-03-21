@@ -2,17 +2,17 @@ import { TestBed } from '@angular/core/testing';
 
 import { TestModule } from '~/tests';
 
-import { MachinesService } from './machines.service';
+import { DatasetsStore } from './datasets.store';
 
-describe('MachinesService', () => {
-  let service: MachinesService;
+describe('DatasetsStore', () => {
+  let store: DatasetsStore;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
-    service = TestBed.inject(MachinesService);
+    store = TestBed.inject(DatasetsStore);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(store).toBeTruthy();
   });
 });

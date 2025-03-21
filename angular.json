@@ -24,18 +24,18 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/public",
+              {
+                "glob": "**/*",
+                "input": "src/public"
+              },
               "src/data",
               {
                 "glob": "glpk.all.wasm",
-                "input": "node_modules/glpk-wasm/dist/",
-                "output": "/glpk-wasm/"
+                "input": "node_modules/glpk-wasm/dist",
+                "output": "glpk-wasm"
               }
             ],
-            "styles": [
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/styles.css"
-            ],
+            "styles": ["src/styles.css"],
             "allowedCommonJsDependencies": [
               "@sideway/formula",
               "cytoscape-elk",
@@ -114,18 +114,18 @@
             "main": "src/test.ts",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              "src/public",
+              {
+                "glob": "**/*",
+                "input": "src/public"
+              },
               "src/data",
               {
                 "glob": "glpk.all.wasm",
-                "input": "node_modules/glpk-wasm/dist/",
-                "output": "/glpk-wasm/"
+                "input": "node_modules/glpk-wasm/dist",
+                "output": "glpk-wasm"
               }
             ],
-            "styles": [
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/styles.css"
-            ],
+            "styles": ["src/styles.css"],
             "codeCoverage": true,
             "codeCoverageExclude": ["src/app/tests/**/*"],
             "stylePreprocessorOptions": {

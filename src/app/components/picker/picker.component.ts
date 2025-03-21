@@ -28,7 +28,7 @@ import { Entities } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
-import { SettingsService } from '~/store/settings.service';
+import { SettingsStore } from '~/store/settings.store';
 
 import { DialogComponent } from '../modal';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -57,7 +57,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 export class PickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
   contentSvc = inject(ContentService);
-  settingsSvc = inject(SettingsService);
+  settingsSvc = inject(SettingsStore);
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 

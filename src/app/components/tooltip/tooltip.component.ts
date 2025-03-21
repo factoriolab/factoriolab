@@ -15,8 +15,8 @@ import { RoundPipe } from '~/pipes/round.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { UsagePipe } from '~/pipes/usage.pipe';
 import { RecipeService } from '~/services/recipe.service';
-import { RecipesService } from '~/store/recipes.service';
-import { SettingsService } from '~/store/settings.service';
+import { RecipesStore } from '~/store/recipes.store';
+import { SettingsStore } from '~/store/settings.store';
 
 type TooltipType =
   | 'item'
@@ -48,8 +48,8 @@ type TooltipType =
 })
 export class TooltipComponent {
   recipeSvc = inject(RecipeService);
-  recipesSvc = inject(RecipesService);
-  settingsSvc = inject(SettingsService);
+  recipesSvc = inject(RecipesStore);
+  settingsSvc = inject(SettingsStore);
 
   id = input.required<string>();
   type = input<TooltipType>('item');

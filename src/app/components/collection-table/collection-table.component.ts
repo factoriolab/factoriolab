@@ -20,7 +20,7 @@ import { IdType } from '~/models/enum/id-type';
 import { Entities } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { SettingsService } from '~/store/settings.service';
+import { SettingsStore } from '~/store/settings.store';
 
 type Entity = Category | Item | RecipeJson;
 
@@ -41,7 +41,7 @@ type Entity = Category | Item | RecipeJson;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionTableComponent {
-  settingsSvc = inject(SettingsService);
+  settingsSvc = inject(SettingsStore);
 
   ids = input.required<string[]>();
   type = input.required<IdType>();

@@ -1,4 +1,4 @@
-@if (mod() != null) {
+<!-- @if (mod() != null) {
   <p-card>
     <div class="d-flex flex-column">
       <div class="d-flex justify-content-center">
@@ -129,8 +129,6 @@
   </p-card>
 } @else {
   <p-progressSpinner></p-progressSpinner>
-}
+} -->
 
-<span class="position-absolute bottom-0 mb-3">{{
-  contentSvc.version$ | async
-}}</span>
+<span class="absolute bottom-0 mb-3">{{ contentSvc.version$ | async }}</span>

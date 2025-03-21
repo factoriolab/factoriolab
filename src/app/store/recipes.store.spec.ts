@@ -3,30 +3,30 @@ import { TestBed } from '@angular/core/testing';
 import { rational } from '~/models/rational';
 import { ItemId, Mocks, TestModule } from '~/tests';
 
-import { RecipesService } from './recipes.service';
+import { RecipesStore } from './recipes.store';
 
-describe('RecipesService', () => {
-  let service: RecipesService;
+describe('RecipesStore', () => {
+  let store: RecipesStore;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
-    service = TestBed.inject(RecipesService);
+    store = TestBed.inject(RecipesStore);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(store).toBeTruthy();
   });
 
   describe('recipesState', () => {
     it('should return the recipe settings', () => {
-      const result = service.settings();
+      const result = store.settings();
       expect(Object.keys(result).length).toEqual(
         Mocks.adjustedDataset.recipeIds.length,
       );
     });
 
     it('should reset invalid beacon totals', () => {
-      spyOn(service, 'state').and.returnValue({
+      spyOn(store, 'state').and.returnValue({
         [Mocks.item1.id]: {
           beacons: [
             {
@@ -38,16 +38,16 @@ describe('RecipesService', () => {
           ],
         },
       });
-      const result = service.settings();
+      const result = store.settings();
       expect(result[Mocks.item1.id].beacons?.[0].total).toBeUndefined();
     });
   });
 
   describe('adjustedDataset', () => {
     it('should call the utility method', () => {
-      spyOn(service.recipeSvc, 'adjustDataset');
-      service.adjustedDataset();
-      expect(service.recipeSvc.adjustDataset).toHaveBeenCalled();
+      spyOn(store.recipeSvc, 'adjustDataset');
+      store.adjustedDataset();
+      expect(store.recipeSvc.adjustDataset).toHaveBeenCalled();
     });
   });
 });

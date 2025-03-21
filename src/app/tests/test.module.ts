@@ -11,8 +11,8 @@ import {
   TranslateService,
 } from '~/services/translate.service';
 import { TestTranslateService } from '~/services/translate.service.spec';
-import { DatasetsService } from '~/store/datasets.service';
-import { SettingsService } from '~/store/settings.service';
+import { DatasetsStore } from '~/store/datasets.store';
+import { SettingsStore } from '~/store/settings.store';
 
 import { Mocks } from '.';
 
@@ -22,18 +22,18 @@ import { Mocks } from '.';
     { provide: DEFAULT_LANGUAGE, useValue: 'en' },
     { provide: TranslateService, useClass: TestTranslateService },
     {
-      provide: DatasetsService,
-      useFactory: (): DatasetsService => {
-        const datasetsSvc = new DatasetsService();
+      provide: DatasetsStore,
+      useFactory: (): DatasetsStore => {
+        const datasetsSvc = new DatasetsStore();
         datasetsSvc.loadData('1.1', Mocks.modData, Mocks.modHash);
         datasetsSvc.loadI18n('1.1', Language.Chinese, Mocks.modI18n);
         return datasetsSvc;
       },
     },
     {
-      provide: SettingsService,
-      useFactory: (): SettingsService => {
-        const settingsSvc = new SettingsService();
+      provide: SettingsStore,
+      useFactory: (): SettingsStore => {
+        const settingsSvc = new SettingsStore();
         settingsSvc.apply({ modId: '1.1', preset: Preset.Beacon8 });
         return settingsSvc;
       },

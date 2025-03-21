@@ -5,14 +5,14 @@ import { MenuItem } from 'primeng/api';
 import { map, switchMap } from 'rxjs';
 
 import { TranslateService } from '~/services/translate.service';
-import { RecipesService } from '~/store/recipes.service';
-import { SettingsService } from '~/store/settings.service';
+import { RecipesStore } from '~/store/recipes.store';
+import { SettingsStore } from '~/store/settings.store';
 
 @Component({ template: '' })
 export abstract class DetailComponent {
   route = inject(ActivatedRoute);
-  recipesSvc = inject(RecipesService);
-  settingsSvc = inject(SettingsService);
+  recipesSvc = inject(RecipesStore);
+  settingsSvc = inject(SettingsStore);
   translateSvc = inject(TranslateService);
 
   home = this.settingsSvc.modMenuItem;

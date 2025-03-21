@@ -22,7 +22,7 @@ import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { RecipeService } from '~/services/recipe.service';
-import { SettingsService } from '~/store/settings.service';
+import { SettingsStore } from '~/store/settings.store';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -46,7 +46,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 })
 export class ModulesComponent {
   recipeSvc = inject(RecipeService);
-  settingsSvc = inject(SettingsService);
+  settingsSvc = inject(SettingsStore);
 
   entity = input.required<Machine | Beacon>();
   modules = input.required<ModuleSettings[]>();

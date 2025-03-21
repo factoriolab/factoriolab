@@ -1,5 +1,4 @@
-import { MenuItem, SelectItem } from 'primeng/api';
-
+import { Option } from './option';
 import { Rational } from './rational';
 import { Step } from './step';
 
@@ -10,9 +9,9 @@ export interface StepOutput {
 }
 
 export interface StepDetail {
-  tabs: MenuItem[];
+  // tabs: MenuItem[];
   outputs: StepOutput[];
   recipeIds: string[];
   recipesEnabled: string[];
-  recipeOptions: SelectItem<string>[];
+  recipeOptions: Option[];
 }

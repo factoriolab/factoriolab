@@ -12,46 +12,46 @@ import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
-import { ObjectivesService } from './objectives.service';
+import { ObjectivesStore } from './objectives.store';
 
-describe('ObjectivesService', () => {
-  let service: ObjectivesService;
+describe('ObjectivesStore', () => {
+  let store: ObjectivesStore;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
-    service = TestBed.inject(ObjectivesService);
+    store = TestBed.inject(ObjectivesStore);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(store).toBeTruthy();
   });
 
   describe('baseObjectives', () => {
     it('should return the array of objectives', () => {
-      spyOn(service, 'state').and.returnValue(Mocks.objectivesState);
-      spyOn(service.settingsSvc, 'dataset').and.returnValue(
+      spyOn(store, 'state').and.returnValue(Mocks.objectivesState);
+      spyOn(store.settingsStr, 'dataset').and.returnValue(
         Mocks.adjustedDataset,
       );
-      const result = service.baseObjectives();
+      const result = store.baseObjectives();
       expect(result).toEqual(Mocks.objectivesList);
     });
   });
 
   describe('objectives', () => {
     it('should adjust recipe objectives based on settings', () => {
-      spyOn(service.recipeSvc, 'adjustObjective');
-      spyOn(service, 'baseObjectives').and.returnValue([Mocks.objective5]);
-      service.objectives();
-      expect(service.recipeSvc.adjustObjective).toHaveBeenCalledTimes(1);
+      spyOn(store.recipeSvc, 'adjustObjective');
+      spyOn(store, 'baseObjectives').and.returnValue([Mocks.objective5]);
+      store.objectives();
+      expect(store.recipeSvc.adjustObjective).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('normalizedObjectives', () => {
     it('should map objectives to rates', () => {
-      spyOn(service.rateSvc, 'objectiveNormalizedRate');
-      spyOn(service, 'objectives').and.returnValue(Mocks.objectives);
-      service.normalizedObjectives();
-      expect(service.rateSvc.objectiveNormalizedRate).toHaveBeenCalledTimes(
+      spyOn(store.rateSvc, 'objectiveNormalizedRate');
+      spyOn(store, 'objectives').and.returnValue(Mocks.objectives);
+      store.normalizedObjectives();
+      expect(store.rateSvc.objectiveNormalizedRate).toHaveBeenCalledTimes(
         Mocks.objectives.length,
       );
     });
@@ -59,28 +59,28 @@ describe('ObjectivesService', () => {
 
   describe('matrixResult', () => {
     it('should calculate using utility method', () => {
-      spyOn(service.simplexSvc, 'solve').and.returnValue({
+      spyOn(store.simplexSvc, 'solve').and.returnValue({
         steps: [],
         resultType: SimplexResultType.Skipped,
       });
-      service.matrixResult();
-      expect(service.simplexSvc.solve).toHaveBeenCalled();
+      store.matrixResult();
+      expect(store.simplexSvc.solve).toHaveBeenCalled();
     });
   });
 
   describe('steps', () => {
     it('should normalize steps after solution is found', () => {
-      spyOn(service.rateSvc, 'normalizeSteps');
-      service.steps();
-      expect(service.rateSvc.normalizeSteps).toHaveBeenCalled();
+      spyOn(store.rateSvc, 'normalizeSteps');
+      store.steps();
+      expect(store.rateSvc.normalizeSteps).toHaveBeenCalled();
     });
   });
 
   describe('stepsModified', () => {
     it('should determine which steps have modified item or recipe settings', () => {
-      spyOn(service, 'steps').and.returnValue(Mocks.steps);
-      spyOn(service, 'baseObjectives').and.returnValue(Mocks.objectives);
-      const result = service.stepsModified();
+      spyOn(store, 'steps').and.returnValue(Mocks.steps);
+      spyOn(store, 'baseObjectives').and.returnValue(Mocks.objectives);
+      const result = store.stepsModified();
       expect(result.items[Mocks.step1.itemId!]).toBeFalse();
       expect(result.recipes[Mocks.step1.recipeId!]).toBeFalse();
     });
@@ -88,7 +88,7 @@ describe('ObjectivesService', () => {
 
   describe('totals', () => {
     it('should get totals for columns', () => {
-      spyOn(service, 'steps').and.returnValue([
+      spyOn(store, 'steps').and.returnValue([
         {
           id: '0',
           itemId: ItemId.Coal,
@@ -141,7 +141,7 @@ describe('ObjectivesService', () => {
           },
         },
       ]);
-      const result = service.totals();
+      const result = store.totals();
       expect(result).toEqual({
         belts: { [ItemId.ExpressTransportBelt]: rational.one },
         wagons: { [ItemId.CargoWagon]: rational.one },
@@ -159,7 +159,7 @@ describe('ObjectivesService', () => {
     });
 
     it('should calculate dsp mining total by recipe', () => {
-      spyOn(service, 'steps').and.returnValue([
+      spyOn(store, 'steps').and.returnValue([
         {
           id: '01',
           recipeId: RecipeId.Coal,
@@ -170,14 +170,14 @@ describe('ObjectivesService', () => {
           },
         },
       ]);
-      spyOn(service.recipesSvc, 'adjustedDataset').and.returnValue(
+      spyOn(store.recipesStr, 'adjustedDataset').and.returnValue(
         spread(Mocks.adjustedDataset, {
           machineEntities: spread(Mocks.adjustedDataset.machineEntities, {
             [ItemId.MiningMachine]: { totalRecipe: true },
           }),
         }),
       );
-      const result = service.totals();
+      const result = store.totals();
       expect(result).toEqual({
         belts: {},
         wagons: {},
@@ -212,8 +212,8 @@ describe('ObjectivesService', () => {
           id: '2',
         },
       ];
-      spyOn(service, 'steps').and.returnValue(steps);
-      const result = service.stepDetails();
+      spyOn(store, 'steps').and.returnValue(steps);
+      const result = store.stepDetails();
       const recipeIds = [
         RecipeId.BasicOilProcessing,
         RecipeId.AdvancedOilProcessing,
@@ -302,16 +302,16 @@ describe('ObjectivesService', () => {
 
   describe('stepById', () => {
     it('should create a map of step ids to steps', () => {
-      spyOn(service, 'steps').and.returnValue(Mocks.steps);
-      const result = service.stepById();
+      spyOn(store, 'steps').and.returnValue(Mocks.steps);
+      const result = store.stepById();
       expect(Object.keys(result).length).toEqual(Mocks.steps.length);
     });
   });
 
   describe('stepByItemEntities', () => {
     it('should create a map of item ids to steps', () => {
-      spyOn(service, 'steps').and.returnValue(Mocks.steps);
-      const result = service.stepByItemEntities();
+      spyOn(store, 'steps').and.returnValue(Mocks.steps);
+      const result = store.stepByItemEntities();
       expect(Object.keys(result).length).toEqual(Mocks.steps.length);
     });
   });
@@ -345,8 +345,8 @@ describe('ObjectivesService', () => {
           },
         },
       ];
-      spyOn(service, 'steps').and.returnValue(steps);
-      const result = service.stepTree();
+      spyOn(store, 'steps').and.returnValue(steps);
+      const result = store.stepTree();
       expect(result).toEqual({
         ['0']: [],
         ['1']: [true],
@@ -359,42 +359,36 @@ describe('ObjectivesService', () => {
 
   describe('effectivePowerUnit', () => {
     it('should calculate an auto power unit as kW', () => {
-      spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(
-        PowerUnit.Auto,
-      );
-      expect(service.effectivePowerUnit()).toEqual(PowerUnit.kW);
+      spyOn(store.preferencesStr, 'powerUnit').and.returnValue(PowerUnit.Auto);
+      expect(store.effectivePowerUnit()).toEqual(PowerUnit.kW);
     });
 
     it('should calculate auto power unit as MW', () => {
-      spyOn(service, 'steps').and.returnValue([
+      spyOn(store, 'steps').and.returnValue([
         { id: '0', power: rational(1000n) },
       ]);
-      spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(
-        PowerUnit.Auto,
-      );
-      expect(service.effectivePowerUnit()).toEqual(PowerUnit.MW);
+      spyOn(store.preferencesStr, 'powerUnit').and.returnValue(PowerUnit.Auto);
+      expect(store.effectivePowerUnit()).toEqual(PowerUnit.MW);
     });
 
     it('should calculate auto power unit as GW', () => {
-      spyOn(service, 'steps').and.returnValue([
+      spyOn(store, 'steps').and.returnValue([
         { id: '0', power: rational(1000000n) },
         { id: '1', power: rational(1000000n) },
       ]);
-      spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(
-        PowerUnit.Auto,
-      );
-      expect(service.effectivePowerUnit()).toEqual(PowerUnit.GW);
+      spyOn(store.preferencesStr, 'powerUnit').and.returnValue(PowerUnit.Auto);
+      expect(store.effectivePowerUnit()).toEqual(PowerUnit.GW);
     });
 
     it('should override with specified power unit', () => {
-      spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(PowerUnit.GW);
-      expect(service.effectivePowerUnit()).toEqual(PowerUnit.GW);
+      spyOn(store.preferencesStr, 'powerUnit').and.returnValue(PowerUnit.GW);
+      expect(store.effectivePowerUnit()).toEqual(PowerUnit.GW);
     });
   });
 
   describe('recipesModified', () => {
     it('should determine whether columns are modified', () => {
-      spyOn(service.recipesSvc, 'state').and.returnValue({
+      spyOn(store.recipesStr, 'state').and.returnValue({
         [RecipeId.Coal]: {
           machineId: undefined,
           modules: undefined,
@@ -409,7 +403,7 @@ describe('ObjectivesService', () => {
           ],
         },
       });
-      const result = service.recipesModified();
+      const result = store.recipesModified();
       expect(result.machines).toBeTrue();
       expect(result.beacons).toBeTrue();
       expect(result.cost).toBeFalse();
@@ -431,11 +425,11 @@ describe('ObjectivesService', () => {
           },
         ],
       };
-      spyOn(service, 'baseObjectives').and.returnValue([objective]);
-      spyOn(service.recipesSvc, 'state').and.returnValue({
+      spyOn(store, 'baseObjectives').and.returnValue([objective]);
+      spyOn(store.recipesStr, 'state').and.returnValue({
         [RecipeId.Coal]: {},
       });
-      const result = service.recipesModified();
+      const result = store.recipesModified();
       expect(result.machines).toBeTrue();
       expect(result.beacons).toBeTrue();
       expect(result.cost).toBeFalse();
@@ -444,19 +438,19 @@ describe('ObjectivesService', () => {
 
   describe('effects', () => {
     it('should automatically trigger adjustDisplayRate', () => {
-      service.settingsSvc.load$.next();
-      spyOn(service, 'adjustDisplayRate');
+      store.settingsStr.load$.next();
+      spyOn(store, 'adjustDisplayRate');
       TestBed.flushEffects();
-      service.settingsSvc.apply({ displayRate: DisplayRate.PerHour });
+      store.settingsStr.apply({ displayRate: DisplayRate.PerHour });
       TestBed.flushEffects();
-      expect(service.adjustDisplayRate).toHaveBeenCalledWith(rational(60n));
+      expect(store.adjustDisplayRate).toHaveBeenCalledWith(rational(60n));
     });
   });
 
   describe('add', () => {
     it('should add the objective', () => {
-      service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
-      expect(service.state()).toEqual({
+      store.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
+      expect(store.state()).toEqual({
         ['1']: {
           id: '1',
           targetId: ItemId.Coal,
@@ -468,29 +462,29 @@ describe('ObjectivesService', () => {
     });
 
     it('should use the last value', () => {
-      service.create({
+      store.create({
         targetId: ItemId.Coal,
         value: rational(60n),
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       });
-      service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
-      expect(service.state()['1'].value).toEqual(rational(60n));
+      store.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
+      expect(store.state()['1'].value).toEqual(rational(60n));
     });
   });
 
   describe('remove', () => {
     it('should remove an objective and re-sort remaining objectives', () => {
-      service.create({
+      store.create({
         targetId: ItemId.Coal,
         value: rational.one,
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       });
-      service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
-      service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
-      service.remove('2');
-      expect(service.state()).toEqual({
+      store.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
+      store.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
+      store.remove('2');
+      expect(store.state()).toEqual({
         ['1']: {
           id: '1',
           targetId: ItemId.Coal,
@@ -511,8 +505,8 @@ describe('ObjectivesService', () => {
 
   describe('setOrder', () => {
     it('should map objectives to an ids array', () => {
-      service.setOrder(Mocks.objectives);
-      expect(Object.keys(service.state())).toEqual(
+      store.setOrder(Mocks.objectives);
+      expect(Object.keys(store.state())).toEqual(
         Mocks.objectives.map((o) => o.id),
       );
     });
@@ -520,9 +514,9 @@ describe('ObjectivesService', () => {
 
   describe('adjustDisplayRate', () => {
     it('should adjust display rates', () => {
-      service.load(Mocks.objectivesState);
-      service.adjustDisplayRate(rational(2n));
-      const result = service.state();
+      store.load(Mocks.objectivesState);
+      store.adjustDisplayRate(rational(2n));
+      const result = store.state();
       expect(result['1'].value).toEqual(rational(2n));
       expect(result['3'].value).toEqual(rational.one);
     });

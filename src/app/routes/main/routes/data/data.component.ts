@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { SettingsService } from '~/store/settings.service';
+import { SettingsStore } from '~/store/settings.store';
 
 @Component({
   selector: 'lab-data',
@@ -22,7 +22,7 @@ import { SettingsService } from '~/store/settings.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent {
-  settingsSvc = inject(SettingsService);
+  settingsSvc = inject(SettingsStore);
 
   home = this.settingsSvc.modMenuItem;
   data = this.settingsSvc.dataset;

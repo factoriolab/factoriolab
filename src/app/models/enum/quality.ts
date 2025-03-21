@@ -1,7 +1,6 @@
-import { SelectItem } from 'primeng/api';
-
 import { Item, ItemJson } from '../data/item';
 import { Recipe, RecipeJson } from '../data/recipe';
+import { Option } from '../option';
 import { Entities } from '../utils';
 
 export enum Quality {
@@ -13,7 +12,7 @@ export enum Quality {
   Legendary = 5,
 }
 
-export const qualityFilterOptions: SelectItem<Quality>[] = [
+export const qualityFilterOptions: Option<Quality>[] = [
   { value: Quality.Any, label: 'options.quality.any' },
   { value: Quality.Normal, label: 'options.quality.normal' },
   { value: Quality.Uncommon, label: 'options.quality.uncommon' },

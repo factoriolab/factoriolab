@@ -1,5 +1,5 @@
-<!-- @if (dataSvc.error$ | async; as error) {
-  <p-dialog
+@if (dataSvc.error$ | async; as error) {
+  <!-- <p-dialog
     [visible]="true"
     [modal]="true"
     [draggable]="false"
@@ -31,10 +31,7 @@
   </p-dialog>
   <div class="d-flex align-items-end justify-content-center vh-100 pb-4">
     <span>{{ contentSvc.version$ | async }}</span>
-  </div>
+  </div> -->
 } @else {
   <router-outlet></router-outlet>
 }
-
-<lab-content></lab-content> -->
-<h1 class="text-3xl font-bold underline">Hello world!</h1>

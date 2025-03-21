@@ -10,10 +10,7 @@ import { rational } from '~/models/rational';
 import { CostKey, CostSettings } from '~/models/settings/cost-settings';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
-import {
-  initialSettingsState,
-  SettingsService,
-} from '~/store/settings.service';
+import { initialSettingsState, SettingsStore } from '~/store/settings.store';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { DialogComponent } from '../modal';
@@ -35,7 +32,7 @@ import { DialogComponent } from '../modal';
 })
 export class CostsComponent extends DialogComponent {
   contentSvc = inject(ContentService);
-  settingsSvc = inject(SettingsService);
+  settingsSvc = inject(SettingsStore);
 
   editValue = spread(initialSettingsState.costs);
 

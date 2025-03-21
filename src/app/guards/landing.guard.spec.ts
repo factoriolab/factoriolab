@@ -3,14 +3,14 @@ import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { RouterService } from '~/services/router.service';
-import { PreferencesService } from '~/store/preferences.service';
+import { PreferencesStore } from '~/store/preferences.store';
 import { Mocks, TestModule } from '~/tests';
 
 import { canActivateLanding } from './landing.guard';
 
 describe('canActivateLanding', () => {
   let router: Router;
-  let preferencesSvc: PreferencesService;
+  let preferencesSvc: PreferencesStore;
   let routerSvc: RouterService;
 
   beforeEach(() => {
@@ -48,7 +48,7 @@ describe('canActivateLanding', () => {
     });
 
     router = TestBed.inject(Router);
-    preferencesSvc = TestBed.inject(PreferencesService);
+    preferencesSvc = TestBed.inject(PreferencesStore);
     routerSvc = TestBed.inject(RouterService);
   });
 

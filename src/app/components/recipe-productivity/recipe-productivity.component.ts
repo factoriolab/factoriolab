@@ -9,8 +9,8 @@ import { Rational, rational } from '~/models/rational';
 import { Entities } from '~/models/utils';
 import { IconClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { RecipesService } from '~/store/recipes.service';
-import { SettingsService } from '~/store/settings.service';
+import { RecipesStore } from '~/store/recipes.store';
+import { SettingsStore } from '~/store/settings.store';
 
 import { DialogComponent } from '../modal';
 
@@ -29,8 +29,8 @@ import { DialogComponent } from '../modal';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeProductivityComponent extends DialogComponent {
-  recipesSvc = inject(RecipesService);
-  settingsSvc = inject(SettingsService);
+  recipesSvc = inject(RecipesStore);
+  settingsSvc = inject(SettingsStore);
 
   recipesState = this.recipesSvc.settings;
   data = this.settingsSvc.dataset;

@@ -1,6 +1,5 @@
-import { SelectItem } from 'primeng/api';
-
 import { Flag } from '../flags';
+import { Option } from '../option';
 import { DisplayRateInfo } from './display-rate';
 
 export enum ObjectiveUnit {
@@ -13,8 +12,8 @@ export enum ObjectiveUnit {
 export function objectiveUnitOptions(
   dispRateInfo: DisplayRateInfo,
   flags: Set<Flag>,
-): SelectItem<ObjectiveUnit>[] {
-  const result: SelectItem<ObjectiveUnit>[] = [
+): Option<ObjectiveUnit>[] {
+  const result: Option<ObjectiveUnit>[] = [
     { value: ObjectiveUnit.Items, label: dispRateInfo.itemsLabel },
     { value: ObjectiveUnit.Belts, label: 'options.objectiveUnit.belts' },
     { value: ObjectiveUnit.Wagons, label: dispRateInfo.wagonsLabel },

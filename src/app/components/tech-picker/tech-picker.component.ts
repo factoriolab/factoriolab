@@ -27,8 +27,8 @@ import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
 import { TranslateService } from '~/services/translate.service';
-import { PreferencesService } from '~/store/preferences.service';
-import { SettingsService } from '~/store/settings.service';
+import { PreferencesStore } from '~/store/preferences.store';
+import { SettingsStore } from '~/store/settings.store';
 
 import { DialogComponent } from '../modal';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -57,8 +57,8 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
 export class TechPickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
   contentSvc = inject(ContentService);
-  preferencesSvc = inject(PreferencesService);
-  settingsSvc = inject(SettingsService);
+  preferencesSvc = inject(PreferencesStore);
+  settingsSvc = inject(SettingsStore);
   translateSvc = inject(TranslateService);
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');

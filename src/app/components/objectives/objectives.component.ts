@@ -37,11 +37,11 @@ import { ContentService } from '~/services/content.service';
 import { RateService } from '~/services/rate.service';
 import { TrackService } from '~/services/track.service';
 import { TranslateService } from '~/services/translate.service';
-import { ItemsService } from '~/store/items.service';
-import { ObjectivesService } from '~/store/objectives.service';
-import { PreferencesService } from '~/store/preferences.service';
-import { RecipesService } from '~/store/recipes.service';
-import { SettingsService } from '~/store/settings.service';
+import { ItemsStore } from '~/store/items.store';
+import { ObjectivesStore } from '~/store/objectives.store';
+import { PreferencesStore } from '~/store/preferences.store';
+import { RecipesStore } from '~/store/recipes.store';
+import { SettingsStore } from '~/store/settings.store';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { PickerComponent } from '../picker/picker.component';
@@ -73,12 +73,12 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 })
 export class ObjectivesComponent {
   contentSvc = inject(ContentService);
-  itemsSvc = inject(ItemsService);
-  objectivesSvc = inject(ObjectivesService);
-  preferencesSvc = inject(PreferencesService);
+  itemsSvc = inject(ItemsStore);
+  objectivesSvc = inject(ObjectivesStore);
+  preferencesSvc = inject(PreferencesStore);
   rateSvc = inject(RateService);
-  recipesSvc = inject(RecipesService);
-  settingsSvc = inject(SettingsService);
+  recipesSvc = inject(RecipesStore);
+  settingsSvc = inject(SettingsStore);
   trackSvc = inject(TrackService);
   translateSvc = inject(TranslateService);
 

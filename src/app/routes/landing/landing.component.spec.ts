@@ -25,20 +25,20 @@ describe('LandingComponent', () => {
 
   describe('selectItem', () => {
     it('should add an item objective and navigate to the list', () => {
-      spyOn(component.objectivesSvc, 'create');
+      spyOn(component.objectivesStr, 'create');
       spyOn(component.router, 'navigate');
       component.selectItem(ItemId.IronPlate);
-      expect(component.objectivesSvc.create).toHaveBeenCalled();
+      expect(component.objectivesStr.create).toHaveBeenCalled();
       expect(component.router.navigate).toHaveBeenCalled();
     });
   });
 
   describe('selectRecipe', () => {
     it('should add a recipe objective and navigate to the list', () => {
-      spyOn(component.objectivesSvc, 'create');
+      spyOn(component.objectivesStr, 'create');
       spyOn(component.router, 'navigate');
       component.selectRecipe(RecipeId.IronPlate);
-      expect(component.objectivesSvc.create).toHaveBeenCalled();
+      expect(component.objectivesStr.create).toHaveBeenCalled();
       expect(component.router.navigate).toHaveBeenCalled();
     });
   });

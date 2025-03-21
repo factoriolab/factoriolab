@@ -54,10 +54,10 @@ import { ContentService } from '~/services/content.service';
 import { RecipeService } from '~/services/recipe.service';
 import { RouterService } from '~/services/router.service';
 import { TranslateService } from '~/services/translate.service';
-import { DatasetsService } from '~/store/datasets.service';
-import { MachinesService } from '~/store/machines.service';
-import { PreferencesService } from '~/store/preferences.service';
-import { SettingsService } from '~/store/settings.service';
+import { DatasetsStore } from '~/store/datasets.store';
+import { MachinesStore } from '~/store/machines.store';
+import { PreferencesStore } from '~/store/preferences.store';
+import { SettingsStore } from '~/store/settings.store';
 
 import { BeaconsOverlayComponent } from '../beacons-overlay/beacons-overlay.component';
 import { CostsComponent } from '../costs/costs.component';
@@ -110,12 +110,12 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 export class SettingsComponent {
   router = inject(Router);
   contentSvc = inject(ContentService);
-  datasetsSvc = inject(DatasetsService);
-  machinesSvc = inject(MachinesService);
-  preferencesSvc = inject(PreferencesService);
+  datasetsSvc = inject(DatasetsStore);
+  machinesSvc = inject(MachinesStore);
+  preferencesSvc = inject(PreferencesStore);
   recipeSvc = inject(RecipeService);
   routerSvc = inject(RouterService);
-  settingsSvc = inject(SettingsService);
+  settingsSvc = inject(SettingsStore);
   translateSvc = inject(TranslateService);
 
   @HostBinding('class.active') @Input() active = false;

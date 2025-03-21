@@ -42,19 +42,16 @@ import { Step } from '~/models/step';
 import { Entities } from '~/models/utils';
 import { RecipeService } from '~/services/recipe.service';
 import { ThemeValues } from '~/services/theme.service';
-import { ItemsService, ItemsSettings } from '~/store/items.service';
-import { MachinesService, MachinesSettings } from '~/store/machines.service';
-import { ObjectivesState } from '~/store/objectives.service';
-import { PreferencesState } from '~/store/preferences.service';
+import { ItemsStore, ItemsSettings } from '~/store/items.store';
+import { MachinesStore, MachinesSettings } from '~/store/machines.store';
+import { ObjectivesState } from '~/store/objectives.store';
+import { PreferencesState } from '~/store/preferences.store';
 import {
-  RecipesService,
+  RecipesStore,
   RecipesSettings,
   RecipesState,
-} from '~/store/recipes.service';
-import {
-  initialSettingsState,
-  SettingsService,
-} from '~/store/settings.service';
+} from '~/store/recipes.store';
+import { initialSettingsState, SettingsStore } from '~/store/settings.store';
 
 import { ItemId } from './item-id';
 import { RecipeId } from './recipe-id';
@@ -320,10 +317,10 @@ export class MockComponent {}
 beforeAll(() => {
   TestBed.configureTestingModule({ imports: [TestModule] });
   const recipeSvc = TestBed.inject(RecipeService);
-  const itemsSvc = TestBed.inject(ItemsService);
-  const machinesSvc = TestBed.inject(MachinesService);
-  const recipesSvc = TestBed.inject(RecipesService);
-  const settingsSvc = TestBed.inject(SettingsService);
+  const itemsSvc = TestBed.inject(ItemsStore);
+  const machinesSvc = TestBed.inject(MachinesStore);
+  const recipesSvc = TestBed.inject(RecipesStore);
+  const settingsSvc = TestBed.inject(SettingsStore);
 
   defaults = settingsSvc.computeDefaults(mod, Preset.Beacon8)!;
   getDataset = (): Dataset => {

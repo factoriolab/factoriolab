@@ -14,9 +14,9 @@ import { FlowSettings } from '~/models/settings/flow-settings';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import {
   initialPreferencesState,
-  PreferencesService,
-} from '~/store/preferences.service';
-import { SettingsService } from '~/store/settings.service';
+  PreferencesStore,
+} from '~/store/preferences.store';
+import { SettingsStore } from '~/store/settings.store';
 
 import { DialogComponent } from '../modal';
 
@@ -38,8 +38,8 @@ const initialValue = initialPreferencesState.flowSettings;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowSettingsComponent extends DialogComponent {
-  preferencesSvc = inject(PreferencesService);
-  settingsSvc = inject(SettingsService);
+  preferencesSvc = inject(PreferencesStore);
+  settingsSvc = inject(SettingsStore);
 
   linkValueOptions = this.settingsSvc.linkValueOptions;
 

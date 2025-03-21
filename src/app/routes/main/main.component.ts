@@ -13,8 +13,8 @@ import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
 import { TranslateService } from '~/services/translate.service';
-import { ObjectivesService } from '~/store/objectives.service';
-import { SettingsService } from '~/store/settings.service';
+import { ObjectivesStore } from '~/store/objectives.store';
+import { SettingsStore } from '~/store/settings.store';
 
 @Component({
   selector: 'lab-main',
@@ -34,8 +34,8 @@ import { SettingsService } from '~/store/settings.service';
 })
 export class MainComponent {
   contentSvc = inject(ContentService);
-  objectivesSvc = inject(ObjectivesService);
-  settingsSvc = inject(SettingsService);
+  objectivesSvc = inject(ObjectivesStore);
+  settingsSvc = inject(SettingsStore);
   translateSvc = inject(TranslateService);
 
   mod = this.settingsSvc.mod;
