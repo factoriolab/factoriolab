@@ -474,6 +474,7 @@ export class SettingsService extends Store<SettingsState> {
       coalesce(mod?.locations, []),
       environment.debug,
     );
+    const prodUpgrades = coalesce(mod?.prodUpgrades, {});
 
     // Apply localization
     if (i18n) {
@@ -658,11 +659,17 @@ export class SettingsService extends Store<SettingsState> {
             }),
           );
         }
+        for (const techId in prodUpgrades) {
+          // http://www.ecma-international.org/ecma-262/5.1/#sec-15.4.4.18
+          // “The range of elements processed by forEach is set before the first call”
+          prodUpgrades[techId].forEach((recipeId) => {
+            const id = qualityId(recipeId, quality);
+            if (recipeQIds.has(id)) prodUpgrades[techId].push(id);
+          });
+        }
       });
     }
-    const canProdUpgradeRecipeIds = recipes
-      .filter((r) => r.flags.has('canProdUpgrade'))
-      .map((r) => r.id);
+    console.log(prodUpgrades);
 
     // Filter for item types
     const beaconIds = items
@@ -818,7 +825,8 @@ export class SettingsService extends Store<SettingsState> {
       recipeIds,
       recipeQIds,
       recipeEntities,
-      canProdUpgradeRecipeIds,
+      prodUpgradeTechs: Object.keys(prodUpgrades),
+      prodUpgrades,
       technologyIds,
       technologyEntities,
       locationIds,

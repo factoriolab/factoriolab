@@ -11,6 +11,7 @@ export interface ModData {
   icons: IconJson[];
   items: ItemJson[];
   recipes: RecipeJson[];
+  prodUpgrades?: Entities<string[]>; // {technology recipe ID => upgraded recipe IDs}
   limitations?: Entities<string[]>;
   locations?: CategoryJson[];
   defaults?: DefaultsJson;

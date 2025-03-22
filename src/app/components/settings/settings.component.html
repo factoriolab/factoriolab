@@ -1243,7 +1243,7 @@
         data().flags.has('miningSpeed') ||
         data().flags.has('miningProductivity') ||
         data().flags.has('researchSpeed') ||
-        data().canProdUpgradeRecipeIds.length
+        data().prodUpgradeTechs.length
       ) {
         <p-accordionTab [header]="'settings.bonuses' | translate">
           <div class="p-fluid">
@@ -1346,7 +1346,7 @@
                 </div>
               </div>
             }
-            @if (data().canProdUpgradeRecipeIds.length) {
+            @if (data().prodUpgradeTechs.length) {
               <div class="pb-3">
                 <button
                   pButton
