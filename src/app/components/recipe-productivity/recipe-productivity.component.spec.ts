@@ -35,7 +35,8 @@ describe('RecipeProductivityComponent', () => {
   describe('open', () => {
     it('should set up the editValue and show the dialog', () => {
       const data = Mocks.getDataset();
-      data.canProdUpgradeRecipeIds.push(RecipeId.SteelPlate);
+      data.prodUpgradeTechs.push(RecipeId.SteelPlate);
+      data.prodUpgrades[RecipeId.SteelPlate] = [RecipeId.SteelPlate];
       spyOn(component, 'data').and.returnValue(data);
       spyOn(component, 'show');
       component.editValue = null as any;
@@ -50,7 +51,8 @@ describe('RecipeProductivityComponent', () => {
   describe('reset', () => {
     it('should set the value back to the initial state', () => {
       const data = Mocks.getDataset();
-      data.canProdUpgradeRecipeIds.push(RecipeId.SteelPlate);
+      data.prodUpgradeTechs.push(RecipeId.SteelPlate);
+      data.prodUpgrades[RecipeId.SteelPlate] = [RecipeId.SteelPlate];
       spyOn(component, 'data').and.returnValue(data);
       component.editValue = null as any;
       component.reset();
@@ -63,7 +65,8 @@ describe('RecipeProductivityComponent', () => {
   describe('save', () => {
     it('should dispatch the action', () => {
       const data = Mocks.getDataset();
-      data.canProdUpgradeRecipeIds.push(RecipeId.SteelPlate);
+      data.prodUpgradeTechs.push(RecipeId.SteelPlate);
+      data.prodUpgrades[RecipeId.SteelPlate] = [RecipeId.SteelPlate];
       spyOn(component, 'data').and.returnValue(data);
       spyOn(component.recipesSvc, 'updateEntityField');
       component.save();

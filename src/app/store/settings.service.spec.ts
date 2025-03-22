@@ -406,14 +406,13 @@ describe('SettingsService', () => {
     });
 
     it('should build list of recipes that allow prod upgrades', () => {
-      const recipes = Mocks.mod.recipes.map((r) =>
-        r.id === RecipeId.SteelChest
-          ? spread(r, { flags: ['canProdUpgrade'] })
-          : r,
+      const prodUpgrades = { [RecipeId.SteelChest]: [RecipeId.SteelChest] };
+      spyOn(service, 'mod').and.returnValue(
+        spread(Mocks.mod, { prodUpgrades }),
       );
-      spyOn(service, 'mod').and.returnValue(spread(Mocks.mod, { recipes }));
       const result = service.dataset();
-      expect(result.canProdUpgradeRecipeIds).toEqual([RecipeId.SteelChest]);
+      expect(result.prodUpgradeTechs).toEqual([RecipeId.SteelChest]);
+      expect(result.prodUpgrades).toEqual(prodUpgrades);
     });
   });
 
