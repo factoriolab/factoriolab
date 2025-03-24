@@ -800,9 +800,11 @@ export class SettingsService extends Store<SettingsState> {
     }
 
     const prodUpgradeTechs: string[] = [];
+    const prodUpgrades: Entities<string[]> = {};
     for (const techId in technologyEntities) {
       if (technologyEntities[techId].prodUpgrades) {
         prodUpgradeTechs.push(techId);
+        prodUpgrades[techId] = technologyEntities[techId].prodUpgrades;
       }
     }
 
@@ -843,6 +845,7 @@ export class SettingsService extends Store<SettingsState> {
       recipeQIds,
       recipeEntities,
       prodUpgradeTechs,
+      prodUpgrades,
       technologyIds,
       technologyEntities,
       locationIds,

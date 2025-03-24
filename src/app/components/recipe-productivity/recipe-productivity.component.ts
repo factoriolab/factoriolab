@@ -49,8 +49,7 @@ export class RecipeProductivityComponent extends DialogComponent {
   open(): void {
     this.editValue = this.data().prodUpgradeTechs.reduce(
       (e: Entities<Rational>, techId) => {
-        const recipeId =
-          this.data().technologyEntities[techId].prodUpgrades![0];
+        const recipeId = this.data().prodUpgrades[techId][0];
         e[techId] = this.recipesState()[recipeId].productivity ?? rational.zero;
         return e;
       },
@@ -71,16 +70,14 @@ export class RecipeProductivityComponent extends DialogComponent {
 
   save(): void {
     this.data().prodUpgradeTechs.forEach((techId) => {
-      this.data().technologyEntities[techId].prodUpgrades!.forEach(
-        (upgradedRecipe) => {
-          this.recipesSvc.updateEntityField(
-            upgradedRecipe,
-            'productivity',
-            this.editValue[techId],
-            rational.zero,
-          );
-        },
-      );
+      this.data().prodUpgrades[techId].forEach((upgradedRecipe) => {
+        this.recipesSvc.updateEntityField(
+          upgradedRecipe,
+          'productivity',
+          this.editValue[techId],
+          rational.zero,
+        );
+      });
     });
   }
 }
