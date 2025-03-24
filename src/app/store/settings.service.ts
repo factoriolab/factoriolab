@@ -669,7 +669,6 @@ export class SettingsService extends Store<SettingsState> {
         }
       });
     }
-    console.log(prodUpgrades);
 
     // Filter for item types
     const beaconIds = items
