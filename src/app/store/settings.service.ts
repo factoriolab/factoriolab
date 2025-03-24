@@ -660,12 +660,11 @@ export class SettingsService extends Store<SettingsState> {
           );
         }
         for (const techId in prodUpgrades) {
-          // http://www.ecma-international.org/ecma-262/5.1/#sec-15.4.4.18
-          // “The range of elements processed by forEach is set before the first call”
-          prodUpgrades[techId].forEach((recipeId) => {
+          const baseRecipes = prodUpgrades[techId].slice();
+          for (const recipeId of baseRecipes) {
             const id = qualityId(recipeId, quality);
             if (recipeQIds.has(id)) prodUpgrades[techId].push(id);
-          });
+          }
         }
       });
     }
