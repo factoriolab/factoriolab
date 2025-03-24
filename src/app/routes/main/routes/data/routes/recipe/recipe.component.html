@@ -383,32 +383,6 @@
         </tr>
       }
     }
-    @if (recipeR()?.flags?.has('canProdUpgrade')) {
-      <tr>
-        <th>{{ 'data.productivity' | translate }}</th>
-        <td>
-          <p-inputNumber
-            #prodInput
-            prefix="+"
-            suffix="%"
-            [min]="0"
-            [step]="10"
-            [showButtons]="true"
-            incrementButtonClass="p-button-outlined"
-            decrementButtonClass="p-button-outlined"
-            [ngModel]="recipeSettings()?.productivity?.toNumber() ?? 0"
-            (onBlur)="
-              recipesSvc.updateEntityField(
-                id(),
-                'productivity',
-                rational(prodInput.value ?? 0),
-                rational(0)
-              )
-            "
-          ></p-inputNumber>
-        </td>
-      </tr>
-    }
     @if (recipeR()?.cost; as cost) {
       <tr>
         <th>{{ 'data.cost' | translate }}</th>

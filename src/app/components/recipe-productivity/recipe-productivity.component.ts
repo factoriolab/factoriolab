@@ -47,9 +47,10 @@ export class RecipeProductivityComponent extends DialogComponent {
   }
 
   open(): void {
-    this.editValue = this.data().canProdUpgradeRecipeIds.reduce(
-      (e: Entities<Rational>, r) => {
-        e[r] = this.recipesState()[r].productivity ?? rational.zero;
+    this.editValue = this.data().prodUpgradeTechs.reduce(
+      (e: Entities<Rational>, techId) => {
+        const recipeId = this.data().prodUpgrades[techId][0];
+        e[techId] = this.recipesState()[recipeId].productivity ?? rational.zero;
         return e;
       },
       {},
@@ -58,9 +59,9 @@ export class RecipeProductivityComponent extends DialogComponent {
   }
 
   reset(): void {
-    this.editValue = this.data().canProdUpgradeRecipeIds.reduce(
-      (e: Entities<Rational>, r) => {
-        e[r] = rational.zero;
+    this.editValue = this.data().prodUpgradeTechs.reduce(
+      (e: Entities<Rational>, techId) => {
+        e[techId] = rational.zero;
         return e;
       },
       {},
@@ -68,13 +69,15 @@ export class RecipeProductivityComponent extends DialogComponent {
   }
 
   save(): void {
-    this.data().canProdUpgradeRecipeIds.forEach((r) => {
-      this.recipesSvc.updateEntityField(
-        r,
-        'productivity',
-        this.editValue[r],
-        rational.zero,
-      );
+    this.data().prodUpgradeTechs.forEach((techId) => {
+      this.data().prodUpgrades[techId].forEach((upgradedRecipe) => {
+        this.recipesSvc.updateEntityField(
+          upgradedRecipe,
+          'productivity',
+          this.editValue[techId],
+          rational.zero,
+        );
+      });
     });
   }
 }

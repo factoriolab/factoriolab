@@ -14,7 +14,7 @@
   <p-table
     responsiveLayout="scroll"
     styleClass="p-datatable-sm"
-    [value]="data().canProdUpgradeRecipeIds"
+    [value]="data().prodUpgradeTechs"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -22,13 +22,13 @@
         <th>{{ 'data.productivity' | translate }}</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-recipeId>
-      @if (data().recipeEntities[recipeId]; as recipe) {
+    <ng-template pTemplate="body" let-techId>
+      @if (data().itemEntities[techId]; as tech) {
         <tr>
           <td>
             <div class="d-flex align-items-center gap-2">
-              <i [class]="recipeId | iconClass: 'recipe'"></i>
-              <span>{{ recipe.name }}</span>
+              <i [class]="techId | iconClass: 'recipe'"></i>
+              <span>{{ tech.name }}</span>
             </div>
           </td>
           <td>
@@ -41,8 +41,8 @@
               [showButtons]="true"
               incrementButtonClass="p-button-outlined"
               decrementButtonClass="p-button-outlined"
-              [ngModel]="editValue[recipeId]?.toNumber() ?? 0"
-              (onBlur)="editValue[recipeId] = rational(prodInput.value ?? 0)"
+              [ngModel]="editValue[techId]?.toNumber() ?? 0"
+              (onBlur)="editValue[techId] = rational(prodInput.value ?? 0)"
             ></p-inputNumber>
           </td>
         </tr>

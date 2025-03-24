@@ -660,9 +660,6 @@ export class SettingsService extends Store<SettingsState> {
         }
       });
     }
-    const canProdUpgradeRecipeIds = recipes
-      .filter((r) => r.flags.has('canProdUpgrade'))
-      .map((r) => r.id);
 
     // Filter for item types
     const beaconIds = items
@@ -782,6 +779,35 @@ export class SettingsService extends Store<SettingsState> {
       return e;
     }, {});
 
+    if (_flags.has('quality')) {
+      const qualities = [
+        Quality.Uncommon,
+        Quality.Rare,
+        Quality.Epic,
+        Quality.Legendary,
+      ];
+      for (const quality of qualities) {
+        for (const techId in technologyEntities) {
+          const tech = technologyEntities[techId];
+          if (tech.prodUpgrades) {
+            for (const recipeId of tech.prodUpgrades.slice()) {
+              const id = qualityId(recipeId, quality);
+              if (recipeQIds.has(id)) tech.prodUpgrades.push(id);
+            }
+          }
+        }
+      }
+    }
+
+    const prodUpgradeTechs: string[] = [];
+    const prodUpgrades: Entities<string[]> = {};
+    for (const techId in technologyEntities) {
+      if (technologyEntities[techId].prodUpgrades) {
+        prodUpgradeTechs.push(techId);
+        prodUpgrades[techId] = technologyEntities[techId].prodUpgrades;
+      }
+    }
+
     return {
       game,
       modId: coalesce(mod?.id, DEFAULT_MOD),
@@ -818,7 +844,8 @@ export class SettingsService extends Store<SettingsState> {
       recipeIds,
       recipeQIds,
       recipeEntities,
-      canProdUpgradeRecipeIds,
+      prodUpgradeTechs,
+      prodUpgrades,
       technologyIds,
       technologyEntities,
       locationIds,
