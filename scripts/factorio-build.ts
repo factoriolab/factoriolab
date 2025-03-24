@@ -715,7 +715,6 @@ async function processMod(): Promise<void> {
       if (upgradedRecipes.length) prodUpgrades[id] = upgradedRecipes;
     }
   }
-  if (Object.keys(prodUpgrades).length) modData.prodUpgrades = prodUpgrades;
 
   const recipesEnabled: Entities<RecipePrototype> = {};
   const fixedRecipe = new Set<string>();
@@ -1984,6 +1983,8 @@ async function processMod(): Promise<void> {
     }
     const unlockedRecipes = technologyUnlocks[id];
     if (unlockedRecipes) technology.unlockedRecipes = unlockedRecipes;
+
+    if (id in prodUpgrades) technology.prodUpgrades = prodUpgrades[id];
 
     const inputs = Object.keys(techIngredientsMap[tech.name]);
     const row = inputs.length;

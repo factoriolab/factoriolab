@@ -53,7 +53,6 @@ export interface Dataset {
   recipeQIds: Set<string>;
   recipeEntities: Entities<Recipe>;
   prodUpgradeTechs: string[];
-  prodUpgrades: Entities<string[]>;
   technologyIds: string[];
   technologyEntities: Entities<Technology>;
   proliferatorModuleIds: string[];

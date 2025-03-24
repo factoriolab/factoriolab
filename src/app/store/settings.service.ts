@@ -474,7 +474,6 @@ export class SettingsService extends Store<SettingsState> {
       coalesce(mod?.locations, []),
       environment.debug,
     );
-    const prodUpgrades = coalesce(mod?.prodUpgrades, {});
 
     // Apply localization
     if (i18n) {
@@ -659,13 +658,6 @@ export class SettingsService extends Store<SettingsState> {
             }),
           );
         }
-        for (const techId in prodUpgrades) {
-          const baseRecipes = prodUpgrades[techId].slice();
-          for (const recipeId of baseRecipes) {
-            const id = qualityId(recipeId, quality);
-            if (recipeQIds.has(id)) prodUpgrades[techId].push(id);
-          }
-        }
       });
     }
 
@@ -787,6 +779,33 @@ export class SettingsService extends Store<SettingsState> {
       return e;
     }, {});
 
+    if (_flags.has('quality')) {
+      const qualities = [
+        Quality.Uncommon,
+        Quality.Rare,
+        Quality.Epic,
+        Quality.Legendary,
+      ];
+      for (const quality of qualities) {
+        for (const techId in technologyEntities) {
+          const tech = technologyEntities[techId];
+          if (tech.prodUpgrades) {
+            for (const recipeId of tech.prodUpgrades.slice()) {
+              const id = qualityId(recipeId, quality);
+              if (recipeQIds.has(id)) tech.prodUpgrades.push(id);
+            }
+          }
+        }
+      }
+    }
+
+    const prodUpgradeTechs: string[] = [];
+    for (const techId in technologyEntities) {
+      if (technologyEntities[techId].prodUpgrades) {
+        prodUpgradeTechs.push(techId);
+      }
+    }
+
     return {
       game,
       modId: coalesce(mod?.id, DEFAULT_MOD),
@@ -823,8 +842,7 @@ export class SettingsService extends Store<SettingsState> {
       recipeIds,
       recipeQIds,
       recipeEntities,
-      prodUpgradeTechs: Object.keys(prodUpgrades),
-      prodUpgrades,
+      prodUpgradeTechs,
       technologyIds,
       technologyEntities,
       locationIds,
