@@ -11,7 +11,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 import { FormComponent } from '../form-component/form-component';
-import { OptionComponent } from '../option/option.component';
+import { OptionComponent, toSelect } from '../option/option.component';
 
 let nextUniqueId = 0;
 
@@ -26,6 +26,9 @@ let nextUniqueId = 0;
     '[attr.id]': 'id()',
     '[attr.tabindex]': 'disabled() ? -1 : 0',
     '[attr.aria-disabled]': 'disabled().toString()',
+    '[attr.aria-controls]': 'open() ? id() + "-listbox" : null',
+    '[attr.aria-expanded]': 'open()',
+    '(keydown.enter)': 'toggle()',
     '(click)': 'toggle()',
   },
   providers: [
@@ -45,10 +48,22 @@ export class SelectComponent<T> extends FormComponent<T> {
 
   open = signal(false);
 
+  constructor() {
+    super();
+
+    toSelect(this.options).subscribe((value) => {
+      this.select(value);
+    });
+  }
+
   toggle(): void {
     if (this.disabled()) return;
-
     this.open.update((o) => !o);
+  }
+
+  select(value: T): void {
+    this.setValue(value);
+    this.open.set(false);
   }
 }
 

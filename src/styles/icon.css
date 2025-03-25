@@ -15,7 +15,7 @@
       transform-origin: 0 0;
 
       /** Set up base app related icons sprite sheet */
-      background-image: url('../public/icons/icons.webp');
+      background-image: url('../public/icons.webp');
       width: 64px;
       height: 64px;
       text-align: end;
@@ -166,7 +166,7 @@ body.light .module::before {
     transform-origin: 0 0;
 
     /** Set up base app related icons sprite sheet */
-    background-image: url('../public/icons/icons.webp');
+    background-image: url('../public/icons.webp');
     width: 64px;
     height: 64px;
     content: '';

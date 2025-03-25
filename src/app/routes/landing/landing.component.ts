@@ -35,7 +35,7 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component';
   ],
   templateUrl: './landing.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex items-center justify-center h-dvh' },
+  host: { class: 'flex flex-col gap-2 items-center justify-center h-dvh' },
 })
 export class LandingComponent {
   router = inject(Router);

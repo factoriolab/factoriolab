@@ -1,4 +1,9 @@
-<div #trigger cdkOverlayOrigin #overlayOrigin="cdkOverlayOrigin">
+<div
+  #trigger
+  [id]="id() + '-trigger'"
+  cdkOverlayOrigin
+  #overlayOrigin="cdkOverlayOrigin"
+>
   hello thingy
 </div>
 
@@ -6,8 +11,14 @@
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="overlayOrigin"
   [cdkConnectedOverlayOpen]="open()"
+  (overlayOutsideClick)="toggle()"
 >
-  <div role="listbox" class="flex flex-col">
+  <div
+    [id]="id() + '-listbox'"
+    role="listbox"
+    [attr.aria-labelledby]="id() + '-trigger'"
+    class="flex flex-col"
+  >
     <ng-content></ng-content>
   </div>
 </ng-template>

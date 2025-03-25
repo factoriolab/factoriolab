@@ -14,23 +14,23 @@ desired objectives."
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="icons/apple-touch-icon.png"
+      href="apple-touch-icon.png?v=1"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="icons/favicon-32x32.png"
+      href="favicon-32x32.png?v=1"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="icons/favicon-16x16.png"
+      href="favicon-16x16.png?v=1"
     />
-    <link rel="manifest" href="icons/site.webmanifest" />
-    <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#5bbad5" />
-    <link rel="shortcut icon" href="icons/favicon.ico" />
+    <link rel="manifest" href="site.webmanifest?v=1" />
+    <link rel="mask-icon" href="safari-pinned-tab.svg?v=0" color="#5bbad5" />
+    <link rel="shortcut icon" href="favicon.ico?v=1" />
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#eb9947" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -40,12 +40,7 @@ desired objectives."
       rel="stylesheet"
     />
     <!-- Prefetch the landing image -->
-    <link
-      rel="prefetch"
-      href="icons/factoriolab.webp"
-      as="image"
-      type="image/webp"
-    />
+    <link rel="prefetch" href="factoriolab.webp" as="image" type="image/webp" />
     <!-- Google tag (gtag.js) -->
     <script
       async
@@ -62,15 +57,21 @@ desired objectives."
     </script>
     <!-- Set up theme -->
     <script>
+      let theme = 'dark';
       const preferences = JSON.parse(localStorage.getItem('preferences'));
-      const prefersDark =
+      console.log(preferences?.theme);
+      if (preferences?.theme) theme = preferences.theme;
+      else if (
         window.matchMedia &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const useDark = preferences ? preferences.theme === 'dark' : prefersDark;
-      if (useDark) document.documentElement.classList.add('dark');
+        !window.matchMedia('(prefers-color-scheme: dark)').matches
+      )
+        theme = 'light';
+
+      if (theme !== 'dark')
+        document.documentElement.setAttribute('data-theme', theme);
     </script>
   </head>
-  <body class="dark:bg-zinc-950 dark:text-white">
+  <body class="bg-theme-bg text-theme-text">
     <lab-root>
       <!-- Pure CSS spinner -->
       <div

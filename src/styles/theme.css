@@ -1,0 +1,19 @@
+:root {
+  --theme-text: var(--color-white);
+  --theme-bg: var(--color-neutral-900);
+
+  &[data-theme='black'] {
+    --theme-text: var(--color-neutral-200);
+    --theme-bg: var(--color-black);
+  }
+
+  &[data-theme='light'] {
+    --theme-text: var(--color-neutral-800);
+    --theme-bg: var(--color-white);
+  }
+}
+
+@theme inline {
+  --color-theme-text: var(--theme-text);
+  --color-theme-bg: var(--theme-bg);
+}
