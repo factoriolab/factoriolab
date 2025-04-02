@@ -681,7 +681,7 @@ async function processMod(): Promise<void> {
 
   // Record of recipe id : technology id
   const recipesLocked = new Set<string>();
-  const recipesCanProdUpgrade = new Set<string>();
+  const prodUpgrades: Record<string, string[]> = {};
   const technologySet = new Set<TechnologyPrototype>();
   const technologyUnlocks: Record<string, string[]> = {};
   for (const key of Object.keys(dataRaw.technology)) {
@@ -702,6 +702,7 @@ async function processMod(): Promise<void> {
       technologySet.add(tech);
       const id = techId[tech.name];
 
+      const upgradedRecipes = [];
       for (const effect of coerceArray(tech.effects)) {
         if (isUnlockRecipeModifier(effect)) {
           recipesLocked.add(effect.recipe);
@@ -709,8 +710,9 @@ async function processMod(): Promise<void> {
         }
 
         if (isChangeRecipeProductivityModifier(effect))
-          recipesCanProdUpgrade.add(effect.recipe);
+          upgradedRecipes.push(effect.recipe);
       }
+      if (upgradedRecipes.length) prodUpgrades[id] = upgradedRecipes;
     }
   }
 
@@ -1419,8 +1421,6 @@ async function processMod(): Promise<void> {
           const flags: RecipeFlag[] = [];
 
           if (recipesLocked.has(proto.name)) flags.push('locked');
-          const canProdUpgrade = recipesCanProdUpgrade.has(proto.name);
-          if (canProdUpgrade) flags.push('canProdUpgrade');
           if (proto.category === 'recycling') flags.push('recycling', 'locked');
 
           if (flags.length) recipe.flags = flags;
@@ -1983,6 +1983,8 @@ async function processMod(): Promise<void> {
     }
     const unlockedRecipes = technologyUnlocks[id];
     if (unlockedRecipes) technology.unlockedRecipes = unlockedRecipes;
+
+    if (id in prodUpgrades) technology.prodUpgrades = prodUpgrades[id];
 
     const inputs = Object.keys(techIngredientsMap[tech.name]);
     const row = inputs.length;
