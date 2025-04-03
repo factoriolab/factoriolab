@@ -117,6 +117,11 @@ export class Rational {
     return new Rational(this.p / this.q);
   }
 
+  trunc(decimals: number): Rational {
+    const factor = rational(Math.pow(10, decimals));
+    return this.mul(factor).floor().div(factor);
+  }
+
   round(): Rational {
     if (this.isInteger()) return this;
 

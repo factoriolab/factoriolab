@@ -389,29 +389,33 @@ export class RecipeService {
             )
               scale = beacon.profile[profileIndex];
 
-            const factor = beaconSettings.count // Num of beacons
+            const beaconCount = beaconSettings.count; // Num of beacons
+            const factor = count // Num of modules/beacon
               .mul(beacon.effectivity) // Effectivity of beacons
-              .mul(count) // Num of modules/beacon
               .mul(scale); // Apply diminishing beacons scale
 
+            const applyEffect = (value: Rational, decimals = 2): Rational => {
+              return value.mul(factor).trunc(decimals).mul(beaconCount);
+            };
+
             if (module.speed)
-              eff.speed = eff.speed.add(module.speed.mul(factor));
+              eff.speed = eff.speed.add(applyEffect(module.speed));
 
             if (module.productivity)
               eff.productivity = eff.productivity.add(
-                module.productivity.mul(factor),
+                applyEffect(module.productivity),
               );
 
             if (module.consumption)
               eff.consumption = eff.consumption.add(
-                module.consumption.mul(factor),
+                applyEffect(module.consumption),
               );
 
             if (module.pollution)
-              eff.pollution = eff.pollution.add(module.pollution.mul(factor));
+              eff.pollution = eff.pollution.add(applyEffect(module.pollution));
 
             if (module.quality)
-              eff.quality = eff.quality.add(module.quality.mul(factor));
+              eff.quality = eff.quality.add(applyEffect(module.quality, 3));
           }
         }
       }

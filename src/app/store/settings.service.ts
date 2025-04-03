@@ -587,9 +587,7 @@ export class SettingsService extends Store<SettingsState> {
                  * Quality is rounded to tenth of a percent, while other effects
                  * are floored to the nearest percent
                  */
-                const round =
-                  eff === 'quality' ? rational(1000n) : rational(100n);
-                value = value.mul(round).floor().div(round);
+                value = value.trunc(eff === 'quality' ? 3 : 2);
 
                 qItem.module = spread(qItem.module, { [eff]: value });
               }
