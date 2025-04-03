@@ -373,7 +373,9 @@ describe('SettingsService', () => {
               })
             : i.id === ItemId.Pump
               ? spread(i, { pipe: { speed: 1200 } })
-              : i,
+              : i.id === ItemId.SpeedModule
+                ? spread(i, { module: { quality: 0.1 } })
+                : i,
       );
       spyOn(service, 'mod').and.returnValue(
         spread(Mocks.mod, { flags: 'spa', items }),
