@@ -10,7 +10,11 @@ import {
 } from '~/helpers';
 import { Beacon } from '~/models/data/beacon';
 import { Machine, MachineJson } from '~/models/data/machine';
-import { filterEffect, ModuleEffect } from '~/models/data/module';
+import {
+  effectPrecision,
+  filterEffect,
+  ModuleEffect,
+} from '~/models/data/module';
 import {
   AdjustedRecipe,
   cloneRecipe,
@@ -394,28 +398,17 @@ export class RecipeService {
               .mul(beacon.effectivity) // Effectivity of beacons
               .mul(scale); // Apply diminishing beacons scale
 
-            const applyEffect = (value: Rational, decimals = 2): Rational => {
-              return value.mul(factor).trunc(decimals).mul(beaconCount);
-            };
+            for (const effect of Object.keys(
+              effectPrecision,
+            ) as ModuleEffect[]) {
+              if (!module[effect]) continue;
 
-            if (module.speed)
-              eff.speed = eff.speed.add(applyEffect(module.speed));
-
-            if (module.productivity)
-              eff.productivity = eff.productivity.add(
-                applyEffect(module.productivity),
-              );
-
-            if (module.consumption)
-              eff.consumption = eff.consumption.add(
-                applyEffect(module.consumption),
-              );
-
-            if (module.pollution)
-              eff.pollution = eff.pollution.add(applyEffect(module.pollution));
-
-            if (module.quality)
-              eff.quality = eff.quality.add(applyEffect(module.quality, 3));
+              const value = module[effect]
+                .mul(factor)
+                .trunc(effectPrecision[effect])
+                .mul(beaconCount);
+              eff[effect] = eff[effect].add(value);
+            }
           }
         }
       }

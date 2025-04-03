@@ -20,7 +20,12 @@ import { Item, ItemJson, parseItem } from '~/models/data/item';
 import { Machine, typeHasCraftingSpeed } from '~/models/data/machine';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
-import { filterEffect, Module, ModuleEffect } from '~/models/data/module';
+import {
+  effectPrecision,
+  filterEffect,
+  Module,
+  ModuleEffect,
+} from '~/models/data/module';
 import { parseRecipe, Recipe } from '~/models/data/recipe';
 import { Technology } from '~/models/data/technology';
 import { Dataset } from '~/models/dataset';
@@ -572,23 +577,10 @@ export class SettingsService extends Store<SettingsState> {
               .mul(rational(3n, 10n))
               .add(rational.one);
 
-            const effs: ModuleEffect[] = [
-              'consumption',
-              'pollution',
-              'productivity',
-              'quality',
-              'speed',
-            ];
-            for (const eff of effs) {
+            for (const eff of Object.keys(effectPrecision) as ModuleEffect[]) {
               if (qItem.module[eff] && !filterEffect(qItem.module, eff)) {
                 let value = qItem.module[eff].mul(factor);
-
-                /**
-                 * Quality is rounded to tenth of a percent, while other effects
-                 * are floored to the nearest percent
-                 */
-                value = value.trunc(eff === 'quality' ? 3 : 2);
-
+                value = value.trunc(effectPrecision[eff]);
                 qItem.module = spread(qItem.module, { [eff]: value });
               }
             }
