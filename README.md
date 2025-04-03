@@ -14,7 +14,7 @@ This is the repository for the [FactorioLab](https://factoriolab.github.io) proj
 | Final Factory                                               | [Calculator](https://factoriolab.github.io/final-factory) | [Steam](https://store.steampowered.com/app/1383150/Final_Factory/)         |
 | [Factor Y](https://buckmartin.de/products/factor-y.html)    | [Calculator](https://factoriolab.github.io/fay)           | [Steam](https://store.steampowered.com/app/2220850?utm_source=FactorioLab) |
 
-This project is intended to build on the features of the Kirk McDonald [Factorio Calculator](https://kirkmcdonald.github.io) ([GitHub](https://github.com/KirkMcDonald/kirkmcdonald.github.io)). It is built from the ground up using Angular, Redux, and TypeScript.
+This project is intended to build on the features of the Kirk McDonald [Factorio Calculator](https://kirkmcdonald.github.io) ([GitHub](https://github.com/KirkMcDonald/kirkmcdonald.github.io)). It is built from the ground up using Angular and TypeScript.
 
 **To submit suggestions or issues,** please check out the [issues page](https://github.com/factoriolab/factoriolab/issues).
 
