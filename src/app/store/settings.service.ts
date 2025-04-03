@@ -584,8 +584,8 @@ export class SettingsService extends Store<SettingsState> {
                 let value = qItem.module[eff].mul(factor);
 
                 /**
-                 * Quality is apparently allowed to have decimals while other
-                 * effects are floored to the nearest percent
+                 * Quality is rounded to tenth of a percent, while other effects
+                 * are floored to the nearest percent
                  */
                 const round =
                   eff === 'quality' ? rational(1000n) : rational(100n);
