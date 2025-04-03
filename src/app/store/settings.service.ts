@@ -587,8 +587,9 @@ export class SettingsService extends Store<SettingsState> {
                  * Quality is apparently allowed to have decimals while other
                  * effects are floored to the nearest percent
                  */
-                if (eff !== 'quality')
-                  value = value.mul(rational(100n)).floor().div(rational(100n));
+                const round =
+                  eff === 'quality' ? rational(1000n) : rational(100n);
+                value = value.mul(round).floor().div(round);
 
                 qItem.module = spread(qItem.module, { [eff]: value });
               }
