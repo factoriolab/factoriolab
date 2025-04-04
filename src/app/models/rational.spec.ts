@@ -143,6 +143,13 @@ describe('Rational', () => {
     });
   });
 
+  describe('trunc', () => {
+    it('should truncate towards zero', () => {
+      expect(rational(12345, 10000).trunc(3)).toEqual(rational(617n, 500n));
+      expect(rational(-12345, 10000).trunc(3)).toEqual(rational(-617n, 500n));
+    });
+  });
+
   describe('round', () => {
     it('should round integers or up/down', () => {
       expect(rational(2n).round()).toEqual(rational(2n));

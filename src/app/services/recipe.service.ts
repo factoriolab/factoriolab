@@ -10,7 +10,11 @@ import {
 } from '~/helpers';
 import { Beacon } from '~/models/data/beacon';
 import { Machine, MachineJson } from '~/models/data/machine';
-import { filterEffect, ModuleEffect } from '~/models/data/module';
+import {
+  effectPrecision,
+  filterEffect,
+  ModuleEffect,
+} from '~/models/data/module';
 import {
   AdjustedRecipe,
   cloneRecipe,
@@ -389,29 +393,22 @@ export class RecipeService {
             )
               scale = beacon.profile[profileIndex];
 
-            const factor = beaconSettings.count // Num of beacons
+            const beaconCount = beaconSettings.count; // Num of beacons
+            const factor = count // Num of modules/beacon
               .mul(beacon.effectivity) // Effectivity of beacons
-              .mul(count) // Num of modules/beacon
               .mul(scale); // Apply diminishing beacons scale
 
-            if (module.speed)
-              eff.speed = eff.speed.add(module.speed.mul(factor));
+            for (const effect of Object.keys(
+              effectPrecision,
+            ) as ModuleEffect[]) {
+              if (!module[effect]) continue;
 
-            if (module.productivity)
-              eff.productivity = eff.productivity.add(
-                module.productivity.mul(factor),
-              );
-
-            if (module.consumption)
-              eff.consumption = eff.consumption.add(
-                module.consumption.mul(factor),
-              );
-
-            if (module.pollution)
-              eff.pollution = eff.pollution.add(module.pollution.mul(factor));
-
-            if (module.quality)
-              eff.quality = eff.quality.add(module.quality.mul(factor));
+              const value = module[effect]
+                .mul(factor)
+                .trunc(effectPrecision[effect])
+                .mul(beaconCount);
+              eff[effect] = eff[effect].add(value);
+            }
           }
         }
       }
