@@ -581,7 +581,7 @@ describe('RateService', () => {
 
   describe('calculateHierarchy', () => {
     it('should set up groups by parents', () => {
-      spyOn(service, 'sortRecursive').and.returnValue([]);
+      spyOn(service, 'sortRecursive');
       const steps: Step[] = [
         {
           id: '0',
@@ -631,14 +631,14 @@ describe('RateService', () => {
           ['']: [steps[1], steps[2], steps[3], steps[4]],
         },
         '',
-        [],
+        jasmine.any(Object),
       );
     });
 
     it('should handle steps not connected to root', () => {
       const steps: Step[] = [
         {
-          id: 'id',
+          id: '0',
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
           recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
@@ -646,7 +646,7 @@ describe('RateService', () => {
           parents: { [RecipeId.PlasticBar]: rational.one },
         },
         {
-          id: 'id',
+          id: '1',
           itemId: ItemId.PlasticBar,
           recipeId: RecipeId.PlasticBar,
           recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.PlasticBar],
@@ -660,11 +660,6 @@ describe('RateService', () => {
   });
 
   describe('sortRecursive', () => {
-    it('should return empty array if no group matches id', () => {
-      const result = service.sortRecursive({}, 'id', ['item'] as any);
-      expect(result).toEqual([]);
-    });
-
     it('should sort groups by hierarchy', () => {
       const steps: Step[] = [
         {
@@ -691,15 +686,16 @@ describe('RateService', () => {
           items: rational.one,
         },
       ];
-      const result = service.sortRecursive(
+      const result = new Set<Step>();
+      service.sortRecursive(
         {
           [`${ItemId.PlasticBar}.${RecipeId.PlasticBar}`]: [steps[0]],
           ['']: [steps[1], steps[2]],
         },
         '',
-        [],
+        result,
       );
-      expect(result).toEqual([steps[1], steps[2], steps[0]]);
+      expect(result).toEqual(new Set([steps[1], steps[2], steps[0]]));
     });
   });
 
