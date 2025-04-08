@@ -392,7 +392,7 @@ export class RateService {
     for (const step of steps) {
       if (
         step.parents == null ||
-        step.parents[''] ||
+        step.parents[ROOT_ID] ||
         Object.keys(step.parents).length > 1
       ) {
         parents[step.id] = ROOT_ID;
@@ -420,35 +420,30 @@ export class RateService {
     }
 
     // Perform recursive sort
-    const sorted = this.sortRecursive(groups, ROOT_ID, []);
+    const sorted = new Set<Step>();
+    this.sortRecursive(groups, ROOT_ID, sorted);
 
-    // Try to add any remaining steps back including their corresponding group
-    while (sorted.length < steps.length) {
-      const step = steps.find((s) => !sorted.includes(s));
+    // Add back any remaining steps according to their separate hierarchy
+    while (sorted.size < steps.length) {
+      const step = steps.find((s) => !sorted.has(s));
       // istanbul ignore next: Should be impossible inside this while statement
       if (step == null) break;
-      sorted.push(step);
-      const group = groups[step.id];
-      if (group) sorted.push(...group);
+      sorted.add(step);
+      this.sortRecursive(groups, step.id, sorted);
     }
 
-    // Add back any steps left out (potentially circular loops)
-    sorted.push(...steps.filter((s) => !sorted.includes(s)));
-
-    return sorted;
+    return Array.from(sorted);
   }
 
-  sortRecursive(groups: Entities<Step[]>, id: string, result: Step[]): Step[] {
-    if (!groups[id]) {
-      return [];
-    }
+  sortRecursive(groups: Entities<Step[]>, id: string, result: Set<Step>): void {
+    if (!groups[id]) return;
+
     const group = groups[id];
+    delete groups[id]; // Remove this group so we don't check it again
     for (const s of group) {
-      result.push(s);
+      result.add(s);
       this.sortRecursive(groups, s.id, result);
     }
-
-    return result;
   }
 
   copy(steps: Step[]): Step[] {
