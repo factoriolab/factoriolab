@@ -1,14 +1,17 @@
-import { OverlayModule } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin, OverlayModule } from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
   Component,
   contentChildren,
+  ElementRef,
+  inject,
   input,
   NgModule,
   signal,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 import { FormComponent } from '../form-component/form-component';
 import { OptionComponent, toSelect } from '../option/option.component';
@@ -22,15 +25,18 @@ let nextUniqueId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'combobox',
+    class:
+      'lab-input flex cursor-pointer items-center justify-between gap-2 select-none',
     'aria-haspopup': 'listbox',
     '[attr.id]': 'id()',
     '[attr.tabindex]': 'disabled() ? -1 : 0',
     '[attr.aria-disabled]': 'disabled().toString()',
-    '[attr.aria-controls]': 'open() ? id() + "-listbox" : null',
-    '[attr.aria-expanded]': 'open()',
+    '[attr.aria-controls]': 'opened() ? id() + "-listbox" : null',
+    '[attr.aria-expanded]': 'opened()',
     '(keydown.enter)': 'toggle()',
     '(click)': 'toggle()',
   },
+  hostDirectives: [CdkOverlayOrigin],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -42,11 +48,16 @@ let nextUniqueId = 0;
 export class SelectComponent<T> extends FormComponent<T> {
   private uniqueId = (nextUniqueId++).toString();
 
+  elementRef = inject(ElementRef);
+  overlayOrigin = inject(CdkOverlayOrigin);
+
   options = contentChildren<OptionComponent<T>>(OptionComponent);
 
   id = input(`lab-select-${this.uniqueId}`);
 
-  open = signal(false);
+  faChevronDown = faChevronDown;
+
+  opened = signal(false);
 
   constructor() {
     super();
@@ -58,12 +69,12 @@ export class SelectComponent<T> extends FormComponent<T> {
 
   toggle(): void {
     if (this.disabled()) return;
-    this.open.update((o) => !o);
+    this.opened.update((o) => !o);
   }
 
   select(value: T): void {
     this.setValue(value);
-    this.open.set(false);
+    this.opened.set(false);
   }
 }
 

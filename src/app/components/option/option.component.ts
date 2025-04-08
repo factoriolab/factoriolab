@@ -25,6 +25,7 @@ export function toSelect<T>(
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'option',
+    '[class]': 'disabled() ? "" : "cursor-pointer hover:bg-theme-900"',
     tabindex: '0',
     '(click)': 'select()',
     '(keydown.enter)': 'select()',

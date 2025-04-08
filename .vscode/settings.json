@@ -4,5 +4,6 @@
   "editor.codeActionsOnSave": ["source.fixAll"],
   "files.associations": {
     "*.css": "tailwindcss"
-  }
+  },
+  "stylelint.validate": ["tailwindcss"]
 }

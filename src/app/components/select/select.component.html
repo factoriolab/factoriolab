@@ -1,23 +1,23 @@
-<div
-  #trigger
-  [id]="id() + '-trigger'"
-  cdkOverlayOrigin
-  #overlayOrigin="cdkOverlayOrigin"
->
-  hello thingy
-</div>
+hello thingy
+<fa-icon
+  class="transition-transform"
+  [class.rotate-180]="opened()"
+  [icon]="faChevronDown"
+  size="xs"
+></fa-icon>
 
 <ng-template
   cdkConnectedOverlay
+  [cdkConnectedOverlayOpen]="opened()"
   [cdkConnectedOverlayOrigin]="overlayOrigin"
-  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayMinWidth]="elementRef.nativeElement.offsetWidth"
   (overlayOutsideClick)="toggle()"
 >
   <div
     [id]="id() + '-listbox'"
     role="listbox"
-    [attr.aria-labelledby]="id() + '-trigger'"
-    class="flex flex-col"
+    [attr.aria-labelledby]="id()"
+    class="border-theme-500 mt-px flex flex-col border py-1"
   >
     <ng-content></ng-content>
   </div>

@@ -1,0 +1,13 @@
+@utility lab-input {
+  border: 1px solid var(--color-theme-700);
+  padding: 0 0.375rem;
+  height: 2rem;
+
+  &:hover {
+    border-color: var(--color-theme-600);
+  }
+
+  &:focus {
+    border-color: var(--color-brand-500);
+  }
+}

@@ -3,7 +3,6 @@
     display: inline-block;
     position: relative;
     flex-shrink: 0;
-    margin: 1px;
     width: 32px;
     height: 32px;
 
@@ -66,30 +65,14 @@
       }
     }
 
-    &.sm {
-      margin: 0;
-      width: 20px;
-      height: 20px;
-
-      &::before,
-      &::after {
-        top: -6px;
-        left: -6px;
-      }
-
-      &.padded {
-        margin: 7px;
-      }
-
-      + .p-button-label {
-        margin-left: 0.75rem;
-      }
-    }
-
     &.sum::before {
       content: 'Σ';
     }
   }
+}
+
+fa-icon {
+  display: inline-flex;
 }
 
 .captain-of-industry::before {

@@ -1,7 +1,13 @@
 @layer components {
   .lab-ring {
     > * {
-      @apply absolute size-20 rounded-full border-4 border-transparent border-t-white;
+      position: absolute;
+      border-width: 4px;
+      border-radius: calc(infinity * 1px);
+      border-color: transparent;
+      border-top-color: white;
+      width: 5rem;
+      height: 5rem;
       animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 
       &:nth-child(1) {
