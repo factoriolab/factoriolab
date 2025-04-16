@@ -424,7 +424,7 @@ export class SimplexService {
 
   itemCost(itemId: string, costKey: CostKey, state: MatrixState): number {
     const base =
-      state.data.itemEntities[itemId].stack == null &&
+      state.data.itemEntities[itemId]?.stack == null &&
       state.data.flags.has('fluidCostRatio')
         ? FACTORIO_FLUID_COST_RATIO
         : rational.one;
