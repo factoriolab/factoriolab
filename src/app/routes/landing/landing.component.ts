@@ -10,7 +10,8 @@ import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { gameInfo } from '~/models/game-info';
 import { rational } from '~/models/rational';
-import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { Optional } from '~/models/utils';
+import { IconClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
 import { RouterService } from '~/services/router.service';
@@ -27,7 +28,7 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component';
     FormsModule,
     KeyValuePipe,
     RouterLink,
-    IconSmClassPipe,
+    IconClassPipe,
     // PickerComponent,
     SelectModule,
     TranslatePipe,
@@ -91,7 +92,8 @@ export class LandingComponent {
     });
   }
 
-  setGame(game: Game): void {
+  setGame(game: Optional<Game>): void {
+    if (game == null) return;
     this.setMod(gameInfo[game].modId);
   }
 

@@ -1,16 +1,26 @@
 @if (mod() != null) {
-  <img src="factoriolab.webp" alt="FactorioLab" height="128" width="128" />
-  <div [innerHTML]="'landing.welcome' | translate"></div>
-  <hr class="border-theme-700 self-stretch border-t" />
-  <i [class]="'factorio' | iconSmClass"></i>
-  <lab-select (valueChange)="setGame($event)">
-    @for (kv of gameInfo | keyvalue; track kv.key) {
-      <lab-option [value]="kv.key" class="flex items-center gap-2 px-1 py-px">
-        <i [class]="kv.value.icon | iconSmClass"></i>
-        <span>{{ kv.value.label | translate }}</span>
-      </lab-option>
-    }
-  </lab-select>
+  <div class="flex flex-col items-center gap-2">
+    <img src="factoriolab.webp" alt="FactorioLab" height="128" width="128" />
+    <div [innerHTML]="'landing.welcome' | translate"></div>
+    <hr class="border-theme-700 self-stretch border-t" />
+    <lab-select
+      [value]="data().game"
+      (valueChange)="setGame($event)"
+      class="self-stretch"
+    >
+      <div class="flex items-center gap-2 px-1">
+        @let inf = gameInfo[data().game];
+        <i [class]="inf.icon | iconClass"></i>
+        <span>{{ inf.label | translate }}</span>
+      </div>
+      @for (kv of gameInfo | keyvalue; track kv.key) {
+        <lab-option [value]="kv.key" class="flex items-center gap-2 px-1 py-px">
+          <i [class]="kv.value.icon | iconClass"></i>
+          <span>{{ kv.value.label | translate }}</span>
+        </lab-option>
+      }
+    </lab-select>
+  </div>
   <!-- <p-dropdown
         styleClass="my-2 w-100"
         scrollHeight="260px"

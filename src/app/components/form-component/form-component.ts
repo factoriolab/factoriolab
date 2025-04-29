@@ -5,7 +5,7 @@ import { Optional } from '~/models/utils';
 
 @Component({ template: '' })
 export class FormComponent<T> implements ControlValueAccessor {
-  value = model<Optional<T>>();
+  value = model<T>();
   disabled = model(false);
 
   onFormChange?: (value: T) => void;

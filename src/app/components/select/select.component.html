@@ -1,8 +1,7 @@
-hello thingy
+<ng-content></ng-content>
 <fa-icon
-  class="transition-transform"
-  [class.rotate-180]="opened()"
   [icon]="faChevronDown"
+  class="flex size-9 items-center justify-center transition-transform"
   size="xs"
 ></fa-icon>
 
@@ -17,8 +16,8 @@ hello thingy
     [id]="id() + '-listbox'"
     role="listbox"
     [attr.aria-labelledby]="id()"
-    class="border-theme-500 mt-px flex flex-col border py-1"
+    class="border-theme-700 bg-theme-950 my-px flex min-w-full flex-col border py-1"
   >
-    <ng-content></ng-content>
+    <ng-content select="lab-option"></ng-content>
   </div>
 </ng-template>

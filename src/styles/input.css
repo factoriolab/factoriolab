@@ -1,13 +1,16 @@
-@utility lab-input {
-  border: 1px solid var(--color-theme-700);
-  padding: 0 0.375rem;
-  height: 2rem;
+@layer components {
+  .lab-input {
+    border: 1px solid var(--color-theme-700);
+    background-color: var(--color-theme-900);
+    height: 2.25rem;
 
-  &:hover {
-    border-color: var(--color-theme-600);
-  }
+    &:hover {
+      border-color: var(--color-brand-500);
+    }
 
-  &:focus {
-    border-color: var(--color-brand-500);
+    &:focus {
+      outline: 1px solid var(--color-brand-400);
+      border-color: var(--color-brand-400);
+    }
   }
 }

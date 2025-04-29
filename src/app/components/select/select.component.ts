@@ -1,4 +1,5 @@
 import { CdkOverlayOrigin, OverlayModule } from '@angular/cdk/overlay';
+import { PortalModule } from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,6 +14,8 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
+import { growVerticalIf } from '~/models/animations';
+
 import { FormComponent } from '../form-component/form-component';
 import { OptionComponent, toSelect } from '../option/option.component';
 
@@ -20,8 +23,9 @@ let nextUniqueId = 0;
 
 @Component({
   selector: 'lab-select',
-  imports: [OverlayModule, FaIconComponent],
+  imports: [PortalModule, OverlayModule, FaIconComponent],
   templateUrl: './select.component.html',
+  animations: [growVerticalIf],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'combobox',

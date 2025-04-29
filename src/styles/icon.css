@@ -76,31 +76,31 @@ fa-icon {
 }
 
 .captain-of-industry::before {
-  background-position: -64px 0;
+  background-position: -65px 0;
 }
 
 .dyson-sphere-program::before {
-  background-position: -128px 0;
+  background-position: -130px 0;
 }
 
 .factorio::before {
-  background-position: -192px 0;
+  background-position: -195px 0;
 }
 
 .final-factory::before {
-  background-position: -256px 0;
+  background-position: -260px 0;
 }
 
 .satisfactory::before {
-  background-position: 0 -64px;
+  background-position: 0 -65px;
 }
 
 .techtonica::before {
-  background-position: -64px -64px;
+  background-position: -65px -65px;
 }
 
 .module::before {
-  background-position: -128px -64px;
+  background-position: -130px -65px;
 }
 
 body.light .module::before {
@@ -108,31 +108,35 @@ body.light .module::before {
 }
 
 .pipe::before {
-  background-position: -192px -64px;
+  background-position: -195px -65px;
 }
 
 .time::before {
-  background-position: -256px -64px;
+  background-position: -260px -65px;
 }
 
 .fast-inserter::before {
-  background-position: 0 -128px;
+  background-position: 0 -130px;
 }
 
 .inserter::before {
-  background-position: -64px -128px;
+  background-position: -65px -130px;
 }
 
 .long-handed-inserter::before {
-  background-position: -128px -128px;
+  background-position: -130px -130px;
 }
 
 .stack-inserter::before {
-  background-position: -192px -128px;
+  background-position: -195px -130px;
+}
+
+.factor-y::before {
+  background-position: -260px -130px;
 }
 
 .transparent::before {
-  background-position: -64px -256px;
+  background-position: -260px -260px;
 }
 
 .q-1,
@@ -157,29 +161,25 @@ body.light .module::before {
 }
 
 .q-1::after {
-  background-position: -256px -128px;
+  background-position: 0 -195px;
 }
 
 .q0::after {
-  background-position: 0 -192px;
+  background-position: -65px -195px;
 }
 
 .q1::after {
-  background-position: -64px -192px;
+  background-position: -130px -195px;
 }
 
 .q2::after {
-  background-position: -128px -192px;
+  background-position: -195px -195px;
 }
 
 .q3::after {
-  background-position: -192px -192px;
+  background-position: -260px -195px;
 }
 
 .q5::after {
-  background-position: -256px -192px;
-}
-
-.factor-y::before {
-  background-position: 0 -256px;
+  background-position: 0 -260px;
 }

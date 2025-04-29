@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  inject,
   input,
   Signal,
 } from '@angular/core';
@@ -32,6 +34,8 @@ export function toSelect<T>(
   },
 })
 export class OptionComponent<T> {
+  elementRef = inject(ElementRef);
+
   value = input.required<T>();
   disabled = input<boolean>();
 
