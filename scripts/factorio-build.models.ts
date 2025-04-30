@@ -93,11 +93,6 @@ export interface DataRawDump {
   tile: Entities<M.TilePrototype>;
   tool: Entities<M.ToolPrototype>;
   'transport-belt': Entities<M.TransportBeltPrototype>;
-  blueprint: Entities<M.BlueprintItemPrototype>;
-  'blueprint-book': Entities<M.BlueprintBookPrototype>;
-  'copy-paste-tool': Entities<M.CopyPasteToolPrototype>;
-  'deconstruction-item': Entities<M.DeconstructionItemPrototype>;
-  'upgrade-item': Entities<M.UpgradeItemPrototype>;
 }
 
 export interface Locale {
@@ -118,12 +113,7 @@ export type AnyItemPrototype =
   | M.SelectionToolPrototype
   | M.SpacePlatformStarterPackPrototype
   | M.SpidertronRemotePrototype
-  | M.ToolPrototype
-  | M.BlueprintItemPrototype
-  | M.BlueprintBookPrototype
-  | M.CopyPasteToolPrototype
-  | M.DeconstructionItemPrototype
-  | M.UpgradeItemPrototype;
+  | M.ToolPrototype;
 
 export function isAnyItemPrototype(proto: unknown): proto is AnyItemPrototype {
   return (
@@ -140,12 +130,7 @@ export function isAnyItemPrototype(proto: unknown): proto is AnyItemPrototype {
     M.isSelectionToolPrototype(proto) ||
     M.isSpacePlatformStarterPackPrototype(proto) ||
     M.isSpidertronRemotePrototype(proto) ||
-    M.isToolPrototype(proto) ||
-    M.isBlueprintItemPrototype(proto) ||
-    M.isBlueprintBookPrototype(proto) ||
-    M.isCopyPasteToolPrototype(proto) ||
-    M.isDeconstructionItemPrototype(proto) ||
-    M.isUpgradeItemPrototype(proto)
+    M.isToolPrototype(proto)
   );
 }
 
@@ -221,11 +206,6 @@ export const anyItemKeys = [
   'space-platform-starter-pack',
   'tool',
   'fluid',
-  'blueprint',
-  'blueprint-book',
-  'copy-paste-tool',
-  'deconstruction-item',
-  'upgrade-item',
 ] as const;
 
 export const anyLocationKeys = ['surface', 'planet'] as const;

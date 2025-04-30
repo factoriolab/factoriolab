@@ -766,7 +766,12 @@ async function processMod(): Promise<void> {
     }
 
     // Process recycling recipes later, after determining included items
-    if (recipe.category === 'recycling') continue;
+    // In Krastorio2, crushing is similar to recycling
+    if (
+      recipe.category === 'recycling' ||
+      recipe.category === 'kr-void-crushing'
+    )
+      continue;
 
     // Don't include recipes with no inputs/outputs
     const ingredients = getIngredients(recipe.ingredients);
@@ -869,7 +874,11 @@ async function processMod(): Promise<void> {
     if (recipesEnabled[key]) continue;
 
     const recipe = dataRaw.recipe[key];
-    if (recipe.category !== 'recycling') continue;
+    if (
+      recipe.category !== 'recycling' &&
+      recipe.category !== 'kr-void-crushing'
+    )
+      continue;
 
     // Only include recycling recipes with used items
     const ingredients = getIngredients(recipe.ingredients);
@@ -881,7 +890,8 @@ async function processMod(): Promise<void> {
     )
       continue;
 
-    technologyUnlocks['recycling'].push(recipe.name);
+    if (recipe.category === 'recycling')
+      technologyUnlocks['recycling'].push(recipe.name);
     recipesEnabled[recipe.name] = recipe;
     recipeIngredientsMap[recipe.name] = ingredients;
     recipeResultsMap[recipe.name] = products;
