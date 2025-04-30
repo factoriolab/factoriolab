@@ -2,6 +2,8 @@
   "beacon": "kr-singularity-beacon",
   "minBelt": "transport-belt",
   "maxBelt": "kr-superior-transport-belt",
+  "minPipe": "pump",
+  "maxPipe": "kr-steel-pump",
   "fuelRank": [
     "coal"
   ],
@@ -50,7 +52,8 @@
     "kr-matter-to-sulfur",
     "kr-matter-to-uranium-238",
     "kr-matter-to-water",
-    "kr-matter-to-wood"
+    "kr-matter-to-wood",
+    "kr-wood-with-fertilizer"
   ],
   "minMachineRank": [
     "assembling-machine-1",
@@ -59,6 +62,7 @@
   ],
   "maxMachineRank": [
     "kr-advanced-assembling-machine",
+    "kr-advanced-chemical-plant",
     "kr-advanced-furnace",
     "kr-electric-mining-drill-mk3"
   ],
