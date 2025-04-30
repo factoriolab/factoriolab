@@ -15,8 +15,9 @@
   <div
     [id]="id() + '-listbox'"
     role="listbox"
+    @fadeIf
     [attr.aria-labelledby]="id()"
-    class="border-theme-700 bg-theme-950 my-px flex min-w-full flex-col border py-1"
+    class="border-theme-700 bg-theme-950 my-px flex max-h-80 min-w-full flex-col gap-px overflow-y-auto border py-2"
   >
     <ng-content select="lab-option"></ng-content>
   </div>

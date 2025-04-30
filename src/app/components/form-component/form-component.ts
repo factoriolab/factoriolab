@@ -1,11 +1,9 @@
 import { Component, model } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
-import { Optional } from '~/models/utils';
-
 @Component({ template: '' })
 export class FormComponent<T> implements ControlValueAccessor {
-  value = model<T>();
+  value = model.required<T>();
   disabled = model(false);
 
   onFormChange?: (value: T) => void;
@@ -13,12 +11,11 @@ export class FormComponent<T> implements ControlValueAccessor {
 
   setValue(value: T): void {
     this.onFormTouched?.();
-    if (value === this.value()) return;
     this.writeValue(value);
     this.onFormChange?.(value);
   }
 
-  writeValue(value: Optional<T>): void {
+  writeValue(value: T): void {
     this.value.set(value);
   }
 

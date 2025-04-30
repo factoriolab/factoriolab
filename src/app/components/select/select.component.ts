@@ -14,10 +14,10 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
-import { growVerticalIf } from '~/models/animations';
+import { fadeIf } from '~/models/animations';
 
 import { FormComponent } from '../form-component/form-component';
-import { OptionComponent, toSelect } from '../option/option.component';
+import { OptionComponent } from '../option/option.component';
 
 let nextUniqueId = 0;
 
@@ -25,12 +25,11 @@ let nextUniqueId = 0;
   selector: 'lab-select',
   imports: [PortalModule, OverlayModule, FaIconComponent],
   templateUrl: './select.component.html',
-  animations: [growVerticalIf],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'combobox',
     class:
-      'lab-input flex cursor-pointer items-center justify-between gap-2 select-none',
+      'lab-input flex cursor-pointer items-center justify-between gap-2 select-none w-full',
     'aria-haspopup': 'listbox',
     '[attr.id]': 'id()',
     '[attr.tabindex]': 'disabled() ? -1 : 0',
@@ -38,24 +37,22 @@ let nextUniqueId = 0;
     '[attr.aria-controls]': 'opened() ? id() + "-listbox" : null',
     '[attr.aria-expanded]': 'opened()',
     '(keydown.enter)': 'toggle()',
+    '(keydown.arrowdown)': 'toggle()',
     '(click)': 'toggle()',
   },
   hostDirectives: [CdkOverlayOrigin],
+  animations: [fadeIf],
   providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: SelectComponent,
-    },
+    { provide: NG_VALUE_ACCESSOR, multi: true, useExisting: SelectComponent },
+    { provide: FormComponent, useExisting: SelectComponent },
   ],
 })
 export class SelectComponent<T> extends FormComponent<T> {
   private uniqueId = (nextUniqueId++).toString();
 
-  elementRef = inject(ElementRef);
+  elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   overlayOrigin = inject(CdkOverlayOrigin);
-
-  options = contentChildren<OptionComponent<T>>(OptionComponent);
+  options = contentChildren(OptionComponent);
 
   id = input(`lab-select-${this.uniqueId}`);
 
@@ -63,22 +60,25 @@ export class SelectComponent<T> extends FormComponent<T> {
 
   opened = signal(false);
 
-  constructor() {
-    super();
-
-    toSelect(this.options).subscribe((value) => {
-      this.select(value);
-    });
-  }
-
   toggle(): void {
     if (this.disabled()) return;
     this.opened.update((o) => !o);
+    if (this.opened()) {
+      const options = this.options();
+      const focus =
+        options.find((o) => o.value() === this.value()) ?? options[0];
+      if (focus) {
+        setTimeout(() => {
+          focus.elementRef.nativeElement.focus();
+        }, 1);
+      }
+    }
   }
 
-  select(value: T): void {
-    this.setValue(value);
+  override setValue(value: T): void {
+    super.setValue(value);
     this.opened.set(false);
+    this.elementRef.nativeElement.focus();
   }
 }
 

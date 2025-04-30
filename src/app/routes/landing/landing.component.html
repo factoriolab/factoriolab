@@ -2,12 +2,13 @@
   <div class="flex flex-col items-center gap-2">
     <img src="factoriolab.webp" alt="FactorioLab" height="128" width="128" />
     <div [innerHTML]="'landing.welcome' | translate"></div>
-    <hr class="border-theme-700 self-stretch border-t" />
-    <lab-select
-      [value]="data().game"
-      (valueChange)="setGame($event)"
-      class="self-stretch"
-    >
+    <div>
+      <hr
+        class="border-theme-700 absolute left-0 w-dvw self-stretch border-t"
+      />
+    </div>
+    <hr />
+    <lab-select [value]="data().game" (valueChange)="setGame($event)">
       <div class="flex items-center gap-2 px-1">
         @let inf = gameInfo[data().game];
         <i [class]="inf.icon | iconClass"></i>
@@ -20,6 +21,16 @@
         </lab-option>
       }
     </lab-select>
+    @if (data().flags.has('mods') && modId(); as modId) {
+      <lab-select [value]="modId" (valueChange)="setMod($event)">
+        {{ modId }}
+        @for (opt of modOptions(); track opt.value) {
+          <lab-option [value]="opt.value">{{
+            opt.label | translate
+          }}</lab-option>
+        }
+      </lab-select>
+    }
   </div>
   <!-- <p-dropdown
         styleClass="my-2 w-100"

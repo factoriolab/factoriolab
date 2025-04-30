@@ -97,7 +97,8 @@ export class LandingComponent {
     this.setMod(gameInfo[game].modId);
   }
 
-  setMod(modId: string): void {
+  setMod(modId: Optional<string>): void {
+    if (modId == null) return;
     void this.router.navigate([modId]);
   }
 }
