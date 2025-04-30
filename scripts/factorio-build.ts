@@ -609,6 +609,7 @@ async function processMod(): Promise<void> {
     noProducers: [],
     resourceNoMinableProducts: [],
     resourceDuplicate: [],
+    disabledRecipeDoesntExist: [],
   };
 
   function writeData(): void {
@@ -640,10 +641,12 @@ async function processMod(): Promise<void> {
 
       if (modData.defaults?.excludedRecipes) {
         // Filter excluded recipes for only recipes that exist
+        const recipeExists = (e: string) =>
+          modData.recipes.some((r) => r.id === e);
+        modDataReport.disabledRecipeDoesntExist =
+          modData.defaults.excludedRecipes.filter((e) => !recipeExists(e));
         modData.defaults.excludedRecipes =
-          modData.defaults.excludedRecipes.filter((e) =>
-            modData.recipes.some((r) => r.id === e),
-          );
+          modData.defaults.excludedRecipes.filter(recipeExists);
       }
 
       updateHash(modData, oldHash, modFlags);
@@ -2138,6 +2141,13 @@ async function processMod(): Promise<void> {
       console.log(
         'Only one mining resource is generated for duplicate resources',
       );
+    }
+
+    if (modDataReport.disabledRecipeDoesntExist.length) {
+      logWarn(
+        `Inexistent recipes disabled in defaults.json: ${modDataReport.disabledRecipeDoesntExist.length.toString()}`,
+      );
+      console.log('These recipes have been ignored.');
     }
 
     if (warnings)
