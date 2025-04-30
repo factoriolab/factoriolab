@@ -150,5 +150,5 @@ export const flags: Record<FlagSet, Set<Flag>> = {
   ffy: new Set(['duplicators']),
   tta: new Set(['fuels', 'power']),
   fay: new Set(['fuels', 'power', 'miningSpeed', 'beltStack']),
-  mds: new Set(['power']),
+  mds: new Set(['fuels', 'power']),
 };
