@@ -158,6 +158,7 @@ export interface ModDataReport {
   noProducers: string[];
   resourceNoMinableProducts: string[];
   resourceDuplicate: string[];
+  disabledRecipeDoesntExist: string[];
 }
 
 export type MachineProto =

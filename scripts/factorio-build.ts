@@ -609,6 +609,7 @@ async function processMod(): Promise<void> {
     noProducers: [],
     resourceNoMinableProducts: [],
     resourceDuplicate: [],
+    disabledRecipeDoesntExist: [],
   };
 
   function writeData(): void {
@@ -640,10 +641,12 @@ async function processMod(): Promise<void> {
 
       if (modData.defaults?.excludedRecipes) {
         // Filter excluded recipes for only recipes that exist
+        const recipeExists = (e: string) =>
+          modData.recipes.some((r) => r.id === e);
+        modDataReport.disabledRecipeDoesntExist =
+          modData.defaults.excludedRecipes.filter((e) => !recipeExists(e));
         modData.defaults.excludedRecipes =
-          modData.defaults.excludedRecipes.filter((e) =>
-            modData.recipes.some((r) => r.id === e),
-          );
+          modData.defaults.excludedRecipes.filter(recipeExists);
       }
 
       updateHash(modData, oldHash, modFlags);
@@ -763,7 +766,12 @@ async function processMod(): Promise<void> {
     }
 
     // Process recycling recipes later, after determining included items
-    if (recipe.category === 'recycling') continue;
+    // In Krastorio2, crushing is similar to recycling
+    if (
+      recipe.category === 'recycling' ||
+      recipe.category === 'kr-void-crushing'
+    )
+      continue;
 
     // Don't include recipes with no inputs/outputs
     const ingredients = getIngredients(recipe.ingredients);
@@ -866,7 +874,11 @@ async function processMod(): Promise<void> {
     if (recipesEnabled[key]) continue;
 
     const recipe = dataRaw.recipe[key];
-    if (recipe.category !== 'recycling') continue;
+    if (
+      recipe.category !== 'recycling' &&
+      recipe.category !== 'kr-void-crushing'
+    )
+      continue;
 
     // Only include recycling recipes with used items
     const ingredients = getIngredients(recipe.ingredients);
@@ -878,7 +890,8 @@ async function processMod(): Promise<void> {
     )
       continue;
 
-    technologyUnlocks['recycling'].push(recipe.name);
+    if (recipe.category === 'recycling')
+      technologyUnlocks['recycling'].push(recipe.name);
     recipesEnabled[recipe.name] = recipe;
     recipeIngredientsMap[recipe.name] = ingredients;
     recipeResultsMap[recipe.name] = products;
@@ -2138,6 +2151,13 @@ async function processMod(): Promise<void> {
       console.log(
         'Only one mining resource is generated for duplicate resources',
       );
+    }
+
+    if (modDataReport.disabledRecipeDoesntExist.length) {
+      logWarn(
+        `Inexistent recipes disabled in defaults.json: ${modDataReport.disabledRecipeDoesntExist.length.toString()}`,
+      );
+      console.log('These recipes have been ignored.');
     }
 
     if (warnings)

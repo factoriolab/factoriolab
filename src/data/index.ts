@@ -65,13 +65,7 @@ export const data: AppData = {
       game: Game.Factorio,
       flags: '1.1',
     },
-    { id: 'kr2', name: 'Krastorio 2', game: Game.Factorio, flags: '1.1' },
-    {
-      id: 'kr2p',
-      name: 'Krastorio 2 Peaceful',
-      game: Game.Factorio,
-      flags: '1.1',
-    },
+    { id: 'kr2', name: 'Krastorio 2', game: Game.Factorio, flags: '2.0' },
     {
       id: 'kr2248',
       name: 'Krastorio 2 + 248K',
