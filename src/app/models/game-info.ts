@@ -56,6 +56,6 @@ export const gameInfo: Record<Game, GameInfo> = {
     icon: 'mindustry',
     route: 'mds',
     label: 'options.game.mindustry',
-    modId: 'mds'
+    modId: 'mds',
   },
 };

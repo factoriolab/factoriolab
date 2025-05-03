@@ -8,7 +8,7 @@ export enum Game {
   Satisfactory = 'Satisfactory',
   Techtonica = 'Techtonica',
   FactorY = 'FactorY',
-  Mindustry = 'Mindustry'
+  Mindustry = 'Mindustry',
 }
 
 export const gameOptions: SelectItem<Game>[] = [
@@ -19,5 +19,5 @@ export const gameOptions: SelectItem<Game>[] = [
   { value: Game.Techtonica, label: 'options.game.techtonica' },
   { value: Game.FinalFactory, label: 'options.game.finalFactory' },
   { value: Game.FactorY, label: 'options.game.factorY' },
-  { value: Game.Mindustry, label: 'options.game.mindustry'}
+  { value: Game.Mindustry, label: 'options.game.mindustry' },
 ];
