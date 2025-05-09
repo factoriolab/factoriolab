@@ -141,11 +141,11 @@ export const data: AppData = {
     { id: 'fay', name: 'Factor Y', game: Game.FactorY, flags: 'fay' },
     {
       id: 'mds',
-      name: 'Mindustry Serpulo',
+      name: 'Serpulo',
       game: Game.Mindustry,
       flags: 'mds',
     },
-    { id: 'mde', name: 'Mindustry Erekir', game: Game.Mindustry, flags: 'mds' },
+    { id: 'mde', name: 'Erekir', game: Game.Mindustry, flags: 'mds' },
   ],
   modHashV0: [
     '1.1',
@@ -214,12 +214,12 @@ export const data: AppData = {
     'utc',
     'ffy',
     'fay',
-    'mds',
-    'mde',
     'lls',
     'ulc',
     'ps2',
     '2.0',
     '2.0q',
+    'mds',
+    'mde',
   ],
 };
