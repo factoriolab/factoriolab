@@ -114,6 +114,10 @@
   background-position: -64px -64px;
 }
 
+.mindustry::before {
+  background-position: -64px -256px;
+}
+
 .module::before {
   background-position: -128px -64px;
 }
@@ -147,7 +151,7 @@ body.light .module::before {
 }
 
 .transparent::before {
-  background-position: -64px -256px;
+  background-position: -128px -256px;
 }
 
 .q-1,
