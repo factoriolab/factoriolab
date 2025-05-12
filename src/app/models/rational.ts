@@ -124,12 +124,18 @@ export class Rational {
     return new Rational(p, q);
   }
 
-  round(): Rational {
+  round(decimals: number | bigint = 0): Rational {
+    if (decimals) {
+      if (typeof decimals === 'number') decimals = BigInt(decimals);
+      const q = rational(10n ** decimals);
+      return this.mul(q).round().div(q);
+    }
+
     if (this.isInteger()) return this;
 
     const x = this.p % this.q;
     const y = Number(x) / Number(this.q);
-    if (y >= 0.5) return this.ceil();
+    if (Math.abs(y) >= 0.5) return this.ceil();
     return this.floor();
   }
 

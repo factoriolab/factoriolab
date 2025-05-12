@@ -379,36 +379,45 @@ export class RecipeService {
             continue;
           }
 
+          const beacon = data.beaconEntities[beaconSettings.id];
+
+          let scale = rational.one;
+          if (
+            beacon.profile &&
+            profileIndex &&
+            profileIndex >= 0 &&
+            profileIndex < beacon.profile.length
+          )
+            scale = beacon.profile[profileIndex];
+
+          const factor = beaconSettings.count.mul(scale);
+          const beaconEffects: Partial<Record<ModuleEffect, Rational>> = {};
           for (const { id, count } of beaconSettings.modules) {
             if (id == null || id === ItemId.Module || count == null) continue;
             const module = data.moduleEntities[id];
-            const beacon = data.beaconEntities[beaconSettings.id];
-
-            let scale = rational.one;
-            if (
-              beacon.profile &&
-              profileIndex &&
-              profileIndex >= 0 &&
-              profileIndex < beacon.profile.length
-            )
-              scale = beacon.profile[profileIndex];
-
-            const beaconCount = beaconSettings.count; // Num of beacons
-            const factor = count // Num of modules/beacon
-              .mul(beacon.effectivity) // Effectivity of beacons
-              .mul(scale); // Apply diminishing beacons scale
 
             for (const effect of Object.keys(
               effectPrecision,
             ) as ModuleEffect[]) {
               if (!module[effect]) continue;
 
-              const value = module[effect]
-                .mul(factor)
-                .trunc(effectPrecision[effect])
-                .mul(beaconCount);
-              eff[effect] = eff[effect].add(value);
+              const value = module[effect].mul(count);
+              const current = beaconEffects[effect];
+              beaconEffects[effect] = current ? current.add(value) : value;
             }
+          }
+
+          for (const e of Object.keys(beaconEffects) as ModuleEffect[]) {
+            const value = beaconEffects[e];
+            if (value == null || value.isZero()) continue;
+
+            const result = value // Effect from modules
+              .mul(beacon.effectivity) // Apply beacon effectivity
+              .trunc(effectPrecision[e]) // Truncate after applying effectivity
+              .mul(factor) // Apply count of beacons, diminishing effect
+              .round(effectPrecision[e]); // Round after applying scaling
+
+            eff[e] = eff[e].add(result);
           }
         }
       }
