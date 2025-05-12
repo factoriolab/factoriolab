@@ -409,19 +409,19 @@ export class StepsComponent implements OnInit, AfterViewInit {
     update(id, state);
   }
 
-  changeBelts(step: Step, state: ItemSettings, original: ItemSettings): void {
+  changeBelts(step: Step, state: ItemSettings): void {
     if (step.itemId == null) return;
     this.itemsSvc.updateEntityField(
       step.itemId,
       'stack',
       state.stack,
-      original.defaultStack,
+      state.defaultStack,
     );
     this.itemsSvc.updateEntityField(
       step.itemId,
       'beltId',
       state.beltId,
-      original.defaultBeltId,
+      state.defaultBeltId,
     );
   }
 

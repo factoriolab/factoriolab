@@ -409,6 +409,7 @@ export class RecipeService {
 
           for (const e of Object.keys(beaconEffects) as ModuleEffect[]) {
             const value = beaconEffects[e];
+            // istanbul ignore if: Should be impossible to hit
             if (value == null || value.isZero()) continue;
 
             const result = value // Effect from modules
