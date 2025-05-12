@@ -404,9 +404,7 @@
                       </button>
                       <lab-belt-overlay
                         #beltPicker
-                        (setValue)="
-                          changeBelts(step, $event, itemSettings.defaultBeltId)
-                        "
+                        (setValue)="changeBelts(step, $event, itemSettings)"
                       ></lab-belt-overlay>
                     } @else {
                       <p-dropdown
