@@ -12,6 +12,7 @@ import { Beacon } from '~/models/data/beacon';
 import { Machine, MachineJson } from '~/models/data/machine';
 import {
   effectPrecision,
+  effects,
   filterEffect,
   ModuleEffect,
 } from '~/models/data/module';
@@ -396,29 +397,28 @@ export class RecipeService {
             if (id == null || id === ItemId.Module || count == null) continue;
             const module = data.moduleEntities[id];
 
-            for (const effect of Object.keys(
-              effectPrecision,
-            ) as ModuleEffect[]) {
+            for (const effect of effects) {
               if (!module[effect]) continue;
 
-              const value = module[effect].mul(count);
+              const value = module[effect]
+                .mul(count)
+                .mul(beacon.effectivity)
+                .trunc(effectPrecision[effect]);
               const current = beaconEffects[effect];
               beaconEffects[effect] = current ? current.add(value) : value;
             }
           }
 
-          for (const e of Object.keys(beaconEffects) as ModuleEffect[]) {
-            const value = beaconEffects[e];
+          for (const effect of Object.keys(beaconEffects) as ModuleEffect[]) {
+            const value = beaconEffects[effect];
             // istanbul ignore if: Should be impossible to hit
             if (value == null || value.isZero()) continue;
 
             const result = value // Effect from modules
-              .mul(beacon.effectivity) // Apply beacon effectivity
-              .trunc(effectPrecision[e]) // Truncate after applying effectivity
-              .mul(factor) // Apply count of beacons, diminishing effect
-              .round(effectPrecision[e]); // Round after applying scaling
+              .mul(factor)
+              .round(effectPrecision[effect]); // Apply count of beacons, scaling
 
-            eff[e] = eff[e].add(result);
+            eff[effect] = eff[effect].add(result);
           }
         }
       }
