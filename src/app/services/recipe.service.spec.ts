@@ -350,7 +350,7 @@ describe('RecipeService', () => {
           count: rational(8n),
           modules: [
             { count: rational(2n), id: ItemId.SpeedModule },
-            { id: ItemId.Module },
+            { count: rational.one, id: ItemId.SpeedModule2 },
           ],
         },
       ];
@@ -399,15 +399,15 @@ describe('RecipeService', () => {
         ] as AdjustedRecipe,
         {
           out: { [ItemId.SteelChest]: rational(4n) },
-          time: rational(200n, 513n),
+          time: rational(100n, 321n),
           drain: rational(5n),
-          consumption: rational(384n),
-          pollution: rational(388n, 625n),
+          consumption: rational(519n),
+          pollution: rational(10553n, 12500n),
           effects: {
-            consumption: rational(64n, 25n),
-            pollution: rational(97n, 20n),
+            consumption: rational(173n, 50n),
+            pollution: rational(122n, 25n),
             productivity: rational(4n),
-            speed: rational(171n, 100n),
+            speed: rational(107n, 50n),
             quality: rational.zero,
           },
           produces: new Set(),
