@@ -15,6 +15,14 @@ export const effectPrecision: Record<ModuleEffect, number> = {
   speed: 2,
 };
 
+export const effects: ModuleEffect[] = [
+  'consumption',
+  'pollution',
+  'productivity',
+  'quality',
+  'speed',
+];
+
 export const goodNegativeEffects = new Set<ModuleEffect>([
   'consumption',
   'pollution',

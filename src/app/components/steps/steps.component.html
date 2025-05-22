@@ -404,9 +404,7 @@
                       </button>
                       <lab-belt-overlay
                         #beltPicker
-                        (setValue)="
-                          changeBelts(step, $event, itemSettings.defaultBeltId)
-                        "
+                        (setValue)="changeBelts(step, $event)"
                       ></lab-belt-overlay>
                     } @else {
                       <p-dropdown
@@ -1053,6 +1051,7 @@
                     itemId: step.itemId,
                     belts: step.belts?.mul(output.value),
                     beltId: itemsState()[step.itemId].beltId,
+                    stack: itemsState()[step.itemId].stack,
                     wagons: step.wagons?.mul(output.value),
                     wagonId: itemsState()[step.itemId].wagonId,
                     machines: output.step?.machines,
@@ -1090,6 +1089,7 @@
                     itemId: step.itemId,
                     belts: step.belts?.mul(parent.value),
                     beltId: itemsState()[step.itemId].beltId,
+                    stack: itemsState()[step.itemId].stack,
                     wagons: step.wagons?.mul(parent.value),
                     wagonId: itemsState()[step.itemId].wagonId,
                     machines:
@@ -1182,6 +1182,7 @@
                             itemId: input.key,
                             belts: rowStep.belts?.mul(rowPercent),
                             beltId: itemsState()[rowStep.itemId].beltId,
+                            stack: itemsState()[rowStep.itemId].stack,
                             wagons: rowStep.wagons?.mul(rowPercent),
                             wagonId: itemsState()[rowStep.itemId].wagonId,
                             machines: output.step?.machines?.mul(rowPercent),
@@ -1205,6 +1206,7 @@
                             itemId: input.key,
                             belts: rowStep.belts?.mul(rowPercent),
                             beltId: itemsState()[rowStep.itemId].beltId,
+                            stack: itemsState()[rowStep.itemId].stack,
                             wagons: rowStep.wagons?.mul(rowPercent),
                             wagonId: itemsState()[rowStep.itemId].wagonId,
                             percent: rowPercent,
@@ -1261,6 +1263,7 @@
                         itemId: output.key,
                         belts: rowStep.belts?.mul(rowPercent),
                         beltId: itemsState()[rowStep.itemId].beltId,
+                        stack: itemsState()[rowStep.itemId].stack,
                         wagons: rowStep.wagons?.mul(rowPercent),
                         wagonId: itemsState()[rowStep.itemId].wagonId,
                         machines: step.machines,
@@ -1331,6 +1334,7 @@
                                             | rate
                                               : columnsState().belts.precision,
                                           itemId: beltId,
+                                          stack: itemsState()[input.key].stack,
                                         }
                                       "
                                     >
@@ -1460,6 +1464,7 @@
                                         items.div(beltSpeed()[beltId])
                                         | rate: columnsState().belts.precision,
                                       itemId: beltId,
+                                      stack: itemsState()[output.key].stack,
                                     }
                                   "
                                 >
@@ -1489,10 +1494,18 @@
                     #machineValueCell
                     let-value="value"
                     let-itemId="itemId"
+                    let-stack="stack"
                   >
                     <div class="d-flex align-items-center justify-content-end">
                       <span class="monospace">{{ value }}</span>
-                      <i [class]="itemId | iconClass" [pTooltip]="tooltip">
+                      <i
+                        class="padded"
+                        [class]="itemId | iconSmClass"
+                        [pTooltip]="tooltip"
+                      >
+                        @if (stack?.gt(rational.one)) {
+                          <span>{{ stack }}</span>
+                        }
                         <ng-template #tooltip>
                           <lab-tooltip [id]="itemId"></lab-tooltip>
                         </ng-template>
@@ -1552,6 +1565,7 @@
     let-itemId="itemId"
     let-belts="belts"
     let-beltId="beltId"
+    let-stack="stack"
     let-wagons="wagons"
     let-wagonId="wagonId"
     let-machines="machines"
@@ -1592,6 +1606,9 @@
           <td class="ps-0">
             <div class="d-flex">
               <i [class]="beltId | iconClass" [pTooltip]="tooltip">
+                @if (stack?.gt(rational.one)) {
+                  <span>{{ stack }}</span>
+                }
                 <ng-template #tooltip>
                   <lab-tooltip [id]="beltId" type="belt"></lab-tooltip>
                 </ng-template>
