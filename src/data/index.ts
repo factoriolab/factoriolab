@@ -133,6 +133,13 @@ export const data: AppData = {
     { id: 'tta', name: 'Techtonica', game: Game.Techtonica, flags: 'tta' },
     { id: 'ffy', name: 'Final Factory', game: Game.FinalFactory, flags: 'ffy' },
     { id: 'fay', name: 'Factor Y', game: Game.FactorY, flags: 'fay' },
+    {
+      id: 'mds',
+      name: 'Serpulo',
+      game: Game.Mindustry,
+      flags: 'mds',
+    },
+    { id: 'mde', name: 'Erekir', game: Game.Mindustry, flags: 'mds' },
   ],
   modHashV0: [
     '1.1',
@@ -206,5 +213,7 @@ export const data: AppData = {
     'ps2',
     '2.0',
     '2.0q',
+    'mds',
+    'mde',
   ],
 };

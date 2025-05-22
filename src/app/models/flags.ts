@@ -40,7 +40,8 @@ export type FlagSet =
   | 'coi'
   | 'ffy'
   | 'tta'
-  | 'fay';
+  | 'fay'
+  | 'mds';
 
 export const flags: Record<FlagSet, Set<Flag>> = {
   spa: new Set([
@@ -149,4 +150,5 @@ export const flags: Record<FlagSet, Set<Flag>> = {
   ffy: new Set(['duplicators']),
   tta: new Set(['fuels', 'power']),
   fay: new Set(['fuels', 'power', 'miningSpeed', 'beltStack']),
+  mds: new Set(['power', 'mods']),
 };

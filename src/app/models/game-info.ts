@@ -52,4 +52,10 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.factorY',
     modId: 'fay',
   },
+  [Game.Mindustry]: {
+    icon: 'mindustry',
+    route: '/mds',
+    label: 'options.game.mindustry',
+    modId: 'mds',
+  },
 };
