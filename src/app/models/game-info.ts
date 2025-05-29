@@ -58,4 +58,10 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.mindustry',
     modId: 'mds',
   },
+  [Game.Foundry]: {
+    icon: 'foundryGame', /* Can't use "foundry" because conflict with the icon of one of factorio's plant */
+    route: '/foundry',
+    label: 'options.game.foundry',
+    modId: 'foundry',
+  },
 };
