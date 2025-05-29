@@ -140,6 +140,8 @@ export const data: AppData = {
       flags: 'mds',
     },
     { id: 'mde', name: 'Erekir', game: Game.Mindustry, flags: 'mds' },
+    { id: 'foundry', name: 'Foundry', game: Game.Foundry, flags: 'foundry' },
+    { id: 'outworldStation', name: 'OutworldStation', game: Game.OutworldStation, flags: 'outworldStation' },
   ],
   modHashV0: [
     '1.1',
@@ -215,5 +217,7 @@ export const data: AppData = {
     '2.0q',
     'mds',
     'mde',
+    'foundry',
+    'outworldStation',
   ],
 };

@@ -44,7 +44,10 @@
       "techtonica": "Techtonica",
       "finalFactory": "Final Factory",
       "factorY": "Factor Y",
-      "mindustry": "Mindustry"
+      "mindustry": "Mindustry",
+      "foundry": "Foundry",
+      "outworldStation": "OutworldStation",
+      "___addNewGameBeforeThisLine": "toAvoidConflictWithTheComma"
     },
     "inserterCapacity": {
       "capacity0": "容量ボーナスなし",
