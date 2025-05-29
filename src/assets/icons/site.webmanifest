@@ -30,5 +30,6 @@
     { "name": "Factor Y", "url": "fay" },
     { "name": "Mindustry", "url": "mds" },
     { "name": "Foundry", "url": "foundry" },
+    { "name": "OutworldStation", "url": "outworldStation" },
   ]
 }

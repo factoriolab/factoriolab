@@ -64,4 +64,10 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.foundry',
     modId: 'foundry',
   },
+  [Game.OutworldStation]: {
+    icon: 'outworldStation',
+    route: '/outworldStation',
+    label: 'options.game.outworldStation',
+    modId: 'outworldStation',
+  },
 };
