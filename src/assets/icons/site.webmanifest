@@ -28,6 +28,8 @@
     { "name": "Techtonica", "url": "tta" },
     { "name": "Final Factory", "url": "ffy" },
     { "name": "Factor Y", "url": "fay" },
-    { "name": "Mindustry", "url": "mds" }
+    { "name": "Mindustry", "url": "mds" },
+    { "name": "Foundry", "url": "fdy" },
+    { "name": "Outworld Station", "url": "ows" }
   ]
 }

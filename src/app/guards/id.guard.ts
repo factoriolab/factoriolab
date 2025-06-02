@@ -39,12 +39,16 @@ export const canActivateId: CanActivateFn = (
     }
     case 'factorio':
       return router.createUrlTree([DEFAULT_MOD]);
+    case 'final-factory':
+      return router.createUrlTree(['ffy']);
+    case 'foundry':
+      return router.createUrlTree(['fdy']);
+    case 'outworld-station':
+      return router.createUrlTree(['ows']);
     case 'satisfactory':
       return router.createUrlTree(['sfy']);
     case 'techtonica':
       return router.createUrlTree(['tta']);
-    case 'final-factory':
-      return router.createUrlTree(['ffy']);
   }
 
   return true;

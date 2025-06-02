@@ -1,0 +1,10 @@
+{
+  "minBelt": "conveyor-1",
+  "maxBelt": "conveyor-4",
+  "minMachineRank": [
+    "assembling-machine-1"
+  ],
+  "maxMachineRank": [
+    "assembling-machine-3"
+  ]
+}

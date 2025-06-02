@@ -49,7 +49,9 @@
       "techtonica": "Techtonica",
       "finalFactory": "Final Factory",
       "factorY": "Factor Y",
-      "mindustry": "Mindustry"
+      "mindustry": "Mindustry",
+      "foundry": "Foundry",
+      "outworldStation": "Outworld Station"
     },
     "inserterCapacity": {
       "capacity0": "No capacity bonus",

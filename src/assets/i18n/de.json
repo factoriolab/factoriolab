@@ -42,7 +42,9 @@
       "dysonSphereProgram": "Dyson Sphere Program",
       "satisfactory": "Satisfactory",
       "captainOfIndustry": "Captain of Industry",
-      "techtonica": "Techtonica"
+      "techtonica": "Techtonica",
+      "foundry": "Foundry",
+      "outworldStation": "Outworld Station"
     },
     "inserterCapacity": {
       "capacity0": "Kein Kapazitätsbonus",

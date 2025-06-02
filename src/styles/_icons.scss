@@ -90,31 +90,31 @@
   }
 }
 
-.captain-of-industry::before {
+.game-captain-of-industry::before {
   background-position: -64px 0;
 }
 
-.dyson-sphere-program::before {
+.game-dyson-sphere-program::before {
   background-position: -128px 0;
 }
 
-.factorio::before {
+.game-factorio::before {
   background-position: -192px 0;
 }
 
-.final-factory::before {
+.game-final-factory::before {
   background-position: -256px 0;
 }
 
-.satisfactory::before {
+.game-satisfactory::before {
   background-position: 0 -64px;
 }
 
-.techtonica::before {
+.game-techtonica::before {
   background-position: -64px -64px;
 }
 
-.mindustry::before {
+.game-mindustry::before {
   background-position: -64px -256px;
 }
 
@@ -199,6 +199,14 @@ body.light .module::before {
   background-position: -256px -192px;
 }
 
-.factor-y::before {
+.game-factor-y::before {
   background-position: 0 -256px;
+}
+
+.game-foundry::before {
+  background-position: -128px -256px;
+}
+
+.game-outworld-station::before {
+  background-position: -192px -256px;
 }
