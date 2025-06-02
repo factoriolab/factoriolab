@@ -29,7 +29,7 @@
     { "name": "Final Factory", "url": "ffy" },
     { "name": "Factor Y", "url": "fay" },
     { "name": "Mindustry", "url": "mds" },
-    { "name": "Foundry", "url": "foundry" },
-    { "name": "OutworldStation", "url": "outworldStation" },
+    { "name": "Foundry", "url": "fdy" },
+    { "name": "Outworld Station", "url": "ows" }
   ]
 }
