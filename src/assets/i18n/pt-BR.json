@@ -322,7 +322,6 @@
     "maximizeTypeTooltip": "Selecione o tipo de valor utilizado para o objetivo maximizar",
     "openCosts": "Abrir configurações de custo",
     "bypassLanding": "Sempre pular página de destino",
-    "hideDuplicateIcons": "Esconder ícones duplicados",
     "disablePaginator": "Desabilitar paginação de lista",
     "netProductionOnly": "Apenas produção líquida",
     "netProductionOnlyTooltip": "Se marcado, receitas que produzem e consomem o mesmo item são reduzidos apenas para a produção líquida",

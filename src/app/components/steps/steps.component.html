@@ -327,9 +327,7 @@
               <span class="find-text">{{
                 data().itemEntities[step.itemId].name
               }}</span>
-              @if (
-                !preferences().hideDuplicateIcons || !columnsState().tree.show
-              ) {
+              @if (!columnsState().tree.show) {
                 <button
                   pButton
                   pRipple
@@ -565,10 +563,7 @@
             @if (step.recipeId && step.recipe && step.recipeSettings) {
               <div class="d-flex align-items-center">
                 <span class="find-text">{{ step.recipe.name }}</span>
-                @if (
-                  !preferences().hideDuplicateIcons ||
-                  (step.itemId != null && step.itemId !== step.recipeId)
-                ) {
+                @if (step.itemId != null && step.itemId !== step.recipeId) {
                   <ng-container
                     *ngTemplateOutlet="recipesSelect"
                   ></ng-container>

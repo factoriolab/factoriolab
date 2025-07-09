@@ -318,7 +318,6 @@
     "maximizeTypeTooltip": "选择最大化目标数值类型",
     "openCosts": "打开权重设置",
     "bypassLanding": "总是跳过欢迎页面",
-    "hideDuplicateIcons": "隐藏重复图标",
     "disablePaginator": "禁用列表分页",
     "netProductionOnly": "仅显示净产量",
     "netProductionOnlyTooltip": "如果勾选，生产和消耗的相同物品会按净产量统计显示",

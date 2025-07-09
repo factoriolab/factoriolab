@@ -222,7 +222,6 @@ export const preferencesState: PreferencesState = {
   theme: Theme.Dark,
   bypassLanding: false,
   showTechLabels: false,
-  hideDuplicateIcons: false,
   paused: false,
   convertObjectiveValues: false,
   flowSettings: flowSettings,
