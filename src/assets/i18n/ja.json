@@ -308,7 +308,6 @@
     "maximizeTypeTooltip": "最大化の目的とする値を選んでください。",
     "openCosts": "コスト設定を開く",
     "bypassLanding": "ランディングページを常にスキップする",
-    "hideDuplicateIcons": "重複したアイコンを非表示にする",
     "disablePaginator": "リストのページャを無効にする",
     "netProductionOnly": "正味生産量のみとする",
     "netProductionOnlyTooltip": "チェックすると、消費と生産で同じアイテムが登場するレシピのとき、正味の生産量まで減らされます。",

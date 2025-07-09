@@ -1451,16 +1451,6 @@
               "
             ></p-checkbox>
           </div>
-          <div class="pb-3">
-            <p-checkbox
-              [ngModel]="preferences().hideDuplicateIcons"
-              [binary]="true"
-              [label]="'settings.hideDuplicateIcons' | translate"
-              (onChange)="
-                preferencesSvc.apply({ hideDuplicateIcons: $event.checked })
-              "
-            ></p-checkbox>
-          </div>
           <div>
             <p-checkbox
               [ngModel]="preferences().disablePaginator"
