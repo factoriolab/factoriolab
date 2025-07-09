@@ -150,10 +150,6 @@ body.light .module::before {
   background-position: -192px -128px;
 }
 
-.transparent::before {
-  background-position: -128px -256px;
-}
-
 .q-1,
 .q0,
 .q1,
@@ -209,4 +205,8 @@ body.light .module::before {
 
 .game-outworld-station::before {
   background-position: -192px -256px;
+}
+
+.transparent::before {
+  background-position: -256px -256px;
 }
