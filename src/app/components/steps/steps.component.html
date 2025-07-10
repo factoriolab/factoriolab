@@ -327,30 +327,28 @@
               <span class="find-text">{{
                 data().itemEntities[step.itemId].name
               }}</span>
-              @if (!columnsState().tree.show) {
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="hover-action p-button-text"
-                  [class.hover-active]="
-                    settings().excludedItemIds.has(step.itemId)
-                  "
-                  [icon]="step.itemId | iconSmClass"
-                  [pTooltip]="tooltip"
-                  (click)="
-                    changeItemExcluded(
-                      step.itemId,
-                      !settings().excludedItemIds.has(step.itemId)
-                    )
-                  "
-                >
-                  <i class="hover-icon fa-solid fa-eye-slash"></i>
-                  <ng-template #tooltip>
-                    <lab-tooltip [id]="step.itemId"></lab-tooltip>
-                  </ng-template>
-                </button>
-              }
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="hover-action p-button-text"
+                [class.hover-active]="
+                  settings().excludedItemIds.has(step.itemId)
+                "
+                [icon]="step.itemId | iconSmClass"
+                [pTooltip]="tooltip"
+                (click)="
+                  changeItemExcluded(
+                    step.itemId,
+                    !settings().excludedItemIds.has(step.itemId)
+                  )
+                "
+              >
+                <i class="hover-icon fa-solid fa-eye-slash"></i>
+                <ng-template #tooltip>
+                  <lab-tooltip [id]="step.itemId"></lab-tooltip>
+                </ng-template>
+              </button>
             </div>
           </td>
         } @else {
@@ -563,11 +561,7 @@
             @if (step.recipeId && step.recipe && step.recipeSettings) {
               <div class="d-flex align-items-center">
                 <span class="find-text">{{ step.recipe.name }}</span>
-                @if (step.itemId != null && step.itemId !== step.recipeId) {
-                  <ng-container
-                    *ngTemplateOutlet="recipesSelect"
-                  ></ng-container>
-                }
+                <ng-container *ngTemplateOutlet="recipesSelect"></ng-container>
                 @if (!step.recipe.flags.has('hideProducer')) {
                   <p-dropdown
                     labDropdownBase="icon"
