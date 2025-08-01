@@ -10,7 +10,12 @@ import {
 } from '~/helpers';
 import { Beacon } from '~/models/data/beacon';
 import { Machine, MachineJson } from '~/models/data/machine';
-import { filterEffect, ModuleEffect } from '~/models/data/module';
+import {
+  effectPrecision,
+  effects,
+  filterEffect,
+  ModuleEffect,
+} from '~/models/data/module';
 import {
   AdjustedRecipe,
   cloneRecipe,
@@ -238,16 +243,23 @@ export class RecipeService {
           ...Object.keys(recipe.in).filter((i) => recipe.in[i].nonzero()),
           ...Object.keys(recipe.out).filter((i) => recipe.out[i].nonzero()),
         ];
-        const belts = ids
-          .map((i) => itemsState[i].beltId)
-          .filter(notNullish)
-          .map((beltId) => data.beltEntities[beltId]);
-        let minSpeed = rational.zero;
-        for (const b of belts.filter(notNullish)) {
-          if (minSpeed.lt(b.speed)) minSpeed = b.speed;
+        const speeds = ids
+          .map((i) => {
+            const state = itemsState[i];
+            const beltId = state.beltId;
+            if (beltId == null) return undefined;
+            return data.beltEntities[beltId].speed.mul(
+              coalesce(state.stack, rational.one),
+            );
+          })
+          .filter(notNullish);
+        let minSpeed = undefined;
+        for (const speed of speeds) {
+          if (minSpeed == null || minSpeed.lt(speed)) minSpeed = speed;
         }
 
-        recipe.time = recipe.time.div(minSpeed);
+        if (minSpeed != null && !minSpeed.isZero())
+          recipe.time = recipe.time.div(minSpeed);
       }
 
       if (recipe.flags.has('technology') && data.flags.has('researchSpeed')) {
@@ -368,43 +380,45 @@ export class RecipeService {
             continue;
           }
 
+          const beacon = data.beaconEntities[beaconSettings.id];
+
+          let scale = rational.one;
+          if (
+            beacon.profile &&
+            profileIndex &&
+            profileIndex >= 0 &&
+            profileIndex < beacon.profile.length
+          )
+            scale = beacon.profile[profileIndex];
+
+          const factor = beaconSettings.count.mul(scale);
+          const beaconEffects: Partial<Record<ModuleEffect, Rational>> = {};
           for (const { id, count } of beaconSettings.modules) {
             if (id == null || id === ItemId.Module || count == null) continue;
             const module = data.moduleEntities[id];
-            const beacon = data.beaconEntities[beaconSettings.id];
 
-            let scale = rational.one;
-            if (
-              beacon.profile &&
-              profileIndex &&
-              profileIndex >= 0 &&
-              profileIndex < beacon.profile.length
-            )
-              scale = beacon.profile[profileIndex];
+            for (const effect of effects) {
+              if (!module[effect]) continue;
 
-            const factor = beaconSettings.count // Num of beacons
-              .mul(beacon.effectivity) // Effectivity of beacons
-              .mul(count) // Num of modules/beacon
-              .mul(scale); // Apply diminishing beacons scale
+              const value = module[effect]
+                .mul(count)
+                .mul(beacon.effectivity)
+                .trunc(effectPrecision[effect]);
+              const current = beaconEffects[effect];
+              beaconEffects[effect] = current ? current.add(value) : value;
+            }
+          }
 
-            if (module.speed)
-              eff.speed = eff.speed.add(module.speed.mul(factor));
+          for (const effect of Object.keys(beaconEffects) as ModuleEffect[]) {
+            const value = beaconEffects[effect];
+            // istanbul ignore if: Should be impossible to hit
+            if (value == null || value.isZero()) continue;
 
-            if (module.productivity)
-              eff.productivity = eff.productivity.add(
-                module.productivity.mul(factor),
-              );
+            const result = value // Effect from modules
+              .mul(factor)
+              .round(effectPrecision[effect]); // Apply count of beacons, scaling
 
-            if (module.consumption)
-              eff.consumption = eff.consumption.add(
-                module.consumption.mul(factor),
-              );
-
-            if (module.pollution)
-              eff.pollution = eff.pollution.add(module.pollution.mul(factor));
-
-            if (module.quality)
-              eff.quality = eff.quality.add(module.quality.mul(factor));
+            eff[effect] = eff[effect].add(result);
           }
         }
       }

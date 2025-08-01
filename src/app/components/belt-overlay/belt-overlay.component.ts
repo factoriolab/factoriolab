@@ -24,8 +24,6 @@ import { InputNumberComponent } from '../input-number/input-number.component';
 import { OverlayComponent } from '../modal';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 
-const MAX = rational(4n);
-
 @Component({
   selector: 'lab-belt-overlay',
   standalone: true,
@@ -49,7 +47,7 @@ export class BeltOverlayComponent extends OverlayComponent {
 
   setValue = output<ItemSettings>();
 
-  maximum = signal(MAX);
+  maximum = signal(rational.zero);
   settings = signal<Optional<ItemSettings>>(undefined);
 
   options = this.settingsSvc.options;
@@ -58,7 +56,7 @@ export class BeltOverlayComponent extends OverlayComponent {
 
   show(event: Event, stack: Rational, settings: ItemSettings): void {
     this.settings.set(spread(settings));
-    this.maximum.set(stack.lt(MAX) ? stack : MAX);
+    this.maximum.set(stack);
     this._show(event);
   }
 

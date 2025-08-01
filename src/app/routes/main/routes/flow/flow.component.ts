@@ -329,8 +329,8 @@ export class FlowComponent implements AfterViewInit {
             shape: 'round-rectangle',
             height: '64px',
             width: '64px',
-            'outline-color': 'data(color)', // Missing types
-            'outline-width': '4px', // Missing types
+            'border-color': 'data(color)',
+            'border-width': '4px',
             'background-color': 'data(color)',
             'background-image': 'data(href)',
             'background-position-x': 'data(posX)',

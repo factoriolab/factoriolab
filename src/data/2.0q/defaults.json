@@ -1,28 +1,60 @@
 {
   "beacon": "beacon",
-  "minBelt": "transport-belt",
-  "maxBelt": "express-transport-belt",
-  "fuelRank": [
-    "coal"
-  ],
+  "belt": "express-transport-belt",
+  "fuelRank": ["coal"],
   "cargoWagon": "cargo-wagon",
   "fluidWagon": "fluid-wagon",
   "excludedRecipes": [],
-  "minMachineRank": [
-    "assembling-machine-1",
+  "machineRank": [
+    "electric-mining-drill",
     "electric-furnace",
-    "electric-mining-drill"
+    "assembling-machine-3"
   ],
-  "maxMachineRank": [
-    "assembling-machine-3",
-    "electric-furnace",
-    "electric-mining-drill"
-  ],
-  "moduleRank": [
-    "productivity-module-3",
-    "speed-module-3"
-  ],
+  "moduleRank": ["productivity-module-3"],
   "beaconModule": "speed-module-3",
-  "minPipe": "pump",
-  "maxPipe": "pump"
+  "pipe": "pump",
+  "presets": [
+    {
+      "id": 0,
+      "label": "options.preset.minimum",
+      "belt": "transport-belt",
+      "moduleRank": [],
+      "machineRank": [
+        "electric-mining-drill",
+        "stone-furnace",
+        "assembling-machine-1"
+      ]
+    },
+    {
+      "id": 1,
+      "label": "options.preset.upgraded",
+      "moduleRank": []
+    },
+    {
+      "id": 2,
+      "label": "options.preset.beacon2",
+      "beaconCount": 2
+    },
+    {
+      "id": 5,
+      "label": "options.quality.legendary",
+      "machineRank": [
+        "electric-mining-drill(5)",
+        "pumpjack(5)",
+        "offshore-pump(5)",
+        "electric-furnace(5)",
+        "assembling-machine-3(5)",
+        "oil-refinery(5)",
+        "chemical-plant(5)",
+        "centrifuge(5)",
+        "recycler(5)",
+        "lab(5)"
+      ],
+      "moduleRank": ["productivity-module-3(5)"],
+      "beacon": "beacon(5)",
+      "beaconCount": 1,
+      "beaconModule": "speed-module-3(5)",
+      "pipe": "pump(5)"
+    }
+  ]
 }

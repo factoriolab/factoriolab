@@ -1,28 +1,49 @@
 {
   "beacon": "beacon",
-  "minBelt": "transport-belt",
-  "maxBelt": "express-transport-belt",
-  "fuelRank": [
-    "coal"
-  ],
+  "belt": "express-transport-belt",
+  "fuelRank": ["coal"],
   "cargoWagon": "cargo-wagon",
   "fluidWagon": "fluid-wagon",
   "excludedRecipes": [],
-  "minMachineRank": [
-    "assembling-machine-1",
+  "machineRank": [
+    "electric-mining-drill",
     "electric-furnace",
-    "electric-mining-drill"
+    "assembling-machine-3"
   ],
-  "maxMachineRank": [
-    "assembling-machine-3",
-    "electric-furnace",
-    "electric-mining-drill"
-  ],
-  "moduleRank": [
-    "productivity-module-3",
-    "speed-module-3"
-  ],
+  "moduleRank": ["productivity-module-3"],
   "beaconModule": "speed-module-3",
-  "minPipe": "pump",
-  "maxPipe": "pump"
+  "pipe": "pump",
+  "presets": [
+    {
+      "id": 0,
+      "label": "options.preset.minimum",
+      "belt": "transport-belt",
+      "moduleRank": [],
+      "machineRank": [
+        "electric-mining-drill",
+        "stone-furnace",
+        "assembling-machine-1"
+      ]
+    },
+    {
+      "id": 1,
+      "label": "options.preset.upgraded",
+      "moduleRank": []
+    },
+    {
+      "id": 2,
+      "label": "options.preset.beacon2",
+      "beaconCount": 2
+    },
+    {
+      "id": 8,
+      "label": "options.preset.beacon8",
+      "beaconCount": 8
+    },
+    {
+      "id": 12,
+      "label": "options.preset.beacon12",
+      "beaconCount": 12
+    }
+  ]
 }

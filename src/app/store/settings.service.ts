@@ -20,7 +20,12 @@ import { Item, ItemJson, parseItem } from '~/models/data/item';
 import { Machine, typeHasCraftingSpeed } from '~/models/data/machine';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
-import { filterEffect, Module, ModuleEffect } from '~/models/data/module';
+import {
+  effectPrecision,
+  filterEffect,
+  Module,
+  ModuleEffect,
+} from '~/models/data/module';
 import { parseRecipe, Recipe } from '~/models/data/recipe';
 import { Technology } from '~/models/data/technology';
 import { Dataset } from '~/models/dataset';
@@ -81,7 +86,7 @@ export interface SettingsState {
   excludedRecipeIds?: Set<string>;
   checkedRecipeIds: Set<string>;
   netProductionOnly: boolean;
-  preset: Preset;
+  preset: number;
   machineRankIds?: string[];
   fuelRankIds?: string[];
   moduleRankIds?: string[];
@@ -122,10 +127,10 @@ export const initialSettingsState: SettingsState = {
     factor: rational.one,
     machine: rational.one,
     footprint: rational.one,
-    unproduceable: rational(1000000n),
+    unproduceable: rational(1000000000n),
     excluded: rational.zero,
     surplus: rational.zero,
-    maximize: rational(-1000000n),
+    maximize: rational(-1000000000n),
     recycling: rational(1000n),
   },
 };
@@ -226,8 +231,9 @@ export class SettingsService extends Store<SettingsState> {
   });
 
   presetOptions = computed(() => {
+    const mod = this.mod();
     const data = this.dataset();
-    return presetOptions(data.flags);
+    return presetOptions(data.flags, mod?.defaults);
   });
 
   columnOptions = computed(() => {
@@ -338,10 +344,55 @@ export class SettingsService extends Store<SettingsState> {
     });
   }
 
-  computeDefaults(mod: Optional<Mod>, preset: Preset): Optional<Defaults> {
+  computeDefaults(
+    mod: Optional<Mod>,
+    presetSetting: number,
+  ): Optional<Defaults> {
     if (mod?.defaults == null) return;
 
     const m = mod.defaults;
+    if ('presets' in m) {
+      const p = coalesce(
+        m.presets.find((p) => p.id === presetSetting),
+        coalesce(m.presets[0], { id: 0, label: '' }),
+      );
+      let beacons: BeaconSettings[] = [];
+      const beaconId = coalesce(p.beacon, m.beacon);
+      if (beaconId) {
+        const beaconBaseId = baseId(beaconId);
+        const beacon = mod.items.find((i) => i.id === beaconBaseId)?.beacon;
+        if (beacon) {
+          const beaconModule = coalesce(p.beaconModule, m.beaconModule);
+          const modules: ModuleSettings[] = [
+            {
+              count: rational(beacon.modules),
+              id: coalesce(beaconModule, ItemId.Module),
+            },
+          ];
+          const count = rational(coalesce(p.beaconCount, 0));
+          beacons = [{ count, id: beaconId, modules }];
+        }
+      }
+      const excludedRecipe = coalesce(p.excludedRecipes, m.excludedRecipes);
+      const machineRank = coalesce(p.machineRank, m.machineRank);
+      const fuelRank = coalesce(p.fuelRank, m.fuelRank);
+      const moduleRank = coalesce(p.moduleRank, m.moduleRank);
+      return {
+        locations: coalesce(p.locations, m.locations),
+        beltId: coalesce(p.belt, m.belt),
+        beltStack: rational(coalesce(p.beltStack, m.beltStack)),
+        pipeId: coalesce(p.pipe, m.pipe),
+        cargoWagonId: coalesce(p.cargoWagon, m.cargoWagon),
+        fluidWagonId: coalesce(p.fluidWagon, m.fluidWagon),
+        excludedRecipeIds: coalesce(excludedRecipe, []),
+        machineRankIds: coalesce(machineRank, []),
+        fuelRankIds: coalesce(fuelRank, []),
+        moduleRankIds: coalesce(moduleRank, []),
+        beacons,
+      };
+    }
+
+    const preset = presetSetting as Preset;
     let beacons: BeaconSettings[] = [];
     let moduleRank: string[] | undefined;
     let overclock: Rational | undefined;
@@ -526,24 +577,10 @@ export class SettingsService extends Store<SettingsState> {
               .mul(rational(3n, 10n))
               .add(rational.one);
 
-            const effs: ModuleEffect[] = [
-              'consumption',
-              'pollution',
-              'productivity',
-              'quality',
-              'speed',
-            ];
-            for (const eff of effs) {
+            for (const eff of Object.keys(effectPrecision) as ModuleEffect[]) {
               if (qItem.module[eff] && !filterEffect(qItem.module, eff)) {
                 let value = qItem.module[eff].mul(factor);
-
-                /**
-                 * Quality is apparently allowed to have decimals while other
-                 * effects are floored to the nearest percent
-                 */
-                if (eff !== 'quality')
-                  value = value.mul(rational(100n)).floor().div(rational(100n));
-
+                value = value.trunc(effectPrecision[eff]);
                 qItem.module = spread(qItem.module, { [eff]: value });
               }
             }
@@ -614,9 +651,6 @@ export class SettingsService extends Store<SettingsState> {
         }
       });
     }
-    const canProdUpgradeRecipeIds = recipes
-      .filter((r) => r.flags.has('canProdUpgrade'))
-      .map((r) => r.id);
 
     // Filter for item types
     const beaconIds = items
@@ -736,6 +770,35 @@ export class SettingsService extends Store<SettingsState> {
       return e;
     }, {});
 
+    if (_flags.has('quality')) {
+      const qualities = [
+        Quality.Uncommon,
+        Quality.Rare,
+        Quality.Epic,
+        Quality.Legendary,
+      ];
+      for (const quality of qualities) {
+        for (const techId in technologyEntities) {
+          const tech = technologyEntities[techId];
+          if (tech.prodUpgrades) {
+            for (const recipeId of tech.prodUpgrades.slice()) {
+              const id = qualityId(recipeId, quality);
+              if (recipeQIds.has(id)) tech.prodUpgrades.push(id);
+            }
+          }
+        }
+      }
+    }
+
+    const prodUpgradeTechs: string[] = [];
+    const prodUpgrades: Entities<string[]> = {};
+    for (const techId in technologyEntities) {
+      if (technologyEntities[techId].prodUpgrades) {
+        prodUpgradeTechs.push(techId);
+        prodUpgrades[techId] = technologyEntities[techId].prodUpgrades;
+      }
+    }
+
     return {
       game,
       modId: coalesce(mod?.id, DEFAULT_MOD),
@@ -772,7 +835,8 @@ export class SettingsService extends Store<SettingsState> {
       recipeIds,
       recipeQIds,
       recipeEntities,
-      canProdUpgradeRecipeIds,
+      prodUpgradeTechs,
+      prodUpgrades,
       technologyIds,
       technologyEntities,
       locationIds,
@@ -791,13 +855,19 @@ export class SettingsService extends Store<SettingsState> {
     const techIds = state.researchedTechnologyIds;
     const allTechnologyIds = Object.keys(data.technologyEntities);
     let researchedTechnologyIds = new Set(allTechnologyIds);
-    if (techIds != null && allTechnologyIds.length > 0)
-      researchedTechnologyIds = techIds;
+    if (techIds != null && allTechnologyIds.length > 0) {
+      // Filter for only technologies that still exist in this data set
+      const filteredTechs = Array.from(techIds).filter((i) =>
+        researchedTechnologyIds.has(i),
+      );
+      researchedTechnologyIds = new Set(filteredTechs);
+    }
 
     const locIds = state.locationIds;
-    const allLocationIds = Object.keys(data.locationEntities);
-    let locationIds = new Set(allLocationIds);
-    if (locIds != null && allLocationIds.length > 0) locationIds = locIds;
+    const defaultLocationIds =
+      defaults?.locations ?? Object.keys(data.locationEntities);
+    let locationIds = new Set(defaultLocationIds);
+    if (locIds != null && defaultLocationIds.length > 0) locationIds = locIds;
 
     let quality = Quality.Normal;
     if (data.flags.has('quality')) {
@@ -920,6 +990,7 @@ export class SettingsService extends Store<SettingsState> {
     return spread(state as Settings, {
       beltId,
       defaultBeltId,
+      stack: coalesce(state.stack, defaults?.beltStack),
       pipeId,
       defaultPipeId,
       cargoWagonId,

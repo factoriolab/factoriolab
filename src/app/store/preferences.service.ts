@@ -27,7 +27,6 @@ export interface PreferencesState {
   theme: Theme;
   bypassLanding: boolean;
   showTechLabels: boolean;
-  hideDuplicateIcons: boolean;
   rows: number;
   disablePaginator: boolean;
   paused: boolean;
@@ -43,7 +42,6 @@ export const initialPreferencesState: PreferencesState = {
   theme: Theme.Dark,
   bypassLanding: false,
   showTechLabels: false,
-  hideDuplicateIcons: false,
   rows: 50,
   disablePaginator: false,
   paused: false,
@@ -93,11 +91,14 @@ export class PreferencesService extends Store<PreferencesState> {
       storeValue('preferences', JSON.stringify(this.state()));
     });
 
-    effect(() => {
-      const lang = this.language();
-      this.translateSvc.use(lang);
-      this.analyticsSvc.event('set_lang', lang);
-    });
+    effect(
+      () => {
+        const lang = this.language();
+        this.translateSvc.use(lang);
+        this.analyticsSvc.event('set_lang', lang);
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   saveState(modId: string, id: string, value: string): void {

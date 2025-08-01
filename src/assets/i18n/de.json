@@ -42,7 +42,9 @@
       "dysonSphereProgram": "Dyson Sphere Program",
       "satisfactory": "Satisfactory",
       "captainOfIndustry": "Captain of Industry",
-      "techtonica": "Techtonica"
+      "techtonica": "Techtonica",
+      "foundry": "Foundry",
+      "outworldStation": "Outworld Station"
     },
     "inserterCapacity": {
       "capacity0": "Kein Kapazitätsbonus",
@@ -65,6 +67,7 @@
     "preset": {
       "minimum": "Minimum",
       "modules": "Module",
+      "beacon2": "2 Effektverteiler",
       "beacon8": "8 Effektverteiler",
       "beacon12": "12 Effektverteiler",
       "upgraded": "mit Upgrade",
@@ -253,7 +256,6 @@
     "maximizeTypeTooltip": "Wähle den Typ von Maximierungswert",
     "openCosts": "Öffne Einstellungen zu Kosten",
     "bypassLanding": "Startseite immer überspringen",
-    "hideDuplicateIcons": "Verstecke doppelte Icons",
     "netProductionOnly": "Nur Nettoproduktion",
     "netProductionOnlyTooltip": "Wenn aktiviert, werden Rezepte, die das gleiche Item sowohl produzieren als auch verbrauchen, auf die Nettoproduktion reduziert.",
     "surplusMachinesOutput": "Maschinenausgabe als Überschuss",

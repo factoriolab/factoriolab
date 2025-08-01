@@ -52,7 +52,11 @@
       "satisfactory": "Satisfactory",
       "captainOfIndustry": "Captain of Industry",
       "techtonica": "Techtonica",
-      "finalFactory": "Final Factory"
+      "finalFactory": "Final Factory",
+      "factorY": "Factor Y",
+      "mindustry": "Mindustry",
+      "foundry": "Foundry",
+      "outworldStation": "Outworld Station"
     },
     "inserterCapacity": {
       "capacity0": "Pas de bonus de capacité",
@@ -68,6 +72,7 @@
     "preset": {
       "minimum": "Minimum",
       "modules": "Modules",
+      "beacon2": "2 Balises",
       "beacon8": "8 Balises",
       "beacon12": "12 Balises",
       "upgraded": "Amélioré",

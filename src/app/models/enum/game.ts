@@ -7,6 +7,10 @@ export enum Game {
   FinalFactory = 'FinalFactory',
   Satisfactory = 'Satisfactory',
   Techtonica = 'Techtonica',
+  FactorY = 'FactorY',
+  Mindustry = 'Mindustry',
+  Foundry = 'Foundry',
+  OutworldStation = 'OutworldStation',
 }
 
 export const gameOptions: SelectItem<Game>[] = [
@@ -16,4 +20,8 @@ export const gameOptions: SelectItem<Game>[] = [
   { value: Game.CaptainOfIndustry, label: 'options.game.captainOfIndustry' },
   { value: Game.Techtonica, label: 'options.game.techtonica' },
   { value: Game.FinalFactory, label: 'options.game.finalFactory' },
+  { value: Game.FactorY, label: 'options.game.factorY' },
+  { value: Game.Mindustry, label: 'options.game.mindustry' },
+  { value: Game.Foundry, label: 'options.game.foundry' },
+  { value: Game.OutworldStation, label: 'options.game.outworldStation' },
 ];

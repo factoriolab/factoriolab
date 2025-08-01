@@ -4,6 +4,7 @@ import { coalesce } from '~/helpers';
 import { Item } from '~/models/data/item';
 import { Dataset } from '~/models/dataset';
 import { ItemId } from '~/models/enum/item-id';
+import { Rational, rational } from '~/models/rational';
 import { ItemSettings, ItemState } from '~/models/settings/item-settings';
 import { Settings } from '~/models/settings/settings';
 import { Entities, Optional } from '~/models/utils';
@@ -46,19 +47,19 @@ export class ItemsService extends EntityStore<ItemState> {
     for (const item of data.itemIds.map((i) => data.itemEntities[i])) {
       const s = state[item.id];
       const defaultBeltId = this.defaultBelt(item, settings);
+      const defaultStack = this.defaultStack(item, settings);
       const defaultWagonId = this.defaultWagon(item, settings);
       const beltId = coalesce(s?.beltId, defaultBeltId);
+      const stack = coalesce(s?.stack, defaultStack);
       const wagonId = coalesce(s?.wagonId, defaultWagonId);
-      let stack = s?.stack;
-      if (stack == null && item.stack && settings.stack)
-        stack = item.stack.lt(settings.stack) ? item.stack : settings.stack;
 
       value[item.id] = {
         beltId,
         defaultBeltId,
+        stack,
+        defaultStack,
         wagonId,
         defaultWagonId,
-        stack,
       };
     }
 
@@ -69,6 +70,11 @@ export class ItemsService extends EntityStore<ItemState> {
     if (item.stack) return settings.beltId;
     else if (settings.pipeId) return settings.pipeId;
     else return ItemId.Pipe;
+  }
+
+  defaultStack(item: Item, settings: Settings): Rational {
+    if (item.stack == null || settings.stack == null) return rational.one;
+    return item.stack.lt(settings.stack) ? item.stack : settings.stack;
   }
 
   defaultWagon(item: Item, settings: Settings): Optional<string> {

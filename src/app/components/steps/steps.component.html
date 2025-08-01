@@ -327,32 +327,28 @@
               <span class="find-text">{{
                 data().itemEntities[step.itemId].name
               }}</span>
-              @if (
-                !preferences().hideDuplicateIcons || !columnsState().tree.show
-              ) {
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="hover-action p-button-text"
-                  [class.hover-active]="
-                    settings().excludedItemIds.has(step.itemId)
-                  "
-                  [icon]="step.itemId | iconSmClass"
-                  [pTooltip]="tooltip"
-                  (click)="
-                    changeItemExcluded(
-                      step.itemId,
-                      !settings().excludedItemIds.has(step.itemId)
-                    )
-                  "
-                >
-                  <i class="hover-icon fa-solid fa-eye-slash"></i>
-                  <ng-template #tooltip>
-                    <lab-tooltip [id]="step.itemId"></lab-tooltip>
-                  </ng-template>
-                </button>
-              }
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="hover-action p-button-text"
+                [class.hover-active]="
+                  settings().excludedItemIds.has(step.itemId)
+                "
+                [icon]="step.itemId | iconSmClass"
+                [pTooltip]="tooltip"
+                (click)="
+                  changeItemExcluded(
+                    step.itemId,
+                    !settings().excludedItemIds.has(step.itemId)
+                  )
+                "
+              >
+                <i class="hover-icon fa-solid fa-eye-slash"></i>
+                <ng-template #tooltip>
+                  <lab-tooltip [id]="step.itemId"></lab-tooltip>
+                </ng-template>
+              </button>
             </div>
           </td>
         } @else {
@@ -404,9 +400,7 @@
                       </button>
                       <lab-belt-overlay
                         #beltPicker
-                        (setValue)="
-                          changeBelts(step, $event, itemSettings.defaultBeltId)
-                        "
+                        (setValue)="changeBelts(step, $event)"
                       ></lab-belt-overlay>
                     } @else {
                       <p-dropdown
@@ -567,14 +561,7 @@
             @if (step.recipeId && step.recipe && step.recipeSettings) {
               <div class="d-flex align-items-center">
                 <span class="find-text">{{ step.recipe.name }}</span>
-                @if (
-                  !preferences().hideDuplicateIcons ||
-                  (step.itemId != null && step.itemId !== step.recipeId)
-                ) {
-                  <ng-container
-                    *ngTemplateOutlet="recipesSelect"
-                  ></ng-container>
-                }
+                <ng-container *ngTemplateOutlet="recipesSelect"></ng-container>
                 @if (!step.recipe.flags.has('hideProducer')) {
                   <p-dropdown
                     labDropdownBase="icon"
@@ -1053,6 +1040,7 @@
                     itemId: step.itemId,
                     belts: step.belts?.mul(output.value),
                     beltId: itemsState()[step.itemId].beltId,
+                    stack: itemsState()[step.itemId].stack,
                     wagons: step.wagons?.mul(output.value),
                     wagonId: itemsState()[step.itemId].wagonId,
                     machines: output.step?.machines,
@@ -1090,6 +1078,7 @@
                     itemId: step.itemId,
                     belts: step.belts?.mul(parent.value),
                     beltId: itemsState()[step.itemId].beltId,
+                    stack: itemsState()[step.itemId].stack,
                     wagons: step.wagons?.mul(parent.value),
                     wagonId: itemsState()[step.itemId].wagonId,
                     machines:
@@ -1132,20 +1121,17 @@
                 output of step.outputs | keyvalue: trackSvc.sortByValue;
                 track output.key
               ) {
-                @if (
-                  {
-                    step: stepByItemEntities()[output.key],
-                    percent: step.outputs?.[output.key],
-                  };
-                  as row
-                ) {
-                  @if (row.step && row.percent && row.step.items) {
+                @if (stepByItemEntities()[output.key]; as rowStep) {
+                  @if (
+                    rowStep.items && step.outputs?.[output.key];
+                    as rowPercent
+                  ) {
                     <ng-container
                       *ngTemplateOutlet="
                         detailRow;
                         context: {
-                          items: row.step.items
-                            .mul(row.percent)
+                          items: rowStep.items
+                            .mul(rowPercent)
                             .div(step.recipe.effects.productivity),
                           itemId: output.key,
                         }
@@ -1167,34 +1153,32 @@
                 input of step.recipe.in | keyvalue: trackSvc.sortByValue;
                 track input.key
               ) {
-                @if (
-                  {
-                    step: stepByItemEntities()[input.key],
-                    percent: stepByItemEntities()[input.key].parents?.[step.id],
-                  };
-                  as row
-                ) {
-                  @if (row.step.itemId && row.percent) {
+                @if (stepByItemEntities()[input.key]; as rowStep) {
+                  @if (
+                    rowStep.itemId && rowStep.parents?.[step.id];
+                    as rowPercent
+                  ) {
                     @if (
-                      stepDetails()[row.step.id].outputs.length === 1 &&
-                        stepDetails()[row.step.id].outputs[0];
+                      stepDetails()[rowStep.id].outputs.length === 1 &&
+                        stepDetails()[rowStep.id].outputs[0];
                       as output
                     ) {
                       <ng-container
                         *ngTemplateOutlet="
                           detailRow;
                           context: {
-                            items: row.step.items?.mul(row.percent),
+                            items: rowStep.items?.mul(rowPercent),
                             itemId: input.key,
-                            belts: row.step.belts?.mul(row.percent),
-                            beltId: itemsState()[row.step.itemId].beltId,
-                            wagons: row.step.wagons?.mul(row.percent),
-                            wagonId: itemsState()[row.step.itemId].wagonId,
-                            machines: output.step?.machines?.mul(row.percent),
+                            belts: rowStep.belts?.mul(rowPercent),
+                            beltId: itemsState()[rowStep.itemId].beltId,
+                            stack: itemsState()[rowStep.itemId].stack,
+                            wagons: rowStep.wagons?.mul(rowPercent),
+                            wagonId: itemsState()[rowStep.itemId].wagonId,
+                            machines: output.step?.machines?.mul(rowPercent),
                             machineId: output.step?.recipeSettings?.machineId,
                             recipeId: output.step?.recipeId,
                             recipeObjectiveId: output.step?.recipeObjectiveId,
-                            percent: row.percent,
+                            percent: rowPercent,
                             destId: step.recipeId,
                             destRecipeObjectiveId: step.recipeObjectiveId,
                             destIsRecipe: true,
@@ -1207,13 +1191,14 @@
                         *ngTemplateOutlet="
                           detailRow;
                           context: {
-                            items: row.step.items?.mul(row.percent),
+                            items: rowStep.items?.mul(rowPercent),
                             itemId: input.key,
-                            belts: row.step.belts?.mul(row.percent),
-                            beltId: itemsState()[row.step.itemId].beltId,
-                            wagons: row.step.wagons?.mul(row.percent),
-                            wagonId: itemsState()[row.step.itemId].wagonId,
-                            percent: row.percent,
+                            belts: rowStep.belts?.mul(rowPercent),
+                            beltId: itemsState()[rowStep.itemId].beltId,
+                            stack: itemsState()[rowStep.itemId].stack,
+                            wagons: rowStep.wagons?.mul(rowPercent),
+                            wagonId: itemsState()[rowStep.itemId].wagonId,
+                            percent: rowPercent,
                             destId: step.recipeId,
                             destRecipeObjectiveId: step.recipeObjectiveId,
                             destIsRecipe: true,
@@ -1254,29 +1239,27 @@
               output of step.recipe.out | keyvalue: trackSvc.sortByValue;
               track output.key
             ) {
-              @if (
-                {
-                  step: stepByItemEntities()[output.key],
-                  percent: step.outputs?.[output.key],
-                };
-                as row
-              ) {
-                @if (row.step.itemId && row.percent) {
+              @if (stepByItemEntities()[output.key]; as rowStep) {
+                @if (
+                  rowStep.itemId && step.outputs?.[output.key];
+                  as rowPercent
+                ) {
                   <ng-container
                     *ngTemplateOutlet="
                       detailRow;
                       context: {
-                        items: row.step.items?.mul(row.percent),
+                        items: rowStep.items?.mul(rowPercent),
                         itemId: output.key,
-                        belts: row.step.belts?.mul(row.percent),
-                        beltId: itemsState()[row.step.itemId].beltId,
-                        wagons: row.step.wagons?.mul(row.percent),
-                        wagonId: itemsState()[row.step.itemId].wagonId,
+                        belts: rowStep.belts?.mul(rowPercent),
+                        beltId: itemsState()[rowStep.itemId].beltId,
+                        stack: itemsState()[rowStep.itemId].stack,
+                        wagons: rowStep.wagons?.mul(rowPercent),
+                        wagonId: itemsState()[rowStep.itemId].wagonId,
                         machines: step.machines,
                         machineId: step.recipeSettings?.machineId,
                         recipeId: step.recipeId,
                         recipeObjectiveId: step.recipeObjectiveId,
-                        percent: row.percent,
+                        percent: rowPercent,
                         percentOnDest: true,
                         destId: output.key,
                         destRecipeObjectiveId: step.recipeObjectiveId,
@@ -1301,25 +1284,18 @@
                       input of step.recipe.in | keyvalue: trackSvc.sortByValue;
                       track input.key
                     ) {
-                      @if (
-                        {
-                          step: stepByItemEntities()[input.key],
-                          percent:
-                            stepByItemEntities()[input.key].parents?.[step.id],
-                        };
-                        as row
-                      ) {
-                        @if (row.percent) {
+                      @if (stepByItemEntities()[input.key]; as rowStep) {
+                        @if (rowStep.parents?.[step.id]; as rowPercent) {
                           <tr>
                             <td>
-                              @if (row.step.items) {
+                              @if (rowStep.items) {
                                 <ng-container
                                   *ngTemplateOutlet="
                                     machineValueCell;
                                     context: {
                                       value:
-                                        row.step.items
-                                          .mul(row.percent)
+                                        rowStep.items
+                                          .mul(rowPercent)
                                           .div(step.machines)
                                         | rate: columnsState().items.precision,
                                       itemId: input.key,
@@ -1331,7 +1307,7 @@
                             </td>
                             @if (columnsState().belts.show) {
                               <td>
-                                @if (row.step.belts) {
+                                @if (rowStep.belts) {
                                   @if (
                                     itemsState()[input.key].beltId;
                                     as beltId
@@ -1341,12 +1317,13 @@
                                         machineValueCell;
                                         context: {
                                           value:
-                                            row.step.belts
-                                              .mul(row.percent)
+                                            rowStep.belts
+                                              .mul(rowPercent)
                                               .div(step.machines)
                                             | rate
                                               : columnsState().belts.precision,
                                           itemId: beltId,
+                                          stack: itemsState()[input.key].stack,
                                         }
                                       "
                                     >
@@ -1359,11 +1336,11 @@
                               <td>
                                 @if (
                                   data().itemEntities[input.key].stack &&
-                                  row.step.items
+                                  rowStep.items
                                 ) {
                                   @if (
-                                    row.step.items
-                                      .mul(row.percent)
+                                    rowStep.items
+                                      .mul(rowPercent)
                                       .div(step.machines)
                                       .div(dispRateInfo().value)
                                       | inserterSpeed: settings();
@@ -1476,6 +1453,7 @@
                                         items.div(beltSpeed()[beltId])
                                         | rate: columnsState().belts.precision,
                                       itemId: beltId,
+                                      stack: itemsState()[output.key].stack,
                                     }
                                   "
                                 >
@@ -1505,10 +1483,18 @@
                     #machineValueCell
                     let-value="value"
                     let-itemId="itemId"
+                    let-stack="stack"
                   >
                     <div class="d-flex align-items-center justify-content-end">
                       <span class="monospace">{{ value }}</span>
-                      <i [class]="itemId | iconClass" [pTooltip]="tooltip">
+                      <i
+                        class="padded"
+                        [class]="itemId | iconSmClass"
+                        [pTooltip]="tooltip"
+                      >
+                        @if (stack?.gt(rational.one)) {
+                          <span>{{ stack }}</span>
+                        }
                         <ng-template #tooltip>
                           <lab-tooltip [id]="itemId"></lab-tooltip>
                         </ng-template>
@@ -1568,6 +1554,7 @@
     let-itemId="itemId"
     let-belts="belts"
     let-beltId="beltId"
+    let-stack="stack"
     let-wagons="wagons"
     let-wagonId="wagonId"
     let-machines="machines"
@@ -1608,6 +1595,9 @@
           <td class="ps-0">
             <div class="d-flex">
               <i [class]="beltId | iconClass" [pTooltip]="tooltip">
+                @if (stack?.gt(rational.one)) {
+                  <span>{{ stack }}</span>
+                }
                 <ng-template #tooltip>
                   <lab-tooltip [id]="beltId" type="belt"></lab-tooltip>
                 </ng-template>

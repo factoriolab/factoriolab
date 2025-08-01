@@ -191,7 +191,6 @@ export class SettingsComponent {
 
   ItemId = ItemId;
   rational = rational;
-  maximumStack = rational(4n);
   isStandalone = window.matchMedia('(display-mode: standalone)').matches;
 
   get search(): string {
@@ -219,9 +218,10 @@ export class SettingsComponent {
           message,
           acceptLabel,
           rejectLabel,
-          accept: () => {
+          accept: async () => {
             localStorage.clear();
-            void this.router.navigate([this.modId()]);
+            await this.router.navigate([this.modId()]);
+            this.contentSvc.reload();
           },
         });
       });

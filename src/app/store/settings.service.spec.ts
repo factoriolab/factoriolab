@@ -153,10 +153,9 @@ describe('SettingsService', () => {
       spyOn(service, 'preset').and.returnValue(Preset.Minimum);
       const result = service.defaults();
       assert(result != null);
-      expect(result.beltId).toEqual(Mocks.mod.defaults!.minBelt);
-      expect(result.machineRankIds).toEqual(
-        Mocks.mod.defaults!.minMachineRank!,
-      );
+      const defaults = Mocks.mod.defaults as any;
+      expect(result.beltId).toEqual(defaults.minBelt);
+      expect(result.machineRankIds).toEqual(defaults.minMachineRank);
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beacons).toEqual([
         {
@@ -228,6 +227,18 @@ describe('SettingsService', () => {
       const result = service.defaults();
       assert(result != null);
       expect(result.moduleRankIds).toEqual(Mocks.defaults.moduleRankIds);
+    });
+    it('should handle custom presets', () => {
+      spyOn(service, 'mod').and.returnValue(
+        spread(Mocks.mod, {
+          defaults: spread(Mocks.mod.defaults, {
+            presets: [{ id: 1, label: 'label', fuelRank: ['test'] }],
+          }),
+        }),
+      );
+      const result = service.defaults();
+      assert(result != null);
+      expect(result.fuelRankIds).toEqual(['test']);
     });
   });
 
@@ -362,7 +373,9 @@ describe('SettingsService', () => {
               })
             : i.id === ItemId.Pump
               ? spread(i, { pipe: { speed: 1200 } })
-              : i,
+              : i.id === ItemId.SpeedModule
+                ? spread(i, { module: { quality: 0.1 } })
+                : i,
       );
       spyOn(service, 'mod').and.returnValue(
         spread(Mocks.mod, { flags: 'spa', items }),
@@ -395,14 +408,16 @@ describe('SettingsService', () => {
     });
 
     it('should build list of recipes that allow prod upgrades', () => {
-      const recipes = Mocks.mod.recipes.map((r) =>
-        r.id === RecipeId.SteelChest
-          ? spread(r, { flags: ['canProdUpgrade'] })
-          : r,
+      const items = Mocks.mod.items.map((i) =>
+        i.id === ItemId.ArtilleryShellRange
+          ? spread(i, { technology: { prodUpgrades: [RecipeId.SteelChest] } })
+          : i,
       );
-      spyOn(service, 'mod').and.returnValue(spread(Mocks.mod, { recipes }));
+      spyOn(service, 'mod').and.returnValue(
+        spread(Mocks.mod, { items, flags: 'spa' }),
+      );
       const result = service.dataset();
-      expect(result.canProdUpgradeRecipeIds).toEqual([RecipeId.SteelChest]);
+      expect(result.prodUpgradeTechs).toEqual([ItemId.ArtilleryShellRange]);
     });
   });
 

@@ -13,7 +13,11 @@
     "errorDetail": "The application has encountered an error:",
     "resetTooltip": "Click to reset",
     "simplexSolved": "Solved, {{ time }}ms, cost: {{ cost }}",
-    "migrationWarning": "Migration warning"
+    "migrationWarning": "Migration warning",
+    "updateAvailable": "Update available",
+    "updateAvailableMessage": "An update is available. Would you like to reload the page to update?",
+    "updateRequired": "Update required",
+    "updateRequiredMessage": "An update is available, and the page must be reloaded to proceed."
   },
   "options": {
     "column": {
@@ -43,7 +47,11 @@
       "satisfactory": "Satisfactory",
       "captainOfIndustry": "Captain of Industry",
       "techtonica": "Techtonica",
-      "finalFactory": "Final Factory"
+      "finalFactory": "Final Factory",
+      "factorY": "Factor Y",
+      "mindustry": "Mindustry",
+      "foundry": "Foundry",
+      "outworldStation": "Outworld Station"
     },
     "inserterCapacity": {
       "capacity0": "No capacity bonus",
@@ -69,6 +77,7 @@
     "preset": {
       "minimum": "Minimum",
       "modules": "Modules",
+      "beacon2": "2 Beacons",
       "beacon8": "8 Beacons",
       "beacon12": "12 Beacons",
       "upgraded": "Upgraded",
@@ -313,7 +322,6 @@
     "maximizeTypeTooltip": "Select maximize objective value type",
     "openCosts": "Open cost settings",
     "bypassLanding": "Always skip landing page",
-    "hideDuplicateIcons": "Hide duplicate icons",
     "disablePaginator": "Disable list paginator",
     "netProductionOnly": "Net production only",
     "netProductionOnlyTooltip": "If checked, recipes that both produce and consume the same item are reduced to the net production only",
@@ -344,7 +352,7 @@
     "error": "No solution found",
     "errorDetail": "Check <b>Limit</b> and <b>Maximize</b> objectives and enabled recipes. ",
     "errorUnbounded": "Solution is unbounded",
-    "errorUnboundedDetail": "<b>Limit</b> objectives may not be restrictive enough for <b>Maximize</b> objectives.",
+    "errorUnboundedDetail": "<b>Limit</b> objectives may not be restrictive enough for <b>Maximize</b> objectives. To see why, try switching your <b>Maximize</b> objectives to <b>Output</b> objectives with extremely high values.",
     "errorInfeasible": "Solution is infeasible",
     "errorInfeasibleDetail": "<b>Limit</b> objectives may be too restrictive to satisfy <b>Output</b> objectives.",
     "errorMaximizeExcluded": "Cannot use <b>Maximize</b> with an excluded target. Choose another target or include the current target.",

@@ -350,7 +350,7 @@ describe('RecipeService', () => {
           count: rational(8n),
           modules: [
             { count: rational(2n), id: ItemId.SpeedModule },
-            { id: ItemId.Module },
+            { count: rational.one, id: ItemId.SpeedModule2 },
           ],
         },
       ];
@@ -399,15 +399,15 @@ describe('RecipeService', () => {
         ] as AdjustedRecipe,
         {
           out: { [ItemId.SteelChest]: rational(4n) },
-          time: rational(5000n, 12867n),
+          time: rational(100n, 321n),
           drain: rational(5n),
-          consumption: rational(3921n, 10n),
-          pollution: rational(3187773n, 5000000n),
+          consumption: rational(519n),
+          pollution: rational(10553n, 12500n),
           effects: {
-            consumption: rational(1307n, 500n),
-            pollution: rational(2439n, 500n),
+            consumption: rational(173n, 50n),
+            pollution: rational(122n, 25n),
             productivity: rational(4n),
-            speed: rational(4289n, 2500n),
+            speed: rational(107n, 50n),
             quality: rational.zero,
           },
           produces: new Set(),
@@ -766,19 +766,25 @@ describe('RecipeService', () => {
     it('should calculate machine speed based on belt speed if undefined', () => {
       const data = Mocks.getDataset();
       data.machineEntities[ItemId.AssemblingMachine2].speed = undefined;
+      const itemsState = spread(Mocks.itemsStateInitial, {
+        [ItemId.ElectronicCircuit]: spread(
+          Mocks.itemsStateInitial[ItemId.ElectronicCircuit],
+          { beltId: undefined },
+        ),
+      });
       const result = service.adjustRecipe(
-        RecipeId.SteelChest,
-        Mocks.recipesState[RecipeId.SteelChest],
-        Mocks.itemsStateInitial,
+        RecipeId.ElectronicCircuit,
+        Mocks.recipesState[RecipeId.ElectronicCircuit],
+        itemsState,
         Mocks.settingsStateInitial,
         data,
       );
       const expected = spread(
         Mocks.adjustedDataset.recipeEntities[
-          RecipeId.SteelChest
+          RecipeId.ElectronicCircuit
         ] as AdjustedRecipe,
         {
-          out: { [ItemId.SteelChest]: rational.one },
+          out: { [ItemId.ElectronicCircuit]: rational.one },
           time: rational(1n, 60n),
           drain: rational(5n),
           consumption: rational(150n),

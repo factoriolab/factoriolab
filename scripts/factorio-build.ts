@@ -609,6 +609,7 @@ async function processMod(): Promise<void> {
     noProducers: [],
     resourceNoMinableProducts: [],
     resourceDuplicate: [],
+    disabledRecipeDoesntExist: [],
   };
 
   function writeData(): void {
@@ -640,10 +641,12 @@ async function processMod(): Promise<void> {
 
       if (modData.defaults?.excludedRecipes) {
         // Filter excluded recipes for only recipes that exist
+        const recipeExists = (e: string) =>
+          modData.recipes.some((r) => r.id === e);
+        modDataReport.disabledRecipeDoesntExist =
+          modData.defaults.excludedRecipes.filter((e) => !recipeExists(e));
         modData.defaults.excludedRecipes =
-          modData.defaults.excludedRecipes.filter((e) =>
-            modData.recipes.some((r) => r.id === e),
-          );
+          modData.defaults.excludedRecipes.filter(recipeExists);
       }
 
       updateHash(modData, oldHash, modFlags);
@@ -681,7 +684,7 @@ async function processMod(): Promise<void> {
 
   // Record of recipe id : technology id
   const recipesLocked = new Set<string>();
-  const recipesCanProdUpgrade = new Set<string>();
+  const prodUpgrades: Record<string, string[]> = {};
   const technologySet = new Set<TechnologyPrototype>();
   const technologyUnlocks: Record<string, string[]> = {};
   for (const key of Object.keys(dataRaw.technology)) {
@@ -702,6 +705,7 @@ async function processMod(): Promise<void> {
       technologySet.add(tech);
       const id = techId[tech.name];
 
+      const upgradedRecipes = [];
       for (const effect of coerceArray(tech.effects)) {
         if (isUnlockRecipeModifier(effect)) {
           recipesLocked.add(effect.recipe);
@@ -709,8 +713,9 @@ async function processMod(): Promise<void> {
         }
 
         if (isChangeRecipeProductivityModifier(effect))
-          recipesCanProdUpgrade.add(effect.recipe);
+          upgradedRecipes.push(effect.recipe);
       }
+      if (upgradedRecipes.length) prodUpgrades[id] = upgradedRecipes;
     }
   }
 
@@ -761,7 +766,12 @@ async function processMod(): Promise<void> {
     }
 
     // Process recycling recipes later, after determining included items
-    if (recipe.category === 'recycling') continue;
+    // In Krastorio2, crushing is similar to recycling
+    if (
+      recipe.category === 'recycling' ||
+      recipe.category === 'kr-void-crushing'
+    )
+      continue;
 
     // Don't include recipes with no inputs/outputs
     const ingredients = getIngredients(recipe.ingredients);
@@ -864,7 +874,11 @@ async function processMod(): Promise<void> {
     if (recipesEnabled[key]) continue;
 
     const recipe = dataRaw.recipe[key];
-    if (recipe.category !== 'recycling') continue;
+    if (
+      recipe.category !== 'recycling' &&
+      recipe.category !== 'kr-void-crushing'
+    )
+      continue;
 
     // Only include recycling recipes with used items
     const ingredients = getIngredients(recipe.ingredients);
@@ -876,7 +890,8 @@ async function processMod(): Promise<void> {
     )
       continue;
 
-    technologyUnlocks['recycling'].push(recipe.name);
+    if (recipe.category === 'recycling')
+      technologyUnlocks['recycling'].push(recipe.name);
     recipesEnabled[recipe.name] = recipe;
     recipeIngredientsMap[recipe.name] = ingredients;
     recipeResultsMap[recipe.name] = products;
@@ -1305,7 +1320,7 @@ async function processMod(): Promise<void> {
     if (isRecipePrototype(proto)) {
       const [recipeIn, recipeInTemp] = recipeIngredientsMap[proto.name];
       const [_recipeOut, , , temps] = recipeResultsMap[proto.name];
-      let [, recipeCatalyst] = recipeResultsMap[proto.name];
+      const [, recipeCatalyst] = recipeResultsMap[proto.name];
       const disallowedEffects = getRecipeDisallowedEffects(proto);
 
       // Convert fluid outputs to use correct ids
@@ -1419,9 +1434,7 @@ async function processMod(): Promise<void> {
           const flags: RecipeFlag[] = [];
 
           if (recipesLocked.has(proto.name)) flags.push('locked');
-          const canProdUpgrade = recipesCanProdUpgrade.has(proto.name);
-          if (canProdUpgrade) flags.push('canProdUpgrade');
-          if (proto.category === 'recycling') flags.push('recycling');
+          if (proto.category === 'recycling') flags.push('recycling', 'locked');
 
           if (flags.length) recipe.flags = flags;
 
@@ -1984,6 +1997,8 @@ async function processMod(): Promise<void> {
     const unlockedRecipes = technologyUnlocks[id];
     if (unlockedRecipes) technology.unlockedRecipes = unlockedRecipes;
 
+    if (id in prodUpgrades) technology.prodUpgrades = prodUpgrades[id];
+
     const inputs = Object.keys(techIngredientsMap[tech.name]);
     const row = inputs.length;
     const producers = labs.filter((l) => {
@@ -2136,6 +2151,13 @@ async function processMod(): Promise<void> {
       console.log(
         'Only one mining resource is generated for duplicate resources',
       );
+    }
+
+    if (modDataReport.disabledRecipeDoesntExist.length) {
+      logWarn(
+        `Inexistent recipes disabled in defaults.json: ${modDataReport.disabledRecipeDoesntExist.length.toString()}`,
+      );
+      console.log('These recipes have been ignored.');
     }
 
     if (warnings)

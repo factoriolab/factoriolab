@@ -64,4 +64,9 @@ export class ContentService {
   }
 
   version$ = this.dataSvc.config$.pipe(map((c) => versionStr(c.version)));
+
+  // istanbul ignore next: Helper to call browser location function
+  reload(): void {
+    location.reload();
+  }
 }

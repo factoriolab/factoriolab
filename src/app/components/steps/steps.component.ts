@@ -44,7 +44,7 @@ import { RecipeState } from '~/models/settings/recipe-settings';
 import { Step } from '~/models/step';
 import { StepDetail } from '~/models/step-detail';
 import { storedSignal } from '~/models/stored-signal';
-import { Entities, Optional } from '~/models/utils';
+import { Entities } from '~/models/utils';
 import { AsStepPipe } from '~/pipes/as-step.pipe';
 import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { InserterSpeedPipe } from '~/pipes/inserter-speed.pipe';
@@ -409,23 +409,19 @@ export class StepsComponent implements OnInit, AfterViewInit {
     update(id, state);
   }
 
-  changeBelts(
-    step: Step,
-    state: ItemSettings,
-    defaultBeltId: Optional<string>,
-  ): void {
+  changeBelts(step: Step, state: ItemSettings): void {
     if (step.itemId == null) return;
     this.itemsSvc.updateEntityField(
       step.itemId,
       'stack',
       state.stack,
-      rational.one,
+      state.defaultStack,
     );
     this.itemsSvc.updateEntityField(
       step.itemId,
       'beltId',
       state.beltId,
-      defaultBeltId,
+      state.defaultBeltId,
     );
   }
 

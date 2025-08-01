@@ -1032,7 +1032,6 @@
                 [pTooltip]="'settings.defaultStackTooltip' | translate"
                 [value]="settings().stack ?? rational.one"
                 [minimum]="rational.one"
-                [maximum]="maximumStack"
                 (setValue)="settingsSvc.apply({ stack: $event })"
               ></lab-input-number>
             </div>
@@ -1244,7 +1243,7 @@
         data().flags.has('miningSpeed') ||
         data().flags.has('miningProductivity') ||
         data().flags.has('researchSpeed') ||
-        data().canProdUpgradeRecipeIds.length
+        data().prodUpgradeTechs.length
       ) {
         <p-accordionTab [header]="'settings.bonuses' | translate">
           <div class="p-fluid">
@@ -1264,7 +1263,7 @@
                     [ngModel]="
                       settings().miningBonus.add(rational(100)).toNumber()
                     "
-                    (onBlur)="
+                    (onInput)="
                       settingsSvc.apply({
                         miningBonus: rational(
                           (miningBonusInput.value ?? 100) - 100
@@ -1347,7 +1346,7 @@
                 </div>
               </div>
             }
-            @if (data().canProdUpgradeRecipeIds.length) {
+            @if (data().prodUpgradeTechs.length) {
               <div class="pb-3">
                 <button
                   pButton
@@ -1449,16 +1448,6 @@
               [ngModel]="preferences().bypassLanding"
               (onChange)="
                 preferencesSvc.apply({ bypassLanding: $event.checked })
-              "
-            ></p-checkbox>
-          </div>
-          <div class="pb-3">
-            <p-checkbox
-              [ngModel]="preferences().hideDuplicateIcons"
-              [binary]="true"
-              [label]="'settings.hideDuplicateIcons' | translate"
-              (onChange)="
-                preferencesSvc.apply({ hideDuplicateIcons: $event.checked })
               "
             ></p-checkbox>
           </div>
