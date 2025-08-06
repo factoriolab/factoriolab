@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { first } from 'rxjs';
-import { data } from 'src/data';
 
 import { asString, coalesce, prune, spread, toEntities } from '~/helpers';
+import { data } from '~/models/app-data';
 import {
   DEFAULT_MOD,
   ZARRAYSEP,

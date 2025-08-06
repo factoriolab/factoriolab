@@ -1,6 +1,6 @@
 import { SelectItem } from 'primeng/api';
-import { data } from 'src/data';
 
+import { data } from './app-data';
 import { Game } from './enum/game';
 
 export function modOptions(game: Game): SelectItem<string>[] {
