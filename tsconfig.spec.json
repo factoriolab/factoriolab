@@ -4,7 +4,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
-    "types": ["vitest"]
+    "types": ["jasmine"]
   },
   "include": ["src/**/*.ts"]
 }

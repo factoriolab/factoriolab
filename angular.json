@@ -72,12 +72,18 @@
           "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular/build:unit-test",
+          "builder": "@angular/build:karma",
           "options": {
-            "buildTarget": "::development",
             "tsConfig": "tsconfig.spec.json",
-            "runner": "vitest",
-            "codeCoverage": true
+            "karmaConfig": "karma.conf.js",
+            "codeCoverage": true,
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": ["src/styles.css"]
           }
         },
         "lint": {

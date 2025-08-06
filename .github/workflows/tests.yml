@@ -27,7 +27,7 @@ jobs:
         run: npm run lint
 
       - name: Run tests
-        run: npm run test -- --no-watch
+        run: npm run test:ci
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
