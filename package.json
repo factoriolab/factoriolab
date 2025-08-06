@@ -20,7 +20,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "prettier": "prettier --check ."
+    "prettier": "prettier --check .",
+    "minify-data": "bun scripts/minify-data.ts"
   },
   "dependencies": {
     "@angular/common": "^20.1.0",
@@ -41,6 +42,7 @@
     "@tailwindcss/postcss": "^4.1.11",
     "@vitest/coverage-v8": "^3.2.4",
     "angular-eslint": "^20.1.0",
+    "bun": "^1.2.19",
     "eslint": "^9.29.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jsdom": "^26.1.0",
