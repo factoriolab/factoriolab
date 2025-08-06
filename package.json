@@ -1,6 +1,15 @@
 {
   "name": "factoriolab",
+  "description": "Angular-based calculator for the game Factorio",
   "version": "0.0.0",
+  "private": true,
+  "contributors": [
+    "Doug Broad (https://github.com/dcbroad3)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/factoriolab/factoriolab.git"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -18,7 +27,6 @@
       }
     ]
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "^20.1.0",
     "@angular/compiler": "^20.1.0",
@@ -26,6 +34,7 @@
     "@angular/forms": "^20.1.0",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
+    "@angular/service-worker": "^20.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -33,13 +42,9 @@
     "@angular/build": "^20.1.4",
     "@angular/cli": "^20.1.4",
     "@angular/compiler-cli": "^20.1.0",
-    "@types/jasmine": "~5.1.0",
-    "jasmine-core": "~5.8.0",
-    "karma": "~6.4.0",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.8.2"
+    "@vitest/coverage-v8": "^3.2.4",
+    "jsdom": "^26.1.0",
+    "typescript": "~5.8.2",
+    "vitest": "^3.2.4"
   }
 }
