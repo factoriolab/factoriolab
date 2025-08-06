@@ -5,134 +5,50 @@
   "projects": {
     "factoriolab": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "changeDetection": "OnPush",
-          "style": "scss"
-        }
-      },
+      "schematics": {},
       "root": "",
       "sourceRoot": "src",
-      "prefix": "lab",
+      "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist",
-            "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/assets/release.json",
-              "src/assets/i18n",
               {
                 "glob": "**/*",
-                "input": "src/assets/icons",
-                "output": "/"
-              },
-              "src/data",
-              {
-                "glob": "glpk.all.wasm",
-                "input": "node_modules/glpk-wasm/dist/",
-                "output": "/assets/glpk-wasm/"
+                "input": "public"
               }
             ],
-            "styles": [
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/primeicons/primeicons.css",
-              "node_modules/primeng/resources/primeng.min.css",
-              "src/styles.scss",
-              {
-                "input": "src/styles/themes/dark/theme.css",
-                "bundleName": "theme-dark",
-                "inject": false
-              },
-              {
-                "input": "src/styles/themes/light/theme.css",
-                "bundleName": "theme-light",
-                "inject": false
-              },
-              {
-                "input": "src/styles/themes/black/theme.css",
-                "bundleName": "theme-black",
-                "inject": false
-              }
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": ["node_modules"]
-            },
-            "scripts": [],
-            "allowedCommonJsDependencies": [
-              "@sideway/formula",
-              "cytoscape-elk",
-              "deep-freeze-strict",
-              "file-saver",
-              "glpk-ts"
-            ],
-            "serviceWorker": "ngsw-config.json"
+            "styles": ["src/styles.css"]
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "baseHref": "/",
-              "outputHashing": "all",
               "budgets": [
                 {
                   "type": "initial",
-                  "baseline": "1.7mb",
-                  "maximumWarning": "100kb",
-                  "maximumError": "200kb"
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
-              ]
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.staging.ts"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
-              "baseHref": "/staging/",
-              "outputHashing": "all",
-              "budgets": [
-                {
-                  "type": "initial",
-                  "baseline": "1.7mb",
-                  "maximumWarning": "100kb",
-                  "maximumError": "200kb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
-              ]
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "buildTarget": "factoriolab:build"
-          },
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "factoriolab:build:production"
@@ -144,61 +60,25 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
+          "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:karma",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
-            "fileReplacements": [
-              {
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.test.ts"
-              }
-            ],
-            "main": "src/test.ts",
-            "karmaConfig": "karma.conf.js",
             "assets": [
-              "src/assets/release.json",
-              "src/assets/i18n",
               {
                 "glob": "**/*",
-                "input": "src/assets/icons",
-                "output": "/"
-              },
-              "src/data",
-              {
-                "glob": "glpk.all.wasm",
-                "input": "node_modules/glpk-wasm/dist/",
-                "output": "/assets/glpk-wasm/"
+                "input": "public"
               }
             ],
-            "styles": [
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/primeicons/primeicons.css",
-              "node_modules/primeng/resources/primeng.min.css",
-              "src/styles.scss"
-            ],
-            "codeCoverage": true,
-            "codeCoverageExclude": ["src/app/tests/**/*"],
-            "stylePreprocessorOptions": {
-              "includePaths": ["src/styles"]
-            },
-            "scripts": []
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "styles": ["src/styles.css"]
           }
         }
       }
     }
   },
   "cli": {
-    "analytics": "d77293c4-7d34-44a7-879c-a57e1cd6821e",
-    "schematicCollections": ["@angular-eslint/schematics"]
+    "analytics": "d77293c4-7d34-44a7-879c-a57e1cd6821e"
   }
 }
