@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { data } from 'src/data';
 import modJson from 'src/data/1.1/data.json';
 import hashJson from 'src/data/1.1/hash.json';
 import i18nJson from 'src/data/1.1/i18n/zh.json';
 
 import { spread, toEntities } from '~/helpers';
+import { data } from '~/models/app-data';
 import { Item } from '~/models/data/item';
 import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
