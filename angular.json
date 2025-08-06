@@ -8,7 +8,7 @@
       "schematics": {
         "@schematics/angular:component": {
           "changeDetection": "OnPush",
-          "style": "scss"
+          "style": "none"
         }
       },
       "root": "",
@@ -76,11 +76,18 @@
             "runner": "vitest",
             "codeCoverage": true
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
         }
       }
     }
   },
   "cli": {
-    "analytics": "d77293c4-7d34-44a7-879c-a57e1cd6821e"
+    "analytics": "d77293c4-7d34-44a7-879c-a57e1cd6821e",
+    "schematicCollections": ["angular-eslint"]
   }
 }
