@@ -97,5 +97,5 @@ export default tseslint.config(
         { allowNullOrUndefined: true },
       ],
     },
-  }
+  },
 );
