@@ -49,6 +49,9 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "staging": {
+              "baseHref": "/staging/"
             }
           },
           "defaultConfiguration": "production"

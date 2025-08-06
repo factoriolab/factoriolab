@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": ["source.fixAll"],
+  "editor.rulers": [80],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}

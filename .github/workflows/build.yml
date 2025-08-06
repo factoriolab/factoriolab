@@ -1,0 +1,50 @@
+name: build
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Prettier
+        run: npm run prettier
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test -- --no-watch
+
+      - name: Run build
+        run: npm run build
+
+      - name: Copy index to 404
+        run: cp dist/factoriolab/browser/index.html dist/factoriolab/browser/404.html
+
+      - name: Semantic release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        if: env.DEPLOY == 'true'
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository-name: factoriolab/factoriolab.github.io
+          branch: main
+          folder: dist/factoriolab/browser
+          clean: true

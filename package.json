@@ -19,7 +19,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "prettier": "prettier --check ."
   },
   "dependencies": {
     "@angular/common": "^20.1.0",
@@ -36,6 +37,7 @@
     "@angular/build": "^20.1.4",
     "@angular/cli": "^20.1.4",
     "@angular/compiler-cli": "^20.1.0",
+    "@semantic-release/exec": "^7.1.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@vitest/coverage-v8": "^3.2.4",
     "angular-eslint": "^20.1.0",
@@ -43,6 +45,9 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jsdom": "^26.1.0",
     "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "semantic-release": "^24.2.7",
+    "semantic-release-discord-bot": "^1.1.0",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.39.0",
