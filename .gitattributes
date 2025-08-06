@@ -1,4 +1,4 @@
+src/data/** filter=lfs diff=lfs merge=lfs -text
 *.png filter=lfs diff=lfs merge=lfs -text
 *.webp filter=lfs diff=lfs merge=lfs -text
-src/data/** filter=lfs diff=lfs merge=lfs -text
 *.ts !text -filter -merge -diff

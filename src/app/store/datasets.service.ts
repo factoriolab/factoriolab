@@ -1,7 +1,7 @@
 import { computed, Injectable } from '@angular/core';
-import { data } from 'src/data';
 
 import { spread } from '~/helpers';
+import { data } from '~/models/app-data';
 import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
