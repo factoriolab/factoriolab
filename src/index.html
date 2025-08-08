@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="bg-gray-950 text-gray-50">
   <head>
     <meta charset="utf-8" />
     <title>FactorioLab</title>
@@ -26,6 +26,15 @@ desired objectives."
       gtag('js', new Date());
 
       gtag('config', 'G-TFR5Z43GPH');
+    </script>
+    <!-- Initialize data-theme -->
+    <script>
+      const theme = localStorage.theme;
+      if (localStorage.theme) {
+        document.documentElement.setAttribute('data-theme', localStorage.theme);
+      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
     </script>
   </head>
   <body>

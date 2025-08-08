@@ -38,6 +38,7 @@ export default tseslint.config(
         { accessibility: 'no-public' },
       ],
       '@typescript-eslint/prefer-enum-initializers': 'error',
+      '@typescript-eslint/no-dynamic-delete': 'off',
       '@typescript-eslint/no-extraneous-class': [
         'error',
         { allowWithDecorator: true },

@@ -24,6 +24,10 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "glpk.all.wasm",
+                "input": "node_modules/glpk-wasm/dist/"
               }
             ],
             "styles": ["src/styles.css"]

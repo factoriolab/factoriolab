@@ -117,7 +117,13 @@
       "machine": "Machine",
       "recipes": "Recipes"
     },
-    "theme": { "light": "Light", "dark": "Dark (Default)", "black": "Black" },
+    "theme": {
+      "black": "Black",
+      "dark": "Dark",
+      "light": "Light",
+      "system": "System",
+      "white": "White"
+    },
     "flowDiagram": { "sankey": "Sankey", "boxLine": "Box-line" },
     "linkValue": {
       "none": "None",
