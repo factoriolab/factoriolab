@@ -7,7 +7,6 @@ import {
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { loadModule } from 'glpk-ts';
@@ -26,7 +25,6 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => initializeApp()),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
-    provideAnimations(),
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(),
     provideServiceWorker('ngsw-worker.js', {

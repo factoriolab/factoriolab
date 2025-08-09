@@ -8,12 +8,12 @@ import {
   input,
   model,
   signal,
+  viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
-import { growVertical } from '~/animations/grow-vertical';
 import { Option } from '~/models/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
@@ -25,7 +25,6 @@ let nextUniqueId = 0;
   selector: 'lab-select',
   imports: [OverlayModule, FaIconComponent, TranslatePipe],
   templateUrl: './select.html',
-  animations: [growVertical],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'combobox',
@@ -37,6 +36,7 @@ let nextUniqueId = 0;
     '[attr.aria-controls]': 'opened() ? id() + "-listbox" : null',
     '[attr.aria-expanded]': 'opened()',
     '(keydown.enter)': 'toggle()',
+    '(keydown.arrowdown)': 'focusDown()',
     '(click)': 'toggle()',
   },
   hostDirectives: [CdkOverlayOrigin],
@@ -51,6 +51,7 @@ let nextUniqueId = 0;
 export class Select<T = string> extends Control<T> {
   protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly cdkOverlayOrigin = inject(CdkOverlayOrigin);
+  private listbox = viewChild<ElementRef<HTMLUListElement>>('listbox');
 
   private uniqueId = (nextUniqueId++).toString();
 
@@ -66,17 +67,43 @@ export class Select<T = string> extends Control<T> {
   selectedOption = computed(() =>
     this.options()?.find((o) => o.value === this.value()),
   );
+  protected hiding = signal(false);
 
-  toggle(event?: MouseEvent): void {
+  toggle(): void {
     if (this.disabled()) return;
 
-    this.opened.update((o) => !o);
+    const el = this.listbox()?.nativeElement;
+    if (el) {
+      // If we got the listbox element, transition out
+      this.hiding.set(true);
+      el.addEventListener('transitionend', () => {
+        this.opened.set(false);
+        this.hiding.set(false);
+      });
+    } else {
+      // If no listbox (failed or not shown yet) update opened signal
+      this.opened.update((o) => !o);
+    }
+
     this.markAsTouched();
-    event?.preventDefault();
   }
 
   select(value: T): void {
     this.opened.set(false);
     this.setValue(value);
   }
+
+  focusDown(): void {
+    console.log('down', document.activeElement);
+    document.activeElement?.dispatchEvent(
+      new KeyboardEvent('keypress', {
+        key: 'Tab',
+      }),
+    );
+  }
+
+  // TODO: Keyboard navigation
+  // TODO: Search input?
+  // TODO: Icon support
+  // TODO: Tooltip support
 }

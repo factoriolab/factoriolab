@@ -4,8 +4,8 @@
   }
 </span>
 <fa-icon
-  class="transition-all"
-  [class.rotate-180]="opened()"
+  class="transition-transform"
+  [class.-scale-y-100]="opened() && !hiding()"
   [icon]="faChevronDown"
 ></fa-icon>
 
@@ -14,13 +14,13 @@
   [cdkConnectedOverlayOrigin]="cdkOverlayOrigin"
   [cdkConnectedOverlayOpen]="opened()"
   [cdkConnectedOverlayMinWidth]="elementRef.nativeElement.offsetWidth"
-  (backdropClick)="toggle($event)"
   (overlayOutsideClick)="toggle()"
 >
   <ul
-    class="bg-gray-900 min-w-full rounded-lg p-1 border border-gray-500 mt-1"
+    class="bg-gray-900 min-w-full rounded-lg p-1 border border-gray-500 mt-1 transition-all origin-top starting:opacity-0 starting:scale-y-75"
     role="listbox"
-    @growVertical
+    [class.opacity-0]="hiding()"
+    #listbox
   >
     @for (opt of options(); track opt.value) {
       <li
