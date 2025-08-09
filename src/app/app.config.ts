@@ -7,13 +7,8 @@ import {
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import {
-  PreloadAllModules,
-  provideRouter,
-  withComponentInputBinding,
-  withPreloading,
-  withRouterConfig,
-} from '@angular/router';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { loadModule } from 'glpk-ts';
 
@@ -31,12 +26,8 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => initializeApp()),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
-    provideRouter(
-      routes,
-      withComponentInputBinding(),
-      withPreloading(PreloadAllModules),
-      withRouterConfig({ paramsInheritanceStrategy: 'always' }),
-    ),
+    provideAnimations(),
+    provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),

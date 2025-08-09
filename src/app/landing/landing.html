@@ -1,1 +1,116 @@
-<p>landing works!</p>
+<img src="factoriolab.webp" alt="FactorioLab" height="128" width="128" />
+<div [innerHtml]="'landing.welcome' | translate"></div>
+<hr class="w-dvw border-t border-gray-800" />
+
+<!-- <select [ngModel]="data().game" (ngModelChange)="setGame($event)">
+  @for (o of gameOptions; track o.value) {
+    <option [ngValue]="o.value">{{ o.label | translate }}</option>
+  }
+</select> -->
+
+<div class="flex flex-col w-64 bg-gray-900 p-2 rounded-lg gap-2">
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+  <lab-select
+    [options]="gameOptions"
+    [ngModel]="data().game"
+    (ngModelChange)="setGame($event)"
+  ></lab-select>
+</div>
+
+<div class="flex">
+  <div class="size-12 bg-brand-50"></div>
+  <div class="size-12 bg-brand-100"></div>
+  <div class="size-12 bg-brand-200"></div>
+  <div class="size-12 bg-brand-300"></div>
+  <div class="size-12 bg-brand-400"></div>
+  <div class="size-12 bg-brand-500"></div>
+  <div class="size-12 bg-brand-600"></div>
+  <div class="size-12 bg-brand-700"></div>
+  <div class="size-12 bg-brand-800"></div>
+  <div class="size-12 bg-brand-900"></div>
+  <div class="size-12 bg-brand-950"></div>
+</div>
+<div class="flex">
+  <div class="size-12 bg-gray-50"></div>
+  <div class="size-12 bg-gray-100"></div>
+  <div class="size-12 bg-gray-200"></div>
+  <div class="size-12 bg-gray-300"></div>
+  <div class="size-12 bg-gray-400"></div>
+  <div class="size-12 bg-gray-500"></div>
+  <div class="size-12 bg-gray-600"></div>
+  <div class="size-12 bg-gray-700"></div>
+  <div class="size-12 bg-gray-800"></div>
+  <div class="size-12 bg-gray-900"></div>
+  <div class="size-12 bg-gray-950"></div>
+</div>
+
+<span class="absolute bottom-4">{{ fileClient.version$ | async }} </span>

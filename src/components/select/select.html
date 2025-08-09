@@ -1,0 +1,44 @@
+<span class="grow">
+  @if (selectedOption(); as opt) {
+    {{ opt.label | translate }}
+  }
+</span>
+<fa-icon
+  class="transition-all"
+  [class.rotate-180]="opened()"
+  [icon]="faChevronDown"
+></fa-icon>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="cdkOverlayOrigin"
+  [cdkConnectedOverlayOpen]="opened()"
+  [cdkConnectedOverlayMinWidth]="elementRef.nativeElement.offsetWidth"
+  (backdropClick)="toggle($event)"
+  (overlayOutsideClick)="toggle()"
+>
+  <ul
+    class="bg-gray-900 min-w-full rounded-lg p-1 border border-gray-500 mt-1"
+    role="listbox"
+    @growVertical
+  >
+    @for (opt of options(); track opt.value) {
+      <li
+        role="option"
+        class="p-1 cursor-pointer rounded-sm select-none"
+        [attr.tabindex]="opt.disabled ? -1 : 0"
+        [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
+        [attr.aria-selected]="opt.value === value()"
+        [class]="
+          opt.value === value()
+            ? 'bg-brand-500/25 hover:bg-brand-500/50'
+            : 'hover:bg-gray-500/50'
+        "
+        (click)="select(opt.value)"
+        (keydown.enter)="select(opt.value)"
+      >
+        {{ opt.label | translate }}
+      </li>
+    }
+  </ul>
+</ng-template>

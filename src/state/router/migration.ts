@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { first } from 'rxjs';
 
 import { ModData } from '~/models/data/mod-data';
 import { datasets, DEFAULT_MOD } from '~/models/datasets';
@@ -101,7 +100,7 @@ export class Migration {
     };
   }
 
-  migrateAny(
+  private migrateAny(
     modId: string | undefined,
     params: Params,
     isBare: boolean,
@@ -138,7 +137,7 @@ export class Migration {
   }
 
   /** Migrates V0 bare zip to latest bare format */
-  migrateV0(state: MigrationState): MigrationState {
+  private migrateV0(state: MigrationState): MigrationState {
     const { params } = state;
     if (params[ZipSectionV10.Settings]) {
       // Reorganize settings
@@ -183,7 +182,7 @@ export class Migration {
   }
 
   /** Migrates V1 bare zip to latest bare format */
-  migrateV1(state: MigrationState): MigrationState {
+  private migrateV1(state: MigrationState): MigrationState {
     const { params, warnings } = state;
     if (params[ZipSectionV10.Settings]) {
       const zip = asString(params[ZipSectionV10.Settings]);
@@ -206,7 +205,7 @@ export class Migration {
   }
 
   /** Migrates V2 hash zip to latest hash format */
-  migrateV2(state: MigrationState): MigrationState {
+  private migrateV2(state: MigrationState): MigrationState {
     const { params } = state;
     if (params[ZipSectionV10.Recipes]) {
       // Convert recipe settings
@@ -253,7 +252,7 @@ export class Migration {
   }
 
   /** Migrates V3 hash zip to latest hash format */
-  migrateV3(state: MigrationState): MigrationState {
+  private migrateV3(state: MigrationState): MigrationState {
     const { params, warnings } = state;
     if (params[ZipSectionV10.Settings]) {
       const zip = asString(params[ZipSectionV10.Settings]);
@@ -361,14 +360,14 @@ export class Migration {
   }
 
   /** Migrates V4 bare zip to latest bare format */
-  migrateV4(state: MigrationState): MigrationState {
+  private migrateV4(state: MigrationState): MigrationState {
     state = this.migrateInlineBeacons(state);
     state.params[ZipSectionV10.Version] = ZipVersion.Version6;
     return this.migrateV6(state);
   }
 
   /** Migrates V5 hash zip to latest hash format */
-  migrateV5(state: MigrationState): MigrationState {
+  private migrateV5(state: MigrationState): MigrationState {
     state = this.migrateInlineBeacons(state);
     state.params[ZipSectionV10.Version] = ZipVersion.Version7;
     return this.migrateV7(state);
@@ -559,18 +558,18 @@ export class Migration {
   }
 
   /** Migrates V6 bare zip to latest format */
-  migrateV6(state: MigrationState): MigrationState {
+  private migrateV6(state: MigrationState): MigrationState {
     state.isBare = true;
     return this.migrateV8(this.migrateToV8(state));
   }
 
   /** Migrates V7 hash zip to latest format */
-  migrateV7(state: MigrationState): MigrationState {
+  private migrateV7(state: MigrationState): MigrationState {
     state.isBare = false;
     return this.migrateV8(this.migrateToV8(state));
   }
 
-  migrateV8(state: MigrationState): MigrationState {
+  private migrateV8(state: MigrationState): MigrationState {
     const { params } = state;
 
     // Need to convert Recipe Objectives to unified Objectives
@@ -655,7 +654,7 @@ export class Migration {
     }
   }
 
-  migrateV9(state: MigrationState): MigrationState {
+  private migrateV9(state: MigrationState): MigrationState {
     const { params } = state;
 
     const modules: string[] = [];
@@ -795,7 +794,7 @@ export class Migration {
     return this.migrateV10(state);
   }
 
-  migrateV10(state: MigrationState): MigrationState {
+  private migrateV10(state: MigrationState): MigrationState {
     const { params } = state;
 
     delete params[ZipSectionV10.RecipeObjectives];
@@ -1037,7 +1036,7 @@ export class Migration {
   }
 
   /** V11: Deprecated */
-  parseNNumber(value: string | undefined): number | undefined {
+  private parseNNumber(value: string | undefined): number | undefined {
     if (!value?.length) return undefined;
     return this.compression.idToN(value);
   }
@@ -1053,21 +1052,22 @@ export class Migration {
     return new Set(result.map((v) => hash[this.compression.idToN(v)]));
   }
 
-  displayWarnings(warnings: string[]): void {
-    this.translate
-      .multi(['app.migrationWarning', 'OK'])
-      .pipe(first())
-      .subscribe(([header, acceptLabel]) => {
-        for (const message of warnings) {
-          // TODO: Display warnings in confirmation dialog
-          console.error(header, acceptLabel, message);
-          // this.contentSvc.confirm({
-          //   message,
-          //   header,
-          //   acceptLabel,
-          //   rejectVisible: false,
-          // });
-        }
-      });
+  private displayWarnings(warnings: string[]): void {
+    if (warnings.length === 0) return;
+    // TODO: Display warnings in confirmation dialog
+    alert(warnings.join('\n'));
+    // this.translate
+    //   .multi(['app.migrationWarning', 'ok'])
+    //   .pipe(first())
+    //   .subscribe(([header, acceptLabel]) => {
+    //     for (const message of warnings) {
+    //       this.contentSvc.confirm({
+    //         message,
+    //         header,
+    //         acceptLabel,
+    //         rejectVisible: false,
+    //       });
+    //     }
+    //   });
   }
 }

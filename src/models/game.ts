@@ -1,7 +1,5 @@
 import { Option } from '~/models/option';
 
-import { datasets } from './datasets';
-
 export enum Game {
   Factorio = 'Factorio',
   CaptainOfIndustry = 'CaptainOfIndustry',
@@ -27,9 +25,3 @@ export const gameOptions: Option<Game>[] = [
   { value: Game.Foundry, label: 'options.game.foundry' },
   { value: Game.OutworldStation, label: 'options.game.outworldStation' },
 ];
-
-export function modOptions(game: Game): Option[] {
-  return datasets.mods
-    .filter((m) => m.game === game)
-    .map((m): Option => ({ label: m.name, value: m.id }));
-}

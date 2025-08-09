@@ -27,9 +27,9 @@ import {
 } from '~/models/data/quality';
 import { parseRecipe, Recipe } from '~/models/data/recipe';
 import { Technology } from '~/models/data/technology';
-import { DEFAULT_MOD } from '~/models/datasets';
+import { DEFAULT_MOD, modOptions } from '~/models/datasets';
 import { flags } from '~/models/flags';
-import { Game, modOptions } from '~/models/game';
+import { Game } from '~/models/game';
 import { gameInfo } from '~/models/game-info';
 import { MenuItem } from '~/models/menu-item';
 import { Mod } from '~/models/mod';

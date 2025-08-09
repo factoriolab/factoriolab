@@ -1,5 +1,6 @@
 import { Game } from './game';
 import { ModInfo } from './mod';
+import { Option } from './option';
 
 export const DEFAULT_MOD = 'spa';
 
@@ -234,3 +235,9 @@ export const datasets: Datasets = {
     'ows',
   ],
 };
+
+export function modOptions(game: Game): Option[] {
+  return datasets.mods
+    .filter((m) => m.game === game)
+    .map((m): Option => ({ label: m.name, value: m.id }));
+}

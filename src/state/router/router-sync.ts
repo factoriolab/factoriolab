@@ -1,8 +1,7 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   BehaviorSubject,
-  combineLatest,
   debounceTime,
   filter,
   firstValueFrom,
@@ -24,6 +23,7 @@ import { prune, spread } from '~/utils/object';
 import { storedSignal } from '~/utils/stored-signal';
 
 import { BeaconSettings } from '../beacon-settings';
+import { FileClient } from '../file-client';
 import { ItemState } from '../items/item-state';
 import { ItemsStore } from '../items/items-store';
 import { MachineState } from '../machines/machine-state';
@@ -35,7 +35,6 @@ import { ObjectiveUnit } from '../objectives/objective-unit';
 import { ObjectivesStore } from '../objectives/objectives-store';
 import { RecipeState } from '../recipes/recipe-state';
 import { RecipesStore } from '../recipes/recipes-store';
-import { Request } from '../request';
 import { CostSettings } from '../settings/cost-settings';
 import { Dataset } from '../settings/dataset';
 import {
@@ -93,7 +92,7 @@ interface PartialState {
 }
 
 @Injectable({ providedIn: 'root' })
-export class Query {
+export class RouterSync {
   private readonly router = inject(Router);
   private readonly compression = inject(Compression);
   private readonly itemsStore = inject(ItemsStore);
@@ -101,7 +100,7 @@ export class Query {
   private readonly migration = inject(Migration);
   private readonly objectivesStore = inject(ObjectivesStore);
   private readonly recipesStore = inject(RecipesStore);
-  private readonly request = inject(Request);
+  private readonly request = inject(FileClient);
   private readonly settingsStore = inject(SettingsStore);
   private readonly zip = inject(Zip);
 
@@ -110,7 +109,7 @@ export class Query {
   // Current hashing algorithm version
   version = ZipVersion.Version11;
   zipTail: LabParams = { v: this.version };
-  route$ = new Subject<ActivatedRoute>();
+  route$ = new Subject<{ params: Params; queryParams: Params }>();
   ready = signal(false);
   navigating$ = new BehaviorSubject<boolean>(false);
   stored = storedSignal('router');
@@ -130,16 +129,9 @@ export class Query {
   constructor() {
     this.route$
       .pipe(
-        switchMap((r) =>
-          combineLatest({
-            params: r.params,
-            queryParams: r.queryParams,
-          }),
-        ),
         withLatestFrom(this.navigating$),
         filter(([_, navigating]) => !navigating),
-        map(([route]) => route),
-        switchMap(async ({ params, queryParams }) => {
+        switchMap(async ([{ params, queryParams }]) => {
           queryParams = await this.unzipQueryParams(queryParams);
           return { params, queryParams };
         }),

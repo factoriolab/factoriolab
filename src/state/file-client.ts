@@ -4,6 +4,7 @@ import {
   catchError,
   combineLatest,
   EMPTY,
+  map,
   Observable,
   shareReplay,
   tap,
@@ -20,7 +21,7 @@ import { PreferencesStore } from './preferences/preferences-store';
 import { SettingsStore } from './settings/settings-store';
 
 @Injectable({ providedIn: 'root' })
-export class Request {
+export class FileClient {
   private readonly http = inject(HttpClient);
   private readonly datasetsStore = inject(DatasetsStore);
   private readonly preferencesStore = inject(PreferencesStore);
@@ -29,7 +30,10 @@ export class Request {
   private cacheData: Record<string, Observable<[ModData, ModHash]>> = {};
   private cacheI18n: Record<string, Record<string, Observable<ModI18n>>> = {};
 
-  config$ = this.http.get<Release>('assets/release.json').pipe(shareReplay(1));
+  config$ = this.http.get<Release>('release.json').pipe(shareReplay(1));
+  version$ = this.config$.pipe(
+    map((c) => `FactorioLab ${c.version || '(dev)'}`),
+  );
 
   constructor() {
     effect(() => {

@@ -3,13 +3,13 @@ import { CanActivateFn, Router } from '@angular/router';
 
 import { DEFAULT_MOD } from '~/models/datasets';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
-import { Query } from '~/state/router/query';
+import { RouterSync } from '~/state/router/router-sync';
 
 export const landingGuard: CanActivateFn = (route) => {
   const router = inject(Router);
   const bypassLanding = inject(PreferencesStore).bypassLanding();
   if (bypassLanding) {
-    const queryState = inject(Query).stored();
+    const queryState = inject(RouterSync).stored();
     // If navigating to root with no query params, use last known state
     if (
       queryState &&

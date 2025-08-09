@@ -25,6 +25,8 @@
     "minify-data": "bun scripts/minify-data.ts"
   },
   "dependencies": {
+    "@angular/animations": "^20.1.0",
+    "@angular/cdk": "^20.1.0",
     "@angular/common": "^20.1.0",
     "@angular/compiler": "^20.1.0",
     "@angular/core": "^20.1.0",
@@ -32,6 +34,8 @@
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
     "@angular/service-worker": "^20.1.0",
+    "@fortawesome/angular-fontawesome": "^3.0.0",
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
     "@sideway/formula": "^3.0.1",
     "d3": "^7.9.0",
     "glpk-ts": "^0.0.11",
