@@ -98,7 +98,7 @@ export class SettingsStore extends Store<SettingsState> {
   });
   game = computed(() => {
     const mod = this.mod();
-    return coalesce(mod?.game, Game.Factorio);
+    return coalesce<Game>(mod?.game, 'factorio');
   });
 
   modStates = computed(() => {
@@ -318,7 +318,7 @@ export class SettingsStore extends Store<SettingsState> {
     let moduleRank: string[] | undefined;
     let overclock: Rational | undefined;
     switch (mod.game) {
-      case Game.Factorio: {
+      case 'factorio': {
         moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
         if (m.beacon) {
           const beacon = mod.items.find((i) => i.id === m.beacon)?.beacon;
@@ -342,16 +342,16 @@ export class SettingsStore extends Store<SettingsState> {
         }
         break;
       }
-      case Game.DysonSphereProgram: {
+      case 'dyson-sphere-program': {
         moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
         break;
       }
-      case Game.Satisfactory: {
+      case 'satisfactory': {
         moduleRank = m.moduleRank;
         overclock = rational(100n);
         break;
       }
-      case Game.FinalFactory: {
+      case 'final-factory': {
         moduleRank = m.moduleRank;
         break;
       }

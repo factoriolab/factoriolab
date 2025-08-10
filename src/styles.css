@@ -1,6 +1,8 @@
 @import '@angular/cdk/overlay-prebuilt.css';
 @import 'tailwindcss';
 
+@import './styles/icons.css';
+
 :root {
   --hue: 256;
 

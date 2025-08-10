@@ -1,27 +1,29 @@
 import { Option } from '~/models/option';
 
-export enum Game {
-  Factorio = 'Factorio',
-  CaptainOfIndustry = 'CaptainOfIndustry',
-  DysonSphereProgram = 'DysonSphereProgram',
-  FinalFactory = 'FinalFactory',
-  Satisfactory = 'Satisfactory',
-  Techtonica = 'Techtonica',
-  FactorY = 'FactorY',
-  Mindustry = 'Mindustry',
-  Foundry = 'Foundry',
-  OutworldStation = 'OutworldStation',
-}
+export type Game =
+  | 'captain-of-industry'
+  | 'dyson-sphere-program'
+  | 'factor-y'
+  | 'factorio'
+  | 'final-factory'
+  | 'foundry'
+  | 'mindustry'
+  | 'outworld-station'
+  | 'satisfactory'
+  | 'techtonica';
 
 export const gameOptions: Option<Game>[] = [
-  { value: Game.Factorio, label: 'options.game.factorio' },
-  { value: Game.DysonSphereProgram, label: 'options.game.dysonSphereProgram' },
-  { value: Game.Satisfactory, label: 'options.game.satisfactory' },
-  { value: Game.CaptainOfIndustry, label: 'options.game.captainOfIndustry' },
-  { value: Game.Techtonica, label: 'options.game.techtonica' },
-  { value: Game.FinalFactory, label: 'options.game.finalFactory' },
-  { value: Game.FactorY, label: 'options.game.factorY' },
-  { value: Game.Mindustry, label: 'options.game.mindustry' },
-  { value: Game.Foundry, label: 'options.game.foundry' },
-  { value: Game.OutworldStation, label: 'options.game.outworldStation' },
+  {
+    value: 'factorio',
+    label: 'options.game.factorio',
+  },
+  { value: 'dyson-sphere-program', label: 'options.game.dysonSphereProgram' },
+  { value: 'satisfactory', label: 'options.game.satisfactory' },
+  { value: 'captain-of-industry', label: 'options.game.captainOfIndustry' },
+  { value: 'techtonica', label: 'options.game.techtonica' },
+  { value: 'final-factory', label: 'options.game.finalFactory' },
+  { value: 'factor-y', label: 'options.game.factorY' },
+  { value: 'mindustry', label: 'options.game.mindustry' },
+  { value: 'foundry', label: 'options.game.foundry' },
+  { value: 'outworld-station', label: 'options.game.outworldStation' },
 ];

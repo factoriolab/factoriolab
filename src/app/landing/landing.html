@@ -2,84 +2,9 @@
 <div [innerHtml]="'landing.welcome' | translate"></div>
 <hr class="w-dvw border-t border-gray-800" />
 
-<!-- <select [ngModel]="data().game" (ngModelChange)="setGame($event)">
-  @for (o of gameOptions; track o.value) {
-    <option [ngValue]="o.value">{{ o.label | translate }}</option>
-  }
-</select> -->
-
 <div class="flex flex-col w-64 bg-gray-900 p-2 rounded-lg gap-2">
   <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
-    [options]="gameOptions"
-    [ngModel]="data().game"
-    (ngModelChange)="setGame($event)"
-  ></lab-select>
-  <lab-select
+    type="game"
     [options]="gameOptions"
     [ngModel]="data().game"
     (ngModelChange)="setGame($event)"

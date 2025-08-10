@@ -1,5 +1,11 @@
+@let t = type();
+@let opt = selectedOption();
+@if (t && opt) {
+  <lab-icon [value]="$any(opt.value)" [type]="t"></lab-icon>
+}
+
 <span class="grow">
-  @if (selectedOption(); as opt) {
+  @if (opt) {
     {{ opt.label | translate }}
   }
 </span>
@@ -17,26 +23,34 @@
   (overlayOutsideClick)="toggle()"
 >
   <ul
+    #listbox
     class="bg-gray-900 min-w-full rounded-lg p-1 border border-gray-500 mt-1 transition-all origin-top starting:opacity-0 starting:scale-y-75"
     role="listbox"
     [class.opacity-0]="hiding()"
-    #listbox
   >
     @for (opt of options(); track opt.value) {
       <li
+        #option
         role="option"
-        class="p-1 cursor-pointer rounded-sm select-none"
+        class="flex items-center cursor-pointer rounded-sm select-none outline-none gap-1"
         [attr.tabindex]="opt.disabled ? -1 : 0"
         [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
         [attr.aria-selected]="opt.value === value()"
         [class]="
           opt.value === value()
-            ? 'bg-brand-500/25 hover:bg-brand-500/50'
-            : 'hover:bg-gray-500/50'
+            ? 'bg-brand-500/25 hover:bg-brand-500/50 focus-visible:bg-brand-500/50'
+            : 'hover:bg-gray-500/50 focus-visible:bg-gray-500/50'
         "
         (click)="select(opt.value)"
         (keydown.enter)="select(opt.value)"
+        (keydown.arrowup)="focusMove(option, -1)"
+        (keydown.arrowdown)="focusMove(option, 1)"
+        (keydown.home)="focusFirst()"
+        (keydown.end)="focusLast()"
       >
+        @if (t) {
+          <lab-icon [value]="$any(opt.value)" [type]="t"></lab-icon>
+        }
         {{ opt.label | translate }}
       </li>
     }
