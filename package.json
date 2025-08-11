@@ -22,7 +22,8 @@
     "test:ci": "ng test --no-watch --progress=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "prettier": "prettier --check .",
-    "minify-data": "bun scripts/minify-data.ts"
+    "minify-data": "bun scripts/minify-data.ts",
+    "sort-i18n": "bun scripts/sort-i18n.ts"
   },
   "dependencies": {
     "@angular/cdk": "^20.1.0",
