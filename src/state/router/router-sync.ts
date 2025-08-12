@@ -1,15 +1,13 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { EventType, Router } from '@angular/router';
 import {
-  BehaviorSubject,
   debounceTime,
-  filter,
+  first,
   firstValueFrom,
   map,
   Subject,
   switchMap,
   tap,
-  withLatestFrom,
 } from 'rxjs';
 
 import { ModData } from '~/models/data/mod-data';
@@ -100,7 +98,7 @@ export class RouterSync {
   private readonly migration = inject(Migration);
   private readonly objectivesStore = inject(ObjectivesStore);
   private readonly recipesStore = inject(RecipesStore);
-  private readonly request = inject(FileClient);
+  private readonly fileClient = inject(FileClient);
   private readonly settingsStore = inject(SettingsStore);
   private readonly zip = inject(Zip);
 
@@ -111,7 +109,9 @@ export class RouterSync {
   zipTail: LabParams = { v: this.version };
   route$ = new Subject<{ params: Params; queryParams: Params }>();
   ready = signal(false);
-  navigating$ = new BehaviorSubject<boolean>(false);
+  navigating$ = this.router.events.pipe(
+    map((e) => e.type !== EventType.NavigationEnd),
+  );
   stored = storedSignal('router');
 
   get empty(): ZipData<LabParams> {
@@ -129,9 +129,14 @@ export class RouterSync {
   constructor() {
     this.route$
       .pipe(
-        withLatestFrom(this.navigating$),
-        filter(([_, navigating]) => !navigating),
-        switchMap(async ([{ params, queryParams }]) => {
+        /** Each time route is updated, wait until next NavigationEnd */
+        switchMap((r) =>
+          this.navigating$.pipe(
+            first((n) => !n),
+            map(() => r),
+          ),
+        ),
+        switchMap(async ({ params, queryParams }) => {
           queryParams = await this.unzipQueryParams(queryParams);
           return { params, queryParams };
         }),
@@ -183,9 +188,7 @@ export class RouterSync {
 
   async updateUrl(zState: ZipState): Promise<void> {
     const queryParams = await this.getHash(zState);
-    this.navigating$.next(true);
     await this.router.navigate([], { queryParams });
-    this.navigating$.next(false);
     const url = this.router.url;
     const path = url.split('?')[0];
     // Only cache list / flow routes
@@ -345,7 +348,7 @@ export class RouterSync {
     }
 
     const [modData, modHash] = await firstValueFrom(
-      this.request.requestData(modId ?? DEFAULT_MOD),
+      this.fileClient.requestData(modId ?? DEFAULT_MOD),
     );
     const hash = isBare ? undefined : modHash;
     const ms = this.unzipModules(params, hash);

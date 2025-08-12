@@ -114,6 +114,7 @@
     "unlockedRecipes": "Entsperrte Rezepte",
     "versions": "Versionen"
   },
+  "game": "Spiel",
   "landing": {
     "addItems": "Items hinzufügen",
     "addMachines": "Maschinen hinzufügen",
@@ -126,6 +127,8 @@
     "skip": "Überspringen",
     "welcome": "Willkommen bei <b>FactorioLab</b>! Lass uns starten."
   },
+  "modSet": "Mod gesetzt",
+  "modSetTooltip": "Wähle deine Version von Factorio oder die gewünschten Mods",
   "none": "Keine Resultate",
   "objectives": {
     "addItems": "Items hinzufügen",
@@ -280,7 +283,6 @@
     "fuelRank": "Bevorzugte Brenn-/Treibstoffe",
     "fuelRankTooltip": "Wähle die Reihenfolge von bevorzugten Brenn-/Treibstoffen, die überall, wo es möglich ist, genutzt werden sollen",
     "fuelTooltip": "Wähle Brennstoff",
-    "game": "Spiel",
     "gameTooltip": "Wähle, welchen Rechner verwendet werden soll, oder benutze die links in der Titelleiste",
     "header": "Einstellungen",
     "helpTranslate": "Beim Übersetzen mithelfen",
@@ -302,8 +304,6 @@
     "miningSpeed": "Geschwindigkeit von Erzförderern",
     "miningSpeedTooltip": "Die aktuelle Geschwindigkeit von Erzförderern mit Bonus eingeben; Standard ist 100%",
     "mod": "Mod",
-    "modSet": "Mod gesetzt",
-    "modSetTooltip": "Wähle deine Version von Factorio oder die gewünschten Mods",
     "modVersions": "Versionen",
     "modifierTooltip": "Wähle Modifier",
     "moveDown": "Nach unten verschieben",

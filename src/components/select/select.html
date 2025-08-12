@@ -4,7 +4,7 @@
   <lab-icon [value]="$any(opt.value)" [type]="t"></lab-icon>
 }
 
-<span class="grow">
+<span class="grow ms-1 text-ellipsis overflow-hidden">
   @if (opt) {
     {{ opt.label | translate }}
   }
@@ -17,14 +17,14 @@
 
 <ng-template
   cdkConnectedOverlay
-  [cdkConnectedOverlayOrigin]="cdkOverlayOrigin"
+  [cdkConnectedOverlayOrigin]="overlayOrigin"
   [cdkConnectedOverlayOpen]="opened()"
   [cdkConnectedOverlayMinWidth]="elementRef.nativeElement.offsetWidth"
   (overlayOutsideClick)="toggle()"
 >
   <ul
     #listbox
-    class="bg-gray-900 min-w-full rounded-lg p-1 border border-gray-500 mt-1 transition-all origin-top starting:opacity-0 starting:scale-y-75"
+    class="bg-gray-900 min-w-full border border-gray-700 mt-1 transition-all origin-top starting:opacity-0 starting:scale-y-75 max-h-96 overflow-y-scroll"
     role="listbox"
     [class.opacity-0]="hiding()"
   >
@@ -32,7 +32,7 @@
       <li
         #option
         role="option"
-        class="flex items-center cursor-pointer rounded-sm select-none outline-none gap-1"
+        class="flex items-center cursor-pointer select-none outline-none px-1 min-h-9"
         [attr.tabindex]="opt.disabled ? -1 : 0"
         [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
         [attr.aria-selected]="opt.value === value()"
@@ -43,15 +43,15 @@
         "
         (click)="select(opt.value)"
         (keydown.enter)="select(opt.value)"
-        (keydown.arrowup)="focusMove(option, -1)"
-        (keydown.arrowdown)="focusMove(option, 1)"
-        (keydown.home)="focusFirst()"
-        (keydown.end)="focusLast()"
+        (keydown.arrowup)="focusMove(option, -1, $event)"
+        (keydown.arrowdown)="focusMove(option, 1, $event)"
+        (keydown.home)="focusFirst($event)"
+        (keydown.end)="focusLast($event)"
       >
         @if (t) {
           <lab-icon [value]="$any(opt.value)" [type]="t"></lab-icon>
         }
-        {{ opt.label | translate }}
+        <span class="ms-1">{{ opt.label | translate }}</span>
       </li>
     }
   </ul>

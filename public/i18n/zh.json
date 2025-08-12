@@ -153,6 +153,7 @@
     "sankeyAlign": "桑基图对齐方式",
     "sankeyAlignTooltip": "选择桑基图节点的对齐方式"
   },
+  "game": "游戏",
   "header": {
     "discord": "Discord",
     "source": "源码",
@@ -170,6 +171,8 @@
     "skip": "跳过",
     "welcome": "欢迎来到 <b>FactorioLab</b>! 让我们开始吧。"
   },
+  "modSet": "Mod 设置",
+  "modSetTooltip": "请选择游戏版本或Mod合集",
   "modules": {
     "eachTooltip": "插件数"
   },
@@ -379,7 +382,6 @@
     "fuelRank": "首选燃料",
     "fuelRankTooltip": "选择燃料的使用顺序",
     "fuelTooltip": "选择燃料",
-    "game": "游戏",
     "gameTooltip": "选择要使用的游戏计算器",
     "header": "设置",
     "helpTranslate": "帮助翻译",
@@ -404,8 +406,6 @@
     "miningSpeed": "采矿速度",
     "miningSpeedTooltip": "输入当前采矿速度加成 (默认 100%)",
     "mod": "Mod",
-    "modSet": "Mod 设置",
-    "modSetTooltip": "请选择游戏版本或Mod合集",
     "modVersions": "Mod 版本信息",
     "modifierCountTooltip": "选择插件数",
     "modifierRank": "首选插件",

@@ -13,17 +13,17 @@ export type Game =
   | 'techtonica';
 
 export const gameOptions: Option<Game>[] = [
+  { value: 'captain-of-industry', label: 'options.game.captainOfIndustry' },
+  { value: 'dyson-sphere-program', label: 'options.game.dysonSphereProgram' },
+  { value: 'factor-y', label: 'options.game.factorY' },
   {
     value: 'factorio',
     label: 'options.game.factorio',
   },
-  { value: 'dyson-sphere-program', label: 'options.game.dysonSphereProgram' },
-  { value: 'satisfactory', label: 'options.game.satisfactory' },
-  { value: 'captain-of-industry', label: 'options.game.captainOfIndustry' },
-  { value: 'techtonica', label: 'options.game.techtonica' },
   { value: 'final-factory', label: 'options.game.finalFactory' },
-  { value: 'factor-y', label: 'options.game.factorY' },
-  { value: 'mindustry', label: 'options.game.mindustry' },
   { value: 'foundry', label: 'options.game.foundry' },
+  { value: 'mindustry', label: 'options.game.mindustry' },
   { value: 'outworld-station', label: 'options.game.outworldStation' },
+  { value: 'satisfactory', label: 'options.game.satisfactory' },
+  { value: 'techtonica', label: 'options.game.techtonica' },
 ];

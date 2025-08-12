@@ -43,6 +43,7 @@
     "unproduceable": "Non productible",
     "unproduceableTooltip": "Cout d'un article qui ne peu etre produit par auccune des recette incluse"
   },
+  "game": "Jeu",
   "header": {
     "discord": "Discord",
     "source": "Source",
@@ -77,6 +78,8 @@
     "unproduceable": "Entré",
     "unproduceableCostTooltip": "Coût des éléments d'entrée qui ne sont produits par aucune recette"
   },
+  "modSet": "Version ou mod",
+  "modSetTooltip": "Séléctionner quel version ou que mod de factorio utiliser",
   "objectives": {
     "addARecipe": "Ajouter un producteur",
     "addARecipeTooltip": "Séléctionner une recette à produire",
@@ -275,7 +278,6 @@
     "estimateBeaconPowerUsageTooltip": "Activez pour estimer la consommation énergiétique des balises, Basé sur le nombre moyen estimer de récepteurs par balises",
     "factory": "Usine",
     "flowRateUnit": "u/sec",
-    "game": "Jeu",
     "gameTooltip": "Séléctionnez quel jeu le calculateur utilise, ou utilisez le lien sur la barre de titre",
     "header": "Paramètres",
     "helpTranslate": "Aider à traduire",
@@ -292,8 +294,6 @@
     "miningSpeed": "Vitesse de minage",
     "miningSpeedTooltip": "Entrez la vitesse de minage actuel avec bonus; 100% par défaut",
     "mod": "Mod",
-    "modSet": "Version ou mod",
-    "modSetTooltip": "Séléctionner quel version ou que mod de factorio utiliser",
     "modVersions": "Versions",
     "modVersionsTooltip": "Versions du jeu / mods ",
     "modifierTooltip": "Séléctionner un modificateur",

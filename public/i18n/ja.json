@@ -132,6 +132,7 @@
     "sankeyAlign": "サンキーグラフの位置調整",
     "sankeyAlignTooltip": "サンキーグラフのノードを揃える方法を選んでください。"
   },
+  "game": "ゲーム",
   "header": {
     "discord": "Discord",
     "source": "Source",
@@ -149,6 +150,8 @@
     "skip": "スキップ",
     "welcome": "<b>FactorioLab</b>へようこそ! さあ、仕事を始めよう。"
   },
+  "modSet": "MOD設定",
+  "modSetTooltip": "使用するFactorioのバージョンまたはMODを選択してください。",
   "none": "なし",
   "objectives": {
     "addItems": "アイテムを追加",
@@ -340,7 +343,6 @@
     "fuelRank": "使用する燃料",
     "fuelRankTooltip": "使用する燃料と、優先順位を選んでください。",
     "fuelTooltip": "燃料を選んでください。",
-    "game": "ゲーム",
     "gameTooltip": "どのゲームの計算をするか選んでください。タイトルバーのリンクをクリックすることもできます。",
     "header": "設定",
     "helpTranslate": "翻訳を手伝う",
@@ -362,8 +364,6 @@
     "miningSpeed": "Mining speed",
     "miningSpeedTooltip": "Enter the current mining speed with bonus; Default is 100%",
     "mod": "MOD",
-    "modSet": "MOD設定",
-    "modSetTooltip": "使用するFactorioのバージョンまたはMODを選択してください。",
     "modVersions": "バージョン",
     "modifierCountTooltip": "モジュールの数を選んでください。",
     "modifierTooltip": "モジュールを選んでください。",

@@ -153,6 +153,7 @@
     "sankeyAlign": "Sankey Align",
     "sankeyAlignTooltip": "Select option to determine how sankey nodes are aligned"
   },
+  "game": "Game",
   "header": {
     "discord": "Discord",
     "source": "Source",
@@ -170,6 +171,8 @@
     "skip": "Skip",
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work."
   },
+  "modSet": "Mod set",
+  "modSetTooltip": "Select which version or set of mods in Factorio to use",
   "modules": {
     "eachTooltip": "Number of modules"
   },
@@ -381,7 +384,6 @@
     "fuelRank": "Preferred fuels",
     "fuelRankTooltip": "Select the order of preferred fuels to be used where applicable",
     "fuelTooltip": "Select fuel",
-    "game": "Game",
     "gameTooltip": "Select which game calculator to use, or use the links in the title bar",
     "header": "Settings",
     "helpTranslate": "Help translate",
@@ -406,8 +408,6 @@
     "miningSpeed": "Mining speed",
     "miningSpeedTooltip": "Enter the current mining speed with bonus; Default is 100%",
     "mod": "Mod",
-    "modSet": "Mod set",
-    "modSetTooltip": "Select which version or set of mods in Factorio to use",
     "modVersions": "Versions",
     "modifierCountTooltip": "Select modifier count",
     "modifierRank": "Preferred modifiers",

@@ -12,7 +12,7 @@ import { IdType } from '~/models/icon-type';
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: "inline-flex bg-[url('../public/icons/icons.webp')] size-8",
+    class: "inline-flex bg-[url('../public/icons/icons.webp')] size-8 shrink-0",
     '[class]': 'hostClass()',
   },
 })
