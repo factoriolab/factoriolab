@@ -1,3 +1,4 @@
+import { DEFAULT_DIALOG_CONFIG, DialogConfig } from '@angular/cdk/dialog';
 import { provideHttpClient } from '@angular/common/http';
 import {
   ApplicationConfig,
@@ -11,9 +12,15 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { loadModule } from 'glpk-ts';
 
+import { Dialog } from '~/components/dialog/dialog';
 import { Translate } from '~/translate/translate';
 
 import { routes } from './app.routes';
+
+export const APP_DIALOG_CONFIG: DialogConfig = {
+  container: Dialog,
+  hasBackdrop: true,
+};
 
 async function initializeApp(): Promise<unknown> {
   inject(Translate).load();
@@ -22,6 +29,7 @@ async function initializeApp(): Promise<unknown> {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: DEFAULT_DIALOG_CONFIG, useValue: APP_DIALOG_CONFIG },
     provideAppInitializer(() => initializeApp()),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),

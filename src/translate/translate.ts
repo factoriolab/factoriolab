@@ -21,6 +21,7 @@ export interface LangData {
   [key: string]: LangData | string;
 }
 export type InterpolateVal = string | number | null | undefined;
+export type InterpolateParams = Record<string, InterpolateVal>;
 
 @Injectable({ providedIn: 'root' })
 export class Translate {
@@ -95,7 +96,7 @@ export class Translate {
     return target;
   }
 
-  interpolate(value: string, params?: Record<string, InterpolateVal>): string {
+  interpolate(value: string, params?: InterpolateParams): string {
     if (params == null) return value;
 
     return value.replace(
@@ -104,10 +105,7 @@ export class Translate {
     );
   }
 
-  get(
-    key: string,
-    params?: Record<string, InterpolateVal>,
-  ): Observable<string> {
+  get(key: string, params?: InterpolateParams): Observable<string> {
     return this.currentLangData$.pipe(
       switchMap((langData) => {
         const result = this.getValue(langData, key);

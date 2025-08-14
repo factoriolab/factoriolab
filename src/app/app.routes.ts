@@ -10,10 +10,6 @@ export const routes: Routes = [
     canActivate: [idGuard],
     children: [
       {
-        path: 'wizard',
-        loadComponent: () => import('./wizard/wizard').then((c) => c.Wizard),
-      },
-      {
         path: 'ratio',
         canActivate: [ratioGuard],
         children: [],
@@ -26,7 +22,8 @@ export const routes: Routes = [
       },
       {
         path: '',
-        loadComponent: () => import('./main/main').then((m) => m.Main),
+        loadComponent: () => import('./main/main').then((c) => c.Main),
+        loadChildren: () => import('./main/main.routes').then((m) => m.routes),
       },
     ],
   },

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'lab-wizard',
+  selector: 'lab-list',
   imports: [],
-  templateUrl: './wizard.html',
+  templateUrl: './list.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Wizard {
+export class List {
 
 }

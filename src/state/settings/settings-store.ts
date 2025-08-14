@@ -3,8 +3,10 @@ import { computed, effect, inject, Injectable } from '@angular/core';
 import { Beacon } from '~/models/data/beacon';
 import { Belt, PIPE } from '~/models/data/belt';
 import { CargoWagon } from '~/models/data/cargo-wagon';
+import { Category } from '~/models/data/category';
 import { FluidWagon } from '~/models/data/fluid-wagon';
 import { Fuel } from '~/models/data/fuel';
+import { Icon } from '~/models/data/icon';
 import { Item, ItemJson, parseItem } from '~/models/data/item';
 import { Machine, typeHasCraftingSpeed } from '~/models/data/machine';
 import { ModHash } from '~/models/data/mod-hash';
@@ -31,6 +33,7 @@ import { DEFAULT_MOD, modOptions } from '~/models/datasets';
 import { flags } from '~/models/flags';
 import { Game } from '~/models/game';
 import { gameInfo } from '~/models/game-info';
+import { IconType } from '~/models/icon-type';
 import { MenuItem } from '~/models/menu-item';
 import { Mod } from '~/models/mod';
 import { getIdOptions, Option } from '~/models/option';
@@ -60,6 +63,7 @@ import { Options } from './options';
 import { Preset, presetOptions } from './preset';
 import { Settings } from './settings';
 import { initialSettingsState, SettingsState } from './settings-state';
+import { systemIconsRecord } from './system-icons';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsStore extends Store<SettingsState> {
@@ -96,6 +100,7 @@ export class SettingsStore extends Store<SettingsState> {
     const lang = this.preferencesStore.language();
     return datasets[modId]?.i18n?.[lang];
   });
+
   game = computed(() => {
     const mod = this.mod();
     return coalesce<Game>(mod?.game, 'factorio');
@@ -133,13 +138,7 @@ export class SettingsStore extends Store<SettingsState> {
   defaults = computed(() => this.computeDefaults(this.mod(), this.preset()));
 
   dataset = computed(() =>
-    this.computeDataset(
-      this.mod(),
-      this.hash(),
-      this.i18n(),
-      this.game(),
-      this.defaults(),
-    ),
+    this.computeDataset(this.mod(), this.hash(), this.i18n(), this.game()),
   );
 
   linkValueOptions = computed(() => {
@@ -378,12 +377,10 @@ export class SettingsStore extends Store<SettingsState> {
     hash: ModHash | undefined,
     i18n: ModI18n | undefined,
     game: Game,
-    defaults: Defaults | undefined,
   ): Dataset {
     // Map out records with mods
     const categoryRecord = toRecord(coalesce(mod?.categories, []));
-    const iconFile = `data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp`;
-    const iconRecord = toRecord(coalesce(mod?.icons, []));
+    const iconData = toRecord(coalesce(mod?.icons, []));
     const itemData = toRecord(coalesce(mod?.items, []));
     const recipeData = toRecord(coalesce(mod?.recipes, []));
     const limitations = reduceRecord(coalesce(mod?.limitations, {}));
@@ -418,7 +415,7 @@ export class SettingsStore extends Store<SettingsState> {
 
     // Convert to id arrays
     const categoryIds = Object.keys(categoryRecord);
-    const iconIds = Object.keys(iconRecord);
+    const iconIds = Object.keys(iconData);
     const itemIds = Object.keys(itemData);
     const recipeIds = Object.keys(recipeData);
     const locationIds = Object.keys(locationRecord);
@@ -430,7 +427,7 @@ export class SettingsStore extends Store<SettingsState> {
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output item
     recipes
-      .filter((r) => !iconRecord[r.id] && !r.icon)
+      .filter((r) => !iconData[r.id] && !r.icon)
       .forEach((r) => {
         const firstOutId = Object.keys(r.out)[0];
         const firstOutItem = itemData[firstOutId];
@@ -704,6 +701,30 @@ export class SettingsStore extends Store<SettingsState> {
       }
     }
 
+    const file = `url("data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp")`;
+    function toIconRecord(
+      ids: string[],
+      rec: Record<string, Category | Item | Recipe>,
+    ): Record<string, Icon> {
+      return ids.reduce<Record<string, Icon>>((e, i) => {
+        const entity = rec[i];
+        const id = coalesce(entity.icon, i);
+        const text = entity.iconText;
+        const quality = (entity as Item | Recipe).quality;
+        e[i] = { ...iconData[id], file, text, quality };
+        return e;
+      }, {});
+    }
+
+    // Generate Icon Record
+    const iconRecord: Record<IconType, Record<string, Icon>> = {
+      system: systemIconsRecord,
+      category: toIconRecord(categoryIds, categoryRecord),
+      item: toIconRecord(itemIds, itemRecord),
+      recipe: toIconRecord(recipeIds, recipeRecord),
+      location: toIconRecord(locationIds, locationRecord),
+    };
+
     return {
       game,
       modId: coalesce(mod?.id, DEFAULT_MOD),
@@ -714,7 +735,6 @@ export class SettingsStore extends Store<SettingsState> {
       categoryRecord,
       categoryItemRows,
       categoryRecipeRows,
-      iconFile,
       iconIds,
       iconRecord,
       itemIds,
@@ -748,7 +768,6 @@ export class SettingsStore extends Store<SettingsState> {
       locationRecord,
       limitations,
       hash,
-      defaults,
     };
   }
 

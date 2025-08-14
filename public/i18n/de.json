@@ -383,15 +383,5 @@
     "showLabels": "Zeige Namen",
     "unlockAll": "Alle freischalten"
   },
-  "wizard": {
-    "back": "Zurück",
-    "itemObjectiveItems": "Wie viel möchtest du produzieren?",
-    "objectiveType": "Was ist dein Ziel?",
-    "produceItems": "Ich möchte Items oder Forschung produzieren",
-    "produceItemsButton": "Wähle ein Item",
-    "recipeObjectiveMachines": "Wie viele Maschinen möchtest du laufen lassen?",
-    "runMachines": "Ich möchte eine Anzahl Maschinen laufen lassen",
-    "runMachinesButton": "Wähle ein Rezept"
-  },
   "yes": "Ja"
 }

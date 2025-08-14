@@ -1,16 +1,18 @@
-@let t = type();
-@let opt = selectedOption();
-@if (t && opt) {
-  <lab-icon [value]="$any(opt.value)" [type]="t"></lab-icon>
+@let _type = type();
+@let _selectedOption = selectedOption();
+@if (_type && _selectedOption) {
+  <lab-icon [value]="$any(_selectedOption.value)" [type]="_type"></lab-icon>
 }
 
-<span class="grow ms-1 text-ellipsis overflow-hidden">
-  @if (opt) {
-    {{ opt.label | translate }}
+<div class="ms-1 grow overflow-hidden text-ellipsis">
+  @if (_selectedOption) {
+    {{ _selectedOption.label | translate }}
+  } @else if (placeholder()) {
+    <span class="text-gray-500">{{ placeholder() | translate }}</span>
   }
-</span>
+</div>
 <fa-icon
-  class="transition-transform"
+  class="text-gray-500 transition-transform"
   [class.-scale-y-100]="opened() && !hiding()"
   [icon]="faChevronDown"
 ></fa-icon>
@@ -22,37 +24,59 @@
   [cdkConnectedOverlayMinWidth]="elementRef.nativeElement.offsetWidth"
   (overlayOutsideClick)="toggle()"
 >
-  <ul
-    #listbox
-    class="bg-gray-900 min-w-full border border-gray-700 mt-1 transition-all origin-top starting:opacity-0 starting:scale-y-75 max-h-96 overflow-y-scroll"
-    role="listbox"
+  <div
+    #overlay
+    class="mt-1 flex max-h-96 min-w-full origin-top flex-col overflow-hidden border border-gray-700 bg-gray-900 transition-all starting:scale-y-75 starting:opacity-0"
     [class.opacity-0]="hiding()"
   >
-    @for (opt of options(); track opt.value) {
-      <li
-        #option
-        role="option"
-        class="flex items-center cursor-pointer select-none outline-none px-1 min-h-9"
-        [attr.tabindex]="opt.disabled ? -1 : 0"
-        [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
-        [attr.aria-selected]="opt.value === value()"
-        [class]="
-          opt.value === value()
-            ? 'bg-brand-500/25 hover:bg-brand-500/50 focus-visible:bg-brand-500/50'
-            : 'hover:bg-gray-500/50 focus-visible:bg-gray-500/50'
-        "
-        (click)="select(opt.value)"
-        (keydown.enter)="select(opt.value)"
-        (keydown.arrowup)="focusMove(option, -1, $event)"
-        (keydown.arrowdown)="focusMove(option, 1, $event)"
-        (keydown.home)="focusFirst($event)"
-        (keydown.end)="focusLast($event)"
-      >
-        @if (t) {
-          <lab-icon [value]="$any(opt.value)" [type]="t"></lab-icon>
-        }
-        <span class="ms-1">{{ opt.label | translate }}</span>
-      </li>
+    @if (filter()) {
+      <div class="relative flex p-2">
+        <input
+          class="focus-visible:border-brand-700 focus-visible:outline-brand-700 min-h-9 w-0 grow border border-gray-700 bg-gray-950 ps-2 pe-8 placeholder:text-gray-500 focus-visible:outline"
+          [placeholder]="'select.filter' | translate"
+          [(ngModel)]="filterText"
+        />
+        <fa-icon
+          class="pointer-events-none absolute top-3.5 right-3.5 text-gray-500"
+          [icon]="faMagnifyingGlass"
+        ></fa-icon>
+      </div>
     }
-  </ul>
+    <ul role="listbox" class="overflow-y-scroll" tabindex="-1">
+      @for (opt of options(); track opt.value) {
+        @let label = opt.label | translate;
+        @if (label.toLowerCase().includes(filterLower())) {
+          <li
+            #option
+            role="option"
+            class="flex min-h-9 cursor-pointer items-center px-1 outline-none select-none"
+            [attr.tabindex]="opt.disabled ? -1 : 0"
+            [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
+            [attr.aria-selected]="opt.value === value()"
+            [class]="
+              opt.value === value()
+                ? 'bg-brand-900 hover:bg-brand-700 focus-visible:bg-brand-700'
+                : 'hover:bg-gray-700 focus-visible:bg-gray-700'
+            "
+            (click)="select(opt.value)"
+            (keydown.enter)="select(opt.value)"
+            (keydown.arrowup)="focusMove(option, -1, $event)"
+            (keydown.arrowdown)="focusMove(option, 1, $event)"
+            (keydown.home)="focusFirst($event)"
+            (keydown.end)="focusLast($event)"
+          >
+            @if (_type) {
+              <lab-icon [value]="$any(opt.value)" [type]="_type"></lab-icon>
+            }
+            <span class="ms-1">{{ label }}</span>
+          </li>
+        }
+      }
+      @if (filterText() && !listItems().length) {
+        <li class="flex min-h-9 items-center px-2">
+          {{ 'select.noMatches' | translate }}
+        </li>
+      }
+    </ul>
+  </div>
 </ng-template>

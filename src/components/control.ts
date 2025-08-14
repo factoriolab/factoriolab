@@ -31,7 +31,7 @@ export abstract class Control<T = unknown> implements ControlValueAccessor {
     this.onFormTouched?.();
   }
 
-  writeValue(value: T | undefined): void {
+  writeValue(value: T): void {
     this.value.set(value);
   }
 

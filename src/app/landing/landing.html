@@ -1,52 +1,86 @@
 <img src="factoriolab.webp" alt="FactorioLab" height="128" width="128" />
 <div [innerHtml]="'landing.welcome' | translate"></div>
-<hr class="w-dvw border-t border-gray-800" />
 
-<div class="flex flex-col w-64 bg-gray-900 p-2 rounded-lg gap-2">
+<hr class="self-stretch border-t border-gray-700" />
+
+<div class="flex h-[30rem] w-96 flex-col gap-3">
   <lab-form-field label="game">
     <lab-select
-      type="game"
+      type="system"
       [options]="gameOptions"
       [ngModel]="data().game"
       (ngModelChange)="setGame($event)"
     ></lab-select>
   </lab-form-field>
-  @if (data().flags.has('mods')) {
+  @if (data().flags.has('mods') && modId(); as modId) {
     <lab-form-field label="modSet">
       <lab-select
         [options]="modOptions()"
-        [ngModel]="modId()"
+        [filter]="true"
+        [ngModel]="modId"
         (ngModelChange)="setMod($event)"
       ></lab-select>
     </lab-form-field>
   }
-</div>
+  <button type="button" class="btn" (click)="addItems()">
+    <fa-icon [icon]="faBox"></fa-icon>
+    <span class="grow text-center">{{ 'landing.addItems' | translate }}</span>
+  </button>
+  <button type="button" class="btn">
+    <fa-icon [icon]="faIndustry"></fa-icon>
+    <span class="grow text-center">{{
+      'landing.addMachines' | translate
+    }}</span>
+  </button>
 
-<div class="flex">
-  <div class="size-12 bg-brand-50"></div>
-  <div class="size-12 bg-brand-100"></div>
-  <div class="size-12 bg-brand-200"></div>
-  <div class="size-12 bg-brand-300"></div>
-  <div class="size-12 bg-brand-400"></div>
-  <div class="size-12 bg-brand-500"></div>
-  <div class="size-12 bg-brand-600"></div>
-  <div class="size-12 bg-brand-700"></div>
-  <div class="size-12 bg-brand-800"></div>
-  <div class="size-12 bg-brand-900"></div>
-  <div class="size-12 bg-brand-950"></div>
-</div>
-<div class="flex">
-  <div class="size-12 bg-gray-50"></div>
-  <div class="size-12 bg-gray-100"></div>
-  <div class="size-12 bg-gray-200"></div>
-  <div class="size-12 bg-gray-300"></div>
-  <div class="size-12 bg-gray-400"></div>
-  <div class="size-12 bg-gray-500"></div>
-  <div class="size-12 bg-gray-600"></div>
-  <div class="size-12 bg-gray-700"></div>
-  <div class="size-12 bg-gray-800"></div>
-  <div class="size-12 bg-gray-900"></div>
-  <div class="size-12 bg-gray-950"></div>
+  @if (stateOptions().length || routerSync.stored()) {
+    <hr class="my-4 border-gray-700" />
+  }
+
+  @if (stateOptions().length) {
+    <div class="flex items-center">
+      <fa-icon
+        class="flex size-9 items-center justify-center border border-r-0 border-gray-700"
+        [icon]="faFileImport"
+      ></fa-icon>
+      <lab-select
+        placeholder="landing.loadSavedState"
+        [options]="stateOptions()"
+        (valueChange)="setState(states()[$event])"
+      ></lab-select>
+    </div>
+  }
+
+  @if (routerSync.stored(); as storedState) {
+    <a
+      class="btn"
+      [routerLink]="storedState"
+      (click)="router.navigateByUrl(storedState)"
+    >
+      <fa-icon [icon]="faClockRotateLeft"></fa-icon>
+      <span class="grow text-center">{{
+        'landing.loadLastState' | translate
+      }}</span>
+    </a>
+  }
+
+  <hr class="my-4 border-gray-700" />
+  <div class="flex items-center">
+    <input
+      id="bypass"
+      type="checkbox"
+      class="checkbox"
+      [ngModel]="preferencesStore.state().bypassLanding"
+      (ngModelChange)="preferencesStore.apply({ bypassLanding: $event })"
+    />
+    <label for="bypass" class="cursor-pointer ps-2 select-none">{{
+      'landing.bypass' | translate
+    }}</label>
+  </div>
+  <a class="btn" routerLink="list" queryParamsHandling="preserve">
+    <fa-icon [icon]="faForward"></fa-icon>
+    <span class="grow text-center">{{ 'landing.skip' | translate }}</span>
+  </a>
 </div>
 
 <span class="absolute bottom-4">{{ fileClient.version$ | async }} </span>

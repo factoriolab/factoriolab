@@ -347,6 +347,10 @@
     "toggleVisible": "Toggle visible"
   },
   "reset": "Reset",
+  "select": {
+    "filter": "Filter",
+    "noMatches": "No matches found"
+  },
   "settings": {
     "addMachineTooltip": "Add a machine preference",
     "advanced": "Advanced",
@@ -501,16 +505,6 @@
     "researched": "Researched",
     "showLabels": "Show labels",
     "unlockAll": "Unlock all"
-  },
-  "wizard": {
-    "back": "Back",
-    "itemObjectiveItems": "How much do you want to produce?",
-    "objectiveType": "What is your objective?",
-    "produceItems": "I want to produce items or research",
-    "produceItemsButton": "Choose which item",
-    "recipeObjectiveMachines": "How many machines do you want to run?",
-    "runMachines": "I want to run a number of machines",
-    "runMachinesButton": "Choose which recipe"
   },
   "yes": "Yes"
 }

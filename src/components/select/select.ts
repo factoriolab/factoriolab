@@ -13,11 +13,14 @@ import {
   viewChild,
   viewChildren,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronDown,
+  faMagnifyingGlass,
+} from '@fortawesome/free-solid-svg-icons';
 
-import { IdType } from '~/models/icon-type';
+import { IconType } from '~/models/icon-type';
 import { Option } from '~/models/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
@@ -29,15 +32,14 @@ let nextUniqueId = 0;
 
 @Component({
   selector: 'lab-select',
-  imports: [OverlayModule, FaIconComponent, Icon, TranslatePipe],
+  imports: [FormsModule, OverlayModule, FaIconComponent, Icon, TranslatePipe],
   templateUrl: './select.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'combobox',
     class:
-      'flex cursor-pointer min-h-9 items-center select-none bg-gray-950 px-1 border focus-visible:border-brand-500 focus-visible:outline focus-visible:outline-brand-500 text-nowrap',
-    '[class.border-gray-700]': '!opened()',
-    '[class.border-brand-500]': 'opened()',
+      'flex grow cursor-pointer min-h-9 items-center select-none bg-gray-950 px-1 border focus-visible:border-brand-700 focus-visible:outline focus-visible:outline-brand-700 text-nowrap hover:border-brand-700',
+    '[class]': 'opened() && !hiding() ? "border-brand-700" : "border-gray-700"',
     '[attr.id]': 'id()',
     '[attr.tabindex]': 'disabled() ? -1 : 0',
     '[attr.aria-disabled]': 'disabled() ? "true" : null',
@@ -61,49 +63,53 @@ let nextUniqueId = 0;
     { provide: LAB_CONTROL, useExisting: Select },
   ],
 })
-export class Select<T = string> extends Control<T> {
+export class Select<T = unknown> extends Control<T> {
   protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly overlayOrigin = inject(CdkOverlayOrigin);
   protected readonly formField = inject(FormField, { optional: true });
   private readonly injector = inject(Injector);
 
-  private readonly listbox =
-    viewChild.required<ElementRef<HTMLUListElement>>('listbox');
-  private readonly listItems =
+  private readonly overlay =
+    viewChild.required<ElementRef<HTMLDivElement>>('overlay');
+  protected readonly listItems =
     viewChildren<ElementRef<HTMLLIElement>>('option');
 
   private uniqueId = (nextUniqueId++).toString();
 
   readonly id = input(`lab-select-${this.uniqueId}`);
-  readonly value = model<T | undefined>();
-  readonly disabled = model(false);
+  readonly value = model<T>();
   readonly options = input.required<Option<T>[]>();
-  readonly type = input<IdType>();
-
-  faChevronDown = faChevronDown;
+  readonly disabled = model(false);
+  readonly placeholder = input<string>();
+  readonly type = input<IconType>();
+  readonly filter = input<boolean>();
 
   opened = signal(false);
   selectedOption = computed(() =>
     this.options()?.find((o) => o.value === this.value()),
   );
+
+  protected faChevronDown = faChevronDown;
+  protected faMagnifyingGlass = faMagnifyingGlass;
   protected hiding = signal(false);
+  protected filterText = signal('');
+  protected filterLower = computed(() => this.filterText().toLowerCase());
 
   toggle(event?: Event): void {
     if (this.disabled()) return;
 
     if (this.opened()) {
-      // If we got the listbox element, transition out
       this.hiding.set(true);
-      this.listbox().nativeElement.addEventListener('transitionend', () => {
+      this.overlay().nativeElement.addEventListener('transitionend', () => {
         this.opened.set(false);
         this.hiding.set(false);
       });
     } else {
       this.opened.set(true);
+      this.filterText.set('');
       this.focusAfterOpen();
     }
 
-    this.markAsTouched();
     this.elementRef.nativeElement.focus();
     event?.preventDefault();
   }
@@ -113,14 +119,14 @@ export class Select<T = string> extends Control<T> {
     this.setValue(value);
   }
 
-  focusFirst(event: Event): void {
+  protected focusFirst(event: Event): void {
     const el = this.listItems()[0]?.nativeElement;
     if (el == null) return;
     el.focus();
     event.preventDefault();
   }
 
-  focusLast(event: Event): void {
+  protected focusLast(event: Event): void {
     const items = this.listItems();
     const el = items[items.length - 1]?.nativeElement;
     if (el == null) return;
@@ -128,7 +134,7 @@ export class Select<T = string> extends Control<T> {
     event.preventDefault();
   }
 
-  focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
+  protected focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
     const index = this.listItems().findIndex((i) => i.nativeElement === option);
     const el = this.listItems()[index + dir]?.nativeElement;
     if (el == null) return;
@@ -138,7 +144,8 @@ export class Select<T = string> extends Control<T> {
 
   private focusAfterOpen(event?: Event): void {
     // Determine which element to focus, most likely the selected element
-    let index = this.options()?.findIndex((o) => o.value === this.value());
+    // Don't need to worry about filter, none can be applied yet
+    let index = this.options().findIndex((o) => o.value === this.value());
     if (event instanceof KeyboardEvent) {
       if (event.key === 'Home') {
         // Select first element

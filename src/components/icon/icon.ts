@@ -2,23 +2,30 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from '@angular/core';
 
-import { IdType } from '~/models/icon-type';
+import { IconType } from '~/models/icon-type';
+import { SettingsStore } from '~/state/settings/settings-store';
 
 @Component({
   selector: 'lab-icon',
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: "inline-flex bg-[url('../public/icons/icons.webp')] size-8 shrink-0",
-    '[class]': 'hostClass()',
+    class: 'inline-flex min-h-8 min-w-8',
+    '[style.background-image]': 'icon().file',
+    '[style.background-position]': 'icon().position',
   },
 })
 export class Icon {
-  value = input.required<string>();
-  type = input.required<IdType>();
+  private readonly settingsStore = inject(SettingsStore);
 
-  hostClass = computed(() => `${this.value()} ${this.type()}`);
+  readonly value = input.required<string>();
+  readonly type = input.required<IconType>();
+
+  icon = computed(
+    () => this.settingsStore.dataset().iconRecord[this.type()][this.value()],
+  );
 }

@@ -500,15 +500,5 @@
     "showLabels": "显示标签",
     "unlockAll": "解锁全部"
   },
-  "wizard": {
-    "back": "返回",
-    "itemObjectiveItems": "你要制造多少？",
-    "objectiveType": "你的目标是什么？",
-    "produceItems": "我要生产物品或进行研究",
-    "produceItemsButton": "选择物品",
-    "recipeObjectiveMachines": "你要运行多少设备？",
-    "runMachines": "我要运行一些设备",
-    "runMachinesButton": "选择配方"
-  },
   "yes": "确定"
 }

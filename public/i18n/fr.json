@@ -384,15 +384,5 @@
     "showLabels": "Afficher les étiquettes",
     "unlockAll": "Débloquer tout"
   },
-  "wizard": {
-    "back": "Retour",
-    "itemObjectiveItems": "Quel quantité voulez vous produire?",
-    "objectiveType": "Quel est votre objectif?",
-    "produceItems": "Je veux produire des articles ou de la recherce",
-    "produceItemsButton": "Selectioner quel article",
-    "recipeObjectiveMachines": "Combien de machine voulez vous utiliser?",
-    "runMachines": "Je veux utiliser un nombre de machines",
-    "runMachinesButton": "Choisir quelle recette"
-  },
   "yes": "Oui"
 }

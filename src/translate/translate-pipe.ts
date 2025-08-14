@@ -8,7 +8,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, Subject, switchMap } from 'rxjs';
 
-import { InterpolateVal, Translate } from './translate';
+import { InterpolateParams, Translate } from './translate';
 
 /**
  * Determines whether two records contain the same values. Nullish or empty
@@ -35,9 +35,7 @@ export class TranslatePipe implements PipeTransform {
   private readonly ref = inject(ChangeDetectorRef);
   private readonly translate = inject(Translate);
 
-  private params$ = new Subject<
-    [string, Record<string, InterpolateVal> | undefined]
-  >();
+  private params$ = new Subject<[string, InterpolateParams | undefined]>();
   value = '';
 
   constructor() {
@@ -56,10 +54,8 @@ export class TranslatePipe implements PipeTransform {
       });
   }
 
-  transform(
-    key: string,
-    interpolateParams?: Record<string, InterpolateVal>,
-  ): string {
+  transform(key?: string, interpolateParams?: InterpolateParams): string {
+    if (key == null) return '';
     this.params$.next([key, interpolateParams]);
     return this.value;
   }

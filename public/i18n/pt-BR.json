@@ -500,15 +500,5 @@
     "showLabels": "Mostrar rótulos",
     "unlockAll": "Desbloquear tudo"
   },
-  "wizard": {
-    "back": "Voltar",
-    "itemObjectiveItems": "Quanto você quer produzir?",
-    "objectiveType": "Qual é o seu objetivo?",
-    "produceItems": "Eu quero produzir itens ou pesquisar",
-    "produceItemsButton": "Escolha qual item",
-    "recipeObjectiveMachines": "Quantas máquinas você quer que operem?",
-    "runMachines": "Eu quero que operem um número de máquinas",
-    "runMachinesButton": "Escolha qual receita"
-  },
   "yes": "Sim"
 }

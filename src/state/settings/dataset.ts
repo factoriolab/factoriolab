@@ -14,7 +14,7 @@ import { Technology } from '~/models/data/technology';
 import { Flag } from '~/models/flags';
 import { Game } from '~/models/game';
 import { GameInfo } from '~/models/game-info';
-import { Defaults } from '~/state/settings/defaults';
+import { IconType } from '~/models/icon-type';
 
 export interface Dataset {
   game: Game;
@@ -26,9 +26,8 @@ export interface Dataset {
   categoryRecord: Record<string, Category>;
   categoryItemRows: Record<string, string[][]>;
   categoryRecipeRows: Record<string, string[][]>;
-  iconFile: string;
   iconIds: string[];
-  iconRecord: Record<string, Icon>;
+  iconRecord: Record<IconType, Record<string, Icon>>;
   itemIds: string[];
   itemQIds: Set<string>;
   itemRecord: Record<string, Item>;
@@ -60,7 +59,6 @@ export interface Dataset {
   locationRecord: Record<string, Category>;
   limitations: Record<string, Record<string, boolean>>;
   hash?: ModHash;
-  defaults?: Defaults | null;
 }
 
 export interface AdjustedDataset extends Dataset {

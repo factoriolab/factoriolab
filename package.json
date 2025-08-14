@@ -22,6 +22,7 @@
     "test:ci": "ng test --no-watch --progress=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "prettier": "prettier --check .",
+    "stylelint": "stylelint **/*.css",
     "minify-data": "bun scripts/minify-data.ts",
     "sort-i18n": "bun scripts/sort-i18n.ts"
   },
@@ -63,8 +64,13 @@
     "karma-junit-reporter": "^2.0.1",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
     "semantic-release": "^24.2.7",
     "semantic-release-discord-bot": "^1.1.0",
+    "stylelint": "^16.23.1",
+    "stylelint-config-concentric-order": "^5.2.1",
+    "stylelint-config-standard": "^39.0.0",
+    "stylelint-config-tailwindcss": "^1.0.0",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.39.0"

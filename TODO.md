@@ -2,5 +2,9 @@
 
 ## Select
 
-- Search input
 - Tooltip support
+
+## Icon
+
+- Text
+- Invert

@@ -421,15 +421,5 @@
     "showLabels": "Показать названия",
     "unlockAll": "Открыть всё"
   },
-  "wizard": {
-    "back": "Назад",
-    "itemObjectiveItems": "Сколько вы хотите производить?",
-    "objectiveType": "Какова ваша цель?",
-    "produceItems": "Я хочу производить предметы или исследовать",
-    "produceItemsButton": "Выберите какой предмет",
-    "recipeObjectiveMachines": "Сколько машин вы хотите запустить?",
-    "runMachines": "Я хочу запустить несколько машин",
-    "runMachinesButton": "Выберете рецепт"
-  },
   "yes": "Да"
 }

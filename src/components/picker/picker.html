@@ -1,0 +1,12 @@
+@for (categoryId of categoryIds; track categoryId) {
+  <lab-icon type="category" [value]="categoryId"></lab-icon>
+  <div class="flex flex-col">
+    @for (ids of categoryRows[categoryId]; track ids) {
+      <div class="flex">
+        @for (id of ids; track id) {
+          <lab-icon [type]="dialogData.type" [value]="id"></lab-icon>
+        }
+      </div>
+    }
+  </div>
+}

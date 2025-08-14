@@ -453,15 +453,5 @@
     "showLabels": "ラベル表示",
     "unlockAll": "すべて開放"
   },
-  "wizard": {
-    "back": "戻る",
-    "itemObjectiveItems": "いくつ生産したいですか？",
-    "objectiveType": "目標はなんですか？",
-    "produceItems": "アイテムを生産または研究したい",
-    "produceItemsButton": "アイテムを選択",
-    "recipeObjectiveMachines": "いくつ同時に動かしますか？",
-    "runMachines": "いくつも機械を同時に動かしたい",
-    "runMachinesButton": "レシピを選択"
-  },
   "yes": "はい"
 }
