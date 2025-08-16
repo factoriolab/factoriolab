@@ -1,24 +1,35 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
-  faBox,
+  faBookOpen,
+  faBoxOpen,
   faClockRotateLeft,
   faFileImport,
   faForward,
-  faIndustry,
   faQuestion,
 } from '@fortawesome/free-solid-svg-icons';
 
+import { Button } from '~/components/button/button';
 import { FormField } from '~/components/form-field/form-field';
+import { InputNumber } from '~/components/input-number/input-number';
 import { Picker, PickerData } from '~/components/picker/picker';
 import { Select } from '~/components/select/select';
 import { Game, gameOptions } from '~/models/game';
 import { gameInfo } from '~/models/game-info';
+import { rational } from '~/models/rational';
 import { FileClient } from '~/state/file-client';
+import { ObjectiveType } from '~/state/objectives/objective-type';
+import { ObjectiveUnit } from '~/state/objectives/objective-unit';
+import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -31,7 +42,9 @@ import { TranslatePipe } from '~/translate/translate-pipe';
     FormsModule,
     RouterLink,
     FaIconComponent,
+    Button,
     FormField,
+    InputNumber,
     Select,
     TranslatePipe,
   ],
@@ -44,33 +57,56 @@ export class Landing {
   private readonly route = inject(ActivatedRoute);
   private readonly dialog = inject(Dialog);
   protected readonly fileClient = inject(FileClient);
+  private readonly objectivesStore = inject(ObjectivesStore);
   protected readonly preferencesStore = inject(PreferencesStore);
   protected readonly routerSync = inject(RouterSync);
   private readonly settingsStore = inject(SettingsStore);
 
-  modId = this.settingsStore.modId;
-  mod = this.settingsStore.mod;
-  data = this.settingsStore.dataset;
-  settings = this.settingsStore.settings;
-  states = this.settingsStore.modStates;
-  stateOptions = this.settingsStore.stateOptions;
-  modOptions = this.settingsStore.modOptions;
+  protected readonly modId = this.settingsStore.modId;
+  protected readonly mod = this.settingsStore.mod;
+  protected readonly data = this.settingsStore.dataset;
+  protected readonly settings = this.settingsStore.settings;
+  protected readonly modOptions = this.settingsStore.modOptions;
+  protected readonly unitOptions = this.settingsStore.objectiveUnitOptions;
+  protected readonly states = this.settingsStore.modStates;
+  protected readonly stateOptions = this.settingsStore.stateOptions;
 
-  faBox = faBox;
-  faClockRotateLeft = faClockRotateLeft;
-  faForward = faForward;
-  faFileImport = faFileImport;
-  faIndustry = faIndustry;
-  faQuestion = faQuestion;
-  gameOptions = gameOptions;
+  protected readonly faBoxOpen = faBoxOpen;
+  protected readonly faBookOpen = faBookOpen;
+  protected readonly faClockRotateLeft = faClockRotateLeft;
+  protected readonly faForward = faForward;
+  protected readonly faFileImport = faFileImport;
+  protected readonly faQuestion = faQuestion;
+  protected readonly gameOptions = gameOptions;
 
-  addItems(): void {
-    this.dialog.open<string, PickerData>(Picker, {
+  value = signal(rational(1));
+  unit = signal(ObjectiveUnit.Items);
+
+  openPicker(type: 'item' | 'recipe'): void {
+    const header =
+      type === 'item' ? 'picker.selectItem' : 'picker.selectRecipe';
+    const key =
+      type === 'item' ? 'availableItemIds' : ('availableRecipeIds' as const);
+    const ref = this.dialog.open<string, PickerData>(Picker, {
       data: {
-        header: 'objectives.add',
-        type: 'item',
-        allIds: this.settings().availableItemIds,
+        header,
+        type,
+        allIds: this.settings()[key],
       },
+    });
+
+    ref.closed.subscribe((targetId) => {
+      if (targetId == null) return;
+      this.objectivesStore.create({
+        targetId,
+        value: this.value(),
+        unit: this.unit(),
+        type: ObjectiveType.Output,
+      });
+      void this.router.navigate(['list'], {
+        relativeTo: this.route,
+        queryParamsHandling: 'preserve',
+      });
     });
   }
 

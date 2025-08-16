@@ -1,9 +1,16 @@
+import { filter, OperatorFunction } from 'rxjs';
+
 /**
  * Function equivalent to `value ?? fallback`. Primarily intended to reduce test
  * branch surface area where nullable values are present.
  */
 export function coalesce<T>(value: T | undefined, fallback: T): T {
   return value ?? fallback;
+}
+
+/** Filters an Observable for only values which are not nullish */
+export function filterNullish<T>(): OperatorFunction<T, NonNullable<T>> {
+  return filter(notNullish);
 }
 
 export type PickNonNullish<T, K extends keyof T> = {

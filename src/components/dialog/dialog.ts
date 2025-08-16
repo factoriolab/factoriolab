@@ -6,11 +6,12 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { InterpolateParams } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
+
+import { Button } from '../button/button';
 
 export interface DialogData {
   header?: string | [string, InterpolateParams];
@@ -18,12 +19,10 @@ export interface DialogData {
 
 @Component({
   selector: 'lab-dialog',
-  imports: [CdkPortalOutlet, FaIconComponent, TranslatePipe],
+  imports: [CdkPortalOutlet, Button, TranslatePipe],
   templateUrl: './dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'bg-gray-900 p-4',
-  },
+  host: { class: 'flex flex-col bg-gray-950 border border-gray-700' },
 })
 export class Dialog extends CdkDialogContainer implements OnInit {
   protected readonly dialogRef = inject(DialogRef);

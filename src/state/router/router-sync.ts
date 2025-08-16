@@ -1,10 +1,11 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { EventType, Router } from '@angular/router';
 import {
-  debounceTime,
+  audit,
   first,
   firstValueFrom,
   map,
+  shareReplay,
   Subject,
   switchMap,
   tap,
@@ -111,6 +112,7 @@ export class RouterSync {
   ready = signal(false);
   navigating$ = this.router.events.pipe(
     map((e) => e.type !== EventType.NavigationEnd),
+    shareReplay(1),
   );
   stored = storedSignal('router');
 
@@ -129,13 +131,7 @@ export class RouterSync {
   constructor() {
     this.route$
       .pipe(
-        /** Each time route is updated, wait until next NavigationEnd */
-        switchMap((r) =>
-          this.navigating$.pipe(
-            first((n) => !n),
-            map(() => r),
-          ),
-        ),
+        audit(() => this.navigating$.pipe(first((n) => !n))),
         switchMap(async ({ params, queryParams }) => {
           queryParams = await this.unzipQueryParams(queryParams);
           return { params, queryParams };
@@ -176,11 +172,11 @@ export class RouterSync {
 
     this.state$
       .pipe(
-        debounceTime(0),
         map((z) => this.zipState(z)),
         tap((z) => {
           this.zipConfig.set(z.config);
         }),
+        audit(() => this.navigating$.pipe(first((n) => !n))),
         switchMap((z) => this.updateUrl(z)),
       )
       .subscribe();

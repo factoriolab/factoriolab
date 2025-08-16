@@ -23,14 +23,16 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "ignore": ["**/defaults.json"]
               },
               {
                 "glob": "glpk.all.wasm",
                 "input": "node_modules/glpk-wasm/dist/"
               }
             ],
-            "styles": ["src/styles.css"]
+            "styles": ["src/styles.css"],
+            "allowedCommonJsDependencies": ["@sideway/formula", "glpk-ts"]
           },
           "configurations": {
             "production": {

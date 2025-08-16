@@ -30,7 +30,7 @@ export default tseslint.config(
       ],
       '@angular-eslint/component-selector': [
         'error',
-        { type: 'element', prefix: 'lab', style: 'kebab-case' },
+        { type: ['element', 'attribute'], prefix: 'lab', style: 'kebab-case' },
       ],
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/explicit-member-accessibility': [
@@ -96,6 +96,10 @@ export default tseslint.config(
       '@angular-eslint/template/eqeqeq': [
         'error',
         { allowNullOrUndefined: true },
+      ],
+      '@angular-eslint/template/elements-content': [
+        'error',
+        { allowList: ['text'] },
       ],
     },
   },

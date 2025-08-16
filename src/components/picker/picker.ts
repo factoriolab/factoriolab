@@ -1,63 +1,124 @@
-import { DIALOG_DATA } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
-  OnInit,
+  linkedSignal,
   signal,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-import { Category } from '~/models/data/category';
+import { Quality, qualityOptions } from '~/models/data/quality';
 import { Option } from '~/models/option';
 import { SettingsStore } from '~/state/settings/settings-store';
-import { coalesce } from '~/utils/nullish';
+import { TranslatePipe } from '~/translate/translate-pipe';
 
+import { Button } from '../button/button';
 import { DialogData } from '../dialog/dialog';
-import { Icon } from '../icon/icon';
+import { Select } from '../select/select';
+import { Tabs } from '../tabs/tabs';
 
 export interface PickerData extends DialogData {
   type: 'item' | 'recipe';
   allIds: string[] | Set<string>;
   selection?: string | string[] | Set<string>;
+  default?: string | string[];
 }
 
 @Component({
   selector: 'lab-picker',
-  imports: [Icon],
+  imports: [FormsModule, FaIconComponent, Button, Select, Tabs, TranslatePipe],
   templateUrl: './picker.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class:
+      'flex flex-col gap-2 w-dvw sm:w-[96dvw] lg:w-[50rem] p-2 pt-0 min-h-[30rem] max-h-[50rem] h-[80dvh]',
+  },
 })
-export class Picker implements OnInit {
+export class Picker {
   private readonly settingsStore = inject(SettingsStore);
-  dialogData = inject<PickerData>(DIALOG_DATA);
+  protected readonly dialogData = inject<PickerData>(DIALOG_DATA);
+  private readonly dialogRef = inject(DialogRef);
 
   data = this.settingsStore.dataset;
   defaults = this.settingsStore.defaults;
 
-  search = signal('');
-  allSelected = false;
+  protected readonly faMagnifyingGlass = faMagnifyingGlass;
+  protected readonly faXmark = faXmark;
+  protected readonly qualityOptions = qualityOptions;
+  protected readonly qualityIconLocator = (value: Quality): string =>
+    `q${value}`;
+
   isMultiselect = false;
+  filter = signal('');
+  quality = signal(Quality.Normal);
+  allSelected = signal(false);
+
+  protected rowsKey = `${this.dialogData.type}CategoryRows` as const;
+  protected recordKey = `${this.dialogData.type}Record` as const;
   selection: string | string[] | undefined;
-  default: string | string[] | undefined;
-  categoryRecord: Record<string, Category> = {};
-  categoryIds: string[] = [];
-  categoryRows: Record<string, string[][]> = {};
-  // Preserve state prior to any filtering
   allSelectItems: Option[] = [];
-  allCategoryIds: string[] = [];
   allCategoryRows: Record<string, string[][]> = {};
   activeIndex = 0;
 
-  ngOnInit(): void {
-    this.setup();
-  }
+  categoryRows = computed(() => {
+    const filter = this.filter();
+    const quality = this.quality();
 
-  setup(): void {
-    const { type, allIds } = { ...this.dialogData };
-    let { selection } = { ...this.dialogData };
-    const data = this.data();
-    const allIdsSet = new Set(allIds);
-    const allIdsArr = Array.from(allIds);
+    if (!filter && quality === Quality.Any) return this.allCategoryRows;
+
+    let allIds = Array.from(this.dialogData.allIds);
+
+    if (quality !== Quality.Any) {
+      const check = quality === Quality.Normal ? undefined : quality;
+      allIds = allIds.filter(
+        (i) => this.data()[this.recordKey][i].quality === check,
+      );
+    }
+
+    if (filter) {
+      const check = filter.toLocaleLowerCase();
+      allIds = allIds.filter((i) =>
+        this.data()[this.recordKey][i].name.toLocaleLowerCase().includes(check),
+      );
+    }
+
+    const result: Record<string, string[][]> = {};
+    const keys = Object.keys(this.allCategoryRows);
+    for (const c of keys) {
+      const rows = [];
+      for (const r of this.allCategoryRows[c]) {
+        const row = r.filter((i) => allIds.includes(i));
+        if (row.length) rows.push(row);
+      }
+
+      if (rows.length) result[c] = rows;
+    }
+
+    return result;
+  });
+
+  categoryOptions = computed(() =>
+    Object.keys(this.categoryRows()).map(
+      (k): Option => ({ label: this.data().categoryRecord[k].name, value: k }),
+    ),
+  );
+
+  selectedCategory = linkedSignal<Record<string, string[][]>, string>({
+    source: this.categoryRows,
+    computation: (value, previous) => {
+      const keys = Object.keys(value);
+      if (previous && keys.includes(previous.value)) return previous.value;
+      return keys[0];
+    },
+  });
+
+  constructor() {
+    let { selection, allIds } = { ...this.dialogData };
+    allIds = Array.from(allIds);
     if (selection instanceof Set) selection = Array.from(selection);
     if (Array.isArray(selection)) {
       this.isMultiselect = true;
@@ -66,70 +127,36 @@ export class Picker implements OnInit {
       this.isMultiselect = false;
       this.selection = selection;
     }
-
-    this.categoryRecord = data.categoryRecord;
-    if (type === 'item') {
-      this.categoryRows = {};
-      data.categoryIds.forEach((c) => {
-        if (data.categoryItemRows[c]) {
-          this.categoryRows[c] = [];
-          data.categoryItemRows[c].forEach((r) => {
-            const row = r.filter((i) => allIdsSet.has(i));
-            if (row.length) this.categoryRows[c].push(row);
-          });
-        }
-      });
-
-      this.allSelectItems = allIdsArr.map(
-        (i): Option => ({ label: data.itemRecord[i].name, value: i }),
-      );
-
-      if (Array.isArray(selection)) {
-        this.allSelected = selection.length === 0;
-      } else if (selection != null) {
-        const index = data.categoryIds.indexOf(
-          data.itemRecord[selection].category,
-        );
-        this.activeIndex = index;
+    const data = this.data();
+    data.categoryIds.forEach((c) => {
+      if (data[this.rowsKey][c]) {
+        this.allCategoryRows[c] = [];
+        data[this.rowsKey][c].forEach((r) => {
+          const row = r.filter((i) => allIds.includes(i));
+          if (row.length) this.allCategoryRows[c].push(row);
+        });
       }
-    } else {
-      this.categoryRows = {};
-      data.categoryIds.forEach((c) => {
-        if (data.categoryRecipeRows[c]) {
-          this.categoryRows[c] = [];
-          data.categoryRecipeRows[c].forEach((r) => {
-            const row = r.filter((i) => allIdsSet.has(i));
-            if (row.length) this.categoryRows[c].push(row);
-          });
-        }
-      });
+    });
 
-      this.allSelectItems = allIdsArr.map(
-        (i): Option => ({ label: data.recipeRecord[i].name, value: i }),
-      );
-
-      if (Array.isArray(selection)) {
-        this.allSelected = selection.length === 0;
-        this.default = [...coalesce(this.defaults()?.excludedRecipeIds, [])];
-      } else if (selection) {
-        const index = data.categoryIds.indexOf(
-          data.recipeRecord[selection].category,
-        );
-        this.activeIndex = index;
-      }
-    }
-    this.categoryIds = data.categoryIds.filter(
-      (c) => this.categoryRows[c]?.length,
+    this.allSelectItems = Array.from(allIds).map(
+      (i): Option => ({ label: data[this.recordKey][i].name, value: i }),
     );
-    this.allCategoryIds = this.categoryIds;
-    this.allCategoryRows = this.categoryRows;
-    // this.inputSearch();
-    // this.show();
 
-    // if (!this.contentSvc.isMobile()) {
-    //   setTimeout(() => {
-    //     this.filterInput().nativeElement.focus();
-    //   }, 10);
-    // }
+    if (Array.isArray(selection)) this.allSelected.set(selection.length === 0);
+    else if (selection != null) {
+      const index = data.categoryIds.indexOf(
+        data[this.recordKey][selection].category,
+      );
+      this.activeIndex = index;
+    }
+  }
+
+  selectId(id: string): void {
+    if (Array.isArray(this.selection)) {
+      // const index = this.selection.indexOf(id);
+      // if (index === -1) this.selection.push(id);
+      // else this.selection.splice(index, 1);
+      // this.allSelected = this.selection.length === 0;
+    } else this.dialogRef.close(id);
   }
 }

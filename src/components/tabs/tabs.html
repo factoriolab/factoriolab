@@ -1,0 +1,58 @@
+@if (scroll.scrollWidth > scroll.clientWidth + 4 && scroll.scrollLeft !== 0) {
+  <button
+    type="button"
+    labButton
+    [faIcon]="faAngleLeft"
+    tabindex="-1"
+    aria-hidden="true"
+    class="text-brand-500 absolute left-0 z-1 h-full rounded-l-none bg-gray-950 shadow-sm shadow-gray-700"
+    (click)="scrollNext(scroll, -1)"
+  ></button>
+}
+<div
+  #scroll
+  class="relative inline-flex grow overflow-hidden scroll-smooth"
+  (scrollend)="onScrollEnd()"
+>
+  @for (opt of options(); track opt.value) {
+    <a
+      #tab
+      class="flex cursor-pointer items-center gap-1 border-b-2 border-gray-700 p-2"
+      role="tab"
+      aria-hidden="true"
+      [title]="scroll.scrollWidth + ' ' + scroll.clientWidth"
+      [class]="
+        opt.value === value()
+          ? 'text-brand-500 group-focus-visible:outline-brand-500 -outline-offset-1 group-focus-visible:outline'
+          : ''
+      "
+      (click)="setValue(opt.value)"
+    >
+      @if (type(); as type) {
+        <lab-icon [type]="type" [value]="iconLocator()(opt.value)"></lab-icon>
+      }
+      <span class="hidden font-semibold lg:line-clamp-1">{{
+        opt.label | translate
+      }}</span>
+    </a>
+  }
+  <span class="grow border-b-2 border-gray-700"></span>
+  <div
+    class="bg-brand-500 absolute bottom-0 h-0.5 transition-all"
+    [style]="indicatorStyle()?.()"
+  ></div>
+</div>
+@if (
+  scroll.scrollWidth > scroll.clientWidth + 4 &&
+  scroll.scrollLeft <= scroll.scrollWidth - scroll.clientWidth - 2
+) {
+  <button
+    type="button"
+    labButton
+    [faIcon]="faAngleRight"
+    tabindex="-1"
+    aria-hidden="true"
+    class="text-brand-500 absolute right-0 z-1 h-full rounded-r-none bg-gray-950 shadow-sm shadow-gray-700"
+    (click)="scrollNext(scroll, 1)"
+  ></button>
+}

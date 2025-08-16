@@ -13,6 +13,7 @@ export interface PreferencesState {
   columns: ColumnsState;
   language: Language;
   powerUnit: PowerUnit;
+  hue: number;
   theme: Theme;
   bypassLanding: boolean;
   showTechLabels: boolean;
@@ -28,6 +29,7 @@ export const initialPreferencesState: PreferencesState = {
   columns: initialColumnsState,
   language: 'en',
   powerUnit: PowerUnit.Auto,
+  hue: 256,
   theme: 'system',
   bypassLanding: false,
   showTechLabels: false,

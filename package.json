@@ -38,6 +38,7 @@
     "@fortawesome/angular-fontawesome": "^3.0.0",
     "@fortawesome/free-solid-svg-icons": "^7.0.0",
     "@sideway/formula": "^3.0.1",
+    "class-variance-authority": "^0.7.1",
     "d3": "^7.9.0",
     "glpk-ts": "^0.0.11",
     "rxjs": "~7.8.0",
@@ -74,5 +75,9 @@
     "tailwindcss": "^4.1.11",
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.39.0"
+  },
+  "browser": {
+    "fs": false,
+    "path": false
   }
 }

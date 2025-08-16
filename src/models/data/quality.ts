@@ -16,7 +16,7 @@ export enum Quality {
   Legendary = 5,
 }
 
-export const qualityFilterOptions: Option<Quality>[] = [
+export const qualityOptions: Option<Quality>[] = [
   { value: Quality.Any, label: 'options.quality.any' },
   { value: Quality.Normal, label: 'options.quality.normal' },
   { value: Quality.Uncommon, label: 'options.quality.uncommon' },
@@ -24,8 +24,6 @@ export const qualityFilterOptions: Option<Quality>[] = [
   { value: Quality.Epic, label: 'options.quality.epic' },
   { value: Quality.Legendary, label: 'options.quality.legendary' },
 ];
-
-export const qualityOptions = qualityFilterOptions.slice(3);
 
 export const QUALITY_REGEX = /^(.*)\((\d)\)$/;
 

@@ -23,6 +23,7 @@
     "stackTooltip": "Stack size"
   },
   "cancel": "Cancel",
+  "close": "Close",
   "columns": {
     "decimals": "Decimals",
     "example": "Example",
@@ -136,6 +137,7 @@
     "unlockedRecipes": "Unlocked recipes",
     "versions": "Versions"
   },
+  "filter": "Filter",
   "flow": {
     "downloadAsJson": "Download as JSON",
     "downloadAsPng": "Download as PNG",
@@ -160,15 +162,16 @@
     "support": "Support"
   },
   "landing": {
+    "selectItem": "Select item",
+
     "addItems": "Add items",
     "addMachines": "Add machines",
     "bypass": "Don't show this screen again",
-    "help": "Help me get started",
     "loadLastState": "Load last state",
     "loadSavedState": "Load a saved state",
-    "selectARecipe": "Select a recipe",
-    "selectAnItem": "Select an item",
+    "quantity": "Quantity",
     "skip": "Skip",
+    "units": "Units",
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work."
   },
   "modSet": "Mod set",
@@ -194,8 +197,6 @@
     "pauseTooltip": "Pause/resume calculations",
     "pausedMessage": "Calculations are paused. Use play button above to resume.",
     "removeTooltip": "Remove objective",
-    "selectARecipe": "Select a recipe",
-    "selectAnItem": "Select an item",
     "selectDisplayRate": "Select display rate",
     "title": "Objectives",
     "typeTooltip": "Select objective type",
@@ -344,11 +345,13 @@
   },
   "picker": {
     "includeAll": "Include all",
-    "toggleVisible": "Toggle visible"
+    "selectRecipe": "Select a recipe",
+    "selectItem": "Select an item",
+    "toggleVisible": "Toggle visible",
+    "qualityFilter": "Quality filter"
   },
   "reset": "Reset",
   "select": {
-    "filter": "Filter",
     "noMatches": "No matches found"
   },
   "settings": {

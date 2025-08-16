@@ -11,10 +11,10 @@ import { SettingsStore } from '~/state/settings/settings-store';
 
 @Component({
   selector: 'lab-icon',
-  template: '',
+  templateUrl: './icon.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'inline-flex min-h-8 min-w-8',
+    class: 'inline-flex size-8 shrink-0',
     '[style.background-image]': 'icon().file',
     '[style.background-position]': 'icon().position',
   },

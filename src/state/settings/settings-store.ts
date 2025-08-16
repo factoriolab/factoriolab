@@ -594,7 +594,7 @@ export class SettingsStore extends Store<SettingsState> {
       .map((r) => r.id);
 
     // Calculate category item rows
-    const categoryItemRows: Record<string, string[][]> = {};
+    const itemCategoryRows: Record<string, string[][]> = {};
     for (const id of categoryIds) {
       const rows: string[][] = [[]];
       const rowItems = items
@@ -611,12 +611,12 @@ export class SettingsStore extends Store<SettingsState> {
           rows[rows.length - 1].push(item.id);
         }
 
-        categoryItemRows[id] = rows;
+        itemCategoryRows[id] = rows;
       }
     }
 
     // Calculate recipe item rows
-    const categoryRecipeRows: Record<string, string[][]> = {};
+    const recipeCategoryRows: Record<string, string[][]> = {};
     for (const id of categoryIds) {
       const rows: string[][] = [[]];
       const rowRecipes = recipes
@@ -633,7 +633,7 @@ export class SettingsStore extends Store<SettingsState> {
           rows[rows.length - 1].push(recipe.id);
         }
 
-        categoryRecipeRows[id] = rows;
+        recipeCategoryRows[id] = rows;
       }
     }
 
@@ -733,8 +733,8 @@ export class SettingsStore extends Store<SettingsState> {
       version: coalesce(mod?.version, {}),
       categoryIds,
       categoryRecord,
-      categoryItemRows,
-      categoryRecipeRows,
+      itemCategoryRows,
+      recipeCategoryRows,
       iconIds,
       iconRecord,
       itemIds,

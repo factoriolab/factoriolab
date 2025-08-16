@@ -1,21 +1,27 @@
 @let _type = type();
 @let _selectedOption = selectedOption();
 @if (_type && _selectedOption) {
-  <lab-icon [value]="$any(_selectedOption.value)" [type]="_type"></lab-icon>
+  <lab-icon
+    [value]="iconLocator()(_selectedOption.value)"
+    [type]="_type"
+  ></lab-icon>
 }
 
-<div class="ms-1 grow overflow-hidden text-ellipsis">
-  @if (_selectedOption) {
-    {{ _selectedOption.label | translate }}
-  } @else if (placeholder()) {
-    <span class="text-gray-500">{{ placeholder() | translate }}</span>
-  }
-</div>
-<fa-icon
-  class="text-gray-500 transition-transform"
-  [class.-scale-y-100]="opened() && !hiding()"
-  [icon]="faChevronDown"
-></fa-icon>
+@if (iconOnly()) {
+} @else {
+  <div class="ms-1 me-2 grow overflow-hidden text-ellipsis">
+    @if (_selectedOption) {
+      {{ _selectedOption.label | translate }}
+    } @else if (placeholder()) {
+      <span class="text-gray-500">{{ placeholder() | translate }}</span>
+    }
+  </div>
+  <fa-icon
+    class="text-gray-500 transition-transform"
+    [class.-scale-y-100]="opened() && !hiding()"
+    [icon]="faChevronDown"
+  ></fa-icon>
+}
 
 <ng-template
   cdkConnectedOverlay
@@ -26,23 +32,28 @@
 >
   <div
     #overlay
-    class="mt-1 flex max-h-96 min-w-full origin-top flex-col overflow-hidden border border-gray-700 bg-gray-900 transition-all starting:scale-y-75 starting:opacity-0"
+    class="mt-1 flex max-h-96 min-w-full origin-top flex-col overflow-hidden rounded-xs border border-gray-700 bg-gray-950 transition-all starting:scale-y-75 starting:opacity-0"
     [class.opacity-0]="hiding()"
   >
     @if (filter()) {
-      <div class="relative flex p-2">
+      <div class="relative m-2 flex">
         <input
-          class="focus-visible:border-brand-700 focus-visible:outline-brand-700 min-h-9 w-0 grow border border-gray-700 bg-gray-950 ps-2 pe-8 placeholder:text-gray-500 focus-visible:outline"
-          [placeholder]="'select.filter' | translate"
+          class="input"
+          [placeholder]="'filter' | translate"
           [(ngModel)]="filterText"
         />
         <fa-icon
-          class="pointer-events-none absolute top-3.5 right-3.5 text-gray-500"
+          class="pointer-events-none absolute top-1.5 right-1.5 text-gray-500"
           [icon]="faMagnifyingGlass"
         ></fa-icon>
       </div>
     }
-    <ul role="listbox" class="overflow-y-scroll" tabindex="-1">
+    <ul
+      [id]="id() + '-listbox'"
+      role="listbox"
+      class="overflow-y-scroll"
+      tabindex="-1"
+    >
       @for (opt of options(); track opt.value) {
         @let label = opt.label | translate;
         @if (label.toLowerCase().includes(filterLower())) {
@@ -55,8 +66,8 @@
             [attr.aria-selected]="opt.value === value()"
             [class]="
               opt.value === value()
-                ? 'bg-brand-900 hover:bg-brand-700 focus-visible:bg-brand-700'
-                : 'hover:bg-gray-700 focus-visible:bg-gray-700'
+                ? 'bg-brand-950 hover:bg-brand-800 focus-visible:bg-brand-800'
+                : 'hover:bg-gray-800 focus-visible:bg-gray-800'
             "
             (click)="select(opt.value)"
             (keydown.enter)="select(opt.value)"
@@ -66,7 +77,10 @@
             (keydown.end)="focusLast($event)"
           >
             @if (_type) {
-              <lab-icon [value]="$any(opt.value)" [type]="_type"></lab-icon>
+              <lab-icon
+                [value]="iconLocator()(opt.value)"
+                [type]="_type"
+              ></lab-icon>
             }
             <span class="ms-1">{{ label }}</span>
           </li>

@@ -1,0 +1,11 @@
+@if (faIcon(); as icon) {
+  <fa-icon [icon]="icon"></fa-icon>
+}
+@if (iconType(); as type) {
+  @if (icon(); as icon) {
+    <lab-icon [type]="type" [value]="icon"></lab-icon>
+  }
+}
+@if (text(); as text) {
+  <span class="grow text-center">{{ text | translate }}</span>
+}

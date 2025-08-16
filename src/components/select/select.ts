@@ -19,6 +19,7 @@ import {
   faChevronDown,
   faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons';
+import { cva } from 'class-variance-authority';
 
 import { IconType } from '~/models/icon-type';
 import { Option } from '~/models/option';
@@ -29,6 +30,22 @@ import { FormField } from '../form-field/form-field';
 import { Icon } from '../icon/icon';
 
 let nextUniqueId = 0;
+const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
+
+const select = cva(
+  'inline-flex grow cursor-pointer min-h-9 items-center select-none bg-gray-950 px-1 border focus-visible:border-brand-700 focus-visible:outline outline-brand-700 text-nowrap rounded-xs',
+  {
+    variants: {
+      opened: {
+        true: 'border-brand-700 outline',
+        false: 'border-gray-700',
+      },
+      iconOnly: {
+        true: 'w-9 grow-0',
+      },
+    },
+  },
+);
 
 @Component({
   selector: 'lab-select',
@@ -37,20 +54,14 @@ let nextUniqueId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'combobox',
-    class:
-      'flex grow cursor-pointer min-h-9 items-center select-none bg-gray-950 px-1 border focus-visible:border-brand-700 focus-visible:outline focus-visible:outline-brand-700 text-nowrap hover:border-brand-700',
-    '[class]': 'opened() && !hiding() ? "border-brand-700" : "border-gray-700"',
+    '[class]': 'hostClass()',
     '[attr.id]': 'id()',
     '[attr.tabindex]': 'disabled() ? -1 : 0',
     '[attr.aria-disabled]': 'disabled() ? "true" : null',
     '[attr.aria-controls]': 'opened() ? id() + "-listbox" : null',
     '[attr.aria-expanded]': 'opened()',
     '[attr.aria-labelledby]': 'formField?.labelId ?? null',
-    '(keydown.enter)': 'toggle()',
-    '(keydown.arrowdown)': 'toggle($event)',
-    '(keydown.arrowup)': 'toggle($event)',
-    '(keydown.home)': 'toggle($event)',
-    '(keydown.end)': 'toggle($event)',
+    '(keydown)': 'toggle($event)',
     '(click)': 'toggle()',
   },
   hostDirectives: [CdkOverlayOrigin],
@@ -64,15 +75,13 @@ let nextUniqueId = 0;
   ],
 })
 export class Select<T = unknown> extends Control<T> {
-  protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  protected readonly overlayOrigin = inject(CdkOverlayOrigin);
-  protected readonly formField = inject(FormField, { optional: true });
-  private readonly injector = inject(Injector);
+  readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  readonly overlayOrigin = inject(CdkOverlayOrigin);
+  readonly formField = inject(FormField, { optional: true });
+  readonly injector = inject(Injector);
 
-  private readonly overlay =
-    viewChild.required<ElementRef<HTMLDivElement>>('overlay');
-  protected readonly listItems =
-    viewChildren<ElementRef<HTMLLIElement>>('option');
+  readonly overlay = viewChild.required<ElementRef<HTMLDivElement>>('overlay');
+  readonly listItems = viewChildren<ElementRef<HTMLLIElement>>('option');
 
   private uniqueId = (nextUniqueId++).toString();
 
@@ -83,20 +92,33 @@ export class Select<T = unknown> extends Control<T> {
   readonly placeholder = input<string>();
   readonly type = input<IconType>();
   readonly filter = input<boolean>();
+  readonly iconOnly = input<boolean>();
+  readonly iconLocator = input<(value: T) => string>((v) => v as string);
 
+  hostClass = computed(() =>
+    select({
+      opened: this.opened() && !this.hiding(),
+      iconOnly: this.iconOnly(),
+    }),
+  );
   opened = signal(false);
   selectedOption = computed(() =>
     this.options()?.find((o) => o.value === this.value()),
   );
 
-  protected faChevronDown = faChevronDown;
-  protected faMagnifyingGlass = faMagnifyingGlass;
-  protected hiding = signal(false);
-  protected filterText = signal('');
-  protected filterLower = computed(() => this.filterText().toLowerCase());
+  protected readonly faChevronDown = faChevronDown;
+  protected readonly faMagnifyingGlass = faMagnifyingGlass;
+
+  hiding = signal(false);
+  filterText = signal('');
+  filterLower = computed(() => this.filterText().toLowerCase());
 
   toggle(event?: Event): void {
-    if (this.disabled()) return;
+    if (
+      this.disabled() ||
+      (event instanceof KeyboardEvent && !TOGGLE_KEYS.has(event.key))
+    )
+      return;
 
     if (this.opened()) {
       this.hiding.set(true);
@@ -107,10 +129,9 @@ export class Select<T = unknown> extends Control<T> {
     } else {
       this.opened.set(true);
       this.filterText.set('');
-      this.focusAfterOpen();
+      this.focusAfterOpen(event);
     }
 
-    this.elementRef.nativeElement.focus();
     event?.preventDefault();
   }
 
@@ -119,14 +140,14 @@ export class Select<T = unknown> extends Control<T> {
     this.setValue(value);
   }
 
-  protected focusFirst(event: Event): void {
+  focusFirst(event: Event): void {
     const el = this.listItems()[0]?.nativeElement;
     if (el == null) return;
     el.focus();
     event.preventDefault();
   }
 
-  protected focusLast(event: Event): void {
+  focusLast(event: Event): void {
     const items = this.listItems();
     const el = items[items.length - 1]?.nativeElement;
     if (el == null) return;
@@ -134,7 +155,7 @@ export class Select<T = unknown> extends Control<T> {
     event.preventDefault();
   }
 
-  protected focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
+  focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
     const index = this.listItems().findIndex((i) => i.nativeElement === option);
     const el = this.listItems()[index + dir]?.nativeElement;
     if (el == null) return;
@@ -145,17 +166,22 @@ export class Select<T = unknown> extends Control<T> {
   private focusAfterOpen(event?: Event): void {
     // Determine which element to focus, most likely the selected element
     // Don't need to worry about filter, none can be applied yet
-    let index = this.options().findIndex((o) => o.value === this.value());
+    const options = this.options();
+    let index = options.findIndex((o) => o.value === this.value());
     if (event instanceof KeyboardEvent) {
-      if (event.key === 'Home') {
-        // Select first element
-        index = 0;
-      } else if (
-        event.key === 'End' ||
-        (event.key === 'ArrowUp' && index == null)
-      ) {
-        // Select last element
-        index = this.options().length - 1;
+      switch (event.key) {
+        case 'ArrowUp':
+          if (index > 0) index--;
+          break;
+        case 'ArrowDown':
+          if (index !== -1 && index < options.length - 1) index++;
+          break;
+        case 'Home':
+          index = 0;
+          break;
+        case 'End':
+          index = options.length - 1;
+          break;
       }
     }
 

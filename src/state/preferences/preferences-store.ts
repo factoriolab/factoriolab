@@ -1,6 +1,7 @@
-import { effect, Injectable } from '@angular/core';
+import { DOCUMENT, effect, inject, Injectable } from '@angular/core';
 
 import { Store } from '~/state/store';
+import { applyHue } from '~/utils/color';
 import { spread } from '~/utils/object';
 import { storedSignal, storeValue } from '~/utils/stored-signal';
 
@@ -8,6 +9,8 @@ import { initialPreferencesState, PreferencesState } from './preferences-state';
 
 @Injectable({ providedIn: 'root' })
 export class PreferencesStore extends Store<PreferencesState> {
+  readonly document = inject(DOCUMENT);
+
   stored = storedSignal('preferences');
 
   bypassLanding = this.select('bypassLanding');
@@ -20,6 +23,7 @@ export class PreferencesStore extends Store<PreferencesState> {
   showTechLabels = this.select('showTechLabels');
   states = this.select('states');
   theme = this.select('theme');
+  hue = this.select('hue');
 
   constructor() {
     super(initialPreferencesState, ['states', 'flowSettings']);
@@ -35,6 +39,23 @@ export class PreferencesStore extends Store<PreferencesState> {
 
     effect(() => {
       storeValue('preferences', JSON.stringify(this.state()));
+    });
+
+    effect(() => {
+      const theme = this.theme();
+      if (
+        theme === 'light' ||
+        (theme === 'system' &&
+          window.matchMedia('(prefers-color-scheme: light)').matches)
+      ) {
+        this.document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        this.document.documentElement.removeAttribute('data-theme');
+      }
+    });
+
+    effect(() => {
+      applyHue(this.hue(), this.document.documentElement);
     });
   }
 

@@ -1,7 +1,11 @@
-<div class="flex justify-between">
-  <div>{{ header | translate: headerParams }}</div>
-  <button type="button" class="cursor-pointer" (click)="dialogRef.close()">
-    <fa-icon [icon]="faXmark"></fa-icon>
-  </button>
+<div class="flex justify-between p-3">
+  <h2 class="text-lg font-semibold">{{ header | translate: headerParams }}</h2>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [attr.aria-label]="'close' | translate"
+    (click)="dialogRef.close()"
+  ></button>
 </div>
 <ng-template cdkPortalOutlet></ng-template>

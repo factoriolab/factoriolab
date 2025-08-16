@@ -1,9 +1,11 @@
-<img src="factoriolab.webp" alt="FactorioLab" height="128" width="128" />
-<div [innerHtml]="'landing.welcome' | translate"></div>
+<div class="flex grow flex-col items-center justify-end">
+  <img src="factoriolab.webp" alt="FactorioLab" height="128" width="128" />
+  <div [innerHtml]="'landing.welcome' | translate"></div>
+</div>
 
 <hr class="self-stretch border-t border-gray-700" />
 
-<div class="flex h-[30rem] w-96 flex-col gap-3">
+<div class="flex w-80 grow basis-[30rem] flex-col gap-3">
   <lab-form-field label="game">
     <lab-select
       type="system"
@@ -22,16 +24,35 @@
       ></lab-select>
     </lab-form-field>
   }
-  <button type="button" class="btn" (click)="addItems()">
-    <fa-icon [icon]="faBox"></fa-icon>
-    <span class="grow text-center">{{ 'landing.addItems' | translate }}</span>
-  </button>
-  <button type="button" class="btn">
-    <fa-icon [icon]="faIndustry"></fa-icon>
-    <span class="grow text-center">{{
-      'landing.addMachines' | translate
-    }}</span>
-  </button>
+
+  <div class="flex gap-3">
+    <lab-form-field label="landing.quantity" class="basis-1/2 text-right">
+      <lab-input-number [(ngModel)]="value"></lab-input-number>
+    </lab-form-field>
+    <lab-form-field label="landing.units" class="basis-1/2">
+      <lab-select [(ngModel)]="unit" [options]="unitOptions()"></lab-select>
+    </lab-form-field>
+  </div>
+
+  @if (unit() === 3) {
+    <button
+      type="button"
+      labButton
+      [faIcon]="faBookOpen"
+      variant="brand"
+      text="picker.selectRecipe"
+      (click)="openPicker('item')"
+    ></button>
+  } @else {
+    <button
+      type="button"
+      labButton
+      [faIcon]="faBoxOpen"
+      variant="brand"
+      text="picker.selectItem"
+      (click)="openPicker('item')"
+    ></button>
+  }
 
   @if (stateOptions().length || routerSync.stored()) {
     <hr class="my-4 border-gray-700" />
@@ -51,20 +72,6 @@
     </div>
   }
 
-  @if (routerSync.stored(); as storedState) {
-    <a
-      class="btn"
-      [routerLink]="storedState"
-      (click)="router.navigateByUrl(storedState)"
-    >
-      <fa-icon [icon]="faClockRotateLeft"></fa-icon>
-      <span class="grow text-center">{{
-        'landing.loadLastState' | translate
-      }}</span>
-    </a>
-  }
-
-  <hr class="my-4 border-gray-700" />
   <div class="flex items-center">
     <input
       id="bypass"
@@ -77,10 +84,23 @@
       'landing.bypass' | translate
     }}</label>
   </div>
-  <a class="btn" routerLink="list" queryParamsHandling="preserve">
-    <fa-icon [icon]="faForward"></fa-icon>
-    <span class="grow text-center">{{ 'landing.skip' | translate }}</span>
-  </a>
+  @if (routerSync.stored(); as storedState) {
+    <a
+      labButton
+      [faIcon]="faClockRotateLeft"
+      text="landing.loadLastState"
+      [routerLink]="storedState"
+      (click)="router.navigateByUrl(storedState)"
+    ></a>
+  }
+  <a
+    labButton
+    [faIcon]="faForward"
+    text="landing.skip"
+    routerLink="list"
+    queryParamsHandling="preserve"
+  ></a>
+  <span class="mt-auto mb-4 text-center"
+    >{{ fileClient.version$ | async }}
+  </span>
 </div>
-
-<span class="absolute bottom-4">{{ fileClient.version$ | async }} </span>

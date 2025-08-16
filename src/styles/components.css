@@ -1,19 +1,25 @@
 @layer components {
-  .btn {
-    display: flex;
-    align-items: center;
+  .input {
+    flex-grow: 1;
     border: 1px solid var(--color-gray-700);
-    cursor: pointer;
-    padding-inline: calc(var(--spacing) * 3);
+    border-radius: var(--radius-xs);
+    background-color: var(--color-gray-950);
+    padding-inline: calc(var(--spacing) * 2);
+    width: 0;
     min-height: calc(var(--spacing) * 9);
-
-    &:hover,
-    &:focus-visible {
-      border-color: var(--color-brand-700);
-    }
 
     &:focus-visible {
       outline: 1px solid var(--color-brand-700);
+      border-color: var(--color-brand-700);
+    }
+
+    &::placeholder {
+      color: var(--color-gray-500);
+    }
+
+    &.ng-invalid {
+      outline-color: var(--color-red-500);
+      border-color: var(--color-red-500);
     }
   }
 
@@ -24,7 +30,7 @@
     accent-color: var(--color-brand-500);
 
     &:focus-visible {
-      outline: 1px auto var(--color-brand-700);
+      outline: 3px solid var(--color-brand-700);
     }
   }
 }

@@ -1,0 +1,9 @@
+<input
+  type="text"
+  [(ngModel)]="text"
+  class="input text-right group-[.ng-invalid]:border-red-500 group-[.ng-invalid]:outline-red-500"
+  [disabled]="disabled()"
+  (input)="onChange($event)"
+  (blur)="onChange($event)"
+  (keydown.enter)="onChange($event)"
+/>
