@@ -72,6 +72,23 @@
     </div>
   }
 
+  @if (routerSync.stored(); as storedState) {
+    <a
+      labButton
+      [faIcon]="faClockRotateLeft"
+      text="landing.loadLastState"
+      [routerLink]="storedState"
+      (click)="router.navigateByUrl(storedState)"
+    ></a>
+  }
+
+  <a
+    labButton
+    [faIcon]="faForward"
+    text="landing.skip"
+    routerLink="list"
+    queryParamsHandling="preserve"
+  ></a>
   <div class="flex items-center">
     <input
       id="bypass"
@@ -84,22 +101,7 @@
       'landing.bypass' | translate
     }}</label>
   </div>
-  @if (routerSync.stored(); as storedState) {
-    <a
-      labButton
-      [faIcon]="faClockRotateLeft"
-      text="landing.loadLastState"
-      [routerLink]="storedState"
-      (click)="router.navigateByUrl(storedState)"
-    ></a>
-  }
-  <a
-    labButton
-    [faIcon]="faForward"
-    text="landing.skip"
-    routerLink="list"
-    queryParamsHandling="preserve"
-  ></a>
+
   <span class="mt-auto mb-4 text-center"
     >{{ fileClient.version$ | async }}
   </span>
