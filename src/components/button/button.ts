@@ -16,7 +16,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Icon } from '../icon/icon';
 
 const button = cva(
-  'flex items-center transition-colors rounded-xs cursor-pointer min-h-9 focus-visible:border-brand-800 focus-visible:outline outline-brand-700',
+  'inline-flex items-center gap-1 transition-colors rounded-xs cursor-pointer min-h-9 focus-visible:border-brand-800 focus-visible:outline outline-brand-700',
   {
     variants: {
       variant: {
@@ -33,6 +33,7 @@ const button = cva(
 
 @Component({
   selector: '[lab-button], [labButton]',
+  exportAs: 'labButton',
   imports: [FaIconComponent, Icon, TranslatePipe],
   templateUrl: './button.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

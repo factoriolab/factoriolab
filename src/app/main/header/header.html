@@ -1,0 +1,19 @@
+@if (asideXlHidden()) {
+  <button
+    type="button"
+    class="hidden xl:block"
+    labButton
+    [faIcon]="faBars"
+    text="settings.header"
+    (click)="asideXlHidden.set(false)"
+  ></button>
+}
+<button class="xl:hidden" (click)="toggleAside()">toggle non-xl</button>
+<a
+  labButton
+  type="button"
+  iconType="system"
+  [text]="gameInfo().label"
+  [icon]="game()"
+  [routerLink]="gameInfo().route"
+></a>

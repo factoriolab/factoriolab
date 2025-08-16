@@ -1,5 +1,6 @@
-import { computed, inject, Injectable, Injector } from '@angular/core';
+import { computed, effect, inject, Injectable, Injector } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
 import { filter, pairwise, switchMap } from 'rxjs';
 
 import { Solver } from '~/glpk/solver';
@@ -29,6 +30,7 @@ import { ObjectiveUnit } from './objective-unit';
 
 @Injectable({ providedIn: 'root' })
 export class ObjectivesStore extends RecordStore<ObjectiveState> {
+  private readonly title = inject(Title);
   private readonly adjustment = inject(Adjustment);
   private readonly itemsStore = inject(ItemsStore);
   private readonly machinesStore = inject(MachinesStore);
@@ -478,6 +480,21 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         );
         this.adjustDisplayRate(factor);
       });
+
+    effect(() => {
+      const objectives = this.baseObjectives();
+      const data = this.settingsStore.dataset();
+
+      const name = objectives
+        .map((o) =>
+          isRecipeObjective(o)
+            ? data.recipeRecord[o.targetId]?.name
+            : data.itemRecord[o.targetId]?.name,
+        )
+        .find((n) => n != null);
+      if (name == null) this.title.setTitle('FactorioLab');
+      else this.title.setTitle(`${name} | FactorioLab`);
+    });
   }
 
   add(objective: ObjectiveBase): void {

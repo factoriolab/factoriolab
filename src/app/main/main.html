@@ -1,2 +1,15 @@
-<p>main works!</p>
-<router-outlet></router-outlet>
+<aside #aside="labAside" labAside></aside>
+<div
+  class="transition-all"
+  [class.ms-80]="aside.open()"
+  [class.xl:ms-80]="!aside.xlHidden()"
+>
+  <header
+    labHeader
+    [(asideOpen)]="aside.open"
+    [(asideXlHidden)]="aside.xlHidden"
+  ></header>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
