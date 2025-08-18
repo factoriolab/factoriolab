@@ -312,7 +312,7 @@ export function applyHue(hue: number, el: HTMLElement): void {
     const [l, c, h] = v.map((w, j) => {
       let underV = tailwindColors[underIndex].variants[i][j];
       if (j === 2 && underV > w) underV -= 360;
-      return Number((w + percent * (w - underV)).toFixed(4));
+      return Number((w + percent * (w - underV)).toPrecision(j === 2 ? 6 : 3));
     });
     el.style.setProperty(`--brand-${weight[i]}`, `oklch(${l} ${c} ${h})`);
   });

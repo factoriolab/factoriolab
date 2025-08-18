@@ -13,5 +13,11 @@ export default {
       { ignorePseudoElements: ['ng-deep'] },
     ],
     'at-rule-no-deprecated': [true, { ignoreAtRules: 'apply' }],
+    /**
+     * Changes required for Tailwind CSS Intellisense plugin
+     * https://github.com/tailwindlabs/tailwindcss-intellisense/issues/1435
+     */
+    'lightness-notation': 'number',
+    'hue-degree-notation': 'number',
   },
 };
