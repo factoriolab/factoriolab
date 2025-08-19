@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { data } from 'src/data';
+import { data } from 'src/app/models/app-data';
 
 import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';

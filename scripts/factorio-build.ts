@@ -2,7 +2,7 @@ import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
-import { data } from 'src/data';
+import { data } from 'src/app/models/app-data';
 
 import { coalesce, spread } from '~/helpers';
 import { CategoryJson } from '~/models/data/category';
