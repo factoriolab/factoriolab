@@ -78,6 +78,7 @@ export interface DataRawDump {
   'rail-planner': Entities<M.RailPlannerPrototype>;
   reactor: Entities<M.ReactorPrototype>;
   recipe: Entities<M.RecipePrototype>;
+  'recipe-category': Entities<M.RecipeCategory>;
   'repair-tool': Entities<M.RepairToolPrototype>;
   resource: Entities<M.ResourceEntityPrototype>;
   'rocket-silo': Entities<M.RocketSiloPrototype>;
@@ -93,6 +94,7 @@ export interface DataRawDump {
   tile: Entities<M.TilePrototype>;
   tool: Entities<M.ToolPrototype>;
   'transport-belt': Entities<M.TransportBeltPrototype>;
+  'utility-constants': { default: M.UtilityConstants };
 }
 
 export interface Locale {

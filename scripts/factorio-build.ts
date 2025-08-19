@@ -117,6 +117,7 @@ import {
   getPipe,
   getRecipeDisallowedEffects,
 } from './helpers/proto.helpers';
+import { ItemId } from '~/models/enum/item-id';
 
 /**
  * This script is intended to pull files from a dump from Factorio and build
@@ -180,6 +181,9 @@ async function processMod(): Promise<void> {
   // Set up collections
   // Record of technology ids by raw id: factoriolab id
   const techId: Record<string, string> = {};
+
+  // Results of https://lua-api.factorio.com/latest/auxiliary/item-weight.html
+  const itemWeight: Entities<number> = {};
 
   const itemMap = getItemMap(dataRaw);
   const entityMap = getEntityMap(dataRaw);
@@ -753,6 +757,8 @@ async function processMod(): Promise<void> {
       Record<string, [number | undefined, number | undefined]>,
     ]
   > = {};
+  // https://lua-api.factorio.com/latest/auxiliary/item-weight.html#recipe-ordering
+  const recipesByProductForWeight: Entities<string[]> = {};
   for (const key of Object.keys(dataRaw.recipe)) {
     const recipe = dataRaw.recipe[key];
 
@@ -785,6 +791,17 @@ async function processMod(): Promise<void> {
     recipesEnabled[recipe.name] = recipe;
     recipeIngredientsMap[recipe.name] = ingredients;
     recipeResultsMap[recipe.name] = products;
+
+    const hidden = recipe.hidden ?? false;
+    const allowDecomposition = recipe.allow_decomposition ?? true;
+    if (!hidden && allowDecomposition) {
+      for (const product in products[0]) {
+        if (!(product in recipesByProductForWeight)) {
+          recipesByProductForWeight[product] = [];
+        }
+        recipesByProductForWeight[product].push(key);
+      }
+    }
   }
 
   logTime('Processing data');
@@ -1115,6 +1132,14 @@ async function processMod(): Promise<void> {
         fluidWagon: getFluidWagon(proto),
       });
     } else {
+      if (proto.weight !== undefined) {
+        itemWeight[proto.name] = proto.weight;
+      } else if (
+        proto.flags?.some((f) => f === 'only-in-cursor' || f === 'spawnable')
+      ) {
+        itemWeight[proto.name] = 0;
+      }
+
       const item: ItemJson = {
         id: proto.name,
         name: itemLocale.names[proto.name],
@@ -1732,6 +1757,123 @@ async function processMod(): Promise<void> {
 
           modData.recipes.push(recipe);
         }
+      }
+    }
+  }
+
+  // https://lua-api.factorio.com/latest/auxiliary/item-weight.html
+  const defaultItemWeight =
+    dataRaw['utility-constants'].default.default_item_weight;
+  const rocketLiftWeight =
+    dataRaw['utility-constants'].default.rocket_lift_weight;
+  const categoryOrder = (category: string | undefined) =>
+    dataRaw['recipe-category'][category ?? 'crafting'].order ?? '';
+  // FIXME: what to do if subgroup is not specified?
+  const subgroupOrder = (subgroup: string | undefined) =>
+    subgroup ? (dataRaw['item-subgroup'][subgroup].order ?? '') : '';
+  const itemWeightBeingComputed: Set<String> = new Set();
+
+  function getItemWeight(itemId: string): number {
+    if (itemId in itemWeight) {
+      return itemWeight[itemId];
+    }
+    if (itemWeightBeingComputed.has(itemId)) {
+      // Break recursion loops
+      return defaultItemWeight;
+    }
+    itemWeightBeingComputed.add(itemId);
+
+    const weight = computeItemWeight(itemId);
+
+    itemWeight[itemId] = weight;
+    itemWeightBeingComputed.delete(itemId);
+    return weight;
+  }
+
+  function computeItemWeight(itemId: string): number {
+    // https://lua-api.factorio.com/latest/auxiliary/item-weight.html#recipe-ordering
+    const recipeIds = recipesByProductForWeight[itemId] ?? [];
+    let someRecipeId = recipeIds.pop();
+    if (someRecipeId === undefined) {
+      return defaultItemWeight;
+    }
+    let chosenRecipe = dataRaw.recipe[someRecipeId];
+    let chosenRecipeUsesItemAsCatalyst =
+      itemId in recipeIngredientsMap[someRecipeId][0];
+    for (const recipeId of recipeIds) {
+      const recipe = dataRaw.recipe[recipeId];
+      const usesItemAsCatalyst = itemId in recipeIngredientsMap[recipeId][0];
+      if (
+        recipeId === itemId ||
+        (!usesItemAsCatalyst && chosenRecipeUsesItemAsCatalyst) ||
+        (recipe.allow_as_intermediate && !chosenRecipe.allow_as_intermediate) ||
+        // Docs say to sort by "The recipe's category, subgroup, then order"
+        // but as pointed out in https://forums.factorio.com/viewtopic.php?p=662295#p662295,
+        // the code provided by https://forums.factorio.com/viewtopic.php?p=662090#p662090
+        // actually sorts by "recipe's category's order, then recipe's subgroup's order,
+        // then recipe's order".
+        categoryOrder(recipe.category) < categoryOrder(chosenRecipe.category) ||
+        subgroupOrder(recipe.subgroup) < subgroupOrder(chosenRecipe.subgroup) ||
+        (recipe.order ?? '') < (chosenRecipe.order ?? '')
+      ) {
+        chosenRecipe = recipe;
+        chosenRecipeUsesItemAsCatalyst = usesItemAsCatalyst;
+      }
+    }
+
+    let recipeWeight = 0;
+    for (const ingredient of chosenRecipe.ingredients ?? []) {
+      if (ingredient.type === 'item') {
+        recipeWeight += ingredient.amount * getItemWeight(ingredient.name);
+      } else {
+        recipeWeight += ingredient.amount * 100;
+      }
+    }
+    if (recipeWeight == 0) {
+      return defaultItemWeight;
+    }
+
+    let productCount = 0;
+    for (const product of chosenRecipe.results ?? []) {
+      if (product.type === 'item') {
+        const min = product.amount_min ?? product.amount ?? 0;
+        const max = product.amount_max ?? product.amount ?? 0;
+        productCount += (product.probability ?? 1) * 0.5 * (min + max);
+      }
+    }
+    if (productCount == 0) {
+      return defaultItemWeight;
+    }
+
+    const item = itemMap[itemId];
+    if (item.type === 'fluid') {
+      // Should never happen but satisfies the type checker
+      return 0;
+    }
+    const intermediateResult =
+      (recipeWeight / productCount) *
+      (item.ingredient_to_weight_coefficient ?? 0.5);
+    if (!chosenRecipe.allow_productivity) {
+      const simpleResult = rocketLiftWeight / item.stack_size;
+      if (simpleResult >= intermediateResult) {
+        return simpleResult;
+      }
+    }
+
+    const stackAmount = rocketLiftWeight / intermediateResult / item.stack_size;
+    if (stackAmount <= 1) {
+      return intermediateResult;
+    } else {
+      return rocketLiftWeight / Math.floor(stackAmount) / item.stack_size;
+    }
+  }
+
+  for (const item of modData.items) {
+    // Skip fluids
+    if (item.stack) {
+      const weight = getItemWeight(item.id);
+      if (weight) {
+        item.rocketCapacity = Math.floor(rocketLiftWeight / weight);
       }
     }
   }
