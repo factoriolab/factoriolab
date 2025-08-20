@@ -136,6 +136,17 @@
           </div>
         </th>
       }
+      <!-- Rockets -->
+      @if (columnsState().rockets.show) {
+        <th colspan="2" pSortableColumn="rockets">
+          <div class="d-flex align-items-center">
+            <span>{{ dispRateInfo().rocketsLabel | translate }}</span>
+            @if (!focus()) {
+              <p-sortIcon field="rockets"></p-sortIcon>
+            }
+          </div>
+        </th>
+      }
       <!-- Machines -->
       <th colspan="2" pSortableColumn="machines">
         <div class="d-flex align-items-center">
@@ -542,6 +553,21 @@
           } @else {
             <td colspan="2"></td>
           }
+        }
+        <!-- Rockets -->
+        @if (columnsState().rockets.show) {
+          <td class="w-0 px-0 px-sm-2 text-end">
+            @if (step.rockets && step.rockets.nonzero()) {
+              <span class="monospace">{{
+                step.rockets | rate: columnsState().rockets.precision
+              }}</span>
+            }
+          </td>
+          <td>
+            @if (step.rockets && step.rockets.nonzero()) {
+              <i [class]="'rocket-silo' | iconClass"></i>
+            }
+          </td>
         }
         <!-- Machines -->
         @if (step.recipeSettings?.machineId; as machineId) {

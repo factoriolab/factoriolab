@@ -214,6 +214,7 @@ export class RateService {
     if (noItems) {
       delete step.belts;
       delete step.wagons;
+      delete step.rockets;
     } else if (step.itemId != null) {
       const itemSettings = items[step.itemId];
       const belt = itemSettings.beltId;
@@ -233,6 +234,12 @@ export class RateService {
           );
         } else
           step.wagons = step.items.div(data.fluidWagonEntities[wagon].capacity);
+      }
+
+      if (step.items != null) {
+        const item = data.itemEntities[step.itemId];
+        if (item.rocketCapacity)
+          step.rockets = step.items.div(item.rocketCapacity);
       }
     }
   }
@@ -294,18 +301,12 @@ export class RateService {
       }
       step.items = step.items.mul(dispRateInfo.value);
     }
-    if (step.surplus) {
-      step.surplus = step.surplus.mul(dispRateInfo.value);
-    }
-    if (step.wagons) {
-      step.wagons = step.wagons.mul(dispRateInfo.value);
-    }
-    if (step.pollution) {
-      step.pollution = step.pollution.mul(dispRateInfo.value);
-    }
-    if (step.output) {
-      step.output = step.output.mul(dispRateInfo.value);
-    }
+
+    if (step.surplus) step.surplus = step.surplus.mul(dispRateInfo.value);
+    if (step.wagons) step.wagons = step.wagons.mul(dispRateInfo.value);
+    if (step.rockets) step.rockets = step.rockets.mul(dispRateInfo.value);
+    if (step.pollution) step.pollution = step.pollution.mul(dispRateInfo.value);
+    if (step.output) step.output = step.output.mul(dispRateInfo.value);
   }
 
   calculateChecked(step: Step, settings: Settings): void {

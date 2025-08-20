@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { data } from 'src/data';
+import { data } from 'src/app/models/app-data';
 
 import { DefaultsJson } from '~/models/data/defaults';
 import { ModData } from '~/models/data/mod-data';

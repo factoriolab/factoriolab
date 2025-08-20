@@ -433,6 +433,27 @@ describe('RateService', () => {
       expect(step.belts).toEqual(rational(1n, 2n));
       expect(step.wagons).toEqual(rational(9n, 400n));
     });
+
+    it('should calculate rockets', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: Mocks.item1.id,
+        items: Mocks.beltSpeed[ItemId.ExpressTransportBelt],
+      };
+      const data = Mocks.getAdjustedDataset();
+      data.itemEntities[Mocks.item1.id].rocketCapacity = rational(100n);
+      service.calculateBelts(
+        step,
+        spread(Mocks.itemsStateInitial, {
+          [Mocks.item1.id]: spread(Mocks.itemsStateInitial[Mocks.item1.id], {
+            stack: rational(2n),
+          }),
+        }),
+        Mocks.beltSpeed,
+        data,
+      );
+      expect(step.rockets).toBeDefined();
+    });
   });
 
   describe('calculateBeacons', () => {
@@ -508,6 +529,7 @@ describe('RateService', () => {
         pollution: rational(4n),
         output: rational(5n),
         parents: { ['id']: rational(6n) },
+        rockets: rational(7n),
       };
       service.calculateDisplayRate(
         step,
@@ -519,6 +541,7 @@ describe('RateService', () => {
       expect(step.pollution).toEqual(rational(240n));
       expect(step.output).toEqual(rational(300n));
       expect(step.parents?.['id']).toEqual(rational(6n));
+      expect(step.rockets).toEqual(rational(420n));
     });
   });
 

@@ -15,6 +15,7 @@ export interface ItemJson {
   category: string;
   row: number;
   stack?: number;
+  rocketCapacity?: number;
   beacon?: BeaconJson;
   belt?: BeltJson;
   pipe?: BeltJson;
@@ -36,6 +37,7 @@ export interface Item {
   category: string;
   row: number;
   stack?: Rational;
+  rocketCapacity?: Rational;
   beacon?: Beacon;
   belt?: Belt;
   pipe?: Belt;
@@ -59,6 +61,7 @@ export function parseItem(json: ItemJson): Item {
     category: json.category,
     row: json.row,
     stack: rational(json.stack),
+    rocketCapacity: rational(json.rocketCapacity),
     beacon: parseBeacon(json.beacon),
     belt: parseBelt(json.belt),
     pipe: parseBelt(json.pipe),
