@@ -117,7 +117,6 @@ import {
   getPipe,
   getRecipeDisallowedEffects,
 } from './helpers/proto.helpers';
-import { ItemId } from '~/models/enum/item-id';
 
 /**
  * This script is intended to pull files from a dump from Factorio and build
@@ -645,7 +644,7 @@ async function processMod(): Promise<void> {
 
       if (modData.defaults?.excludedRecipes) {
         // Filter excluded recipes for only recipes that exist
-        const recipeExists = (e: string) =>
+        const recipeExists = (e: string): boolean =>
           modData.recipes.some((r) => r.id === e);
         modDataReport.disabledRecipeDoesntExist =
           modData.defaults.excludedRecipes.filter((e) => !recipeExists(e));
@@ -1132,7 +1131,7 @@ async function processMod(): Promise<void> {
         fluidWagon: getFluidWagon(proto),
       });
     } else {
-      if (proto.weight !== undefined) {
+      if (proto.weight != null) {
         itemWeight[proto.name] = proto.weight;
       } else if (
         proto.flags?.some((f) => f === 'only-in-cursor' || f === 'spawnable')
@@ -1766,21 +1765,18 @@ async function processMod(): Promise<void> {
     dataRaw['utility-constants'].default.default_item_weight;
   const rocketLiftWeight =
     dataRaw['utility-constants'].default.rocket_lift_weight;
-  const categoryOrder = (category: string | undefined) =>
-    dataRaw['recipe-category'][category ?? 'crafting'].order ?? '';
-  // FIXME: what to do if subgroup is not specified?
-  const subgroupOrder = (subgroup: string | undefined) =>
-    subgroup ? (dataRaw['item-subgroup'][subgroup].order ?? '') : '';
-  const itemWeightBeingComputed: Set<String> = new Set();
+  const categoryOrder = (recipe: RecipePrototype): string =>
+    dataRaw['recipe-category'][recipe.category ?? 'crafting'].order ?? '';
+  const subgroupOrder = (recipe: RecipePrototype): string =>
+    dataRaw['item-subgroup'][getSubgroup(recipe)].order ?? '';
+  const itemWeightBeingComputed = new Set<string>();
 
   function getItemWeight(itemId: string): number {
-    if (itemId in itemWeight) {
-      return itemWeight[itemId];
-    }
-    if (itemWeightBeingComputed.has(itemId)) {
-      // Break recursion loops
-      return defaultItemWeight;
-    }
+    if (itemId in itemWeight) return itemWeight[itemId];
+
+    // Break recursion loops
+    if (itemWeightBeingComputed.has(itemId)) return defaultItemWeight;
+
     itemWeightBeingComputed.add(itemId);
 
     const weight = computeItemWeight(itemId);
@@ -1793,10 +1789,9 @@ async function processMod(): Promise<void> {
   function computeItemWeight(itemId: string): number {
     // https://lua-api.factorio.com/latest/auxiliary/item-weight.html#recipe-ordering
     const recipeIds = recipesByProductForWeight[itemId] ?? [];
-    let someRecipeId = recipeIds.pop();
-    if (someRecipeId === undefined) {
-      return defaultItemWeight;
-    }
+    const someRecipeId = recipeIds.pop();
+    if (someRecipeId == null) return defaultItemWeight;
+
     let chosenRecipe = dataRaw.recipe[someRecipeId];
     let chosenRecipeUsesItemAsCatalyst =
       itemId in recipeIngredientsMap[someRecipeId][0];
@@ -1812,8 +1807,8 @@ async function processMod(): Promise<void> {
         // the code provided by https://forums.factorio.com/viewtopic.php?p=662090#p662090
         // actually sorts by "recipe's category's order, then recipe's subgroup's order,
         // then recipe's order".
-        categoryOrder(recipe.category) < categoryOrder(chosenRecipe.category) ||
-        subgroupOrder(recipe.subgroup) < subgroupOrder(chosenRecipe.subgroup) ||
+        categoryOrder(recipe) < categoryOrder(chosenRecipe) ||
+        subgroupOrder(recipe) < subgroupOrder(chosenRecipe) ||
         (recipe.order ?? '') < (chosenRecipe.order ?? '')
       ) {
         chosenRecipe = recipe;
@@ -1823,15 +1818,12 @@ async function processMod(): Promise<void> {
 
     let recipeWeight = 0;
     for (const ingredient of chosenRecipe.ingredients ?? []) {
-      if (ingredient.type === 'item') {
-        recipeWeight += ingredient.amount * getItemWeight(ingredient.name);
-      } else {
-        recipeWeight += ingredient.amount * 100;
-      }
+      const factor =
+        ingredient.type === 'item' ? getItemWeight(ingredient.name) : 100;
+      recipeWeight += ingredient.amount * factor;
     }
-    if (recipeWeight == 0) {
-      return defaultItemWeight;
-    }
+
+    if (recipeWeight === 0) return defaultItemWeight;
 
     let productCount = 0;
     for (const product of chosenRecipe.results ?? []) {
@@ -1841,40 +1833,30 @@ async function processMod(): Promise<void> {
         productCount += (product.probability ?? 1) * 0.5 * (min + max);
       }
     }
-    if (productCount == 0) {
-      return defaultItemWeight;
-    }
+    if (productCount === 0) return defaultItemWeight;
 
     const item = itemMap[itemId];
-    if (item.type === 'fluid') {
-      // Should never happen but satisfies the type checker
-      return 0;
-    }
+    // Should never happen but satisfies the type checker
+    if (item.type === 'fluid') return 0;
+
     const intermediateResult =
       (recipeWeight / productCount) *
       (item.ingredient_to_weight_coefficient ?? 0.5);
     if (!chosenRecipe.allow_productivity) {
       const simpleResult = rocketLiftWeight / item.stack_size;
-      if (simpleResult >= intermediateResult) {
-        return simpleResult;
-      }
+      if (simpleResult >= intermediateResult) return simpleResult;
     }
 
     const stackAmount = rocketLiftWeight / intermediateResult / item.stack_size;
-    if (stackAmount <= 1) {
-      return intermediateResult;
-    } else {
-      return rocketLiftWeight / Math.floor(stackAmount) / item.stack_size;
-    }
+    if (stackAmount <= 1) return intermediateResult;
+    else return rocketLiftWeight / Math.floor(stackAmount) / item.stack_size;
   }
 
   for (const item of modData.items) {
     // Skip fluids
     if (item.stack) {
       const weight = getItemWeight(item.id);
-      if (weight) {
-        item.rocketCapacity = Math.floor(rocketLiftWeight / weight);
-      }
+      if (weight) item.rocketCapacity = Math.floor(rocketLiftWeight / weight);
     }
   }
 
