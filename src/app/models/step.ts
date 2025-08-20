@@ -22,6 +22,7 @@ export interface Step {
   surplus?: Rational;
   belts?: Rational;
   wagons?: Rational;
+  rockets?: Rational;
   /**
    * Fraction of this item requested by each step, or output denoted by key `''`
    */
