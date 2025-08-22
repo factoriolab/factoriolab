@@ -7,4 +7,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex' },
 })
-export class List {}
+export class List {
+  test = new Array(10000).fill('hello, world');
+}

@@ -1,0 +1,16 @@
+<h2 class="text-2xl font-light">Objectives</h2>
+
+<div cdkDropList (cdkDropListDropped)="drop($event)">
+  @for (objective of objectives(); track objective.id) {
+    <div cdkDrag>{{ objective.id }}</div>
+  }
+</div>
+
+<div>
+  <!-- <button
+    type="button"
+    labButton
+    color="brand"
+    (click)="openPicker('item')"
+  ></button> -->
+</div>

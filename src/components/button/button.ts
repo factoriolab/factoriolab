@@ -29,10 +29,10 @@ const button = cva(
       size: {
         small: 'min-h-8 text-sm font-light opacity-60',
         standard: 'min-h-9',
-        large: 'min-h-11 text-2xl font-light tracking-wide',
+        large: 'min-h-11 text-2xl font-light',
       },
       iconOnly: {
-        true: 'min-w-9 justify-center',
+        true: 'justify-center',
         false: 'px-3',
       },
     },
@@ -50,12 +50,27 @@ const button = cva(
       {
         color: 'gray',
         border: false,
-        class: 'hover:bg-gray-700/20',
+        class: 'hover:bg-gray-800',
       },
       {
         color: 'brand',
         border: false,
-        class: 'text-brand-50 hover:bg-brand-700/20',
+        class: 'text-brand-50 hover:bg-brand-950',
+      },
+      {
+        size: 'small',
+        iconOnly: true,
+        class: 'min-w-8',
+      },
+      {
+        size: 'standard',
+        iconOnly: true,
+        class: 'min-w-9',
+      },
+      {
+        size: 'large',
+        iconOnly: true,
+        class: 'min-w-11',
       },
     ],
   },

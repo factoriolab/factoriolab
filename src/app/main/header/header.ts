@@ -8,13 +8,14 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { IconDefinition } from '@fortawesome/angular-fontawesome';
 import { faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faBars, faMugHot } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { Select } from '~/components/select/select';
 import { Game, gameOptions } from '~/models/game';
 import { gameInfo } from '~/models/game-info';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { TranslatePipe } from '~/translate/translate-pipe';
 
 interface ExternalLink {
   text: string;
@@ -25,12 +26,12 @@ interface ExternalLink {
 @Component({
   selector: 'header[labHeader], header[lab-header]',
   exportAs: 'labHeader',
-  imports: [RouterLink, Button, Select],
+  imports: [RouterLink, Button, Select, TranslatePipe],
   templateUrl: './header.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex justify-between h-16 items-center px-6 flex-wrap xl:flex-nowrap',
+      'flex justify-between min-h-19 md:min-h-16 items-center flex-wrap sm:px-3 lg:px-6 xl:flex-nowrap md:sticky top-0 backdrop-blur-md border-b border-gray-700',
   },
 })
 export class Header {
@@ -43,25 +44,22 @@ export class Header {
   protected readonly game = this.settingsStore.game;
   protected readonly gameInfo = this.settingsStore.gameInfo;
   protected readonly faBars = faBars;
-  protected readonly faDiscord = faDiscord;
-  protected readonly faGithub = faGithub;
-  protected readonly faMugHot = faMugHot;
 
   protected readonly links: ExternalLink[] = [
-    {
-      text: 'header.source',
-      icon: faGithub,
-      href: 'https://github.com/factoriolab/factoriolab',
-    },
     {
       text: 'header.discord',
       icon: faDiscord,
       href: 'https://discord.gg/N4FKV687x2',
     },
     {
-      text: 'header.support',
-      icon: faMugHot,
+      text: 'header.sponsor',
+      icon: faHandHoldingDollar,
       href: 'https://ko-fi.com/dcbroad3',
+    },
+    {
+      text: 'header.source',
+      icon: faGithub,
+      href: 'https://github.com/factoriolab/factoriolab',
     },
   ];
 

@@ -1,7 +1,12 @@
 <aside #aside="labAside" labAside></aside>
 <div
-  class="transition-[margin]"
-  [class.ms-80]="aside.open()"
+  role="none"
+  class="fixed z-1 hidden h-dvh w-dvw bg-gray-950/75 xl:hidden"
+  [class.hidden]="!aside.open()"
+  (click)="aside.open.set(false)"
+></div>
+<div
+  class="flex h-full flex-col transition-[margin]"
   [class.xl:ms-80]="!aside.xlHidden()"
 >
   <header
@@ -9,7 +14,31 @@
     [(asideOpen)]="aside.open"
     [(asideXlHidden)]="aside.xlHidden"
   ></header>
-  <main>
-    <router-outlet></router-outlet>
+  <main class="flex grow flex-col">
+    <lab-objectives></lab-objectives>
+
+    <div class="grow">
+      <router-outlet></router-outlet>
+    </div>
+
+    <div
+      class="flex justify-between border-t border-gray-700 p-2 sm:p-3 lg:p-6"
+    >
+      <span>
+        @if (result().resultType === 'solved') {
+          {{
+            'app.simplexSolved'
+              | translate
+                : {
+                    time: result().time,
+                    cost: result().cost?.toFixedString(),
+                  }
+          }}
+        } @else {
+          {{ 'options.simplexResultType.' + result().resultType | translate }}
+        }
+      </span>
+      <span>{{ fileClient.version$ | async }}</span>
+    </div>
   </main>
 </div>

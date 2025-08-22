@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  DestroyRef,
-  inject,
-  Pipe,
-  PipeTransform,
-} from '@angular/core';
+import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, Subject, switchMap } from 'rxjs';
 
@@ -31,7 +25,6 @@ function areRecordsEqual<T>(
 
 @Pipe({ name: 'translate', pure: false })
 export class TranslatePipe implements PipeTransform {
-  private readonly destroyRef = inject(DestroyRef);
   private readonly ref = inject(ChangeDetectorRef);
   private readonly translate = inject(Translate);
 
@@ -45,11 +38,13 @@ export class TranslatePipe implements PipeTransform {
           ([pKey, pParams], [cKey, cParams]) =>
             pKey === cKey && areRecordsEqual(pParams, cParams),
         ),
+
         switchMap((params) => this.translate.get(...params)),
-        takeUntilDestroyed(this.destroyRef),
+        takeUntilDestroyed(),
       )
       .subscribe((value) => {
         this.value = value;
+        console.log(value);
         this.ref.markForCheck();
       });
   }

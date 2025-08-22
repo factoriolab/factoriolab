@@ -153,13 +153,39 @@ export class Rational {
     return rational(this.toNumber());
   }
 
+  decimals(): number {
+    const num = this.toNumber();
+    if (num % 1 !== 0) {
+      // Pick apart complex numbers, looking for decimal and negative exponent
+      // 3.33e-6 => ["3.33e-6", ".33", "33", "e-6", "6"]
+      const match = DECIMALS_REGEX.exec(num.toString());
+      let decimals = 0;
+
+      // istanbul ignore else: Regex pattern should match all known number toString formats
+      if (match) {
+        // If decimal portion found, add length
+        if (match[2]) decimals += match[2].length;
+
+        // If negative exponent found, add value
+        if (match[4]) decimals += Number(match[4]);
+      } else console.warn('Number did not match expected pattern', num);
+
+      return decimals;
+    }
+
+    return 0;
+  }
+
   toNumber(): number {
     return Number(this.p) / Number(this.q);
   }
 
-  toPrecision(x: number): number {
-    const round = fromNumber(Math.pow(10, x));
-    return this.mul(round).ceil().div(round).toNumber();
+  toFixed(x: number): number {
+    return Number(this.toNumber().toFixed(x));
+  }
+
+  toFixedString(maximumFractionDigits = 2): string {
+    return this.toNumber().toLocaleString(undefined, { maximumFractionDigits });
   }
 
   toFraction(mixed = true): string {
@@ -182,37 +208,12 @@ export class Rational {
    *   * Specify number to specify number of decimals
    */
   toString(precision?: number | null): string {
-    if (precision) return this.toPrecision(precision).toString();
+    if (precision) return this.toFixedString(precision);
 
-    if (precision === null || this.toDecimals() > 2)
+    if (precision === null || this.decimals() > 2)
       return this.toFraction(precision !== undefined);
 
     return this.toNumber().toString();
-  }
-
-  toDecimals(): number {
-    const num = this.toNumber();
-    if (num % 1 !== 0) {
-      // Pick apart complex numbers, looking for decimal and negative exponent
-      // 3.33e-6 => ["3.33e-6", ".33", "33", "e-6", "6"]
-      const match = DECIMALS_REGEX.exec(num.toString());
-      let decimals = 0;
-
-      // istanbul ignore else: Regex pattern should match all known number toString formats
-      if (match) {
-        // If decimal portion found, add length
-        if (match[2]) decimals += match[2].length;
-
-        // If negative exponent found, add value
-        if (match[4]) decimals += Number(match[4]);
-      } else {
-        console.warn('Number did not match expected pattern', num);
-      }
-
-      return decimals;
-    }
-
-    return 0;
   }
 
   toJSON(): string {

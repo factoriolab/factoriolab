@@ -11,7 +11,7 @@ import { cva } from 'class-variance-authority';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 
 const aside = cva(
-  'fixed bg-gray-900 top-0 left-0 h-full border-r border-gray-700 w-80 transition-transform',
+  'flex flex-col fixed z-2 bg-gray-900 top-0 left-0 h-full border-r border-gray-700 w-80 transition-transform',
   {
     variants: {
       open: {

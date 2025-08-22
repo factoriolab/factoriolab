@@ -1,49 +1,69 @@
-<div class="flex gap-px">
+<div class="flex w-full justify-between gap-2 md:w-auto">
   @if (asideXlHidden()) {
-    <button
-      type="button"
-      class="hidden xl:block"
-      labButton
-      [faIcon]="faBars"
-      text="settings.header"
-      size="large"
-      [border]="false"
-      (click)="asideXlHidden.set(false)"
-    ></button>
+    <div class="hidden xl:block">
+      <button
+        type="button"
+        labButton
+        text="settings.header"
+        [faIcon]="faBars"
+        color="brand"
+        size="large"
+        [border]="false"
+        (click)="asideXlHidden.set(false)"
+      ></button>
+    </div>
   }
   <button
+    type="button"
     class="xl:hidden"
     labButton
     text="settings.header"
     [faIcon]="faBars"
+    color="brand"
     size="large"
     [border]="false"
     (click)="toggleAside()"
   ></button>
-  <a
-    [routerLink]="gameInfo().route"
-    class="rounded-r-none"
-    labButton
-    [text]="gameInfo().label"
-    iconType="system"
-    [icon]="game()"
-    color="brand"
-    size="large"
-    [border]="false"
-  ></a>
-  <lab-select
-    type="system"
-    class="w-11 rounded-l-none"
-    [iconOnly]="true"
-    [options]="gameOptions()"
-    (valueChange)="setGame($event)"
-  ></lab-select>
+  <div class="flex gap-px">
+    <div class="hidden lg:block">
+      <a
+        [routerLink]="gameInfo().route"
+        class="rounded-r-none"
+        labButton
+        [text]="gameInfo().label"
+        iconType="system"
+        [icon]="game()"
+        color="brand"
+        size="large"
+        [border]="false"
+      ></a>
+    </div>
+    <a
+      [routerLink]="gameInfo().route"
+      class="rounded-r-none lg:hidden"
+      labButton
+      [attr.aria-label]="gameInfo().label | translate"
+      iconType="system"
+      [icon]="game()"
+      color="brand"
+      size="large"
+      [border]="false"
+    ></a>
+    <lab-select
+      type="system"
+      class="w-11 rounded-l-none"
+      [iconOnly]="true"
+      [options]="gameOptions()"
+      (valueChange)="setGame($event)"
+    ></lab-select>
+  </div>
 </div>
-<div class="flex w-100 items-center gap-2 xl:w-auto">
+<div class="flex w-full items-center gap-2 md:w-auto">
   @for (link of links; track link.href) {
     <a
       [href]="link.href"
       target="_blank"
+      class="grow md:grow-0"
       labButton
       [text]="link.text"
       [faIcon]="link.icon"

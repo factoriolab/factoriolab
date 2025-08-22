@@ -73,6 +73,7 @@
     "stylelint-config-concentric-order": "^5.2.1",
     "stylelint-config-standard": "^39.0.0",
     "stylelint-config-tailwindcss": "^1.0.0",
+    "stylelint-order": "^7.0.0",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.39.0"
