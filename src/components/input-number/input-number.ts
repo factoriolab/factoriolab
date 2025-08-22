@@ -92,7 +92,6 @@ export class InputNumber
   ): ValidationErrors | null {
     const val = control.value;
     if (val == null) return null;
-    console.log('value', val);
 
     try {
       const min = this.minimum();
@@ -110,7 +109,6 @@ export class InputNumber
     try {
       const text = this.text();
       const value = rational(text);
-      // console.log('onChange', rat);
       this.value$.next({
         type: event.type as 'input' | 'keydown' | 'blur',
         value,

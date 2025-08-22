@@ -33,7 +33,7 @@ let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
 
 const select = cva(
-  'inline-flex grow cursor-pointer min-h-9 items-center select-none bg-gray-950 px-1 border focus-visible:border-brand-700 focus-visible:outline outline-brand-700 text-nowrap rounded-xs',
+  'inline-flex grow cursor-pointer min-h-9 items-center select-none bg-gray-950 px-1 focus-visible:border-brand-700 focus-visible:outline text-nowrap rounded-xs',
   {
     variants: {
       opened: {
@@ -41,7 +41,8 @@ const select = cva(
         false: 'border-gray-700',
       },
       iconOnly: {
-        true: 'w-9 grow-0',
+        true: 'min-w-9 justify-center hover:bg-brand-700/20 outline-gray-300',
+        false: 'border outline-brand-700',
       },
     },
   },
@@ -91,8 +92,8 @@ export class Select<T = unknown> extends Control<T> {
   readonly disabled = model(false);
   readonly placeholder = input<string>();
   readonly type = input<IconType>();
-  readonly filter = input<boolean>();
-  readonly iconOnly = input<boolean>();
+  readonly filter = input<boolean>(false);
+  readonly iconOnly = input<boolean>(false);
   readonly iconLocator = input<(value: T) => string>((v) => v as string);
 
   hostClass = computed(() =>

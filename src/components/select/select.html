@@ -5,10 +5,15 @@
     [value]="iconLocator()(_selectedOption.value)"
     [type]="_type"
   ></lab-icon>
+} @else if (iconOnly()) {
+  <fa-icon
+    class="absolute text-gray-500 transition-transform"
+    [class.-scale-y-100]="opened() && !hiding()"
+    [icon]="faChevronDown"
+  ></fa-icon>
 }
 
-@if (iconOnly()) {
-} @else {
+@if (!iconOnly()) {
   <div class="ms-1 me-2 grow overflow-hidden text-ellipsis">
     @if (_selectedOption) {
       {{ _selectedOption.label | translate }}

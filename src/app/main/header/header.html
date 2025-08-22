@@ -1,19 +1,52 @@
-@if (asideXlHidden()) {
+<div class="flex gap-px">
+  @if (asideXlHidden()) {
+    <button
+      type="button"
+      class="hidden xl:block"
+      labButton
+      [faIcon]="faBars"
+      text="settings.header"
+      size="large"
+      [border]="false"
+      (click)="asideXlHidden.set(false)"
+    ></button>
+  }
   <button
-    type="button"
-    class="hidden xl:block"
+    class="xl:hidden"
     labButton
-    [faIcon]="faBars"
     text="settings.header"
-    (click)="asideXlHidden.set(false)"
+    [faIcon]="faBars"
+    (click)="toggleAside()"
   ></button>
-}
-<button class="xl:hidden" (click)="toggleAside()">toggle non-xl</button>
-<a
-  labButton
-  type="button"
-  iconType="system"
-  [text]="gameInfo().label"
-  [icon]="game()"
-  [routerLink]="gameInfo().route"
-></a>
+  <a
+    [routerLink]="gameInfo().route"
+    class="rounded-r-none"
+    labButton
+    [text]="gameInfo().label"
+    iconType="system"
+    [icon]="game()"
+    color="brand"
+    size="large"
+    [border]="false"
+  ></a>
+  <lab-select
+    type="system"
+    class="w-11 rounded-l-none"
+    [iconOnly]="true"
+    [options]="gameOptions()"
+    (valueChange)="setGame($event)"
+  ></lab-select>
+</div>
+<div class="flex items-center gap-2">
+  @for (link of links; track link.href) {
+    <a
+      [href]="link.href"
+      target="_blank"
+      labButton
+      [text]="link.text"
+      [faIcon]="link.icon"
+      size="small"
+      [border]="false"
+    ></a>
+  }
+</div>

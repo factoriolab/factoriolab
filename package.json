@@ -36,6 +36,7 @@
     "@angular/router": "^20.1.0",
     "@angular/service-worker": "^20.1.0",
     "@fortawesome/angular-fontawesome": "^3.0.0",
+    "@fortawesome/free-brands-svg-icons": "^7.0.0",
     "@fortawesome/free-solid-svg-icons": "^7.0.0",
     "@sideway/formula": "^3.0.1",
     "class-variance-authority": "^0.7.1",

@@ -2,9 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   signal,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { cva } from 'class-variance-authority';
+
+import { PreferencesStore } from '~/state/preferences/preferences-store';
 
 const aside = cva(
   'fixed bg-gray-900 top-0 left-0 h-full border-r border-gray-700 w-80 transition-transform',
@@ -24,12 +28,14 @@ const aside = cva(
 @Component({
   selector: 'aside[labAside], aside[lab-aside]',
   exportAs: 'labAside',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './aside.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[class]': 'hostClass()' },
 })
 export class Aside {
+  readonly preferencesStore = inject(PreferencesStore);
+
   readonly open = signal(false);
   readonly xlHidden = signal(false);
   readonly hostClass = computed(() =>

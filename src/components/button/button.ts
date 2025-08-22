@@ -16,18 +16,48 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Icon } from '../icon/icon';
 
 const button = cva(
-  'inline-flex items-center gap-1 transition-colors rounded-xs cursor-pointer min-h-9 focus-visible:border-brand-800 focus-visible:outline outline-brand-700',
+  'inline-flex items-center gap-1 transition-colors rounded-xs cursor-pointer focus-visible:outline',
   {
     variants: {
-      variant: {
-        gray: 'bg-gray-950 hover:bg-gray-700 border-gray-700',
-        brand: 'bg-brand-950 hover:bg-brand-700 border-brand-700',
+      color: {
+        gray: 'outline-brand-700 focus-visible:border-brand-700',
+        brand: 'outline-gray-300 focus-visible:border-gray-300',
+      },
+      border: {
+        true: 'border',
+      },
+      size: {
+        small: 'min-h-8 text-sm font-light opacity-60',
+        standard: 'min-h-9',
+        large: 'min-h-11 text-2xl font-light tracking-wide',
       },
       iconOnly: {
         true: 'min-w-9 justify-center',
-        false: 'border px-3',
+        false: 'px-3',
       },
     },
+    compoundVariants: [
+      {
+        color: 'gray',
+        border: true,
+        class: 'bg-gray-950 hover:bg-gray-700 border-gray-700',
+      },
+      {
+        color: 'brand',
+        border: true,
+        class: 'bg-brand-950 hover:bg-brand-700 border-brand-700',
+      },
+      {
+        color: 'gray',
+        border: false,
+        class: 'hover:bg-gray-700/20',
+      },
+      {
+        color: 'brand',
+        border: false,
+        class: 'text-brand-50 hover:bg-brand-700/20',
+      },
+    ],
   },
 );
 
@@ -44,9 +74,16 @@ export class Button {
   faIcon = input<IconDefinition>();
   iconType = input<IconType>();
   icon = input<string>();
-  variant = input<'brand' | 'gray'>('gray');
+  color = input<'brand' | 'gray'>('gray');
+  border = input(true);
+  size = input<'small' | 'standard' | 'large'>('standard');
 
   hostClass = computed(() =>
-    button({ iconOnly: !this.text(), variant: this.variant() }),
+    button({
+      iconOnly: !this.text(),
+      color: this.color(),
+      border: this.border(),
+      size: this.size(),
+    }),
   );
 }
