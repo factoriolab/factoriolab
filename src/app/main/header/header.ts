@@ -28,7 +28,10 @@ interface ExternalLink {
   imports: [RouterLink, Button, Select],
   templateUrl: './header.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex justify-between h-16 items-center px-6' },
+  host: {
+    class:
+      'flex justify-between h-16 items-center px-6 flex-wrap xl:flex-nowrap',
+  },
 })
 export class Header {
   private readonly router = inject(Router);

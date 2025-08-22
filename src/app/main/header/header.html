@@ -16,6 +16,8 @@
     labButton
     text="settings.header"
     [faIcon]="faBars"
+    size="large"
+    [border]="false"
     (click)="toggleAside()"
   ></button>
   <a
@@ -37,7 +39,7 @@
     (valueChange)="setGame($event)"
   ></lab-select>
 </div>
-<div class="flex items-center gap-2">
+<div class="flex w-100 items-center gap-2 xl:w-auto">
   @for (link of links; track link.href) {
     <a
       [href]="link.href"
