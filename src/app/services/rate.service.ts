@@ -238,7 +238,7 @@ export class RateService {
 
       if (step.items != null) {
         const item = data.itemEntities[step.itemId];
-        if (item.rocketCapacity)
+        if (item.rocketCapacity?.nonzero())
           step.rockets = step.items.div(item.rocketCapacity);
       }
     }
