@@ -19,7 +19,7 @@ jobs:
         run: npm ci
 
       - name: Run build
-        run: npm run build
+        run: npm run build -- -c=production,next
 
       - name: Copy index to 404
         run: cp dist/factoriolab/browser/index.html dist/factoriolab/browser/404.html

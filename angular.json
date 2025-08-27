@@ -58,6 +58,9 @@
             },
             "staging": {
               "baseHref": "/staging/"
+            },
+            "next": {
+              "baseHref": "/next/"
             }
           },
           "defaultConfiguration": "production"
