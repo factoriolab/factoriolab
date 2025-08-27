@@ -61,6 +61,7 @@ module.exports = tseslint.config(
       ],
       '@typescript-eslint/no-dynamic-delete': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
+      '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/prefer-nullish-coalescing': [
         'error',
         { ignorePrimitives: true },

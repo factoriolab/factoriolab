@@ -70,4 +70,10 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.outworldStation',
     modId: 'ows',
   },
+  [Game.MoteMancer]: {
+    icon: 'game-factorio',
+    route: '/mmc',
+    label: 'options.game.moteMancer',
+    modId: 'mmc',
+  },
 };
