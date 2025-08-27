@@ -1,0 +1,35 @@
+name: build
+on:
+  push:
+    branches: [next]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run build
+        run: npm run build
+
+      - name: Copy index to 404
+        run: cp dist/factoriolab/browser/index.html dist/factoriolab/browser/404.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        if: env.DEPLOY == 'true'
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository-name: factoriolab/next
+          branch: main
+          folder: dist/factoriolab/browser
+          clean: true
