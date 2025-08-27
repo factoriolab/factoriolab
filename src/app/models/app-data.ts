@@ -153,6 +153,7 @@ export const data: AppData = {
       game: Game.OutworldStation,
       flags: 'fdy',
     },
+    { id: 'mmc', name: 'MoteMancer', game: Game.MoteMancer, flags: 'mmc' },
   ],
   modHashV0: [
     '1.1',
@@ -230,5 +231,6 @@ export const data: AppData = {
     'mde',
     'fdy',
     'ows',
+    'mmc',
   ],
 };

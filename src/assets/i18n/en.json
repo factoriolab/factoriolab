@@ -52,7 +52,8 @@
       "factorY": "Factor Y",
       "mindustry": "Mindustry",
       "foundry": "Foundry",
-      "outworldStation": "Outworld Station"
+      "outworldStation": "Outworld Station",
+      "moteMancer": "MoteMancer"
     },
     "inserterCapacity": {
       "capacity0": "No capacity bonus",
@@ -121,8 +122,15 @@
       "machine": "Machine",
       "recipes": "Recipes"
     },
-    "theme": { "light": "Light", "dark": "Dark (Default)", "black": "Black" },
-    "flowDiagram": { "sankey": "Sankey", "boxLine": "Box-line" },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark (Default)",
+      "black": "Black"
+    },
+    "flowDiagram": {
+      "sankey": "Sankey",
+      "boxLine": "Box-line"
+    },
     "linkValue": {
       "none": "None",
       "percent": "Percent",
