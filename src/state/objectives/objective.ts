@@ -13,14 +13,13 @@ export function isRecipeObjective(obj: ObjectiveState): obj is RecipeObjective {
 export interface ObjectiveBase {
   /** If unit is ObjectiveUnit.Machines, a recipe id; otherwise an item id */
   targetId: string;
+  value: Rational;
   unit: ObjectiveUnit;
-  type?: ObjectiveType;
+  type: ObjectiveType;
 }
 
 interface Objective extends ObjectiveBase {
   id: string;
-  value: Rational;
-  type: ObjectiveType;
   recipe?: AdjustedRecipe;
 }
 

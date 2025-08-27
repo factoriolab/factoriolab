@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import {
   SankeyLinkExtraProperties,
@@ -12,26 +12,22 @@ import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 import { toRecord } from '~/utils/record';
 
-import { ItemSettings } from './items/item-settings';
+import { ItemsStore } from './items/items-store';
 import { ObjectiveSettings } from './objectives/objective';
 import { ObjectiveType } from './objectives/objective-type';
 import { ObjectiveUnit } from './objectives/objective-unit';
-import { RecipeSettings } from './recipes/recipe-settings';
-import { AdjustedDataset } from './settings/dataset';
-import { DisplayRateInfo } from './settings/display-rate';
-import { Settings } from './settings/settings';
+import { RecipesStore } from './recipes/recipes-store';
+import { SettingsStore } from './settings/settings-store';
 
 const ROOT_ID = '';
 
 @Injectable({ providedIn: 'root' })
 export class Normalization {
-  normalizeRate(
-    objective: ObjectiveSettings,
-    items: Record<string, ItemSettings>,
-    beltSpeed: Record<string, Rational>,
-    displayRateInfo: DisplayRateInfo,
-    data: AdjustedDataset,
-  ): Rational {
+  private readonly itemsStore = inject(ItemsStore);
+  private readonly recipesStore = inject(RecipesStore);
+  private readonly settingsStore = inject(SettingsStore);
+
+  normalizeRate(objective: ObjectiveSettings): Rational {
     // Ignore unit entirely when maximizing, do not adjust if unit is Machines
     if (
       objective.unit === ObjectiveUnit.Machines ||
@@ -39,32 +35,35 @@ export class Normalization {
     )
       return objective.value;
 
+    const dispRateVal = this.settingsStore.displayRateInfo().value;
+    const data = this.recipesStore.adjustedDataset();
+
     const rate = objective.value;
     let factor = rational.one;
     switch (objective.unit) {
       case ObjectiveUnit.Items: {
-        factor = displayRateInfo.value.reciprocal();
+        factor = dispRateVal.reciprocal();
         break;
       }
       case ObjectiveUnit.Belts: {
-        const itemSettings = items[objective.targetId];
-        if (itemSettings.beltId)
+        const itemSettings = this.itemsStore.settings()[objective.targetId];
+        if (itemSettings.beltId) {
+          const beltSpeed = this.settingsStore.beltSpeed();
           factor = beltSpeed[itemSettings.beltId].mul(
             coalesce(itemSettings.stack, rational.one),
           );
+        }
         break;
       }
       case ObjectiveUnit.Wagons: {
-        const wagonId = items[objective.targetId].wagonId;
+        const wagonId = this.itemsStore.settings()[objective.targetId].wagonId;
         if (wagonId) {
           const item = data.itemRecord[objective.targetId];
           const wagon = data.itemRecord[wagonId];
           if (item.stack && wagon.cargoWagon) {
-            factor = item.stack
-              .mul(wagon.cargoWagon.size)
-              .div(displayRateInfo.value);
+            factor = item.stack.mul(wagon.cargoWagon.size).div(dispRateVal);
           } else if (wagon.fluidWagon) {
-            factor = wagon.fluidWagon.capacity.div(displayRateInfo.value);
+            factor = wagon.fluidWagon.capacity.div(dispRateVal);
           }
         }
         break;
@@ -80,16 +79,7 @@ export class Normalization {
     return rate.mul(factor);
   }
 
-  normalizeSteps(
-    steps: Step[],
-    objectives: ObjectiveSettings[],
-    items: Record<string, ItemSettings>,
-    recipes: Record<string, RecipeSettings>,
-    beltSpeed: Record<string, Rational>,
-    dispRateInfo: DisplayRateInfo,
-    settings: Settings,
-    data: AdjustedDataset,
-  ): Step[] {
+  normalizeSteps(steps: Step[], objectives: ObjectiveSettings[]): Step[] {
     const _steps = this.copy(steps);
 
     for (const step of _steps) this.calculateParentsOutputs(step, _steps);
@@ -97,11 +87,11 @@ export class Normalization {
     const objectiveRecord = toRecord(objectives);
 
     for (const step of _steps) {
-      this.calculateSettings(step, objectiveRecord, recipes);
-      this.calculateBelts(step, items, beltSpeed, data);
-      this.calculateBeacons(step, settings.beaconReceivers, data);
-      this.calculateDisplayRate(step, dispRateInfo);
-      this.calculateChecked(step, settings);
+      this.calculateSettings(step, objectiveRecord);
+      this.calculateBelts(step);
+      this.calculateBeacons(step);
+      this.calculateDisplayRate(step);
+      this.calculateChecked(step);
     }
 
     this.sortBySankey(_steps);
@@ -145,21 +135,19 @@ export class Normalization {
   private calculateSettings(
     step: Step,
     objectiveRecord: Record<string, ObjectiveSettings>,
-    recipes: Record<string, RecipeSettings>,
   ): void {
     if (step.recipeId) {
       if (step.recipeObjectiveId)
         step.recipeSettings = objectiveRecord[step.recipeObjectiveId];
-      else step.recipeSettings = recipes[step.recipeId];
+      else step.recipeSettings = this.recipesStore.settings()[step.recipeId];
     }
   }
 
-  private calculateBelts(
-    step: Step,
-    items: Record<string, ItemSettings>,
-    beltSpeed: Record<string, Rational>,
-    data: AdjustedDataset,
-  ): void {
+  private calculateBelts(step: Step): void {
+    const data = this.settingsStore.dataset();
+    const itemsState = this.itemsStore.settings();
+    const beltSpeed = this.settingsStore.beltSpeed();
+
     let noItems = false;
     if (step.recipeId != null && step.recipeSettings != null) {
       const machineId = step.recipeSettings.machineId;
@@ -177,7 +165,7 @@ export class Normalization {
       delete step.belts;
       delete step.wagons;
     } else if (step.itemId != null) {
-      const itemSettings = items[step.itemId];
+      const itemSettings = itemsState[step.itemId];
       const belt = itemSettings.beltId;
       if (step.items != null && belt != null) {
         step.belts = step.items.div(beltSpeed[belt]);
@@ -199,11 +187,10 @@ export class Normalization {
     }
   }
 
-  private calculateBeacons(
-    step: Step,
-    beaconReceivers: Rational | undefined,
-    data: AdjustedDataset,
-  ): void {
+  private calculateBeacons(step: Step): void {
+    const beaconReceivers = this.settingsStore.settings().beaconReceivers;
+    const data = this.settingsStore.dataset();
+
     if (
       !beaconReceivers?.nonzero() ||
       step.recipeId == null ||
@@ -247,26 +234,27 @@ export class Normalization {
     });
   }
 
-  private calculateDisplayRate(
-    step: Step,
-    dispRateInfo: DisplayRateInfo,
-  ): void {
+  private calculateDisplayRate(step: Step): void {
+    const dispRateVal = this.settingsStore.displayRateInfo().value;
+
     if (step.items) {
       if (step.parents && step.items.nonzero()) {
         for (const key of Object.keys(step.parents))
           step.parents[key] = step.parents[key].div(step.items);
       }
 
-      step.items = step.items.mul(dispRateInfo.value);
+      step.items = step.items.mul(dispRateVal);
     }
 
-    if (step.surplus) step.surplus = step.surplus.mul(dispRateInfo.value);
-    if (step.wagons) step.wagons = step.wagons.mul(dispRateInfo.value);
-    if (step.pollution) step.pollution = step.pollution.mul(dispRateInfo.value);
-    if (step.output) step.output = step.output.mul(dispRateInfo.value);
+    if (step.surplus) step.surplus = step.surplus.mul(dispRateVal);
+    if (step.wagons) step.wagons = step.wagons.mul(dispRateVal);
+    if (step.pollution) step.pollution = step.pollution.mul(dispRateVal);
+    if (step.output) step.output = step.output.mul(dispRateVal);
   }
 
-  private calculateChecked(step: Step, settings: Settings): void {
+  private calculateChecked(step: Step): void {
+    const settings = this.settingsStore.settings();
+
     // Priority: 1) Item settings, 2) Recipe objective settings, 3) Recipe settings
     if (step.itemId != null)
       step.checked = settings.checkedItemIds.has(step.itemId);

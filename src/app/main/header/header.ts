@@ -43,8 +43,8 @@ export class Header {
 
   protected readonly game = this.settingsStore.game;
   protected readonly gameInfo = this.settingsStore.gameInfo;
-  protected readonly faBars = faBars;
 
+  protected readonly faBars = faBars;
   protected readonly links: ExternalLink[] = [
     {
       text: 'header.discord',
@@ -63,7 +63,7 @@ export class Header {
     },
   ];
 
-  gameOptions = computed(() =>
+  protected readonly gameOptions = computed(() =>
     gameOptions.filter((o) => o.value !== this.settingsStore.game()),
   );
 

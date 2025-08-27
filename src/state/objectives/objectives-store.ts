@@ -73,25 +73,11 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     );
   });
 
-  normalizedObjectives = computed(() => {
-    const objectives = this.objectives();
-    const itemsState = this.itemsStore.settings();
-    const beltSpeed = this.settingsStore.beltSpeed();
-    const dispRateInfo = this.settingsStore.displayRateInfo();
-    const data = this.recipesStore.adjustedDataset();
-
-    return objectives.map((o) =>
-      spread(o, {
-        value: this.normalization.normalizeRate(
-          o,
-          itemsState,
-          beltSpeed,
-          dispRateInfo,
-          data,
-        ),
-      }),
-    );
-  });
+  normalizedObjectives = computed(() =>
+    this.objectives().map((o) =>
+      spread(o, { value: this.normalization.normalizeRate(o) }),
+    ),
+  );
 
   matrixResult = computed(() => {
     const objectives = this.normalizedObjectives();
@@ -105,23 +91,8 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
   steps = computed(() => {
     const result = this.matrixResult();
     const objectives = this.objectives();
-    const itemsState = this.itemsStore.settings();
-    const recipesState = this.recipesStore.settings();
-    const beltSpeed = this.settingsStore.beltSpeed();
-    const dispRateInfo = this.settingsStore.displayRateInfo();
-    const settings = this.settingsStore.settings();
-    const data = this.recipesStore.adjustedDataset();
 
-    return this.normalization.normalizeSteps(
-      result.steps,
-      objectives,
-      itemsState,
-      recipesState,
-      beltSpeed,
-      dispRateInfo,
-      settings,
-      data,
-    );
+    return this.normalization.normalizeSteps(result.steps, objectives);
   });
 
   stepsModified = computed(() => {
@@ -499,18 +470,11 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
 
   add(objective: ObjectiveBase): void {
     this.reduce((state) => {
-      let value = rational.one;
-      const ids = Object.keys(state);
-      const lastId = ids.at(-1);
-      if (lastId) value = state[lastId].value;
-
       let n = 1;
       while (state[n.toString()] != null) n++;
       const id = n.toString();
-
       const base = {
         id,
-        value,
         type: ObjectiveType.Output,
       } as ObjectiveState;
       return spread(state, { [id]: spread(base, objective) });

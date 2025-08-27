@@ -111,7 +111,11 @@ export class RouterSync {
   route$ = new Subject<{ params: Params; queryParams: Params }>();
   ready = signal(false);
   navigating$ = this.router.events.pipe(
-    map((e) => e.type !== EventType.NavigationEnd),
+    map(
+      (e) =>
+        e.type !== EventType.NavigationEnd &&
+        e.type !== EventType.NavigationSkipped,
+    ),
     shareReplay(1),
   );
   stored = storedSignal('router');
@@ -131,7 +135,7 @@ export class RouterSync {
   constructor() {
     this.route$
       .pipe(
-        audit(() => this.navigating$.pipe(first((n) => !n))),
+        // audit(() => this.navigating$.pipe(first((n) => !n))),
         switchMap(async ({ params, queryParams }) => {
           queryParams = await this.unzipQueryParams(queryParams);
           return { params, queryParams };
@@ -269,6 +273,9 @@ export class RouterSync {
       zState.config.bare,
       this.zipTail,
     );
+
+    if (Object.keys(bare).length === 1) return {};
+
     const hash = spread(
       zState.objectives.hash,
       zState.config.hash,

@@ -1,17 +1,17 @@
 <div class="flex w-full justify-between gap-2 md:w-auto">
   @if (asideXlHidden()) {
-    <div class="hidden xl:block">
-      <button
-        type="button"
-        labButton
-        text="settings.header"
-        [faIcon]="faBars"
-        color="brand"
-        size="large"
-        [border]="false"
-        (click)="asideXlHidden.set(false)"
-      ></button>
-    </div>
+    <button
+      type="button"
+      labButton
+      class="xl:block"
+      text="settings.header"
+      [faIcon]="faBars"
+      color="brand"
+      size="large"
+      [border]="false"
+      [hide]="true"
+      (click)="asideXlHidden.set(false)"
+    ></button>
   }
   <button
     type="button"
@@ -25,19 +25,18 @@
     (click)="toggleAside()"
   ></button>
   <div class="flex gap-px">
-    <div class="hidden lg:block">
-      <a
-        [routerLink]="gameInfo().route"
-        class="rounded-r-none"
-        labButton
-        [text]="gameInfo().label"
-        iconType="system"
-        [icon]="game()"
-        color="brand"
-        size="large"
-        [border]="false"
-      ></a>
-    </div>
+    <a
+      [routerLink]="gameInfo().route"
+      class="rounded-r-none lg:inline-flex"
+      labButton
+      [text]="gameInfo().label"
+      iconType="system"
+      [icon]="game()"
+      color="brand"
+      size="large"
+      [border]="false"
+      [hide]="true"
+    ></a>
     <a
       [routerLink]="gameInfo().route"
       class="rounded-r-none lg:hidden"

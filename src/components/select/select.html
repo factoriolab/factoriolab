@@ -14,7 +14,7 @@
 }
 
 @if (!iconOnly()) {
-  <div class="ms-1 me-2 grow overflow-hidden text-ellipsis">
+  <div class="ms-1 me-2 line-clamp-1 grow">
     @if (_selectedOption) {
       {{ _selectedOption.label | translate }}
     } @else if (placeholder()) {

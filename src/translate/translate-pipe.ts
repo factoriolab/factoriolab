@@ -44,7 +44,6 @@ export class TranslatePipe implements PipeTransform {
       )
       .subscribe((value) => {
         this.value = value;
-        console.log(value);
         this.ref.markForCheck();
       });
   }

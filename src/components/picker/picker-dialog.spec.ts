@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Picker } from './picker';
+import { PickerDialog } from './picker-dialog';
 
-describe('Picker', () => {
-  let component: Picker;
-  let fixture: ComponentFixture<Picker>;
+describe('PickerDialog', () => {
+  let component: PickerDialog;
+  let fixture: ComponentFixture<PickerDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Picker]
-    })
-    .compileComponents();
+      imports: [PickerDialog],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(Picker);
+    fixture = TestBed.createComponent(PickerDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

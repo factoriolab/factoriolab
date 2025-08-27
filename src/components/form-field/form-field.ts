@@ -16,7 +16,7 @@ let nextUniqueId = 0;
   imports: [TranslatePipe],
   templateUrl: './form-field.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[attr.id]': 'id()', class: 'flex flex-col' },
+  host: { '[attr.id]': 'id()', class: 'inline-flex flex-col' },
 })
 export class FormField {
   protected readonly control = contentChild.required(LAB_CONTROL);

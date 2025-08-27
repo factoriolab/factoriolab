@@ -1,0 +1,33 @@
+import { computed, inject, signal } from '@angular/core';
+
+import { Picker } from '~/components/picker/picker';
+import { ObjectiveBase } from '~/state/objectives/objective';
+import { ObjectiveType } from '~/state/objectives/objective-type';
+import { ObjectiveUnit } from '~/state/objectives/objective-unit';
+
+import { rational } from './rational';
+
+export abstract class ObjectiveForm {
+  protected readonly picker = inject(Picker);
+
+  value = signal(rational(1));
+  unit = signal(ObjectiveUnit.Items);
+  type = signal(ObjectiveType.Output);
+  isRecipe = computed(() => this.unit() === ObjectiveUnit.Machines);
+
+  openPicker(): void {
+    const targetId$ = this.isRecipe()
+      ? this.picker.pickRecipe()
+      : this.picker.pickItem();
+    targetId$.subscribe((targetId) => {
+      this.addObjective({
+        targetId,
+        value: this.value(),
+        unit: this.unit(),
+        type: this.type(),
+      });
+    });
+  }
+
+  abstract addObjective(value: ObjectiveBase): void;
+}

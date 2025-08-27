@@ -16,7 +16,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Icon } from '../icon/icon';
 
 const button = cva(
-  'inline-flex items-center gap-1 transition-colors rounded-xs cursor-pointer focus-visible:outline',
+  'overflow-hidden items-center gap-1 transition-colors rounded-xs cursor-pointer focus-visible:outline',
   {
     variants: {
       color: {
@@ -34,6 +34,10 @@ const button = cva(
       iconOnly: {
         true: 'justify-center',
         false: 'px-3',
+      },
+      hide: {
+        true: 'hidden',
+        false: 'inline-flex',
       },
     },
     compoundVariants: [
@@ -92,6 +96,7 @@ export class Button {
   color = input<'brand' | 'gray'>('gray');
   border = input(true);
   size = input<'small' | 'standard' | 'large'>('standard');
+  hide = input(false);
 
   hostClass = computed(() =>
     button({
@@ -99,6 +104,7 @@ export class Button {
       color: this.color(),
       border: this.border(),
       size: this.size(),
+      hide: this.hide(),
     }),
   );
 }

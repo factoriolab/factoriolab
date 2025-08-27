@@ -33,7 +33,7 @@ let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
 
 const select = cva(
-  'inline-flex grow cursor-pointer min-h-9 items-center select-none px-1 focus-visible:border-brand-700 focus-visible:outline text-nowrap rounded-xs',
+  'inline-flex overflow-hidden grow cursor-pointer min-h-9 items-center select-none px-1 focus-visible:border-brand-700 focus-visible:outline rounded-xs',
   {
     variants: {
       opened: {

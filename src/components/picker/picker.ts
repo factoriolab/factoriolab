@@ -1,162 +1,33 @@
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  linkedSignal,
-  signal,
-} from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { Dialog } from '@angular/cdk/dialog';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import { Quality, qualityOptions } from '~/models/data/quality';
-import { Option } from '~/models/option';
 import { SettingsStore } from '~/state/settings/settings-store';
-import { TranslatePipe } from '~/translate/translate-pipe';
+import { filterNullish } from '~/utils/nullish';
 
-import { Button } from '../button/button';
-import { DialogData } from '../dialog/dialog';
-import { Select } from '../select/select';
-import { Tabs } from '../tabs/tabs';
+import { PickerData } from './picker-data';
+import { PickerDialog } from './picker-dialog';
 
-export interface PickerData extends DialogData {
-  type: 'item' | 'recipe';
-  allIds: string[] | Set<string>;
-  selection?: string | string[] | Set<string>;
-  default?: string | string[];
-}
-
-@Component({
-  selector: 'lab-picker',
-  imports: [FormsModule, FaIconComponent, Button, Select, Tabs, TranslatePipe],
-  templateUrl: './picker.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class:
-      'flex flex-col gap-2 w-dvw sm:w-[96dvw] lg:w-[50rem] p-2 pt-0 min-h-[30rem] max-h-[50rem] h-[80dvh]',
-  },
-})
+@Injectable({ providedIn: 'root' })
 export class Picker {
+  private readonly dialog = inject(Dialog);
   private readonly settingsStore = inject(SettingsStore);
-  protected readonly dialogData = inject<PickerData>(DIALOG_DATA);
-  private readonly dialogRef = inject(DialogRef);
 
-  data = this.settingsStore.dataset;
-  defaults = this.settingsStore.defaults;
-
-  protected readonly faMagnifyingGlass = faMagnifyingGlass;
-  protected readonly faXmark = faXmark;
-  protected readonly qualityOptions = qualityOptions;
-  protected readonly qualityIconLocator = (value: Quality): string =>
-    `q${value}`;
-
-  isMultiselect = false;
-  filter = signal('');
-  quality = signal(Quality.Normal);
-  allSelected = signal(false);
-
-  protected rowsKey = `${this.dialogData.type}CategoryRows` as const;
-  protected recordKey = `${this.dialogData.type}Record` as const;
-  selection: string | string[] | undefined;
-  allSelectItems: Option[] = [];
-  allCategoryRows: Record<string, string[][]> = {};
-  activeIndex = 0;
-
-  categoryRows = computed(() => {
-    const filter = this.filter();
-    const quality = this.quality();
-
-    if (!filter && quality === Quality.Any) return this.allCategoryRows;
-
-    let allIds = Array.from(this.dialogData.allIds);
-
-    if (quality !== Quality.Any) {
-      const check = quality === Quality.Normal ? undefined : quality;
-      allIds = allIds.filter(
-        (i) => this.data()[this.recordKey][i].quality === check,
-      );
-    }
-
-    if (filter) {
-      const check = filter.toLocaleLowerCase();
-      allIds = allIds.filter((i) =>
-        this.data()[this.recordKey][i].name.toLocaleLowerCase().includes(check),
-      );
-    }
-
-    const result: Record<string, string[][]> = {};
-    const keys = Object.keys(this.allCategoryRows);
-    for (const c of keys) {
-      const rows = [];
-      for (const r of this.allCategoryRows[c]) {
-        const row = r.filter((i) => allIds.includes(i));
-        if (row.length) rows.push(row);
-      }
-
-      if (rows.length) result[c] = rows;
-    }
-
-    return result;
-  });
-
-  categoryOptions = computed(() =>
-    Object.keys(this.categoryRows()).map(
-      (k): Option => ({ label: this.data().categoryRecord[k].name, value: k }),
-    ),
-  );
-
-  selectedCategory = linkedSignal<Record<string, string[][]>, string>({
-    source: this.categoryRows,
-    computation: (value, previous) => {
-      const keys = Object.keys(value);
-      if (previous && keys.includes(previous.value)) return previous.value;
-      return keys[0];
-    },
-  });
-
-  constructor() {
-    let { selection, allIds } = { ...this.dialogData };
-    allIds = Array.from(allIds);
-    if (selection instanceof Set) selection = Array.from(selection);
-    if (Array.isArray(selection)) {
-      this.isMultiselect = true;
-      this.selection = [...selection];
-    } else {
-      this.isMultiselect = false;
-      this.selection = selection;
-    }
-    const data = this.data();
-    data.categoryIds.forEach((c) => {
-      if (data[this.rowsKey][c]) {
-        this.allCategoryRows[c] = [];
-        data[this.rowsKey][c].forEach((r) => {
-          const row = r.filter((i) => allIds.includes(i));
-          if (row.length) this.allCategoryRows[c].push(row);
-        });
-      }
-    });
-
-    this.allSelectItems = Array.from(allIds).map(
-      (i): Option => ({ label: data[this.recordKey][i].name, value: i }),
-    );
-
-    if (Array.isArray(selection)) this.allSelected.set(selection.length === 0);
-    else if (selection != null) {
-      const index = data.categoryIds.indexOf(
-        data[this.recordKey][selection].category,
-      );
-      this.activeIndex = index;
-    }
+  pickItem(allIds?: string[] | Set<string>): Observable<string> {
+    allIds ??= this.settingsStore.settings().availableItemIds;
+    return this.dialog
+      .open<string, PickerData>(PickerDialog, {
+        data: { header: 'picker.selectItem', type: 'item', allIds },
+      })
+      .closed.pipe(filterNullish());
   }
 
-  selectId(id: string): void {
-    if (Array.isArray(this.selection)) {
-      // const index = this.selection.indexOf(id);
-      // if (index === -1) this.selection.push(id);
-      // else this.selection.splice(index, 1);
-      // this.allSelected = this.selection.length === 0;
-    } else this.dialogRef.close(id);
+  pickRecipe(allIds?: string[] | Set<string>): Observable<string> {
+    allIds ??= this.settingsStore.settings().availableRecipeIds;
+    return this.dialog
+      .open<string, PickerData>(PickerDialog, {
+        data: { header: 'picker.selectRecipe', type: 'recipe', allIds },
+      })
+      .closed.pipe(filterNullish());
   }
 }

@@ -26,33 +26,22 @@
   }
 
   <div class="flex gap-3">
-    <lab-form-field label="landing.quantity" class="basis-1/2 text-right">
+    <lab-form-field label="objectives.quantity" class="basis-1/2 text-right">
       <lab-input-number [(ngModel)]="value"></lab-input-number>
     </lab-form-field>
-    <lab-form-field label="landing.units" class="basis-1/2">
+    <lab-form-field label="objectives.units" class="basis-1/2">
       <lab-select [(ngModel)]="unit" [options]="unitOptions()"></lab-select>
     </lab-form-field>
   </div>
 
-  @if (unit() === 3) {
-    <button
-      type="button"
-      labButton
-      [faIcon]="faBookOpen"
-      color="brand"
-      text="picker.selectRecipe"
-      (click)="openPicker('item')"
-    ></button>
-  } @else {
-    <button
-      type="button"
-      labButton
-      [faIcon]="faBoxOpen"
-      color="brand"
-      text="picker.selectItem"
-      (click)="openPicker('item')"
-    ></button>
-  }
+  <button
+    type="button"
+    labButton
+    [faIcon]="isRecipe() ? faBookOpen : faBoxOpen"
+    color="brand"
+    [text]="isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'"
+    (click)="openPicker()"
+  ></button>
 
   @if (stateOptions().length || routerSync.stored()) {
     <hr class="my-4 border-gray-700" />

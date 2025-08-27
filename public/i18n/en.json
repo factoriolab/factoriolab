@@ -162,16 +162,10 @@
     "sponsor": "Sponsor"
   },
   "landing": {
-    "selectItem": "Select item",
-
-    "addItems": "Add items",
-    "addMachines": "Add machines",
     "bypass": "Don't show this screen again",
     "loadLastState": "Load last state",
     "loadSavedState": "Load a saved state",
-    "quantity": "Quantity",
     "skip": "Skip",
-    "units": "Units",
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work."
   },
   "modSet": "Mod set",
@@ -183,6 +177,7 @@
   "objectives": {
     "addItems": "Add items",
     "addMachines": "Add machines",
+    "drag": "Drag objective",
     "error": "No solution found",
     "errorDetail": "Check <b>Limit</b> and <b>Maximize</b> objectives and enabled recipes. ",
     "errorInfeasible": "Solution is infeasible",
@@ -196,10 +191,14 @@
     "errorUnboundedDetail": "<b>Limit</b> objectives may not be restrictive enough for <b>Maximize</b> objectives. To see why, try switching your <b>Maximize</b> objectives to <b>Output</b> objectives with extremely high values.",
     "pauseTooltip": "Pause/resume calculations",
     "pausedMessage": "Calculations are paused. Use play button above to resume.",
+    "quantity": "Quantity",
     "removeTooltip": "Remove objective",
     "selectDisplayRate": "Select display rate",
+    "target": "Target",
     "title": "Objectives",
+    "type": "Type",
     "typeTooltip": "Select objective type",
+    "units": "Units",
     "unitTooltip": "Select units",
     "valueRatioTooltip": "Set ratio",
     "valueTooltip": "Set value",

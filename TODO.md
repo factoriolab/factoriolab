@@ -12,6 +12,7 @@
 ## Performance
 
 - Optimize so that store / router sync are not part of initial bundle?
+- Pure translate pipe?
 
 ## Picker
 
@@ -19,6 +20,8 @@
 - Tooltip support
 - Multiselect support
 
-## General
+## Objectives
 
-- Returning to landing page does not restore version query param?
+- Select display rate unit
+- Pause / Resume
+- Status messages
