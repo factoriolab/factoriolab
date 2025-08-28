@@ -13,6 +13,7 @@
 
 - Optimize so that store / router sync are not part of initial bundle?
 - Pure translate pipe?
+- Clean up tags
 
 ## Picker
 

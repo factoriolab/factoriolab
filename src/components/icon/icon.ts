@@ -14,7 +14,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
   templateUrl: './icon.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'inline-flex size-8 shrink-0',
+    class: 'inline-flex size-16 scale-50 -m-4 shrink-0',
     '[style.background-image]': 'icon().file',
     '[style.background-position]': 'icon().position',
   },

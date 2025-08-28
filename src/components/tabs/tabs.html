@@ -5,7 +5,7 @@
     [faIcon]="faAngleLeft"
     tabindex="-1"
     aria-hidden="true"
-    class="text-brand-500 absolute left-0 z-1 h-full rounded-l-none bg-gray-950 shadow-sm shadow-gray-700"
+    class="absolute left-0 z-1 h-full rounded-l-none bg-gray-950 shadow-sm shadow-gray-700"
     [border]="false"
     (click)="scrollNext(scroll, -1)"
   ></button>
@@ -39,7 +39,7 @@
   }
   <span class="grow border-b-2 border-gray-700"></span>
   <div
-    class="bg-brand-500 absolute bottom-0 h-0.5 transition-all"
+    class="bg-brand-500 absolute bottom-0 h-0.5 transition-all duration-300"
     [style]="indicatorStyle()?.()"
   ></div>
 </div>
@@ -53,7 +53,7 @@
     [faIcon]="faAngleRight"
     tabindex="-1"
     aria-hidden="true"
-    class="text-brand-500 absolute right-0 z-1 h-full rounded-r-none bg-gray-950 shadow-sm shadow-gray-700"
+    class="absolute right-0 z-1 h-full rounded-r-none bg-gray-950 shadow-sm shadow-gray-700"
     [border]="false"
     (click)="scrollNext(scroll, 1)"
   ></button>
