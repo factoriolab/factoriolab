@@ -17,8 +17,8 @@ import {
 
 import { Button } from '~/components/button/button';
 import { InputNumber } from '~/components/input-number/input-number';
+import { ObjectiveForm } from '~/components/objective-form';
 import { Select } from '~/components/select/select';
-import { ObjectiveForm } from '~/models/objective-form';
 import { ObjectiveBase, ObjectiveSettings } from '~/state/objectives/objective';
 import { objectiveTypeOptions } from '~/state/objectives/objective-type';
 import { ObjectiveUnit } from '~/state/objectives/objective-unit';

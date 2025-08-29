@@ -1,20 +1,20 @@
-import { Beacon } from '~/models/data/beacon';
-import { Belt } from '~/models/data/belt';
-import { CargoWagon } from '~/models/data/cargo-wagon';
-import { Category } from '~/models/data/category';
-import { FluidWagon } from '~/models/data/fluid-wagon';
-import { Fuel } from '~/models/data/fuel';
-import { Icon } from '~/models/data/icon';
-import { Item } from '~/models/data/item';
-import { Machine } from '~/models/data/machine';
-import { ModHash } from '~/models/data/mod-hash';
-import { Module } from '~/models/data/module';
-import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
-import { Technology } from '~/models/data/technology';
-import { Flag } from '~/models/flags';
-import { Game } from '~/models/game';
-import { GameInfo } from '~/models/game-info';
-import { IconType } from '~/models/icon-type';
+import { Game } from '~/data/game';
+import { GameInfo } from '~/data/game-info';
+import { IconType } from '~/data/icon-type';
+import { Beacon } from '~/data/schema/beacon';
+import { Belt } from '~/data/schema/belt';
+import { CargoWagon } from '~/data/schema/cargo-wagon';
+import { Category } from '~/data/schema/category';
+import { FluidWagon } from '~/data/schema/fluid-wagon';
+import { Fuel } from '~/data/schema/fuel';
+import { Icon } from '~/data/schema/icon';
+import { Item } from '~/data/schema/item';
+import { Machine } from '~/data/schema/machine';
+import { ModHash } from '~/data/schema/mod-hash';
+import { Module } from '~/data/schema/module';
+import { AdjustedRecipe, Recipe } from '~/data/schema/recipe';
+import { Technology } from '~/data/schema/technology';
+import { Flag } from '~/state/flags';
 
 export interface Dataset {
   game: Game;

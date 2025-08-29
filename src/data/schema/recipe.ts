@@ -1,5 +1,5 @@
-import { spread } from '~/utils/object';
 import { Rational, rational } from '~/models/rational';
+import { spread } from '~/utils/object';
 import { cloneRecord, toRationalRecord } from '~/utils/record';
 
 import { ModuleEffect } from './module';

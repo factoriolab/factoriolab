@@ -1,22 +1,27 @@
 import { computed, effect, inject, Injectable } from '@angular/core';
 
-import { Beacon } from '~/models/data/beacon';
-import { Belt, PIPE } from '~/models/data/belt';
-import { CargoWagon } from '~/models/data/cargo-wagon';
-import { Category } from '~/models/data/category';
-import { FluidWagon } from '~/models/data/fluid-wagon';
-import { Fuel } from '~/models/data/fuel';
-import { Icon } from '~/models/data/icon';
-import { Item, ItemJson, parseItem } from '~/models/data/item';
-import { Machine, typeHasCraftingSpeed } from '~/models/data/machine';
-import { ModHash } from '~/models/data/mod-hash';
-import { ModI18n } from '~/models/data/mod-i18n';
+import { DEFAULT_MOD, modOptions } from '~/data/datasets';
+import { Game } from '~/data/game';
+import { gameInfo } from '~/data/game-info';
+import { IconType } from '~/data/icon-type';
+import { Mod } from '~/data/mod';
+import { Beacon } from '~/data/schema/beacon';
+import { Belt, PIPE } from '~/data/schema/belt';
+import { CargoWagon } from '~/data/schema/cargo-wagon';
+import { Category } from '~/data/schema/category';
+import { FluidWagon } from '~/data/schema/fluid-wagon';
+import { Fuel } from '~/data/schema/fuel';
+import { Icon } from '~/data/schema/icon';
+import { Item, ItemJson, parseItem } from '~/data/schema/item';
+import { Machine, typeHasCraftingSpeed } from '~/data/schema/machine';
+import { ModHash } from '~/data/schema/mod-hash';
+import { ModI18n } from '~/data/schema/mod-i18n';
 import {
   effectPrecision,
   filterEffect,
   Module,
   ModuleEffect,
-} from '~/models/data/module';
+} from '~/data/schema/module';
 import {
   baseId,
   EPIC_QUALITY,
@@ -26,18 +31,13 @@ import {
   QUALITY_MODULE_TECHNOLOGY,
   qualityId,
   recipeHasQuality,
-} from '~/models/data/quality';
-import { parseRecipe, Recipe } from '~/models/data/recipe';
-import { Technology } from '~/models/data/technology';
-import { DEFAULT_MOD, modOptions } from '~/models/datasets';
-import { flags } from '~/models/flags';
-import { Game } from '~/models/game';
-import { gameInfo } from '~/models/game-info';
-import { IconType } from '~/models/icon-type';
+} from '~/data/schema/quality';
+import { parseRecipe, Recipe } from '~/data/schema/recipe';
+import { Technology } from '~/data/schema/technology';
 import { MenuItem } from '~/models/menu-item';
-import { Mod } from '~/models/mod';
 import { getIdOptions, Option } from '~/models/option';
 import { Rational, rational } from '~/models/rational';
+import { flags } from '~/state/flags';
 import { log } from '~/utils/log';
 import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';

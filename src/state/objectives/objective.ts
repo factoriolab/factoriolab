@@ -1,4 +1,4 @@
-import { AdjustedRecipe } from '~/models/data/recipe';
+import { AdjustedRecipe } from '~/data/schema/recipe';
 import { Rational } from '~/models/rational';
 
 import { RecipeSettings } from '../recipes/recipe-settings';

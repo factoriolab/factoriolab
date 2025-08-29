@@ -11,18 +11,18 @@ import {
   tap,
 } from 'rxjs';
 
-import { ModData } from '~/models/data/mod-data';
-import { ModHash } from '~/models/data/mod-hash';
-import { DEFAULT_MOD } from '~/models/datasets';
+import { DEFAULT_MOD } from '~/data/datasets';
+import { FileClient } from '~/data/file-client';
+import { ModData } from '~/data/schema/mod-data';
+import { ModHash } from '~/data/schema/mod-hash';
 import { rational } from '~/models/rational';
-import { Step } from '~/models/step';
+import { Step } from '~/solver/step';
 import { asString } from '~/utils/coercion';
 import { coalesce } from '~/utils/nullish';
 import { prune, spread } from '~/utils/object';
 import { storedSignal } from '~/utils/stored-signal';
 
 import { BeaconSettings } from '../beacon-settings';
-import { FileClient } from '../file-client';
 import { ItemState } from '../items/item-state';
 import { ItemsStore } from '../items/items-store';
 import { MachineState } from '../machines/machine-state';

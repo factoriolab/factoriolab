@@ -1,4 +1,4 @@
-import { Option } from '../models/option';
+import { Option } from '~/models/option';
 
 export type Language = 'en' | 'zh' | 'de' | 'fr' | 'ru' | 'ja' | 'pt-BR';
 

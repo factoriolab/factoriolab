@@ -5,9 +5,9 @@ import {
   SankeyNodeExtraProperties,
 } from '~/d3-sankey/models';
 import { sankey } from '~/d3-sankey/sankey';
-import { EnergyType } from '~/models/data/energy-type';
+import { EnergyType } from '~/data/schema/energy-type';
 import { Rational, rational } from '~/models/rational';
-import { Step } from '~/models/step';
+import { Step } from '~/solver/step';
 import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 import { toRecord } from '~/utils/record';

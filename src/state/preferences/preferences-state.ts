@@ -1,4 +1,4 @@
-import { Theme } from '~/models/theme';
+import { Theme } from '~/state/preferences/theme';
 import { Language } from '~/translate/language';
 
 import { ColumnsState, initialColumnsState } from './columns-state';

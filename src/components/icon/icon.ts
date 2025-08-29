@@ -6,7 +6,7 @@ import {
   input,
 } from '@angular/core';
 
-import { IconType } from '~/models/icon-type';
+import { IconType } from '~/data/icon-type';
 import { SettingsStore } from '~/state/settings/settings-store';
 
 @Component({

@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
-import { IconType } from '~/models/icon-type';
+import { IconType } from '~/data/icon-type';
 import { Option } from '~/models/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 

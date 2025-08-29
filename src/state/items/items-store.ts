@@ -1,7 +1,7 @@
 import { computed, inject, Injectable } from '@angular/core';
 
-import { PIPE } from '~/models/data/belt';
-import { Item } from '~/models/data/item';
+import { PIPE } from '~/data/schema/belt';
+import { Item } from '~/data/schema/item';
 import { Rational, rational } from '~/models/rational';
 import { coalesce } from '~/utils/nullish';
 

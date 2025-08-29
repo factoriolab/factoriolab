@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { Beacon } from '~/models/data/beacon';
-import { Machine, MachineJson } from '~/models/data/machine';
-import { filterEffect } from '~/models/data/module';
-import { Recipe } from '~/models/data/recipe';
+import { Beacon } from '~/data/schema/beacon';
+import { Machine, MachineJson } from '~/data/schema/machine';
+import { filterEffect } from '~/data/schema/module';
+import { Recipe } from '~/data/schema/recipe';
 import { Option } from '~/models/option';
 import { Rational, rational } from '~/models/rational';
 import { fnPropsNotNullish } from '~/utils/nullish';

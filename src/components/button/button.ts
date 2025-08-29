@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/angular-fontawesome';
 import { cva } from 'class-variance-authority';
 
-import { IconType } from '~/models/icon-type';
+import { IconType } from '~/data/icon-type';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Icon } from '../icon/icon';

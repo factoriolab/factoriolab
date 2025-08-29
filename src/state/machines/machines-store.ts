@@ -1,6 +1,6 @@
 import { computed, inject, Injectable } from '@angular/core';
 
-import { EnergyType } from '~/models/data/energy-type';
+import { EnergyType } from '~/data/schema/energy-type';
 import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 

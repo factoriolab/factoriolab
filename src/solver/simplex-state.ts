@@ -1,12 +1,12 @@
-import { AdjustedRecipe } from '~/models/data/recipe';
+import { AdjustedRecipe } from '~/data/schema/recipe';
 import { Rational } from '~/models/rational';
-import { Step } from '~/models/step';
 import { ObjectiveState, RecipeObjective } from '~/state/objectives/objective';
 import { CostSettings } from '~/state/settings/cost-settings';
 import { AdjustedDataset } from '~/state/settings/dataset';
 import { MaximizeType } from '~/state/settings/maximize-type';
 
 import { ItemValues } from './item-values';
+import { Step } from './step';
 
 export interface SimplexState {
   objectives: ObjectiveState[];

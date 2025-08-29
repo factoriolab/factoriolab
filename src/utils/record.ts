@@ -1,6 +1,7 @@
 import { isDevMode } from '@angular/core';
 
-import { Rational, rational } from '../models/rational';
+import { Rational, rational } from '~/models/rational';
+
 import { spread } from './object';
 
 export function addValueByIds(

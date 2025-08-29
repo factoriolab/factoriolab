@@ -2,18 +2,12 @@ import { Routes } from '@angular/router';
 
 import { idGuard } from './id-guard';
 import { landingGuard } from './landing/landing-guard';
-import { ratioGuard } from './ratio-guard';
 
 export const routes: Routes = [
   {
     path: ':id',
     canActivate: [idGuard],
     children: [
-      {
-        path: 'ratio',
-        canActivate: [ratioGuard],
-        children: [],
-      },
       {
         path: '',
         pathMatch: 'full',

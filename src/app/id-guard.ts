@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { from, map, switchMap } from 'rxjs';
 
-import { DEFAULT_MOD } from '~/models/datasets';
+import { DEFAULT_MOD } from '~/data/datasets';
 import { Migration } from '~/state/router/migration';
 import { RouterSync } from '~/state/router/router-sync';
 import { coalesce } from '~/utils/nullish';

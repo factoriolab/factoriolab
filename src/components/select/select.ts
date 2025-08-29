@@ -21,7 +21,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
-import { IconType } from '~/models/icon-type';
+import { IconType } from '~/data/icon-type';
 import { Option } from '~/models/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 

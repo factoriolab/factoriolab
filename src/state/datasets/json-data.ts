@@ -1,6 +1,6 @@
-import { ModData } from '~/models/data/mod-data';
-import { ModHash } from '~/models/data/mod-hash';
-import { ModI18n } from '~/models/data/mod-i18n';
+import { ModData } from '~/data/schema/mod-data';
+import { ModHash } from '~/data/schema/mod-hash';
+import { ModI18n } from '~/data/schema/mod-i18n';
 
 export interface JsonData {
   data?: ModData;

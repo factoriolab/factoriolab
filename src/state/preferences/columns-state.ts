@@ -1,6 +1,6 @@
-import { Flag } from '~/models/flags';
-import { spread } from '~/utils/object';
 import { Option } from '~/models/option';
+import { Flag } from '~/state/flags';
+import { spread } from '~/utils/object';
 
 export type ColumnKey =
   | 'checkbox'

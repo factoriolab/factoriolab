@@ -15,11 +15,11 @@ import {
 import { Button } from '~/components/button/button';
 import { FormField } from '~/components/form-field/form-field';
 import { InputNumber } from '~/components/input-number/input-number';
+import { ObjectiveForm } from '~/components/objective-form';
 import { Select } from '~/components/select/select';
-import { Game, gameOptions } from '~/models/game';
-import { gameInfo } from '~/models/game-info';
-import { ObjectiveForm } from '~/models/objective-form';
-import { FileClient } from '~/state/file-client';
+import { FileClient } from '~/data/file-client';
+import { Game, gameOptions } from '~/data/game';
+import { gameInfo } from '~/data/game-info';
 import { ObjectiveBase } from '~/state/objectives/objective';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { PreferencesStore } from '~/state/preferences/preferences-store';

@@ -3,13 +3,10 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { filter, pairwise, switchMap } from 'rxjs';
 
-import { Solver } from '~/glpk/solver';
 import { Option } from '~/models/option';
 import { Rational, rational } from '~/models/rational';
-import { Step } from '~/models/step';
-import { StepDetail } from '~/models/step-detail';
-import { StepDetailTab } from '~/models/step-detail-tab';
-import { StepOutput } from '~/models/step-output';
+import { Solver } from '~/solver/solver';
+import { Step } from '~/solver/step';
 import { fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 import { addValueByIds, toRecord } from '~/utils/record';
@@ -27,6 +24,9 @@ import { RecordStore } from '../store';
 import { isRecipeObjective, ObjectiveBase, ObjectiveState } from './objective';
 import { ObjectiveType } from './objective-type';
 import { ObjectiveUnit } from './objective-unit';
+import { StepDetail } from './step-detail';
+import { StepDetailTab } from './step-detail-tab';
+import { StepOutput } from './step-output';
 
 @Injectable({ providedIn: 'root' })
 export class ObjectivesStore extends RecordStore<ObjectiveState> {

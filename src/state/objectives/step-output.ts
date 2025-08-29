@@ -1,5 +1,5 @@
-import { Rational } from './rational';
-import { Step } from './step';
+import { Rational } from '~/models/rational';
+import { Step } from '~/solver/step';
 
 export interface StepOutput {
   inputs?: boolean;

@@ -1,5 +1,5 @@
-import { Flag } from '~/models/flags';
 import { Option } from '~/models/option';
+import { Flag } from '~/state/flags';
 
 import { DisplayRateInfo } from '../settings/display-rate';
 

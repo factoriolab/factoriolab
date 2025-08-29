@@ -1,5 +1,6 @@
-import { MenuItem } from './menu-item';
-import { Option } from './option';
+import { MenuItem } from '~/models/menu-item';
+import { Option } from '~/models/option';
+
 import { StepOutput } from './step-output';
 
 export interface StepDetail {

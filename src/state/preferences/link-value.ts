@@ -1,5 +1,5 @@
-import { Flag } from '~/models/flags';
 import { Option } from '~/models/option';
+import { Flag } from '~/state/flags';
 
 export enum LinkValue {
   None = 0,

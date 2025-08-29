@@ -1,6 +1,6 @@
-import { Flag } from '~/models/flags';
-import { DefaultsJson } from '~/models/data/defaults';
+import { DefaultsJson } from '~/data/schema/defaults';
 import { Option } from '~/models/option';
+import { Flag } from '~/state/flags';
 
 export enum Preset {
   Minimum = 0,

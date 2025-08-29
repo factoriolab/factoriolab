@@ -12,9 +12,10 @@ import {
   switchMap,
 } from 'rxjs';
 
-import { PreferencesStore } from '../state/preferences/preferences-store';
-import { log } from '../utils/log';
-import { coalesce } from '../utils/nullish';
+import { PreferencesStore } from '~/state/preferences/preferences-store';
+import { log } from '~/utils/log';
+import { coalesce } from '~/utils/nullish';
+
 import { Language } from './language';
 
 export interface LangData {

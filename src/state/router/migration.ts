@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 
-import { ModData } from '~/models/data/mod-data';
-import { datasets, DEFAULT_MOD } from '~/models/datasets';
+import { datasets, DEFAULT_MOD } from '~/data/datasets';
+import { ModData } from '~/data/schema/mod-data';
 import { Translate } from '~/translate/translate';
 import { asString } from '~/utils/coercion';
 import { log } from '~/utils/log';

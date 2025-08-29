@@ -1,26 +1,26 @@
 import { inject, Injectable } from '@angular/core';
 
-import { EnergyType } from '~/models/data/energy-type';
-import { Machine, PUMPJACK } from '~/models/data/machine';
+import { EnergyType } from '~/data/schema/energy-type';
+import { Machine, PUMPJACK } from '~/data/schema/machine';
 import {
   effectPrecision,
   effects,
   ModuleEffect,
   SOMERSLOOP,
-} from '~/models/data/module';
+} from '~/data/schema/module';
 import {
   baseId,
   itemHasQuality,
   Quality,
   qualityId,
-} from '~/models/data/quality';
+} from '~/data/schema/quality';
 import {
   AdjustedRecipe,
   cloneRecipe,
   finalizeRecipe,
   Recipe,
   RecipeJson,
-} from '~/models/data/recipe';
+} from '~/data/schema/recipe';
 import { Rational, rational } from '~/models/rational';
 import { coalesce, notNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';

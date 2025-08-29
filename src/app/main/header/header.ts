@@ -12,8 +12,8 @@ import { faBars, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { Select } from '~/components/select/select';
-import { Game, gameOptions } from '~/models/game';
-import { gameInfo } from '~/models/game-info';
+import { Game, gameOptions } from '~/data/game';
+import { gameInfo } from '~/data/game-info';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 

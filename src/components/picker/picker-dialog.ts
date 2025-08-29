@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-import { Quality, qualityOptions } from '~/models/data/quality';
+import { Quality, qualityOptions } from '~/data/schema/quality';
 import { Option } from '~/models/option';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';

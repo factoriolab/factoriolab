@@ -1,11 +1,11 @@
 import { computed, inject, signal } from '@angular/core';
 
-import { Picker } from '~/components/picker/picker';
+import { rational } from '~/models/rational';
 import { ObjectiveBase } from '~/state/objectives/objective';
 import { ObjectiveType } from '~/state/objectives/objective-type';
 import { ObjectiveUnit } from '~/state/objectives/objective-unit';
 
-import { rational } from './rational';
+import { Picker } from './picker/picker';
 
 export abstract class ObjectiveForm {
   protected readonly picker = inject(Picker);

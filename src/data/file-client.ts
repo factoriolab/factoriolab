@@ -10,15 +10,14 @@ import {
   tap,
 } from 'rxjs';
 
-import { ModData } from '~/models/data/mod-data';
-import { ModHash } from '~/models/data/mod-hash';
-import { ModI18n } from '~/models/data/mod-i18n';
-import { Release } from '~/models/release';
+import { Release } from '~/data/release';
+import { ModData } from '~/data/schema/mod-data';
+import { ModHash } from '~/data/schema/mod-hash';
+import { ModI18n } from '~/data/schema/mod-i18n';
+import { DatasetsStore } from '~/state/datasets/datasets-store';
+import { PreferencesStore } from '~/state/preferences/preferences-store';
+import { SettingsStore } from '~/state/settings/settings-store';
 import { Language } from '~/translate/language';
-
-import { DatasetsStore } from './datasets/datasets-store';
-import { PreferencesStore } from './preferences/preferences-store';
-import { SettingsStore } from './settings/settings-store';
 
 @Injectable({ providedIn: 'root' })
 export class FileClient {

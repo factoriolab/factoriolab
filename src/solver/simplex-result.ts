@@ -2,9 +2,9 @@ import { Simplex } from 'glpk-ts';
 import { StatusSimplex } from 'node_modules/glpk-ts/dist/status';
 
 import { Rational } from '~/models/rational';
-import { Step } from '~/models/step';
 
 import { SimplexResultType } from './simplex-result-type';
+import { Step } from './step';
 
 export interface SimplexResult {
   steps: Step[];

@@ -1,10 +1,10 @@
 import { computed, Injectable } from '@angular/core';
 
-import { ModData } from '~/models/data/mod-data';
-import { ModHash } from '~/models/data/mod-hash';
-import { ModI18n } from '~/models/data/mod-i18n';
-import { datasets } from '~/models/datasets';
-import { Mod } from '~/models/mod';
+import { datasets } from '~/data/datasets';
+import { Mod } from '~/data/mod';
+import { ModData } from '~/data/schema/mod-data';
+import { ModHash } from '~/data/schema/mod-hash';
+import { ModI18n } from '~/data/schema/mod-i18n';
 import { Language } from '~/translate/language';
 import { spread } from '~/utils/object';
 

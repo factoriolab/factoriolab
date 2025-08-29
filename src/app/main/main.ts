@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { FileClient } from '~/state/file-client';
+import { FileClient } from '~/data/file-client';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 

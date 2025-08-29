@@ -1,4 +1,4 @@
-import { Quality } from '~/models/data/quality';
+import { Quality } from '~/data/schema/quality';
 
 import { SettingsState } from './settings-state';
 

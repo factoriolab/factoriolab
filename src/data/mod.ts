@@ -1,6 +1,7 @@
-import { ModData } from './data/mod-data';
-import { FlagSet } from './flags';
+import { FlagSet } from '~/state/flags';
+
 import { Game } from './game';
+import { ModData } from './schema/mod-data';
 
 export interface ModInfo {
   /**

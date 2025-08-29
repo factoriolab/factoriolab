@@ -9,31 +9,31 @@ import {
   VariableProperties,
 } from 'glpk-ts';
 
-import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
+import { AdjustedRecipe, Recipe } from '~/data/schema/recipe';
 import { Rational, rational } from '~/models/rational';
-import { Step } from '~/models/step';
+import {
+  isRecipeObjective,
+  ObjectiveState,
+  RecipeObjective,
+} from '~/state/objectives/objective';
 import { ObjectiveType } from '~/state/objectives/objective-type';
 import {
   CostKey,
   FACTORIO_FLUID_COST_RATIO,
 } from '~/state/settings/cost-settings';
+import { AdjustedDataset, Dataset } from '~/state/settings/dataset';
+import { MaximizeType } from '~/state/settings/maximize-type';
 import { Settings } from '~/state/settings/settings';
 import { spread } from '~/utils/object';
 import { contains } from '~/utils/record';
 
-import {
-  isRecipeObjective,
-  ObjectiveState,
-  RecipeObjective,
-} from '../state/objectives/objective';
-import { AdjustedDataset, Dataset } from '../state/settings/dataset';
-import { MaximizeType } from '../state/settings/maximize-type';
 import { GlpkResult } from './glpk-result';
 import { ItemValues } from './item-values';
 import { simplexConfig } from './simplex-config';
 import { SimplexResult } from './simplex-result';
 import { SimplexSolution } from './simplex-solution';
 import { SimplexState } from './simplex-state';
+import { Step } from './step';
 
 @Injectable({ providedIn: 'root' })
 export class Solver {

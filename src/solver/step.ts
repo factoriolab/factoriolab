@@ -1,7 +1,6 @@
+import { AdjustedRecipe } from '~/data/schema/recipe';
 import { Rational } from '~/models/rational';
 import { RecipeSettings } from '~/state/recipes/recipe-settings';
-
-import { AdjustedRecipe } from './data/recipe';
 
 export interface Step {
   id: string;
