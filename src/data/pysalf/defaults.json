@@ -1,3 +1,26 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:b1168c9a05b4011ea3f3b5085d402684af00beac8104f856a52da213830cbbba
-size 563
+{
+  "beacon": "beacon",
+  "minBelt": "transport-belt",
+  "maxBelt": "express-transport-belt",
+  "fuelRank": [
+    "coal"
+  ],
+  "cargoWagon": "cargo-wagon",
+  "fluidWagon": "fluid-wagon",
+  "excludedRecipes": [],
+  "minMachineRank": [
+    "bhoddos-culture-mk01",
+    "barrel-machine-mk01",
+    "electric-mining-drill"
+  ],
+  "maxMachineRank": [
+    "fusion-reactor-mk02",
+    "compost-plant-mk04",
+    "electric-mining-drill"
+  ],
+  "moduleRank": [
+    "productivity-module-3",
+    "bhoddos-mk04"
+  ],
+  "beaconModule": "bhoddos-mk04"
+}
