@@ -15,7 +15,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Icon } from '../icon/icon';
 
-const button = cva(
+const host = cva(
   'overflow-hidden items-center gap-1 transition-colors rounded-xs cursor-pointer focus-visible:outline',
   {
     variants: {
@@ -89,17 +89,17 @@ const button = cva(
   host: { '[class]': 'hostClass()' },
 })
 export class Button {
-  text = input('');
-  faIcon = input<IconDefinition>();
-  iconType = input<IconType>();
-  icon = input<string>();
-  color = input<'brand' | 'gray'>('gray');
-  border = input(true);
-  size = input<'small' | 'standard' | 'large'>('standard');
-  hide = input(false);
+  readonly text = input('');
+  readonly faIcon = input<IconDefinition>();
+  readonly iconType = input<IconType>();
+  readonly icon = input<string>();
+  readonly color = input<'brand' | 'gray'>('gray');
+  readonly border = input(true);
+  readonly size = input<'small' | 'standard' | 'large'>('standard');
+  readonly hide = input(false);
 
-  hostClass = computed(() =>
-    button({
+  readonly hostClass = computed(() =>
+    host({
       iconOnly: !this.text(),
       color: this.color(),
       border: this.border(),

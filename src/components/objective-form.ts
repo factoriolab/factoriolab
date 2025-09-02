@@ -10,10 +10,10 @@ import { Picker } from './picker/picker';
 export abstract class ObjectiveForm {
   protected readonly picker = inject(Picker);
 
-  value = signal(rational(1));
-  unit = signal(ObjectiveUnit.Items);
-  type = signal(ObjectiveType.Output);
-  isRecipe = computed(() => this.unit() === ObjectiveUnit.Machines);
+  readonly value = signal(rational(1));
+  readonly unit = signal(ObjectiveUnit.Items);
+  readonly type = signal(ObjectiveType.Output);
+  readonly isRecipe = computed(() => this.unit() === ObjectiveUnit.Machines);
 
   openPicker(): void {
     const targetId$ = this.isRecipe()

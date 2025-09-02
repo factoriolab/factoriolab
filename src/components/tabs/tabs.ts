@@ -55,7 +55,7 @@ export class Tabs<T> extends Control<T> implements AfterViewInit {
   protected readonly faAngleLeft = faAngleLeft;
   protected readonly faAngleRight = faAngleRight;
 
-  indicatorStyle = computed(() => {
+  readonly indicatorStyle = computed(() => {
     const options = this.options();
     const index = options.findIndex((o) => o.value === this.value());
     const el = this.tabs()[index]?.nativeElement;

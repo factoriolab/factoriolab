@@ -10,7 +10,7 @@ import { cva } from 'class-variance-authority';
 
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 
-const aside = cva(
+const host = cva(
   'flex flex-col fixed z-2 bg-gray-900 top-0 left-0 h-full border-r border-gray-700 w-80 transition-transform',
   {
     variants: {
@@ -39,6 +39,6 @@ export class Aside {
   readonly open = signal(false);
   readonly xlHidden = signal(false);
   readonly hostClass = computed(() =>
-    aside({ open: this.open(), xlHidden: this.xlHidden() }),
+    host({ open: this.open(), xlHidden: this.xlHidden() }),
   );
 }

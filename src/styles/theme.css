@@ -72,4 +72,19 @@
   --color-brand-900: var(--color-brand-900, oklch(0.381 0.137 261.342));
   --color-brand-950: var(--color-brand-950, oklch(0.284 0.0868 263.732));
   --color-test: oklch(0.634 0.206 256);
+  --animate-fade-in: fade-in 300ms linear;
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
 }

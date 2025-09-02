@@ -32,7 +32,7 @@ import { Icon } from '../icon/icon';
 let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
 
-const select = cva(
+const host = cva(
   'inline-flex overflow-hidden grow cursor-pointer min-h-9 items-center select-none px-1 focus-visible:border-brand-700 focus-visible:outline rounded-xs',
   {
     variants: {
@@ -96,14 +96,14 @@ export class Select<T = unknown> extends Control<T> {
   readonly iconOnly = input<boolean>(false);
   readonly iconLocator = input<(value: T) => string>((v) => v as string);
 
-  hostClass = computed(() =>
-    select({
+  readonly hostClass = computed(() =>
+    host({
       opened: this.opened() && !this.hiding(),
       iconOnly: this.iconOnly(),
     }),
   );
-  opened = signal(false);
-  selectedOption = computed(() =>
+  readonly opened = signal(false);
+  readonly selectedOption = computed(() =>
     this.options()?.find((o) => o.value === this.value()),
   );
 

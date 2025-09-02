@@ -29,8 +29,8 @@ export class Dialog extends CdkDialogContainer implements OnInit {
 
   protected faXmark = faXmark;
 
-  header?: string;
-  headerParams?: InterpolateParams;
+  protected header?: string;
+  protected headerParams?: InterpolateParams;
 
   ngOnInit(): void {
     this.parseData();

@@ -71,7 +71,7 @@ export class InputNumber
     map((v) => (this.integer() ? v.round() : v)),
   );
 
-  text = linkedSignal<Rational | undefined, string>({
+  readonly text = linkedSignal<Rational | undefined, string>({
     source: this.value,
     computation: (val, previous) => {
       if (val == null) return '0';

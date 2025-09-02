@@ -36,8 +36,8 @@ export class PickerDialog {
   protected readonly dialogData = inject<PickerData>(DIALOG_DATA);
   private readonly dialogRef = inject(DialogRef);
 
-  data = this.settingsStore.dataset;
-  defaults = this.settingsStore.defaults;
+  protected readonly data = this.settingsStore.dataset;
+  protected readonly defaults = this.settingsStore.defaults;
 
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
   protected readonly faXmark = faXmark;
@@ -46,10 +46,9 @@ export class PickerDialog {
     `q${value}`;
 
   isMultiselect = false;
-  filter = signal('');
-  quality = signal(Quality.Normal);
-  allSelected = signal(false);
-
+  readonly filter = signal('');
+  readonly quality = signal(Quality.Normal);
+  readonly allSelected = signal(false);
   protected rowsKey = `${this.dialogData.type}CategoryRows` as const;
   protected recordKey = `${this.dialogData.type}Record` as const;
   selection: string | string[] | undefined;
@@ -57,7 +56,7 @@ export class PickerDialog {
   allCategoryRows: Record<string, string[][]> = {};
   activeIndex = 0;
 
-  categoryRows = computed(() => {
+  readonly categoryRows = computed(() => {
     const filter = this.filter();
     const quality = this.quality();
 
@@ -94,13 +93,13 @@ export class PickerDialog {
     return result;
   });
 
-  categoryOptions = computed(() =>
+  readonly categoryOptions = computed(() =>
     Object.keys(this.categoryRows()).map(
       (k): Option => ({ label: this.data().categoryRecord[k].name, value: k }),
     ),
   );
 
-  selectedCategory = linkedSignal<Record<string, string[][]>, string>({
+  readonly selectedCategory = linkedSignal<Record<string, string[][]>, string>({
     source: this.categoryRows,
     computation: (value, previous) => {
       const keys = Object.keys(value);
