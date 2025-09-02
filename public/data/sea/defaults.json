@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:1f42acdb178c4f2a695f16c423dc0bf6187e523a30cf457f3357abeb69743b9e
-size 507
+{
+  "beacon": "beacon",
+  "minBelt": "basic-transport-belt",
+  "maxBelt": "ultimate-transport-belt",
+  "fuelRank": ["nuclear-fuel"],
+  "cargoWagon": "cargo-wagon",
+  "fluidWagon": "fluid-wagon",
+  "minMachineRank": [
+    "assembling-machine-1",
+    "electric-furnace",
+    "electric-mining-drill"
+  ],
+  "maxMachineRank": [
+    "assembling-machine-3",
+    "electric-furnace",
+    "electric-mining-drill"
+  ],
+  "moduleRank": ["productivity-module-3", "speed-module-3"],
+  "beaconModule": "speed-module-3"
+}

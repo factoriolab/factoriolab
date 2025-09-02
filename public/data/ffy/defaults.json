@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c4cf9f2f5055e58fd165868fa8216a7313c8d2cd9389558d31c82171d467717e
-size 326
+{
+  "minBelt": "connector",
+  "maxBelt": "high-energy-connector",
+  "minMachineRank": [
+    "assembler",
+    "ship-assembler",
+    "atomic-printer"
+  ],
+  "maxMachineRank": [
+    "advanced-assembler",
+    "advanced-ship-assembler",
+    "quantum-printer"
+  ],
+  "moduleRank": [
+    "duplicator-artifact"
+  ]
+}

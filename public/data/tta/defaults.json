@@ -1,3 +1,7 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d616ebab981dbc3903e5e7a5d559399d418e391413ebe9cae8d54096cf234758
-size 238
+{
+  "minBelt": "conveyor-1",
+  "maxBelt": "conveyor-1",
+  "minMachineRank": ["drill-1", "smelter-1", "assembler-1", "thresher-1"],
+  "maxMachineRank": ["drill-3", "smelter-3", "assembler-2", "thresher-2"],
+  "fuelRank": ["plantmatter"]
+}

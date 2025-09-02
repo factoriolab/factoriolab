@@ -1,3 +1,46 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:806af0a346502751ed4c3599bef44c6b86b6f3b55c1b057c6a03ac737facd037
-size 936
+{
+  "beacon": "beacon",
+  "belt": "express-transport-belt",
+  "fuelRank": ["coal"],
+  "cargoWagon": "cargo-wagon",
+  "fluidWagon": "fluid-wagon",
+  "machineRank": [
+    "electric-mining-drill",
+    "electric-furnace",
+    "assembling-machine-3"
+  ],
+  "moduleRank": ["productivity-module-3"],
+  "beaconModule": "speed-module-3",
+  "pipe": "pump",
+  "presets": [
+    {
+      "id": 0,
+      "label": "options.preset.minimum",
+      "belt": "transport-belt",
+      "machineRank": [
+        "electric-mining-drill",
+        "stone-furnace",
+        "assembling-machine-1"
+      ]
+    },
+    {
+      "id": 1,
+      "label": "options.preset.upgraded"
+    },
+    {
+      "id": 2,
+      "label": "options.preset.beacon2",
+      "beaconCount": 2
+    },
+    {
+      "id": 8,
+      "label": "options.preset.beacon8",
+      "beaconCount": 8
+    },
+    {
+      "id": 12,
+      "label": "options.preset.beacon12",
+      "beaconCount": 12
+    }
+  ]
+}
