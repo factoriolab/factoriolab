@@ -15,7 +15,7 @@ import { DEFAULT_MOD } from '~/data/datasets';
 import { FileClient } from '~/data/file-client';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
-import { rational } from '~/models/rational';
+import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { asString } from '~/utils/coercion';
 import { coalesce } from '~/utils/nullish';

@@ -1,4 +1,4 @@
-import { Rational } from '~/models/rational';
+import { Rational } from '~/rational/rational';
 import { areArraysEqual } from '~/utils/equality';
 
 import { areModuleSettingsEqual, ModuleSettings } from './module-settings';

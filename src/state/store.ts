@@ -1,7 +1,7 @@
 import { computed, Signal, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { Rational } from '~/models/rational';
+import { Rational } from '~/rational/rational';
 import { prune, spread } from '~/utils/object';
 
 export type RecursivePartial<T> = { [P in keyof T]?: RecursivePartial<T[P]> };

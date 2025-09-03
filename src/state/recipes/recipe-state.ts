@@ -1,4 +1,4 @@
-import { Rational } from '~/models/rational';
+import { Rational } from '~/rational/rational';
 
 import { BeaconSettings } from '../beacon-settings';
 import { ModuleSettings } from '../module-settings';

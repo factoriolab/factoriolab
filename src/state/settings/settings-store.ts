@@ -11,7 +11,7 @@ import { CargoWagon } from '~/data/schema/cargo-wagon';
 import { Category } from '~/data/schema/category';
 import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
-import { Icon } from '~/data/schema/icon';
+import { IconData } from '~/data/schema/icon';
 import { Item, ItemJson, parseItem } from '~/data/schema/item';
 import { Machine, typeHasCraftingSpeed } from '~/data/schema/machine';
 import { ModHash } from '~/data/schema/mod-hash';
@@ -36,7 +36,7 @@ import { parseRecipe, Recipe } from '~/data/schema/recipe';
 import { Technology } from '~/data/schema/technology';
 import { MenuItem } from '~/models/menu-item';
 import { getIdOptions, Option } from '~/models/option';
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 import { flags } from '~/state/flags';
 import { log } from '~/utils/log';
 import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
@@ -705,8 +705,8 @@ export class SettingsStore extends Store<SettingsState> {
     function toIconRecord(
       ids: string[],
       rec: Record<string, Category | Item | Recipe>,
-    ): Record<string, Icon> {
-      return ids.reduce<Record<string, Icon>>((e, i) => {
+    ): Record<string, IconData> {
+      return ids.reduce<Record<string, IconData>>((e, i) => {
         const entity = rec[i];
         const id = coalesce(entity.icon, i);
         const text = entity.iconText;
@@ -717,7 +717,7 @@ export class SettingsStore extends Store<SettingsState> {
     }
 
     // Generate Icon Record
-    const iconRecord: Record<IconType, Record<string, Icon>> = {
+    const iconRecord: Record<IconType, Record<string, IconData>> = {
       system: systemIconsRecord,
       category: toIconRecord(categoryIds, categoryRecord),
       item: toIconRecord(itemIds, itemRecord),

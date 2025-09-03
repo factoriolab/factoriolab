@@ -7,7 +7,6 @@
     "flow": "Flow",
     "list": "List",
     "migrationWarning": "Migration warning",
-    "resetTooltip": "Click to reset",
     "simplexSolved": "Solved, {{ time }}ms, cost: {{ cost }}",
     "updateAvailable": "Update available",
     "updateAvailableMessage": "An update is available. Would you like to reload the page to update?",
@@ -157,6 +156,7 @@
   },
   "game": "Game",
   "header": {
+    "resetTooltip": "Click to reset",
     "discord": "Discord",
     "source": "Source",
     "sponsor": "Sponsor"

@@ -1,5 +1,5 @@
 import { AdjustedRecipe } from '~/data/schema/recipe';
-import { Rational } from '~/models/rational';
+import { Rational } from '~/rational/rational';
 
 import { RecipeSettings } from '../recipes/recipe-settings';
 import { RecipeState } from '../recipes/recipe-state';

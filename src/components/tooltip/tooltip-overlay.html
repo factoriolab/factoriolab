@@ -1,2 +1,21 @@
-<p>{{ data.message }} {{ position() }}</p>
+@if (tooltipData.type === 'recipe') {
+  @if (data().recipeRecord[tooltipData.value]; as recipe) {
+    <div>{{ recipe.name }}</div>
+    <lab-recipe [value]="recipe.id"></lab-recipe>
+  }
+} @else if (tooltipData.type) {
+  @if (data().itemRecord[tooltipData.value]; as item) {
+    <div>{{ item.name }}</div>
+    @if (recipeId(); as recipeId) {
+      <lab-recipe [value]="recipeId"></lab-recipe>
+    }
+  }
+} @else {
+  {{ tooltipData.value | translate }}
+}
+
+@if (tooltipData.action) {
+  <div class="text-sm italic">{{ tooltipData.action | translate }}</div>
+}
+
 <span [class]="nubClass()"></span>

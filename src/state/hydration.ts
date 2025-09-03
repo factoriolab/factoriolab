@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 
 import { Option } from '~/models/option';
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 import { areArraysEqual } from '~/utils/equality';
 import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
 

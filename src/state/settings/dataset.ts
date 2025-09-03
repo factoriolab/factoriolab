@@ -7,7 +7,7 @@ import { CargoWagon } from '~/data/schema/cargo-wagon';
 import { Category } from '~/data/schema/category';
 import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
-import { Icon } from '~/data/schema/icon';
+import { IconData } from '~/data/schema/icon';
 import { Item } from '~/data/schema/item';
 import { Machine } from '~/data/schema/machine';
 import { ModHash } from '~/data/schema/mod-hash';
@@ -27,7 +27,7 @@ export interface Dataset {
   itemCategoryRows: Record<string, string[][]>;
   recipeCategoryRows: Record<string, string[][]>;
   iconIds: string[];
-  iconRecord: Record<IconType, Record<string, Icon>>;
+  iconRecord: Record<IconType, Record<string, IconData>>;
   itemIds: string[];
   itemQIds: Set<string>;
   itemRecord: Record<string, Item>;

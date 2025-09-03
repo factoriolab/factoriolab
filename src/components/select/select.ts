@@ -28,6 +28,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Control, LAB_CONTROL } from '../control';
 import { FormField } from '../form-field/form-field';
 import { Icon } from '../icon/icon';
+import { Tooltip } from '../tooltip/tooltip';
 
 let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
@@ -50,7 +51,14 @@ const host = cva(
 
 @Component({
   selector: 'lab-select',
-  imports: [FormsModule, OverlayModule, FaIconComponent, Icon, TranslatePipe],
+  imports: [
+    FormsModule,
+    OverlayModule,
+    FaIconComponent,
+    Icon,
+    Tooltip,
+    TranslatePipe,
+  ],
   templateUrl: './select.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

@@ -1,4 +1,4 @@
-import { Rational } from '~/models/rational';
+import { Rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 
 export interface StepOutput {

@@ -74,6 +74,8 @@
                 ? 'bg-brand-950 hover:bg-brand-800 focus-visible:bg-brand-800'
                 : 'hover:bg-gray-800 focus-visible:bg-gray-800'
             "
+            [labTooltip]="opt.tooltip"
+            labTooltipPosition="adjacent"
             (click)="select(opt.value)"
             (keydown.enter)="select(opt.value)"
             (keydown.arrowup)="focusMove(option, -1, $event)"

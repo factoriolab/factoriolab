@@ -2,7 +2,7 @@ import { computed, inject, Injectable } from '@angular/core';
 
 import { PIPE } from '~/data/schema/belt';
 import { Item } from '~/data/schema/item';
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 import { coalesce } from '~/utils/nullish';
 
 import { Dataset } from '../settings/dataset';

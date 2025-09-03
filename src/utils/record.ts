@@ -1,6 +1,6 @@
 import { isDevMode } from '@angular/core';
 
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 
 import { spread } from './object';
 

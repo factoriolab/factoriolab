@@ -1,6 +1,7 @@
 import {
   Overlay,
   OverlayRef,
+  STANDARD_DROPDOWN_ADJACENT_POSITIONS,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -14,8 +15,11 @@ import {
   OnDestroy,
 } from '@angular/core';
 
+import { AdjustedRecipe } from '~/data/schema/recipe';
+
 import { TOOLTIP_DATA, TooltipData } from './tooltip-data';
 import { TooltipOverlay } from './tooltip-overlay';
+import { TooltipType } from './tooltip-type';
 
 @Directive({
   selector: '[labTooltip]',
@@ -32,21 +36,34 @@ export class Tooltip implements OnDestroy {
   private readonly injector = inject(Injector);
 
   readonly labTooltip = input<string>();
+  readonly labTooltipType = input<TooltipType>();
+  readonly labTooltipPosition = input<'below' | 'adjacent'>('below');
+  readonly labTooltipAction = input<string>();
+  readonly labTooltipAdjustedRecipe = input<AdjustedRecipe>();
 
   private overlayRef: OverlayRef | undefined;
 
   show(): void {
-    const message = this.labTooltip();
-    if (this.overlayRef || !message) return;
+    const value = this.labTooltip();
+    if (this.overlayRef || !value) return;
+
+    const positions =
+      this.labTooltipPosition() === 'adjacent'
+        ? STANDARD_DROPDOWN_ADJACENT_POSITIONS
+        : STANDARD_DROPDOWN_BELOW_POSITIONS;
 
     const positionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(this.elementRef)
       .withFlexibleDimensions(false)
-      .withPositions(STANDARD_DROPDOWN_BELOW_POSITIONS);
+      .withPositions(positions);
 
     const data: TooltipData = {
-      message,
+      value,
+      type: this.labTooltipType(),
+      action: this.labTooltipAction(),
+      adjustedRecipe: this.labTooltipAdjustedRecipe(),
+      defaultPosition: positions[0],
       positionChanges: positionStrategy.positionChanges,
     };
 

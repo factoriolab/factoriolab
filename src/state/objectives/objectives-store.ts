@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { filter, pairwise, switchMap } from 'rxjs';
 
 import { Option } from '~/models/option';
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 import { Solver } from '~/solver/solver';
 import { Step } from '~/solver/step';
 import { fnPropsNotNullish } from '~/utils/nullish';

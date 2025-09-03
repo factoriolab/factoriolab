@@ -2,7 +2,8 @@
 
 ## Tooltip
 
-- Actual rendering of tooltips for various object types
+- Adjusted recipe effects (used in list)
+- Item entity details
 
 ## Select
 
@@ -10,13 +11,12 @@
 
 ## Icon
 
-- Text
+- Sum icon?
 - Invert
 
 ## Picker
 
 - Need to pass in defaults where relevant using dialog data
-- Tooltip support
 - Multiselect support
 
 ## Objectives
@@ -35,3 +35,5 @@
 
 - Remove usages of $ Observable suffix?
 - Re-check readonly / access modifiers across all files
+- Re-check mobile view
+- Re-check light theme

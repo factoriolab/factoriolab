@@ -6,7 +6,7 @@ export interface IconJson {
   color: string;
 }
 
-export interface Icon extends IconJson {
+export interface IconData extends IconJson {
   file: string;
   text?: string;
   quality?: Quality;

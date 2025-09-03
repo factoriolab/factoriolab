@@ -1,4 +1,4 @@
-import { Rational } from '~/models/rational';
+import { Rational } from '~/rational/rational';
 
 export interface ItemState {
   beltId?: string;

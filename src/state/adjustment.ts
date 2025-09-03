@@ -21,7 +21,7 @@ import {
   Recipe,
   RecipeJson,
 } from '~/data/schema/recipe';
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 import { coalesce, notNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 

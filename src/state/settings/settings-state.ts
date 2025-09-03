@@ -1,4 +1,4 @@
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 
 import { BeaconSettings } from '../beacon-settings';
 import { CostSettings } from './cost-settings';

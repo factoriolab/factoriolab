@@ -1,5 +1,5 @@
 import { AdjustedRecipe } from '~/data/schema/recipe';
-import { Rational } from '~/models/rational';
+import { Rational } from '~/rational/rational';
 import { ObjectiveState, RecipeObjective } from '~/state/objectives/objective';
 import { CostSettings } from '~/state/settings/cost-settings';
 import { AdjustedDataset } from '~/state/settings/dataset';

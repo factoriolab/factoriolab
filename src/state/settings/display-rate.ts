@@ -1,5 +1,5 @@
 import { Option } from '~/models/option';
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 
 export enum DisplayRate {
   PerSecond = 0,

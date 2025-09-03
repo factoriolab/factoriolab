@@ -1,0 +1,45 @@
+@let r = recipe();
+<div class="flex flex-wrap items-center justify-center">
+  <lab-icon value="time" type="system" [quantity]="r.time"></lab-icon>
+  @for (input of r.in | keyvalue; track input.key) {
+    <lab-icon
+      [value]="input.key"
+      type="item"
+      [quantity]="input.value"
+    ></lab-icon>
+  }
+  <fa-icon [icon]="faArrowRightLong"></fa-icon>
+  @for (output of r.out | keyvalue; track output.key) {
+    <lab-icon
+      [value]="output.key"
+      type="item"
+      [quantity]="output.value"
+    ></lab-icon>
+  }
+</div>
+
+<div class="flex flex-wrap justify-between gap-2">
+  @if (!r.flags.has('hideProducer')) {
+    <div>
+      <div class="mt-1 text-sm">{{ 'data.producers' | translate }}</div>
+      <div>
+        @for (producer of r.producers; track producer) {
+          @if (data().itemRecord[producer].quality == null) {
+            <lab-icon [value]="producer" type="item"></lab-icon>
+          }
+        }
+      </div>
+    </div>
+  }
+
+  @if (r.locations; as locations) {
+    <div [class.text-end]="!r.flags.has('hideProducer')">
+      <div class="mt-1 text-sm">{{ 'data.locations' | translate }}</div>
+      <div>
+        @for (location of locations; track location) {
+          <lab-icon [value]="location" type="location"></lab-icon>
+        }
+      </div>
+    </div>
+  }
+</div>

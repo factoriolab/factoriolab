@@ -6,7 +6,7 @@ import {
 } from '~/d3-sankey/models';
 import { sankey } from '~/d3-sankey/sankey';
 import { EnergyType } from '~/data/schema/energy-type';
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';

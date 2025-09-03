@@ -1,4 +1,4 @@
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 
 export interface FluidWagonJson {
   capacity: number | string;

@@ -1,4 +1,4 @@
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 
 import { EnergyType } from './energy-type';
 import { ModuleEffect } from './module';

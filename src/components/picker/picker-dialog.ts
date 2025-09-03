@@ -19,11 +19,20 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Button } from '../button/button';
 import { Select } from '../select/select';
 import { Tabs } from '../tabs/tabs';
+import { Tooltip } from '../tooltip/tooltip';
 import { PickerData } from './picker-data';
 
 @Component({
   selector: 'lab-picker-dialog',
-  imports: [FormsModule, FaIconComponent, Button, Select, Tabs, TranslatePipe],
+  imports: [
+    FormsModule,
+    FaIconComponent,
+    Button,
+    Select,
+    Tabs,
+    TranslatePipe,
+    Tooltip,
+  ],
   templateUrl: './picker-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

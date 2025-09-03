@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 
 import { Picker } from '~/components/picker/picker';
-import { rational } from '~/models/rational';
+import { rational } from '~/rational/rational';
 import { Normalization } from '~/state/normalization';
 import {
   ObjectiveSettings,

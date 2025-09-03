@@ -1,4 +1,4 @@
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 
 import { Beacon, BeaconJson, parseBeacon } from './beacon';
 import { Belt, BeltJson, parseBelt } from './belt';

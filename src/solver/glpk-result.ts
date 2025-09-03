@@ -1,6 +1,6 @@
 import { Simplex, Status } from 'glpk-ts';
 
-import { Rational } from '~/models/rational';
+import { Rational } from '~/rational/rational';
 
 export interface GlpkResult {
   surplus: Record<string, Rational>;

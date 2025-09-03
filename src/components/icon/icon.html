@@ -1,3 +1,17 @@
+<span
+  class="absolute size-16 origin-top-left scale-50"
+  [style.background-image]="icon().file"
+  [style.background-position]="icon().position"
+>
+</span>
+
 @if (icon().quality; as q) {
   <lab-icon type="system" [value]="'q' + q"></lab-icon>
+}
+
+@if (quantity(); as q) {
+  <span
+    class="text-shadow-solid absolute right-0 bottom-0 text-base/4 font-bold text-white text-shadow-black"
+    >{{ q | round }}</span
+  >
 }

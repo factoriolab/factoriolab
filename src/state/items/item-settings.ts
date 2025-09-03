@@ -1,4 +1,4 @@
-import { Rational } from '~/models/rational';
+import { Rational } from '~/rational/rational';
 
 import { ItemState } from './item-state';
 

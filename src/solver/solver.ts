@@ -10,7 +10,7 @@ import {
 } from 'glpk-ts';
 
 import { AdjustedRecipe, Recipe } from '~/data/schema/recipe';
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 import {
   isRecipeObjective,
   ObjectiveState,

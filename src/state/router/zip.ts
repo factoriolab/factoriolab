@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 
 import { Compression } from './compression';
 import { ZARRAYSEP, ZEMPTY, ZFALSE, ZFIELDSEP, ZTRUE } from './constants';

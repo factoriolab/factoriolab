@@ -5,7 +5,7 @@ import { Machine, MachineJson } from '~/data/schema/machine';
 import { filterEffect } from '~/data/schema/module';
 import { Recipe } from '~/data/schema/recipe';
 import { Option } from '~/models/option';
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 import { fnPropsNotNullish } from '~/utils/nullish';
 
 import { ModuleSettings } from './module-settings';

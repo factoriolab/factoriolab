@@ -17,7 +17,7 @@ import {
 } from '@angular/forms';
 import { debounce, map, of, Subject, timer } from 'rxjs';
 
-import { Rational, rational } from '~/models/rational';
+import { Rational, rational } from '~/rational/rational';
 import { filterNullish } from '~/utils/nullish';
 
 import { Control, LAB_CONTROL } from '../control';

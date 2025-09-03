@@ -1,5 +1,5 @@
 import { Option } from '~/models/option';
-import { Rational } from '~/models/rational';
+import { Rational } from '~/rational/rational';
 
 import { MachineState } from './machine-state';
 

@@ -9,7 +9,11 @@ export enum ObjectiveType {
 
 export const objectiveTypeOptions: Option<ObjectiveType>[] = [
   { value: ObjectiveType.Output, label: 'options.objectiveType.output' },
-  { value: ObjectiveType.Input, label: 'options.objectiveType.input' },
+  {
+    value: ObjectiveType.Input,
+    label: 'options.objectiveType.input',
+    tooltip: 'tooltip thingy',
+  },
   { value: ObjectiveType.Maximize, label: 'options.objectiveType.maximize' },
   { value: ObjectiveType.Limit, label: 'options.objectiveType.limit' },
 ];

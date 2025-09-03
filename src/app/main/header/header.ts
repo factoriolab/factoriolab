@@ -12,6 +12,7 @@ import { faBars, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { Select } from '~/components/select/select';
+import { Tooltip } from '~/components/tooltip/tooltip';
 import { Game, gameOptions } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -26,7 +27,7 @@ interface ExternalLink {
 @Component({
   selector: 'header[labHeader], header[lab-header]',
   exportAs: 'labHeader',
-  imports: [RouterLink, Button, Select, TranslatePipe],
+  imports: [RouterLink, Button, Select, Tooltip, TranslatePipe],
   templateUrl: './header.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
