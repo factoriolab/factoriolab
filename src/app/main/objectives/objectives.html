@@ -17,13 +17,14 @@
   }}</span>
   <div class="invisible min-w-9"></div>
 </div>
+
 <div
   class="flex flex-col gap-1 sm:gap-2"
   cdkDropList
   (cdkDropListDropped)="drop($event)"
 >
   @for (objective of objectives(); track objective.id) {
-    <div cdkDrag>
+    <div cdkDrag cdkDragLockAxis="y" cdkDragBoundary=".flex.flex-col">
       <div class="flex max-w-200 gap-1 bg-gray-950 sm:gap-2">
         <button
           class="sm:inline-flex"
@@ -95,43 +96,42 @@
       </div>
     </div>
   }
-  <div class="flex max-w-200 gap-1 sm:gap-2">
-    <div class="invisible hidden min-w-9 sm:block"></div>
-    <button
-      type="button"
-      class="md:hidden"
-      labButton
-      [faIcon]="faPlus"
-      color="brand"
-      [attr.aria-label]="
-        isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'
-      "
-      (click)="openPicker()"
-    ></button>
-    <button
-      type="button"
-      class="basis-2/5 md:inline-flex"
-      labButton
-      [faIcon]="faPlus"
-      color="brand"
-      [text]="isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'"
-      [hide]="true"
-      (click)="openPicker()"
-    ></button>
-    <lab-input-number
-      class="basis-1/3 md:basis-1/5"
-      [(ngModel)]="value"
-    ></lab-input-number>
-    <lab-select
-      class="basis-1/3 md:basis-1/5"
-      [(ngModel)]="unit"
-      [options]="unitOptions()"
-    ></lab-select>
-    <lab-select
-      class="basis-1/3 md:basis-1/5"
-      [(ngModel)]="type"
-      [options]="typeOptions"
-    ></lab-select>
-    <div class="invisible min-w-9"></div>
-  </div>
+</div>
+
+<div class="mt-1 flex max-w-200 gap-1 sm:mt-2 sm:gap-2">
+  <div class="invisible hidden min-w-9 sm:block"></div>
+  <button
+    type="button"
+    class="md:hidden"
+    labButton
+    [faIcon]="faPlus"
+    color="brand"
+    [attr.aria-label]="isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'"
+    (click)="openPicker()"
+  ></button>
+  <button
+    type="button"
+    class="basis-2/5 md:inline-flex"
+    labButton
+    [faIcon]="faPlus"
+    color="brand"
+    [text]="isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'"
+    [hide]="true"
+    (click)="openPicker()"
+  ></button>
+  <lab-input-number
+    class="basis-1/3 md:basis-1/5"
+    [(ngModel)]="value"
+  ></lab-input-number>
+  <lab-select
+    class="basis-1/3 md:basis-1/5"
+    [(ngModel)]="unit"
+    [options]="unitOptions()"
+  ></lab-select>
+  <lab-select
+    class="basis-1/3 md:basis-1/5"
+    [(ngModel)]="type"
+    [options]="typeOptions"
+  ></lab-select>
+  <div class="invisible min-w-9"></div>
 </div>

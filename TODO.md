@@ -5,10 +5,6 @@
 - Adjusted recipe effects (used in list)
 - Item entity details
 
-## Select
-
-- Tooltip support
-
 ## Icon
 
 - Sum icon?
@@ -25,10 +21,14 @@
 - Pause / Resume
 - Status messages
 
+## Translate
+
+- Pure translate pipe?
+- Signal-based translate injectable?
+
 ## Performance
 
 - Optimize so that store / router sync are not part of initial bundle?
-- Pure translate pipe?
 - ::view-transition-new, ::view-transition-old
 
 ## General

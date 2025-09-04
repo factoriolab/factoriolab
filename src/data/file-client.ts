@@ -26,11 +26,17 @@ export class FileClient {
   private readonly preferencesStore = inject(PreferencesStore);
   private readonly settingsStore = inject(SettingsStore);
 
-  private cacheData: Record<string, Observable<[ModData, ModHash]>> = {};
-  private cacheI18n: Record<string, Record<string, Observable<ModI18n>>> = {};
+  private readonly cacheData: Record<string, Observable<[ModData, ModHash]>> =
+    {};
+  private readonly cacheI18n: Record<
+    string,
+    Record<string, Observable<ModI18n>>
+  > = {};
 
-  config$ = this.http.get<Release>('release.json').pipe(shareReplay(1));
-  version$ = this.config$.pipe(
+  readonly config$ = this.http
+    .get<Release>('release.json')
+    .pipe(shareReplay(1));
+  readonly version$ = this.config$.pipe(
     map((c) => `FactorioLab ${c.version || '(dev)'}`),
   );
 

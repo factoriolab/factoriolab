@@ -434,6 +434,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     super();
 
     // TODO: Is it really necessary to specify the injector here?
+    // TODO: Can this be removed entirely and replaced with signal-based logic?
     const injector = inject(Injector);
     this.settingsStore.load$
       .pipe(

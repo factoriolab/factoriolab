@@ -11,7 +11,7 @@
     }
   }
 } @else {
-  {{ tooltipData.value | translate }}
+  <span [innerHtml]="tooltipData.value | translate"></span>
 }
 
 @if (tooltipData.action) {

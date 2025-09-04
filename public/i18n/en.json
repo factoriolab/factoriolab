@@ -267,9 +267,13 @@
     },
     "objectiveType": {
       "input": "Input",
+      "inputTooltip": "I am already producing this quantity<br><span class=\"text-sm italic\">(don't solve for it)</span>",
       "limit": "Limit",
+      "limitTooltip": "I want to limit this production<br><span class=\"text-sm italic\">(usually for maximize)</span>",
       "maximize": "Maximize",
-      "output": "Output"
+      "maximizeTooltip": "I want to maximize this production<br><span class=\"text-sm italic\">(requires a limit)</span>",
+      "output": "Output",
+      "outputTooltip": "I want to produce this quantity"
     },
     "objectiveUnit": {
       "belts": "Belts",

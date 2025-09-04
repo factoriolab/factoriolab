@@ -1,6 +1,5 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { from, map, switchMap } from 'rxjs';
+import { CanActivateFn, Router, UrlTree } from '@angular/router';
 
 import { DEFAULT_MOD } from '~/data/datasets';
 import { Migration } from '~/state/router/migration';
@@ -20,15 +19,19 @@ export const idGuard: CanActivateFn = (route) => {
     case 'wizard':
     case 'flow':
     case 'data': {
-      return from(routerSync.unzipQueryParams(route.queryParams)).pipe(
-        map((queryParams) => migration.migrate(undefined, queryParams)),
-        switchMap(async ({ modId, params }) => {
-          if (params.z) params = await routerSync.getHashParams(params);
-          return router.createUrlTree([coalesce(modId, '1.1'), id], {
-            queryParams: params,
-          });
-        }),
-      );
+      const result = async (): Promise<UrlTree> => {
+        const unzipParams = await routerSync.unzipQueryParams(
+          route.queryParams,
+        );
+        const { modId, params } = migration.migrate(undefined, unzipParams);
+        const queryParams = params.z
+          ? await routerSync.getHashParams(params)
+          : params;
+        return router.createUrlTree([coalesce(modId, '1.1'), id], {
+          queryParams,
+        });
+      };
+      return result();
     }
     case 'factorio':
       return router.createUrlTree([DEFAULT_MOD]);
