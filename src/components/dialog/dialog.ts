@@ -22,7 +22,10 @@ export interface DialogData {
   imports: [CdkPortalOutlet, Button, TranslatePipe],
   templateUrl: './dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex flex-col bg-gray-950 border border-gray-700' },
+  host: {
+    class:
+      'flex flex-col bg-gray-950 border border-gray-700 w-dvw-1 sm:w-dvw-3 lg:w-auto',
+  },
 })
 export class Dialog extends CdkDialogContainer implements OnInit {
   protected readonly dialogRef = inject(DialogRef);

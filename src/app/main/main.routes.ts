@@ -3,7 +3,8 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'list',
-    loadComponent: () => import('./list/list').then((c) => c.List),
+    loadComponent: () =>
+      import('~/components/steps/steps').then((c) => c.Steps),
   },
   {
     path: 'flow',

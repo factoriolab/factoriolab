@@ -32,3 +32,4 @@
 - Re-check mobile view
 - Re-check light theme
 - Re-check translations are being used
+- Apply sorting to tailwind classes in component files

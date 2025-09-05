@@ -37,7 +37,7 @@ import { PickerData } from './picker-data';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex flex-col gap-2 w-dvw sm:w-[96dvw] lg:w-[50rem] p-2 pt-0 min-h-[30rem] max-h-[50rem] h-[80dvh]',
+      'flex flex-col gap-2 tab-2 lg:w-3xl p-2 pt-0 min-h-[30rem] max-h-[50rem] h-[80dvh]',
   },
 })
 export class PickerDialog {
