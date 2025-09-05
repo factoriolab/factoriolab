@@ -14,6 +14,7 @@ import {
   input,
   OnDestroy,
 } from '@angular/core';
+import { take } from 'rxjs';
 
 import { AdjustedRecipe } from '~/data/schema/recipe';
 
@@ -27,7 +28,6 @@ import { TooltipType } from './tooltip-type';
     '(mouseenter)': 'show()',
     '(touchstart)': 'show()',
     '(mouseleave)': 'hide()',
-    '(touchend)': 'hide()',
   },
 })
 export class Tooltip implements OnDestroy {
@@ -73,6 +73,12 @@ export class Tooltip implements OnDestroy {
     });
 
     const ref = this.overlay.create({ positionStrategy });
+    ref
+      .outsidePointerEvents()
+      .pipe(take(1))
+      .subscribe(() => {
+        this.hide();
+      });
     ref.attach(new ComponentPortal(TooltipOverlay, undefined, injector));
     this.overlayRef = ref;
 
