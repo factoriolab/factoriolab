@@ -1,0 +1,41 @@
+@if (message(); as message) {
+  <fa-icon size="lg" [icon]="message.icon"></fa-icon>
+
+  <div>
+    @if (message.summary) {
+      <h2 class="font-bold">
+        {{ message.summary | translate: message.params }}
+      </h2>
+    }
+
+    <div [innerHTML]="message.detail | translate: message.params"></div>
+
+    @if (message.info) {
+      <div class="text-sm italic">
+        {{ message.info | translate: message.params }}
+      </div>
+    }
+
+    @if (message.recipeId) {
+      <div class="flex items-center gap-2">
+        <lab-icon [value]="message.recipeId" type="recipe"></lab-icon>
+        {{ settingsStore.dataset().recipeRecord[message.recipeId].name }}
+        <button
+          type="button"
+          labButton
+          color="brand"
+          [faIcon]="faPlus"
+          text="objectives.errorSimplexUnboundedAddRecipeLimit"
+          (click)="
+            objectivesStore.add({
+              targetId: message.recipeId,
+              value: rational.one,
+              unit: ObjectiveUnit.Machines,
+              type: ObjectiveType.Limit,
+            })
+          "
+        ></button>
+      </div>
+    }
+  </div>
+}

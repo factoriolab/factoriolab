@@ -15,12 +15,6 @@
 - Need to pass in defaults where relevant using dialog data
 - Multiselect support
 
-## Objectives
-
-- Select display rate unit
-- Pause / Resume
-- Status messages
-
 ## Translate
 
 - Pure translate pipe?
@@ -37,3 +31,4 @@
 - Re-check readonly / access modifiers across all files
 - Re-check mobile view
 - Re-check light theme
+- Re-check translations are being used

@@ -1,13 +1,18 @@
 import { computed, effect, inject, Injectable, Injector } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
+import {
+  faExclamationCircle,
+  faPauseCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import { filter, pairwise, switchMap } from 'rxjs';
 
 import { Option } from '~/models/option';
 import { Rational, rational } from '~/rational/rational';
 import { Solver } from '~/solver/solver';
 import { Step } from '~/solver/step';
-import { fnPropsNotNullish } from '~/utils/nullish';
+import { InterpolateParams } from '~/translate/translate';
+import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 import { addValueByIds, toRecord } from '~/utils/record';
 
@@ -21,6 +26,7 @@ import { RecipesStore } from '../recipes/recipes-store';
 import { displayRateInfo } from '../settings/display-rate';
 import { SettingsStore } from '../settings/settings-store';
 import { RecordStore } from '../store';
+import { MessageData } from './message-data';
 import { isRecipeObjective, ObjectiveBase, ObjectiveState } from './objective';
 import { ObjectiveType } from './objective-type';
 import { ObjectiveUnit } from './objective-unit';
@@ -428,6 +434,61 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         objectives.some((p) => p.beacons != null),
       cost: Object.keys(state).some((id) => state[id].cost),
     };
+  });
+
+  message = computed((): MessageData | undefined => {
+    const objectives = this.objectives();
+    const matrixResult = this.matrixResult();
+    const settings = this.settingsStore.settings();
+
+    if (matrixResult.resultType === 'paused')
+      return { icon: faPauseCircle, detail: 'objectives.pausedMessage' };
+
+    if (matrixResult.resultType !== 'failed') return;
+
+    const icon = faExclamationCircle;
+    let summary = 'objectives.error';
+    let detail = 'objectives.errorDetail';
+    let recipeId: string | undefined;
+    const info = 'objectives.errorSimplexInfo';
+    const params: InterpolateParams = {
+      returnCode: coalesce(matrixResult.returnCode, 'unknown'),
+      simplexStatus: coalesce(matrixResult.simplexStatus, 'unknown'),
+    };
+
+    if (matrixResult.simplexStatus === 'unbounded') {
+      const maxObjectives = objectives.filter(
+        (o) => o.type === ObjectiveType.Maximize,
+      );
+
+      summary = 'objectives.errorUnbounded';
+      detail = 'objectives.errorUnboundedDetail';
+
+      if (matrixResult.unboundedRecipeId) {
+        detail = 'objectives.errorSimplexUnboundedRecipe';
+        recipeId = matrixResult.unboundedRecipeId;
+      } else if (
+        maxObjectives.length &&
+        objectives.every((o) => o.type !== ObjectiveType.Limit)
+      ) {
+        // Found maximize objectives but no limits
+        detail = 'objectives.errorNoLimits';
+      } else if (
+        maxObjectives.some((o) =>
+          o.unit === ObjectiveUnit.Machines
+            ? settings.excludedRecipeIds.has(o.targetId)
+            : settings.excludedItemIds.has(o.targetId),
+        )
+      ) {
+        // Found an excluded maximize objective
+        detail = 'objectives.errorMaximizeExcluded';
+      }
+    } else if (matrixResult.simplexStatus === 'no_feasible') {
+      summary = 'objectives.errorInfeasible';
+      detail = 'objectives.errorInfeasibleDetail';
+    }
+
+    return { icon, summary, detail, info, params, recipeId };
   });
 
   constructor() {
