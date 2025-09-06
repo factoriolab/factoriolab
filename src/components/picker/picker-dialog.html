@@ -48,7 +48,8 @@
           labButton
           [iconType]="dialogData.type"
           [icon]="id"
-          [border]="false"
+          [border]="id === selection"
+          [color]="id === selection ? 'brand' : 'gray'"
           [labTooltip]="id"
           [labTooltipType]="dialogData.type"
           (click)="selectId(id)"

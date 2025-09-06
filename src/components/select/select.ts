@@ -34,15 +34,18 @@ let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
 
 const host = cva(
-  'inline-flex overflow-hidden grow cursor-pointer min-h-9 items-center select-none px-1 focus-visible:border-brand-700 focus-visible:outline rounded-xs',
+  'inline-flex overflow-hidden grow cursor-pointer min-h-9 items-center select-none px-1 focus-visible:border-brand-700 focus-visible:outline focus:z-2',
   {
     variants: {
       opened: {
-        true: 'border-brand-700 outline',
+        true: 'border-brand-700 outline z-2',
         false: 'border-gray-700',
       },
+      rounded: {
+        true: 'rounded-xs',
+      },
       iconOnly: {
-        true: 'min-w-9 justify-center hover:bg-brand-950 outline-gray-300',
+        true: 'min-w-9 justify-center hover:bg-gray-800 outline-brand-700',
         false: 'border outline-brand-700',
       },
     },
@@ -99,6 +102,7 @@ export class Select<T = unknown> extends Control<T> {
   readonly options = input.required<Option<T>[]>();
   readonly disabled = model(false);
   readonly placeholder = input<string>();
+  readonly rounded = input(true);
   readonly type = input<IconType>();
   readonly filter = input<boolean>(false);
   readonly iconOnly = input<boolean>(false);
@@ -107,6 +111,7 @@ export class Select<T = unknown> extends Control<T> {
   readonly hostClass = computed(() =>
     host({
       opened: this.opened() && !this.hiding(),
+      rounded: this.rounded(),
       iconOnly: this.iconOnly(),
     }),
   );

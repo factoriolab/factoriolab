@@ -14,7 +14,7 @@ import {
   input,
   OnDestroy,
 } from '@angular/core';
-import { take } from 'rxjs';
+import { filter, take } from 'rxjs';
 
 import { AdjustedRecipe } from '~/data/schema/recipe';
 
@@ -25,9 +25,9 @@ import { TooltipType } from './tooltip-type';
 @Directive({
   selector: '[labTooltip]',
   host: {
-    '(mouseenter)': 'show()',
+    '(mouseover)': 'show()',
     '(touchstart)': 'show()',
-    '(mouseleave)': 'hide()',
+    '(mouseout)': 'hide()',
   },
 })
 export class Tooltip implements OnDestroy {
@@ -73,9 +73,13 @@ export class Tooltip implements OnDestroy {
     });
 
     const ref = this.overlay.create({ positionStrategy });
+    // Watch for click events to hide after touchstart on mobile
     ref
       .outsidePointerEvents()
-      .pipe(take(1))
+      .pipe(
+        filter((e) => e.type === 'click'),
+        take(1),
+      )
       .subscribe(() => {
         this.hide();
       });

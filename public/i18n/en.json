@@ -177,7 +177,6 @@
   "objectives": {
     "addItems": "Add items",
     "addMachines": "Add machines",
-    "drag": "Drag objective",
     "error": "No solution found",
     "errorDetail": "Check <b>Limit</b> and <b>Maximize</b> objectives and enabled recipes. ",
     "errorInfeasible": "Solution is infeasible",

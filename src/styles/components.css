@@ -33,4 +33,10 @@
       outline: 3px solid var(--color-brand-700);
     }
   }
+
+  fa-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

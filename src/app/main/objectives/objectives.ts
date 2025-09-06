@@ -91,8 +91,8 @@ export class Objectives extends ObjectiveForm {
   changeTarget(objective: ObjectiveSettings): void {
     const targetId$ =
       objective.unit === ObjectiveUnit.Machines
-        ? this.picker.pickRecipe()
-        : this.picker.pickItem();
+        ? this.picker.pickRecipe(objective.targetId)
+        : this.picker.pickItem(objective.targetId);
     targetId$.subscribe((targetId) => {
       this.objectivesStore.updateRecord(objective.id, { targetId });
     });

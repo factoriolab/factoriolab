@@ -63,7 +63,6 @@ export class PickerDialog {
   selection: string | string[] | undefined;
   allSelectItems: Option[] = [];
   allCategoryRows: Record<string, string[][]> = {};
-  activeIndex = 0;
 
   readonly categoryRows = computed(() => {
     const filter = this.filter();
@@ -145,10 +144,7 @@ export class PickerDialog {
 
     if (Array.isArray(selection)) this.allSelected.set(selection.length === 0);
     else if (selection != null) {
-      const index = data.categoryIds.indexOf(
-        data[this.recordKey][selection].category,
-      );
-      this.activeIndex = index;
+      this.selectedCategory.set(data[this.recordKey][selection].category);
     }
   }
 

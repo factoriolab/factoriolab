@@ -16,40 +16,44 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Icon } from '../icon/icon';
 
 const host = cva(
-  'overflow-hidden items-center gap-1 transition-colors rounded-xs cursor-pointer focus-visible:outline',
+  'overflow-hidden items-center gap-1 transition-colors cursor-pointer focus-visible:outline focus:z-2',
   {
     variants: {
       color: {
-        gray: 'outline-brand-700 focus-visible:border-brand-700',
-        brand: 'outline-gray-300 focus-visible:border-gray-300',
-      },
-      border: {
-        true: 'border',
+        gray: 'bg-gray-950 text-gray-50 outline-brand-700 focus-visible:border-brand-700',
+        brand:
+          'bg-brand-950 text-brand-50 outline-gray-300 focus-visible:border-gray-300 z-1',
       },
       size: {
         small: 'min-h-8 text-sm font-light opacity-60',
         standard: 'min-h-9',
         large: 'min-h-11 text-2xl font-light',
       },
-      iconOnly: {
-        true: 'justify-center',
-        false: 'px-3',
+      border: {
+        true: 'border',
+      },
+      rounded: {
+        true: 'rounded-xs',
       },
       hide: {
         true: 'hidden',
         false: 'inline-flex',
+      },
+      iconOnly: {
+        true: 'justify-center',
+        false: 'px-3',
       },
     },
     compoundVariants: [
       {
         color: 'gray',
         border: true,
-        class: 'bg-gray-950 hover:bg-gray-700 border-gray-700',
+        class: 'hover:bg-gray-700 border-gray-700',
       },
       {
         color: 'brand',
         border: true,
-        class: 'bg-brand-950 hover:bg-brand-700 border-brand-700',
+        class: 'hover:bg-brand-700 border-brand-700',
       },
       {
         color: 'gray',
@@ -59,7 +63,7 @@ const host = cva(
       {
         color: 'brand',
         border: false,
-        class: 'text-brand-50 hover:bg-brand-950',
+        class: 'hover:bg-brand-800',
       },
       {
         size: 'small',
@@ -94,17 +98,19 @@ export class Button {
   readonly iconType = input<IconType>();
   readonly icon = input<string>();
   readonly color = input<'brand' | 'gray'>('gray');
-  readonly border = input(true);
   readonly size = input<'small' | 'standard' | 'large'>('standard');
+  readonly border = input(true);
+  readonly rounded = input(true);
   readonly hide = input(false);
 
   readonly hostClass = computed(() =>
     host({
-      iconOnly: !this.text(),
       color: this.color(),
-      border: this.border(),
       size: this.size(),
+      border: this.border(),
+      rounded: this.rounded(),
       hide: this.hide(),
+      iconOnly: !this.text(),
     }),
   );
 }

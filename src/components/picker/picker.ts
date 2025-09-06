@@ -13,20 +13,31 @@ export class Picker {
   private readonly dialog = inject(Dialog);
   private readonly settingsStore = inject(SettingsStore);
 
-  pickItem(allIds?: string[] | Set<string>): Observable<string> {
+  pickItem(
+    selection?: string | string[] | Set<string>,
+    allIds?: string[] | Set<string>,
+  ): Observable<string> {
     allIds ??= this.settingsStore.settings().availableItemIds;
     return this.dialog
       .open<string, PickerData>(PickerDialog, {
-        data: { header: 'picker.selectItem', type: 'item', allIds },
+        data: { header: 'picker.selectItem', type: 'item', allIds, selection },
       })
       .closed.pipe(filterNullish());
   }
 
-  pickRecipe(allIds?: string[] | Set<string>): Observable<string> {
+  pickRecipe(
+    selection?: string | string[] | Set<string>,
+    allIds?: string[] | Set<string>,
+  ): Observable<string> {
     allIds ??= this.settingsStore.settings().availableRecipeIds;
     return this.dialog
       .open<string, PickerData>(PickerDialog, {
-        data: { header: 'picker.selectRecipe', type: 'recipe', allIds },
+        data: {
+          header: 'picker.selectRecipe',
+          type: 'recipe',
+          allIds,
+          selection,
+        },
       })
       .closed.pipe(filterNullish());
   }

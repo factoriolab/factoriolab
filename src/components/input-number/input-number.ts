@@ -61,6 +61,7 @@ export class InputNumber
   readonly minimum = input<Rational | undefined>(rational.zero);
   readonly maximum = input<Rational | undefined>(undefined);
   readonly integer = input(false);
+  readonly rounded = input(true);
 
   private value$ = new Subject<ChangeEvent>();
   private emit$ = this.value$.pipe(
