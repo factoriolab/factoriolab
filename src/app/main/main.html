@@ -17,8 +17,17 @@
   <main class="flex grow flex-col">
     <lab-objectives></lab-objectives>
 
-    <div class="grow p-1 sm:p-3 lg:p-6">
-      <h2 class="mb-1 text-2xl font-light">Factory</h2>
+    <div class="grow px-1 sm:px-3 lg:px-6">
+      <h2 class="mb-1 hidden text-2xl font-light xl:block">Factory</h2>
+      <div class="relative">
+        <span
+          class="absolute bottom-0 -left-1 w-1 border-b-2 border-gray-700 sm:-left-3 sm:w-3 lg:-left-6 lg:w-6"
+        ></span>
+        <lab-tabs [tabs]="tabs"></lab-tabs>
+        <span
+          class="absolute -right-1 bottom-0 w-1 border-b-2 border-gray-700 sm:-right-3 sm:w-3 lg:-right-6 lg:w-6"
+        ></span>
+      </div>
       <router-outlet></router-outlet>
     </div>
 

@@ -1,6 +1,6 @@
 import { CategoryJson } from './category';
 import { DefaultsJson } from './defaults';
-import { IconJson } from './icon';
+import { IconJson } from './icon-data';
 import { ItemJson } from './item';
 import { RecipeJson } from './recipe';
 

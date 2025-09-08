@@ -273,7 +273,7 @@
       "maximize": "Maximize",
       "maximizeTooltip": "I want to maximize this production<br><span class=\"text-sm italic\">(requires a limit)</span>",
       "output": "Output",
-      "outputTooltip": "I want to produce this quantity"
+      "outputTooltip": "I want to produce this quantity<br><span class=\"text-sm italic\">(default option)</span>"
     },
     "objectiveUnit": {
       "belts": "Belts",

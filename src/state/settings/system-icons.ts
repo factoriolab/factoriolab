@@ -1,4 +1,4 @@
-import { IconJson } from '~/data/schema/icon';
+import { IconJson } from '~/data/schema/icon-data';
 import { toRecord } from '~/utils/record';
 
 export const systemIcons: IconJson[] = [

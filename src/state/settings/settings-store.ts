@@ -11,7 +11,7 @@ import { CargoWagon } from '~/data/schema/cargo-wagon';
 import { Category } from '~/data/schema/category';
 import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
-import { IconData } from '~/data/schema/icon';
+import { IconData } from '~/data/schema/icon-data';
 import { Item, ItemJson, parseItem } from '~/data/schema/item';
 import { Machine, typeHasCraftingSpeed } from '~/data/schema/machine';
 import { ModHash } from '~/data/schema/mod-hash';

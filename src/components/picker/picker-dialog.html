@@ -36,7 +36,7 @@
 <lab-tabs
   type="category"
   [(value)]="selectedCategory"
-  [options]="categoryOptions()"
+  [tabs]="categoryTabs()"
 ></lab-tabs>
 <div class="flex flex-col overflow-y-auto">
   @for (ids of categoryRows()[selectedCategory()]; track $index) {

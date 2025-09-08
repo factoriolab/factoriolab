@@ -7,7 +7,7 @@ import { CargoWagon } from '~/data/schema/cargo-wagon';
 import { Category } from '~/data/schema/category';
 import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
-import { IconData } from '~/data/schema/icon';
+import { IconData } from '~/data/schema/icon-data';
 import { Item } from '~/data/schema/item';
 import { Machine } from '~/data/schema/machine';
 import { ModHash } from '~/data/schema/mod-hash';

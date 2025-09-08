@@ -12,21 +12,30 @@ import {
   model,
   viewChildren,
 } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 import { IconType } from '~/data/icon-type';
-import { Option } from '~/models/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
 import { Control } from '../control';
 import { Icon } from '../icon/icon';
+import { TabData } from './tab-data';
 
 let nextUniqueId = 0;
 
 @Component({
   selector: 'lab-tabs',
-  imports: [Button, Icon, TranslatePipe],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    FaIconComponent,
+    Button,
+    Icon,
+    TranslatePipe,
+  ],
   templateUrl: './tabs.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -38,27 +47,27 @@ let nextUniqueId = 0;
     '(keydown)': 'onKeydown($event)',
   },
 })
-export class Tabs<T> extends Control<T> implements AfterViewInit {
+export class Tabs extends Control<string> implements AfterViewInit {
   private readonly ref = inject(ChangeDetectorRef);
   private readonly injector = inject(Injector);
-  private readonly tabs = viewChildren<ElementRef<HTMLAnchorElement>>('tab');
+  private readonly tabElements =
+    viewChildren<ElementRef<HTMLAnchorElement>>('tab');
 
   private uniqueId = (nextUniqueId++).toString();
 
   readonly id = input(`lab-tabs-${this.uniqueId}`);
-  readonly value = model<T>();
-  readonly options = input.required<Option<T>[]>();
+  readonly value = model<string>();
+  readonly tabs = input.required<TabData[]>();
   readonly disabled = model(false);
   readonly type = input<IconType>();
-  readonly iconLocator = input<(value: T) => string>((v) => v as string);
 
   protected readonly faAngleLeft = faAngleLeft;
   protected readonly faAngleRight = faAngleRight;
 
   readonly indicatorStyle = computed(() => {
-    const options = this.options();
-    const index = options.findIndex((o) => o.value === this.value());
-    const el = this.tabs()[index]?.nativeElement;
+    const tabs = this.tabs();
+    const index = tabs.findIndex((o) => o.value === this.value());
+    const el = this.tabElements()[index]?.nativeElement;
     if (el == null) return;
     /**
      * Note: Return this as a function so that the selected element's properties
@@ -105,7 +114,7 @@ export class Tabs<T> extends Control<T> implements AfterViewInit {
   }
 
   focusFirst(event: KeyboardEvent): void {
-    const el = this.tabs()[0]?.nativeElement;
+    const el = this.tabElements()[0]?.nativeElement;
     if (el == null) return;
     el.click();
     el.scrollIntoView({ block: 'nearest' });
@@ -113,7 +122,7 @@ export class Tabs<T> extends Control<T> implements AfterViewInit {
   }
 
   focusLast(event: KeyboardEvent): void {
-    const items = this.tabs();
+    const items = this.tabElements();
     const el = items[items.length - 1]?.nativeElement;
     if (el == null) return;
     el.click();
@@ -122,8 +131,8 @@ export class Tabs<T> extends Control<T> implements AfterViewInit {
   }
 
   focusMove(dir: -1 | 1, event: Event): void {
-    const index = this.options().findIndex((o) => o.value === this.value());
-    const el = this.tabs()[index + dir]?.nativeElement;
+    const index = this.tabs().findIndex((o) => o.value === this.value());
+    const el = this.tabElements()[index + dir]?.nativeElement;
     if (el == null) return;
     el.click();
     el.scrollIntoView({ block: 'nearest' });

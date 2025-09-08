@@ -18,6 +18,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
 import { Select } from '../select/select';
+import { TabData } from '../tabs/tab-data';
 import { Tabs } from '../tabs/tabs';
 import { Tooltip } from '../tooltip/tooltip';
 import { PickerData } from './picker-data';
@@ -101,9 +102,9 @@ export class PickerDialog {
     return result;
   });
 
-  readonly categoryOptions = computed(() =>
+  readonly categoryTabs = computed(() =>
     Object.keys(this.categoryRows()).map(
-      (k): Option => ({ label: this.data().categoryRecord[k].name, value: k }),
+      (k): TabData => ({ label: this.data().categoryRecord[k].name, value: k }),
     ),
   );
 

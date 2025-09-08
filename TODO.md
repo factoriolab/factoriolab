@@ -24,12 +24,14 @@
 
 - Optimize so that store / router sync are not part of initial bundle?
 - ::view-transition-new, ::view-transition-old
+- Analyze and improve Lighthouse score
 
 ## General
 
 - Remove usages of $ Observable suffix?
 - Re-check readonly / access modifiers across all files
 - Re-check mobile view
-- Re-check light theme
+- Re-check light theme (+ icon invert)
 - Re-check translations are being used
 - Apply sorting to tailwind classes in component files
+- Update dialogs

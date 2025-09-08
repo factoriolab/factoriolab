@@ -50,10 +50,7 @@ import { Message } from './message';
   ],
   templateUrl: './objectives.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class:
-      'flex flex-col p-1 sm:p-3 lg:p-6 border-b border-gray-700 gap-1.5 lg:gap-3',
-  },
+  host: { class: 'flex flex-col p-1 sm:p-3 lg:p-6 gap-1.5 lg:gap-3' },
 })
 export class Objectives extends ObjectiveForm {
   protected readonly conversion = inject(Conversion);

@@ -15,24 +15,31 @@
   class="relative inline-flex grow overflow-hidden scroll-smooth"
   (scrollend)="onScrollEnd()"
 >
-  @for (opt of options(); track opt.value) {
+  @for (opt of tabs(); track opt.value) {
     <a
       #tab
-      class="flex cursor-pointer items-center gap-1 border-b-2 border-gray-700 p-2"
+      class="flex cursor-pointer items-center gap-2 border-b-2 border-gray-700 px-3 py-2"
       role="tab"
       aria-hidden="true"
+      [routerLink]="opt.routerLink"
+      routerLinkActive
+      queryParamsHandling="preserve"
+      (isActiveChange)="$event ? value.set(opt.value) : null"
       [title]="scroll.scrollWidth + ' ' + scroll.clientWidth"
       [class]="
         opt.value === value()
           ? 'text-brand-500 group-focus-visible:outline-brand-500 -outline-offset-1 group-focus-visible:outline'
-          : ''
+          : 'hover:text-brand-500'
       "
-      (click)="setValue(opt.value)"
+      (click)="value.set(opt.value)"
     >
-      @if (type(); as type) {
-        <lab-icon [type]="type" [value]="iconLocator()(opt.value)"></lab-icon>
+      @if (opt.faIcon) {
+        <fa-icon [icon]="opt.faIcon"></fa-icon>
       }
-      <span class="hidden font-semibold lg:line-clamp-1">{{
+      @if (type(); as type) {
+        <lab-icon [type]="type" [value]="opt.icon ?? opt.value"></lab-icon>
+      }
+      <span class="font-semibold lg:line-clamp-1" [class.hidden]="!!type()">{{
         opt.label | translate
       }}</span>
     </a>
