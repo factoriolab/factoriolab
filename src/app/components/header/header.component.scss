@@ -77,6 +77,20 @@
     right: 0;
     left: unset !important;
   }
+
+  .language-selector {
+    .p-dropdown-label {
+      color: var(--text-color);
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .language-selector {
+    position: absolute !important;
+    top: 0.5rem !important;
+    right: 4.5rem !important;
+  }
 }
 
 a {
