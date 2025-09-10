@@ -20,16 +20,6 @@ export class App {
   private readonly windowClient = inject(WindowClient);
 
   constructor() {
-    this.confirm.show({
-      header: 'app.updateAvailable',
-      message: 'app.updateAvailableMessage',
-      icon: faRotate,
-      actions: [
-        { text: 'cancel', value: false },
-        { text: 'ok', value: true },
-      ],
-    });
-
     combineLatest([
       this.swUpdate.unrecoverable.pipe(
         switchMap(() =>
