@@ -189,6 +189,7 @@
       "machines": "機械",
       "pollution": "汚染",
       "power": "電力",
+      "rockets": "ロケット",
       "tree": "ツリー",
       "wagons": "貨物車両"
     },
@@ -254,6 +255,9 @@
       "pollutionPerHour": "汚染/h",
       "pollutionPerMinute": "汚染/m",
       "pollutionPerSecond": "汚染/s",
+      "rocketsPerSecond": "ロケット/s",
+      "rocketsPerMinute": "ロケット/m",
+      "rocketsPerHour": "ロケット/h",
       "wagonsPerHour": "貨物車両/h",
       "wagonsPerMinute": "貨物車両/m",
       "wagonsPerSecond": "貨物車両/s"

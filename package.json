@@ -41,6 +41,7 @@
     "@sideway/formula": "^3.0.1",
     "class-variance-authority": "^0.7.1",
     "d3": "^7.9.0",
+    "file-saver": "^2.0.5",
     "glpk-ts": "^0.0.11",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
@@ -52,6 +53,7 @@
     "@semantic-release/exec": "^7.1.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/d3": "^7.4.3",
+    "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~5.1.0",
     "angular-eslint": "^20.1.0",
     "bun": "^1.2.19",

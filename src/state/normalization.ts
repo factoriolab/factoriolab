@@ -164,6 +164,7 @@ export class Normalization {
     if (noItems) {
       delete step.belts;
       delete step.wagons;
+      delete step.rockets;
     } else if (step.itemId != null) {
       const itemSettings = itemsState[step.itemId];
       const belt = itemSettings.beltId;
@@ -183,6 +184,12 @@ export class Normalization {
           );
         } else
           step.wagons = step.items.div(data.fluidWagonRecord[wagon].capacity);
+      }
+
+      if (step.items != null) {
+        const item = data.itemRecord[step.itemId];
+        if (item.rocketCapacity)
+          step.rockets = step.items.div(item.rocketCapacity);
       }
     }
   }
@@ -248,6 +255,7 @@ export class Normalization {
 
     if (step.surplus) step.surplus = step.surplus.mul(dispRateVal);
     if (step.wagons) step.wagons = step.wagons.mul(dispRateVal);
+    if (step.rockets) step.rockets = step.rockets.mul(dispRateVal);
     if (step.pollution) step.pollution = step.pollution.mul(dispRateVal);
     if (step.output) step.output = step.output.mul(dispRateVal);
   }

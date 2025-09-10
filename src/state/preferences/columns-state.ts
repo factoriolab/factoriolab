@@ -8,6 +8,7 @@ export type ColumnKey =
   | 'items'
   | 'belts'
   | 'wagons'
+  | 'rockets'
   | 'machines'
   | 'beacons'
   | 'power'
@@ -35,6 +36,7 @@ export const columnsInfo: ColumnsInfo = {
   items: { hasPrecision: true },
   belts: { hasPrecision: true },
   wagons: { hasPrecision: true, flag: true },
+  rockets: { hasPrecision: true, flag: true },
   machines: { hasPrecision: true },
   beacons: { flag: true },
   power: { hasPrecision: true, flag: true },

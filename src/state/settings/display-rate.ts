@@ -18,6 +18,7 @@ export interface DisplayRateInfo {
   suffix: string;
   itemsLabel: string;
   wagonsLabel: string;
+  rocketsLabel: string;
   pollutionLabel: string;
   value: Rational;
 }
@@ -28,6 +29,7 @@ export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
     suffix: 'options.displayRate.perSecondSuffix',
     itemsLabel: 'options.objectiveUnit.itemsPerSecond',
     wagonsLabel: 'options.objectiveUnit.wagonsPerSecond',
+    rocketsLabel: 'options.objectiveUnit.rocketsPerSecond',
     pollutionLabel: 'options.objectiveUnit.pollutionPerSecond',
     value: rational.one,
   },
@@ -36,6 +38,7 @@ export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
     suffix: 'options.displayRate.perMinuteSuffix',
     itemsLabel: 'options.objectiveUnit.itemsPerMinute',
     wagonsLabel: 'options.objectiveUnit.wagonsPerMinute',
+    rocketsLabel: 'options.objectiveUnit.rocketsPerMinute',
     pollutionLabel: 'options.objectiveUnit.pollutionPerMinute',
     value: rational(60n),
   },
@@ -44,6 +47,7 @@ export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
     suffix: 'options.displayRate.perHourSuffix',
     itemsLabel: 'options.objectiveUnit.itemsPerHour',
     wagonsLabel: 'options.objectiveUnit.wagonsPerHour',
+    rocketsLabel: 'options.objectiveUnit.rocketsPerHour',
     pollutionLabel: 'options.objectiveUnit.pollutionPerHour',
     value: rational(3600n),
   },

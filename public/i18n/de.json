@@ -164,7 +164,8 @@
       "pollution": "Umweltverschmutzung",
       "power": "Strom",
       "tree": "Baum",
-      "wagons": "Wagons"
+      "wagons": "Wagons",
+      "rockets": "Raketen"
     },
     "displayRate": {
       "perHour": "Teile pro Stunde",
@@ -213,6 +214,9 @@
       "pollutionPerHour": "Umweltverschmutzung/h",
       "pollutionPerMinute": "Umweltverschmutzung/min",
       "pollutionPerSecond": "Umweltverschmutzung/s",
+      "rocketsPerSecond": "Raketen/s",
+      "rocketsPerMinute": "Raketen/min",
+      "rocketsPerHour": "Raketen/h",
       "wagonsPerHour": "Wagons/h",
       "wagonsPerMinute": "Wagons/min",
       "wagonsPerSecond": "Wagons/s"

@@ -1,0 +1,19 @@
+<div class="flex gap-1 sm:gap-2">
+  @if (dialogData.icon; as icon) {
+    <fa-icon size="xl" [icon]="icon"></fa-icon>
+  }
+  <p>{{ dialogData.message | translate }}</p>
+</div>
+
+<div class="flex justify-end gap-1 sm:gap-2">
+  @for (action of dialogData.actions; track action.value; let last = $last) {
+    <button
+      type="button"
+      labButton
+      [color]="action.color ?? ($last ? 'brand' : 'gray')"
+      [faIcon]="action.icon"
+      [text]="action.text"
+      (click)="dialogRef.close(action.value)"
+    ></button>
+  }
+</div>

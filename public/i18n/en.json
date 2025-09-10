@@ -215,6 +215,7 @@
       "machines": "Machines",
       "pollution": "Pollution",
       "power": "Power",
+      "rockets": "Rockets",
       "tree": "Tree",
       "wagons": "Wagons"
     },
@@ -284,6 +285,9 @@
       "pollutionPerHour": "Pollution/h",
       "pollutionPerMinute": "Pollution/m",
       "pollutionPerSecond": "Pollution/s",
+      "rocketsPerSecond": "Rockets/s",
+      "rocketsPerMinute": "Rockets/m",
+      "rocketsPerHour": "Rockets/h",
       "wagonsPerHour": "Wagons/h",
       "wagonsPerMinute": "Wagons/m",
       "wagonsPerSecond": "Wagons/s"

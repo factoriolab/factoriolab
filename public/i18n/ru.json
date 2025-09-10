@@ -182,6 +182,7 @@
       "machines": "Машины",
       "pollution": "Загрязнение",
       "power": "Мощность",
+      "rockets": "Ракеты",
       "tree": "Дерево",
       "wagons": "Вагоны"
     },
@@ -235,6 +236,9 @@
       "pollutionPerHour": "Загрязнение/ч",
       "pollutionPerMinute": "Загрязнение/м",
       "pollutionPerSecond": "Загрязнение/с",
+      "rocketsPerSecond": "Ракеты/с",
+      "rocketsPerMinute": "Ракеты/м",
+      "rocketsPerHour": "Ракеты/ч",
       "wagonsPerHour": "Вагонов/ч",
       "wagonsPerMinute": "Вагонов/м",
       "wagonsPerSecond": "Вагонов/с"

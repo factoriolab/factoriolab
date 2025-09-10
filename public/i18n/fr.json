@@ -99,30 +99,23 @@
   },
   "ok": "OK",
   "options": {
-    "checkbox": "Boite",
     "column": {
       "beacons": "Balises",
       "belts": "Convoyeurs",
+      "checkbox": "Boite",
       "items": "Articles",
       "link": "Lien",
       "machines": "Usines",
-      "options": {
-        "checkbox": "Boite",
-        "pollution": "Pollution",
-        "wagons": "Wagons"
-      },
       "pollution": "Pollution",
       "power": "Energie",
-      "surplus": "Surplus",
+      "rockets": "Fusées",
       "tree": "Arbre",
       "wagons": "Wagons"
     },
     "displayRate": {
-      "options": {
-        "perHourSuffix": "/h",
-        "perMinuteSuffix": "/m",
-        "perSecondSuffix": "/s"
-      },
+      "perHourSuffix": "/h",
+      "perMinuteSuffix": "/m",
+      "perSecondSuffix": "/s",
       "perHour": "Unités par heure",
       "perMinute": "Unités par minute",
       "perSecond": "Unités par seconde"
@@ -167,12 +160,10 @@
       "weight": "Poid"
     },
     "objectiveType": {
-      "options": {
-        "input": "Entrée",
-        "limit": "Limiter",
-        "maximize": "Maximiser",
-        "output": "Sortie"
-      }
+      "input": "Entrée",
+      "limit": "Limiter",
+      "maximize": "Maximiser",
+      "output": "Sortie"
     },
     "objectiveUnit": {
       "belts": "Tapis",
@@ -183,6 +174,9 @@
       "pollutionPerHour": "Pollution/h",
       "pollutionPerMinute": "Pollution/m",
       "pollutionPerSecond": "Pollution/s",
+      "rocketsPerSecond": "Fusées/s",
+      "rocketsPerMinute": "Fusées/m",
+      "rocketsPerHour": "Fusées/h",
       "wagonsPerHour": "Wagons/h",
       "wagonsPerMinute": "Wagons/m",
       "wagonsPerSecond": "Wagons/s"

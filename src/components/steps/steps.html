@@ -1,1 +1,137 @@
-<p>steps works!</p>
+<div class="flex gap-1 sm:gap-2">
+  <button
+    type="button"
+    labButton
+    [faIcon]="faTableColumns"
+    text="columns.header"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faFileArrowDown"
+    text="steps.downloadAsCsv"
+    (click)="exporter.stepsToCsv(objectivesStore.steps())"
+  ></button>
+</div>
+
+<table class="table" cdk-table [dataSource]="objectivesStore.steps()">
+  <ng-container cdkColumnDef="actions">
+    <th cdk-header-cell *cdkHeaderCellDef>-Actions-</th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="checkbox">
+    <th cdk-header-cell *cdkHeaderCellDef>-Checkbox-</th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="tree">
+    <th cdk-header-cell *cdkHeaderCellDef>Tree</th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="items">
+    <th cdk-header-cell *cdkHeaderCellDef colspan="2">Items</th>
+    <td
+      cdk-cell
+      *cdkCellDef="let step; type: Step"
+      class="text-right font-mono whitespace-pre"
+    >
+      @if (step.items) {
+        {{ step.items | rate: settingsStore.columnsState().items.precision }}
+      }
+    </td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="itemId">
+    <th cdk-header-cell *cdkHeaderCellDef class="hidden"></th>
+    <td cdk-cell *cdkCellDef="let step; type: Step">
+      @if (step.itemId) {
+        <lab-icon [value]="step.itemId" type="item"></lab-icon>
+      }
+    </td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="belts">
+    <th cdk-header-cell *cdkHeaderCellDef colspan="2">Belts</th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="beltId">
+    <th cdk-header-cell *cdkHeaderCellDef class="hidden"></th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="wagons">
+    <th cdk-header-cell *cdkHeaderCellDef colspan="2">Wagons</th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="wagonId">
+    <th cdk-header-cell *cdkHeaderCellDef class="hidden"></th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="rockets">
+    <th cdk-header-cell *cdkHeaderCellDef colspan="2">Rockets</th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="rocketId">
+    <th cdk-header-cell *cdkHeaderCellDef class="hidden"></th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="machines">
+    <th cdk-header-cell *cdkHeaderCellDef colspan="2">Machines</th>
+    <td
+      cdk-cell
+      *cdkCellDef="let step; type: Step"
+      class="text-right font-mono whitespace-pre"
+    >
+      @if (step.machines) {
+        {{
+          step.machines | rate: settingsStore.columnsState().machines.precision
+        }}
+      }
+    </td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="machineId">
+    <th cdk-header-cell *cdkHeaderCellDef class="hidden"></th>
+    <td cdk-cell *cdkCellDef="let step; type: Step">
+      @if (step.recipeId) {
+        <lab-icon [value]="step.recipeId" type="recipe"></lab-icon>
+      }
+      @if (step.recipeSettings?.machineId; as machineId) {
+        <lab-icon [value]="machineId" type="item"></lab-icon>
+      }
+    </td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="beacons">
+    <th cdk-header-cell *cdkHeaderCellDef>Beacons</th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="power">
+    <th cdk-header-cell *cdkHeaderCellDef>Power</th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="pollution">
+    <th cdk-header-cell *cdkHeaderCellDef>Pollution</th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <ng-container cdkColumnDef="link">
+    <th cdk-header-cell *cdkHeaderCellDef>-Link-</th>
+    <td cdk-cell *cdkCellDef="let step"></td>
+  </ng-container>
+
+  <tr cdk-header-row *cdkHeaderRowDef="settingsStore.visibleColumns()"></tr>
+  <tr
+    cdk-row
+    *cdkRowDef="let row; columns: settingsStore.visibleColumns()"
+  ></tr>
+</table>
