@@ -5,6 +5,10 @@
 - Adjusted recipe effects (used in list)
 - Item entity details
 
+## Button
+
+- Transition colors causing flash white border
+
 ## Icon
 
 - Sum icon?
