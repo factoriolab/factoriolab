@@ -18,6 +18,7 @@
 
 - Need to pass in defaults where relevant using dialog data
 - Multiselect support
+- Should not have min height?
 
 ## Translate
 
@@ -38,4 +39,3 @@
 - Re-check light theme (+ icon invert)
 - Re-check translations are being used
 - Apply sorting to tailwind classes in component files
-- Update dialogs

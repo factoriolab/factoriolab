@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
 
-import { idGuard } from './id-guard';
+import { idGuard } from './id/id-guard';
 import { landingGuard } from './landing/landing-guard';
 
 export const routes: Routes = [
   {
     path: ':id',
     canActivate: [idGuard],
+    loadComponent: () => import('./id/id').then((c) => c.Id),
     children: [
       {
         path: '',

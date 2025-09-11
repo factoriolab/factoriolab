@@ -47,7 +47,5 @@ export const idGuard: CanActivateFn = (route) => {
       return router.createUrlTree(['tta']);
   }
 
-  routerSync.route$.next(route);
-
   return true;
 };

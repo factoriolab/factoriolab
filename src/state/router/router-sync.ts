@@ -1,7 +1,8 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { EventType, Router } from '@angular/router';
+import { ActivatedRoute, EventType, Router } from '@angular/router';
 import {
   audit,
+  combineLatest,
   first,
   firstValueFrom,
   map,
@@ -108,7 +109,7 @@ export class RouterSync {
   // Current hashing algorithm version
   version = ZipVersion.Version11;
   zipTail: LabParams = { v: this.version };
-  route$ = new Subject<{ params: Params; queryParams: Params }>();
+  route$ = new Subject<ActivatedRoute>();
   ready = signal(false);
   navigating$ = this.router.events.pipe(
     map(
@@ -135,7 +136,13 @@ export class RouterSync {
   constructor() {
     this.route$
       .pipe(
-        // audit(() => this.navigating$.pipe(first((n) => !n))),
+        switchMap((r) =>
+          combineLatest({
+            params: r.params,
+            queryParams: r.queryParams,
+          }),
+        ),
+        audit(() => this.navigating$.pipe(first((n) => !n))),
         switchMap(async ({ params, queryParams }) => {
           queryParams = await this.unzipQueryParams(queryParams);
           return { params, queryParams };
