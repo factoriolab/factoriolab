@@ -6,13 +6,15 @@
     text="columns.header"
     (click)="columns.show()"
   ></button>
-  <button
-    type="button"
-    labButton
-    [faIcon]="faFileArrowDown"
-    text="steps.downloadAsCsv"
-    (click)="exporter.stepsToCsv(objectivesStore.steps())"
-  ></button>
+  @if (objectivesStore.steps().length) {
+    <button
+      type="button"
+      labButton
+      [faIcon]="faFileArrowDown"
+      text="steps.downloadAsCsv"
+      (click)="exporter.stepsToCsv(objectivesStore.steps())"
+    ></button>
+  }
 </div>
 
 <table class="table" cdk-table [dataSource]="objectivesStore.steps()">
