@@ -48,11 +48,7 @@ import { DatasetsStore } from '../datasets/datasets-store';
 import { Hydration } from '../hydration';
 import { ModuleSettings } from '../module-settings';
 import { objectiveUnitOptions } from '../objectives/objective-unit';
-import {
-  columnOptions,
-  gameColumnsState,
-  initialColumnsState,
-} from '../preferences/columns-state';
+import { columnOptions, gameColumnsState } from '../preferences/columns-state';
 import { linkValueOptions } from '../preferences/link-value';
 import { PreferencesStore } from '../preferences/preferences-store';
 import { Store } from '../store';
@@ -166,7 +162,7 @@ export class SettingsStore extends Store<SettingsState> {
   columnsState = computed(() => {
     const data = this.dataset();
     const columns = this.preferencesStore.columns();
-    return gameColumnsState(spread(initialColumnsState, columns), data.flags);
+    return gameColumnsState(columns, data.flags);
   });
 
   visibleColumns = computed(() => {

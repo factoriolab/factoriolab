@@ -2,10 +2,10 @@ import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
-import { faRotate } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faRotate, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { combineLatest, filter, switchMap } from 'rxjs';
 
-import { Confirm } from '~/components/confirm-dialog/confirm';
+import { Confirm } from '~/components/confirm/confirm';
 import { WindowClient } from '~/window/window-client';
 
 @Component({
@@ -27,7 +27,7 @@ export class App {
             header: 'app.updateRequired',
             message: 'app.updateRequiredMessage',
             icon: faRotate,
-            actions: [{ text: 'ok' }],
+            actions: [{ text: 'ok', icon: faCheck }],
           }),
         ),
       ),
@@ -39,8 +39,8 @@ export class App {
             message: 'app.updateAvailableMessage',
             icon: faRotate,
             actions: [
-              { text: 'cancel', value: false },
-              { text: 'ok', value: true },
+              { text: 'cancel', value: false, icon: faXmark },
+              { text: 'ok', value: true, icon: faCheck },
             ],
           }),
         ),

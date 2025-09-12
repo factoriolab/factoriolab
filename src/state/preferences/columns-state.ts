@@ -79,6 +79,16 @@ export function gameColumnsState(
   columnsState: ColumnsState,
   flags: Set<Flag>,
 ): ColumnsState {
+  // Apply all defaults
+  columnsState = spread(initialColumnsState, columnsState);
+
+  // Delete any keys that are not valid
+  const oldKeys = Object.keys(columnsState) as ColumnKey[];
+  oldKeys
+    .filter((c) => !initialColumnsState[c])
+    .forEach((c) => delete columnsState[c]);
+
+  // Hide any columns that are not relevant to the current game
   allColumns
     .filter((c) => columnsInfo[c].flag && !flags.has(c as Flag))
     .forEach((c) => {
@@ -88,4 +98,12 @@ export function gameColumnsState(
     });
 
   return columnsState;
+}
+
+export function copyColumnsState(value: ColumnsState): ColumnsState {
+  const keys = Object.keys(value) as ColumnKey[];
+  return keys.reduce((s, c) => {
+    s[c] = spread(value[c]);
+    return s;
+  }, {} as ColumnsState);
 }

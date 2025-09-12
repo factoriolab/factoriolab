@@ -38,4 +38,5 @@
 - Re-check mobile view
 - Re-check light theme (+ icon invert)
 - Re-check translations are being used
+- Re-check a11y
 - Apply sorting to tailwind classes in component files

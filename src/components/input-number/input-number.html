@@ -1,7 +1,7 @@
 <input
   type="text"
   [(ngModel)]="text"
-  class="input text-right group-[.ng-invalid]:border-red-500 group-[.ng-invalid]:outline-red-500 focus:z-2"
+  class="input group-[.ng-invalid]:border-red-500 group-[.ng-invalid]:outline-red-500"
   [class.rounded-none]="!rounded()"
   [disabled]="disabled()"
   (input)="onChange($event)"

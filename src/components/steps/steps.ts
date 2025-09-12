@@ -12,6 +12,7 @@ import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { SettingsStore } from '~/state/settings/settings-store';
 
 import { Button } from '../button/button';
+import { Columns } from '../columns/columns';
 import { Icon } from '../icon/icon';
 import { TypeSafeCdkCellDef } from '../type-safe-cdk-cell-def/type-safe-cell-def';
 
@@ -23,6 +24,7 @@ import { TypeSafeCdkCellDef } from '../type-safe-cdk-cell-def/type-safe-cell-def
   host: { class: 'flex flex-col gap-1 sm:gap-2' },
 })
 export class Steps {
+  protected readonly columns = inject(Columns);
   protected readonly exporter = inject(Exporter);
   protected readonly objectivesStore = inject(ObjectivesStore);
   protected readonly settingsStore = inject(SettingsStore);

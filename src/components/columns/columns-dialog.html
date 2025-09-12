@@ -1,0 +1,137 @@
+<div class="overflow-auto">
+  <table
+    class="table w-sm"
+    cdk-table
+    [dataSource]="settingsStore.columnOptions()"
+  >
+    <ng-container cdkColumnDef="visibility">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ 'columns.visibility' | translate }}
+      </th>
+      <td cdk-cell *cdkCellDef="let column; type: OptionColumn">
+        <div
+          class="flex items-center gap-2"
+          [class.opacity-40]="column.disabled"
+        >
+          <input
+            [attr.id]="column.value"
+            type="checkbox"
+            class="checkbox"
+            step="1"
+            [(ngModel)]="value[column.value].show"
+            [disabled]="!!column.disabled"
+            (ngModelChange)="ref.markForCheck()"
+          />
+          <label [for]="column.value">{{ column.label | translate }}</label>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="decimals">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ 'columns.decimals' | translate }}
+      </th>
+      <td
+        cdk-cell
+        *cdkCellDef="let column; type: OptionColumn"
+        [attr.colspan]="
+          columnsInfo[column.value].hasPrecision && value[column.value].show
+            ? 1
+            : 3
+        "
+        [class.text-center]="
+          !columnsInfo[column.value].hasPrecision || !value[column.value].show
+        "
+        class="w-20"
+      >
+        @if (!columnsInfo[column.value].hasPrecision) {
+          {{ 'columns.notApplicable' | translate }}
+        } @else if (!value[column.value].show) {
+          {{ 'columns.hidden' | translate }}
+        } @else {
+          <input
+            type="number"
+            class="input"
+            [(ngModel)]="value[column.value].precision"
+          />
+        }
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="fractions">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ 'columns.fractions' | translate }}
+      </th>
+      <td
+        cdk-cell
+        *cdkCellDef="let column; type: OptionColumn"
+        [class.hidden]="
+          !columnsInfo[column.value].hasPrecision || !value[column.value].show
+        "
+        class="text-center"
+      >
+        <input
+          type="checkbox"
+          class="checkbox"
+          [ngModel]="value[column.value].precision == null"
+          (ngModelChange)="value[column.value].precision = $event ? null : 1"
+        />
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="example">
+      <th cdk-header-cell *cdkHeaderCellDef>
+        {{ 'columns.example' | translate }}
+      </th>
+      <td
+        cdk-cell
+        *cdkCellDef="let column; type: OptionColumn"
+        class="font-mono"
+        [class.hidden]="
+          !columnsInfo[column.value].hasPrecision || !value[column.value].show
+        "
+      >
+        {{ value[column.value].precision | precisionExample }}
+      </td>
+    </ng-container>
+
+    <tr
+      cdk-header-row
+      *cdkHeaderRowDef="['visibility', 'decimals', 'fractions', 'example']"
+    ></tr>
+    <tr
+      cdk-row
+      *cdkRowDef="
+        let row;
+        columns: ['visibility', 'decimals', 'fractions', 'example']
+      "
+    ></tr>
+  </table>
+</div>
+
+<div class="flex justify-end gap-1 sm:gap-2">
+  @if (modified) {
+    <button
+      type="button"
+      labButton
+      text="reset"
+      [faIcon]="faRotateLeft"
+      (click)="reset()"
+    ></button>
+  }
+  <button
+    type="button"
+    labButton
+    text="ok"
+    [faIcon]="faCheck"
+    color="brand"
+    (click)="save()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    text="cancel"
+    [faIcon]="faXmark"
+    (click)="dialogRef.close()"
+  ></button>
+</div>
