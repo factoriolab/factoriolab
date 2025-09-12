@@ -72,7 +72,7 @@ const host = cva(
     '[attr.aria-disabled]': 'disabled() ? "true" : null',
     '[attr.aria-controls]': 'opened() ? id() + "-listbox" : null',
     '[attr.aria-expanded]': 'opened()',
-    '[attr.aria-labelledby]': 'formField?.labelId ?? null',
+    '[attr.aria-labelledby]': 'labelledBy() ?? formField?.labelId ?? null',
     '(keydown)': 'toggle($event)',
     '(click)': 'toggle()',
   },
@@ -107,6 +107,7 @@ export class Select<T = unknown> extends Control<T> {
   readonly filter = input<boolean>(false);
   readonly iconOnly = input<boolean>(false);
   readonly iconLocator = input<(value: T) => string>((v) => v as string);
+  readonly labelledBy = input<string>();
 
   readonly hostClass = computed(() =>
     host({

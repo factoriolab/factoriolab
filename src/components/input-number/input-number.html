@@ -3,6 +3,7 @@
   [(ngModel)]="text"
   class="input group-[.ng-invalid]:border-red-500 group-[.ng-invalid]:outline-red-500"
   [class.rounded-none]="!rounded()"
+  [attr.aria-labelledby]="labelledBy()"
   [disabled]="disabled()"
   (input)="onChange($event)"
   (blur)="onChange($event)"

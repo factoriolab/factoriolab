@@ -157,6 +157,7 @@
   },
   "game": "Game",
   "header": {
+    "selectGame": "Select game",
     "resetTooltip": "Click to reset",
     "discord": "Discord",
     "source": "Source",

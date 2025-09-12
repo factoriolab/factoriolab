@@ -7,15 +7,21 @@
       <span class="hidden basis-2/5 px-1 text-sm text-gray-300 md:block">{{
         'objectives.target' | translate
       }}</span>
-      <span class="basis-1/4 px-1 text-sm text-gray-300 md:basis-1/5">{{
-        'objectives.quantity' | translate
-      }}</span>
-      <span class="basis-3/8 px-1 text-sm text-gray-300 md:basis-1/5">{{
-        'objectives.units' | translate
-      }}</span>
-      <span class="basis-3/8 px-1 text-sm text-gray-300 md:basis-1/5">{{
-        'objectives.type' | translate
-      }}</span>
+      <span
+        id="quantity-label"
+        class="basis-1/4 px-1 text-sm text-gray-300 md:basis-1/5"
+        >{{ 'objectives.quantity' | translate }}</span
+      >
+      <span
+        id="units-label"
+        class="basis-3/8 px-1 text-sm text-gray-300 md:basis-1/5"
+        >{{ 'objectives.units' | translate }}</span
+      >
+      <span
+        id="type-label"
+        class="basis-3/8 px-1 text-sm text-gray-300 md:basis-1/5"
+        >{{ 'objectives.type' | translate }}</span
+      >
       <div class="invisible min-w-9"></div>
     </div>
 
@@ -66,6 +72,7 @@
               ></button>
               <lab-input-number
                 class="-ms-px basis-1/4 md:basis-1/5"
+                labelledBy="quantity-label"
                 [rounded]="false"
                 [ngModel]="objective.value"
                 (ngModelChange)="
@@ -74,6 +81,7 @@
               ></lab-input-number>
               <lab-select
                 class="-ms-px basis-3/8 md:basis-1/5"
+                labelledBy="units-label"
                 [rounded]="false"
                 [options]="unitOptions()"
                 [ngModel]="objective.unit"
@@ -81,6 +89,7 @@
               ></lab-select>
               <lab-select
                 class="-ms-px basis-3/8 md:basis-1/5"
+                labelledBy="type-label"
                 [rounded]="false"
                 [options]="typeOptions"
                 [ngModel]="objective.type"
@@ -129,17 +138,20 @@
       ></button>
       <lab-input-number
         class="-ms-px basis-1/4 md:basis-1/5"
+        labelledBy="quantity-label"
         [rounded]="false"
         [(ngModel)]="value"
       ></lab-input-number>
       <lab-select
         class="-ms-px basis-3/8 md:basis-1/5"
+        labelledBy="units-label"
         [rounded]="false"
         [(ngModel)]="unit"
         [options]="unitOptions()"
       ></lab-select>
       <lab-select
         class="-ms-px basis-3/8 md:basis-1/5"
+        labelledBy="type-label"
         [rounded]="false"
         [(ngModel)]="type"
         [options]="typeOptions"
@@ -171,11 +183,13 @@
     </div>
   </div>
   <div class="hidden items-end lg:flex">
-    <lab-select
-      [ngModel]="settingsStore.displayRate()"
-      [options]="displayRateOptions"
-      (ngModelChange)="settingsStore.apply({ displayRate: $event })"
-    ></lab-select>
+    <lab-form-field label="settings.displayRate">
+      <lab-select
+        [ngModel]="settingsStore.displayRate()"
+        [options]="displayRateOptions"
+        (ngModelChange)="settingsStore.apply({ displayRate: $event })"
+      ></lab-select>
+    </lab-form-field>
   </div>
 </div>
 

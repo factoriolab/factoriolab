@@ -18,6 +18,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
+import { FormField } from '~/components/form-field/form-field';
 import { InputNumber } from '~/components/input-number/input-number';
 import { ObjectiveForm } from '~/components/objective-form';
 import { Select } from '~/components/select/select';
@@ -47,6 +48,7 @@ import { Message } from './message';
     TranslatePipe,
     Tooltip,
     Message,
+    FormField,
   ],
   templateUrl: './objectives.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

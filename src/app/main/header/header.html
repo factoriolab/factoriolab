@@ -49,6 +49,7 @@
     <lab-select
       type="system"
       class="w-11 rounded-l-none"
+      [attr.aria-label]="'header.selectGame' | translate"
       [iconOnly]="true"
       [options]="gameOptions()"
       (valueChange)="setGame($event)"
