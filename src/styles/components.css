@@ -54,7 +54,7 @@
     td,
     th {
       border-bottom: 1px solid var(--color-gray-700);
-      padding-block: calc(var(--spacing) * 1.5);
+      padding-block: calc(var(--spacing) * 1);
       padding-inline: calc(var(--spacing) * 2);
       height: 49px;
     }

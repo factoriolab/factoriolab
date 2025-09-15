@@ -24,7 +24,7 @@ export interface DialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex flex-col bg-gray-950 border border-gray-700 w-dvw-1 sm:w-dvw-3 lg:w-auto rounded-xs starting:opacity-0 starting:translate-y-40 transition-all',
+      'flex flex-col bg-gray-950 border border-gray-700 w-dvw-1 sm:w-dvw-3 lg:w-auto rounded-xs starting:opacity-0 starting:scale-75 transition-all',
   },
 })
 export class Dialog extends CdkDialogContainer implements OnInit {
