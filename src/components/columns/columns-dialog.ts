@@ -1,5 +1,4 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { CdkTableModule } from '@angular/cdk/table';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,19 +24,11 @@ import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
-import { TypeSafeCdkCellDef } from '../type-safe-cdk-cell-def/type-safe-cell-def';
 import { PrecisionExamplePipe } from './precision-example-pipe';
 
 @Component({
   selector: 'lab-columns-dialog',
-  imports: [
-    FormsModule,
-    CdkTableModule,
-    Button,
-    PrecisionExamplePipe,
-    TranslatePipe,
-    TypeSafeCdkCellDef,
-  ],
+  imports: [FormsModule, Button, PrecisionExamplePipe, TranslatePipe],
   templateUrl: './columns-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
