@@ -17,14 +17,98 @@
   }
 </div>
 
-<table class="table" cdk-table [dataSource]="objectivesStore.steps()">
+<table class="table">
+  <thead>
+    <tr>
+      <th><!-- Row Actions --></th>
+      @if (cols().checkbox.show) {
+        <th>
+          <fa-icon [icon]="faSquareCheck"></fa-icon>
+        </th>
+      }
+      <th>id</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (step of objectivesStore.steps(); track step.id) {
+      <tr>
+        <td class="w-0">
+          <div class="hidden" [id]="'step_' + step.id"></div>
+          @for (
+            item of objectivesStore.stepDetails()[step.id].tabs;
+            track item.label
+          ) {
+            <div
+              [id]="'step_' + step.id + '_' + item.label"
+              class="hidden"
+            ></div>
+          }
+          <button
+            type="button"
+            class="*:transition-transform"
+            [class.*:rotate-90]="expandedSteps().has(step.id)"
+            labButton
+            [faIcon]="faAngleRight"
+            [border]="false"
+            [attr.aria-label]="'steps.showDetails' | translate"
+            labTooltip="steps.showDetails"
+            labTooltipPosition="adjacent"
+            (click)="toggleStep(step)"
+          ></button>
+        </td>
+        @if (cols().checkbox.show) {
+          <td><fa-icon [icon]="faSquareCheck"></fa-icon></td>
+        }
+        <td>{{ step.id }}</td>
+      </tr>
+      @if (expandedSteps().has(step.id)) {
+        <tr class="transition-all duration-2000" animate.enter="opacity-0">
+          <td colspan="100">expansion row</td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>
+
+<!-- <table
+  class="table"
+  cdk-table
+  [dataSource]="objectivesStore.steps()"
+  multiTemplateDataRows
+>
   <ng-container cdkColumnDef="actions">
-    <th cdk-header-cell *cdkHeaderCellDef>-Actions-</th>
-    <td cdk-cell *cdkCellDef="let step"></td>
+    <th cdk-header-cell *cdkHeaderCellDef class="w-0"></th>
+    <td cdk-cell *cdkCellDef="let step; type: Step" class="w-0">
+      <div class="hidden" [id]="'step_' + step.id"></div>
+      @for (
+        item of objectivesStore.stepDetails()[step.id].tabs;
+        track item.label
+      ) {
+        <div [id]="'step_' + step.id + '_' + item.label" class="hidden"></div>
+      }
+      <div class="flex h-full items-center justify-center">
+        <button
+          type="button"
+          class="transition-transform"
+          [class.rotate-90]="expandedSteps().has(step.id)"
+          labButton
+          [faIcon]="faAngleRight"
+          [border]="false"
+          [attr.aria-label]="'steps.showDetails' | translate"
+          labTooltip="steps.showDetails"
+          labTooltipPosition="adjacent"
+          (click)="toggleStep(step)"
+        ></button>
+      </div>
+    </td>
   </ng-container>
 
   <ng-container cdkColumnDef="checkbox">
-    <th cdk-header-cell *cdkHeaderCellDef>-Checkbox-</th>
+    <th cdk-header-cell *cdkHeaderCellDef>
+      <div class="flex h-full items-center justify-center">
+        <fa-icon [icon]="faSquareCheck"></fa-icon>
+      </div>
+    </th>
     <td cdk-cell *cdkCellDef="let step"></td>
   </ng-container>
 
@@ -128,7 +212,7 @@
   </ng-container>
 
   <ng-container cdkColumnDef="link">
-    <th cdk-header-cell *cdkHeaderCellDef>-Link-</th>
+    <th cdk-header-cell *cdkHeaderCellDef>()</th>
     <td cdk-cell *cdkCellDef="let step"></td>
   </ng-container>
 
@@ -137,4 +221,4 @@
     cdk-row
     *cdkRowDef="let row; columns: settingsStore.visibleColumns()"
   ></tr>
-</table>
+</table> -->
