@@ -230,5 +230,6 @@ export const data: AppData = {
     'mde',
     'fdy',
     'ows',
+    'spa',
   ],
 };
