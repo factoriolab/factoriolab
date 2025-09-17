@@ -5,7 +5,6 @@ import {
   catchError,
   combineLatest,
   EMPTY,
-  NEVER,
   Observable,
   shareReplay,
   tap,
@@ -60,7 +59,6 @@ export class DataService {
   }
 
   requestData(id: string): Observable<[ModData, ModHash]> {
-    if (!this.hashSet.has(id)) return NEVER;
     /** Setup observable for data */
     if (!this.cacheData[id])
       this.cacheData[id] = combineLatest([
@@ -81,7 +79,6 @@ export class DataService {
   }
 
   requestI18n(id: string, lang: Language): Observable<ModI18n> {
-    if (!this.hashSet.has(id)) return NEVER;
     if (!this.cacheI18n[id]) this.cacheI18n[id] = {};
     if (!this.cacheI18n[id][lang])
       this.cacheI18n[id][lang] = this.http
