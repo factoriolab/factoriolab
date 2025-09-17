@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { faCheck, faRotate, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { combineLatest, filter, switchMap } from 'rxjs';
+import { filter, merge, switchMap } from 'rxjs';
 
 import { Confirm } from '~/components/confirm/confirm';
 import { WindowClient } from '~/window/window-client';
@@ -20,7 +20,7 @@ export class App {
   private readonly windowClient = inject(WindowClient);
 
   constructor() {
-    combineLatest([
+    merge(
       this.swUpdate.unrecoverable.pipe(
         switchMap(() =>
           this.confirm.show({
@@ -46,7 +46,7 @@ export class App {
         ),
         filter((result) => !!result),
       ),
-    ])
+    )
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
         this.windowClient.reload();
