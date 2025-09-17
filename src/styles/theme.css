@@ -72,6 +72,9 @@
   --color-brand-900: var(--color-brand-900, oklch(38.1% 0.137 261.342deg));
   --color-brand-950: var(--color-brand-950, oklch(28.4% 0.0868 263.732deg));
   --color-test: oklch(63.4% 0.206 256deg);
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --font-mono:
     'Roboto Mono', ui-monospace, sfmono-regular, menlo, monaco, consolas,
     'Liberation Mono', 'Courier New', monospace;
