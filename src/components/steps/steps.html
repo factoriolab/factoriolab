@@ -47,8 +47,8 @@
       @if (!focus() && cols().tree.show) {
         <th>{{ 'options.column.tree' | translate }}</th>
       }
-      <!-- Items (Value & Icon) -->
-      <th colspan="2">
+      <!-- Items (Surplus, Value, & Icon) -->
+      <th colspan="3">
         {{ displayRateInfo().itemsLabel | translate }}
       </th>
       <!-- Belts (Value & Icon) -->
@@ -130,17 +130,61 @@
         }
         <!-- Tree -->
         @if (!focus() && cols().tree.show) {
-          <td></td>
+          <td class="py-0">
+            <div class="flex h-12 items-center">
+              @if (tree()[step.id].length) {
+                @for (
+                  trail of tree()[step.id];
+                  track $index;
+                  let first = $first;
+                  let last = $last
+                ) {
+                  <div
+                    class="-z-1 mb-6 self-end border-e-2 border-dotted border-gray-50"
+                    [class]="{
+                      'ms-4.5': first,
+                      'ms-6': !first,
+                      'h-12.5': trail || last,
+                    }"
+                  ></div>
+                }
+                <div class="w-2 border-t-2 border-dotted border-gray-50"></div>
+              }
+              <div class="flex flex-col items-center">
+                @if (step.itemId && step.recipeObjectiveId == null) {
+                  <button
+                    type="button"
+                    labButton
+                    [icon]="step.itemId"
+                    [toggleIcon]="faEyeSlash"
+                    [toggled]="settings().excludedItemIds.has(step.itemId)"
+                    iconType="item"
+                    [border]="false"
+                    [labTooltip]="step.itemId"
+                    labTooltipType="item"
+                    labTooltipPosition="adjacent"
+                    labTooltipAction="steps.excludeItemTooltip"
+                    [attr.aria-label]="'steps.excludeItemTooltip' | translate"
+                    (click)="changeItemExcluded(step.itemId)"
+                  ></button>
+                }
+              </div>
+            </div>
+          </td>
         }
         <!-- Items (Value & Icon) -->
-        <td class="pe-0">
+        <td>
+          @if (step.surplus) {
+            <div
+              class="text-brand-400 flex justify-end font-mono whitespace-pre"
+            >
+              (+{{ step.surplus | rate: cols().items.precision }})
+            </div>
+          }
+        </td>
+        <td class="w-0 pe-0">
           @if (step.items) {
             <div class="flex justify-end font-mono whitespace-pre">
-              @if (step.surplus && step.surplus.nonzero()) {
-                <span class="text-brand-400"
-                  >(+{{ step.surplus | rate: cols().items.precision }})</span
-                >
-              }
               {{ step.items | rate: cols().items.precision }}
             </div>
           }

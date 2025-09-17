@@ -8,6 +8,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import {
   faAngleRight,
+  faEyeSlash,
   faFileArrowDown,
   faRotateLeft,
   faSquareCheck,
@@ -48,11 +49,13 @@ export class Steps {
   protected readonly data = this.recipesStore.adjustedDataset;
   protected readonly displayRateInfo = this.settingsStore.displayRateInfo;
   protected readonly faAngleRight = faAngleRight;
+  protected readonly faEyeSlash = faEyeSlash;
   protected readonly faFileArrowDown = faFileArrowDown;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faSquareCheck = faSquareCheck;
   protected readonly faTableColumns = faTableColumns;
   protected readonly settings = this.settingsStore.settings;
+  protected readonly tree = this.objectivesStore.stepTree;
 
   expandedSteps = signal<Set<string>>(new Set());
 
@@ -96,5 +99,15 @@ export class Steps {
       checkedObjectiveIds: new Set(),
       checkedRecipeIds: new Set(),
     });
+  }
+
+  changeItemExcluded(id: string): void {
+    const value = !this.settings().excludedItemIds.has(id);
+    const excludedItemIds = updateSetIds(
+      id,
+      value,
+      this.settings().excludedItemIds,
+    );
+    this.settingsStore.apply({ excludedItemIds });
   }
 }

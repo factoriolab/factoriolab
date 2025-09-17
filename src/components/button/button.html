@@ -3,9 +3,21 @@
 }
 @if (iconType(); as type) {
   @if (icon(); as icon) {
-    <lab-icon [type]="type" [value]="icon"></lab-icon>
+    <lab-icon
+      [type]="type"
+      [value]="icon"
+      [class.opacity-40]="toggled()"
+      [class.group-hover:opacity-40]="toggleIcon() != null"
+    ></lab-icon>
   }
 }
 @if (text(); as text) {
   <span class="line-clamp-1 grow text-center">{{ text | translate }}</span>
+}
+@if (toggleIcon(); as icon) {
+  <fa-icon
+    class="text-brand-400 absolute group-hover:block"
+    [class.hidden]="!toggled()"
+    [icon]="icon"
+  ></fa-icon>
 }
