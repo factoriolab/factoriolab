@@ -16,7 +16,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Icon } from '../icon/icon';
 
 const host = cva(
-  'overflow-hidden items-center gap-1 transition-colors cursor-pointer focus-visible:outline focus:z-2',
+  'overflow-hidden items-center gap-1 transition-colors cursor-pointer focus-visible:outline focus:z-2 disabled:pointer-events-none',
   {
     variants: {
       color: {

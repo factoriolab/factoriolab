@@ -20,20 +20,76 @@
 <table class="table">
   <thead>
     <tr>
-      <th><!-- Row Actions --></th>
+      <!-- Row Actions -->
+      <th class="w-0"></th>
+      <!-- Checkbox -->
       @if (cols().checkbox.show) {
-        <th>
-          <fa-icon [icon]="faSquareCheck"></fa-icon>
+        <th class="w-0">
+          <div class="flex">
+            @let disabled =
+              !settings().checkedItemIds.size &&
+              !settings().checkedRecipeIds.size &&
+              !settings().checkedObjectiveIds.size;
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'steps.checkedUndoTooltip' | translate"
+              [faIcon]="disabled ? faSquareCheck : faRotateLeft"
+              [labTooltip]="disabled ? '' : 'steps.checkedUndoTooltip'"
+              [disabled]="disabled"
+              [border]="!disabled"
+              (click)="resetChecked()"
+            ></button>
+          </div>
         </th>
       }
-      <th>id</th>
+      <!-- Tree -->
+      @if (!focus() && cols().tree.show) {
+        <th>{{ 'options.column.tree' | translate }}</th>
+      }
+      <!-- Items (Value & Icon) -->
+      <th colspan="2">
+        {{ displayRateInfo().itemsLabel | translate }}
+      </th>
+      <!-- Belts (Value & Icon) -->
+      @if (cols().belts.show) {
+        <th colspan="2">{{ 'options.column.belts' | translate }}</th>
+      }
+      <!-- Wagons (Value & Icon) -->
+      @if (cols().wagons.show) {
+        <th colspan="2">{{ 'options.column.wagons' | translate }}</th>
+      }
+      <!-- Rockets (Value & Icon) -->
+      @if (cols().rockets.show) {
+        <th colspan="2">{{ 'options.column.rockets' | translate }}</th>
+      }
+      <!-- Machines (Value & Icon) -->
+      <th colspan="2">{{ 'options.column.machines' | translate }}</th>
+      <!-- Beacons -->
+      @if (cols().beacons.show) {
+        <th>{{ 'options.column.beacons' | translate }}</th>
+      }
+      <!-- Power -->
+      @if (cols().power.show) {
+        <th>{{ 'options.column.power' | translate }}</th>
+      }
+      <!-- Pollution -->
+      @if (cols().pollution.show) {
+        <th>{{ 'options.column.pollution' | translate }}</th>
+      }
+      <!-- Link -->
+      @if (cols().link.show) {
+        <th></th>
+      }
     </tr>
   </thead>
   <tbody>
     @for (step of objectivesStore.steps(); track step.id) {
+      @let expanded = expandedSteps().has(step.id);
       <tr>
-        <td class="w-0">
-          <div class="hidden" [id]="'step_' + step.id"></div>
+        <!-- Row Actions -->
+        <td>
+          <div [id]="'step_' + step.id" class="hidden"></div>
           @for (
             item of objectivesStore.stepDetails()[step.id].tabs;
             track item.label
@@ -43,182 +99,117 @@
               class="hidden"
             ></div>
           }
-          <button
-            type="button"
-            class="*:transition-transform"
-            [class.*:rotate-90]="expandedSteps().has(step.id)"
-            labButton
-            [faIcon]="faAngleRight"
-            [border]="false"
-            [attr.aria-label]="'steps.showDetails' | translate"
-            labTooltip="steps.showDetails"
-            labTooltipPosition="adjacent"
-            (click)="toggleStep(step)"
-          ></button>
+          <div class="flex">
+            @let tooltip = expanded ? 'steps.hideDetails' : 'steps.showDetails';
+            <button
+              type="button"
+              class="*:transition-transform"
+              [class.*:rotate-90]="expanded"
+              labButton
+              [faIcon]="faAngleRight"
+              [border]="false"
+              [attr.aria-label]="tooltip | translate"
+              [labTooltip]="tooltip"
+              labTooltipPosition="adjacent"
+              (click)="toggleStep(step)"
+            ></button>
+          </div>
         </td>
+        <!-- Checkbox -->
         @if (cols().checkbox.show) {
-          <td><fa-icon [icon]="faSquareCheck"></fa-icon></td>
+          <td>
+            <div class="flex justify-center">
+              <input
+                type="checkbox"
+                class="checkbox"
+                [ngModel]="step.checked"
+                (ngModelChange)="changeStepChecked(step, $event)"
+              />
+            </div>
+          </td>
         }
-        <td>{{ step.id }}</td>
+        <!-- Tree -->
+        @if (!focus() && cols().tree.show) {
+          <td></td>
+        }
+        <!-- Items (Value & Icon) -->
+        <td class="pe-0">
+          @if (step.items) {
+            <div class="flex justify-end font-mono whitespace-pre">
+              @if (step.surplus && step.surplus.nonzero()) {
+                <span class="text-brand-400"
+                  >(+{{ step.surplus | rate: cols().items.precision }})</span
+                >
+              }
+              {{ step.items | rate: cols().items.precision }}
+            </div>
+          }
+        </td>
+        <td class="ps-0">
+          @if (step.itemId) {
+            <div class="flex">
+              <lab-icon [value]="step.itemId" type="item"></lab-icon>
+            </div>
+          }
+        </td>
+        <!-- Belts (Value & Icon) -->
+        @if (cols().belts.show) {
+          <td></td>
+          <td></td>
+        }
+        <!-- Wagons (Value & Icon) -->
+        @if (cols().wagons.show) {
+          <td></td>
+          <td></td>
+        }
+        <!-- Rockets (Value & Icon) -->
+        @if (cols().rockets.show) {
+          <td></td>
+          <td></td>
+        }
+        <!-- Machines (Value & Icon) -->
+        @if (step.recipeSettings?.machineId; as machineId) {
+          <td class="pe-0">
+            @if (
+              step.machines &&
+              step.machines.nonzero() &&
+              !data().machineRecord[machineId].hideRate
+            ) {
+              <div class="flex justify-end font-mono whitespace-pre">
+                {{ step.machines | rate: cols().machines.precision }}
+              </div>
+            }
+          </td>
+          <td class="ps-0">
+            <div class="flex">
+              <lab-icon [value]="machineId" type="item"></lab-icon>
+            </div>
+          </td>
+        } @else {
+          <td colspan="2"></td>
+        }
+        <!-- Beacons -->
+        @if (cols().beacons.show) {
+          <td></td>
+        }
+        <!-- Power -->
+        @if (cols().power.show) {
+          <td></td>
+        }
+        <!-- Pollution -->
+        @if (cols().pollution.show) {
+          <td></td>
+        }
+        <!-- Link -->
+        @if (cols().link.show) {
+          <td></td>
+        }
       </tr>
-      @if (expandedSteps().has(step.id)) {
-        <tr class="transition-all duration-2000" animate.enter="opacity-0">
+      @if (expanded) {
+        <tr class="transition-all" animate.enter="animate-enter-translate-y">
           <td colspan="100">expansion row</td>
         </tr>
       }
     }
   </tbody>
 </table>
-
-<!-- <table
-  class="table"
-  cdk-table
-  [dataSource]="objectivesStore.steps()"
-  multiTemplateDataRows
->
-  <ng-container cdkColumnDef="actions">
-    <th cdk-header-cell *cdkHeaderCellDef class="w-0"></th>
-    <td cdk-cell *cdkCellDef="let step; type: Step" class="w-0">
-      <div class="hidden" [id]="'step_' + step.id"></div>
-      @for (
-        item of objectivesStore.stepDetails()[step.id].tabs;
-        track item.label
-      ) {
-        <div [id]="'step_' + step.id + '_' + item.label" class="hidden"></div>
-      }
-      <div class="flex h-full items-center justify-center">
-        <button
-          type="button"
-          class="transition-transform"
-          [class.rotate-90]="expandedSteps().has(step.id)"
-          labButton
-          [faIcon]="faAngleRight"
-          [border]="false"
-          [attr.aria-label]="'steps.showDetails' | translate"
-          labTooltip="steps.showDetails"
-          labTooltipPosition="adjacent"
-          (click)="toggleStep(step)"
-        ></button>
-      </div>
-    </td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="checkbox">
-    <th cdk-header-cell *cdkHeaderCellDef>
-      <div class="flex h-full items-center justify-center">
-        <fa-icon [icon]="faSquareCheck"></fa-icon>
-      </div>
-    </th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="tree">
-    <th cdk-header-cell *cdkHeaderCellDef>Tree</th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="items">
-    <th cdk-header-cell *cdkHeaderCellDef colspan="2">Items</th>
-    <td
-      cdk-cell
-      *cdkCellDef="let step; type: Step"
-      class="text-right font-mono whitespace-pre"
-    >
-      @if (step.items) {
-        {{ step.items | rate: settingsStore.columnsState().items.precision }}
-      }
-    </td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="itemId">
-    <th cdk-header-cell *cdkHeaderCellDef class="hidden"></th>
-    <td cdk-cell *cdkCellDef="let step; type: Step">
-      @if (step.itemId) {
-        <lab-icon [value]="step.itemId" type="item"></lab-icon>
-      }
-    </td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="belts">
-    <th cdk-header-cell *cdkHeaderCellDef colspan="2">Belts</th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="beltId">
-    <th cdk-header-cell *cdkHeaderCellDef class="hidden"></th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="wagons">
-    <th cdk-header-cell *cdkHeaderCellDef colspan="2">Wagons</th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="wagonId">
-    <th cdk-header-cell *cdkHeaderCellDef class="hidden"></th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="rockets">
-    <th cdk-header-cell *cdkHeaderCellDef colspan="2">Rockets</th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="rocketId">
-    <th cdk-header-cell *cdkHeaderCellDef class="hidden"></th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="machines">
-    <th cdk-header-cell *cdkHeaderCellDef colspan="2">Machines</th>
-    <td
-      cdk-cell
-      *cdkCellDef="let step; type: Step"
-      class="text-right font-mono whitespace-pre"
-    >
-      @if (step.machines) {
-        {{
-          step.machines | rate: settingsStore.columnsState().machines.precision
-        }}
-      }
-    </td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="machineId">
-    <th cdk-header-cell *cdkHeaderCellDef class="hidden"></th>
-    <td cdk-cell *cdkCellDef="let step; type: Step">
-      @if (step.recipeId) {
-        <lab-icon [value]="step.recipeId" type="recipe"></lab-icon>
-      }
-      @if (step.recipeSettings?.machineId; as machineId) {
-        <lab-icon [value]="machineId" type="item"></lab-icon>
-      }
-    </td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="beacons">
-    <th cdk-header-cell *cdkHeaderCellDef>Beacons</th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="power">
-    <th cdk-header-cell *cdkHeaderCellDef>Power</th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="pollution">
-    <th cdk-header-cell *cdkHeaderCellDef>Pollution</th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <ng-container cdkColumnDef="link">
-    <th cdk-header-cell *cdkHeaderCellDef>()</th>
-    <td cdk-cell *cdkCellDef="let step"></td>
-  </ng-container>
-
-  <tr cdk-header-row *cdkHeaderRowDef="settingsStore.visibleColumns()"></tr>
-  <tr
-    cdk-row
-    *cdkRowDef="let row; columns: settingsStore.visibleColumns()"
-  ></tr>
-</table> -->

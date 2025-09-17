@@ -111,7 +111,7 @@ export class Select<T = unknown> extends Control<T> {
 
   readonly hostClass = computed(() =>
     host({
-      opened: this.opened() && !this.hiding(),
+      opened: this.opened(),
       rounded: this.rounded(),
       iconOnly: this.iconOnly(),
     }),
@@ -124,7 +124,6 @@ export class Select<T = unknown> extends Control<T> {
   protected readonly faChevronDown = faChevronDown;
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
 
-  hiding = signal(false);
   filterText = signal('');
   filterLower = computed(() => this.filterText().toLowerCase());
 
@@ -135,13 +134,8 @@ export class Select<T = unknown> extends Control<T> {
     )
       return;
 
-    if (this.opened()) {
-      this.hiding.set(true);
-      this.overlay().nativeElement.addEventListener('transitionend', () => {
-        this.opened.set(false);
-        this.hiding.set(false);
-      });
-    } else {
+    if (this.opened()) this.opened.set(false);
+    else {
       this.opened.set(true);
       this.filterText.set('');
       this.focusAfterOpen(event);

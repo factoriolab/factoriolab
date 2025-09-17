@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Rational, rational } from './rational';
+import { Rational, rational } from '../../rational/rational';
 
 @Pipe({ name: 'rate', standalone: true })
 export class RatePipe implements PipeTransform {
@@ -9,11 +9,16 @@ export class RatePipe implements PipeTransform {
 
     if (precision === -2) {
       const num = Math.round(value.mul(rational(100n)).toNumber());
-      return num.toString();
+      return num.toLocaleString();
     }
 
-    const num = value.toFixed(precision);
-    let result = num.toString();
+    if (value.isInteger()) {
+      let result = value.toLocaleString();
+      if (precision > 0) result += ' '.repeat(precision + 1);
+      return result;
+    }
+
+    let result = value.toLocaleString(precision, true);
     if (precision > 0) {
       /**
        * Check whether value is lower than minimum rounded-up value, and prepend
@@ -21,15 +26,6 @@ export class RatePipe implements PipeTransform {
        */
       const compare = rational(1, Math.pow(10, precision));
       if (value.gt(rational.zero) && value.lt(compare)) result = `<${result}`;
-
-      const split = result.split('.');
-      if (split.length > 1) {
-        if (split[1].length < precision) {
-          const spaces = precision - split[1].length;
-          return result + '0'.repeat(spaces);
-        }
-      } else if (value.isInteger()) return result + ' '.repeat(precision + 1);
-      else return result + '.' + '0'.repeat(precision);
     }
 
     return result;

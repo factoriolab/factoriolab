@@ -3,7 +3,6 @@ import * as formula from '@sideway/formula';
 const MAX_DENOM = 10000000;
 const DIVIDE_BY_ZERO = 'Cannot divide by zero';
 const FLOAT_TOLERANCE = 1e-10;
-const DECIMALS_REGEX = new RegExp(/\d+(\.(\d+))?(e-(\d+))?/);
 
 export function gcd(x: bigint, y: bigint): bigint {
   x = abs(x);
@@ -153,39 +152,21 @@ export class Rational {
     return rational(this.toNumber());
   }
 
-  decimals(): number {
-    const num = this.toNumber();
-    if (num % 1 !== 0) {
-      // Pick apart complex numbers, looking for decimal and negative exponent
-      // 3.33e-6 => ["3.33e-6", ".33", "33", "e-6", "6"]
-      const match = DECIMALS_REGEX.exec(num.toString());
-      let decimals = 0;
-
-      // istanbul ignore else: Regex pattern should match all known number toString formats
-      if (match) {
-        // If decimal portion found, add length
-        if (match[2]) decimals += match[2].length;
-
-        // If negative exponent found, add value
-        if (match[4]) decimals += Number(match[4]);
-      } else console.warn('Number did not match expected pattern', num);
-
-      return decimals;
-    }
-
-    return 0;
-  }
-
   toNumber(): number {
     return Number(this.p) / Number(this.q);
   }
 
-  toFixed(x: number): number {
-    return Number(this.toNumber().toFixed(x));
+  toLocaleString(maximumFractionDigits = 2, fixedDigits = false): string {
+    return this.toNumber().toLocaleString(undefined, {
+      minimumFractionDigits: fixedDigits ? maximumFractionDigits : undefined,
+      maximumFractionDigits,
+      roundingMode: 'ceil',
+    });
   }
 
-  toFixedString(maximumFractionDigits = 2): string {
-    return this.toNumber().toLocaleString(undefined, { maximumFractionDigits });
+  toPrecision(x: number): number {
+    const round = fromNumber(Math.pow(10, x));
+    return this.mul(round).ceil().div(round).toNumber();
   }
 
   toFraction(mixed = true): string {
@@ -208,9 +189,10 @@ export class Rational {
    *   * Specify number to specify number of decimals
    */
   toString(precision?: number | null): string {
-    if (precision) return this.toFixedString(precision);
+    if (precision) return this.toPrecision(precision).toString();
 
-    if (precision === null || this.decimals() > 2)
+    const compare = this.toNumber() * 100;
+    if (precision === null || Math.floor(compare) === compare)
       return this.toFraction(precision !== undefined);
 
     return this.toNumber().toString();

@@ -1,5 +1,17 @@
 # TODO
 
+## Header
+
+- Settings button? To pick language, etc.
+
+## Rational
+
+- Need toLocaleFraction??
+
+## Machine Rate Pipe
+
+- Replace with machine (or recipe?) setting for percentages
+
 ## Tooltip
 
 - Adjusted recipe effects (used in list)

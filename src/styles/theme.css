@@ -72,14 +72,25 @@
   --color-brand-900: var(--color-brand-900, oklch(38.1% 0.137 261.342deg));
   --color-brand-950: var(--color-brand-950, oklch(28.4% 0.0868 263.732deg));
   --color-test: oklch(63.4% 0.206 256deg);
+  --font-sans:
+    'Noto Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-serif: ui-serif, georgia, cambria, 'Times New Roman', times, serif;
+  --font-mono:
+    'Noto Sans Mono', ui-monospace, sfmono-regular, menlo, monaco, consolas,
+    'Liberation Mono', 'Courier New', monospace;
   --text-shadow-solid:
     0 1px 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
     0 -1px 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
     1px 0 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
     -1px 0 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%));
-  --animate-fade-in: fade-in 300ms linear;
+  --animate-delayed-fade-in: delayed-fade-in 300ms linear;
+  --animate-fade-out: fade-out var(--default-transition-duration)
+    var(--default-transition-timing-function);
+  --animate-enter-translate-y: translate-y var(--default-transition-duration)
+    var(--default-transition-timing-function);
 
-  @keyframes fade-in {
+  @keyframes delayed-fade-in {
     0% {
       opacity: 0;
     }
@@ -89,6 +100,30 @@
     }
 
     100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+      scale: 1 1;
+    }
+
+    100% {
+      opacity: 0;
+      scale: 1 0.75;
+    }
+  }
+
+  @keyframes translate-y {
+    0% {
+      transform: translateY(-25%);
+      opacity: 0;
+    }
+
+    100% {
+      transform: translateY(0);
       opacity: 1;
     }
   }

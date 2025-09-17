@@ -24,7 +24,7 @@ const positionVariants = {
 };
 
 const host = cva(
-  'bg-gray-950 border rounded-xs border-gray-700 py-[5px] px-2 animate-fade-in relative max-w-69',
+  'bg-gray-950 border rounded-xs border-gray-700 py-[5px] px-2 animate-delayed-fade-in relative max-w-69',
   {
     variants: positionVariants,
     compoundVariants: [

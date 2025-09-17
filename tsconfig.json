@@ -13,7 +13,7 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "importHelpers": true,
-    "target": "ES2022",
+    "target": "ES2023",
     "module": "preserve",
     "baseUrl": "./",
     "paths": { "~/*": ["src/*"] }

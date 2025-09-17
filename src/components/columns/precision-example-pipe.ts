@@ -9,6 +9,6 @@ const fraction = example.toFraction();
 export class PrecisionExamplePipe implements PipeTransform {
   transform(value: number | null | undefined): string {
     if (value == null) return fraction;
-    return example.toFixedString(value);
+    return example.toLocaleString(value);
   }
 }

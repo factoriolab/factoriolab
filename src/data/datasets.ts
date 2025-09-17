@@ -183,6 +183,7 @@ export const datasets: Datasets = {
     'mde',
     'fdy',
     'ows',
+    'spa',
   ],
 };
 

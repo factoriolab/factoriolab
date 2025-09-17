@@ -165,24 +165,6 @@ export class SettingsStore extends Store<SettingsState> {
     return gameColumnsState(columns, data.flags);
   });
 
-  visibleColumns = computed(() => {
-    const state = this.columnsState();
-    const columns: string[] = ['actions'];
-    if (state.checkbox.show) columns.push('checkbox');
-    if (state.tree.show) columns.push('tree');
-    columns.push('items', 'itemId');
-    if (state.belts.show) columns.push('belts', 'beltId');
-    if (state.wagons.show) columns.push('wagons', 'wagonId');
-    if (state.rockets.show) columns.push('rockets', 'rocketId');
-    columns.push('machines', 'machineId');
-    if (state.beacons.show) columns.push('beacons');
-    if (state.power.show) columns.push('power');
-    if (state.pollution.show) columns.push('pollution');
-    if (state.link.show) columns.push('link');
-
-    return columns;
-  });
-
   settings = computed(() =>
     this.computeSettings(this.state(), this.defaults(), this.dataset()),
   );
