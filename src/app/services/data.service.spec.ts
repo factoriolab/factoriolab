@@ -1,6 +1,6 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { EMPTY } from 'rxjs';
+import { EMPTY, NEVER } from 'rxjs';
 
 import { Language } from '~/models/enum/language';
 import { Mocks, TestModule } from '~/tests';
@@ -58,6 +58,10 @@ describe('DataService', () => {
         .flush('', { status: 404, statusText: 'error' });
       expect(service.error$.next).toHaveBeenCalled();
     });
+
+    it('should handle unrecognized ids', () => {
+      expect(service.requestData('next')).toEqual(NEVER);
+    });
   });
 
   describe('requestI18n', () => {
@@ -81,6 +85,10 @@ describe('DataService', () => {
         .expectOne('data/1.1/i18n/zh.json')
         .flush('', { status: 404, statusText: 'error' });
       expect(service.datasetsSvc.loadI18n).not.toHaveBeenCalled();
+    });
+
+    it('should handle unrecognized ids', () => {
+      expect(service.requestI18n('next', Language.English)).toEqual(NEVER);
     });
   });
 });
