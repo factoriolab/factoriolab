@@ -23,7 +23,6 @@
       routerLinkActive
       queryParamsHandling="preserve"
       (isActiveChange)="$event ? value.set(opt.value) : null"
-      [title]="scroll.scrollWidth + ' ' + scroll.clientWidth"
       [class]="
         opt.value === value()
           ? 'text-brand-500 group-focus-visible:outline-brand-500 -outline-offset-1 group-focus-visible:outline'
