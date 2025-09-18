@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   linkedSignal,
   signal,
@@ -22,6 +23,8 @@ import { TabData } from '../tabs/tab-data';
 import { Tabs } from '../tabs/tabs';
 import { Tooltip } from '../tooltip/tooltip';
 import { PickerData } from './picker-data';
+
+let lastCategory: string | null = null;
 
 @Component({
   selector: 'lab-picker-dialog',
@@ -113,6 +116,7 @@ export class PickerDialog {
     computation: (value, previous) => {
       const keys = Object.keys(value);
       if (previous && keys.includes(previous.value)) return previous.value;
+      if (lastCategory && keys.includes(lastCategory)) return lastCategory;
       return keys[0];
     },
   });
@@ -147,6 +151,8 @@ export class PickerDialog {
     else if (selection != null) {
       this.selectedCategory.set(data[this.recordKey][selection].category);
     }
+
+    effect(() => (lastCategory = this.selectedCategory()));
   }
 
   selectId(id: string): void {

@@ -9,9 +9,9 @@
   <lab-icon type="system" [value]="'q' + q"></lab-icon>
 }
 
-@if (quantity(); as q) {
+@if (text(); as text) {
   <span
-    class="text-shadow-solid absolute right-0 bottom-0 text-base/4 font-bold text-white text-shadow-black"
-    >{{ q | round }}</span
+    class="text-shadow-solid pointer-events-none absolute right-0 bottom-0 text-base/4 font-bold text-white text-shadow-black"
+    >{{ text }}</span
   >
 }

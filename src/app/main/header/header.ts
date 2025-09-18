@@ -32,7 +32,7 @@ interface ExternalLink {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex justify-between min-h-19 md:min-h-16 items-center flex-wrap sm:px-3 lg:px-6 xl:flex-nowrap md:sticky top-0 backdrop-blur-md border-b border-gray-700',
+      'flex justify-between min-h-19 md:min-h-16 items-center flex-wrap sm:px-3 lg:px-6 xl:flex-nowrap md:sticky top-0 backdrop-blur-md border-b border-gray-700 z-5',
   },
 })
 export class Header {

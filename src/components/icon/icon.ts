@@ -7,13 +7,10 @@ import {
 } from '@angular/core';
 
 import { IconType } from '~/data/icon-type';
-import { Rational } from '~/rational/rational';
-import { RoundPipe } from '~/rational/round-pipe';
 import { SettingsStore } from '~/state/settings/settings-store';
 
 @Component({
   selector: 'lab-icon',
-  imports: [RoundPipe],
   templateUrl: './icon.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -25,7 +22,7 @@ export class Icon {
 
   readonly value = input.required<string>();
   readonly type = input.required<IconType>();
-  readonly quantity = input<Rational | string | number>();
+  readonly text = input<string>();
 
   readonly icon = computed(
     () => this.settingsStore.dataset().iconRecord[this.type()][this.value()],

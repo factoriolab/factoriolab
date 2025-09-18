@@ -20,7 +20,7 @@ const host = cva(
   {
     variants: {
       color: {
-        gray: 'bg-gray-950 text-gray-50 outline-brand-700 focus-visible:border-brand-700',
+        gray: 'text-gray-50 outline-brand-700 focus-visible:border-brand-700',
         brand:
           'bg-brand-950 text-brand-50 outline-gray-300 focus-visible:border-gray-300 z-1',
       },

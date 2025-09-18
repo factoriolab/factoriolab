@@ -1,11 +1,11 @@
 @let r = recipe();
 <div class="flex flex-wrap items-center justify-center">
-  <lab-icon value="time" type="system" [quantity]="r.time"></lab-icon>
+  <lab-icon value="time" type="system" [text]="r.time | round"></lab-icon>
   @for (input of r.in | keyvalue; track input.key) {
     <lab-icon
       [value]="input.key"
       type="item"
-      [quantity]="input.value"
+      [text]="input.value | round"
     ></lab-icon>
   }
   <fa-icon [icon]="faArrowRightLong"></fa-icon>
@@ -13,7 +13,7 @@
     <lab-icon
       [value]="output.key"
       type="item"
-      [quantity]="output.value"
+      [text]="output.value | round"
     ></lab-icon>
   }
 </div>
@@ -25,7 +25,13 @@
       <div>
         @for (producer of r.producers; track producer) {
           @if (data().itemRecord[producer].quality == null) {
-            <lab-icon [value]="producer" type="item"></lab-icon>
+            <div
+              class="inline-flex rounded-xs border"
+              [class.bg-brand-950]="producer === machineId()"
+              [class.border-brand-700]="producer === machineId()"
+            >
+              <lab-icon [value]="producer" type="item"></lab-icon>
+            </div>
           }
         }
       </div>

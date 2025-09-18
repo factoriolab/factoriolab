@@ -48,34 +48,61 @@
         <th>{{ 'options.column.tree' | translate }}</th>
       }
       <!-- Items (Surplus, Value, & Icon) -->
-      <th colspan="3">
-        {{ displayRateInfo().itemsLabel | translate }}
-      </th>
+      <th
+        colspan="3"
+        labSortHeader
+        [text]="displayRateInfo().itemsLabel"
+        column="items"
+      ></th>
       <!-- Belts (Value & Icon) -->
       @if (cols().belts.show) {
-        <th colspan="2">{{ 'options.column.belts' | translate }}</th>
+        <th
+          colspan="2"
+          labSortHeader
+          text="options.column.belts"
+          column="belts"
+        ></th>
       }
       <!-- Wagons (Value & Icon) -->
       @if (cols().wagons.show) {
-        <th colspan="2">{{ 'options.column.wagons' | translate }}</th>
+        <th
+          colspan="2"
+          labSortHeader
+          [text]="displayRateInfo().wagonsLabel"
+          column="wagons"
+        ></th>
       }
       <!-- Rockets (Value & Icon) -->
       @if (cols().rockets.show) {
-        <th colspan="2">{{ 'options.column.rockets' | translate }}</th>
+        <th
+          colspan="2"
+          labSortHeader
+          [text]="displayRateInfo().rocketsLabel"
+          column="rockets"
+        ></th>
       }
       <!-- Machines (Value & Icon) -->
-      <th colspan="2">{{ 'options.column.machines' | translate }}</th>
+      <th
+        colspan="2"
+        labSortHeader
+        text="options.column.machines"
+        column="machines"
+      ></th>
       <!-- Beacons -->
       @if (cols().beacons.show) {
         <th>{{ 'options.column.beacons' | translate }}</th>
       }
       <!-- Power -->
       @if (cols().power.show) {
-        <th>{{ 'options.column.power' | translate }}</th>
+        <th labSortHeader text="options.column.power" column="power"></th>
       }
       <!-- Pollution -->
       @if (cols().pollution.show) {
-        <th>{{ 'options.column.pollution' | translate }}</th>
+        <th
+          labSortHeader
+          [text]="displayRateInfo().pollutionLabel"
+          column="pollution"
+        ></th>
       }
       <!-- Link -->
       @if (cols().link.show) {
@@ -84,20 +111,18 @@
     </tr>
   </thead>
   <tbody>
-    @for (step of objectivesStore.steps(); track step.id) {
+    @for (step of sortedSteps(); track step.id) {
       @let expanded = expandedSteps().has(step.id);
       <tr>
         <!-- Row Actions -->
         <td>
-          <div [id]="'step_' + step.id" class="hidden"></div>
+          @let stepId = 'step_' + step.id;
+          <div [id]="stepId" class="hidden"></div>
           @for (
             item of objectivesStore.stepDetails()[step.id].tabs;
             track item.label
           ) {
-            <div
-              [id]="'step_' + step.id + '_' + item.label"
-              class="hidden"
-            ></div>
+            <div [id]="stepId + '_' + item.label" class="hidden"></div>
           }
           <div class="flex">
             @let tooltip = expanded ? 'steps.hideDetails' : 'steps.showDetails';
@@ -130,9 +155,9 @@
         }
         <!-- Tree -->
         @if (!focus() && cols().tree.show) {
-          <td class="py-0">
+          <td class="px-0 py-0 sm:px-2">
             <div class="flex h-12 items-center">
-              @if (tree()[step.id].length) {
+              @if (sort() == null && tree()[step.id].length) {
                 @for (
                   trail of tree()[step.id];
                   track $index;
@@ -140,10 +165,13 @@
                   let last = $last
                 ) {
                   <div
-                    class="-z-1 mb-6 self-end border-e-2 border-dotted border-gray-50"
+                    class="-z-1 mb-6 self-end border-dotted border-gray-50"
                     [class]="{
-                      'ms-4.5': first,
-                      'ms-6': !first,
+                      'border-e-2': trail || last,
+                      'ms-2': first,
+                      'ms-4': !first,
+                      'sm:ms-4.5': first,
+                      'sm:ms-6': !first,
                       'h-12.5': trail || last,
                     }"
                   ></div>
@@ -152,21 +180,19 @@
               }
               <div class="flex flex-col items-center">
                 @if (step.itemId && step.recipeObjectiveId == null) {
-                  <button
-                    type="button"
-                    labButton
-                    [icon]="step.itemId"
-                    [toggleIcon]="faEyeSlash"
-                    [toggled]="settings().excludedItemIds.has(step.itemId)"
-                    iconType="item"
-                    [border]="false"
-                    [labTooltip]="step.itemId"
-                    labTooltipType="item"
+                  <lab-exclude-button
+                    [itemId]="step.itemId"
+                  ></lab-exclude-button>
+                } @else if (step.recipeId) {
+                  <lab-icon
+                    [value]="step.recipeId"
+                    type="recipe"
+                    [text]="'#' + step.recipeObjectiveId"
+                    [labTooltip]="step.recipeId"
+                    labTooltipType="recipe"
                     labTooltipPosition="adjacent"
-                    labTooltipAction="steps.excludeItemTooltip"
-                    [attr.aria-label]="'steps.excludeItemTooltip' | translate"
-                    (click)="changeItemExcluded(step.itemId)"
-                  ></button>
+                    [labTooltipAdjustedRecipe]="step.recipe"
+                  ></lab-icon>
                 }
               </div>
             </div>
@@ -191,8 +217,13 @@
         </td>
         <td class="ps-0">
           @if (step.itemId) {
-            <div class="flex">
-              <lab-icon [value]="step.itemId" type="item"></lab-icon>
+            <div class="relative flex">
+              <span
+                class="absolute top-1 text-transparent select-none"
+                aria-hidden="true"
+                >{{ data().itemRecord[step.itemId].name }}</span
+              >
+              <lab-exclude-button [itemId]="step.itemId"></lab-exclude-button>
             </div>
           }
         </td>

@@ -36,7 +36,7 @@
     cursor: pointer;
     width: calc(var(--spacing) * 5);
     height: calc(var(--spacing) * 5);
-    accent-color: var(--color-brand-500);
+    accent-color: var(--color-brand-700);
 
     &:focus-visible {
       outline: 3px solid var(--color-brand-700);

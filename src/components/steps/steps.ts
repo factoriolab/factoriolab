@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   signal,
@@ -8,7 +9,6 @@ import {
 import { FormsModule } from '@angular/forms';
 import {
   faAngleRight,
-  faEyeSlash,
   faFileArrowDown,
   faRotateLeft,
   faSquareCheck,
@@ -17,21 +17,35 @@ import {
 
 import { RatePipe } from '~/components/steps/rate-pipe';
 import { Exporter } from '~/exporter/exporter';
+import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { coalesce } from '~/utils/nullish';
 import { updateSetIds } from '~/utils/set';
 
 import { Button } from '../button/button';
 import { Columns } from '../columns/columns';
 import { Icon } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
+import { ExcludeButton } from './exclude-button/exclude-button';
+import { SortColumn } from './sort-column';
+import { SortHeader } from './sort-header/sort-header';
 
 @Component({
   selector: 'lab-steps',
-  imports: [FormsModule, Button, Icon, RatePipe, Tooltip, TranslatePipe],
+  imports: [
+    FormsModule,
+    Button,
+    ExcludeButton,
+    Icon,
+    RatePipe,
+    Tooltip,
+    TranslatePipe,
+    SortHeader,
+  ],
   templateUrl: './steps.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col gap-1 sm:gap-2' },
@@ -49,7 +63,6 @@ export class Steps {
   protected readonly data = this.recipesStore.adjustedDataset;
   protected readonly displayRateInfo = this.settingsStore.displayRateInfo;
   protected readonly faAngleRight = faAngleRight;
-  protected readonly faEyeSlash = faEyeSlash;
   protected readonly faFileArrowDown = faFileArrowDown;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faSquareCheck = faSquareCheck;
@@ -58,6 +71,32 @@ export class Steps {
   protected readonly tree = this.objectivesStore.stepTree;
 
   expandedSteps = signal<Set<string>>(new Set());
+  sort = signal<[SortColumn, -1 | 1] | null>(null);
+
+  sortedSteps = computed(() => {
+    const sort = this.sort();
+    let steps = this.objectivesStore.steps();
+    if (sort == null) return steps;
+
+    const [col, dir] = sort;
+
+    steps = [...steps];
+    steps.sort(
+      (a, b) =>
+        coalesce(b[col], rational.zero)
+          .sub(coalesce(a[col], rational.zero))
+          .toNumber() * dir,
+    );
+    return steps;
+  });
+
+  changeSort(column: SortColumn): void {
+    this.sort.update((current) => {
+      if (current == null || current[0] !== column) return [column, 1];
+      if (current[1] === -1) return null;
+      return [column, -1];
+    });
+  }
 
   toggleStep(step: Step): void {
     this.expandedSteps.update((s) =>
@@ -99,15 +138,5 @@ export class Steps {
       checkedObjectiveIds: new Set(),
       checkedRecipeIds: new Set(),
     });
-  }
-
-  changeItemExcluded(id: string): void {
-    const value = !this.settings().excludedItemIds.has(id);
-    const excludedItemIds = updateSetIds(
-      id,
-      value,
-      this.settings().excludedItemIds,
-    );
-    this.settingsStore.apply({ excludedItemIds });
   }
 }
