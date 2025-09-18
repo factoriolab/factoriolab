@@ -127,7 +127,7 @@ export function getAllowedLocations(
   locations: AnyLocationPrototype[],
   defaults: Record<string, number>,
 ): Optional<AnyLocationPrototype[]> {
-  if (surface_conditions == null) return undefined;
+  if (!surface_conditions?.every) return undefined;
 
   const matches = locations.filter((l) => {
     return surface_conditions.every((c) => {

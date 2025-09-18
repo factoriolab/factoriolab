@@ -2968,7 +2968,7 @@ export type FluidPrototype = _FluidPrototype &
   Omit<Prototype, keyof _FluidPrototype>;
 
 export function isFluidPrototype(value: unknown): value is FluidPrototype {
-  return (value as { type: string }).type === 'fluid';
+  return value !== undefined && (value as { type: string }).type === 'fluid';
 }
 
 /** Used for example for the handheld flamethrower. */
