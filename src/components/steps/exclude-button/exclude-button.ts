@@ -19,6 +19,7 @@ import { Button } from '../../button/button';
   imports: [Button, Tooltip, TranslatePipe],
   templateUrl: './exclude-button.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'inline-flex' },
 })
 export class ExcludeButton {
   protected readonly settingsStore = inject(SettingsStore);
