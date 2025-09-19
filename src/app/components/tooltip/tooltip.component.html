@@ -380,7 +380,7 @@
       <div class="mt-1">{{ 'data.producers' | translate }}</div>
       <div>
         @for (producer of recipe.producers; track producer) {
-          @if (data().itemEntities[producer].quality == null) {
+          @if (data().itemEntities[producer]?.quality == null) {
             <i [class]="producer | iconSmClass"></i>
           }
         }
