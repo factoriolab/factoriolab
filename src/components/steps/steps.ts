@@ -27,6 +27,7 @@ import { coalesce } from '~/utils/nullish';
 import { updateSetIds } from '~/utils/set';
 
 import { Button } from '../button/button';
+import { Checkbox } from '../checkbox/checkbox';
 import { Columns } from '../columns/columns';
 import { Icon } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
@@ -39,6 +40,7 @@ import { SortHeader } from './sort-header/sort-header';
   imports: [
     FormsModule,
     Button,
+    Checkbox,
     ExcludeButton,
     Icon,
     RatePipe,

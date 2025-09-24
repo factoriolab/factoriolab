@@ -55,7 +55,7 @@ export class InputNumber
 {
   private uniqueId = (nextUniqueId++).toString();
 
-  readonly id = input(`lab-input-number-${this.uniqueId}`);
+  readonly controlId = input(`lab-input-number-${this.uniqueId}`);
   readonly value = model<Rational>();
   readonly disabled = model(false);
   readonly minimum = input<Rational | undefined>(rational.zero);

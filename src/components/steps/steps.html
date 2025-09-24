@@ -144,12 +144,10 @@
         @if (cols().checkbox.show) {
           <td>
             <div class="flex justify-center">
-              <input
-                type="checkbox"
-                class="checkbox"
+              <lab-checkbox
                 [ngModel]="step.checked"
                 (ngModelChange)="changeStepChecked(step, $event)"
-              />
+              ></lab-checkbox>
             </div>
           </td>
         }
@@ -165,7 +163,7 @@
                   let last = $last
                 ) {
                   <div
-                    class="-z-1 mb-6 self-end border-dotted border-gray-50"
+                    class="mb-6 self-end border-dotted border-gray-50"
                     [class]="{
                       'border-e-2': trail || last,
                       'ms-2': first,
@@ -178,7 +176,7 @@
                 }
                 <div class="w-2 border-t-2 border-dotted border-gray-50"></div>
               }
-              <div class="flex flex-col items-center">
+              <div class="z-1 flex flex-col items-center">
                 @if (step.itemId && step.recipeObjectiveId == null) {
                   <lab-exclude-button
                     [itemId]="step.itemId"

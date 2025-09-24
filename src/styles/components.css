@@ -32,21 +32,6 @@
     }
   }
 
-  .checkbox {
-    cursor: pointer;
-    width: calc(var(--spacing) * 5);
-    height: calc(var(--spacing) * 5);
-    accent-color: var(--color-brand-700);
-
-    &:focus-visible {
-      outline: 3px solid var(--color-brand-700);
-    }
-
-    &:disabled {
-      pointer-events: none;
-    }
-  }
-
   .table {
     border-collapse: separate;
     border-spacing: 0;

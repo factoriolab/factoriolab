@@ -4,7 +4,7 @@
       <tr>
         <th>{{ 'columns.visibility' | translate }}</th>
         <th>{{ 'columns.decimals' | translate }}</th>
-        <th>{{ 'columns.fractions' | translate }}</th>
+        <th id="fractions-label">{{ 'columns.fractions' | translate }}</th>
         <th>{{ 'columns.example' | translate }}</th>
       </tr>
     </thead>
@@ -13,19 +13,18 @@
         <tr>
           <td>
             <div
-              class="flex items-center gap-2"
+              class="flex items-center gap-1"
               [class.opacity-40]="column.disabled"
             >
-              <input
-                [attr.id]="column.value"
-                type="checkbox"
-                class="checkbox"
-                step="1"
+              <lab-checkbox
+                [controlId]="column.value"
                 [(ngModel)]="value[column.value].show"
                 [disabled]="!!column.disabled"
                 (ngModelChange)="ref.markForCheck()"
-              />
-              <label [for]="column.value">{{ column.label | translate }}</label>
+              ></lab-checkbox>
+              <label [for]="column.value" class="cursor-pointer select-none">{{
+                column.label | translate
+              }}</label>
             </div>
           </td>
           @if (
@@ -46,15 +45,16 @@
                 [(ngModel)]="value[column.value].precision"
               />
             </td>
-            <td class="text-center">
-              <input
-                type="checkbox"
-                class="checkbox"
-                [ngModel]="value[column.value].precision == null"
-                (ngModelChange)="
-                  value[column.value].precision = $event ? null : 1
-                "
-              />
+            <td>
+              <div class="flex items-center justify-center">
+                <lab-checkbox
+                  labelledBy="fractions-label"
+                  [ngModel]="value[column.value].precision == null"
+                  (ngModelChange)="
+                    value[column.value].precision = $event ? null : 1
+                  "
+                ></lab-checkbox>
+              </div>
             </td>
             <td class="text-center font-mono">
               {{ value[column.value].precision | precisionExample }}

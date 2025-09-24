@@ -67,10 +67,10 @@ const host = cva(
   host: {
     role: 'combobox',
     '[class]': 'hostClass()',
-    '[attr.id]': 'id()',
+    '[attr.id]': 'controlId()',
     '[attr.tabindex]': 'disabled() ? -1 : 0',
     '[attr.aria-disabled]': 'disabled() ? "true" : null',
-    '[attr.aria-controls]': 'opened() ? id() + "-listbox" : null',
+    '[attr.aria-controls]': 'opened() ? controlId() + "-listbox" : null',
     '[attr.aria-expanded]': 'opened()',
     '[attr.aria-labelledby]': 'labelledBy() ?? formField?.labelId ?? null',
     '(keydown)': 'toggle($event)',
@@ -97,7 +97,7 @@ export class Select<T = unknown> extends Control<T> {
 
   private uniqueId = (nextUniqueId++).toString();
 
-  readonly id = input(`lab-select-${this.uniqueId}`);
+  readonly controlId = input(`lab-select-${this.uniqueId}`);
   readonly value = model<T>();
   readonly options = input.required<Option<T>[]>();
   readonly disabled = model(false);

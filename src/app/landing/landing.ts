@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
+import { Checkbox } from '~/components/checkbox/checkbox';
 import { FormField } from '~/components/form-field/form-field';
 import { InputNumber } from '~/components/input-number/input-number';
 import { ObjectiveForm } from '~/components/objective-form';
@@ -35,6 +36,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
     RouterLink,
     FaIconComponent,
     Button,
+    Checkbox,
     FormField,
     InputNumber,
     Select,

@@ -1,0 +1,16 @@
+<input
+  [id]="controlId()"
+  type="checkbox"
+  class="z-2 size-9 cursor-pointer opacity-0"
+  [attr.aria-labelledby]="labelledBy()"
+  [disabled]="disabled()"
+  [ngModel]="value()"
+  (ngModelChange)="setValue($event)"
+/>
+
+<fa-icon
+  class="absolute *:z-1 after:absolute after:size-4 after:content-['']"
+  [class]="value() !== false ? 'after:bg-white' : ''"
+  size="xl"
+  [icon]="icon()"
+></fa-icon>

@@ -55,7 +55,7 @@ export class Tabs extends Control<string> implements AfterViewInit {
 
   private uniqueId = (nextUniqueId++).toString();
 
-  readonly id = input(`lab-tabs-${this.uniqueId}`);
+  readonly controlId = input(`lab-tabs-${this.uniqueId}`);
   readonly value = model<string>();
   readonly tabs = input.required<TabData[]>();
   readonly disabled = model(false);

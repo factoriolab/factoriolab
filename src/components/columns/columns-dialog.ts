@@ -24,11 +24,12 @@ import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
+import { Checkbox } from '../checkbox/checkbox';
 import { PrecisionExamplePipe } from './precision-example-pipe';
 
 @Component({
   selector: 'lab-columns-dialog',
-  imports: [FormsModule, Button, PrecisionExamplePipe, TranslatePipe],
+  imports: [FormsModule, Button, Checkbox, PrecisionExamplePipe, TranslatePipe],
   templateUrl: './columns-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
