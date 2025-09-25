@@ -156,7 +156,7 @@
         }
         <!-- Tree -->
         @if (!focus() && cols().tree.show) {
-          <td>
+          <td class="px-0 py-0 sm:px-2">
             <div class="flex h-12 items-center">
               @let _tree = objectivesStore.stepTree()[step.id];
               @if (sort() == null && _tree.length) {
