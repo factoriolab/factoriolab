@@ -5,7 +5,7 @@ import { Rational, rational } from '../../rational/rational';
 @Pipe({ name: 'rate', standalone: true })
 export class RatePipe implements PipeTransform {
   transform(value: Rational, precision: number | null): string {
-    if (precision == null) return value.toFraction();
+    if (precision == null) return value.toFraction(true, true);
 
     if (precision === -2) {
       const num = Math.round(value.mul(rational(100n)).toNumber());

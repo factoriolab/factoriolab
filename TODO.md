@@ -4,10 +4,6 @@
 
 - Settings button? To pick language, etc.
 
-## Rational
-
-- Need toLocaleFraction??
-
 ## Machine Rate Pipe
 
 - Replace with machine (or recipe?) setting for percentages
@@ -16,10 +12,6 @@
 
 - Adjusted recipe effects (used in list)
 - Item entity details
-
-## Button
-
-- Transition colors causing flash white border
 
 ## Icon
 
@@ -30,7 +22,6 @@
 
 - Need to pass in defaults where relevant using dialog data
 - Multiselect support
-- Should not have min height?
 
 ## Translate
 
@@ -40,7 +31,6 @@
 ## Performance
 
 - Optimize so that store / router sync are not part of initial bundle?
-- ::view-transition-new, ::view-transition-old
 - Analyze and improve Lighthouse score
 
 ## General

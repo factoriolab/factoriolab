@@ -169,16 +169,17 @@ export class Rational {
     return this.mul(round).ceil().div(round).toNumber();
   }
 
-  toFraction(mixed = true): string {
-    if (this.isInteger()) return this.p.toString();
+  toFraction(mixed = true, locale = false): string {
+    const toString = locale ? 'toLocaleString' : 'toString';
+    if (this.isInteger()) return this.p[toString]();
 
     if (mixed && abs(this.p) > abs(this.q)) {
       const whole = this.p / this.q;
       const mod = this.p % this.q;
-      return `${whole.toString()} + ${mod.toString()}/${this.q.toString()}`;
+      return `${whole[toString]()} + ${mod[toString]()}/${this.q[toString]()}`;
     }
 
-    return `${this.p.toString()}/${this.q.toString()}`;
+    return `${this.p[toString]()}/${this.q[toString]()}`;
   }
 
   /**
