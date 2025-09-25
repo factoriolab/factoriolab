@@ -24,6 +24,7 @@ import { Steps } from '../steps';
 
 @Component({
   selector: 'th[lab-sort-header], th[labSortHeader]',
+  exportAs: 'labSortHeader',
   imports: [FaIconComponent, Button, Tooltip, TranslatePipe],
   templateUrl: './sort-header.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

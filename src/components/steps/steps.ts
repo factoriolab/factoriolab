@@ -24,30 +24,29 @@ import { RecipesStore } from '~/state/recipes/recipes-store';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
+import { updateSetIds } from '~/utils/set';
 
 import { Button } from '../button/button';
+import { Checkbox } from '../checkbox/checkbox';
 import { Columns } from '../columns/columns';
 import { Icon } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
-import { CheckboxCell } from './checkbox-cell/checkbox-cell';
 import { ExcludeButton } from './exclude-button/exclude-button';
 import { SortColumn } from './sort-column';
 import { SortHeader } from './sort-header/sort-header';
-import { TreeCell } from './tree-cell/tree-cell';
 
 @Component({
   selector: 'lab-steps',
   imports: [
     FormsModule,
     Button,
-    CheckboxCell,
+    Checkbox,
     ExcludeButton,
     Icon,
     RatePipe,
     SortHeader,
     Tooltip,
     TranslatePipe,
-    TreeCell,
   ],
   templateUrl: './steps.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -107,6 +106,33 @@ export class Steps {
         ? new Set(Array.from(s).filter((s) => s !== step.id))
         : new Set([...Array.from(s), step.id]),
     );
+  }
+
+  changeStepChecked(step: Step, value: boolean): void {
+    const settings = this.settingsStore.settings();
+    // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
+    if (step.itemId != null) {
+      const checkedItemIds = updateSetIds(
+        step.itemId,
+        value,
+        settings.checkedItemIds,
+      );
+      this.settingsStore.apply({ checkedItemIds });
+    } else if (step.recipeObjectiveId != null) {
+      const checkedObjectiveIds = updateSetIds(
+        step.recipeObjectiveId,
+        value,
+        settings.checkedObjectiveIds,
+      );
+      this.settingsStore.apply({ checkedObjectiveIds });
+    } else if (step.recipeId != null) {
+      const checkedRecipeIds = updateSetIds(
+        step.recipeId,
+        value,
+        settings.checkedRecipeIds,
+      );
+      this.settingsStore.apply({ checkedRecipeIds });
+    }
   }
 
   resetChecked(): void {
