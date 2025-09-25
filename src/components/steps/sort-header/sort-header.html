@@ -1,4 +1,18 @@
-<div class="flex justify-between">
-  {{ text() | translate }}
+<div class="flex items-center gap-2">
+  <span>{{ text() | translate }}</span>
   <fa-icon [icon]="icon()"></fa-icon>
+
+  @if (showUndo()) {
+    @let tooltip = undoTooltip() | translate;
+    <button
+      type="button"
+      class="ms-auto"
+      labButton
+      [attr.aria-label]="tooltip"
+      [labTooltip]="tooltip"
+      labTooltipPosition="adjacent"
+      [faIcon]="faArrowRotateLeft"
+      (click)="undoClicked($event)"
+    ></button>
+  }
 </div>

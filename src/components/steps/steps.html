@@ -51,16 +51,19 @@
       <th
         colspan="3"
         labSortHeader
-        [text]="displayRateInfo().itemsLabel"
         column="items"
+        [text]="displayRateInfo().itemsLabel"
+        [showUndo]="!!settings().excludedItemIds.size"
+        undoTooltip="steps.itemsUndoTooltip"
+        (undo)="resetExcludedItems()"
       ></th>
       <!-- Belts (Value & Icon) -->
       @if (cols().belts.show) {
         <th
           colspan="2"
           labSortHeader
-          text="options.column.belts"
           column="belts"
+          text="options.column.belts"
         ></th>
       }
       <!-- Wagons (Value & Icon) -->
@@ -68,8 +71,8 @@
         <th
           colspan="2"
           labSortHeader
-          [text]="displayRateInfo().wagonsLabel"
           column="wagons"
+          [text]="displayRateInfo().wagonsLabel"
         ></th>
       }
       <!-- Rockets (Value & Icon) -->
@@ -77,16 +80,16 @@
         <th
           colspan="2"
           labSortHeader
-          [text]="displayRateInfo().rocketsLabel"
           column="rockets"
+          [text]="displayRateInfo().rocketsLabel"
         ></th>
       }
       <!-- Machines (Value & Icon) -->
       <th
         colspan="2"
         labSortHeader
-        text="options.column.machines"
         column="machines"
+        text="options.column.machines"
       ></th>
       <!-- Beacons -->
       @if (cols().beacons.show) {
@@ -94,14 +97,14 @@
       }
       <!-- Power -->
       @if (cols().power.show) {
-        <th labSortHeader text="options.column.power" column="power"></th>
+        <th labSortHeader column="power" text="options.column.power"></th>
       }
       <!-- Pollution -->
       @if (cols().pollution.show) {
         <th
           labSortHeader
-          [text]="displayRateInfo().pollutionLabel"
           column="pollution"
+          [text]="displayRateInfo().pollutionLabel"
         ></th>
       }
       <!-- Link -->
@@ -142,59 +145,15 @@
         </td>
         <!-- Checkbox -->
         @if (cols().checkbox.show) {
-          <td>
-            <div class="flex justify-center">
-              <lab-checkbox
-                [ngModel]="step.checked"
-                (ngModelChange)="changeStepChecked(step, $event)"
-              ></lab-checkbox>
-            </div>
-          </td>
+          @defer {
+            <td labCheckboxCell [step]="step"></td>
+          }
         }
         <!-- Tree -->
         @if (!focus() && cols().tree.show) {
-          <td class="px-0 py-0 sm:px-2">
-            <div class="flex h-12 items-center">
-              @if (sort() == null && tree()[step.id].length) {
-                @for (
-                  trail of tree()[step.id];
-                  track $index;
-                  let first = $first;
-                  let last = $last
-                ) {
-                  <div
-                    class="mb-6 self-end border-dotted border-gray-50"
-                    [class]="{
-                      'border-e-2': trail || last,
-                      'ms-2': first,
-                      'ms-4': !first,
-                      'sm:ms-4.5': first,
-                      'sm:ms-6': !first,
-                      'h-12.5': trail || last,
-                    }"
-                  ></div>
-                }
-                <div class="w-2 border-t-2 border-dotted border-gray-50"></div>
-              }
-              <div class="z-1 flex flex-col items-center">
-                @if (step.itemId && step.recipeObjectiveId == null) {
-                  <lab-exclude-button
-                    [itemId]="step.itemId"
-                  ></lab-exclude-button>
-                } @else if (step.recipeId) {
-                  <lab-icon
-                    [value]="step.recipeId"
-                    type="recipe"
-                    [text]="'#' + step.recipeObjectiveId"
-                    [labTooltip]="step.recipeId"
-                    labTooltipType="recipe"
-                    labTooltipPosition="adjacent"
-                    [labTooltipAdjustedRecipe]="step.recipe"
-                  ></lab-icon>
-                }
-              </div>
-            </div>
-          </td>
+          @defer {
+            <td labTreeCell [step]="step"></td>
+          }
         }
         <!-- Items (Value & Icon) -->
         <td>

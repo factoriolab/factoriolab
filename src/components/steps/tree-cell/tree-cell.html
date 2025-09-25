@@ -1,0 +1,35 @@
+<div class="flex h-12 items-center">
+  @let _step = step();
+  @let _tree = objectivesStore.stepTree()[_step.id];
+  @if (parent.sort() == null && _tree.length) {
+    @for (trail of _tree; track $index; let first = $first; let last = $last) {
+      <div
+        class="mb-6 self-end border-dotted border-gray-50"
+        [class]="{
+          'border-e-2': trail || last,
+          'ms-2': first,
+          'ms-4': !first,
+          'sm:ms-4.5': first,
+          'sm:ms-6': !first,
+          'h-12.5': trail || last,
+        }"
+      ></div>
+    }
+    <div class="w-2 border-t-2 border-dotted border-gray-50"></div>
+  }
+  <div class="z-1 flex flex-col items-center">
+    @if (_step.itemId && _step.recipeObjectiveId == null) {
+      <lab-exclude-button [itemId]="_step.itemId"></lab-exclude-button>
+    } @else if (_step.recipeId) {
+      <lab-icon
+        [value]="_step.recipeId"
+        type="recipe"
+        [text]="'#' + _step.recipeObjectiveId"
+        [labTooltip]="_step.recipeId"
+        labTooltipType="recipe"
+        labTooltipPosition="adjacent"
+        [labTooltipAdjustedRecipe]="_step.recipe"
+      ></lab-icon>
+    }
+  </div>
+</div>
