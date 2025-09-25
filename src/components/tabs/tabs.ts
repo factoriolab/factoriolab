@@ -22,6 +22,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Button } from '../button/button';
 import { Control } from '../control';
 import { Icon } from '../icon/icon';
+import { Ripple } from '../ripple/ripple';
 import { TabData } from './tab-data';
 
 let nextUniqueId = 0;
@@ -34,6 +35,7 @@ let nextUniqueId = 0;
     FaIconComponent,
     Button,
     Icon,
+    Ripple,
     TranslatePipe,
   ],
   templateUrl: './tabs.html',

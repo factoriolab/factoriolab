@@ -14,9 +14,10 @@ import { IconType } from '~/data/icon-type';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Icon } from '../icon/icon';
+import { Ripple } from '../ripple/ripple';
 
 const host = cva(
-  'overflow-hidden items-center gap-1 transition-colors cursor-pointer focus-visible:outline focus:z-2 disabled:pointer-events-none group',
+  'overflow-hidden select-none items-center gap-1 transition-colors cursor-pointer focus-visible:outline focus:z-2 disabled:pointer-events-none group',
   {
     variants: {
       color: {
@@ -91,6 +92,7 @@ const host = cva(
   templateUrl: './button.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[class]': 'hostClass()' },
+  hostDirectives: [Ripple],
 })
 export class Button {
   readonly text = input('');

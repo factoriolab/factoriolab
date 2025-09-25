@@ -156,30 +156,20 @@
         [(ngModel)]="type"
         [options]="typeOptions"
       ></lab-select>
-      @if (preferencesStore.paused()) {
-        <button
-          type="button"
-          class="-ms-px"
-          labButton
-          [faIcon]="faPlay"
-          labTooltip="objectives.playTooltip"
-          color="brand"
-          [rounded]="false"
-          [attr.aria-label]="'objectives.playTooltip' | translate"
-          (click)="preferencesStore.apply({ paused: false })"
-        ></button>
-      } @else {
-        <button
-          type="button"
-          class="-ms-px rounded-e-xs"
-          labButton
-          [faIcon]="faPause"
-          labTooltip="objectives.pauseTooltip"
-          [rounded]="false"
-          [attr.aria-label]="'objectives.pauseTooltip' | translate"
-          (click)="preferencesStore.apply({ paused: true })"
-        ></button>
-      }
+      @let paused = preferencesStore.paused();
+      @let pausedTooltip =
+        paused ? 'objectives.playTooltip' : 'objectives.pauseTooltip';
+      <button
+        type="button"
+        class="-ms-px rounded-e-xs"
+        labButton
+        [faIcon]="paused ? faPlay : faPause"
+        [labTooltip]="pausedTooltip"
+        [color]="paused ? 'brand' : 'gray'"
+        [rounded]="false"
+        [attr.aria-label]="pausedTooltip | translate"
+        (click)="preferencesStore.apply({ paused: !paused })"
+      ></button>
     </div>
   </div>
   <div class="hidden items-end lg:flex">

@@ -12,6 +12,7 @@ import {
   faUpDown,
 } from '@fortawesome/free-solid-svg-icons';
 
+import { Ripple } from '~/components/ripple/ripple';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { SortColumn } from '../sort-column';
@@ -23,10 +24,11 @@ import { Steps } from '../steps';
   templateUrl: './sort-header.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'cursor-pointer select-none hover:bg-gray-700',
+    class: 'cursor-pointer select-none hover:bg-gray-700 overflow-hidden',
     '[class.text-brand-400]': 'steps.sort()?.[0] === column()',
     '(click)': 'steps.changeSort(column())',
   },
+  hostDirectives: [Ripple],
 })
 export class SortHeader {
   protected readonly steps = inject(Steps);
