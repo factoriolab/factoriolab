@@ -46,8 +46,8 @@ export class Adjustment {
   private readonly hydration = inject(Hydration);
   private readonly options = inject(Options);
 
-  private readonly maxFactor = rational(4n);
-  private readonly minFactor = rational(1n, 5n);
+  readonly maxFactor = rational(4n);
+  readonly minFactor = rational(1n, 5n);
   private readonly pollutionFactor = rational(60n);
   private readonly minFactorioRecipeTime = rational(1n, 60n);
 

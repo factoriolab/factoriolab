@@ -31,6 +31,7 @@ import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
 import { Columns } from '../columns/columns';
 import { Icon } from '../icon/icon';
+import { InputNumber } from '../input-number/input-number';
 import { Select } from '../select/select';
 import { Tooltip } from '../tooltip/tooltip';
 import { ExcludeButton } from './exclude-button/exclude-button';
@@ -46,6 +47,7 @@ import { SortHeader } from './sort-header/sort-header';
     Checkbox,
     ExcludeButton,
     Icon,
+    InputNumber,
     RatePipe,
     RecipesSelect,
     Select,
@@ -74,6 +76,7 @@ export class Steps {
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faSquareCheck = faSquareCheck;
   protected readonly faTableColumns = faTableColumns;
+  protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
   protected readonly tree = this.objectivesStore.stepTree;
 

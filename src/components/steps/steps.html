@@ -262,7 +262,7 @@
           </td>
           <td class="ps-0">
             @if (step.recipeId && step.recipe && step.recipeSettings) {
-              <div class="relative flex items-center">
+              <div class="relative flex items-center gap-1">
                 <span
                   class="absolute top-1 -z-1 text-transparent select-none"
                   aria-hidden="true"
@@ -278,6 +278,9 @@
                       step.recipeSettings.machineOptions != null &&
                       step.recipeSettings.machineOptions.length > 5
                     "
+                    [labTooltip]="machineId"
+                    labTooltipType="machine"
+                    labTooltipPosition="adjacent"
                     [ngModel]="machineId"
                     (ngModelChange)="
                       step.recipeObjectiveId
@@ -295,6 +298,28 @@
                           )
                     "
                   ></lab-select>
+                }
+
+                @if (data().flags.has('overclock')) {
+                  <lab-input-number
+                    class="w-20"
+                    [minimum]="rational(1)"
+                    [maximum]="rational(250)"
+                    [step]="rational(10)"
+                    [percent]="true"
+                    [ngModel]="step.recipeSettings.overclock"
+                  ></lab-input-number>
+                }
+
+                @if (step.recipeSettings.fuelId; as fuelId) {
+                  @if (step.recipe.flags.has('burn')) {
+                    <lab-icon
+                      [value]="fuelId"
+                      type="item"
+                      [labTooltip]="fuelId"
+                      labTooltipType="fuel"
+                    ></lab-icon>
+                  }
                 }
               </div>
             }

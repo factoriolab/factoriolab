@@ -74,6 +74,7 @@
                 class="-ms-px basis-1/4 md:basis-1/5"
                 labelledBy="quantity-label"
                 [rounded]="false"
+                [step]="rational(5)"
                 [ngModel]="objective.value"
                 (ngModelChange)="
                   objectivesStore.updateRecord(objective.id, { value: $event })
@@ -140,6 +141,7 @@
         class="-ms-px basis-1/4 md:basis-1/5"
         labelledBy="quantity-label"
         [rounded]="false"
+        [step]="rational(5)"
         [(ngModel)]="value"
       ></lab-input-number>
       <lab-select

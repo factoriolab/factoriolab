@@ -1,4 +1,4 @@
-import { KeyValuePipe } from '@angular/common';
+import { KeyValuePipe, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,8 +12,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { cva } from 'class-variance-authority';
 
 import { BonusPercentPipe } from '~/rational/bonus-percent-pipe';
+import { rational } from '~/rational/rational';
 import { RoundPipe } from '~/rational/round-pipe';
 import { UsagePipe } from '~/rational/usage-pipe';
+import { Adjustment } from '~/state/adjustment';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
@@ -86,6 +88,7 @@ const nub = cva(
   selector: 'lab-tooltip-overlay',
   imports: [
     KeyValuePipe,
+    NgTemplateOutlet,
     BonusPercentPipe,
     Icon,
     RecipeProcess,
@@ -94,6 +97,7 @@ const nub = cva(
     UsagePipe,
   ],
   templateUrl: './tooltip-overlay.html',
+  styleUrl: './tooltip-overlay.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'hostClass()',
@@ -101,10 +105,12 @@ const nub = cva(
 })
 export class TooltipOverlay implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
+  protected readonly adjustment = inject(Adjustment);
   protected readonly recipesStore = inject(RecipesStore);
   protected readonly tooltipData = inject(TOOLTIP_DATA);
 
-  data = this.recipesStore.adjustedDataset;
+  protected readonly data = this.recipesStore.adjustedDataset;
+  protected readonly rational = rational;
 
   /**
    * Assume preferred position is taken instead of waiting, so that content is

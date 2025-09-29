@@ -11,6 +11,7 @@ import { faChevronDown, faFlaskVial } from '@fortawesome/free-solid-svg-icons';
 
 import { Icon } from '~/components/icon/icon';
 import { Select } from '~/components/select/select';
+import { Tooltip } from '~/components/tooltip/tooltip';
 import { Step } from '~/solver/step';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { StepDetail } from '~/state/objectives/step-detail';
@@ -19,7 +20,7 @@ import { updateSetIds } from '~/utils/set';
 
 @Component({
   selector: 'lab-recipes-select',
-  imports: [FormsModule, FaIconComponent, Icon, Select],
+  imports: [FormsModule, FaIconComponent, Icon, Select, Tooltip],
   templateUrl: './recipes-select.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex' },

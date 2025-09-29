@@ -4,6 +4,11 @@
     class="group border-brand-700 hover:border"
     [iconOnly]="true"
     [options]="details.recipeOptions"
+    [labTooltip]="step().recipeId"
+    labTooltipType="recipe"
+    labTooltipPosition="adjacent"
+    labTooltipAction="steps.selectRecipesTooltip"
+    [labTooltipAdjustedRecipe]="step().recipe"
     [ngModel]="details.recipesEnabled"
     (ngModelChange)="changeRecipesIncluded($event)"
   >

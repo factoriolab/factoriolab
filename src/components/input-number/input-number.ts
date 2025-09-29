@@ -15,6 +15,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
+import { faPercent } from '@fortawesome/free-solid-svg-icons';
 import { debounce, map, of, Subject, timer } from 'rxjs';
 
 import { Rational, rational } from '~/rational/rational';
@@ -47,7 +48,7 @@ interface ChangeEvent {
     },
     { provide: LAB_CONTROL, useExisting: InputNumber },
   ],
-  host: { class: 'inline-flex group' },
+  host: { class: 'inline-flex group relative' },
 })
 export class InputNumber
   extends Control<Rational>
@@ -60,9 +61,11 @@ export class InputNumber
   readonly disabled = model(false);
   readonly minimum = input<Rational | undefined>(rational.zero);
   readonly maximum = input<Rational | undefined>(undefined);
+  readonly step = input<Rational>(rational.one);
   readonly integer = input(false);
   readonly rounded = input(true);
   readonly labelledBy = input<string>();
+  readonly percent = input<boolean>();
 
   private value$ = new Subject<ChangeEvent>();
   private emit$ = this.value$.pipe(
@@ -82,6 +85,8 @@ export class InputNumber
       return val.toString();
     },
   });
+
+  protected readonly faPercent = faPercent;
 
   ngOnInit(): void {
     this.emit$.subscribe((v) => {
@@ -119,5 +124,17 @@ export class InputNumber
     } catch {
       // Ignore error
     }
+  }
+
+  increment(direction: 1 | -1): void {
+    let value = this.value() ?? rational.zero;
+    let step = this.step();
+    if (direction === -1) step = step.inverse();
+    value = value.add(step);
+    const min = this.minimum();
+    const max = this.maximum();
+    if (min?.gt(value)) value = min;
+    if (max?.lt(value)) value = max;
+    this.value$.next({ type: 'keydown', value });
   }
 }

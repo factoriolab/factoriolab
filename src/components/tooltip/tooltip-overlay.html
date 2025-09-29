@@ -2,6 +2,65 @@
   @if (data().recipeRecord[tooltipData.value]; as recipe) {
     <div>{{ recipe.name }}</div>
     <lab-recipe [value]="recipe.id"></lab-recipe>
+    @if (tooltipData.adjustedRecipe?.effects; as effects) {
+      <table>
+        <ng-template #effectRow let-label="label" let-value="value">
+          @if (!value.eq(rational.one)) {
+            <tr
+              [class.text-orange-500]="
+                data().flags.has('minimumFactor') &&
+                value.eq(adjustment.minFactor)
+              "
+            >
+              <td>{{ label | translate }}</td>
+              <td>{{ value.sub(rational.one) | bonusPercent }}</td>
+            </tr>
+          }
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="
+            effectRow;
+            context: {
+              label: 'data.energyConsumption',
+              value: effects.consumption,
+            }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            effectRow;
+            context: {
+              label: 'data.speed',
+              value: effects.speed,
+            }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            effectRow;
+            context: {
+              label: 'data.productivity',
+              value: effects.productivity,
+            }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            effectRow;
+            context: {
+              label: 'data.pollution',
+              value: effects.pollution,
+            }
+          "
+        ></ng-container>
+        @if (effects.quality.nonzero()) {
+          <tr>
+            <td>{{ 'data.quality' | translate }}</td>
+            <td>{{ effects.quality | bonusPercent }}</td>
+          </tr>
+        }
+      </table>
+    }
   }
 } @else if (tooltipData.type) {
   @if (data().itemRecord[tooltipData.value]; as item) {
@@ -9,13 +68,15 @@
     @if (recipeId(); as recipeId) {
       <lab-recipe [value]="recipeId"></lab-recipe>
     }
+  } @else if (tooltipData.type === 'module') {
+    <div>{{ 'data.moduleSlots' | translate }}</div>
   }
 
   @if (
     tooltipData.type === 'machine' && data().machineRecord[tooltipData.value];
     as machine
   ) {
-    <table class="info-table">
+    <table>
       @if (machine.speed && !data().flags.has('hideMachineSettings')) {
         <tr>
           <td>{{ 'data.craftingSpeed' | translate }}</td>

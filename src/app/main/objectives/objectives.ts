@@ -23,6 +23,7 @@ import { InputNumber } from '~/components/input-number/input-number';
 import { ObjectiveForm } from '~/components/objective-form';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
+import { rational } from '~/rational/rational';
 import { ObjectiveBase, ObjectiveSettings } from '~/state/objectives/objective';
 import { objectiveTypeOptions } from '~/state/objectives/objective-type';
 import { ObjectiveUnit } from '~/state/objectives/objective-unit';
@@ -61,14 +62,7 @@ export class Objectives extends ObjectiveForm {
   protected readonly settingsStore = inject(SettingsStore);
 
   protected readonly data = this.settingsStore.dataset;
-  protected readonly objectives = this.objectivesStore.objectives;
-  protected readonly result = this.objectivesStore.matrixResult;
-  protected readonly unitOptions = this.settingsStore.objectiveUnitOptions;
-
-  protected readonly ObjectiveUnit = ObjectiveUnit;
   protected readonly displayRateOptions = displayRateOptions;
-  protected readonly typeOptions = objectiveTypeOptions;
-
   protected readonly faBoxOpen = faBoxOpen;
   protected readonly faBookOpen = faBookOpen;
   protected readonly faGrip = faGrip;
@@ -76,6 +70,12 @@ export class Objectives extends ObjectiveForm {
   protected readonly faPlay = faPlay;
   protected readonly faPlus = faPlus;
   protected readonly faXmark = faXmark;
+  protected readonly rational = rational;
+  protected readonly objectives = this.objectivesStore.objectives;
+  protected readonly ObjectiveUnit = ObjectiveUnit;
+  protected readonly result = this.objectivesStore.matrixResult;
+  protected readonly typeOptions = objectiveTypeOptions;
+  protected readonly unitOptions = this.settingsStore.objectiveUnitOptions;
 
   addObjective(value: ObjectiveBase): void {
     this.objectivesStore.add(value);

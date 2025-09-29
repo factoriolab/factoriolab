@@ -3,10 +3,16 @@
   type="text"
   [(ngModel)]="text"
   class="input group-[.ng-invalid]:border-red-500 group-[.ng-invalid]:outline-red-500"
+  [class.pe-6]="percent()"
   [class.rounded-none]="!rounded()"
   [attr.aria-labelledby]="labelledBy()"
   [disabled]="disabled()"
   (input)="onChange($event)"
   (blur)="onChange($event)"
   (keydown.enter)="onChange($event)"
+  (keydown.arrowup)="increment(1)"
+  (keydown.arrowdown)="increment(-1)"
 />
+@if (percent()) {
+  <span class="pointer-events-none absolute top-1.5 right-1.5 z-3">%</span>
+}
