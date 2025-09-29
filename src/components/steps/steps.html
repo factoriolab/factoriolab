@@ -271,7 +271,6 @@
                 <lab-recipes-select [step]="step"></lab-recipes-select>
                 @if (!step.recipe.flags.has('hideProducer')) {
                   <lab-select
-                    class="grow-0"
                     [iconOnly]="true"
                     [options]="step.recipeSettings.machineOptions ?? []"
                     [filter]="
@@ -319,6 +318,12 @@
                       [labTooltip]="fuelId"
                       labTooltipType="fuel"
                     ></lab-icon>
+                  } @else {
+                    <lab-select
+                      [iconOnly]="true"
+                      [ngModel]="fuelId"
+                      [options]="step.recipeSettings.fuelOptions ?? []"
+                    ></lab-select>
                   }
                 }
               </div>

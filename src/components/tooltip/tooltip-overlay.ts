@@ -12,11 +12,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { cva } from 'class-variance-authority';
 
 import { BonusPercentPipe } from '~/rational/bonus-percent-pipe';
+import { FuelValuePipe } from '~/rational/fuel-value-pipe';
 import { rational } from '~/rational/rational';
 import { RoundPipe } from '~/rational/round-pipe';
 import { UsagePipe } from '~/rational/usage-pipe';
 import { Adjustment } from '~/state/adjustment';
 import { RecipesStore } from '~/state/recipes/recipes-store';
+import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Icon } from '../icon/icon';
@@ -91,6 +93,7 @@ const nub = cva(
     NgTemplateOutlet,
     BonusPercentPipe,
     Icon,
+    FuelValuePipe,
     RecipeProcess,
     RoundPipe,
     TranslatePipe,
@@ -107,6 +110,7 @@ export class TooltipOverlay implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   protected readonly adjustment = inject(Adjustment);
   protected readonly recipesStore = inject(RecipesStore);
+  protected readonly settingsStore = inject(SettingsStore);
   protected readonly tooltipData = inject(TOOLTIP_DATA);
 
   protected readonly data = this.recipesStore.adjustedDataset;

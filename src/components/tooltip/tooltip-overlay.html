@@ -68,138 +68,310 @@
     @if (recipeId(); as recipeId) {
       <lab-recipe [value]="recipeId"></lab-recipe>
     }
-  } @else if (tooltipData.type === 'module') {
-    <div>{{ 'data.moduleSlots' | translate }}</div>
-  }
 
-  @if (
-    tooltipData.type === 'machine' && data().machineRecord[tooltipData.value];
-    as machine
-  ) {
-    <table>
-      @if (machine.speed && !data().flags.has('hideMachineSettings')) {
-        <tr>
-          <td>{{ 'data.craftingSpeed' | translate }}</td>
-          <td>{{ machine.speed | round }}</td>
-        </tr>
-      }
-      @if (machine.baseEffect; as eff) {
-        @if (eff.consumption && eff.consumption.nonzero()) {
-          <tr>
-            <td>{{ 'data.energyConsumption' | translate }}</td>
-            <td>{{ eff.consumption | bonusPercent }}</td>
-          </tr>
+    @switch (tooltipData.type) {
+      @case ('beacon') {
+        @if (item.beacon; as beacon) {
+          <table>
+            <tr>
+              <td>{{ 'data.efficiency' | translate }}</td>
+              <td>{{ beacon.effectivity | round }}</td>
+            </tr>
+            <tr>
+              <td>{{ 'data.modules' | translate }}</td>
+              <td>{{ beacon.modules }}</td>
+            </tr>
+            <tr>
+              <td>{{ 'data.range' | translate }}</td>
+              <td>{{ beacon.range }}</td>
+            </tr>
+            @if (beacon.type) {
+              <tr>
+                <td>{{ 'data.energySource' | translate }}</td>
+                <td>{{ beacon.type }}</td>
+              </tr>
+            }
+            @if (beacon.usage) {
+              <tr>
+                <td>{{ 'data.energyConsumption' | translate }}</td>
+                <td>{{ beacon.usage | usage }}</td>
+              </tr>
+            }
+            @if (beacon.disallowedEffects) {
+              <tr>
+                <td>{{ 'data.disallowedEffects' | translate }}</td>
+                <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+              </tr>
+            }
+            @if (beacon.size) {
+              <tr>
+                <td>{{ 'data.dimensions' | translate }}</td>
+                <td>{{ beacon.size[0] }}×{{ beacon.size[1] }}</td>
+              </tr>
+            }
+          </table>
         }
-        @if (eff.speed && eff.speed.nonzero()) {
+      }
+      @case ('belt') {
+        <table>
           <tr>
             <td>{{ 'data.speed' | translate }}</td>
-            <td>{{ eff.speed | bonusPercent }}</td>
+            <td>
+              {{ settingsStore.beltSpeedTxt()[tooltipData.value]
+              }}{{ settingsStore.displayRateInfo().suffix | translate }}
+            </td>
           </tr>
-        }
-        @if (eff.productivity && eff.productivity.nonzero()) {
-          <tr>
-            <td>{{ 'data.productivity' | translate }}</td>
-            <td>{{ eff.productivity | bonusPercent }}</td>
-          </tr>
-        }
-        @if (eff.pollution && eff.pollution.nonzero()) {
-          <tr>
-            <td>{{ 'data.pollution' | translate }}</td>
-            <td>{{ eff.pollution | bonusPercent }}</td>
-          </tr>
-        }
-        @if (eff.quality && eff.quality.nonzero()) {
-          <tr>
-            <td>{{ 'data.quality' | translate }}</td>
-            <td>{{ eff.quality | bonusPercent }}</td>
-          </tr>
+        </table>
+      }
+      @case ('cargo-wagon') {
+        @if (item.cargoWagon; as wagon) {
+          <table>
+            <tr>
+              <td>{{ 'data.storageSize' | translate }}</td>
+              <td>{{ wagon.size }}</td>
+            </tr>
+          </table>
         }
       }
-      @if (machine.modules) {
-        <tr>
-          <td>{{ 'data.modules' | translate }}</td>
-          <td>{{ machine.modules }}</td>
-        </tr>
-      }
-      @if (machine.disallowedEffects) {
-        <tr>
-          <td>{{ 'data.disallowedEffects' | translate }}</td>
-          <td>{{ machine.disallowedEffects.join(', ') }}</td>
-        </tr>
-      }
-      @if (machine.type) {
-        <tr>
-          <td>{{ 'data.energySource' | translate }}</td>
-          <td>{{ machine.type }}</td>
-        </tr>
-      }
-      @if (machine.fuelCategories) {
-        <tr>
-          <td>{{ 'data.fuelCategories' | translate }}</td>
-          <td>{{ machine.fuelCategories.join(', ') }}</td>
-        </tr>
-      }
-      @if (machine.fuel) {
-        <tr>
-          <td>{{ 'data.fuel' | translate }}</td>
-          <td>{{ machine.fuel }}</td>
-        </tr>
-      }
-      @if (machine.usage && machine.usage.nonzero()) {
-        <tr>
-          <td>{{ 'data.energyConsumption' | translate }}</td>
-          <td>{{ machine.usage | usage }}</td>
-        </tr>
-      }
-      @if (machine.drain && machine.drain.nonzero()) {
-        <tr>
-          <td>{{ 'data.energyDrain' | translate }}</td>
-          <td>{{ machine.drain | usage }}</td>
-        </tr>
-      }
-      @if (machine.pollution && machine.pollution.nonzero()) {
-        <tr>
-          <td>{{ 'data.pollution' | translate }}</td>
-          <td>{{ machine.pollution | round }}/m</td>
-        </tr>
-      }
-      @if (machine.size) {
-        <tr>
-          <td>{{ 'data.dimensions' | translate }}</td>
-          <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
-        </tr>
-      }
-      @if (machine.silo) {
-        <tr>
-          <td>{{ 'data.rocketPartsRequired' | translate }}</td>
-          <td>{{ machine.silo.parts | round }}</td>
-        </tr>
-        <tr>
-          <td>{{ 'data.rocketLaunchTime' | translate }}</td>
-          <td>{{ machine.silo.launch | round }}s</td>
-        </tr>
-      }
-    </table>
-    @if (machine.consumption) {
-      <div class="mt-1 flex items-center justify-center">
-        @for (input of machine.consumption | keyvalue; track input.key) {
-          <lab-icon
-            [value]="input.key"
-            type="item"
-            [text]="input.value | round"
-          >
-          </lab-icon>
+      @case ('fluid-wagon') {
+        @if (item.fluidWagon; as wagon) {
+          <table>
+            <tr>
+              <td>{{ 'data.fluidCapacity' | translate }}</td>
+              <td>{{ wagon.capacity }}</td>
+            </tr>
+          </table>
         }
-      </div>
+      }
+      @case ('fuel') {
+        @if (item.fuel; as fuel) {
+          <table>
+            <tr>
+              <td>{{ 'data.fuelCategory' | translate }}</td>
+              <td>{{ fuel.category }}</td>
+            </tr>
+            <tr>
+              <td>{{ 'data.fuelValue' | translate }}</td>
+              <td>{{ fuel.value | fuelValue }}</td>
+            </tr>
+          </table>
+        }
+      }
+      @case ('machine') {
+        @if (item.machine; as machine) {
+          <table>
+            @if (machine.speed && !data().flags.has('hideMachineSettings')) {
+              <tr>
+                <td>{{ 'data.craftingSpeed' | translate }}</td>
+                <td>{{ machine.speed | round }}</td>
+              </tr>
+            }
+            @if (machine.baseEffect; as eff) {
+              @if (eff.consumption && eff.consumption.nonzero()) {
+                <tr>
+                  <td>{{ 'data.energyConsumption' | translate }}</td>
+                  <td>{{ eff.consumption | bonusPercent }}</td>
+                </tr>
+              }
+              @if (eff.speed && eff.speed.nonzero()) {
+                <tr>
+                  <td>{{ 'data.speed' | translate }}</td>
+                  <td>{{ eff.speed | bonusPercent }}</td>
+                </tr>
+              }
+              @if (eff.productivity && eff.productivity.nonzero()) {
+                <tr>
+                  <td>{{ 'data.productivity' | translate }}</td>
+                  <td>{{ eff.productivity | bonusPercent }}</td>
+                </tr>
+              }
+              @if (eff.pollution && eff.pollution.nonzero()) {
+                <tr>
+                  <td>{{ 'data.pollution' | translate }}</td>
+                  <td>{{ eff.pollution | bonusPercent }}</td>
+                </tr>
+              }
+              @if (eff.quality && eff.quality.nonzero()) {
+                <tr>
+                  <td>{{ 'data.quality' | translate }}</td>
+                  <td>{{ eff.quality | bonusPercent }}</td>
+                </tr>
+              }
+            }
+            @if (machine.modules) {
+              <tr>
+                <td>{{ 'data.modules' | translate }}</td>
+                <td>{{ machine.modules }}</td>
+              </tr>
+            }
+            @if (machine.disallowedEffects) {
+              <tr>
+                <td>{{ 'data.disallowedEffects' | translate }}</td>
+                <td>{{ machine.disallowedEffects.join(', ') }}</td>
+              </tr>
+            }
+            @if (machine.type) {
+              <tr>
+                <td>{{ 'data.energySource' | translate }}</td>
+                <td>{{ machine.type }}</td>
+              </tr>
+            }
+            @if (machine.fuelCategories) {
+              <tr>
+                <td>{{ 'data.fuelCategories' | translate }}</td>
+                <td>{{ machine.fuelCategories.join(', ') }}</td>
+              </tr>
+            }
+            @if (machine.fuel) {
+              <tr>
+                <td>{{ 'data.fuel' | translate }}</td>
+                <td>{{ machine.fuel }}</td>
+              </tr>
+            }
+            @if (machine.usage && machine.usage.nonzero()) {
+              <tr>
+                <td>{{ 'data.energyConsumption' | translate }}</td>
+                <td>{{ machine.usage | usage }}</td>
+              </tr>
+            }
+            @if (machine.drain && machine.drain.nonzero()) {
+              <tr>
+                <td>{{ 'data.energyDrain' | translate }}</td>
+                <td>{{ machine.drain | usage }}</td>
+              </tr>
+            }
+            @if (machine.pollution && machine.pollution.nonzero()) {
+              <tr>
+                <td>{{ 'data.pollution' | translate }}</td>
+                <td>{{ machine.pollution | round }}/m</td>
+              </tr>
+            }
+            @if (machine.size) {
+              <tr>
+                <td>{{ 'data.dimensions' | translate }}</td>
+                <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
+              </tr>
+            }
+            @if (machine.silo) {
+              <tr>
+                <td>{{ 'data.rocketPartsRequired' | translate }}</td>
+                <td>{{ machine.silo.parts | round }}</td>
+              </tr>
+              <tr>
+                <td>{{ 'data.rocketLaunchTime' | translate }}</td>
+                <td>{{ machine.silo.launch | round }}s</td>
+              </tr>
+            }
+          </table>
+          @if (machine.consumption) {
+            <div class="mt-1 flex items-center justify-center">
+              @for (input of machine.consumption | keyvalue; track input.key) {
+                <lab-icon
+                  [value]="input.key"
+                  type="item"
+                  [text]="input.value | round"
+                >
+                </lab-icon>
+              }
+            </div>
+          }
+          @if (machine.locations) {
+            <div class="mt-1 text-sm">{{ 'data.locations' | translate }}</div>
+            <div>
+              @for (location of machine.locations; track location) {
+                <lab-icon [value]="location" type="location"></lab-icon>
+              }
+            </div>
+          }
+        }
+      }
+      @case ('module') {
+        @if (item.module; as module) {
+          <table>
+            @if (module.consumption && module.consumption.nonzero()) {
+              <tr>
+                <td>{{ 'data.energyConsumption' | translate }}</td>
+                <td>{{ module.consumption | bonusPercent }}</td>
+              </tr>
+            }
+            @if (module.speed && module.speed.nonzero()) {
+              <tr>
+                <td>{{ 'data.speed' | translate }}</td>
+                <td>{{ module.speed | bonusPercent }}</td>
+              </tr>
+            }
+            @if (module.productivity && module.productivity.nonzero()) {
+              <tr>
+                <td>{{ 'data.productivity' | translate }}</td>
+                <td>{{ module.productivity | bonusPercent }}</td>
+              </tr>
+            }
+            @if (module.pollution && module.pollution.nonzero()) {
+              <tr>
+                <td>{{ 'data.pollution' | translate }}</td>
+                <td>{{ module.pollution | bonusPercent }}</td>
+              </tr>
+            }
+            @if (module.quality && module.quality.nonzero()) {
+              <tr>
+                <td>{{ 'data.quality' | translate }}</td>
+                <td>{{ module.quality | bonusPercent }}</td>
+              </tr>
+            }
+            @if (module.sprays && module.sprays.nonzero()) {
+              <tr>
+                <td>{{ 'data.sprays' | translate }}</td>
+                <td>{{ module.sprays | round }}</td>
+              </tr>
+            }
+          </table>
+        }
+      }
+      @case ('pipe') {
+        @if (item.pipe; as pipe) {
+          <table>
+            <tr>
+              <td>{{ 'data.flowRate' | translate }}</td>
+              <td>
+                {{ settingsStore.beltSpeedTxt()[tooltipData.value]
+                }}{{ settingsStore.displayRateInfo().suffix | translate }}
+              </td>
+            </tr>
+          </table>
+        }
+      }
+      @case ('technology') {
+        @if (item.technology; as technology) {
+          @if (technology.prerequisites; as prerequisites) {
+            <div class="mt-1">{{ 'data.prerequisites' | translate }}</div>
+            <div>
+              @for (prerequisite of prerequisites; track prerequisite) {
+                <lab-icon [value]="prerequisite" type="item"></lab-icon>
+              }
+            </div>
+          }
+          @if (technology.unlockedRecipes; as recipes) {
+            @if (recipes.length > 5) {
+              <table>
+                <tr>
+                  <td>{{ 'data.unlockedRecipes' | translate }}</td>
+                  <td>{{ recipes.length }}</td>
+                </tr>
+              </table>
+            } @else {
+              <div class="mt-1">{{ 'data.unlockedRecipes' | translate }}</div>
+              <div>
+                @for (recipeId of recipes; track recipeId) {
+                  <lab-icon [value]="recipeId" type="recipe"></lab-icon>
+                }
+              </div>
+            }
+          }
+        }
+      }
     }
-    @if (machine.locations) {
-      <div class="mt-1 text-sm">{{ 'data.locations' | translate }}</div>
-      <div>
-        @for (location of machine.locations; track location) {
-          <lab-icon [value]="location" type="location"></lab-icon>
-        }
-      </div>
-    }
+  } @else if (tooltipData.type === 'module') {
+    <div>{{ 'data.moduleSlots' | translate }}</div>
   }
 } @else {
   <span [innerHtml]="tooltipData.value | translate"></span>

@@ -5,7 +5,6 @@ export type TooltipType =
   | 'cargo-wagon'
   | 'fluid-wagon'
   | 'fuel'
-  | 'location'
   | 'machine'
   | 'module'
   | 'pipe'

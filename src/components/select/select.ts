@@ -48,7 +48,7 @@ const host = cva(
         true: 'rounded-xs',
       },
       iconOnly: {
-        true: 'min-w-9 justify-center hover:bg-gray-800 outline-brand-700 hover:border',
+        true: 'min-w-9 justify-center hover:bg-gray-800 outline-brand-700 hover:border grow-0',
         false: 'border outline-brand-700 px-1',
       },
     },

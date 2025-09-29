@@ -1,19 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Rational, rational } from '~/rational/rational';
+import { Rational, toNumber } from '~/rational/rational';
 
 @Pipe({ name: 'bonusPercent' })
 export class BonusPercentPipe implements PipeTransform {
-  transform(value: Rational | null | undefined): string {
+  transform(value: Rational | string | number | null | undefined): string {
     if (value == null) return '';
+    value = toNumber(value);
+    if (value === 0) return '';
 
-    const pct = value
-      .mul(rational(100n))
-      .round()
-      .toNumber()
-      .toLocaleString(undefined, { maximumFractionDigits: 2 });
-    if (value.gt(rational.zero)) return `+${pct}%`;
-    if (value.lt(rational.zero)) return `${pct}%`;
-    return '';
+    const pct = Math.round(value * 100).toLocaleString(undefined, {
+      maximumFractionDigits: 2,
+    });
+    if (value > 0) return `+${pct}%`;
+    else return `${pct}%`;
   }
 }

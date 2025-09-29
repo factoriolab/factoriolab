@@ -66,7 +66,16 @@ export class Options {
       .filter((f) => fuelCategories.includes(f.fuel.category));
     if (allowed.some((f) => settings.availableItemIds.has(f.id)))
       allowed = allowed.filter((f) => settings.availableItemIds.has(f.id));
-    return allowed.map((f): Option => ({ value: f.id, label: f.name }));
+    return allowed.map(
+      (f): Option => ({
+        value: f.id,
+        label: f.name,
+        icon: f.id,
+        iconType: 'item',
+        tooltip: f.id,
+        tooltipType: 'fuel',
+      }),
+    );
   }
 
   moduleOptions(
