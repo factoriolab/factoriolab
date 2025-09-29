@@ -17,12 +17,42 @@ export enum Quality {
 }
 
 export const qualityOptions: Option<Quality>[] = [
-  { value: Quality.Any, label: 'options.quality.any' },
-  { value: Quality.Normal, label: 'options.quality.normal' },
-  { value: Quality.Uncommon, label: 'options.quality.uncommon' },
-  { value: Quality.Rare, label: 'options.quality.rare' },
-  { value: Quality.Epic, label: 'options.quality.epic' },
-  { value: Quality.Legendary, label: 'options.quality.legendary' },
+  {
+    value: Quality.Any,
+    label: 'options.quality.any',
+    icon: 'q-1',
+    iconType: 'system',
+  },
+  {
+    value: Quality.Normal,
+    label: 'options.quality.normal',
+    icon: 'q0',
+    iconType: 'system',
+  },
+  {
+    value: Quality.Uncommon,
+    label: 'options.quality.uncommon',
+    icon: 'q1',
+    iconType: 'system',
+  },
+  {
+    value: Quality.Rare,
+    label: 'options.quality.rare',
+    icon: 'q2',
+    iconType: 'system',
+  },
+  {
+    value: Quality.Epic,
+    label: 'options.quality.epic',
+    icon: 'q3',
+    iconType: 'system',
+  },
+  {
+    value: Quality.Legendary,
+    label: 'options.quality.legendary',
+    icon: 'q5',
+    iconType: 'system',
+  },
 ];
 
 export const QUALITY_REGEX = /^(.*)\((\d)\)$/;

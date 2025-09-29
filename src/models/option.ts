@@ -1,10 +1,16 @@
 import { IconDefinition } from '@fortawesome/angular-fontawesome';
 
+import { TooltipType } from '~/components/tooltip/tooltip-type';
+import { IconType } from '~/data/icon-type';
+
 export interface Option<T = string> {
   label: string;
   value: T;
-  icon?: IconDefinition;
+  faIcon?: IconDefinition;
+  icon?: string;
+  iconType?: IconType;
   tooltip?: string;
+  tooltipType?: TooltipType;
   disabled?: boolean;
 }
 

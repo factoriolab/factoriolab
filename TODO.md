@@ -1,5 +1,9 @@
 # TODO
 
+## Select
+
+- Revisit whether icon / tooltip info should live on Option
+
 ## Header
 
 - Settings button? To pick language, etc.

@@ -299,13 +299,24 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
           (r): Option => ({
             value: r,
             label: data.recipeRecord[r].name,
+            icon: r,
+            iconType: 'recipe',
+            tooltip: s.recipeId,
+            tooltipType: 'recipe',
           }),
         );
       } else if (s.recipeId != null) {
         recipeIds = [s.recipeId];
         recipesEnabled = [s.recipeId];
         recipeOptions = [
-          { label: data.recipeRecord[s.recipeId].name, value: s.recipeId },
+          {
+            label: data.recipeRecord[s.recipeId].name,
+            value: s.recipeId,
+            icon: s.recipeId,
+            iconType: 'recipe',
+            tooltip: s.recipeId,
+            tooltipType: 'recipe',
+          },
         ];
       }
 

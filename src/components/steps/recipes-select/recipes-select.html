@@ -1,0 +1,24 @@
+@if (details(); as details) {
+  <lab-select
+    #select
+    type="recipe"
+    class="group border-brand-700 hover:border"
+    [iconOnly]="true"
+    [options]="details.recipeOptions"
+    [ngModel]="details.recipesEnabled"
+    (ngModelChange)="changeRecipesIncluded($event)"
+  >
+    <div class="flex group-hover:opacity-40">
+      @if (step().recipeId; as recipeId) {
+        <lab-icon type="recipe" [value]="recipeId"></lab-icon>
+      } @else {
+        <fa-icon [icon]="faFlaskVial"></fa-icon>
+      }
+    </div>
+    <fa-icon
+      class="text-brand-400 absolute hidden transition-transform group-hover:block"
+      [class.-scale-y-100]="select.opened()"
+      [icon]="faChevronDown"
+    ></fa-icon>
+  </lab-select>
+}

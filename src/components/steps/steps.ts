@@ -32,6 +32,7 @@ import { Columns } from '../columns/columns';
 import { Icon } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
 import { ExcludeButton } from './exclude-button/exclude-button';
+import { RecipesSelect } from './recipes-select/recipes-select';
 import { SortColumn } from './sort-column';
 import { SortHeader } from './sort-header/sort-header';
 
@@ -44,6 +45,7 @@ import { SortHeader } from './sort-header/sort-header';
     ExcludeButton,
     Icon,
     RatePipe,
+    RecipesSelect,
     SortHeader,
     Tooltip,
     TranslatePipe,

@@ -44,6 +44,9 @@ const host = cva(
         true: 'justify-center',
         false: 'px-3',
       },
+      toggle: {
+        true: 'border-brand-700 hover:border',
+      },
     },
     compoundVariants: [
       {
@@ -115,6 +118,7 @@ export class Button {
       rounded: this.rounded(),
       hide: this.hide(),
       iconOnly: !this.text(),
+      toggle: this.toggleIcon() != null,
     }),
   );
 }

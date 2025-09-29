@@ -84,8 +84,7 @@
     1px 0 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
     -1px 0 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%));
   --animate-delayed-fade-in: delayed-fade-in 300ms linear;
-  --animate-fade-out: fade-out var(--default-transition-duration)
-    var(--default-transition-timing-function);
+  --animate-fade-out: fade-out 300ms var(--default-transition-timing-function);
   --animate-enter-translate-y: translate-y var(--default-transition-duration)
     var(--default-transition-timing-function);
   --animate-ripple: ripple-animation 300ms linear forwards;
@@ -104,10 +103,20 @@
     }
   }
 
+  /**
+   * Double duration of animation but complete halfway through. This extra time
+   * seems to help Angular's animate.leave remove the element when the animation
+   * completes.
+   */
   @keyframes fade-out {
     0% {
       opacity: 1;
       scale: 1 1;
+    }
+
+    50% {
+      opacity: 0;
+      scale: 1 0.75;
     }
 
     100% {

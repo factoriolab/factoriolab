@@ -55,8 +55,6 @@ export class PickerDialog {
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
   protected readonly faXmark = faXmark;
   protected readonly qualityOptions = qualityOptions;
-  protected readonly qualityIconLocator = (value: Quality): string =>
-    `q${value}`;
 
   isMultiselect = false;
   readonly filter = signal('');

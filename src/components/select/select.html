@@ -1,32 +1,37 @@
-@let _type = type();
-@let _selectedOption = selectedOption();
-@if (_type && _selectedOption) {
-  <lab-icon
-    [value]="iconLocator()(_selectedOption.value)"
-    [type]="_type"
-  ></lab-icon>
-} @else if (iconOnly()) {
-  <fa-icon
-    class="absolute text-gray-500 transition-transform"
-    [class.-scale-y-100]="opened()"
-    [icon]="faChevronDown"
-  ></fa-icon>
-}
+<ng-content>
+  @let _selectedOption = selectedOption();
+  @if (_selectedOption && _selectedOption.faIcon) {
+    <fa-icon [icon]="_selectedOption.faIcon"></fa-icon>
+  } @else if (
+    _selectedOption && _selectedOption.icon && _selectedOption.iconType
+  ) {
+    <lab-icon
+      [value]="_selectedOption.icon"
+      [type]="_selectedOption.iconType"
+    ></lab-icon>
+  } @else if (iconOnly()) {
+    <fa-icon
+      class="absolute text-gray-500 transition-transform"
+      [class.-scale-y-100]="opened()"
+      [icon]="faChevronDown"
+    ></fa-icon>
+  }
 
-@if (!iconOnly()) {
-  <div class="ms-1 me-2 line-clamp-1 grow">
-    @if (_selectedOption) {
-      {{ _selectedOption.label | translate }}
-    } @else if (placeholder()) {
-      <span class="text-gray-500">{{ placeholder() | translate }}</span>
-    }
-  </div>
-  <fa-icon
-    class="text-gray-500 transition-transform"
-    [class.-scale-y-100]="opened()"
-    [icon]="faChevronDown"
-  ></fa-icon>
-}
+  @if (!iconOnly()) {
+    <div class="ms-1 me-2 line-clamp-1 grow">
+      @if (_selectedOption) {
+        {{ _selectedOption.label | translate }}
+      } @else if (placeholder()) {
+        <span class="text-gray-500">{{ placeholder() | translate }}</span>
+      }
+    </div>
+    <fa-icon
+      class="text-gray-500 transition-transform"
+      [class.-scale-y-100]="opened()"
+      [icon]="faChevronDown"
+    ></fa-icon>
+  }
+</ng-content>
 
 <ng-template
   cdkConnectedOverlay
@@ -40,17 +45,25 @@
     class="mt-1 flex max-h-96 min-w-full origin-top flex-col overflow-hidden rounded-xs border border-gray-700 bg-gray-950 transition-all starting:scale-y-75 starting:opacity-0"
     animate.leave="animate-fade-out"
   >
-    @if (filter()) {
-      <div class="relative m-2 flex">
-        <input
-          class="input"
-          [placeholder]="'filter' | translate"
-          [(ngModel)]="filterText"
-        />
-        <fa-icon
-          class="pointer-events-none absolute top-1.5 right-1.5 text-gray-500"
-          [icon]="faMagnifyingGlass"
-        ></fa-icon>
+    @if (filter() || multi()) {
+      <div class="flex items-center gap-1 px-1 py-2">
+        @if (multi()) {
+          <lab-checkbox
+            [ngModel]="allSelected()"
+            (ngModelChange)="selectAll($event)"
+          ></lab-checkbox>
+        }
+        <div class="relative flex">
+          <input
+            class="input"
+            [placeholder]="'filter' | translate"
+            [(ngModel)]="filterText"
+          />
+          <fa-icon
+            class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+            [icon]="faMagnifyingGlass"
+          ></fa-icon>
+        </div>
       </div>
     }
     <ul
@@ -61,20 +74,24 @@
     >
       @for (opt of options(); track opt.value) {
         @let label = opt.label | translate;
+        @let checked = selection().has(opt.value);
         @if (label.toLowerCase().includes(filterLower())) {
           <li
             #option
+            labRipple
             role="option"
-            class="flex min-h-9 cursor-pointer items-center px-1 outline-none select-none"
+            class="flex min-h-9 cursor-pointer items-center overflow-hidden px-1 outline-none select-none"
             [attr.tabindex]="opt.disabled ? -1 : 0"
             [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
             [attr.aria-selected]="opt.value === value()"
+            [attr.aria-checked]="checked"
             [class]="
               opt.value === value()
                 ? 'text-brand-50 bg-brand-950 hover:bg-brand-800 focus-visible:bg-brand-800'
                 : 'hover:bg-gray-800 focus-visible:bg-gray-800'
             "
             [labTooltip]="opt.tooltip"
+            [labTooltipType]="opt.tooltipType"
             labTooltipPosition="adjacent"
             (click)="select(opt.value)"
             (keydown.enter)="select(opt.value)"
@@ -83,11 +100,16 @@
             (keydown.home)="focusFirst($event)"
             (keydown.end)="focusLast($event)"
           >
-            @if (_type) {
-              <lab-icon
-                [value]="iconLocator()(opt.value)"
-                [type]="_type"
-              ></lab-icon>
+            @if (multi()) {
+              <lab-checkbox
+                class="pointer-events-none"
+                [ngModel]="checked"
+              ></lab-checkbox>
+            }
+            @if (opt.faIcon) {
+              <fa-icon [icon]="opt.faIcon"></fa-icon>
+            } @else if (opt.icon && opt.iconType) {
+              <lab-icon [value]="opt.icon" [type]="opt.iconType"></lab-icon>
             }
             <span class="ms-1">{{ label }}</span>
           </li>

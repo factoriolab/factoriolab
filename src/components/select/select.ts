@@ -8,6 +8,7 @@ import {
   inject,
   Injector,
   input,
+  linkedSignal,
   model,
   signal,
   viewChild,
@@ -21,20 +22,22 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
-import { IconType } from '~/data/icon-type';
 import { Option } from '~/models/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { areArraysEqual } from '~/utils/equality';
 
+import { Checkbox } from '../checkbox/checkbox';
 import { Control, LAB_CONTROL } from '../control';
 import { FormField } from '../form-field/form-field';
 import { Icon } from '../icon/icon';
+import { Ripple } from '../ripple/ripple';
 import { Tooltip } from '../tooltip/tooltip';
 
 let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
 
 const host = cva(
-  'inline-flex overflow-hidden grow cursor-pointer min-h-9 items-center select-none px-1 hover:border-brand-700 hover:z-2 focus-visible:border-brand-700 focus-visible:outline focus:z-2',
+  'inline-flex overflow-hidden grow cursor-pointer min-h-9 items-center select-none hover:border-brand-700 hover:z-2 focus-visible:border-brand-700 focus-visible:outline focus:z-2',
   {
     variants: {
       opened: {
@@ -46,7 +49,7 @@ const host = cva(
       },
       iconOnly: {
         true: 'min-w-9 justify-center hover:bg-gray-800 outline-brand-700',
-        false: 'border outline-brand-700',
+        false: 'border outline-brand-700 px-1',
       },
     },
   },
@@ -58,7 +61,9 @@ const host = cva(
     FormsModule,
     OverlayModule,
     FaIconComponent,
+    Checkbox,
     Icon,
+    Ripple,
     Tooltip,
     TranslatePipe,
   ],
@@ -103,11 +108,17 @@ export class Select<T = unknown> extends Control<T> {
   readonly disabled = model(false);
   readonly placeholder = input<string>();
   readonly rounded = input(true);
-  readonly type = input<IconType>();
   readonly filter = input<boolean>(false);
   readonly iconOnly = input<boolean>(false);
-  readonly iconLocator = input<(value: T) => string>((v) => v as string);
   readonly labelledBy = input<string>();
+
+  readonly filterText = signal('');
+  readonly opened = signal(false);
+
+  readonly selection = linkedSignal(() => {
+    const value = this.value();
+    return new Set(Array.isArray(value) ? value : null);
+  });
 
   readonly hostClass = computed(() =>
     host({
@@ -116,16 +127,19 @@ export class Select<T = unknown> extends Control<T> {
       iconOnly: this.iconOnly(),
     }),
   );
-  readonly opened = signal(false);
+  readonly multi = computed(() => Array.isArray(this.value()));
+  readonly allSelected = computed(() => {
+    if (this.options().length === this.selection().size) return true;
+    if (this.selection().size === 0) return false;
+    return undefined;
+  });
   readonly selectedOption = computed(() =>
     this.options()?.find((o) => o.value === this.value()),
   );
+  readonly filterLower = computed(() => this.filterText().toLowerCase());
 
   protected readonly faChevronDown = faChevronDown;
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
-
-  filterText = signal('');
-  filterLower = computed(() => this.filterText().toLowerCase());
 
   toggle(event?: Event): void {
     if (
@@ -134,8 +148,14 @@ export class Select<T = unknown> extends Control<T> {
     )
       return;
 
-    if (this.opened()) this.opened.set(false);
-    else {
+    if (this.opened()) {
+      this.opened.set(false);
+      if (this.multi()) {
+        const next = Array.from(this.selection());
+        if (!areArraysEqual(next, this.value() as unknown[]))
+          this.setValue(Array.from(this.selection()) as unknown as T);
+      }
+    } else {
       this.opened.set(true);
       this.filterText.set('');
       this.focusAfterOpen(event);
@@ -145,8 +165,23 @@ export class Select<T = unknown> extends Control<T> {
   }
 
   select(value: T): void {
-    this.toggle();
-    this.setValue(value);
+    if (this.multi()) {
+      this.selection.update((s) => {
+        const result = new Set(s);
+        if (result.has(value)) result.delete(value);
+        else result.add(value);
+        return result;
+      });
+    } else {
+      this.toggle();
+      this.setValue(value);
+    }
+  }
+
+  selectAll(value: boolean | undefined): void {
+    if (!this.multi() || value == null) return;
+    if (value) this.selection.set(new Set(this.options().map((o) => o.value)));
+    else this.selection.set(new Set());
   }
 
   focusFirst(event: Event): void {
@@ -177,6 +212,7 @@ export class Select<T = unknown> extends Control<T> {
     // Don't need to worry about filter, none can be applied yet
     const options = this.options();
     let index = options.findIndex((o) => o.value === this.value());
+    if (this.multi()) index = 0;
     if (event instanceof KeyboardEvent) {
       switch (event.key) {
         case 'ArrowUp':

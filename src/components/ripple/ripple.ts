@@ -2,7 +2,7 @@ import { Directive, DOCUMENT, inject } from '@angular/core';
 
 @Directive({
   selector: '[labRipple]',
-  host: { class: 'relative', '(click)': 'ripple($event)' },
+  host: { class: 'relative', '(mousedown)': 'ripple($event)' },
 })
 export class Ripple {
   private readonly document = inject(DOCUMENT);
@@ -14,6 +14,7 @@ export class Ripple {
       'rounded-full',
       'bg-gray-50/40',
       'animate-ripple',
+      'pointer-events-none',
     );
 
     const element = event.currentTarget as HTMLElement;

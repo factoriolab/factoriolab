@@ -221,7 +221,7 @@
           @if (step.itemId) {
             <div class="relative flex">
               <span
-                class="absolute top-1 text-transparent select-none"
+                class="absolute top-1 -z-1 text-transparent select-none"
                 aria-hidden="true"
                 >{{ data().itemRecord[step.itemId].name }}</span
               >
@@ -258,12 +258,23 @@
             }
           </td>
           <td class="ps-0">
-            <div class="flex">
-              <lab-icon [value]="machineId" type="item"></lab-icon>
-            </div>
+            @if (step.recipeId && step.recipe && step.recipeSettings) {
+              <div class="relative flex items-center">
+                <span
+                  class="absolute top-1 -z-1 text-transparent select-none"
+                  aria-hidden="true"
+                  >{{ data().recipeRecord[step.recipeId].name }}</span
+                >
+                <lab-recipes-select [step]="step"></lab-recipes-select>
+                <lab-icon [value]="machineId" type="item"></lab-icon>
+              </div>
+            }
           </td>
         } @else {
-          <td colspan="2"></td>
+          <td></td>
+          <td class="ps-0">
+            <lab-recipes-select [step]="step"></lab-recipes-select>
+          </td>
         }
         <!-- Beacons -->
         @if (cols().beacons.show) {
