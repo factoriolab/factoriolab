@@ -40,6 +40,10 @@ export class Options {
     return machineIds.map((m) => ({
       value: m,
       label: data.itemRecord[m].name,
+      icon: m,
+      iconType: 'item',
+      tooltip: m,
+      tooltipType: 'machine',
     }));
   }
 

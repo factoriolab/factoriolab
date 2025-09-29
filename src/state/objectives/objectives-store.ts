@@ -252,7 +252,6 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
       const outputs: StepOutput[] = [];
       let recipeIds: string[] = [];
       let recipesEnabled: string[] = [];
-      let recipeOptions: Option[] = [];
       if (s.itemId != null && s.items != null) {
         const itemId = s.itemId; // Store null-checked id
         tabs.push(StepDetailTab.Item);
@@ -281,13 +280,8 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         outputs.sort((a, b) => b.value.sub(a.value).toNumber());
       }
 
-      if (s.recipeId != null) {
-        tabs.push(StepDetailTab.Recipe);
-      }
-
-      if (s.machines?.nonzero()) {
-        tabs.push(StepDetailTab.Machine);
-      }
+      if (s.recipeId != null) tabs.push(StepDetailTab.Recipe);
+      if (s.machines?.nonzero()) tabs.push(StepDetailTab.Machine);
 
       if (s.itemId != null) {
         recipeIds = data.itemRecipeIds[s.itemId];
@@ -295,30 +289,21 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         recipesEnabled = recipeIds.filter(
           (r) => !settings.excludedRecipeIds.has(r),
         );
-        recipeOptions = recipeIds.map(
-          (r): Option => ({
-            value: r,
-            label: data.recipeRecord[r].name,
-            icon: r,
-            iconType: 'recipe',
-            tooltip: s.recipeId,
-            tooltipType: 'recipe',
-          }),
-        );
       } else if (s.recipeId != null) {
         recipeIds = [s.recipeId];
         recipesEnabled = [s.recipeId];
-        recipeOptions = [
-          {
-            label: data.recipeRecord[s.recipeId].name,
-            value: s.recipeId,
-            icon: s.recipeId,
-            iconType: 'recipe',
-            tooltip: s.recipeId,
-            tooltipType: 'recipe',
-          },
-        ];
       }
+
+      const recipeOptions = recipeIds.map(
+        (i): Option => ({
+          label: data.recipeRecord[i].name,
+          value: i,
+          icon: i,
+          iconType: 'recipe',
+          tooltip: i,
+          tooltipType: 'recipe',
+        }),
+      );
 
       e[s.id] = {
         tabs: tabs.map((t) => {

@@ -47,13 +47,19 @@
       labTooltip="header.resetTooltip"
     ></a>
     <lab-select
-      type="system"
+      #gameSelect
       class="w-11 rounded-l-none"
       [attr.aria-label]="'header.selectGame' | translate"
       [iconOnly]="true"
       [options]="gameOptions()"
       (valueChange)="setGame($event)"
-    ></lab-select>
+    >
+      <fa-icon
+        class="absolute text-gray-400 transition-transform"
+        [class.-scale-y-100]="gameSelect.opened()"
+        [icon]="faChevronDown"
+      ></fa-icon>
+    </lab-select>
   </div>
 </div>
 <div class="flex w-full items-center gap-2 md:w-auto">

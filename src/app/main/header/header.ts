@@ -6,9 +6,16 @@ import {
   model,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { IconDefinition } from '@fortawesome/angular-fontawesome';
+import {
+  FaIconComponent,
+  IconDefinition,
+} from '@fortawesome/angular-fontawesome';
 import { faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faBars, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBars,
+  faChevronDown,
+  faHandHoldingDollar,
+} from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { Select } from '~/components/select/select';
@@ -27,7 +34,14 @@ interface ExternalLink {
 @Component({
   selector: 'header[labHeader], header[lab-header]',
   exportAs: 'labHeader',
-  imports: [RouterLink, Button, Select, Tooltip, TranslatePipe],
+  imports: [
+    RouterLink,
+    FaIconComponent,
+    Button,
+    Select,
+    Tooltip,
+    TranslatePipe,
+  ],
   templateUrl: './header.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -46,6 +60,7 @@ export class Header {
   protected readonly gameInfo = this.settingsStore.gameInfo;
 
   protected readonly faBars = faBars;
+  protected readonly faChevronDown = faChevronDown;
   protected readonly links: ExternalLink[] = [
     {
       text: 'header.discord',

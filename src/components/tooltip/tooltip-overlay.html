@@ -10,6 +10,136 @@
       <lab-recipe [value]="recipeId"></lab-recipe>
     }
   }
+
+  @if (
+    tooltipData.type === 'machine' && data().machineRecord[tooltipData.value];
+    as machine
+  ) {
+    <table class="info-table">
+      @if (machine.speed && !data().flags.has('hideMachineSettings')) {
+        <tr>
+          <td>{{ 'data.craftingSpeed' | translate }}</td>
+          <td>{{ machine.speed | round }}</td>
+        </tr>
+      }
+      @if (machine.baseEffect; as eff) {
+        @if (eff.consumption && eff.consumption.nonzero()) {
+          <tr>
+            <td>{{ 'data.energyConsumption' | translate }}</td>
+            <td>{{ eff.consumption | bonusPercent }}</td>
+          </tr>
+        }
+        @if (eff.speed && eff.speed.nonzero()) {
+          <tr>
+            <td>{{ 'data.speed' | translate }}</td>
+            <td>{{ eff.speed | bonusPercent }}</td>
+          </tr>
+        }
+        @if (eff.productivity && eff.productivity.nonzero()) {
+          <tr>
+            <td>{{ 'data.productivity' | translate }}</td>
+            <td>{{ eff.productivity | bonusPercent }}</td>
+          </tr>
+        }
+        @if (eff.pollution && eff.pollution.nonzero()) {
+          <tr>
+            <td>{{ 'data.pollution' | translate }}</td>
+            <td>{{ eff.pollution | bonusPercent }}</td>
+          </tr>
+        }
+        @if (eff.quality && eff.quality.nonzero()) {
+          <tr>
+            <td>{{ 'data.quality' | translate }}</td>
+            <td>{{ eff.quality | bonusPercent }}</td>
+          </tr>
+        }
+      }
+      @if (machine.modules) {
+        <tr>
+          <td>{{ 'data.modules' | translate }}</td>
+          <td>{{ machine.modules }}</td>
+        </tr>
+      }
+      @if (machine.disallowedEffects) {
+        <tr>
+          <td>{{ 'data.disallowedEffects' | translate }}</td>
+          <td>{{ machine.disallowedEffects.join(', ') }}</td>
+        </tr>
+      }
+      @if (machine.type) {
+        <tr>
+          <td>{{ 'data.energySource' | translate }}</td>
+          <td>{{ machine.type }}</td>
+        </tr>
+      }
+      @if (machine.fuelCategories) {
+        <tr>
+          <td>{{ 'data.fuelCategories' | translate }}</td>
+          <td>{{ machine.fuelCategories.join(', ') }}</td>
+        </tr>
+      }
+      @if (machine.fuel) {
+        <tr>
+          <td>{{ 'data.fuel' | translate }}</td>
+          <td>{{ machine.fuel }}</td>
+        </tr>
+      }
+      @if (machine.usage && machine.usage.nonzero()) {
+        <tr>
+          <td>{{ 'data.energyConsumption' | translate }}</td>
+          <td>{{ machine.usage | usage }}</td>
+        </tr>
+      }
+      @if (machine.drain && machine.drain.nonzero()) {
+        <tr>
+          <td>{{ 'data.energyDrain' | translate }}</td>
+          <td>{{ machine.drain | usage }}</td>
+        </tr>
+      }
+      @if (machine.pollution && machine.pollution.nonzero()) {
+        <tr>
+          <td>{{ 'data.pollution' | translate }}</td>
+          <td>{{ machine.pollution | round }}/m</td>
+        </tr>
+      }
+      @if (machine.size) {
+        <tr>
+          <td>{{ 'data.dimensions' | translate }}</td>
+          <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
+        </tr>
+      }
+      @if (machine.silo) {
+        <tr>
+          <td>{{ 'data.rocketPartsRequired' | translate }}</td>
+          <td>{{ machine.silo.parts | round }}</td>
+        </tr>
+        <tr>
+          <td>{{ 'data.rocketLaunchTime' | translate }}</td>
+          <td>{{ machine.silo.launch | round }}s</td>
+        </tr>
+      }
+    </table>
+    @if (machine.consumption) {
+      <div class="mt-1 flex items-center justify-center">
+        @for (input of machine.consumption | keyvalue; track input.key) {
+          <lab-icon
+            [value]="input.key"
+            type="item"
+            [text]="input.value | round"
+          >
+          </lab-icon>
+        }
+      </div>
+    }
+    @if (machine.locations) {
+      <div class="mt-1 text-sm">{{ 'data.locations' | translate }}</div>
+      <div>
+        @for (location of machine.locations; track location) {
+          <lab-icon [value]="location" type="location"></lab-icon>
+        }
+      </div>
+    }
+  }
 } @else {
   <span [innerHtml]="tooltipData.value | translate"></span>
 }

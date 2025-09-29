@@ -90,6 +90,8 @@
         labSortHeader
         column="machines"
         text="options.column.machines"
+        [showUndo]="objectivesStore.recipesModified().machines"
+        (undo)="resetMachines()"
       ></th>
       <!-- Beacons -->
       @if (cols().beacons.show) {
@@ -212,9 +214,10 @@
         </td>
         <td class="w-0 pe-0">
           @if (step.items) {
-            <div class="flex justify-end font-mono whitespace-pre">
-              {{ step.items | rate: cols().items.precision }}
-            </div>
+            <div
+              class="flex justify-end font-mono whitespace-pre"
+              [innerHTML]="step.items | rate: cols().items.precision"
+            ></div>
           }
         </td>
         <td class="ps-0">
@@ -266,7 +269,33 @@
                   >{{ data().recipeRecord[step.recipeId].name }}</span
                 >
                 <lab-recipes-select [step]="step"></lab-recipes-select>
-                <lab-icon [value]="machineId" type="item"></lab-icon>
+                @if (!step.recipe.flags.has('hideProducer')) {
+                  <lab-select
+                    class="grow-0"
+                    [iconOnly]="true"
+                    [options]="step.recipeSettings.machineOptions ?? []"
+                    [filter]="
+                      step.recipeSettings.machineOptions != null &&
+                      step.recipeSettings.machineOptions.length > 5
+                    "
+                    [ngModel]="machineId"
+                    (ngModelChange)="
+                      step.recipeObjectiveId
+                        ? objectivesStore.updateRecordField(
+                            step.recipeObjectiveId,
+                            'machineId',
+                            $event,
+                            step.recipeSettings.defaultMachineId
+                          )
+                        : recipesStore.updateRecordField(
+                            step.recipeId,
+                            'machineId',
+                            $event,
+                            step.recipeSettings.defaultMachineId
+                          )
+                    "
+                  ></lab-select>
+                }
               </div>
             }
           </td>

@@ -14,7 +14,8 @@ import { SettingsStore } from '~/state/settings/settings-store';
   templateUrl: './icon.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'inline-flex shrink-0 relative size-8',
+    class:
+      'inline-flex shrink-0 relative size-8 text-sm/4 font-bold text-white',
   },
 })
 export class Icon {

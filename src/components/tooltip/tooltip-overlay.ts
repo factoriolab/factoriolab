@@ -1,3 +1,4 @@
+import { KeyValuePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,9 +11,13 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { cva } from 'class-variance-authority';
 
+import { BonusPercentPipe } from '~/rational/bonus-percent-pipe';
+import { RoundPipe } from '~/rational/round-pipe';
+import { UsagePipe } from '~/rational/usage-pipe';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
+import { Icon } from '../icon/icon';
 import { RecipeProcess } from '../recipe-process/recipe-process';
 import { TOOLTIP_DATA } from './tooltip-data';
 
@@ -79,7 +84,15 @@ const nub = cva(
 
 @Component({
   selector: 'lab-tooltip-overlay',
-  imports: [RecipeProcess, TranslatePipe],
+  imports: [
+    KeyValuePipe,
+    BonusPercentPipe,
+    Icon,
+    RecipeProcess,
+    RoundPipe,
+    TranslatePipe,
+    UsagePipe,
+  ],
   templateUrl: './tooltip-overlay.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

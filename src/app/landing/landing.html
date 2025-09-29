@@ -8,7 +8,6 @@
 <div class="flex w-xs grow basis-[30rem] flex-col gap-3">
   <lab-form-field label="game">
     <lab-select
-      type="system"
       [options]="gameOptions"
       [ngModel]="data().game"
       (ngModelChange)="setGame($event)"

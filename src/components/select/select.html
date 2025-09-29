@@ -1,21 +1,21 @@
 <ng-content>
   @let _selectedOption = selectedOption();
-  @if (_selectedOption && _selectedOption.faIcon) {
-    <fa-icon [icon]="_selectedOption.faIcon"></fa-icon>
-  } @else if (
-    _selectedOption && _selectedOption.icon && _selectedOption.iconType
-  ) {
-    <lab-icon
-      [value]="_selectedOption.icon"
-      [type]="_selectedOption.iconType"
-    ></lab-icon>
-  } @else if (iconOnly()) {
-    <fa-icon
-      class="absolute text-gray-500 transition-transform"
-      [class.-scale-y-100]="opened()"
-      [icon]="faChevronDown"
-    ></fa-icon>
-  }
+  <span
+    class="inline-flex"
+    [class.group-hover:opacity-40]="iconOnly()"
+    [class.opacity-40]="iconOnly() && opened()"
+  >
+    @if (_selectedOption && _selectedOption.faIcon) {
+      <fa-icon [icon]="_selectedOption.faIcon"></fa-icon>
+    } @else if (
+      _selectedOption && _selectedOption.icon && _selectedOption.iconType
+    ) {
+      <lab-icon
+        [value]="_selectedOption.icon"
+        [type]="_selectedOption.iconType"
+      ></lab-icon>
+    }
+  </span>
 
   @if (!iconOnly()) {
     <div class="ms-1 me-2 line-clamp-1 grow">
@@ -27,6 +27,13 @@
     </div>
     <fa-icon
       class="text-gray-500 transition-transform"
+      [class.-scale-y-100]="opened()"
+      [icon]="faChevronDown"
+    ></fa-icon>
+  } @else {
+    <fa-icon
+      class="text-brand-400 absolute transition-transform group-hover:block"
+      [class.hidden]="!opened()"
       [class.-scale-y-100]="opened()"
       [icon]="faChevronDown"
     ></fa-icon>
@@ -42,7 +49,7 @@
 >
   <div
     #overlay
-    class="mt-1 flex max-h-96 min-w-full origin-top flex-col overflow-hidden rounded-xs border border-gray-700 bg-gray-950 transition-all starting:scale-y-75 starting:opacity-0"
+    class="mt-1 flex max-h-96 max-w-80 min-w-full origin-top flex-col overflow-hidden rounded-xs border border-gray-700 bg-gray-950 transition-all starting:scale-y-75 starting:opacity-0"
     animate.leave="animate-fade-out"
   >
     @if (filter() || multi()) {
@@ -53,7 +60,7 @@
             (ngModelChange)="selectAll($event)"
           ></lab-checkbox>
         }
-        <div class="relative flex">
+        <div class="relative flex grow">
           <input
             class="input"
             [placeholder]="'filter' | translate"
@@ -80,7 +87,7 @@
             #option
             labRipple
             role="option"
-            class="flex min-h-9 cursor-pointer items-center overflow-hidden px-1 outline-none select-none"
+            class="flex min-h-9 cursor-pointer items-center overflow-hidden ps-1 pe-4 outline-none select-none"
             [attr.tabindex]="opt.disabled ? -1 : 0"
             [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
             [attr.aria-selected]="opt.value === value()"
@@ -111,7 +118,7 @@
             } @else if (opt.icon && opt.iconType) {
               <lab-icon [value]="opt.icon" [type]="opt.iconType"></lab-icon>
             }
-            <span class="ms-1">{{ label }}</span>
+            <span class="ms-1 line-clamp-1">{{ label }}</span>
           </li>
         }
       }

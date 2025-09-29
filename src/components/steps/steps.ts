@@ -20,6 +20,7 @@ import { Exporter } from '~/exporter/exporter';
 import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
+import { RecipeState } from '~/state/recipes/recipe-state';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
@@ -30,6 +31,7 @@ import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
 import { Columns } from '../columns/columns';
 import { Icon } from '../icon/icon';
+import { Select } from '../select/select';
 import { Tooltip } from '../tooltip/tooltip';
 import { ExcludeButton } from './exclude-button/exclude-button';
 import { RecipesSelect } from './recipes-select/recipes-select';
@@ -46,6 +48,7 @@ import { SortHeader } from './sort-header/sort-header';
     Icon,
     RatePipe,
     RecipesSelect,
+    Select,
     SortHeader,
     Tooltip,
     TranslatePipe,
@@ -147,5 +150,16 @@ export class Steps {
 
   resetExcludedItems(): void {
     this.settingsStore.apply({ excludedItemIds: new Set() });
+  }
+
+  resetMachines(): void {
+    const fields: (keyof RecipeState)[] = [
+      'machineId',
+      'overclock',
+      'modules',
+      'beacons',
+    ];
+    this.objectivesStore.resetFields(...fields);
+    this.recipesStore.resetFields(...fields);
   }
 }
