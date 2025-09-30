@@ -9,6 +9,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import {
   faAngleRight,
+  faArrowRotateLeft,
   faFileArrowDown,
   faRotateLeft,
   faSquareCheck,
@@ -21,6 +22,8 @@ import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { BeaconSettings } from '~/state/beacon-settings';
 import { Hydration } from '~/state/hydration';
+import { ItemSettings } from '~/state/items/item-settings';
+import { ItemsStore } from '~/state/items/items-store';
 import { MachinesStore } from '~/state/machines/machines-store';
 import { ModuleSettings } from '~/state/module-settings';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
@@ -31,6 +34,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 import { updateSetIds } from '~/utils/set';
 
+import { BeltSelect } from '../belt-select/belt-select';
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
 import { Columns } from '../columns/columns';
@@ -48,6 +52,7 @@ import { SortHeader } from './sort-header/sort-header';
   selector: 'lab-steps',
   imports: [
     FormsModule,
+    BeltSelect,
     Button,
     Checkbox,
     ExcludeButton,
@@ -69,6 +74,7 @@ export class Steps {
   protected readonly columns = inject(Columns);
   protected readonly exporter = inject(Exporter);
   private readonly hydration = inject(Hydration);
+  protected readonly itemsStore = inject(ItemsStore);
   private readonly machinesStore = inject(MachinesStore);
   protected readonly objectivesStore = inject(ObjectivesStore);
   protected readonly recipesStore = inject(RecipesStore);
@@ -80,6 +86,7 @@ export class Steps {
   protected readonly data = this.recipesStore.adjustedDataset;
   protected readonly displayRateInfo = this.settingsStore.displayRateInfo;
   protected readonly faAngleRight = faAngleRight;
+  protected readonly faArrowRotateLeft = faArrowRotateLeft;
   protected readonly faFileArrowDown = faFileArrowDown;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faSquareCheck = faSquareCheck;
@@ -198,6 +205,22 @@ export class Steps {
     this.settingsStore.apply({ excludedItemIds: new Set() });
   }
 
+  changeBelts(step: Step, state?: ItemSettings): void {
+    if (step.itemId == null || state == null) return;
+    this.itemsStore.updateRecordField(
+      step.itemId,
+      'stack',
+      state.stack,
+      state.defaultStack,
+    );
+    this.itemsStore.updateRecordField(
+      step.itemId,
+      'beltId',
+      state.beltId,
+      state.defaultBeltId,
+    );
+  }
+
   resetMachines(): void {
     const fields: (keyof RecipeState)[] = [
       'machineId',
@@ -208,5 +231,10 @@ export class Steps {
     ];
     this.objectivesStore.resetFields(...fields);
     this.recipesStore.resetFields(...fields);
+  }
+
+  resetBeacons(): void {
+    this.objectivesStore.resetFields('beacons');
+    this.recipesStore.resetFields('beacons');
   }
 }

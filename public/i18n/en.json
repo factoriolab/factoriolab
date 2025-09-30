@@ -18,6 +18,9 @@
     "eachTooltip": "Beacons per machine",
     "totalTooltip": "Total beacons"
   },
+  "beltTooltip": {
+    "tooltip": "Click to select belt and stack size"
+  },
   "beltOverlay": {
     "stackTooltip": "Stack size"
   },

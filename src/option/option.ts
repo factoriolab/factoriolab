@@ -14,17 +14,48 @@ export interface Option<T = string> {
   disabled?: boolean;
 }
 
+export interface OptionParams {
+  iconType?: IconType;
+  tooltipType?: TooltipType;
+  include?: Set<string>;
+  exclude?: Set<string>;
+  emptyModule?: boolean;
+}
+
 export function getIdOptions(
   ids: string[],
   record: Record<string, { name: string }>,
-  include = new Set(ids),
-  exclude?: Set<string>,
-  emptyModule = false,
+  params?: OptionParams,
 ): Option[] {
-  ids = ids.filter((i) => include.has(i));
+  const { iconType, tooltipType, include, exclude, emptyModule } = {
+    ...params,
+  };
+
+  if (include) ids = ids.filter((i) => include.has(i));
   if (exclude) ids = ids.filter((i) => !exclude.has(i));
-  const list = ids.map((i): Option => ({ label: record[i].name, value: i }));
-  if (emptyModule) list.unshift({ label: 'none', value: '' });
+
+  const list = ids.map((i): Option => {
+    const opt: Option = { label: record[i].name, value: i };
+    if (iconType) {
+      opt.icon = i;
+      opt.iconType = iconType;
+    }
+
+    if (tooltipType) {
+      opt.tooltip = i;
+      opt.tooltipType = tooltipType;
+    }
+
+    return opt;
+  });
+
+  if (emptyModule)
+    list.unshift({
+      label: 'none',
+      value: '',
+      icon: 'module',
+      iconType: 'system',
+    });
 
   return list;
 }

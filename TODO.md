@@ -1,9 +1,5 @@
 # TODO
 
-## Select
-
-- Revisit whether icon / tooltip info should live on Option
-
 ## Header
 
 - Settings button? To pick language, etc.
@@ -11,11 +7,6 @@
 ## Machine Rate Pipe
 
 - Replace with machine (or recipe?) setting for percentages
-
-## Tooltip
-
-- Adjusted recipe effects (used in list)
-- Item entity details
 
 ## Icon
 

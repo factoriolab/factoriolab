@@ -11,7 +11,7 @@ import { cva } from 'class-variance-authority';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 
 const host = cva(
-  'flex flex-col fixed z-2 bg-gray-900 top-0 left-0 h-full border-r border-gray-700 w-xs transition-transform',
+  'flex flex-col fixed z-6 bg-gray-900 top-0 left-0 h-full border-r border-gray-700 w-xs transition-transform',
   {
     variants: {
       open: {

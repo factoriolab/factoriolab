@@ -64,6 +64,9 @@
           labSortHeader
           column="belts"
           text="options.column.belts"
+          [showUndo]="itemsStore.itemsModified().belts"
+          undoTooltip="steps.beltsUndoTooltip"
+          (undo)="itemsStore.resetFields('beltId', 'stack')"
         ></th>
       }
       <!-- Wagons (Value & Icon) -->
@@ -73,6 +76,9 @@
           labSortHeader
           column="wagons"
           [text]="displayRateInfo().wagonsLabel"
+          [showUndo]="itemsStore.itemsModified().wagons"
+          undoTooltip="steps.wagonsUndoTooltip"
+          (undo)="itemsStore.resetFields('wagonId')"
         ></th>
       }
       <!-- Rockets (Value & Icon) -->
@@ -91,11 +97,28 @@
         column="machines"
         text="options.column.machines"
         [showUndo]="objectivesStore.recipesModified().machines"
+        undoTooltip="steps.machinesUndoTooltip"
         (undo)="resetMachines()"
       ></th>
       <!-- Beacons -->
       @if (cols().beacons.show) {
-        <th>{{ 'options.column.beacons' | translate }}</th>
+        <th>
+          <div class="flex items-center gap-2">
+            <span>{{ 'options.column.beacons' | translate }}</span>
+            @if (objectivesStore.recipesModified().beacons) {
+              <button
+                type="button"
+                class="ms-auto"
+                labButton
+                [attr.aria-label]="'steps.beaconsUndoTooltip' | translate"
+                labTooltip="steps.beaconsUndoTooltip"
+                labTooltipPosition="adjacent"
+                [faIcon]="faArrowRotateLeft"
+                (click)="resetBeacons()"
+              ></button>
+            }
+          </div>
+        </th>
       }
       <!-- Power -->
       @if (cols().power.show) {
@@ -234,8 +257,73 @@
         </td>
         <!-- Belts (Value & Icon) -->
         @if (cols().belts.show) {
-          <td></td>
-          <td></td>
+          <td>
+            @if (step.belts) {
+              <div class="flex justify-end font-mono whitespace-pre">
+                {{ step.belts | rate: cols().belts.precision }}
+              </div>
+            }
+          </td>
+          <td>
+            @if (
+              step.itemId && itemsStore.settings()[step.itemId];
+              as itemSettings
+            ) {
+              @if (itemSettings.beltId; as beltId) {
+                <div class="flex">
+                  @if (
+                    data().beltIds.includes(beltId)
+                      ? 'belt'
+                      : data().pipeIds.includes(beltId)
+                        ? 'pipe'
+                        : null;
+                    as type
+                  ) {
+                    @let stack = data().itemRecord[step.itemId].stack;
+                    @if (
+                      data().flags.has('beltStack') &&
+                      stack &&
+                      stack.gt(rational.one)
+                    ) {
+                      @defer {
+                        <lab-belt-select
+                          [stack]="stack"
+                          [value]="itemSettings"
+                          (valueChange)="changeBelts(step, $event)"
+                        ></lab-belt-select>
+                      }
+                    } @else {
+                      <lab-select
+                        [iconOnly]="true"
+                        [border]="false"
+                        [options]="
+                          settingsStore.options()[
+                            type === 'belt' ? 'belts' : 'pipes'
+                          ]
+                        "
+                        [ngModel]="beltId"
+                        (ngModelChange)="
+                          itemsStore.updateRecordField(
+                            step.itemId,
+                            'beltId',
+                            $event,
+                            itemSettings.defaultBeltId
+                          )
+                        "
+                      ></lab-select>
+                    }
+                  } @else {
+                    <lab-icon
+                      [value]="beltId"
+                      type="item"
+                      [labTooltip]="beltId"
+                      labTooltipType="pipe"
+                    ></lab-icon>
+                  }
+                </div>
+              }
+            }
+          </td>
         }
         <!-- Wagons (Value & Icon) -->
         @if (cols().wagons.show) {

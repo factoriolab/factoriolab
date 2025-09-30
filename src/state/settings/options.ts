@@ -2,7 +2,6 @@ import { Option } from '~/option/option';
 
 export interface Options {
   categories: Option[];
-  items: Option[];
   beacons: Option[];
   belts: Option[];
   pipes: Option[];
@@ -12,6 +11,5 @@ export interface Options {
   modules: Option[];
   proliferatorModules: Option[];
   machines: Option[];
-  recipes: Option[];
   locations: Option[];
 }

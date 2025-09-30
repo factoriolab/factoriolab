@@ -9,19 +9,21 @@ import {
   model,
   signal,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { faCheck, faGear, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
-import { Machine } from '~/data/schema/machine';
-import { ModuleSettings } from '~/state/module-settings';
+import { Rational, rational } from '~/rational/rational';
+import { ItemSettings } from '~/state/items/item-settings';
+import { SettingsStore } from '~/state/settings/settings-store';
+import { spread } from '~/utils/object';
 
 import { Button } from '../button/button';
 import { Control, LAB_CONTROL } from '../control';
 import { FormField } from '../form-field/form-field';
 import { Icon } from '../icon/icon';
-import { Modules } from '../modules/modules';
+import { InputNumber } from '../input-number/input-number';
+import { Select } from '../select/select';
 import { Tooltip } from '../tooltip/tooltip';
 
 let nextUniqueId = 0;
@@ -37,9 +39,17 @@ const host = cva(
 );
 
 @Component({
-  selector: 'lab-modules-select',
-  imports: [OverlayModule, FaIconComponent, Button, Icon, Modules, Tooltip],
-  templateUrl: './modules-select.html',
+  selector: 'lab-belt-select',
+  imports: [
+    FormsModule,
+    OverlayModule,
+    Button,
+    Icon,
+    InputNumber,
+    Select,
+    Tooltip,
+  ],
+  templateUrl: './belt-select.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'button',
@@ -59,26 +69,26 @@ const host = cva(
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: ModulesSelect,
+      useExisting: BeltSelect,
     },
-    { provide: LAB_CONTROL, useExisting: ModulesSelect },
+    { provide: LAB_CONTROL, useExisting: BeltSelect },
   ],
 })
-export class ModulesSelect extends Control<ModuleSettings[]> {
+export class BeltSelect extends Control<ItemSettings> {
   protected readonly overlayOrigin = inject(CdkOverlayOrigin);
   readonly formField = inject(FormField, { optional: true });
+  protected readonly settingsStore = inject(SettingsStore);
 
   private uniqueId = (nextUniqueId++).toString();
 
-  readonly controlId = input(`lab-modules-select-${this.uniqueId}`);
-  readonly value = model<ModuleSettings[]>();
+  readonly controlId = input(`lab-belt-select-${this.uniqueId}`);
+  readonly value = model<ItemSettings>();
   readonly disabled = model(false);
   readonly labelledBy = input<string>();
-  readonly machine = input.required<Machine>();
-  readonly recipeId = input<string>();
+  readonly stack = input.required<Rational>();
 
   readonly opened = signal(false);
-  readonly editValue = linkedSignal(() => this.value() ?? []);
+  readonly editValue = linkedSignal(() => spread(this.value()));
 
   readonly hostClass = computed(() =>
     host({
@@ -90,16 +100,22 @@ export class ModulesSelect extends Control<ModuleSettings[]> {
   protected readonly faCheck = faCheck;
   protected readonly faGear = faGear;
   protected readonly faXmark = faXmark;
+  protected readonly rational = rational;
 
   toggle(): void {
     if (this.disabled()) return;
 
     if (this.opened()) {
       this.opened.set(false);
-      let value = this.editValue();
-      if (this.machine().modules !== true)
-        value = value.filter((e) => e.count?.nonzero());
-      this.value.set(value);
+      this.value.set(this.editValue());
     } else this.opened.set(true);
+  }
+
+  setStack(stack: Rational): void {
+    this.editValue.update((v) => spread(v, { stack }));
+  }
+
+  setBelt(beltId: string): void {
+    this.editValue.update((v) => spread(v, { beltId }));
   }
 }

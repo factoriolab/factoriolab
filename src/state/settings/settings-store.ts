@@ -35,7 +35,7 @@ import {
 import { parseRecipe, Recipe } from '~/data/schema/recipe';
 import { Technology } from '~/data/schema/technology';
 import { MenuItem } from '~/models/menu-item';
-import { getIdOptions, Option } from '~/option/option';
+import { getIdOptions, Option, OptionParams } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 import { flags } from '~/state/flags';
 import { log } from '~/utils/log';
@@ -174,34 +174,43 @@ export class SettingsStore extends Store<SettingsState> {
     const settings = this.settings();
     const itemSet = new Set(settings.availableItemIds);
 
-    function itemOptions(ids: string[], exclude?: Set<string>): Option[] {
-      return getIdOptions(ids, data.itemRecord, itemSet, exclude);
+    function itemOptions(ids: string[], params?: OptionParams): Option[] {
+      return getIdOptions(ids, data.itemRecord, {
+        ...params,
+        ...{ include: itemSet, iconType: 'item' },
+      });
     }
 
     return {
       categories: getIdOptions(data.categoryIds, data.categoryRecord),
-      items: itemOptions(data.itemIds),
-      beacons: itemOptions(data.beaconIds),
-      belts: itemOptions(data.beltIds, data.itemQIds),
-      pipes: itemOptions(data.pipeIds),
-      cargoWagons: itemOptions(data.cargoWagonIds, data.itemQIds),
-      fluidWagons: itemOptions(data.fluidWagonIds, data.itemQIds),
-      fuels: itemOptions(data.fuelIds, data.itemQIds),
-      modules: itemOptions(data.moduleIds),
-      proliferatorModules: getIdOptions(
-        data.proliferatorModuleIds,
-        data.itemRecord,
-        itemSet,
-        new Set(),
-        true,
-      ),
-      machines: itemOptions(data.machineIds),
-      recipes: getIdOptions(
-        data.recipeIds,
-        data.recipeRecord,
-        new Set(settings.availableRecipeIds),
-      ),
-      locations: getIdOptions(data.locationIds, data.locationRecord),
+      beacons: itemOptions(data.beaconIds, { tooltipType: 'beacon' }),
+      belts: itemOptions(data.beltIds, {
+        exclude: data.itemQIds,
+        tooltipType: 'belt',
+      }),
+      pipes: itemOptions(data.pipeIds, { tooltipType: 'pipe' }),
+      cargoWagons: itemOptions(data.cargoWagonIds, {
+        exclude: data.itemQIds,
+        tooltipType: 'cargo-wagon',
+      }),
+      fluidWagons: itemOptions(data.fluidWagonIds, {
+        exclude: data.itemQIds,
+        tooltipType: 'fluid-wagon',
+      }),
+      fuels: itemOptions(data.fuelIds, {
+        exclude: data.itemQIds,
+        tooltipType: 'fuel',
+      }),
+      modules: itemOptions(data.moduleIds, { tooltipType: 'module' }),
+      proliferatorModules: itemOptions(data.proliferatorModuleIds, {
+        emptyModule: true,
+        include: itemSet,
+        tooltipType: 'module',
+      }),
+      machines: itemOptions(data.machineIds, { tooltipType: 'machine' }),
+      locations: getIdOptions(data.locationIds, data.locationRecord, {
+        iconType: 'location',
+      }),
     };
   });
 
