@@ -17,12 +17,12 @@
   <main class="flex grow flex-col">
     <lab-objectives></lab-objectives>
 
-    <div class="grow px-1 sm:px-3 lg:px-6">
+    <div class="flex grow flex-col px-1 sm:px-3 lg:px-6">
       <h2 class="mb-1 hidden text-2xl font-light xl:block">Factory</h2>
       <div class="relative mb-1 sm:mb-2">
         <lab-tabs [tabs]="tabs"></lab-tabs>
       </div>
-      <div class="overflow-x-auto">
+      <div class="grow overflow-x-auto">
         <router-outlet></router-outlet>
       </div>
     </div>

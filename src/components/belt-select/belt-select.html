@@ -1,8 +1,9 @@
 @if (value()?.beltId; as beltId) {
+  @let stack = value()?.stack;
   <lab-icon
     [value]="beltId"
     type="item"
-    [text]="value()?.stack?.toString()"
+    [text]="stack?.gt(rational.one) ? stack?.toString() : ''"
     [labTooltip]="beltId"
     labTooltipType="belt"
     labTooltipAction="beltSelect.tooltip"

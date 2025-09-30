@@ -327,13 +327,64 @@
         }
         <!-- Wagons (Value & Icon) -->
         @if (cols().wagons.show) {
-          <td></td>
-          <td></td>
+          <td>
+            @if (step.wagons) {
+              <div class="flex justify-end font-mono whitespace-pre">
+                {{ step.wagons | rate: cols().wagons.precision }}
+              </div>
+            }
+          </td>
+          <td>
+            @if (
+              step.itemId && itemsStore.settings()[step.itemId];
+              as itemSettings
+            ) {
+              @if (itemSettings.wagonId; as wagonId) {
+                <div class="flex">
+                  @if (
+                    data().cargoWagonIds.includes(wagonId)
+                      ? 'cargo-wagon'
+                      : data().fluidWagonIds.includes(wagonId)
+                        ? 'fluid-wagon'
+                        : null;
+                    as type
+                  ) {
+                    <lab-select
+                      [iconOnly]="true"
+                      [border]="false"
+                      [options]="
+                        settingsStore.options()[
+                          type === 'cargo-wagon' ? 'cargoWagons' : 'fluidWagons'
+                        ]
+                      "
+                      [ngModel]="wagonId"
+                      (ngModelChange)="
+                        itemsStore.updateRecordField(
+                          step.itemId,
+                          'wagonId',
+                          $event,
+                          itemSettings.defaultWagonId
+                        )
+                      "
+                    ></lab-select>
+                  }
+                </div>
+              }
+            }
+          </td>
         }
         <!-- Rockets (Value & Icon) -->
         @if (cols().rockets.show) {
-          <td></td>
-          <td></td>
+          <td>
+            @if (step.rockets) {
+              <div class="flex justify-end font-mono whitespace-pre">
+                {{ step.rockets | rate: cols().rockets.precision }}
+              </div>
+            }
+          </td>
+          <td>
+            <lab-icon value="rocket-silo" type="item"></lab-icon>
+          </td>
         }
         <!-- Machines (Value & Icon) -->
         @if (step.recipeSettings?.machineId; as machineId) {
