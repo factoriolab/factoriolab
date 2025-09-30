@@ -1,0 +1,34 @@
+@for (entry of value(); track entry.id; let index = $index) {
+  <div class="flex">
+    <lab-input-number
+      class="w-0 grow rounded-s-xs"
+      [rounded]="false"
+      [maximum]="maximum()[index]"
+      [buttons]="true"
+      [disabled]="!entry.id"
+      [ngModel]="entry.count"
+      (ngModelChange)="setCount(index, $event)"
+    ></lab-input-number>
+    <lab-select
+      class="-ms-px"
+      [rounded]="false"
+      [iconOnly]="true"
+      [options]="moduleOptions() | filterOptions: exclude() : entry.id"
+      [ngModel]="entry.id"
+      (ngModelChange)="setId(index, $event)"
+    ></lab-select>
+    @if (entity().modules !== true) {
+      <button
+        type="button"
+        class="-ms-px rounded-e-xs"
+        labButton
+        [rounded]="false"
+        [disabled]="entry.id === ''"
+        [faIcon]="faXmark"
+        labTooltip="remove"
+        [aria-label]="'remove' | translate"
+        (click)="removeEntry(index)"
+      ></button>
+    }
+  </div>
+}

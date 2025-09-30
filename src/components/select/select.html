@@ -76,7 +76,7 @@
     <ul
       [id]="controlId() + '-listbox'"
       role="listbox"
-      class="overflow-y-auto"
+      class="overflow-y-auto py-2"
       tabindex="-1"
     >
       @for (opt of options(); track opt.value) {
@@ -87,7 +87,7 @@
             #option
             labRipple
             role="option"
-            class="flex min-h-9 cursor-pointer items-center overflow-hidden ps-1 pe-4 outline-none select-none"
+            class="flex min-h-9 cursor-pointer items-center overflow-hidden ps-2 pe-4 outline-none select-none"
             [attr.tabindex]="opt.disabled ? -1 : 0"
             [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
             [attr.aria-selected]="opt.value === value()"

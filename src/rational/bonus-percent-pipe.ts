@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Rational, toNumber } from '~/rational/rational';
+import { Rational } from '~/rational/rational';
+import { toNumber } from '~/utils/number';
 
 @Pipe({ name: 'bonusPercent' })
 export class BonusPercentPipe implements PipeTransform {

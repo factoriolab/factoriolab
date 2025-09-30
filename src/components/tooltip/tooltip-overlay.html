@@ -378,7 +378,9 @@
 }
 
 @if (tooltipData.action) {
-  <div class="text-sm italic">{{ tooltipData.action | translate }}</div>
+  <div class="text-sm text-gray-400 italic">
+    {{ tooltipData.action | translate }}
+  </div>
 }
 
 <span [class]="nubClass()"></span>

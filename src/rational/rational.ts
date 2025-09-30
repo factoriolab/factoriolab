@@ -352,9 +352,3 @@ export const rational = Object.assign(rationalFn, {
   zero,
   one,
 });
-
-export function toNumber(value: Rational | string | number): number {
-  if (typeof value === 'string') value = rational(value);
-  if (value instanceof Rational) value = value.toNumber();
-  return value;
-}

@@ -1,4 +1,4 @@
-import { Option } from '../models/option';
+import { Option } from '../option/option';
 
 export type Game =
   | 'captain-of-industry'

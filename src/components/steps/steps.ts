@@ -19,6 +19,10 @@ import { RatePipe } from '~/components/steps/rate-pipe';
 import { Exporter } from '~/exporter/exporter';
 import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
+import { BeaconSettings } from '~/state/beacon-settings';
+import { Hydration } from '~/state/hydration';
+import { MachinesStore } from '~/state/machines/machines-store';
+import { ModuleSettings } from '~/state/module-settings';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { RecipeState } from '~/state/recipes/recipe-state';
 import { RecipesStore } from '~/state/recipes/recipes-store';
@@ -32,6 +36,7 @@ import { Checkbox } from '../checkbox/checkbox';
 import { Columns } from '../columns/columns';
 import { Icon } from '../icon/icon';
 import { InputNumber } from '../input-number/input-number';
+import { ModulesSelect } from '../modules-select/modules-select';
 import { Select } from '../select/select';
 import { Tooltip } from '../tooltip/tooltip';
 import { ExcludeButton } from './exclude-button/exclude-button';
@@ -48,6 +53,7 @@ import { SortHeader } from './sort-header/sort-header';
     ExcludeButton,
     Icon,
     InputNumber,
+    ModulesSelect,
     RatePipe,
     RecipesSelect,
     Select,
@@ -62,6 +68,8 @@ import { SortHeader } from './sort-header/sort-header';
 export class Steps {
   protected readonly columns = inject(Columns);
   protected readonly exporter = inject(Exporter);
+  private readonly hydration = inject(Hydration);
+  private readonly machinesStore = inject(MachinesStore);
   protected readonly objectivesStore = inject(ObjectivesStore);
   protected readonly recipesStore = inject(RecipesStore);
   protected readonly settingsStore = inject(SettingsStore);
@@ -116,6 +124,41 @@ export class Steps {
     );
   }
 
+  changeModulesBeacons(
+    step: Step,
+    state: { modules?: ModuleSettings[]; beacons?: BeaconSettings[] },
+  ): void {
+    const settings = step.recipeSettings;
+    if (step.recipeId == null || settings?.machineId == null) return;
+
+    const id = step.recipeObjectiveId ?? step.recipeId;
+    const update =
+      step.recipeObjectiveId != null
+        ? this.objectivesStore.updateRecord.bind(this.objectivesStore)
+        : this.recipesStore.updateRecord.bind(this.recipesStore);
+
+    const machine = this.data().machineRecord[settings.machineId];
+    const machineSettings = this.machinesStore.settings()[settings.machineId];
+    if (state.modules) {
+      state.modules = this.hydration.dehydrateModules(
+        state.modules,
+        coalesce(settings.moduleOptions, []),
+        this.settings().moduleRankIds,
+        machine.modules,
+        machineSettings.modules,
+      );
+    }
+
+    if (state.beacons) {
+      state.beacons = this.hydration.dehydrateBeacons(
+        state.beacons,
+        machineSettings.beacons,
+      );
+    }
+
+    update(id, state);
+  }
+
   changeStepChecked(step: Step, value: boolean): void {
     const settings = this.settingsStore.settings();
     // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
@@ -158,9 +201,10 @@ export class Steps {
   resetMachines(): void {
     const fields: (keyof RecipeState)[] = [
       'machineId',
-      'overclock',
+      'fuelId',
       'modules',
       'beacons',
+      'overclock',
     ];
     this.objectivesStore.resetFields(...fields);
     this.recipesStore.resetFields(...fields);

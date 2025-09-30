@@ -1,6 +1,6 @@
 import { Game } from '~/data/game';
 import { ModInfo } from '~/data/mod';
-import { Option } from '~/models/option';
+import { Option } from '~/option/option';
 
 export const DEFAULT_MOD = 'spa';
 

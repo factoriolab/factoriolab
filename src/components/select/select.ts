@@ -22,7 +22,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
-import { Option } from '~/models/option';
+import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areArraysEqual } from '~/utils/equality';
 
@@ -44,14 +44,28 @@ const host = cva(
         true: 'border-brand-700 outline z-2',
         false: 'border-gray-700',
       },
+      border: {
+        true: 'border',
+        false: 'hover:border',
+      },
       rounded: {
         true: 'rounded-xs',
       },
       iconOnly: {
-        true: 'min-w-9 justify-center hover:bg-gray-800 outline-brand-700 hover:border grow-0',
-        false: 'border outline-brand-700 px-1',
+        true: 'min-w-9 justify-center hover:bg-gray-800 outline-brand-700 grow-0',
+        false: 'outline-brand-700 px-1',
+      },
+      disabled: {
+        true: 'pointer-events-none',
       },
     },
+    compoundVariants: [
+      {
+        border: false,
+        opened: true,
+        class: 'border',
+      },
+    ],
   },
 );
 
@@ -92,10 +106,10 @@ const host = cva(
   ],
 })
 export class Select<T = unknown> extends Control<T> {
-  readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  readonly overlayOrigin = inject(CdkOverlayOrigin);
-  readonly formField = inject(FormField, { optional: true });
-  readonly injector = inject(Injector);
+  protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected readonly overlayOrigin = inject(CdkOverlayOrigin);
+  protected readonly formField = inject(FormField, { optional: true });
+  private readonly injector = inject(Injector);
 
   readonly overlay = viewChild.required<ElementRef<HTMLDivElement>>('overlay');
   readonly listItems = viewChildren<ElementRef<HTMLLIElement>>('option');
@@ -107,6 +121,7 @@ export class Select<T = unknown> extends Control<T> {
   readonly options = input.required<Option<T>[]>();
   readonly disabled = model(false);
   readonly placeholder = input<string>();
+  readonly border = input(true);
   readonly rounded = input(true);
   readonly filter = input<boolean>(false);
   readonly iconOnly = input<boolean>(false);
@@ -123,8 +138,10 @@ export class Select<T = unknown> extends Control<T> {
   readonly hostClass = computed(() =>
     host({
       opened: this.opened(),
+      border: this.border(),
       rounded: this.rounded(),
       iconOnly: this.iconOnly(),
+      disabled: this.disabled(),
     }),
   );
   readonly multi = computed(() => Array.isArray(this.value()));

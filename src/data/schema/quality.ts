@@ -1,4 +1,4 @@
-import { Option } from '~/models/option';
+import { Option } from '~/option/option';
 
 import { Item, ItemJson } from './item';
 import { Recipe, RecipeJson } from './recipe';

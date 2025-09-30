@@ -7,32 +7,31 @@ import {
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  AbstractControl,
-  FormsModule,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-} from '@angular/forms';
-import { faPercent } from '@fortawesome/free-solid-svg-icons';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { debounce, map, of, Subject, timer } from 'rxjs';
 
 import { Rational, rational } from '~/rational/rational';
+import { TranslatePipe } from '~/translate/translate-pipe';
 import { filterNullish } from '~/utils/nullish';
+import { inRange } from '~/utils/number';
 
+import { Button } from '../button/button';
 import { Control, LAB_CONTROL } from '../control';
+import { ValidateRational } from './validate-rational';
 
 let nextUniqueId = 0;
 
+type EventType = 'input' | 'blur' | 'keydown';
+
 interface ChangeEvent {
-  type: 'input' | 'blur' | 'keydown';
+  type: EventType;
   value: Rational | undefined;
 }
 
 @Component({
   selector: 'lab-input-number',
-  imports: [FormsModule],
+  imports: [FormsModule, Button, TranslatePipe, ValidateRational],
   templateUrl: './input-number.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -41,19 +40,11 @@ interface ChangeEvent {
       useExisting: InputNumber,
       multi: true,
     },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: InputNumber,
-      multi: true,
-    },
     { provide: LAB_CONTROL, useExisting: InputNumber },
   ],
   host: { class: 'inline-flex group relative' },
 })
-export class InputNumber
-  extends Control<Rational>
-  implements Validator, OnInit
-{
+export class InputNumber extends Control<Rational> implements OnInit {
   private uniqueId = (nextUniqueId++).toString();
 
   readonly controlId = input(`lab-input-number-${this.uniqueId}`);
@@ -64,6 +55,7 @@ export class InputNumber
   readonly step = input<Rational>(rational.one);
   readonly integer = input(false);
   readonly rounded = input(true);
+  readonly buttons = input(false);
   readonly labelledBy = input<string>();
   readonly percent = input<boolean>();
 
@@ -86,7 +78,7 @@ export class InputNumber
     },
   });
 
-  protected readonly faPercent = faPercent;
+  protected readonly faChevronUp = faChevronUp;
 
   ngOnInit(): void {
     this.emit$.subscribe((v) => {
@@ -94,36 +86,23 @@ export class InputNumber
     });
   }
 
-  validate(
-    control: AbstractControl<Rational | undefined>,
-  ): ValidationErrors | null {
-    const val = control.value;
-    if (val == null) return null;
-
-    try {
-      const min = this.minimum();
-      const max = this.maximum();
-      if ((min == null || val.gte(min)) && (max == null || val.lte(max)))
-        return null;
-    } catch {
-      // ignore error
-    }
-
-    return { rational: { valid: false } };
-  }
-
   onChange(event: Event): void {
+    const type = event.type as EventType;
     try {
       const text = this.text();
       const value = rational(text);
-      this.value$.next({
-        type: event.type as 'input' | 'keydown' | 'blur',
-        value,
-      });
-      if (value && event.type === 'keydown') this.text.set(value.toString());
+      const min = this.minimum();
+      const max = this.maximum();
+      if (inRange(value, min, max)) {
+        this.value$.next({ type, value });
+        if (value && event.type === 'keydown') this.text.set(value.toString());
+        return;
+      }
     } catch {
       // Ignore error
     }
+
+    this.value$.next({ value: undefined, type });
   }
 
   increment(direction: 1 | -1): void {

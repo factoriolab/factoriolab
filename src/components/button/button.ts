@@ -26,6 +26,7 @@ const host = cva(
           'bg-brand-950 text-brand-50 outline-gray-300 focus-visible:border-gray-300 z-1',
       },
       size: {
+        micro: 'w-9',
         small: 'min-h-8 text-sm font-light opacity-60',
         standard: 'min-h-9',
         large: 'min-h-11 text-2xl font-light',
@@ -46,6 +47,9 @@ const host = cva(
       },
       toggle: {
         true: 'border-brand-700 hover:border',
+      },
+      disabled: {
+        true: 'pointer-events-none opacity-40',
       },
     },
     compoundVariants: [
@@ -103,12 +107,13 @@ export class Button {
   readonly iconType = input<IconType>();
   readonly icon = input<string>();
   readonly color = input<'brand' | 'gray'>('gray');
-  readonly size = input<'small' | 'standard' | 'large'>('standard');
+  readonly size = input<'micro' | 'small' | 'standard' | 'large'>('standard');
   readonly border = input(true);
   readonly rounded = input(true);
   readonly hide = input(false);
   readonly toggleIcon = input<IconDefinition>();
   readonly toggled = input(false);
+  readonly disabled = input(false);
 
   readonly hostClass = computed(() =>
     host({
@@ -119,6 +124,7 @@ export class Button {
       hide: this.hide(),
       iconOnly: !this.text(),
       toggle: this.toggleIcon() != null,
+      disabled: this.disabled(),
     }),
   );
 }

@@ -1,7 +1,8 @@
 @if (details(); as details) {
   <lab-select
     #select
-    class="group border-brand-700 hover:border"
+    class="group"
+    [border]="false"
     [iconOnly]="true"
     [options]="details.recipeOptions"
     [labTooltip]="step().recipeId"

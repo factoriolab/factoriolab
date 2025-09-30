@@ -35,7 +35,7 @@ import {
 import { parseRecipe, Recipe } from '~/data/schema/recipe';
 import { Technology } from '~/data/schema/technology';
 import { MenuItem } from '~/models/menu-item';
-import { getIdOptions, Option } from '~/models/option';
+import { getIdOptions, Option } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 import { flags } from '~/state/flags';
 import { log } from '~/utils/log';

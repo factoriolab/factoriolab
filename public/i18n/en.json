@@ -163,6 +163,10 @@
     "source": "Source",
     "sponsor": "Sponsor"
   },
+  "inputNumber": {
+    "decrement": "Decrement",
+    "increment": "Increment"
+  },
   "landing": {
     "bypass": "Don't show this screen again",
     "loadLastState": "Load last state",
@@ -174,6 +178,9 @@
   "modSetTooltip": "Select which version or set of mods in Factorio to use",
   "modules": {
     "eachTooltip": "Number of modules"
+  },
+  "moduleSelect": {
+    "tooltip": "Click to select modifiers"
   },
   "none": "None",
   "objectives": {
@@ -359,6 +366,7 @@
     "toggleVisible": "Toggle visible",
     "qualityFilter": "Quality filter"
   },
+  "remove": "Remove",
   "reset": "Reset",
   "select": {
     "noMatches": "No matches found"
@@ -494,7 +502,9 @@
     "openNewTabTooltip": "Open in a new tab",
     "outputs": "Outputs",
     "overclockTooltip": "Overclock percentage",
-    "selectRecipesTooltip": "Click to select included recipes for this item",
+    "selectFuelTooltip": "Click to select fuel",
+    "selectMachineTooltip": "Click to select machine",
+    "selectRecipesTooltip": "Click to select recipes",
     "showDetails": "Show details",
     "sources": "Sources",
     "stepUndoTooltip": "Undo modifications to this step",

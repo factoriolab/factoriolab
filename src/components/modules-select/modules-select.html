@@ -1,0 +1,65 @@
+<div class="inline-flex group-hover:opacity-40" [class.opacity-40]="opened()">
+  @for (module of value(); track module.id) {
+    @if (module.id === '') {
+      <lab-icon
+        value="module"
+        type="system"
+        [text]="module.count?.toString()"
+        labTooltip="moduleSelect.tooltip"
+      ></lab-icon>
+    } @else if (module.id) {
+      <lab-icon
+        [value]="module.id"
+        type="item"
+        [text]="module.count?.toString()"
+        [labTooltip]="module.id"
+        labTooltipType="module"
+        labTooltipAction="moduleSelect.tooltip"
+      ></lab-icon>
+    }
+  }
+</div>
+
+<fa-icon
+  class="text-brand-400 pointer-events-none absolute transition-transform group-hover:block"
+  [class.hidden]="!opened()"
+  [class.rotate-90]="opened()"
+  [icon]="faGear"
+></fa-icon>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="overlayOrigin"
+  [cdkConnectedOverlayOpen]="opened()"
+  (overlayOutsideClick)="toggle()"
+>
+  <div
+    [id]="controlId() + '-menu'"
+    role="menu"
+    class="mt-1 flex origin-top flex-col gap-2 rounded-xs border border-gray-700 bg-gray-950 p-4 transition-all starting:scale-y-75 starting:opacity-0"
+    animate.leave="animate-fade-out"
+  >
+    <lab-modules
+      [(value)]="editValue"
+      [entity]="machine()"
+      [recipeId]="recipeId()"
+    ></lab-modules>
+    <div class="flex gap-2">
+      <button
+        type="button"
+        labButton
+        color="brand"
+        [faIcon]="faCheck"
+        text="ok"
+        (click)="toggle()"
+      ></button>
+      <button
+        type="button"
+        labButton
+        [faIcon]="faXmark"
+        text="cancel"
+        (click)="opened.set(false)"
+      ></button>
+    </div>
+  </div>
+</ng-template>

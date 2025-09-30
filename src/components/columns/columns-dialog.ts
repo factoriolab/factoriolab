@@ -12,7 +12,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { Option } from '~/models/option';
+import { Option } from '~/option/option';
 import {
   ColumnKey,
   columnsInfo,

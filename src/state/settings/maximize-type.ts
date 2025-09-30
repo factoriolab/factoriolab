@@ -1,4 +1,4 @@
-import { Option } from '~/models/option';
+import { Option } from '~/option/option';
 
 export enum MaximizeType {
   Weight = 0,

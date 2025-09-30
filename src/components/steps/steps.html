@@ -271,6 +271,7 @@
                 <lab-recipes-select [step]="step"></lab-recipes-select>
                 @if (!step.recipe.flags.has('hideProducer')) {
                   <lab-select
+                    [border]="false"
                     [iconOnly]="true"
                     [options]="step.recipeSettings.machineOptions ?? []"
                     [filter]="
@@ -280,21 +281,15 @@
                     [labTooltip]="machineId"
                     labTooltipType="machine"
                     labTooltipPosition="adjacent"
+                    labTooltipAction="steps.selectMachineTooltip"
                     [ngModel]="machineId"
                     (ngModelChange)="
-                      step.recipeObjectiveId
-                        ? objectivesStore.updateRecordField(
-                            step.recipeObjectiveId,
-                            'machineId',
-                            $event,
-                            step.recipeSettings.defaultMachineId
-                          )
-                        : recipesStore.updateRecordField(
-                            step.recipeId,
-                            'machineId',
-                            $event,
-                            step.recipeSettings.defaultMachineId
-                          )
+                      objectivesStore.updateRecipeField(
+                        step,
+                        'machineId',
+                        $event,
+                        step.recipeSettings.defaultMachineId
+                      )
                     "
                   ></lab-select>
                 }
@@ -307,6 +302,14 @@
                     [step]="rational(10)"
                     [percent]="true"
                     [ngModel]="step.recipeSettings.overclock"
+                    (ngModelChange)="
+                      objectivesStore.updateRecipeField(
+                        step,
+                        'overclock',
+                        $event,
+                        step.recipeSettings.defaultOverclock
+                      )
+                    "
                   ></lab-input-number>
                 }
 
@@ -320,10 +323,35 @@
                     ></lab-icon>
                   } @else {
                     <lab-select
+                      [border]="false"
                       [iconOnly]="true"
-                      [ngModel]="fuelId"
                       [options]="step.recipeSettings.fuelOptions ?? []"
+                      [labTooltip]="fuelId"
+                      labTooltipType="fuel"
+                      labTooltipAction="steps.selectFuelTooltip"
+                      [ngModel]="fuelId"
+                      (ngModelChange)="
+                        objectivesStore.updateRecipeField(
+                          step,
+                          'fuelId',
+                          $event,
+                          step.recipeSettings.defaultFuelId
+                        )
+                      "
                     ></lab-select>
+                  }
+                }
+
+                @if (step.recipeSettings.modules; as modules) {
+                  @if (data().machineRecord[machineId]; as machine) {
+                    <lab-modules-select
+                      [machine]="machine"
+                      labTooltipAction="steps.selectModifiersTooltip"
+                      [value]="modules"
+                      (valueChange)="
+                        changeModulesBeacons(step, { modules: $event })
+                      "
+                    ></lab-modules-select>
                   }
                 }
               </div>

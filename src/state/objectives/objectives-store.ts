@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { filter, pairwise, switchMap } from 'rxjs';
 
-import { Option } from '~/models/option';
+import { Option } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 import { Solver } from '~/solver/solver';
 import { Step } from '~/solver/step';
@@ -22,6 +22,7 @@ import { MachinesStore } from '../machines/machines-store';
 import { Normalization } from '../normalization';
 import { PowerUnit } from '../preferences/power-unit';
 import { PreferencesStore } from '../preferences/preferences-store';
+import { RecipeState } from '../recipes/recipe-state';
 import { RecipesStore } from '../recipes/recipes-store';
 import { displayRateInfo } from '../settings/display-rate';
 import { SettingsStore } from '../settings/settings-store';
@@ -554,6 +555,19 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
 
   setOrder(objectives: ObjectiveState[]): void {
     this.set(this.reduceObjectives(objectives));
+  }
+
+  updateRecipeField<K extends keyof RecipeState>(
+    step: Step,
+    field: K,
+    value: ObjectiveState[K],
+    def?: ObjectiveState[K],
+  ): void {
+    if (step.recipeObjectiveId) {
+      this.updateRecordField(step.recipeObjectiveId, field, value, def);
+    } else if (step.recipeId) {
+      this.recipesStore.updateRecordField(step.recipeId, field, value, def);
+    }
   }
 
   adjustDisplayRate(factor: Rational): void {

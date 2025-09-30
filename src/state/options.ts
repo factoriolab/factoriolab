@@ -4,7 +4,7 @@ import { Beacon } from '~/data/schema/beacon';
 import { Machine, MachineJson } from '~/data/schema/machine';
 import { filterEffect } from '~/data/schema/module';
 import { Recipe } from '~/data/schema/recipe';
-import { Option } from '~/models/option';
+import { Option } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 import { fnPropsNotNullish } from '~/utils/nullish';
 
@@ -125,13 +125,25 @@ export class Options {
     }
 
     const options = allowed.map(
-      (m): Option => ({ value: m.id, label: m.name }),
+      (m): Option => ({
+        value: m.id,
+        label: m.name,
+        icon: m.id,
+        iconType: 'item',
+        tooltip: m.id,
+        tooltipType: 'module',
+      }),
     );
     if (
       (!data.flags.has('resourcePurity') || !recipe?.flags.has('mining')) &&
       !data.flags.has('duplicators')
     ) {
-      options.unshift({ label: 'none', value: '' });
+      options.unshift({
+        label: 'none',
+        value: '',
+        icon: 'module',
+        iconType: 'system',
+      });
     }
     return options;
   }

@@ -1,4 +1,4 @@
-import { Option } from '~/models/option';
+import { Option } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 
 export const researchBonusValue = {
