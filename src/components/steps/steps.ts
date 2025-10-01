@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,16 +8,18 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
   faAngleRight,
   faArrowRotateLeft,
+  faArrowUpRightFromSquare,
   faFileArrowDown,
   faRotateLeft,
   faSquareCheck,
   faTableColumns,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { RatePipe } from '~/components/steps/rate-pipe';
+import { RatePipe } from '~/components/steps/pipes/rate-pipe';
 import { Exporter } from '~/exporter/exporter';
 import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
@@ -29,6 +32,7 @@ import { ModuleSettings } from '~/state/module-settings';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { RecipeState } from '~/state/recipes/recipe-state';
 import { RecipesStore } from '~/state/recipes/recipes-store';
+import { RouterSync } from '~/state/router/router-sync';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
@@ -45,6 +49,8 @@ import { ModulesSelect } from '../modules-select/modules-select';
 import { Select } from '../select/select';
 import { Tooltip } from '../tooltip/tooltip';
 import { ExcludeButton } from './exclude-button/exclude-button';
+import { PowerPipe } from './pipes/power-pipe';
+import { StepHrefPipe } from './pipes/step-href-pipe';
 import { RecipesSelect } from './recipes-select/recipes-select';
 import { SortColumn } from './sort-column';
 import { SortHeader } from './sort-header/sort-header';
@@ -52,7 +58,9 @@ import { SortHeader } from './sort-header/sort-header';
 @Component({
   selector: 'lab-steps',
   imports: [
+    AsyncPipe,
     FormsModule,
+    RouterLink,
     BeaconsSelect,
     BeltSelect,
     Button,
@@ -61,10 +69,12 @@ import { SortHeader } from './sort-header/sort-header';
     Icon,
     InputNumber,
     ModulesSelect,
+    PowerPipe,
     RatePipe,
     RecipesSelect,
     Select,
     SortHeader,
+    StepHrefPipe,
     Tooltip,
     TranslatePipe,
   ],
@@ -80,6 +90,7 @@ export class Steps {
   private readonly machinesStore = inject(MachinesStore);
   protected readonly objectivesStore = inject(ObjectivesStore);
   protected readonly recipesStore = inject(RecipesStore);
+  protected readonly routerSync = inject(RouterSync);
   protected readonly settingsStore = inject(SettingsStore);
 
   readonly focus = input(false);
@@ -89,6 +100,7 @@ export class Steps {
   protected readonly displayRateInfo = this.settingsStore.displayRateInfo;
   protected readonly faAngleRight = faAngleRight;
   protected readonly faArrowRotateLeft = faArrowRotateLeft;
+  protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
   protected readonly faFileArrowDown = faFileArrowDown;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faSquareCheck = faSquareCheck;
@@ -131,6 +143,22 @@ export class Steps {
         ? new Set(Array.from(s).filter((s) => s !== step.id))
         : new Set([...Array.from(s), step.id]),
     );
+  }
+
+  resetStep(step: Step): void {
+    if (step.itemId) this.itemsStore.resetId(step.itemId);
+
+    if (step.recipeObjectiveId) {
+      this.objectivesStore.updateRecord(step.recipeObjectiveId, {
+        machineId: undefined,
+        fuelId: undefined,
+        modules: undefined,
+        beacons: undefined,
+        overclock: undefined,
+      });
+    } else if (step.recipeId) {
+      this.recipesStore.resetId(step.recipeId);
+    }
   }
 
   changeModulesBeacons(

@@ -193,7 +193,7 @@ export class Rational {
     if (precision) return this.toPrecision(precision).toString();
 
     const compare = this.toNumber() * 100;
-    if (precision === null || Math.floor(compare) === compare)
+    if (precision === null || Math.floor(compare) !== compare)
       return this.toFraction(precision !== undefined);
 
     return this.toNumber().toString();

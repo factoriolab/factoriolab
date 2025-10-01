@@ -134,7 +134,7 @@
       }
       <!-- Link -->
       @if (cols().link.show) {
-        <th></th>
+        <th class="w-0"></th>
       }
     </tr>
   </thead>
@@ -519,15 +519,63 @@
         }
         <!-- Power -->
         @if (cols().power.show) {
-          <td></td>
+          <td>
+            @if (step.power) {
+              <div class="flex justify-end font-mono whitespace-pre">
+                {{
+                  step.power
+                    | power
+                      : cols().power.precision
+                      : objectivesStore.effectivePowerUnit()
+                }}
+              </div>
+            }
+          </td>
         }
         <!-- Pollution -->
         @if (cols().pollution.show) {
-          <td></td>
+          <td>
+            @if (step.pollution) {
+              <span class="flex justify-end font-mono whitespace-pre">{{
+                step.pollution | rate: cols().pollution.precision
+              }}</span>
+            }
+          </td>
         }
         <!-- Link -->
         @if (cols().link.show) {
-          <td></td>
+          <td>
+            <div class="flex gap-1">
+              <a
+                target="_blank"
+                routerLink="."
+                [queryParams]="step | stepHref: routerSync.zipConfig() | async"
+                labButton
+                [faIcon]="faArrowUpRightFromSquare"
+                [border]="false"
+                labTooltip="steps.openNewTabTooltip"
+                [attr.aria-label]="'steps.openNewTabTooltip' | translate"
+              >
+              </a>
+              @let mod = objectivesStore.stepsModified();
+              @if (
+                (step.recipeId && mod.recipes[step.recipeId]) ||
+                (step.itemId && mod.items[step.itemId]) ||
+                (step.recipeObjectiveId &&
+                  mod.objectives[step.recipeObjectiveId])
+              ) {
+                <button
+                  type="button"
+                  labButton
+                  [faIcon]="faArrowRotateLeft"
+                  [border]="false"
+                  labTooltip="steps.stepUndoTooltip"
+                  [attr.aria-label]="'steps.stepUndoTooltip' | translate"
+                  (click)="resetStep(step)"
+                ></button>
+              }
+            </div>
+          </td>
         }
       </tr>
       @if (expanded) {
