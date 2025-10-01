@@ -2,11 +2,14 @@
   .input {
     flex-grow: 1;
     border: 1px solid var(--color-gray-700);
-    border-radius: var(--radius-xs);
     background-color: var(--color-gray-950);
     padding-inline: calc(var(--spacing) * 2);
     width: 100%;
     min-height: calc(var(--spacing) * 9);
+
+    &:not(.square) {
+      border-radius: var(--radius-xs);
+    }
 
     &:hover,
     &:focus-visible {

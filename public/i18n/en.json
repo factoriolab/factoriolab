@@ -13,9 +13,10 @@
     "updateRequired": "Update required",
     "updateRequiredMessage": "An update is available, and the page must be reloaded to proceed."
   },
-  "beaconsOverlay": {
+  "beaconsSelect": {
     "addBeacons": "Add beacons",
     "eachTooltip": "Beacons per machine",
+    "tooltip": "Click to select beacons",
     "totalTooltip": "Total beacons"
   },
   "beltTooltip": {
@@ -180,9 +181,10 @@
   "modSet": "Mod set",
   "modSetTooltip": "Select which version or set of mods in Factorio to use",
   "modules": {
-    "eachTooltip": "Number of modules"
+    "eachTooltip": "Number of modules",
+    "moduleTooltip": "Click to select modifier"
   },
-  "moduleSelect": {
+  "modulesSelect": {
     "tooltip": "Click to select modifiers"
   },
   "none": "None",

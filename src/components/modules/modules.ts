@@ -38,7 +38,7 @@ import { Tooltip } from '../tooltip/tooltip';
   ],
   templateUrl: './modules.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'inline-flex flex-col gap-1' },
+  host: { class: 'inline-flex flex-col' },
 })
 export class Modules {
   private readonly options = inject(Options);
@@ -89,10 +89,9 @@ export class Modules {
   }
 
   protected setId(i: number, id: string): void {
-    this.value.update((v) => {
-      const modules = v.map((m, j) => (i === j ? spread(m, { id }) : m));
-      return modules;
-    });
+    this.value.update((v) =>
+      v.map((m, j) => (i === j ? spread(m, { id }) : m)),
+    );
   }
 
   protected removeEntry(i: number): void {

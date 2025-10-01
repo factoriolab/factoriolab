@@ -34,6 +34,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 import { updateSetIds } from '~/utils/set';
 
+import { BeaconsSelect } from '../beacons-select/beacons-select';
 import { BeltSelect } from '../belt-select/belt-select';
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
@@ -52,6 +53,7 @@ import { SortHeader } from './sort-header/sort-header';
   selector: 'lab-steps',
   imports: [
     FormsModule,
+    BeaconsSelect,
     BeltSelect,
     Button,
     Checkbox,

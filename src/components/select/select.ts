@@ -31,6 +31,7 @@ import { Control, LAB_CONTROL } from '../control';
 import { FormField } from '../form-field/form-field';
 import { Icon } from '../icon/icon';
 import { Ripple } from '../ripple/ripple';
+import { Rounded, roundedVariants } from '../rounding';
 import { Tooltip } from '../tooltip/tooltip';
 
 let nextUniqueId = 0;
@@ -48,9 +49,7 @@ const host = cva(
         true: 'border',
         false: 'hover:border',
       },
-      rounded: {
-        true: 'rounded-xs',
-      },
+      rounded: roundedVariants,
       iconOnly: {
         true: 'min-w-9 justify-center hover:bg-gray-800 outline-brand-700 grow-0',
         false: 'outline-brand-700 px-1',
@@ -118,14 +117,14 @@ export class Select<T = unknown> extends Control<T> {
 
   readonly controlId = input(`lab-select-${this.uniqueId}`);
   readonly value = model<T>();
-  readonly options = input.required<Option<T>[]>();
   readonly disabled = model(false);
+  readonly labelledBy = input<string>();
+  readonly options = input.required<Option<T>[]>();
   readonly placeholder = input<string>();
   readonly border = input(true);
-  readonly rounded = input(true);
+  readonly rounded = input<Rounded>('all');
   readonly filter = input<boolean>(false);
   readonly iconOnly = input<boolean>(false);
-  readonly labelledBy = input<string>();
 
   readonly filterText = signal('');
   readonly opened = signal(false);

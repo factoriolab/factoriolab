@@ -15,6 +15,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Icon } from '../icon/icon';
 import { Ripple } from '../ripple/ripple';
+import { Rounded, roundedVariants } from '../rounding';
 
 const host = cva(
   'overflow-hidden select-none items-center gap-1 transition-colors cursor-pointer focus-visible:outline focus:z-2 disabled:pointer-events-none group',
@@ -34,9 +35,7 @@ const host = cva(
       border: {
         true: 'border',
       },
-      rounded: {
-        true: 'rounded-xs',
-      },
+      rounded: roundedVariants,
       hide: {
         true: 'hidden',
         false: 'inline-flex',
@@ -109,7 +108,7 @@ export class Button {
   readonly color = input<'brand' | 'gray'>('gray');
   readonly size = input<'micro' | 'small' | 'standard' | 'large'>('standard');
   readonly border = input(true);
-  readonly rounded = input(true);
+  readonly rounded = input<Rounded>('all');
   readonly hide = input(false);
   readonly toggleIcon = input<IconDefinition>();
   readonly toggled = input(false);

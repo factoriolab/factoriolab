@@ -25,11 +25,12 @@
   <div class="flex gap-px">
     <a
       [routerLink]="gameInfo().route"
-      class="rounded-r-none lg:inline-flex"
+      class="lg:inline-flex"
       labButton
       [text]="gameInfo().label"
       iconType="system"
       [icon]="game()"
+      rounded="start"
       size="large"
       [border]="false"
       [hide]="true"
@@ -37,19 +38,21 @@
     ></a>
     <a
       [routerLink]="gameInfo().route"
-      class="rounded-r-none lg:hidden"
+      class="lg:hidden"
       labButton
       [attr.aria-label]="gameInfo().label | translate"
       iconType="system"
       [icon]="game()"
+      rounded="start"
       size="large"
       [border]="false"
       labTooltip="header.resetTooltip"
     ></a>
     <lab-select
       #gameSelect
-      class="w-11 rounded-l-none"
+      class="w-11"
       [attr.aria-label]="'header.selectGame' | translate"
+      rounded="end"
       [iconOnly]="true"
       [border]="false"
       [options]="gameOptions()"

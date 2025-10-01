@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   input,
   linkedSignal,
   model,
@@ -9,6 +10,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { cva } from 'class-variance-authority';
 import { debounce, map, of, Subject, timer } from 'rxjs';
 
 import { Rational, rational } from '~/rational/rational';
@@ -18,9 +20,25 @@ import { inRange } from '~/utils/number';
 
 import { Button } from '../button/button';
 import { Control, LAB_CONTROL } from '../control';
+import { Rounded, roundedVariants } from '../rounding';
 import { ValidateRational } from './validate-rational';
 
 let nextUniqueId = 0;
+
+const control = cva(
+  'input square group-[.ng-invalid]:border-red-500 group-[.ng-invalid]:outline-red-500',
+  {
+    variants: {
+      rounded: roundedVariants,
+      percent: {
+        true: 'pe-6',
+      },
+      disabled: {
+        true: 'opacity-40 pointer-events-none',
+      },
+    },
+  },
+);
 
 type EventType = 'input' | 'blur' | 'keydown';
 
@@ -50,13 +68,13 @@ export class InputNumber extends Control<Rational> implements OnInit {
   readonly controlId = input(`lab-input-number-${this.uniqueId}`);
   readonly value = model<Rational>();
   readonly disabled = model(false);
+  readonly labelledBy = input<string>();
   readonly minimum = input<Rational | undefined>(rational.zero);
   readonly maximum = input<Rational | undefined>(undefined);
   readonly step = input<Rational>(rational.one);
   readonly integer = input(false);
-  readonly rounded = input(true);
+  readonly rounded = input<Rounded>('all');
   readonly buttons = input(false);
-  readonly labelledBy = input<string>();
   readonly percent = input<boolean>();
 
   private value$ = new Subject<ChangeEvent>();
@@ -77,6 +95,14 @@ export class InputNumber extends Control<Rational> implements OnInit {
       return val.toString();
     },
   });
+
+  readonly controlClass = computed(() =>
+    control({
+      rounded: this.rounded(),
+      percent: this.percent(),
+      disabled: this.disabled(),
+    }),
+  );
 
   protected readonly faChevronUp = faChevronUp;
 

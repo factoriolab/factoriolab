@@ -12,6 +12,7 @@ export abstract class Control<T = unknown> implements ControlValueAccessor {
   abstract controlId: InputSignal<string>;
   abstract value: ModelSignal<T | undefined>;
   abstract disabled: ModelSignal<boolean>;
+  abstract labelledBy: InputSignal<string | undefined>;
 
   touched = signal(false);
   onFormChange?: (value: T) => void;

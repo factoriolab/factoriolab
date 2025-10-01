@@ -270,7 +270,7 @@
               as itemSettings
             ) {
               @if (itemSettings.beltId; as beltId) {
-                <div class="flex">
+                <div class="flex items-center">
                   @if (
                     data().beltIds.includes(beltId)
                       ? 'belt'
@@ -504,7 +504,18 @@
         }
         <!-- Beacons -->
         @if (cols().beacons.show) {
-          <td></td>
+          <td>
+            @if (
+              step.recipeId &&
+              step.recipeSettings &&
+              step.recipeSettings.beacons &&
+              step.recipeSettings.beacons.length
+            ) {
+              <lab-beacons-select
+                [value]="step.recipeSettings.beacons"
+              ></lab-beacons-select>
+            }
+          </td>
         }
         <!-- Power -->
         @if (cols().power.show) {

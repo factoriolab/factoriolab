@@ -1,0 +1,111 @@
+<lab-dropdown [controlId]="controlId()" (open)="open()" (save)="save()">
+  <ng-container button>
+    @for (beacon of value(); track $index) {
+      @if (beacon.id) {
+        <div class="flex gap-1">
+          <lab-icon
+            type="item"
+            [value]="beacon.id"
+            [text]="beacon.count?.toString()"
+            [labTooltip]="beacon.id"
+            labTooltipType="beacon"
+            labTooltipAction="beaconsSelect.tooltip"
+          ></lab-icon>
+          @if (beacon.total) {
+            <lab-icon
+              type="item"
+              alt="Σ"
+              [value]="beacon.id"
+              [text]="beacon.total.toString()"
+              [labTooltip]="beacon.id"
+              labTooltipType="beacon"
+              labTooltipAction="beaconsSelect.tooltip"
+            ></lab-icon>
+          }
+          @for (module of beacon.modules; track module.id) {
+            @if (module.id === '') {
+              <lab-icon
+                value="module"
+                type="system"
+                [text]="module.count?.toString()"
+                labTooltip="beaconsSelect.tooltip"
+              ></lab-icon>
+            } @else if (module.id) {
+              <lab-icon
+                [value]="module.id"
+                type="item"
+                [text]="module.count?.toString()"
+                [labTooltip]="module.id"
+                labTooltipType="module"
+                labTooltipAction="beaconsSelect.tooltip"
+              ></lab-icon>
+            }
+          }
+        </div>
+      }
+    }
+  </ng-container>
+  <div overlay class="flex w-3xs flex-col gap-2">
+    <div class="flex flex-col gap-1">
+      @for (beacon of editValue(); let index = $index; track $index) {
+        <div class="flex flex-col">
+          <div class="flex">
+            <lab-input-number
+              class="w-0 grow"
+              rounded="start"
+              [buttons]="true"
+              labTooltip="beaconsSelect.eachTooltip"
+              [ngModel]="beacon.count"
+              (ngModelChange)="setCount(index, $event)"
+            ></lab-input-number>
+            @if (beacon.total) {
+              <lab-input-number
+                class="-ms-px w-0 grow"
+                rounded="none"
+                [buttons]="true"
+                labTooltip="beaconsSelect.totalTooltip"
+                [ngModel]="beacon.total"
+                (ngModelChange)="setTotal(index, $event)"
+              ></lab-input-number>
+            }
+            <lab-select
+              class="-ms-px"
+              rounded="none"
+              [iconOnly]="true"
+              [options]="settingsStore.options().beacons"
+              [ngModel]="beacon.id"
+              (ngModelChange)="setId(index, $event)"
+            >
+            </lab-select>
+            <button
+              type="button"
+              class="-ms-px"
+              labButton
+              rounded="end"
+              [faIcon]="faXmark"
+              labTooltip="remove"
+              [aria-label]="'remove' | translate"
+              [disabled]="editValue().length < 2"
+              (click)="removeEntry(index)"
+            ></button>
+          </div>
+          @if (beacon.id && beacon.modules) {
+            <lab-modules
+              class="-mt-px"
+              [entity]="settingsStore.dataset().beaconRecord[beacon.id]"
+              [value]="beacon.modules"
+              (valueChange)="setModules(index, $event)"
+            ></lab-modules>
+          }
+        </div>
+      }
+    </div>
+    <button
+      type="button"
+      labButton
+      [faIcon]="faPlus"
+      text="beaconsSelect.addBeacons"
+      (click)="addEntry()"
+    ></button>
+  </div>
+</lab-dropdown>

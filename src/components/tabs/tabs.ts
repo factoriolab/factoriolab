@@ -46,6 +46,7 @@ let nextUniqueId = 0;
       'flex items-center relative group overflow-hidden outline-none shrink-0',
     '[attr.tabindex]': 'disabled() ? -1 : 0',
     '[attr.aria-disabled]': 'disabled() ? true : false',
+    '[attr.aria-labelledby]': 'labelledBy() ?? null',
     '(keydown)': 'onKeydown($event)',
   },
 })
@@ -59,8 +60,9 @@ export class Tabs extends Control<string> implements AfterViewInit {
 
   readonly controlId = input(`lab-tabs-${this.uniqueId}`);
   readonly value = model<string>();
-  readonly tabs = input.required<TabData[]>();
   readonly disabled = model(false);
+  readonly labelledBy = input<string>();
+  readonly tabs = input.required<TabData[]>();
   readonly type = input<IconType>();
 
   protected readonly faAngleLeft = faAngleLeft;

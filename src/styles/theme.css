@@ -79,10 +79,10 @@
     'Roboto Mono', ui-monospace, sfmono-regular, menlo, monaco, consolas,
     'Liberation Mono', 'Courier New', monospace;
   --text-shadow-solid:
-    0 1px 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
-    0 -1px 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
-    1px 0 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
-    -1px 0 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%));
+    0 2px 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
+    0 -2px 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
+    2px 0 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
+    -2px 0 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%));
   --animate-delayed-fade-in: delayed-fade-in 300ms linear;
   --animate-fade-out: fade-out 300ms var(--default-transition-timing-function);
   --animate-enter-translate-y: translate-y var(--default-transition-duration)

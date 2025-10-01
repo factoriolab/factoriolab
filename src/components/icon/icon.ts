@@ -24,6 +24,7 @@ export class Icon {
   readonly value = input.required<string>();
   readonly type = input.required<IconType>();
   readonly text = input<string>();
+  readonly alt = input<string>();
 
   readonly icon = computed(
     () => this.settingsStore.dataset().iconRecord[this.type()][this.value()],

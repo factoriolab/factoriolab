@@ -1,62 +1,35 @@
-@if (value()?.beltId; as beltId) {
-  @let stack = value()?.stack;
-  <lab-icon
-    [value]="beltId"
-    type="item"
-    [text]="stack?.gt(rational.one) ? stack?.toString() : ''"
-    [labTooltip]="beltId"
-    labTooltipType="belt"
-    labTooltipAction="beltSelect.tooltip"
-  ></lab-icon>
-}
+<lab-dropdown [controlId]="controlId()" (open)="open()" (save)="save()">
+  <ng-container button>
+    @if (value()?.beltId; as beltId) {
+      @let stack = value()?.stack;
+      <lab-icon
+        [value]="beltId"
+        type="item"
+        [text]="stack?.gt(rational.one) ? stack?.toString() : ''"
+        [labTooltip]="beltId"
+        labTooltipType="belt"
+        labTooltipAction="beltSelect.tooltip"
+      ></lab-icon>
+    }
+  </ng-container>
 
-<ng-template
-  cdkConnectedOverlay
-  [cdkConnectedOverlayOrigin]="overlayOrigin"
-  [cdkConnectedOverlayOpen]="opened()"
-  (overlayOutsideClick)="toggle()"
->
-  <div
-    [id]="controlId() + '-menu'"
-    role="menu"
-    class="mt-1 flex origin-top flex-col gap-2 rounded-xs border border-gray-700 bg-gray-950 p-4 transition-all starting:scale-y-75 starting:opacity-0"
-    animate.leave="animate-fade-out"
-  >
-    <div class="flex">
-      <lab-input-number
-        class="w-0 grow rounded-s-xs"
-        [rounded]="false"
-        [minimum]="rational.one"
-        [maximum]="stack()"
-        [buttons]="true"
-        [ngModel]="value()?.stack"
-        (ngModelChange)="setStack($event)"
-      ></lab-input-number>
-      <lab-select
-        class="-ms-px"
-        [rounded]="false"
-        [iconOnly]="true"
-        [options]="settingsStore.options().belts"
-        [ngModel]="value()?.beltId"
-        (ngModelChange)="setBelt($event)"
-      ></lab-select>
-    </div>
-    <div class="flex gap-2">
-      <button
-        type="button"
-        labButton
-        color="brand"
-        [faIcon]="faCheck"
-        text="ok"
-        (click)="toggle()"
-      ></button>
-      <button
-        type="button"
-        labButton
-        [faIcon]="faXmark"
-        text="cancel"
-        (click)="opened.set(false)"
-      ></button>
-    </div>
+  <div overlay class="flex">
+    <lab-input-number
+      class="w-0 grow"
+      rounded="start"
+      [minimum]="rational.one"
+      [maximum]="stack()"
+      [buttons]="true"
+      [ngModel]="editValue()?.stack"
+      (ngModelChange)="setStack($event)"
+    ></lab-input-number>
+    <lab-select
+      class="-ms-px"
+      rounded="end"
+      [iconOnly]="true"
+      [options]="settingsStore.options().belts"
+      [ngModel]="editValue()?.beltId"
+      (ngModelChange)="setBelt($event)"
+    ></lab-select>
   </div>
-</ng-template>
+</lab-dropdown>

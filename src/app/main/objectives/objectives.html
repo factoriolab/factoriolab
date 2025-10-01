@@ -33,17 +33,17 @@
       >
         @for (objective of objectives(); track objective.id) {
           <div cdkDrag cdkDragLockAxis="y" cdkDragBoundary=".flex.flex-col">
-            <div class="input-group flex bg-gray-950">
+            <div class="flex bg-gray-950">
               <button
                 type="button"
-                class="rounded-s-xs md:hidden"
+                class="md:hidden"
                 labButton
                 cdkDragHandle
                 [iconType]="
                   objective.unit === ObjectiveUnit.Machines ? 'recipe' : 'item'
                 "
                 [icon]="objective.targetId"
-                [rounded]="false"
+                rounded="start"
                 [attr.aria-label]="
                   (objective.unit === ObjectiveUnit.Machines
                     ? data().recipeRecord
@@ -53,7 +53,7 @@
               ></button>
               <button
                 type="button"
-                class="-ms-px basis-2/5 rounded-s-xs md:inline-flex"
+                class="-ms-px basis-2/5 md:inline-flex"
                 labButton
                 cdkDragHandle
                 [faIcon]="objectives().length > 1 ? faGrip : undefined"
@@ -67,13 +67,13 @@
                     : data().itemRecord)[objective.targetId].name
                 "
                 [hide]="true"
-                [rounded]="false"
+                rounded="start"
                 (click)="changeTarget(objective)"
               ></button>
               <lab-input-number
                 class="-ms-px basis-1/4 md:basis-1/5"
                 labelledBy="quantity-label"
-                [rounded]="false"
+                rounded="none"
                 [step]="rational(5)"
                 [ngModel]="objective.value"
                 (ngModelChange)="
@@ -83,7 +83,7 @@
               <lab-select
                 class="-ms-px basis-3/8 md:basis-1/5"
                 labelledBy="units-label"
-                [rounded]="false"
+                rounded="none"
                 [options]="unitOptions()"
                 [ngModel]="objective.unit"
                 (ngModelChange)="conversion.changeUnit(objective, $event)"
@@ -91,7 +91,7 @@
               <lab-select
                 class="-ms-px basis-3/8 md:basis-1/5"
                 labelledBy="type-label"
-                [rounded]="false"
+                rounded="none"
                 [options]="typeOptions"
                 [ngModel]="objective.type"
                 (ngModelChange)="
@@ -100,10 +100,10 @@
               ></lab-select>
               <button
                 type="button"
-                class="-ms-px rounded-e-xs"
+                class="-ms-px"
                 labButton
                 [faIcon]="faXmark"
-                [rounded]="false"
+                rounded="end"
                 [attr.aria-label]="'objectives.removeTooltip' | translate"
                 (click)="objectivesStore.remove(objective.id)"
               ></button>
@@ -116,11 +116,11 @@
     <div class="flex">
       <button
         type="button"
-        class="rounded-s-xs md:hidden"
+        class="md:hidden"
         labButton
         [faIcon]="faPlus"
         color="brand"
-        [rounded]="false"
+        rounded="start"
         [attr.aria-label]="
           isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'
         "
@@ -128,11 +128,11 @@
       ></button>
       <button
         type="button"
-        class="-ms-px basis-2/5 rounded-s-xs md:inline-flex"
+        class="-ms-px basis-2/5 md:inline-flex"
         labButton
         [faIcon]="faPlus"
         color="brand"
-        [rounded]="false"
+        rounded="start"
         [text]="isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'"
         [hide]="true"
         (click)="openPicker()"
@@ -140,21 +140,21 @@
       <lab-input-number
         class="-ms-px basis-1/4 md:basis-1/5"
         labelledBy="quantity-label"
-        [rounded]="false"
+        rounded="none"
         [step]="rational(5)"
         [(ngModel)]="value"
       ></lab-input-number>
       <lab-select
         class="-ms-px basis-3/8 md:basis-1/5"
         labelledBy="units-label"
-        [rounded]="false"
+        rounded="none"
         [(ngModel)]="unit"
         [options]="unitOptions()"
       ></lab-select>
       <lab-select
         class="-ms-px basis-3/8 md:basis-1/5"
         labelledBy="type-label"
-        [rounded]="false"
+        rounded="none"
         [(ngModel)]="type"
         [options]="typeOptions"
       ></lab-select>
@@ -163,12 +163,12 @@
         paused ? 'objectives.playTooltip' : 'objectives.pauseTooltip';
       <button
         type="button"
-        class="-ms-px rounded-e-xs"
+        class="-ms-px"
         labButton
         [faIcon]="paused ? faPlay : faPause"
         [labTooltip]="pausedTooltip"
         [color]="paused ? 'brand' : 'gray'"
-        [rounded]="false"
+        rounded="end"
         [attr.aria-label]="pausedTooltip | translate"
         (click)="preferencesStore.apply({ paused: !paused })"
       ></button>

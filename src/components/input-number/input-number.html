@@ -5,10 +5,7 @@
   labValidateRational
   [minimum]="minimum()"
   [maximum]="maximum()"
-  class="input group-[.ng-invalid]:border-red-500 group-[.ng-invalid]:outline-red-500"
-  [class.pe-6]="percent()"
-  [class.rounded-none]="!rounded()"
-  [class.opacity-40]="disabled()"
+  [class]="controlClass()"
   [attr.aria-labelledby]="labelledBy()"
   [disabled]="disabled()"
   (input)="onChange($event)"
@@ -23,7 +20,7 @@
       type="button"
       labButton
       size="micro"
-      [rounded]="false"
+      rounded="none"
       [faIcon]="faChevronUp"
       [disabled]="disabled() || !!maximum()?.lte(value)"
       [attr.aria-label]="'inputNumber.increment' | translate"
@@ -34,7 +31,7 @@
       class="rotate-180"
       labButton
       size="micro"
-      [rounded]="false"
+      rounded="none"
       [faIcon]="faChevronUp"
       [disabled]="disabled() || !!minimum()?.gte(value)"
       [attr.aria-label]="'inputNumber.decrement' | translate"
