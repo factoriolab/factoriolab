@@ -88,6 +88,7 @@
   --animate-enter-translate-y: translate-y var(--default-transition-duration)
     var(--default-transition-timing-function);
   --animate-ripple: ripple-animation 300ms linear forwards;
+  --animate-shrink-y: shrink-y 300ms var(--default-transition-timing-function);
 
   @keyframes delayed-fade-in {
     0% {
@@ -146,6 +147,16 @@
     100% {
       scale: 250% 250%;
       opacity: 0;
+    }
+  }
+
+  @keyframes shrink-y {
+    0% {
+      grid-template-rows: 1fr;
+    }
+
+    100% {
+      grid-template-rows: 0fr;
     }
   }
 }

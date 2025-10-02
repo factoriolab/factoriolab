@@ -113,6 +113,7 @@ export class Button {
   readonly toggleIcon = input<IconDefinition>();
   readonly toggled = input(false);
   readonly disabled = input(false);
+  readonly textAlign = input<'left' | 'center' | 'right'>('center');
 
   readonly hostClass = computed(() =>
     host({
@@ -126,4 +127,15 @@ export class Button {
       disabled: this.disabled(),
     }),
   );
+
+  readonly alignClass = computed(() => {
+    switch (this.textAlign()) {
+      case 'left':
+        return 'text-left';
+      case 'center':
+        return 'text-center';
+      case 'right':
+        return 'text-end';
+    }
+  });
 }

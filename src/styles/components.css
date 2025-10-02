@@ -25,7 +25,7 @@
       color: var(--color-gray-500);
     }
 
-    &.ng-invalid {
+    &.ng-invalid.ng-dirty {
       outline-color: var(--color-red-500);
       border-color: var(--color-red-500);
     }

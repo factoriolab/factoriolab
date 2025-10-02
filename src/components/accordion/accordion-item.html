@@ -1,0 +1,29 @@
+<button
+  type="button"
+  [id]="controlId()"
+  [attr.aria-controls]="controlId() + '-region'"
+  class="flex h-9 cursor-pointer items-center gap-1 border-b border-gray-800 p-2 hover:bg-gray-700"
+  [class.text-brand-400]="expanded"
+  (click)="toggle()"
+>
+  <fa-icon
+    [icon]="faChevronRight"
+    class="transition-transform"
+    [class.rotate-90]="expanded"
+  ></fa-icon>
+  {{ text() | translate }}
+</button>
+
+@if (expanded) {
+  <div
+    [id]="controlId() + '-region'"
+    role="region"
+    [attr.aria-labelledby]="controlId()"
+    class="test grid grid-rows-[1fr] overflow-hidden transition-[grid-template-rows] duration-300 starting:grid-rows-[0fr]"
+    animate.leave="animate-shrink-y"
+  >
+    <div class="flex min-h-0 flex-col gap-2 p-4">
+      <ng-content></ng-content>
+    </div>
+  </div>
+}

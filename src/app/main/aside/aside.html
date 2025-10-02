@@ -1,5 +1,220 @@
-<button class="hidden xl:block" (click)="xlHidden.set(true)">toggle xl</button>
-<button class="xl:hidden" (click)="open.set(false)">toggle non-xl</button>
+<div
+  class="flex items-center justify-between border-b border-gray-700 p-3 md:min-h-16"
+>
+  <h2 class="hidden grow text-2xl font-light xl:block">
+    {{ 'aside.header' | translate }}
+  </h2>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faTrash"
+    [border]="false"
+    labTooltip="aside.reset"
+    [attr.aria-label]="'aside.reset' | translate"
+    (click)="reset()"
+  ></button>
+  <button
+    type="button"
+    class="hidden xl:block"
+    labButton
+    [faIcon]="faXmark"
+    [border]="false"
+    [attr.aria-label]="'aside.hide' | translate"
+    (click)="xlHidden.set(true)"
+  ></button>
+  <button
+    type="button"
+    class="xl:hidden"
+    labButton
+    [faIcon]="faXmark"
+    [border]="false"
+    [attr.aria-label]="'aside.hide' | translate"
+    (click)="open.set(false)"
+  ></button>
+</div>
+
+<lab-accordion class="overflow-y-auto">
+  <lab-accordion-item #accordionItem text="aside.savedStates" [expanded]="true">
+    @if (!windowClient.isStandalone) {
+      <div class="flex">
+        <input
+          #paramsInput
+          [ngModel]="params()"
+          type="text"
+          class="input square rounded-s-xs"
+          [placeholder]="'aside.queryParamsPlaceholder' | translate"
+        />
+        <button
+          type="button"
+          labButton
+          rounded="none"
+          class="-ms-px"
+          [faIcon]="faArrowUpRightFromSquare"
+          labTooltip="aside.applyQueryParams"
+          [attr.aria-label]="'aside.applyQueryParams' | translate"
+          (click)="setParams(paramsInput.value)"
+        ></button>
+        <button
+          type="button"
+          labButton
+          rounded="end"
+          class="-ms-px"
+          [faIcon]="faCopy"
+          labTooltip="aside.copyQueryParams"
+          [attr.aria-label]="'aside.copyQueryParams' | translate"
+          (click)="windowClient.copyToClipboard(paramsInput.value)"
+        ></button>
+      </div>
+    }
+
+    <div class="flex">
+      @if (editStatus()) {
+        <input
+          type="text"
+          class="input"
+          [placeholder]="'aside.nameSavedState' | translate"
+          required
+          [(ngModel)]="editValue"
+          (keydown.enter)="saveState()"
+        />
+        <button
+          type="button"
+          labButton
+          rounded="none"
+          class="-ms-px"
+          [faIcon]="faFloppyDisk"
+          labTooltip="aside.saveState"
+          [attr.aria-label]="'aside.saveState' | translate"
+          (click)="saveState()"
+        ></button>
+        <button
+          type="button"
+          labButton
+          rounded="end"
+          class="-ms-px"
+          [faIcon]="faXmark"
+          labTooltip="cancel"
+          [attr.aria-label]="'cancel' | translate"
+          (click)="editStatus.set(null)"
+        ></button>
+      } @else if (settingsStore.stateOptions().length) {
+        <lab-select
+          rounded="start"
+          [options]="settingsStore.stateOptions()"
+          [ngModel]="state()"
+          (ngModelChange)="setState($event)"
+        ></lab-select>
+        @if (state(); as state) {
+          <button
+            type="button"
+            class="-ms-px"
+            labButton
+            rounded="end"
+            [faIcon]="faEllipsisVertical"
+            [attr.aria-label]="'aside.savedStateMenuLabel' | translate"
+            [cdkMenuTriggerFor]="editStateMenu"
+          ></button>
+          <ng-template #editStateMenu>
+            <div
+              class="flex flex-col rounded-xs border border-gray-700 bg-gray-950 py-1"
+              cdkMenu
+            >
+              <button
+                type="button"
+                labButton
+                cdkMenuItem
+                [border]="false"
+                [faIcon]="faPlus"
+                text="aside.createSavedState"
+                textAlign="left"
+                (click)="createState()"
+              ></button>
+              <button
+                type="button"
+                labButton
+                cdkMenuItem
+                [border]="false"
+                [faIcon]="faPencil"
+                text="aside.editSavedState"
+                textAlign="left"
+                (click)="editState(state)"
+              ></button>
+              <button
+                type="button"
+                labButton
+                cdkMenuItem
+                [border]="false"
+                [faIcon]="faTrash"
+                text="aside.deleteSavedState"
+                textAlign="left"
+                (click)="deleteState(state)"
+              ></button>
+            </div>
+          </ng-template>
+        } @else {
+          <button
+            type="button"
+            class="-ms-px"
+            labButton
+            rounded="end"
+            [faIcon]="faPlus"
+            labTooltip="aside.createSavedState"
+            [attr.aria-label]="'aside.createSavedState' | translate"
+            (click)="createState()"
+          ></button>
+        }
+      } @else {
+        <button
+          type="button"
+          labButton
+          class="w-full"
+          [faIcon]="faPlus"
+          text="aside.createSavedState"
+          (click)="createState()"
+        ></button>
+      }
+    </div>
+
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+    <div>contents</div>
+  </lab-accordion-item>
+</lab-accordion>
 
 <input
   type="range"

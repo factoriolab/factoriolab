@@ -1,4 +1,6 @@
-<h2 class="mb-1 hidden text-2xl font-light xl:block">Objectives</h2>
+<h2 class="mb-1 hidden text-2xl font-light xl:block">
+  {{ 'objectives.title' | translate }}
+</h2>
 
 <div class="flex flex-wrap gap-1 sm:gap-2">
   <div class="flex w-full max-w-2xl grow flex-col sm:w-auto">
@@ -175,7 +177,7 @@
     </div>
   </div>
   <div class="hidden items-end lg:flex">
-    <lab-form-field label="settings.displayRate">
+    <lab-form-field label="aside.displayRate">
       <lab-select
         [ngModel]="settingsStore.displayRate()"
         [options]="displayRateOptions"

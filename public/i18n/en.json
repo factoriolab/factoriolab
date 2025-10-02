@@ -376,10 +376,11 @@
   "select": {
     "noMatches": "No matches found"
   },
-  "settings": {
+  "aside": {
     "addMachineTooltip": "Add a machine preference",
     "advanced": "Advanced",
     "allTechsResearched": "All technologies researched",
+    "applyQueryParams": "Apply query parameters",
     "averageBeaconReceivers": "Average beacon receivers",
     "averageBeaconReceiversTooltip": "Average number of machines affected by each beacon; minimum value is 1",
     "beaconCountTooltip": "Set beacon count",
@@ -389,6 +390,7 @@
     "bypassLanding": "Always skip landing page",
     "convertObjectiveValues": "Convert objective values",
     "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
+    "copyQueryParams": "Copy current query parameters",
     "createSavedState": "Create new",
     "defaultCargoWagon": "Default cargo wagon",
     "defaultCargoWagonTooltip": "Select the default cargo wagon to be used by all items",
@@ -416,6 +418,7 @@
     "gameTooltip": "Select which game calculator to use, or use the links in the title bar",
     "header": "Settings",
     "helpTranslate": "Help translate",
+    "hide": "Hide settings panel",
     "inserterCapacity": "Inserter capacity",
     "inserterCapacityTooltip": "Enter the current level of inserter capacity bonus; this setting only affects inserter estimates",
     "inserterTarget": "Inserter target",
@@ -459,6 +462,7 @@
     "presetTooltip": "Select a default preset of machine settings to use",
     "proliferatorSelfSpray": "Proliferator self-spray",
     "proliferatorSelfSprayTooltip": "Select the proliferator spray applied to proliferator itself",
+    "queryParamsPlaceholder": "Paste query parameters",
     "recipeProductivity": "Recipe productivity bonuses",
     "recipeProductivityTooltip": "Click to set productivity bonuses for recipes upgraded by technology",
     "recipesExcluded": "{{ count }} recipes excluded",
@@ -474,6 +478,7 @@
     "resetWarning": "This will delete all saved FactorioLab settings in this browser, are you sure you want to continue?",
     "saveSavedState": "Save",
     "saveState": "Save state",
+    "savedStateMenuLabel": "Saved state menu",
     "savedStates": "Saved states",
     "selectSavedState": "Select state",
     "techsResearched": "{{ count }} technologies researched",

@@ -12,7 +12,9 @@
   }
 }
 @if (text(); as text) {
-  <span class="line-clamp-1 grow text-center">{{ text | translate }}</span>
+  <span class="line-clamp-1 grow" [class]="alignClass()">{{
+    text | translate
+  }}</span>
 }
 @if (toggleIcon(); as icon) {
   <fa-icon
