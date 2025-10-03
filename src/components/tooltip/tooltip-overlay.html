@@ -343,7 +343,9 @@
       @case ('technology') {
         @if (item.technology; as technology) {
           @if (technology.prerequisites; as prerequisites) {
-            <div class="mt-1">{{ 'data.prerequisites' | translate }}</div>
+            <div class="mt-1 text-sm">
+              {{ 'data.prerequisites' | translate }}
+            </div>
             <div>
               @for (prerequisite of prerequisites; track prerequisite) {
                 <lab-icon [value]="prerequisite" type="item"></lab-icon>
@@ -359,7 +361,9 @@
                 </tr>
               </table>
             } @else {
-              <div class="mt-1">{{ 'data.unlockedRecipes' | translate }}</div>
+              <div class="mt-1 text-sm">
+                {{ 'data.unlockedRecipes' | translate }}
+              </div>
               <div>
                 @for (recipeId of recipes; track recipeId) {
                   <lab-icon [value]="recipeId" type="recipe"></lab-icon>

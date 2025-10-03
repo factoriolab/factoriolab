@@ -55,7 +55,9 @@ export class PreferencesStore extends Store<PreferencesState> {
     });
 
     effect(() => {
-      applyHue(this.hue(), this.document.documentElement);
+      const hue = this.hue();
+      applyHue(hue, 'brand', this.document.documentElement);
+      applyHue(hue + 180, 'complement', this.document.documentElement);
     });
   }
 

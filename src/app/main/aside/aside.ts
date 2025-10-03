@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
@@ -17,6 +18,8 @@ import {
   faEllipsisVertical,
   faExclamationTriangle,
   faFloppyDisk,
+  faInfo,
+  faMicrochip,
   faPencil,
   faPlus,
   faTrash,
@@ -28,16 +31,22 @@ import { filter, map, switchMap } from 'rxjs';
 import { AccordionModule } from '~/components/accordion/accordion-module';
 import { Button } from '~/components/button/button';
 import { Confirm } from '~/components/confirm/confirm';
+import { FormField } from '~/components/form-field/form-field';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
+import { Game, gameOptions } from '~/data/game';
+import { gameInfo } from '~/data/game-info';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { WindowClient } from '~/window/window-client';
 
+import { TechnologiesDialog } from './technologies-dialog/technologies-dialog';
+import { VersionsDialog } from './versions-dialog/versions-dialog';
+
 const host = cva(
-  'flex flex-col fixed z-6 top-0 left-0 h-full border-r border-gray-700 w-xs transition-transform',
+  'flex flex-col fixed z-6 top-0 left-0 h-full border-r border-gray-700 w-xs transition-transform bg-gray-950',
   {
     variants: {
       open: { false: '-translate-x-full' },
@@ -54,6 +63,7 @@ const host = cva(
     CdkMenuModule,
     AccordionModule,
     Button,
+    FormField,
     Select,
     Tooltip,
     TranslatePipe,
@@ -65,9 +75,10 @@ const host = cva(
 export class Aside {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly dialog = inject(Dialog);
   private readonly confirm = inject(Confirm);
   protected readonly preferencesStore = inject(PreferencesStore);
-  private readonly routerSync = inject(RouterSync);
+  protected readonly routerSync = inject(RouterSync);
   protected readonly settingsStore = inject(SettingsStore);
   protected readonly windowClient = inject(WindowClient);
 
@@ -87,24 +98,28 @@ export class Aside {
   readonly editStatus = signal<'create' | 'edit' | null>(null);
   readonly editValue = signal('');
 
+  protected readonly data = this.settingsStore.dataset;
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
   protected readonly faCopy = faCopy;
   protected readonly faEllipsisVertical = faEllipsisVertical;
   protected readonly faFloppyDisk = faFloppyDisk;
+  protected readonly faInfo = faInfo;
+  protected readonly faMicrochip = faMicrochip;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
+  protected readonly gameOptions = gameOptions;
 
   reset(): void {
     this.confirm
-      .show({
+      .open({
         header: 'aside.reset',
         message: 'aside.resetWarning',
         icon: faExclamationTriangle,
         actions: [
-          { text: 'cancel', value: false, icon: faXmark },
           { text: 'yes', value: true, icon: faCheck },
+          { text: 'cancel', value: false, icon: faXmark },
         ],
       })
       .pipe(
@@ -164,10 +179,25 @@ export class Aside {
   }
 
   deleteState(state: string): void {
-    this.preferencesStore.removeState(
-      this.settingsStore.dataset().modId,
-      state,
-    );
+    this.preferencesStore.removeState(this.data().modId, state);
     this.state.set('');
+  }
+
+  setGame(game: Game): void {
+    this.setMod(gameInfo[game].modId);
+  }
+
+  setMod(modId: string): void {
+    void this.router.navigate([modId, 'list']);
+  }
+
+  openVersions(): void {
+    this.dialog.open(VersionsDialog, { data: { header: 'aside.modVersions' } });
+  }
+
+  openTechnologies(): void {
+    this.dialog.open(TechnologiesDialog, {
+      data: { header: 'technologies.header' },
+    });
   }
 }

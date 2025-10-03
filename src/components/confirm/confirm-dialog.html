@@ -6,11 +6,11 @@
 </div>
 
 <div class="flex justify-end gap-1 sm:gap-2">
-  @for (action of dialogData.actions; track action.value; let last = $last) {
+  @for (action of dialogData.actions; track action.value; let first = $first) {
     <button
       type="button"
       labButton
-      [color]="action.color ?? ($last ? 'brand' : 'gray')"
+      [color]="action.color ?? ($first ? 'brand' : 'gray')"
       [faIcon]="action.icon"
       [text]="action.text"
       (click)="dialogRef.close(action.value)"

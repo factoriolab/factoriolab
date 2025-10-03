@@ -11,6 +11,8 @@ import {
 import { cva } from 'class-variance-authority';
 
 import { IconType } from '~/data/icon-type';
+import { Color } from '~/state/preferences/color';
+import { InterpolateParams } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Icon } from '../icon/icon';
@@ -24,7 +26,9 @@ const host = cva(
       color: {
         gray: 'text-gray-50 outline-brand-700 focus-visible:border-brand-700',
         brand:
-          'bg-brand-950 text-brand-50 outline-gray-300 focus-visible:border-gray-300 z-1',
+          'text-brand-50 outline-gray-300 bg-brand-950 focus-visible:border-gray-300 z-1',
+        complement:
+          'text-complement-50 outline-gray-300 bg-complement-950 focus-visible:border-gray-300 z-1',
       },
       size: {
         micro: 'w-9',
@@ -63,6 +67,11 @@ const host = cva(
         class: 'hover:bg-brand-700 border-brand-700',
       },
       {
+        color: 'complement',
+        border: true,
+        class: 'hover:bg-complement-700 border-complement-700',
+      },
+      {
         color: 'gray',
         border: false,
         class: 'hover:bg-gray-800',
@@ -71,6 +80,11 @@ const host = cva(
         color: 'brand',
         border: false,
         class: 'hover:bg-brand-800',
+      },
+      {
+        color: 'complement',
+        border: false,
+        class: 'hover:bg-complement-800',
       },
       {
         size: 'small',
@@ -105,7 +119,7 @@ export class Button {
   readonly faIcon = input<IconDefinition>();
   readonly iconType = input<IconType>();
   readonly icon = input<string>();
-  readonly color = input<'brand' | 'gray'>('gray');
+  readonly color = input<Color>('gray');
   readonly size = input<'micro' | 'small' | 'standard' | 'large'>('standard');
   readonly border = input(true);
   readonly rounded = input<Rounded>('all');
@@ -114,6 +128,7 @@ export class Button {
   readonly toggled = input(false);
   readonly disabled = input(false);
   readonly textAlign = input<'left' | 'center' | 'right'>('center');
+  readonly interpolateParams = input<InterpolateParams>();
 
   readonly hostClass = computed(() =>
     host({

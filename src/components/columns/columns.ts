@@ -7,7 +7,7 @@ import { ColumnsDialog } from './columns-dialog';
 export class Columns {
   private readonly dialog = inject(Dialog);
 
-  show(): void {
+  open(): void {
     this.dialog.open(ColumnsDialog, { data: { header: 'columns.header' } });
   }
 }

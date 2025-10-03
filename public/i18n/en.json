@@ -522,13 +522,11 @@
     "total": "Total",
     "wagonsUndoTooltip": "Undo all wagon modifications"
   },
-  "techPicker": {
+  "technologies": {
     "available": "Available",
     "exportCopyScript": "Copy console script",
     "exportFromFactorio": "Export from Factorio",
-    "exportMod": "Export mod",
-    "exportScript": "Copy console script",
-    "exportScriptCopied": "Copied to clipboard",
+    "exportScriptCopied": "Script copied!",
     "exportUseMod": "Use a mod",
     "header": "Set researched technologies",
     "import": "Import",
@@ -539,6 +537,10 @@
     "researched": "Researched",
     "showLabels": "Show labels",
     "unlockAll": "Unlock all"
+  },
+  "versions": {
+    "mod": "Mod",
+    "version": "Version"
   },
   "yes": "Yes"
 }

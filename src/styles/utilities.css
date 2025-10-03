@@ -1,4 +1,0 @@
-/** Fill the display width with specified padding on each side */
-@utility w-dvw-* {
-  width: calc(100dvw - var(--spacing) * --value(integer) * 2);
-}

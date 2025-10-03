@@ -42,7 +42,6 @@
       @for (id of ids; track $index) {
         <button
           type="button"
-          [attr.aria-label]="data()[recordKey][id].name"
           labButton
           [iconType]="dialogData.type"
           [icon]="id"
@@ -50,6 +49,7 @@
           [color]="id === selection ? 'brand' : 'gray'"
           [labTooltip]="id"
           [labTooltipType]="dialogData.type"
+          [attr.aria-label]="data()[recordKey][id].name"
           (click)="selectId(id)"
         ></button>
       }

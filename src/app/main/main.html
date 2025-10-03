@@ -1,7 +1,7 @@
 <aside #aside="labAside" labAside></aside>
 <div
   role="none"
-  class="fixed z-1 hidden h-dvh w-dvw bg-gray-950/75 xl:hidden"
+  class="fixed z-2 hidden h-dvh w-dvw bg-gray-950/75 xl:hidden"
   [class.hidden]="!aside.open()"
   (click)="aside.open.set(false)"
 ></div>

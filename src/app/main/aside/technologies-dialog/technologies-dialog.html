@@ -1,0 +1,81 @@
+<div class="flex">
+  <div class="relative flex grow">
+    <input
+      class="input square rounded-s-xs"
+      [placeholder]="'filter' | translate"
+      [(ngModel)]="filterText"
+    />
+    <fa-icon
+      class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+      [icon]="faMagnifyingGlass"
+    ></fa-icon>
+  </div>
+  <div class="flex items-center gap-1 border border-s-0 border-gray-700 pe-2">
+    <lab-checkbox
+      controlId="select-all"
+      [ngModel]="allSelected()"
+      (ngModelChange)="selectAll($event)"
+    ></lab-checkbox>
+    <label for="select-all" class="cursor-pointer select-none">{{
+      'technologies.unlockAll' | translate
+    }}</label>
+  </div>
+  <div class="flex items-center gap-1 border border-s-0 border-gray-700 pe-2">
+    <lab-checkbox
+      controlId="show-labels"
+      [ngModel]="preferencesStore.showTechLabels()"
+      (ngModelChange)="preferencesStore.apply({ showTechLabels: $event })"
+    ></lab-checkbox>
+    <label for="show-labels" class="cursor-pointer select-none">{{
+      'technologies.showLabels' | translate
+    }}</label>
+  </div>
+  <button
+    type="button"
+    class="-ms-px"
+    rounded="end"
+    labButton
+    [faIcon]="faFileImport"
+    text="technologies.import"
+    labTooltip="technologies.importTooltip"
+    (click)="openImport()"
+  ></button>
+</div>
+
+<div class="flex flex-col gap-2 overflow-y-scroll">
+  <lab-technologies-set
+    text="technologies.available"
+    [ids]="status().available"
+    (toggleId)="toggleId($event)"
+  ></lab-technologies-set>
+  <lab-technologies-set
+    text="technologies.locked"
+    [ids]="status().locked"
+    color="complement"
+    (toggleId)="toggleId($event)"
+  ></lab-technologies-set>
+  <lab-technologies-set
+    text="technologies.researched"
+    [ids]="status().researched"
+    color="brand"
+    (toggleId)="toggleId($event)"
+  ></lab-technologies-set>
+</div>
+
+<div class="flex justify-end gap-1 sm:gap-2">
+  <button
+    type="button"
+    labButton
+    text="ok"
+    [faIcon]="faCheck"
+    color="brand"
+    (click)="save()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    text="cancel"
+    [faIcon]="faXmark"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

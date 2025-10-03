@@ -1,9 +1,7 @@
 <div
-  class="flex items-center justify-between border-b border-gray-700 p-3 md:min-h-16"
+  class="flex items-center justify-between border-b border-gray-700 p-2 md:min-h-16 md:p-3"
 >
-  <h2 class="hidden grow text-2xl font-light xl:block">
-    {{ 'aside.header' | translate }}
-  </h2>
+  <h2 class="grow text-2xl font-light">{{ 'aside.header' | translate }}</h2>
   <button
     type="button"
     labButton
@@ -15,9 +13,10 @@
   ></button>
   <button
     type="button"
-    class="hidden xl:block"
+    class="xl:inline-flex"
     labButton
     [faIcon]="faXmark"
+    [hide]="true"
     [border]="false"
     [attr.aria-label]="'aside.hide' | translate"
     (click)="xlHidden.set(true)"
@@ -33,9 +32,9 @@
   ></button>
 </div>
 
-<lab-accordion class="overflow-y-auto">
-  <lab-accordion-item #accordionItem text="aside.savedStates" [expanded]="true">
-    @if (!windowClient.isStandalone) {
+<lab-accordion class="overflow-y-auto" [multi]="true">
+  <lab-accordion-item text="aside.savedStates" [note]="state()">
+    @if (windowClient.isStandalone) {
       <div class="flex">
         <input
           #paramsInput
@@ -174,45 +173,61 @@
         ></button>
       }
     </div>
+  </lab-accordion-item>
+  <lab-accordion-item text="game" [note]="settingsStore.modId()">
+    <lab-form-field label="game">
+      <lab-select
+        [options]="gameOptions"
+        [ngModel]="data().game"
+        (ngModelChange)="setGame($event)"
+      ></lab-select>
+    </lab-form-field>
 
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
-    <div>contents</div>
+    @if (data().flags.has('mods') && settingsStore.modId(); as modId) {
+      <lab-form-field label="modSet">
+        <a
+          action
+          class="link text-sm"
+          href="https://github.com/factoriolab/factoriolab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
+          target="_blank"
+          >{{ 'aside.requestMod' | translate }}</a
+        >
+        <div class="flex">
+          <lab-select
+            [options]="settingsStore.modOptions()"
+            [filter]="true"
+            rounded="start"
+            [ngModel]="modId"
+            (ngModelChange)="setMod($event)"
+          ></lab-select>
+          <button
+            type="button"
+            class="-ms-px"
+            labButton
+            rounded="end"
+            [faIcon]="faInfo"
+            labTooltip="aside.modVersions"
+            [attr.aria-label]="'aside.modVersions' | translate"
+            (click)="openVersions()"
+          ></button>
+        </div>
+      </lab-form-field>
+    }
+
+    <button
+      type="button"
+      labButton
+      [faIcon]="faMicrochip"
+      [text]="
+        settingsStore.researchedTechnologyIds()
+          ? 'aside.techsResearched'
+          : 'aside.allTechsResearched'
+      "
+      [interpolateParams]="{
+        count: settingsStore.settings().researchedTechnologyIds.size,
+      }"
+      (click)="openTechnologies()"
+    ></button>
   </lab-accordion-item>
 </lab-accordion>
 

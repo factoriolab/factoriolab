@@ -26,7 +26,7 @@ import { ValidateRational } from './validate-rational';
 let nextUniqueId = 0;
 
 const control = cva(
-  'input square group-[.ng-invalid]:border-red-500 group-[.ng-invalid]:outline-red-500',
+  'input square group-[.ng-invalid]:border-complement-500 group-[.ng-invalid]:outline-complement-500',
   {
     variants: {
       rounded: roundedVariants,

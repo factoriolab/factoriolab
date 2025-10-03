@@ -15,7 +15,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'inline-flex shrink-0 relative size-8 text-sm/4 font-bold text-white',
+      'inline-flex shrink-0 relative size-8 text-sm/3.5 font-bold text-white',
   },
 })
 export class Icon {

@@ -2,8 +2,7 @@
   type="button"
   [id]="controlId()"
   [attr.aria-controls]="controlId() + '-region'"
-  class="flex h-9 cursor-pointer items-center gap-1 border-b border-gray-800 p-2 hover:bg-gray-700"
-  [class.text-brand-400]="expanded"
+  class="-mt-px flex h-9 cursor-pointer items-center gap-1 border-t border-b border-gray-700 p-2 hover:bg-gray-700 md:h-auto md:p-3"
   (click)="toggle()"
 >
   <fa-icon
@@ -11,7 +10,10 @@
     class="transition-transform"
     [class.rotate-90]="expanded"
   ></fa-icon>
-  {{ text() | translate }}
+  <span class="me-auto">{{ text() | translate }}</span>
+  @if (note(); as note) {
+    <span>{{ note }}</span>
+  }
 </button>
 
 @if (expanded) {
@@ -19,11 +21,13 @@
     [id]="controlId() + '-region'"
     role="region"
     [attr.aria-labelledby]="controlId()"
-    class="test grid grid-rows-[1fr] overflow-hidden transition-[grid-template-rows] duration-300 starting:grid-rows-[0fr]"
+    class="grid grid-rows-[1fr] overflow-hidden transition-[grid-template-rows] duration-300 starting:grid-rows-[0fr]"
     animate.leave="animate-shrink-y"
   >
-    <div class="flex min-h-0 flex-col gap-2 p-4">
-      <ng-content></ng-content>
+    <div class="min-h-0 border-b border-gray-700">
+      <div class="flex flex-col gap-2 p-4">
+        <ng-content></ng-content>
+      </div>
     </div>
   </div>
 }

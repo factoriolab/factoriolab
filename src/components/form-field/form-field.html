@@ -1,7 +1,10 @@
-<label
-  [id]="labelId"
-  [for]="control().controlId()"
-  class="mx-1 text-sm text-gray-300"
-  >{{ label() | translate }}</label
->
+<div class="flex items-center justify-between">
+  <label
+    [id]="labelId"
+    [for]="control().controlId()"
+    class="mx-1 text-sm text-gray-300"
+    >{{ label() | translate }}</label
+  >
+  <ng-content select="[action]"></ng-content>
+</div>
 <ng-content></ng-content>

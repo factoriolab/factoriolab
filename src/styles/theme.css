@@ -21,6 +21,17 @@
   --color-brand-800: var(--brand-800);
   --color-brand-900: var(--brand-900);
   --color-brand-950: var(--brand-950);
+  --color-complement-50: var(--complement-50);
+  --color-complement-100: var(--complement-100);
+  --color-complement-200: var(--complement-200);
+  --color-complement-300: var(--complement-300);
+  --color-complement-400: var(--complement-400);
+  --color-complement-500: var(--complement-500);
+  --color-complement-600: var(--complement-600);
+  --color-complement-700: var(--complement-700);
+  --color-complement-800: var(--complement-800);
+  --color-complement-900: var(--complement-900);
+  --color-complement-950: var(--complement-950);
 
   &[data-theme='light'] {
     --color-gray-50: oklch(14.5% 0 0deg);
@@ -45,6 +56,17 @@
     --color-brand-800: var(--brand-200);
     --color-brand-900: var(--brand-100);
     --color-brand-950: var(--brand-50);
+    --color-complement-50: var(--complement-950);
+    --color-complement-100: var(--complement-900);
+    --color-complement-200: var(--complement-800);
+    --color-complement-300: var(--complement-700);
+    --color-complement-400: var(--complement-600);
+    --color-complement-500: var(--complement-500);
+    --color-complement-600: var(--complement-400);
+    --color-complement-700: var(--complement-300);
+    --color-complement-800: var(--complement-200);
+    --color-complement-900: var(--complement-100);
+    --color-complement-950: var(--complement-50);
   }
 }
 
@@ -71,7 +93,47 @@
   --color-brand-800: var(--color-brand-800, oklch(42.7% 0.184 261.423deg));
   --color-brand-900: var(--color-brand-900, oklch(38.1% 0.137 261.342deg));
   --color-brand-950: var(--color-brand-950, oklch(28.4% 0.0868 263.732deg));
-  --color-test: oklch(63.4% 0.206 256deg);
+  --color-complement-50: var(
+    --color-complement-50,
+    oklch(98.7% 0.0235 97.8483deg)
+  );
+  --color-complement-100: var(
+    --color-complement-100,
+    oklch(96.6% 0.0634 98.4259deg)
+  );
+  --color-complement-200: var(
+    --color-complement-200,
+    oklch(93.2% 0.123 97.8942deg)
+  );
+  --color-complement-300: var(
+    --color-complement-300,
+    oklch(88.9% 0.174 94.0172deg)
+  );
+  --color-complement-400: var(
+    --color-complement-400,
+    oklch(83.7% 0.193 87.2123deg)
+  );
+  --color-complement-500: var(--color-complement-500, oklch(77.9% 0.187 76deg));
+  --color-complement-600: var(
+    --color-complement-600,
+    oklch(67.2% 0.173 64.8123deg)
+  );
+  --color-complement-700: var(
+    --color-complement-700,
+    oklch(55.5% 0.153 55.4656deg)
+  );
+  --color-complement-800: var(
+    --color-complement-800,
+    oklch(47.4% 0.128 52.0242deg)
+  );
+  --color-complement-900: var(
+    --color-complement-900,
+    oklch(41.7% 0.106 50.2805deg)
+  );
+  --color-complement-950: var(
+    --color-complement-950,
+    oklch(28.2% 0.0729 48.6671deg)
+  );
   --font-sans:
     'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -79,10 +141,7 @@
     'Roboto Mono', ui-monospace, sfmono-regular, menlo, monaco, consolas,
     'Liberation Mono', 'Courier New', monospace;
   --text-shadow-solid:
-    0 2px 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
-    0 -2px 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
-    2px 0 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%)),
-    -2px 0 1px var(--tw-text-shadow-color, rgb(0 0 0 / 10%));
+    0 1px 1px #000, 0 -1px 1px #000, 1px 0 1px #000, -1px 0 1px #000;
   --animate-delayed-fade-in: delayed-fade-in 300ms linear;
   --animate-fade-out: fade-out 300ms var(--default-transition-timing-function);
   --animate-enter-translate-y: translate-y var(--default-transition-duration)

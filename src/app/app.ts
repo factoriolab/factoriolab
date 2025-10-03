@@ -23,7 +23,7 @@ export class App {
     merge(
       this.swUpdate.unrecoverable.pipe(
         switchMap(() =>
-          this.confirm.show({
+          this.confirm.open({
             header: 'app.updateRequired',
             message: 'app.updateRequiredMessage',
             icon: faRotate,
@@ -34,13 +34,13 @@ export class App {
       this.swUpdate.versionUpdates.pipe(
         filter((event) => event.type === 'VERSION_READY'),
         switchMap(() =>
-          this.confirm.show({
+          this.confirm.open({
             header: 'app.updateAvailable',
             message: 'app.updateAvailableMessage',
             icon: faRotate,
             actions: [
-              { text: 'cancel', value: false, icon: faXmark },
               { text: 'ok', value: true, icon: faCheck },
+              { text: 'cancel', value: false, icon: faXmark },
             ],
           }),
         ),

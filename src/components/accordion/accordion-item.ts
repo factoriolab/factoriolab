@@ -19,6 +19,12 @@ export class AccordionItem extends CdkAccordionItem {
 
   readonly controlId = input(`lab-accordion-item-${this.uniqueId}`);
   readonly text = input.required<string>();
+  readonly note = input<string>();
 
   protected readonly faChevronRight = faChevronRight;
+
+  test(): void {
+    console.log('test');
+    this.toggle();
+  }
 }

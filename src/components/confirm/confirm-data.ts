@@ -1,9 +1,11 @@
 import { IconDefinition } from '@fortawesome/angular-fontawesome';
 
+import { Color } from '~/state/preferences/color';
+
 export interface ConfirmAction<T> {
   text: string;
   value?: T;
-  color?: 'brand' | 'gray';
+  color?: Color;
   icon?: IconDefinition;
 }
 

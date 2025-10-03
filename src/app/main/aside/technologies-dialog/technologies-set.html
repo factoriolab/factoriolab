@@ -1,0 +1,23 @@
+<h3 class="font-semibold">{{ text() | translate }}</h3>
+
+<div class="flex flex-wrap gap-1">
+  @for (id of ids(); track $index) {
+    <button
+      type="button"
+      labButton
+      [border]="false"
+      [color]="color()"
+      [icon]="id"
+      iconType="item"
+      [labTooltip]="id"
+      labTooltipType="technology"
+      [attr.aria-label]="data().itemRecord[id].name"
+      [text]="
+        (preferencesStore.showTechLabels() && data().itemRecord[id].name) || ''
+      "
+      (click)="toggleId.emit(id)"
+    ></button>
+  } @empty {
+    <span class="italic"> {{ 'none' | translate }} </span>
+  }
+</div>

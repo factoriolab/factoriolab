@@ -26,8 +26,8 @@
     }
 
     &.ng-invalid.ng-dirty {
-      outline-color: var(--color-red-500);
-      border-color: var(--color-red-500);
+      outline-color: var(--color-complement-500);
+      border-color: var(--color-complement-500);
     }
 
     &:disabled {
@@ -53,6 +53,18 @@
       z-index: 1;
       background-color: var(--color-gray-950);
       font-weight: var(--font-weight-semibold);
+    }
+  }
+
+  .link {
+    color: var(--color-brand-400);
+
+    &:visited {
+      color: var(--color-brand-600);
+    }
+
+    &:hover {
+      text-decoration: underline;
     }
   }
 
