@@ -10,14 +10,21 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheck,
+  faEyeSlash,
+  faMagnifyingGlass,
+  faRotateLeft,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 
 import { Quality, qualityOptions } from '~/data/schema/quality';
-import { Option } from '~/option/option';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { areSetsEqual } from '~/utils/equality';
 
 import { Button } from '../button/button';
+import { Checkbox } from '../checkbox/checkbox';
 import { Select } from '../select/select';
 import { TabData } from '../tabs/tab-data';
 import { Tabs } from '../tabs/tabs';
@@ -32,6 +39,7 @@ let lastCategory: string | null = null;
     FormsModule,
     FaIconComponent,
     Button,
+    Checkbox,
     Select,
     Tabs,
     TranslatePipe,
@@ -41,32 +49,60 @@ let lastCategory: string | null = null;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex flex-col gap-2 lg:w-3xl xl:w-[80dvw] 2xl:w-[70dvw] p-2 pt-0 max-h-[50rem] h-[90dvh] sm:h-[80dvh]',
+      'flex flex-col gap-2 lg:w-3xl xl:w-[80dvw] 2xl:w-[70dvw] p-3 pt-0 max-h-[50rem] h-[90dvh] sm:h-[80dvh]',
   },
 })
 export class PickerDialog {
   private readonly settingsStore = inject(SettingsStore);
   protected readonly dialogData = inject<PickerData>(DIALOG_DATA);
-  private readonly dialogRef = inject(DialogRef);
+  protected readonly dialogRef = inject(DialogRef);
 
   protected readonly data = this.settingsStore.dataset;
-  protected readonly defaults = this.settingsStore.defaults;
 
-  protected readonly faMagnifyingGlass = faMagnifyingGlass;
-  protected readonly faXmark = faXmark;
-  protected readonly qualityOptions = qualityOptions;
+  protected readonly allIds = new Set(this.dialogData.allIds);
+  protected readonly multi = this.dialogData.selection instanceof Set;
+  protected readonly selectedId?: string;
+  protected readonly selection = signal(new Set<string>());
+  protected readonly filter = signal('');
 
-  isMultiselect = false;
-  readonly filter = signal('');
-  readonly quality = signal(Quality.Normal);
-  readonly allSelected = signal(false);
-  protected rowsKey = `${this.dialogData.type}CategoryRows` as const;
-  protected recordKey = `${this.dialogData.type}Record` as const;
-  selection: string | string[] | undefined;
-  allSelectItems: Option[] = [];
-  allCategoryRows: Record<string, string[][]> = {};
+  protected readonly allSelected = computed(() => {
+    const selection = this.selection();
+    if (selection.size === 0) return true;
+    if (selection.size === this.allIds.size) return false;
+    return undefined;
+  });
 
-  readonly categoryRows = computed(() => {
+  protected readonly recyclingSet = computed(() => {
+    if (this.dialogData.type === 'item' || !this.multi)
+      return new Set<string>();
+    const data = this.data();
+    const recyclingIds = data.recipeIds.filter((r) =>
+      data.recipeRecord[r].flags.has('recycling'),
+    );
+    return new Set(recyclingIds);
+  });
+
+  protected readonly allRecyclingSelected = computed(() => {
+    const selection = this.selection();
+    const recyclingSet = this.recyclingSet();
+    const recyclingSelection = Array.from(recyclingSet).filter((r) =>
+      selection.has(r),
+    );
+    if (recyclingSelection.length === 0) return true;
+    if (recyclingSelection.length === recyclingSet.size) return false;
+    return undefined;
+  });
+
+  protected readonly isDefault = computed(() =>
+    areSetsEqual(this.selection(), new Set(this.dialogData.default)),
+  );
+
+  protected readonly quality = signal(Quality.Normal);
+  protected readonly rowsKey = `${this.dialogData.type}CategoryRows` as const;
+  protected readonly recordKey = `${this.dialogData.type}Record` as const;
+  private readonly allCategoryRows: Record<string, string[][]> = {};
+
+  protected readonly categoryRows = computed(() => {
     const filter = this.filter();
     const quality = this.quality();
 
@@ -119,46 +155,64 @@ export class PickerDialog {
     },
   });
 
+  protected readonly faCheck = faCheck;
+  protected readonly faEyeSlash = faEyeSlash;
+  protected readonly faMagnifyingGlass = faMagnifyingGlass;
+  protected readonly faRotateLeft = faRotateLeft;
+  protected readonly faXmark = faXmark;
+  protected readonly qualityOptions = qualityOptions;
+
   constructor() {
-    let { selection, allIds } = { ...this.dialogData };
-    allIds = Array.from(allIds);
-    if (selection instanceof Set) selection = Array.from(selection);
-    if (Array.isArray(selection)) {
-      this.isMultiselect = true;
-      this.selection = [...selection];
-    } else {
-      this.isMultiselect = false;
-      this.selection = selection;
-    }
+    const { selection } = { ...this.dialogData };
     const data = this.data();
     data.categoryIds.forEach((c) => {
       if (data[this.rowsKey][c]) {
         this.allCategoryRows[c] = [];
         data[this.rowsKey][c].forEach((r) => {
-          const row = r.filter((i) => allIds.includes(i));
+          const row = r.filter((i) => this.allIds.has(i));
           if (row.length) this.allCategoryRows[c].push(row);
         });
       }
     });
 
-    this.allSelectItems = Array.from(allIds).map(
-      (i): Option => ({ label: data[this.recordKey][i].name, value: i }),
-    );
-
-    if (Array.isArray(selection)) this.allSelected.set(selection.length === 0);
+    if (selection instanceof Set) this.selection.set(selection);
     else if (selection != null) {
+      this.selectedId = selection;
       this.selectedCategory.set(data[this.recordKey][selection].category);
     }
 
     effect(() => (lastCategory = this.selectedCategory()));
   }
 
+  selectAll(value: boolean): void {
+    if (value) this.selection.set(new Set());
+    else this.selection.set(new Set(this.allIds));
+  }
+
+  selectAllRecycling(value: boolean): void {
+    this.selection.update((s) => {
+      s = new Set(s);
+      for (const recipeId of Array.from(this.recyclingSet())) {
+        if (value) s.delete(recipeId);
+        else s.add(recipeId);
+      }
+
+      return s;
+    });
+  }
+
   selectId(id: string): void {
-    if (Array.isArray(this.selection)) {
-      // const index = this.selection.indexOf(id);
-      // if (index === -1) this.selection.push(id);
-      // else this.selection.splice(index, 1);
-      // this.allSelected = this.selection.length === 0;
+    if (this.multi) {
+      this.selection.update((s) => {
+        s = new Set(s);
+        if (s.has(id)) s.delete(id);
+        else s.add(id);
+        return s;
+      });
     } else this.dialogRef.close(id);
+  }
+
+  reset(): void {
+    this.selection.set(new Set(this.dialogData.default));
   }
 }

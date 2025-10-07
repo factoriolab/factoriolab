@@ -366,10 +366,13 @@
   },
   "picker": {
     "includeAll": "Include all",
+    "includeAllRecycling": "Include all recycling",
     "selectRecipe": "Select a recipe",
     "selectItem": "Select an item",
     "toggleVisible": "Toggle visible",
-    "qualityFilter": "Quality filter"
+    "qualityFilter": "Quality filter",
+    "includedRecipes": "Set included recipes",
+    "includedItems": "Set included items"
   },
   "remove": "Remove",
   "reset": "Reset",
@@ -424,7 +427,6 @@
     "inserterTarget": "Inserter target",
     "inserterTargetTooltip": "Select inserter target",
     "itemsExcluded": "{{ count }} items excluded",
-    "itemsHeader": "Set included items",
     "itemsTooltip": "Click to modify which items are included. Excluded items will not be produced in the solution.",
     "language": "Language",
     "languageTooltip": "Select language",
@@ -466,7 +468,6 @@
     "recipeProductivity": "Recipe productivity bonuses",
     "recipeProductivityTooltip": "Click to set productivity bonuses for recipes upgraded by technology",
     "recipesExcluded": "{{ count }} recipes excluded",
-    "recipesHeader": "Set included recipes",
     "recipesTooltip": "Click to modify which recipes are included. Excluded recipes will not be used in the solution.",
     "removeMachinePreference": "Remove machine preference",
     "requestMod": "Request a mod",

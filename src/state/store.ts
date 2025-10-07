@@ -2,6 +2,7 @@ import { computed, Signal, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Rational } from '~/rational/rational';
+import { areSetsEqual } from '~/utils/equality';
 import { prune, spread } from '~/utils/object';
 
 export type RecursivePartial<T> = { [P in keyof T]?: RecursivePartial<T[P]> };
@@ -21,9 +22,9 @@ function compareRank(value: string[], def: string[]): string[] | undefined {
  * Compares a set with a default set. If it differs from the default, returns
  * the value, otherwise returns undefined.
  */
-function compareSet<T>(value: Set<T>, def: Set<T>): Set<T> | undefined {
-  if (value.size !== def.size) return value;
-  return Array.from(value).every((v) => def.has(v)) ? undefined : value;
+export function compareSet<T>(value: Set<T>, def: Set<T>): Set<T> | undefined {
+  if (areSetsEqual(value, def)) return undefined;
+  return value;
 }
 
 export abstract class Store<T extends object> {

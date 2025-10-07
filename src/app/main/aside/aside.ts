@@ -13,10 +13,12 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   faArrowUpRightFromSquare,
+  faBoxesStacked,
   faCheck,
   faCopy,
   faEllipsisVertical,
   faExclamationTriangle,
+  faFlaskVial,
   faFloppyDisk,
   faInfo,
   faMicrochip,
@@ -32,6 +34,7 @@ import { AccordionModule } from '~/components/accordion/accordion-module';
 import { Button } from '~/components/button/button';
 import { Confirm } from '~/components/confirm/confirm';
 import { FormField } from '~/components/form-field/form-field';
+import { Picker } from '~/components/picker/picker';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { Game, gameOptions } from '~/data/game';
@@ -77,6 +80,7 @@ export class Aside {
   private readonly router = inject(Router);
   private readonly dialog = inject(Dialog);
   private readonly confirm = inject(Confirm);
+  protected readonly picker = inject(Picker);
   protected readonly preferencesStore = inject(PreferencesStore);
   protected readonly routerSync = inject(RouterSync);
   protected readonly settingsStore = inject(SettingsStore);
@@ -100,8 +104,10 @@ export class Aside {
 
   protected readonly data = this.settingsStore.dataset;
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
+  protected readonly faBoxesStacked = faBoxesStacked;
   protected readonly faCopy = faCopy;
   protected readonly faEllipsisVertical = faEllipsisVertical;
+  protected readonly faFlaskVial = faFlaskVial;
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faInfo = faInfo;
   protected readonly faMicrochip = faMicrochip;

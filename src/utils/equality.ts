@@ -8,3 +8,8 @@ export function areArraysEqual<T>(
   if (!b?.length) return false;
   return a.length === b.length && a.every((ae, i) => compareFn(ae, b[i]));
 }
+
+export function areSetsEqual<T>(a: Set<T>, b: Set<T>): boolean {
+  if (a.size !== b.size) return false;
+  return Array.from(a).every((i) => b.has(i));
+}

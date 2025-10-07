@@ -1,12 +1,12 @@
 export interface ModHash {
-  items: string[];
-  beacons: string[];
-  belts: string[];
-  fuels: string[];
-  wagons: string[];
-  machines: string[];
-  modules: string[];
-  recipes: string[];
-  technologies: string[];
-  locations?: string[];
+  items: (string | null)[];
+  beacons: (string | null)[];
+  belts: (string | null)[];
+  fuels: (string | null)[];
+  wagons: (string | null)[];
+  machines: (string | null)[];
+  modules: (string | null)[];
+  recipes: (string | null)[];
+  technologies: (string | null)[];
+  locations?: (string | null)[];
 }

@@ -1,10 +1,12 @@
-<div class="flex gap-2">
+<div class="flex">
   <div class="relative flex grow basis-2/3">
     <input
-      class="input pe-9"
+      class="input square rounded-s-xs pe-9"
+      [class.rounded-e-xs]="!data().flags.has('quality') && !multi"
       [placeholder]="'filter' | translate"
       [(ngModel)]="filter"
     />
+
     @if (filter()) {
       <button
         type="button"
@@ -21,13 +23,54 @@
       ></fa-icon>
     }
   </div>
+
   @if (data().flags.has('quality')) {
     <lab-select
-      class="basis-1/3"
+      class="-ms-px basis-1/3"
+      [rounded]="multi ? 'none' : 'end'"
       [attr.aria-label]="'picker.qualityFilter' | translate"
       [options]="qualityOptions"
       [(ngModel)]="quality"
     ></lab-select>
+  }
+
+  @if (multi) {
+    <div
+      class="-ms-px flex items-center border border-gray-700 pe-2"
+      [class.rounded-e-xs]="!recyclingSet().size"
+    >
+      <lab-checkbox
+        controlId="all-selected"
+        [ngModel]="allSelected()"
+        (ngModelChange)="selectAll($event)"
+      ></lab-checkbox>
+
+      <label
+        for="all-selected"
+        class="cursor-pointer ps-1 text-nowrap select-none"
+      >
+        {{ 'picker.includeAll' | translate }}
+      </label>
+    </div>
+
+    @if (recyclingSet().size) {
+      <div
+        class="-ms-px flex items-center rounded-e-xs border border-gray-700 pe-2"
+      >
+        <lab-checkbox
+          controlId="all-recycling-selected"
+          [ngModel]="allRecyclingSelected()"
+          (ngModelChange)="selectAllRecycling($event)"
+        ></lab-checkbox>
+
+        <label
+          for="all-recycling-selected"
+          class="cursor-pointer ps-1 text-nowrap select-none"
+        >
+          {{ 'picker.includeAllRecycling' | translate }}
+        </label>
+      </div>
+    }
   }
 </div>
 
@@ -36,7 +79,7 @@
   [(value)]="selectedCategory"
   [tabs]="categoryTabs()"
 ></lab-tabs>
-<div class="flex flex-col overflow-y-auto">
+<div class="flex grow flex-col overflow-y-auto">
   @for (ids of categoryRows()[selectedCategory()]; track $index) {
     <div class="flex flex-wrap">
       @for (id of ids; track $index) {
@@ -45,8 +88,10 @@
           labButton
           [iconType]="dialogData.type"
           [icon]="id"
-          [border]="id === selection"
-          [color]="id === selection ? 'brand' : 'gray'"
+          [border]="id === selectedId"
+          [color]="id === selectedId ? 'brand' : 'gray'"
+          [toggleIcon]="multi ? faEyeSlash : undefined"
+          [toggled]="selection().has(id)"
           [labTooltip]="id"
           [labTooltipType]="dialogData.type"
           [attr.aria-label]="data()[recordKey][id].name"
@@ -56,3 +101,34 @@
     </div>
   }
 </div>
+
+@if (multi) {
+  <div class="flex justify-end gap-1 sm:gap-2">
+    <button
+      type="button"
+      class="-ms-px shrink-0"
+      labButton
+      rounded="end"
+      [faIcon]="faRotateLeft"
+      text="reset"
+      [disabled]="isDefault()"
+      (click)="reset()"
+    ></button>
+
+    <button
+      type="button"
+      labButton
+      color="brand"
+      [faIcon]="faCheck"
+      text="ok"
+      (click)="dialogRef.close(selection())"
+    ></button>
+    <button
+      type="button"
+      labButton
+      [faIcon]="faXmark"
+      text="cancel"
+      (click)="dialogRef.close()"
+    ></button>
+  </div>
+}

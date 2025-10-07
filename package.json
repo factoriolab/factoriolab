@@ -24,7 +24,8 @@
     "prettier": "prettier --check .",
     "stylelint": "stylelint **/*.css",
     "minify-data": "bun scripts/minify-data.ts",
-    "sort-i18n": "bun scripts/sort-i18n.ts"
+    "sort-i18n": "bun scripts/sort-i18n.ts",
+    "update-hash": "bun scripts/update-hash.ts"
   },
   "dependencies": {
     "@angular/cdk": "^20.2.3",

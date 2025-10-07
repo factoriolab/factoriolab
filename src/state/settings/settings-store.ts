@@ -67,12 +67,11 @@ export class SettingsStore extends Store<SettingsState> {
   private readonly hydration = inject(Hydration);
   private readonly preferencesStore = inject(PreferencesStore);
 
+  modId = this.select('modId');
+  maximizeType = this.select('maximizeType');
   displayRate = this.select('displayRate');
   flowRate = this.select('flowRate');
-  maximizeType = this.select('maximizeType');
-  modId = this.select('modId');
   preset = this.select('preset');
-  excludedRecipeIds = this.select('excludedRecipeIds');
   researchedTechnologyIds = this.select('researchedTechnologyIds');
 
   mod = computed(() => {

@@ -22,9 +22,4 @@ export class AccordionItem extends CdkAccordionItem {
   readonly note = input<string>();
 
   protected readonly faChevronRight = faChevronRight;
-
-  test(): void {
-    console.log('test');
-    this.toggle();
-  }
 }

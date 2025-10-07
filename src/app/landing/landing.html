@@ -77,13 +77,13 @@
     routerLink="list"
     queryParamsHandling="preserve"
   ></a>
-  <div class="flex items-center gap-1">
+  <div class="flex items-center">
     <lab-checkbox
       controlId="bypass"
       [ngModel]="preferencesStore.state().bypassLanding"
       (ngModelChange)="preferencesStore.apply({ bypassLanding: $event })"
     ></lab-checkbox>
-    <label for="bypass" class="cursor-pointer select-none">{{
+    <label for="bypass" class="cursor-pointer ps-1 select-none">{{
       'landing.bypass' | translate
     }}</label>
   </div>

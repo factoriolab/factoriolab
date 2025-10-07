@@ -1,4 +1,8 @@
-import { DEFAULT_DIALOG_CONFIG, DialogConfig } from '@angular/cdk/dialog';
+import {
+  DEFAULT_DIALOG_CONFIG,
+  DialogConfig,
+  DialogRef,
+} from '@angular/cdk/dialog';
 import { provideHttpClient } from '@angular/common/http';
 import {
   ApplicationConfig,
@@ -17,9 +21,26 @@ import { Translate } from '~/translate/translate';
 
 import { routes } from './app.routes';
 
+let closePredicateIndex = 0;
 export const APP_DIALOG_CONFIG: DialogConfig = {
   container: Dialog,
   hasBackdrop: true,
+  /** Hacky workaround to animate leaving all dialogs */
+  closePredicate: (result, _, component): boolean => {
+    // Find the dialogRef reference on the component
+    const dialogRef = (component as { dialogRef: DialogRef }).dialogRef;
+    // If not found, just allow the dialog to close, we can't animate it
+    if (dialogRef?.containerInstance == null) {
+      if (isDevMode())
+        console.warn('Closing dialog without animation', component);
+      return true;
+    }
+
+    // Animate leaving dialog, return false, return true on the next call
+    // (after the animation completes)
+    (dialogRef.containerInstance as Dialog).animateClose(result);
+    return closePredicateIndex++ % 2 === 1;
+  },
 };
 
 async function initializeApp(): Promise<unknown> {

@@ -31,7 +31,7 @@ export class Conversion {
         };
         if (recipeIds.length === 1) updateFn(recipeIds[0]);
         else {
-          this.picker.pickRecipe(recipeIds).subscribe((targetId) => {
+          this.picker.pickRecipe(undefined, recipeIds).subscribe((targetId) => {
             updateFn(targetId);
           });
         }
@@ -50,7 +50,7 @@ export class Conversion {
 
         if (itemIds.length === 1) updateFn(itemIds[0]);
         else {
-          this.picker.pickItem(itemIds).subscribe((targetId) => {
+          this.picker.pickItem(undefined, itemIds).subscribe((targetId) => {
             updateFn(targetId);
           });
         }

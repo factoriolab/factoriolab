@@ -1,6 +1,9 @@
 import fs from 'fs';
 
 export function getJsonData(file: string): unknown {
-  const str = fs.readFileSync(file).toString();
-  return JSON.parse(str);
+  return JSON.parse(fs.readFileSync(file).toString());
+}
+
+export function writeJsonData(file: string, data: unknown): void {
+  fs.writeFileSync(file, JSON.stringify(data));
 }

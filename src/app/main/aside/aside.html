@@ -226,7 +226,32 @@
       [interpolateParams]="{
         count: settingsStore.settings().researchedTechnologyIds.size,
       }"
+      labTooltip="aside.techsTooltip"
       (click)="openTechnologies()"
+    ></button>
+
+    <button
+      type="button"
+      labButton
+      [faIcon]="faFlaskVial"
+      text="aside.recipesExcluded"
+      [interpolateParams]="{
+        count: settingsStore.settings().excludedRecipeIds.size,
+      }"
+      labTooltip="aside.recipesTooltip"
+      (click)="picker.pickExcludedRecipes()"
+    ></button>
+
+    <button
+      type="button"
+      labButton
+      [faIcon]="faBoxesStacked"
+      text="aside.itemsExcluded"
+      [interpolateParams]="{
+        count: settingsStore.settings().excludedItemIds.size,
+      }"
+      labTooltip="aside.itemsTooltip"
+      (click)="picker.pickExcludedItems()"
     ></button>
   </lab-accordion-item>
 </lab-accordion>

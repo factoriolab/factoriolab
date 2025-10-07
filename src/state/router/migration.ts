@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
+import { Confirm } from '~/components/confirm/confirm';
 import { datasets, DEFAULT_MOD } from '~/data/datasets';
 import { ModData } from '~/data/schema/mod-data';
-import { Translate } from '~/translate/translate';
 import { asString } from '~/utils/coercion';
 import { log } from '~/utils/log';
-import { coalesce } from '~/utils/nullish';
+import { coalesce, notNullish } from '~/utils/nullish';
 import { prune, spread } from '~/utils/object';
 import { toRecord } from '~/utils/record';
 
@@ -57,7 +58,7 @@ enum MigrationWarning {
 @Injectable({ providedIn: 'root' })
 export class Migration {
   private readonly compression = inject(Compression);
-  private readonly translate = inject(Translate);
+  private readonly confirm = inject(Confirm);
   private readonly zip = inject(Zip);
 
   /** Migrates older zip params to latest bare/hash formats */
@@ -1044,30 +1045,23 @@ export class Migration {
   /* Only for use in migrations */
   parseSet(
     value: string | undefined,
-    hash?: string[],
+    hash?: (string | null)[],
   ): Set<string> | undefined {
     if (value == null) return undefined;
     const result = value.split(ZARRAYSEP);
     if (hash == null) return new Set(result);
-    return new Set(result.map((v) => hash[this.compression.idToN(v)]));
+    return new Set(
+      result.map((v) => hash[this.compression.idToN(v)]).filter(notNullish),
+    );
   }
 
   private displayWarnings(warnings: string[]): void {
-    if (warnings.length === 0) return;
-    // TODO: Display warnings in confirmation dialog
-    alert(warnings.join('\n'));
-    // this.translate
-    //   .multi(['app.migrationWarning', 'ok'])
-    //   .pipe(first())
-    //   .subscribe(([header, acceptLabel]) => {
-    //     for (const message of warnings) {
-    //       this.contentSvc.confirm({
-    //         message,
-    //         header,
-    //         acceptLabel,
-    //         rejectVisible: false,
-    //       });
-    //     }
-    //   });
+    for (const message of warnings) {
+      this.confirm.open({
+        header: 'app.migrationWarning',
+        message,
+        actions: [{ text: 'ok', icon: faCheck }],
+      });
+    }
   }
 }

@@ -3,6 +3,7 @@ import { CdkPortalOutlet } from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   inject,
   OnInit,
 } from '@angular/core';
@@ -28,6 +29,7 @@ export interface DialogData {
   },
 })
 export class Dialog extends CdkDialogContainer implements OnInit {
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly dialogRef = inject(DialogRef);
 
   protected faXmark = faXmark;
@@ -46,5 +48,12 @@ export class Dialog extends CdkDialogContainer implements OnInit {
     if (typeof header === 'string') this.header = header;
     else if (typeof header === 'object')
       [this.header, this.headerParams] = [...header];
+  }
+
+  animateClose(result?: unknown): void {
+    this.elementRef.nativeElement.classList.add('animate-fade');
+    this.elementRef.nativeElement.addEventListener('animationend', () => {
+      this.dialogRef.close(result);
+    });
   }
 }

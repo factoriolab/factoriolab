@@ -60,7 +60,7 @@
     color: var(--color-brand-400);
 
     &:visited {
-      color: var(--color-brand-600);
+      color: var(--color-complement-400);
     }
 
     &:hover {
