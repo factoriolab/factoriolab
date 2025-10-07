@@ -9,7 +9,9 @@ export function areArraysEqual<T>(
   return a.length === b.length && a.every((ae, i) => compareFn(ae, b[i]));
 }
 
-export function areSetsEqual<T>(a: Set<T>, b: Set<T>): boolean {
+export function areSetsEqual<T>(a: Set<T> | T[], b: Set<T> | T[]): boolean {
+  if (Array.isArray(a)) a = new Set<T>(a);
+  if (Array.isArray(b)) b = new Set<T>(b);
   if (a.size !== b.size) return false;
   return Array.from(a).every((i) => b.has(i));
 }

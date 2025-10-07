@@ -19,13 +19,15 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faChevronDown,
   faMagnifyingGlass,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
-import { areArraysEqual } from '~/utils/equality';
+import { areSetsEqual } from '~/utils/equality';
 
+import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
 import { Control, LAB_CONTROL } from '../control';
 import { FormField } from '../form-field/form-field';
@@ -74,6 +76,7 @@ const host = cva(
     FormsModule,
     OverlayModule,
     FaIconComponent,
+    Button,
     Checkbox,
     Icon,
     Ripple,
@@ -126,15 +129,13 @@ export class Select<T = unknown> extends Control<T> {
   readonly filter = input<boolean>(false);
   readonly iconOnly = input<boolean>(false);
 
-  readonly filterText = signal('');
+  protected readonly filterText = signal('');
   readonly opened = signal(false);
 
-  readonly selection = linkedSignal(() => {
-    const value = this.value();
-    return new Set(Array.isArray(value) ? value : null);
-  });
-
-  readonly hostClass = computed(() =>
+  protected readonly selection = linkedSignal(() =>
+    this.selectionValue(this.value()),
+  );
+  protected readonly hostClass = computed(() =>
     host({
       opened: this.opened(),
       border: this.border(),
@@ -143,19 +144,25 @@ export class Select<T = unknown> extends Control<T> {
       disabled: this.disabled(),
     }),
   );
-  readonly multi = computed(() => Array.isArray(this.value()));
-  readonly allSelected = computed(() => {
+  protected readonly multi = computed(() => {
+    const value = this.value();
+    return Array.isArray(value) || value instanceof Set;
+  });
+  protected readonly allSelected = computed(() => {
     if (this.options().length === this.selection().size) return true;
     if (this.selection().size === 0) return false;
     return undefined;
   });
-  readonly selectedOption = computed(() =>
+  protected readonly selectedOption = computed(() =>
     this.options()?.find((o) => o.value === this.value()),
   );
-  readonly filterLower = computed(() => this.filterText().toLowerCase());
+  protected readonly filterLower = computed(() =>
+    this.filterText().toLowerCase(),
+  );
 
   protected readonly faChevronDown = faChevronDown;
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
+  protected readonly faXmark = faXmark;
 
   toggle(event?: Event): void {
     if (
@@ -166,14 +173,21 @@ export class Select<T = unknown> extends Control<T> {
 
     if (this.opened()) {
       this.opened.set(false);
-      if (this.multi()) {
-        const next = Array.from(this.selection());
-        if (!areArraysEqual(next, this.value() as unknown[]))
-          this.setValue(Array.from(this.selection()) as unknown as T);
+      const value = this.value();
+      const selection = this.selection();
+      if (
+        (Array.isArray(value) || value instanceof Set) &&
+        !areSetsEqual(value, selection)
+      ) {
+        const newValue = Array.isArray(value)
+          ? Array.from(selection)
+          : selection;
+        this.setValue(newValue as unknown as T);
       }
     } else {
       this.opened.set(true);
       this.filterText.set('');
+      this.selection.set(this.selectionValue(this.value()));
       this.focusAfterOpen(event);
     }
 
@@ -221,6 +235,12 @@ export class Select<T = unknown> extends Control<T> {
     if (el == null) return;
     el.focus();
     event.preventDefault();
+  }
+
+  private selectionValue(value: T | undefined): Set<unknown> {
+    if (Array.isArray(value)) return new Set(value);
+    if (value instanceof Set) return value;
+    return new Set();
   }
 
   private focusAfterOpen(event?: Event): void {

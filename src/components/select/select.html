@@ -62,7 +62,7 @@
         }
         <div class="relative flex grow">
           <input
-            class="input"
+            class="input w-0"
             [placeholder]="'filter' | translate"
             [(ngModel)]="filterText"
           />
@@ -71,6 +71,16 @@
             [icon]="faMagnifyingGlass"
           ></fa-icon>
         </div>
+        @if (multi()) {
+          <button
+            type="button"
+            labButton
+            [border]="false"
+            [faIcon]="faXmark"
+            [attr.aria-label]="'cancel' | translate"
+            (click)="opened.set(false)"
+          ></button>
+        }
       </div>
     }
     <ul

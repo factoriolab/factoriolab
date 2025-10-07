@@ -11,10 +11,12 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faArrowUpRightFromSquare,
   faBoxesStacked,
   faCheck,
+  faChevronDown,
   faCopy,
   faEllipsisVertical,
   faExclamationTriangle,
@@ -34,11 +36,13 @@ import { AccordionModule } from '~/components/accordion/accordion-module';
 import { Button } from '~/components/button/button';
 import { Confirm } from '~/components/confirm/confirm';
 import { FormField } from '~/components/form-field/form-field';
+import { Icon } from '~/components/icon/icon';
 import { Picker } from '~/components/picker/picker';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { Game, gameOptions } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
+import { OptionPipe } from '~/option/option-pipe';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -64,9 +68,12 @@ const host = cva(
   imports: [
     FormsModule,
     CdkMenuModule,
+    FaIconComponent,
     AccordionModule,
     Button,
     FormField,
+    Icon,
+    OptionPipe,
     Select,
     Tooltip,
     TranslatePipe,
@@ -105,6 +112,7 @@ export class Aside {
   protected readonly data = this.settingsStore.dataset;
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
   protected readonly faBoxesStacked = faBoxesStacked;
+  protected readonly faChevronDown = faChevronDown;
   protected readonly faCopy = faCopy;
   protected readonly faEllipsisVertical = faEllipsisVertical;
   protected readonly faFlaskVial = faFlaskVial;
@@ -116,6 +124,7 @@ export class Aside {
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   protected readonly gameOptions = gameOptions;
+  protected readonly settings = this.settingsStore.settings;
 
   reset(): void {
     this.confirm

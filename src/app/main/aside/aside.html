@@ -100,6 +100,8 @@
         <lab-select
           rounded="start"
           [options]="settingsStore.stateOptions()"
+          placeholder="aside.selectSavedState"
+          labTooltip="aside.selectSavedState"
           [ngModel]="state()"
           (ngModelChange)="setState($event)"
         ></lab-select>
@@ -178,6 +180,8 @@
     <lab-form-field label="game">
       <lab-select
         [options]="gameOptions"
+        labTooltip="aside.gameTooltip"
+        labTooltipPosition="adjacent"
         [ngModel]="data().game"
         (ngModelChange)="setGame($event)"
       ></lab-select>
@@ -197,6 +201,7 @@
             [options]="settingsStore.modOptions()"
             [filter]="true"
             rounded="start"
+            labTooltip="modSetTooltip"
             [ngModel]="modId"
             (ngModelChange)="setMod($event)"
           ></lab-select>
@@ -223,10 +228,9 @@
           ? 'aside.techsResearched'
           : 'aside.allTechsResearched'
       "
-      [interpolateParams]="{
-        count: settingsStore.settings().researchedTechnologyIds.size,
-      }"
+      [interpolateParams]="{ count: settings().researchedTechnologyIds.size }"
       labTooltip="aside.techsTooltip"
+      labTooltipPosition="adjacent"
       (click)="openTechnologies()"
     ></button>
 
@@ -235,10 +239,9 @@
       labButton
       [faIcon]="faFlaskVial"
       text="aside.recipesExcluded"
-      [interpolateParams]="{
-        count: settingsStore.settings().excludedRecipeIds.size,
-      }"
+      [interpolateParams]="{ count: settings().excludedRecipeIds.size }"
       labTooltip="aside.recipesTooltip"
+      labTooltipPosition="adjacent"
       (click)="picker.pickExcludedRecipes()"
     ></button>
 
@@ -247,12 +250,56 @@
       labButton
       [faIcon]="faBoxesStacked"
       text="aside.itemsExcluded"
-      [interpolateParams]="{
-        count: settingsStore.settings().excludedItemIds.size,
-      }"
+      [interpolateParams]="{ count: settings().excludedItemIds.size }"
       labTooltip="aside.itemsTooltip"
+      labTooltipPosition="adjacent"
       (click)="picker.pickExcludedItems()"
     ></button>
+  </lab-accordion-item>
+  <lab-accordion-item
+    text="aside.factory"
+    [note]="(settings().preset | option: settingsStore.presetOptions())?.label"
+    [expanded]="true"
+  >
+    <lab-form-field label="aside.preset">
+      <lab-select
+        [options]="settingsStore.presetOptions()"
+        labTooltip="aside.presetTooltip"
+        labTooltipPosition="adjacent"
+        [ngModel]="settings().preset"
+        (ngModelChange)="settingsStore.apply({ preset: $event })"
+      ></lab-select>
+    </lab-form-field>
+
+    @if (settingsStore.options().locations.length > 1) {
+      <lab-form-field label="aside.locations">
+        <lab-select
+          #locationSelect
+          [options]="settingsStore.options().locations"
+          labTooltip="aside.locationsTooltip"
+          labTooltipPosition="adjacent"
+          [ngModel]="settings().locationIds"
+          (ngModelChange)="
+            settingsStore.updateField(
+              'locationIds',
+              $event,
+              settings().defaultLocationIds
+            )
+          "
+        >
+          <div class="flex grow">
+            @for (locationId of settings().locationIds; track $index) {
+              <lab-icon [value]="locationId" type="location"></lab-icon>
+            }
+          </div>
+          <fa-icon
+            class="text-gray-500 transition-transform"
+            [class.-scale-y-100]="locationSelect.opened()"
+            [icon]="faChevronDown"
+          ></fa-icon>
+        </lab-select>
+      </lab-form-field>
+    }
   </lab-accordion-item>
 </lab-accordion>
 
