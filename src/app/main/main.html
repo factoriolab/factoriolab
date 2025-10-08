@@ -23,7 +23,17 @@
         <lab-tabs [tabs]="tabs"></lab-tabs>
       </div>
       <div class="grow overflow-x-auto">
-        <router-outlet></router-outlet>
+        <router-outlet #ro="outlet"></router-outlet>
+        @if (!ro.isActivated) {
+          <div class="flex h-full items-center justify-center">
+            <img
+              src="factoriolab.gif"
+              alt="FactorioLab"
+              height="174"
+              width="194"
+            />
+          </div>
+        }
       </div>
     </div>
 

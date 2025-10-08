@@ -1,5 +1,5 @@
 <div class="flex grow flex-col items-center justify-end">
-  <img src="factoriolab.webp" alt="FactorioLab" height="128" width="128" />
+  <img src="factoriolab.gif" alt="FactorioLab" height="174" width="194" />
   <div [innerHtml]="'landing.welcome' | translate"></div>
 </div>
 
@@ -13,80 +13,85 @@
       (ngModelChange)="setGame($event)"
     ></lab-select>
   </lab-form-field>
-  @if (data().flags.has('mods') && modId(); as modId) {
-    <lab-form-field label="modSet">
-      <lab-select
-        [options]="modOptions()"
-        [filter]="true"
-        [ngModel]="modId"
-        (ngModelChange)="setMod($event)"
-      ></lab-select>
-    </lab-form-field>
-  }
+  @if (settingsStore.mod()) {
+    @if (data().flags.has('mods') && settingsStore.modId(); as modId) {
+      <lab-form-field label="modSet">
+        <lab-select
+          [options]="settingsStore.modOptions()"
+          [filter]="true"
+          [ngModel]="modId"
+          (ngModelChange)="setMod($event)"
+        ></lab-select>
+      </lab-form-field>
+    }
 
-  <div class="flex gap-3">
-    <lab-form-field label="objectives.quantity" class="basis-1/2">
-      <lab-input-number [(ngModel)]="value"></lab-input-number>
-    </lab-form-field>
-    <lab-form-field label="objectives.units" class="basis-1/2">
-      <lab-select [(ngModel)]="unit" [options]="unitOptions()"></lab-select>
-    </lab-form-field>
-  </div>
-
-  <button
-    type="button"
-    labButton
-    [faIcon]="isRecipe() ? faBookOpen : faBoxOpen"
-    color="brand"
-    [text]="isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'"
-    (click)="openPicker()"
-  ></button>
-
-  @if (stateOptions().length || routerSync.stored()) {
-    <hr class="my-4 border-gray-700" />
-  }
-
-  @if (stateOptions().length) {
-    <div class="flex items-center">
-      <fa-icon
-        class="flex size-9 items-center justify-center border border-r-0 border-gray-700"
-        [icon]="faFileImport"
-      ></fa-icon>
-      <lab-select
-        placeholder="landing.loadSavedState"
-        [options]="stateOptions()"
-        (valueChange)="setState(states()[$event])"
-      ></lab-select>
+    <div class="flex gap-3">
+      <lab-form-field label="objectives.quantity" class="basis-1/2">
+        <lab-input-number [(ngModel)]="value"></lab-input-number>
+      </lab-form-field>
+      <lab-form-field label="objectives.units" class="basis-1/2">
+        <lab-select
+          [(ngModel)]="unit"
+          [options]="settingsStore.objectiveUnitOptions()"
+        ></lab-select>
+      </lab-form-field>
     </div>
-  }
 
-  @if (routerSync.stored(); as storedState) {
+    <button
+      type="button"
+      labButton
+      [faIcon]="isRecipe() ? faBookOpen : faBoxOpen"
+      color="brand"
+      [text]="isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'"
+      (click)="openPicker()"
+    ></button>
+
+    @if (stateOptions().length || routerSync.stored()) {
+      <hr class="my-4 border-gray-700" />
+    }
+
+    @if (stateOptions().length) {
+      <div class="flex items-center">
+        <fa-icon
+          class="flex size-9 items-center justify-center border border-r-0 border-gray-700"
+          [icon]="faFileImport"
+        ></fa-icon>
+        <lab-select
+          placeholder="landing.loadSavedState"
+          [options]="stateOptions()"
+          (valueChange)="setState(settingsStore.modStates()[$event])"
+        ></lab-select>
+      </div>
+    }
+
+    @if (routerSync.stored(); as storedState) {
+      <a
+        labButton
+        [faIcon]="faClockRotateLeft"
+        text="landing.loadLastState"
+        [routerLink]="storedState"
+        (click)="router.navigateByUrl(storedState)"
+      ></a>
+    }
+
     <a
       labButton
-      [faIcon]="faClockRotateLeft"
-      text="landing.loadLastState"
-      [routerLink]="storedState"
-      (click)="router.navigateByUrl(storedState)"
+      [faIcon]="faForward"
+      text="landing.skip"
+      routerLink="list"
+      queryParamsHandling="preserve"
     ></a>
+    <div class="flex items-center">
+      <lab-checkbox
+        controlId="bypass"
+        [ngModel]="preferencesStore.state().bypassLanding"
+        (ngModelChange)="preferencesStore.apply({ bypassLanding: $event })"
+      ></lab-checkbox>
+      <label for="bypass" class="cursor-pointer ps-1 select-none">{{
+        'landing.bypass' | translate
+      }}</label>
+    </div>
   }
-
-  <a
-    labButton
-    [faIcon]="faForward"
-    text="landing.skip"
-    routerLink="list"
-    queryParamsHandling="preserve"
-  ></a>
-  <div class="flex items-center">
-    <lab-checkbox
-      controlId="bypass"
-      [ngModel]="preferencesStore.state().bypassLanding"
-      (ngModelChange)="preferencesStore.apply({ bypassLanding: $event })"
-    ></lab-checkbox>
-    <label for="bypass" class="cursor-pointer ps-1 select-none">{{
-      'landing.bypass' | translate
-    }}</label>
-  </div>
 
   <span class="mt-auto mb-4 text-center"
     >{{ fileClient.version$ | async }}

@@ -53,15 +53,9 @@ export class Landing extends ObjectiveForm {
   private readonly objectivesStore = inject(ObjectivesStore);
   protected readonly preferencesStore = inject(PreferencesStore);
   protected readonly routerSync = inject(RouterSync);
-  private readonly settingsStore = inject(SettingsStore);
+  protected readonly settingsStore = inject(SettingsStore);
 
   protected readonly data = this.settingsStore.dataset;
-  protected readonly modId = this.settingsStore.modId;
-  protected readonly modOptions = this.settingsStore.modOptions;
-  protected readonly stateOptions = this.settingsStore.stateOptions;
-  protected readonly states = this.settingsStore.modStates;
-  protected readonly unitOptions = this.settingsStore.objectiveUnitOptions;
-
   protected readonly faBoxOpen = faBoxOpen;
   protected readonly faBookOpen = faBookOpen;
   protected readonly faClockRotateLeft = faClockRotateLeft;
@@ -69,6 +63,7 @@ export class Landing extends ObjectiveForm {
   protected readonly faFileImport = faFileImport;
   protected readonly faQuestion = faQuestion;
   protected readonly gameOptions = gameOptions;
+  protected readonly stateOptions = this.settingsStore.stateOptions;
 
   addObjective(value: ObjectiveBase): void {
     this.objectivesStore.create(value);
