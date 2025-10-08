@@ -199,7 +199,6 @@
         <div class="flex">
           <lab-select
             [options]="settingsStore.modOptions()"
-            [filter]="true"
             rounded="start"
             labTooltip="modSetTooltip"
             [ngModel]="modId"
@@ -339,6 +338,155 @@
         >
         </lab-rank-select>
       </lab-form-field>
+    }
+
+    @if (!data().flags.has('hideMachineSettings')) {
+      <div>
+        <div class="mx-1 text-sm text-gray-300">
+          {{ 'aside.machineRank' | translate }}
+        </div>
+        <div class="flex">
+          <span
+            class="flex size-9 items-center justify-center rounded-s-xs border border-gray-700"
+          >
+            <fa-icon [icon]="faIndustry"></fa-icon>
+          </span>
+
+          <lab-select
+            class="-ms-px"
+            placeholder="Add machine"
+            [rounded]="
+              data().flags.has('overclock') || data().flags.has('beacons')
+                ? 'none'
+                : 'end'
+            "
+            [options]="
+              options().machines | filterOptions: settings().machineRankIds
+            "
+            [ngModel]="null"
+            (ngModelChange)="addMachine($event)"
+          ></lab-select>
+
+          @if (data().flags.has('overclock')) {
+            <lab-input-number
+              class="-ms-px w-16"
+              [rounded]="data().flags.has('beacons') ? 'none' : 'end'"
+              [minimum]="rational.one"
+              [maximum]="rational(250)"
+              [step]="rational(10)"
+              [percent]="true"
+              [ngModel]="settings().overclock"
+              (ngModelChange)="settingsStore.apply({ overclock: $event })"
+            >
+            </lab-input-number>
+          }
+
+          @if (data().flags.has('beacons')) {
+            <lab-beacons-select
+              class="-ms-px"
+              rounded="end"
+              [ngModel]="settings().beacons"
+              (ngModelChange)="settingsStore.apply({ beacons: $event })"
+            ></lab-beacons-select>
+          }
+        </div>
+      </div>
+      <div
+        class="flex flex-col gap-2"
+        cdkDropList
+        (cdkDropListDropped)="dropMachine($event)"
+      >
+        @for (machineId of settings().machineRankIds; track machineId) {
+          @if (machinesStore.settings()[machineId]; as ms) {
+            @if (data().machineRecord[machineId]; as machine) {
+              <div
+                cdkDrag
+                cdkDragLockAxis="y"
+                cdkDragBoundary=".flex-col"
+                class="flex"
+              >
+                <div class="flex items-center bg-gray-950">
+                  <div
+                    cdkDragHandle
+                    class="flex size-9 cursor-grab items-center justify-center rounded-s-xs border border-gray-700"
+                  >
+                    <fa-icon [icon]="faGrip"></fa-icon>
+                  </div>
+
+                  <lab-select
+                    class="-ms-px"
+                    [iconOnly]="true"
+                    rounded="none"
+                    [options]="
+                      options().machines
+                        | filterOptions: settings().machineRankIds : machineId
+                    "
+                    [labTooltip]="machineId"
+                    labTooltipType="machine"
+                    labTooltipAction="aside.machineTooltip"
+                    [ngModel]="machineId"
+                    (ngModelChange)="changeMachine($index, $event)"
+                  ></lab-select>
+
+                  @if (ms.fuelId && ms.fuelOptions) {
+                    <lab-select
+                      class="-ms-px"
+                      [iconOnly]="true"
+                      rounded="none"
+                      [options]="ms.fuelOptions"
+                      [labTooltip]="ms.fuelId"
+                      labTooltipType="fuel"
+                      [ngModel]="ms.fuelId"
+                      (ngModelChange)="
+                        machinesStore.updateRecordField(
+                          machineId,
+                          'fuelId',
+                          $event,
+                          ms.defaultFuelId
+                        )
+                      "
+                    >
+                    </lab-select>
+                  }
+
+                  @if (ms.modules && ms.moduleOptions && machine.modules) {
+                    @if (machine.modules !== true && machine.modules.isOne()) {
+                      <lab-select
+                        class="-ms-px"
+                        [iconOnly]="true"
+                        rounded="none"
+                        [options]="ms.moduleOptions"
+                        [labTooltip]="
+                          ms.modules[0].id || 'aside.modifierTooltip'
+                        "
+                        [labTooltipType]="
+                          ms.modules[0].id ? 'module' : undefined
+                        "
+                        [labTooltipAction]="
+                          ms.modules[0].id ? 'aside.modifierTooltip' : undefined
+                        "
+                        [ngModel]="ms.modules[0].id"
+                        (ngModelChange)="
+                          changeModules(machineId, [
+                            { id: $event, count: rational.one },
+                          ])
+                        "
+                      ></lab-select>
+                    } @else if (machine.modules != null) {
+                      <lab-modules-select
+                        [machine]="machine"
+                        rounded="none"
+                        [ngModel]="ms.modules"
+                        (ngModelChange)="changeModules(machineId, $event)"
+                      ></lab-modules-select>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          }
+        }
+      </div>
     }
   </lab-accordion-item>
 </lab-accordion>

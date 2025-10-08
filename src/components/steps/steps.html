@@ -420,10 +420,6 @@
                     [border]="false"
                     [iconOnly]="true"
                     [options]="step.recipeSettings.machineOptions ?? []"
-                    [filter]="
-                      step.recipeSettings.machineOptions != null &&
-                      step.recipeSettings.machineOptions.length > 5
-                    "
                     [labTooltip]="machineId"
                     labTooltipType="machine"
                     labTooltipPosition="adjacent"
@@ -443,7 +439,7 @@
                 @if (data().flags.has('overclock')) {
                   <lab-input-number
                     class="w-16"
-                    [minimum]="rational(1)"
+                    [minimum]="rational.one"
                     [maximum]="rational(250)"
                     [step]="rational(10)"
                     [percent]="true"
@@ -496,7 +492,11 @@
                         [iconOnly]="true"
                         [border]="false"
                         [options]="step.recipeSettings.moduleOptions ?? []"
-                        labTooltip="aside.modifierTooltip"
+                        [labTooltip]="modules[0].id || 'aside.modifierTooltip'"
+                        [labTooltipType]="modules[0].id ? 'module' : undefined"
+                        [labTooltipAction]="
+                          modules[0].id ? 'aside.modifierTooltip' : undefined
+                        "
                         [ngModel]="modules[0].id"
                         (ngModelChange)="
                           changeModulesBeacons(step, {
@@ -508,8 +508,9 @@
                       <lab-modules-select
                         [machine]="machine"
                         [recipeId]="step.recipeId"
-                        [value]="modules"
-                        (valueChange)="
+                        [border]="false"
+                        [ngModel]="modules"
+                        (ngModelChange)="
                           changeModulesBeacons(step, { modules: $event })
                         "
                       ></lab-modules-select>
@@ -535,7 +536,11 @@
               step.recipeSettings.beacons.length
             ) {
               <lab-beacons-select
-                [value]="step.recipeSettings.beacons"
+                [border]="false"
+                [ngModel]="step.recipeSettings.beacons"
+                (ngModelChange)="
+                  changeModulesBeacons(step, { beacons: $event })
+                "
               ></lab-beacons-select>
             }
           </td>

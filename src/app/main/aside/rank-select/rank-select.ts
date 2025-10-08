@@ -74,9 +74,9 @@ const host = cva(
   selector: 'lab-rank-select',
   imports: [
     FormsModule,
-    OverlayModule,
-    CdkDropList,
     CdkDrag,
+    CdkDropList,
+    OverlayModule,
     FaIconComponent,
     Button,
     Checkbox,

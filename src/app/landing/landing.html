@@ -18,7 +18,6 @@
       <lab-form-field label="modSet">
         <lab-select
           [options]="settingsStore.modOptions()"
-          [filter]="true"
           [ngModel]="modId"
           (ngModelChange)="setMod($event)"
         ></lab-select>

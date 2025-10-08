@@ -36,9 +36,7 @@ const host = cva(
         standard: 'min-h-9',
         large: 'min-h-11 text-2xl font-light',
       },
-      border: {
-        true: 'border',
-      },
+      border: { true: 'border' },
       rounded: roundedVariants,
       hide: {
         true: 'hidden',

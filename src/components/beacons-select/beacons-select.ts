@@ -22,6 +22,7 @@ import { Dropdown } from '../dropdown/dropdown';
 import { Icon } from '../icon/icon';
 import { InputNumber } from '../input-number/input-number';
 import { Modules } from '../modules/modules';
+import { Rounded } from '../rounding';
 import { Select } from '../select/select';
 import { Tooltip } from '../tooltip/tooltip';
 
@@ -55,14 +56,16 @@ let nextUniqueId = 0;
 export class BeaconsSelect extends Control<BeaconSettings[]> {
   protected readonly settingsStore = inject(SettingsStore);
 
-  private uniqueId = (nextUniqueId++).toString();
+  private readonly uniqueId = (nextUniqueId++).toString();
 
   readonly controlId = input(`lab-beacons-select-${this.uniqueId}`);
   readonly value = model<BeaconSettings[]>();
   readonly disabled = model(false);
   readonly labelledBy = input<string>();
+  readonly border = input(true);
+  readonly rounded = input<Rounded>('all');
 
-  readonly editValue = linkedSignal(() => this.value() ?? []);
+  protected readonly editValue = linkedSignal(() => this.value() ?? []);
 
   protected readonly faPlus = faPlus;
   protected readonly faXmark = faXmark;

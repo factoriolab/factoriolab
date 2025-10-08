@@ -1,4 +1,10 @@
-<lab-dropdown [controlId]="controlId()" (open)="open()" (save)="save()">
+<lab-dropdown
+  [controlId]="controlId()"
+  [border]="border()"
+  [rounded]="rounded()"
+  (open)="open()"
+  (save)="save()"
+>
   <ng-container button>
     @for (module of value(); track module.id) {
       @if (module.id === '') {

@@ -15,6 +15,7 @@ import { Control, LAB_CONTROL } from '../control';
 import { Dropdown } from '../dropdown/dropdown';
 import { Icon } from '../icon/icon';
 import { Modules } from '../modules/modules';
+import { Rounded } from '../rounding';
 import { Tooltip } from '../tooltip/tooltip';
 
 let nextUniqueId = 0;
@@ -42,6 +43,8 @@ export class ModulesSelect extends Control<ModuleSettings[]> {
   readonly value = model<ModuleSettings[]>();
   readonly disabled = model(false);
   readonly labelledBy = input<string>();
+  readonly border = input(true);
+  readonly rounded = input<Rounded>('all');
   readonly machine = input.required<Machine>();
   readonly recipeId = input<string>();
 

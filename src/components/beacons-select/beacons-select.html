@@ -1,4 +1,10 @@
-<lab-dropdown [controlId]="controlId()" (open)="open()" (save)="save()">
+<lab-dropdown
+  [controlId]="controlId()"
+  [border]="border()"
+  [rounded]="rounded()"
+  (open)="open()"
+  (save)="save()"
+>
   <ng-container button>
     @for (beacon of value(); track $index) {
       @if (beacon.id) {
@@ -73,6 +79,8 @@
               rounded="none"
               [iconOnly]="true"
               [options]="settingsStore.options().beacons"
+              [labTooltip]="beacon.id"
+              labTooltipType="beacon"
               [ngModel]="beacon.id"
               (ngModelChange)="setId($index, $event)"
             >
@@ -83,7 +91,6 @@
               labButton
               rounded="end"
               [faIcon]="faXmark"
-              labTooltip="remove"
               [aria-label]="'remove' | translate"
               [disabled]="editValue().length < 2"
               (click)="removeEntry($index)"

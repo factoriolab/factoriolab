@@ -13,14 +13,22 @@ import { faCheck, faGear, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
 import { Button } from '../button/button';
+import { Rounded, roundedVariants } from '../rounding';
 
 const host = cva(
-  'inline-flex cursor-pointer justify-center items-center min-h-9 min-w-9 relative hover:bg-gray-800 group outline-brand-700 border focus-visible:outline rounded-xs hover:border-brand-700',
+  'inline-flex cursor-pointer border justify-center items-center min-h-9 min-w-9 relative hover:bg-gray-800 group outline-brand-700 focus-visible:outline hover:border-brand-700',
   {
     variants: {
-      opened: { true: 'border-brand-700' },
+      opened: {
+        true: 'border-brand-700 outline z-2',
+      },
+      border: { false: 'hover:border-brand-700' },
+      rounded: roundedVariants,
       disabled: { true: 'pointer-events-none' },
     },
+    compoundVariants: [
+      { border: true, opened: false, class: 'border-gray-700' },
+    ],
   },
 );
 
@@ -50,13 +58,21 @@ export class Dropdown {
   readonly controlId = input.required();
   readonly disabled = input(false);
   readonly labelledBy = input<string>();
+  readonly border = input(true);
+  readonly rounded = input<Rounded>('all');
+
   readonly open = output();
   readonly save = output();
 
-  readonly opened = signal(false);
+  protected readonly opened = signal(false);
 
-  readonly hostClass = computed(() =>
-    host({ opened: this.opened(), disabled: this.disabled() }),
+  protected readonly hostClass = computed(() =>
+    host({
+      opened: this.opened(),
+      border: this.border(),
+      rounded: this.rounded(),
+      disabled: this.disabled(),
+    }),
   );
 
   protected readonly faCheck = faCheck;

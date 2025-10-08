@@ -47,10 +47,7 @@ const host = cva(
         true: 'border-brand-700 outline z-2',
         false: 'border-gray-700',
       },
-      border: {
-        true: 'border',
-        false: 'hover:border',
-      },
+      border: { true: 'border', false: 'hover:border' },
       rounded: roundedVariants,
       iconOnly: {
         true: 'min-w-9 justify-center hover:bg-gray-800 outline-brand-700 grow-0',
@@ -126,7 +123,6 @@ export class Select<T = unknown> extends Control<T> {
   readonly placeholder = input<string>();
   readonly border = input(true);
   readonly rounded = input<Rounded>('all');
-  readonly filter = input<boolean>(false);
   readonly iconOnly = input<boolean>(false);
 
   protected readonly filterText = signal('');
@@ -144,6 +140,7 @@ export class Select<T = unknown> extends Control<T> {
       disabled: this.disabled(),
     }),
   );
+  readonly filter = computed(() => this.options().length > 10);
   protected readonly multi = computed(() => {
     const value = this.value();
     return Array.isArray(value) || value instanceof Set;

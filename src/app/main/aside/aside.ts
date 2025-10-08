@@ -1,4 +1,11 @@
 import { Dialog } from '@angular/cdk/dialog';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
@@ -22,6 +29,8 @@ import {
   faExclamationTriangle,
   faFlaskVial,
   faFloppyDisk,
+  faGrip,
+  faIndustry,
   faInfo,
   faMicrochip,
   faPencil,
@@ -33,20 +42,29 @@ import { cva } from 'class-variance-authority';
 import { filter, map, switchMap } from 'rxjs';
 
 import { AccordionModule } from '~/components/accordion/accordion-module';
+import { BeaconsSelect } from '~/components/beacons-select/beacons-select';
 import { Button } from '~/components/button/button';
 import { Confirm } from '~/components/confirm/confirm';
 import { FormField } from '~/components/form-field/form-field';
 import { Icon } from '~/components/icon/icon';
+import { InputNumber } from '~/components/input-number/input-number';
+import { ModulesSelect } from '~/components/modules-select/modules-select';
 import { Picker } from '~/components/picker/picker';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { Game, gameOptions } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
+import { FilterOptionsPipe } from '~/option/filter-options-pipe';
 import { OptionPipe } from '~/option/option-pipe';
+import { rational } from '~/rational/rational';
+import { Hydration } from '~/state/hydration';
+import { MachinesStore } from '~/state/machines/machines-store';
+import { ModuleSettings } from '~/state/module-settings';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { coalesce } from '~/utils/nullish';
 import { WindowClient } from '~/window/window-client';
 
 import { RankSelect } from './rank-select/rank-select';
@@ -68,12 +86,19 @@ const host = cva(
   exportAs: 'labAside',
   imports: [
     FormsModule,
+    CdkDrag,
+    CdkDragHandle,
+    CdkDropList,
     CdkMenuModule,
     FaIconComponent,
     AccordionModule,
+    BeaconsSelect,
     Button,
+    FilterOptionsPipe,
     FormField,
     Icon,
+    InputNumber,
+    ModulesSelect,
     OptionPipe,
     RankSelect,
     Select,
@@ -89,6 +114,8 @@ export class Aside {
   private readonly router = inject(Router);
   private readonly dialog = inject(Dialog);
   private readonly confirm = inject(Confirm);
+  private readonly hydration = inject(Hydration);
+  protected readonly machinesStore = inject(MachinesStore);
   protected readonly picker = inject(Picker);
   protected readonly preferencesStore = inject(PreferencesStore);
   protected readonly routerSync = inject(RouterSync);
@@ -119,6 +146,8 @@ export class Aside {
   protected readonly faEllipsisVertical = faEllipsisVertical;
   protected readonly faFlaskVial = faFlaskVial;
   protected readonly faFloppyDisk = faFloppyDisk;
+  protected readonly faGrip = faGrip;
+  protected readonly faIndustry = faIndustry;
   protected readonly faInfo = faInfo;
   protected readonly faMicrochip = faMicrochip;
   protected readonly faPencil = faPencil;
@@ -127,6 +156,7 @@ export class Aside {
   protected readonly faXmark = faXmark;
   protected readonly gameOptions = gameOptions;
   protected readonly options = this.settingsStore.options;
+  protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
 
   reset(): void {
@@ -217,5 +247,47 @@ export class Aside {
     this.dialog.open(TechnologiesDialog, {
       data: { header: 'technologies.header' },
     });
+  }
+
+  addMachine(machineId: string): void {
+    const settings = this.settings();
+    const ids = [...settings.machineRankIds, machineId];
+    this.settingsStore.updateField(
+      'machineRankIds',
+      ids,
+      settings.defaultMachineRankIds,
+    );
+  }
+
+  changeMachine(index: number, value: string): void {
+    const settings = this.settings();
+    const machineRankIds = [...settings.machineRankIds];
+    machineRankIds[index] = value;
+    this.settingsStore.updateField(
+      'machineRankIds',
+      machineRankIds,
+      settings.defaultMachineRankIds,
+    );
+  }
+
+  dropMachine(event: CdkDragDrop<string[]>): void {
+    const settings = this.settings();
+    const machineRankIds = [...settings.machineRankIds];
+    moveItemInArray(machineRankIds, event.previousIndex, event.currentIndex);
+    this.settingsStore.updateField(
+      'machineRankIds',
+      machineRankIds,
+      settings.defaultMachineRankIds,
+    );
+  }
+
+  changeModules(id: string, value: ModuleSettings[]): void {
+    const modules = this.hydration.dehydrateModules(
+      value,
+      coalesce(this.machinesStore.settings()[id].moduleOptions, []),
+      this.settings().moduleRankIds,
+      this.data().machineRecord[id].modules,
+    );
+    this.machinesStore.updateRecord(id, { modules });
   }
 }
