@@ -280,17 +280,15 @@
                       stack &&
                       stack.gt(rational.one)
                     ) {
-                      @defer {
-                        <lab-belt-select
-                          [stack]="stack"
-                          [labTooltip]="itemSettings.beltId"
-                          labTooltipType="belt"
-                          labTooltipAction="steps.beltSelectTooltip"
-                          labTooltipPosition="adjacent"
-                          [value]="itemSettings"
-                          (valueChange)="changeBelts(step, $event)"
-                        ></lab-belt-select>
-                      }
+                      <lab-belt-select
+                        [stack]="stack"
+                        [labTooltip]="itemSettings.beltId"
+                        labTooltipType="belt"
+                        labTooltipAction="steps.beltSelectTooltip"
+                        labTooltipPosition="adjacent"
+                        [value]="itemSettings"
+                        (valueChange)="changeBelts(step, $event)"
+                      ></lab-belt-select>
                     } @else {
                       <lab-select
                         [iconOnly]="true"

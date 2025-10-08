@@ -488,6 +488,9 @@
     "version": "Version",
     "wiki": "Wiki"
   },
+  "rankSelect": {
+    "label": "Rank (drag to reorder)"
+  },
   "steps": {
     "beaconEachTooltip": "Beacons per machine",
     "beaconTotalTooltip": "Total beacons",

@@ -1,7 +1,6 @@
 import {
   CdkDrag,
   CdkDragDrop,
-  CdkDragHandle,
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
@@ -78,7 +77,6 @@ const host = cva(
     OverlayModule,
     CdkDropList,
     CdkDrag,
-    CdkDragHandle,
     FaIconComponent,
     Button,
     Checkbox,
@@ -147,14 +145,6 @@ export class RankSelect extends Control<string[]> {
     if (this.options().length === this.editValue().length) return true;
     if (this.editValue().length === 0) return false;
     return undefined;
-  });
-  protected readonly sortedOptions = computed(() => {
-    const options = [...this.options()];
-    const editValue = this.editValue();
-    return options.sort(
-      (a, b) =>
-        this.sortIndex(a.value, editValue) - this.sortIndex(b.value, editValue),
-    );
   });
   protected readonly filterLower = computed(() =>
     this.filterText().toLowerCase(),
@@ -228,12 +218,6 @@ export class RankSelect extends Control<string[]> {
     if (el == null) return;
     el.focus();
     event.preventDefault();
-  }
-
-  private sortIndex(value: string, rank: string[]): number {
-    const index = rank.indexOf(value);
-    if (index === -1) return Number.MAX_SAFE_INTEGER;
-    return index;
   }
 
   private focusAfterOpen(event?: Event): void {

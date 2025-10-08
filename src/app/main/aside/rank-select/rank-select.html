@@ -60,25 +60,53 @@
         ></button>
       </div>
     }
+    <div class="border-y border-gray-800 px-2 py-1">
+      <span class="text-sm text-gray-300">{{
+        'rankSelect.label' | translate
+      }}</span>
+      <div
+        class="flex shrink-0 items-center overflow-x-auto"
+        cdkDropList
+        cdkDropListOrientation="horizontal"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @if (editValue().length) {
+        } @else {
+          <span class="ms-1 text-base/9 text-gray-500 italic">
+            {{ placeholder() | translate }}
+          </span>
+        }
+        @for (opt of editValue(); track opt) {
+          <div
+            class="flex cursor-grab items-center justify-center rounded-xs p-0.5 hover:bg-gray-700"
+            cdkDrag
+            cdkDragLockAxis="x"
+            cdkDragBoundary=".border-y"
+            (cdkDragStarted)="dragging.set(true)"
+            (cdkDragEnded)="dragging.set(false)"
+          >
+            <lab-icon
+              [value]="opt"
+              type="item"
+              [text]="($index + 1).toString()"
+            ></lab-icon>
+          </div>
+        }
+      </div>
+    </div>
     <ul
       [id]="controlId() + '-listbox'"
       role="listbox"
       class="overflow-y-auto py-1"
       aria-multiselectable="true"
       tabindex="-1"
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
     >
-      @for (opt of sortedOptions(); track opt.value) {
+      @for (opt of options(); track opt.value) {
         @let label = opt.label | translate;
         @let checked = editValue().includes(opt.value);
         @if (label.toLowerCase().includes(filterLower())) {
           <li
             #option
-            cdkDrag
-            cdkDragLockAxis="y"
-            cdkDragBoundary="ul"
-            [cdkDragDisabled]="!checked"
             role="option"
             class="cursor-pointer overflow-hidden outline-none select-none focus-visible:bg-gray-800"
             [attr.tabindex]="opt.disabled ? -1 : 0"
@@ -88,15 +116,12 @@
             [labTooltip]="opt.tooltip"
             [labTooltipType]="opt.tooltipType"
             labTooltipPosition="adjacent"
-            [labTooltipDisabled]="dragging()"
             (click)="select(opt.value)"
             (keydown.enter)="select(opt.value)"
             (keydown.arrowup)="focusMove(option, -1, $event)"
             (keydown.arrowdown)="focusMove(option, 1, $event)"
             (keydown.home)="focusFirst($event)"
             (keydown.end)="focusLast($event)"
-            (cdkDragStarted)="dragging.set(true)"
-            (cdkDragEnded)="dragging.set(false)"
           >
             <div
               class="flex min-h-9 items-center overflow-hidden bg-gray-950 ps-2 pe-4"
@@ -107,24 +132,8 @@
                 class="pointer-events-none"
                 [ngModel]="checked"
               ></lab-checkbox>
-              <lab-icon
-                [value]="opt.value"
-                type="item"
-                [text]="
-                  checked && editValue().length > 1
-                    ? (editValue().indexOf(opt.value) + 1).toString()
-                    : undefined
-                "
-              ></lab-icon>
+              <lab-icon [value]="opt.value" type="item"></lab-icon>
               <span class="ms-1 line-clamp-1 grow">{{ label }}</span>
-              @if (checked && editValue().length > 1) {
-                <div
-                  class="flex size-9 shrink-0 cursor-grab items-center justify-center"
-                  cdkDragHandle
-                >
-                  <fa-icon [icon]="faGrip"></fa-icon>
-                </div>
-              }
             </div>
           </li>
         }
