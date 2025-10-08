@@ -53,7 +53,7 @@
     animate.leave="animate-fade-y"
   >
     @if (filter() || multi()) {
-      <div class="flex items-center gap-1 px-1 py-2">
+      <div class="flex items-center gap-1 p-2">
         @if (multi()) {
           <lab-checkbox
             [ngModel]="allSelected()"

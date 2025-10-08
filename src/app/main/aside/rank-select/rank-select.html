@@ -34,7 +34,7 @@
     animate.leave="animate-fade-y"
   >
     @if (options().length > 5) {
-      <div class="flex items-center gap-1 px-1 py-2">
+      <div class="flex items-center gap-1 p-2">
         <lab-checkbox
           [ngModel]="allSelected()"
           (ngModelChange)="selectAll($event)"
