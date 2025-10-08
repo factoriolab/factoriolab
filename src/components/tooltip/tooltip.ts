@@ -8,6 +8,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import {
   afterNextRender,
   Directive,
+  effect,
   ElementRef,
   inject,
   Injector,
@@ -40,10 +41,19 @@ export class Tooltip implements OnDestroy {
   readonly labTooltipPosition = input<'below' | 'adjacent'>('below');
   readonly labTooltipAction = input<string>();
   readonly labTooltipAdjustedRecipe = input<AdjustedRecipe>();
+  readonly labTooltipDisabled = input<boolean>();
 
   private overlayRef: OverlayRef | undefined;
 
+  constructor() {
+    effect(() => {
+      if (this.labTooltipDisabled()) this.hide();
+    });
+  }
+
   show(): void {
+    if (this.labTooltipDisabled()) return;
+
     const value = this.labTooltip();
     if (this.overlayRef || !value) return;
 

@@ -1,0 +1,139 @@
+<ng-content>
+  <div class="flex grow">
+    @for (id of value(); track $index) {
+      <lab-icon
+        [value]="id"
+        type="item"
+        [text]="
+          (value() ?? []).length > 1 ? ($index + 1).toString() : undefined
+        "
+      ></lab-icon>
+    } @empty {
+      <span class="ms-1 text-gray-500 italic">
+        {{ placeholder() | translate }}
+      </span>
+    }
+  </div>
+  <fa-icon
+    class="text-gray-500 transition-transform"
+    [class.-scale-y-100]="opened()"
+    [icon]="faChevronDown"
+  ></fa-icon>
+</ng-content>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="overlayOrigin"
+  [cdkConnectedOverlayOpen]="opened()"
+  [cdkConnectedOverlayMinWidth]="elementRef.nativeElement.offsetWidth"
+  (overlayOutsideClick)="toggle($event)"
+>
+  <div
+    #overlay
+    class="mt-1 flex max-h-96 max-w-80 min-w-full origin-top flex-col overflow-hidden rounded-xs border border-gray-700 bg-gray-950 transition-all starting:scale-y-75 starting:opacity-0"
+    animate.leave="animate-fade-y"
+  >
+    @if (options().length > 5) {
+      <div class="flex items-center gap-1 px-1 py-2">
+        <lab-checkbox
+          [ngModel]="allSelected()"
+          (ngModelChange)="selectAll($event)"
+        ></lab-checkbox>
+        <div class="relative flex grow">
+          <input
+            class="input w-0"
+            [placeholder]="'filter' | translate"
+            [(ngModel)]="filterText"
+          />
+          <fa-icon
+            class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+            [icon]="faMagnifyingGlass"
+          ></fa-icon>
+        </div>
+        <button
+          type="button"
+          labButton
+          [border]="false"
+          [faIcon]="faXmark"
+          [attr.aria-label]="'cancel' | translate"
+          (click)="opened.set(false)"
+        ></button>
+      </div>
+    }
+    <ul
+      [id]="controlId() + '-listbox'"
+      role="listbox"
+      class="overflow-y-auto py-1"
+      aria-multiselectable="true"
+      tabindex="-1"
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+    >
+      @for (opt of sortedOptions(); track opt.value) {
+        @let label = opt.label | translate;
+        @let checked = editValue().includes(opt.value);
+        @if (label.toLowerCase().includes(filterLower())) {
+          <li
+            #option
+            cdkDrag
+            cdkDragLockAxis="y"
+            cdkDragBoundary="ul"
+            [cdkDragDisabled]="!checked"
+            role="option"
+            class="cursor-pointer overflow-hidden outline-none select-none focus-visible:bg-gray-800"
+            [attr.tabindex]="opt.disabled ? -1 : 0"
+            [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
+            [attr.aria-selected]="checked"
+            [attr.aria-checked]="checked"
+            [labTooltip]="opt.tooltip"
+            [labTooltipType]="opt.tooltipType"
+            labTooltipPosition="adjacent"
+            [labTooltipDisabled]="dragging()"
+            (click)="select(opt.value)"
+            (keydown.enter)="select(opt.value)"
+            (keydown.arrowup)="focusMove(option, -1, $event)"
+            (keydown.arrowdown)="focusMove(option, 1, $event)"
+            (keydown.home)="focusFirst($event)"
+            (keydown.end)="focusLast($event)"
+            (cdkDragStarted)="dragging.set(true)"
+            (cdkDragEnded)="dragging.set(false)"
+          >
+            <div
+              class="flex min-h-9 items-center overflow-hidden bg-gray-950 ps-2 pe-4"
+              labRipple
+              [class.hover:bg-gray-800]="!dragging()"
+            >
+              <lab-checkbox
+                class="pointer-events-none"
+                [ngModel]="checked"
+              ></lab-checkbox>
+              <lab-icon
+                [value]="opt.value"
+                type="item"
+                [text]="
+                  checked && editValue().length > 1
+                    ? (editValue().indexOf(opt.value) + 1).toString()
+                    : undefined
+                "
+              ></lab-icon>
+              <span class="ms-1 line-clamp-1 grow">{{ label }}</span>
+              @if (checked && editValue().length > 1) {
+                <div
+                  class="flex size-9 shrink-0 cursor-grab items-center justify-center"
+                  cdkDragHandle
+                >
+                  <fa-icon [icon]="faGrip"></fa-icon>
+                </div>
+              }
+            </div>
+          </li>
+        }
+      }
+      @if (filterText() && !listItems().length) {
+        <li class="flex min-h-9 items-center px-2">
+          {{ 'select.noMatches' | translate }}
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>

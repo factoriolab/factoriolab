@@ -25,11 +25,15 @@ import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { rational } from '~/rational/rational';
 import { ObjectiveBase, ObjectiveSettings } from '~/state/objectives/objective';
-import { objectiveTypeOptions } from '~/state/objectives/objective-type';
+import {
+  ObjectiveType,
+  objectiveTypeOptions,
+} from '~/state/objectives/objective-type';
 import { ObjectiveUnit } from '~/state/objectives/objective-unit';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { displayRateOptions } from '~/state/settings/display-rate';
+import { MaximizeType } from '~/state/settings/maximize-type';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
@@ -70,8 +74,10 @@ export class Objectives extends ObjectiveForm {
   protected readonly faPlay = faPlay;
   protected readonly faPlus = faPlus;
   protected readonly faXmark = faXmark;
+  protected readonly MaximizeType = MaximizeType;
   protected readonly rational = rational;
   protected readonly objectives = this.objectivesStore.objectives;
+  protected readonly ObjectiveType = ObjectiveType;
   protected readonly ObjectiveUnit = ObjectiveUnit;
   protected readonly result = this.objectivesStore.matrixResult;
   protected readonly typeOptions = objectiveTypeOptions;

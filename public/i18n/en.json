@@ -19,10 +19,7 @@
     "tooltip": "Click to select beacons",
     "totalTooltip": "Total beacons"
   },
-  "beltTooltip": {
-    "tooltip": "Click to select belt and stack size"
-  },
-  "beltOverlay": {
+  "beltSelect": {
     "stackTooltip": "Stack size"
   },
   "cancel": "Cancel",
@@ -416,6 +413,7 @@
     "factory": "Factory",
     "flowRateUnit": "u/sec",
     "fuelRank": "Preferred fuels",
+    "fuelRankEmpty": "No fuels selected",
     "fuelRankTooltip": "Select the order of preferred fuels to be used where applicable",
     "fuelTooltip": "Select fuel",
     "gameTooltip": "Select which game calculator to use, or use the links in the title bar",
@@ -445,6 +443,7 @@
     "modVersions": "Versions",
     "modifierCountTooltip": "Select modifier count",
     "modifierRank": "Preferred modifiers",
+    "modifierRankEmpty": "No modifiers selected",
     "modifierRankTooltip": "Select the order of preferred modifiers to be used where applicable",
     "modifierTooltip": "Select modifier",
     "moveDown": "Move down",
@@ -493,6 +492,8 @@
     "beaconEachTooltip": "Beacons per machine",
     "beaconTotalTooltip": "Total beacons",
     "beaconsUndoTooltip": "Undo all beacon modifications",
+    "beltSelectTooltip": "Click to select belt and stack size",
+    "beltTooltip": "Click to select belt",
     "beltsUndoTooltip": "Undo all belt modifications",
     "checkedUndoTooltip": "Undo all checkmarks",
     "columnSettings": "Column settings",
@@ -521,6 +522,7 @@
     "stepUndoTooltip": "Undo modifications to this step",
     "time": "Time",
     "total": "Total",
+    "wagonTooltip": "Click to select wagon",
     "wagonsUndoTooltip": "Undo all wagon modifications"
   },
   "technologies": {

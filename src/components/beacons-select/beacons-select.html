@@ -47,7 +47,7 @@
   </ng-container>
   <div overlay class="flex w-3xs flex-col gap-2">
     <div class="flex flex-col gap-1">
-      @for (beacon of editValue(); let index = $index; track $index) {
+      @for (beacon of editValue(); track $index) {
         <div class="flex flex-col">
           <div class="flex">
             <lab-input-number
@@ -56,7 +56,7 @@
               [buttons]="true"
               labTooltip="beaconsSelect.eachTooltip"
               [ngModel]="beacon.count"
-              (ngModelChange)="setCount(index, $event)"
+              (ngModelChange)="setCount($index, $event)"
             ></lab-input-number>
             @if (beacon.total) {
               <lab-input-number
@@ -65,7 +65,7 @@
                 [buttons]="true"
                 labTooltip="beaconsSelect.totalTooltip"
                 [ngModel]="beacon.total"
-                (ngModelChange)="setTotal(index, $event)"
+                (ngModelChange)="setTotal($index, $event)"
               ></lab-input-number>
             }
             <lab-select
@@ -74,7 +74,7 @@
               [iconOnly]="true"
               [options]="settingsStore.options().beacons"
               [ngModel]="beacon.id"
-              (ngModelChange)="setId(index, $event)"
+              (ngModelChange)="setId($index, $event)"
             >
             </lab-select>
             <button
@@ -86,7 +86,7 @@
               labTooltip="remove"
               [aria-label]="'remove' | translate"
               [disabled]="editValue().length < 2"
-              (click)="removeEntry(index)"
+              (click)="removeEntry($index)"
             ></button>
           </div>
           @if (beacon.id && beacon.modules) {
@@ -94,7 +94,7 @@
               class="-mt-px"
               [entity]="settingsStore.dataset().beaconRecord[beacon.id]"
               [value]="beacon.modules"
-              (valueChange)="setModules(index, $event)"
+              (valueChange)="setModules($index, $event)"
             ></lab-modules>
           }
         </div>

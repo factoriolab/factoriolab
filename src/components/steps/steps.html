@@ -185,21 +185,16 @@
             <div class="flex h-12 items-center">
               @let _tree = objectivesStore.stepTree()[step.id];
               @if (sort() == null && _tree.length) {
-                @for (
-                  trail of _tree;
-                  track $index;
-                  let first = $first;
-                  let last = $last
-                ) {
+                @for (trail of _tree; track $index) {
                   <div
                     class="mb-6 self-end border-dotted border-gray-50"
                     [class]="{
-                      'border-e-2': trail || last,
-                      'ms-2': first,
-                      'ms-4': !first,
-                      'sm:ms-4.5': first,
-                      'sm:ms-6': !first,
-                      'h-12.5': trail || last,
+                      'border-e-2': trail || $last,
+                      'ms-2': $first,
+                      'ms-4': !$first,
+                      'sm:ms-4.5': $first,
+                      'sm:ms-6': !$first,
+                      'h-12.5': trail || $last,
                     }"
                   ></div>
                 }
@@ -288,6 +283,10 @@
                       @defer {
                         <lab-belt-select
                           [stack]="stack"
+                          [labTooltip]="itemSettings.beltId"
+                          labTooltipType="belt"
+                          labTooltipAction="steps.beltSelectTooltip"
+                          labTooltipPosition="adjacent"
                           [value]="itemSettings"
                           (valueChange)="changeBelts(step, $event)"
                         ></lab-belt-select>
@@ -301,6 +300,10 @@
                             type === 'belt' ? 'belts' : 'pipes'
                           ]
                         "
+                        [labTooltip]="beltId"
+                        labTooltipType="belt"
+                        labTooltipAction="steps.beltTooltip"
+                        labTooltipPosition="adjacent"
                         [ngModel]="beltId"
                         (ngModelChange)="
                           itemsStore.updateRecordField(
@@ -357,6 +360,12 @@
                           type === 'cargo-wagon' ? 'cargoWagons' : 'fluidWagons'
                         ]
                       "
+                      [labTooltip]="wagonId"
+                      [labTooltipType]="
+                        type === 'cargo-wagon' ? 'cargo-wagon' : 'fluid-wagon'
+                      "
+                      labTooltipAction="steps.wagonTooltip"
+                      labTooltipPosition="adjacent"
                       [ngModel]="wagonId"
                       (ngModelChange)="
                         itemsStore.updateRecordField(
@@ -435,11 +444,12 @@
 
                 @if (data().flags.has('overclock')) {
                   <lab-input-number
-                    class="w-20"
+                    class="w-16"
                     [minimum]="rational(1)"
                     [maximum]="rational(250)"
                     [step]="rational(10)"
                     [percent]="true"
+                    [border]="false"
                     [ngModel]="step.recipeSettings.overclock"
                     (ngModelChange)="
                       objectivesStore.updateRecipeField(
@@ -483,14 +493,29 @@
 
                 @if (step.recipeSettings.modules; as modules) {
                   @if (data().machineRecord[machineId]; as machine) {
-                    <lab-modules-select
-                      [machine]="machine"
-                      labTooltipAction="steps.selectModifiersTooltip"
-                      [value]="modules"
-                      (valueChange)="
-                        changeModulesBeacons(step, { modules: $event })
-                      "
-                    ></lab-modules-select>
+                    @if (machine.modules !== true && machine.modules?.isOne()) {
+                      <lab-select
+                        [iconOnly]="true"
+                        [border]="false"
+                        [options]="step.recipeSettings.moduleOptions ?? []"
+                        labTooltip="aside.modifierTooltip"
+                        [ngModel]="modules[0].id"
+                        (ngModelChange)="
+                          changeModulesBeacons(step, {
+                            modules: [{ id: $event, count: rational.one }],
+                          })
+                        "
+                      ></lab-select>
+                    } @else if (machine.modules != null) {
+                      <lab-modules-select
+                        [machine]="machine"
+                        [recipeId]="step.recipeId"
+                        [value]="modules"
+                        (valueChange)="
+                          changeModulesBeacons(step, { modules: $event })
+                        "
+                      ></lab-modules-select>
+                    }
                   }
                 }
               </div>

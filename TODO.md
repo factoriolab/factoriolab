@@ -36,6 +36,6 @@
 - Re-check light theme (+ icon invert)
 - Re-check translations are being used
 - Re-check a11y
+- Re-check tooltips
 - Apply sorting to tailwind classes in component files
 - Remove productivity adjustment for research products
-- Reduce passing around of state, directly call signals instead

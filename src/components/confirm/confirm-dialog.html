@@ -6,7 +6,7 @@
 </div>
 
 <div class="flex justify-end gap-1 sm:gap-2">
-  @for (action of dialogData.actions; track action.value; let first = $first) {
+  @for (action of dialogData.actions; track action.value) {
     <button
       type="button"
       labButton

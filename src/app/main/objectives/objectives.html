@@ -179,8 +179,8 @@
   <div class="hidden items-end lg:flex">
     <lab-form-field label="aside.displayRate">
       <lab-select
-        [ngModel]="settingsStore.displayRate()"
         [options]="displayRateOptions"
+        [ngModel]="settingsStore.displayRate()"
         (ngModelChange)="settingsStore.apply({ displayRate: $event })"
       ></lab-select>
     </lab-form-field>

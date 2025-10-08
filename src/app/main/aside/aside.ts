@@ -49,6 +49,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { WindowClient } from '~/window/window-client';
 
+import { RankSelect } from './rank-select/rank-select';
 import { TechnologiesDialog } from './technologies-dialog/technologies-dialog';
 import { VersionsDialog } from './versions-dialog/versions-dialog';
 
@@ -74,6 +75,7 @@ const host = cva(
     FormField,
     Icon,
     OptionPipe,
+    RankSelect,
     Select,
     Tooltip,
     TranslatePipe,
@@ -124,6 +126,7 @@ export class Aside {
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   protected readonly gameOptions = gameOptions;
+  protected readonly options = this.settingsStore.options;
   protected readonly settings = this.settingsStore.settings;
 
   reset(): void {

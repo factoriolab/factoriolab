@@ -1,20 +1,14 @@
-@for (
-  entry of value();
-  track entry.id;
-  let index = $index;
-  let first = $first;
-  let last = $last
-) {
-  <div class="flex" [class.-mt-px]="!first">
+@for (entry of value(); track entry.id) {
+  <div class="flex" [class.-mt-px]="!$first">
     <lab-input-number
       class="w-0 grow"
       rounded="start"
-      [maximum]="maximum()[index]"
+      [maximum]="maximum()[$index]"
       [buttons]="true"
       [disabled]="!entry.id"
       labTooltip="modules.eachTooltip"
       [ngModel]="entry.count"
-      (ngModelChange)="setCount(index, $event)"
+      (ngModelChange)="setCount($index, $event)"
     ></lab-input-number>
     <lab-select
       class="-ms-px"
@@ -25,7 +19,7 @@
       [labTooltipType]="entry.id ? 'module' : undefined"
       [labTooltipAction]="entry.id ? 'modules.moduleTooltip' : ''"
       [ngModel]="entry.id"
-      (ngModelChange)="setId(index, $event)"
+      (ngModelChange)="setId($index, $event)"
     ></lab-select>
     @if (entity().modules !== true) {
       <button
@@ -37,7 +31,7 @@
         labTooltip="remove"
         [aria-label]="'remove' | translate"
         [disabled]="entry.id === ''"
-        (click)="removeEntry(index)"
+        (click)="removeEntry($index)"
       ></button>
     }
   </div>

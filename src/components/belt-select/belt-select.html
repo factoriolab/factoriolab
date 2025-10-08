@@ -6,9 +6,6 @@
         [value]="beltId"
         type="item"
         [text]="stack?.gt(rational.one) ? stack?.toString() : ''"
-        [labTooltip]="beltId"
-        labTooltipType="belt"
-        labTooltipAction="beltSelect.tooltip"
       ></lab-icon>
     }
   </ng-container>
@@ -20,6 +17,7 @@
       [minimum]="rational.one"
       [maximum]="stack()"
       [buttons]="true"
+      labTooltip="beltSelect.stackTooltip"
       [ngModel]="editValue()?.stack"
       (ngModelChange)="setStack($event)"
     ></lab-input-number>

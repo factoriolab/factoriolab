@@ -5,7 +5,6 @@ export type Flag =
   | 'diminishingBeacons'
   | 'duplicators'
   | 'expensive'
-  | 'fuels'
   | 'hideMachineSettings'
   | 'inactiveDrain'
   | 'inserterEstimation'
@@ -51,7 +50,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'beltStack',
     'diminishingBeacons',
     'fluidCostRatio',
-    'fuels',
     'inserterEstimation',
     'maximumFactor',
     'minimumFactor',
@@ -69,7 +67,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'beacons',
     'diminishingBeacons',
     'fluidCostRatio',
-    'fuels',
     'inserterEstimation',
     'maximumFactor',
     'minimumFactor',
@@ -85,7 +82,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'beacons',
     'diminishingBeacons',
     'fluidCostRatio',
-    'fuels',
     'inserterEstimation',
     'maximumFactor',
     'minimumFactor',
@@ -102,7 +98,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'beacons',
     'flowRate',
     'fluidCostRatio',
-    'fuels',
     'inserterEstimation',
     'minimumFactor',
     'minimumRecipeTime',
@@ -120,7 +115,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'expensive',
     'flowRate',
     'fluidCostRatio',
-    'fuels',
     'inserterEstimation',
     'minimumFactor',
     'minimumRecipeTime',
@@ -135,7 +129,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
   ]),
   dsp: new Set([
     'beltStack',
-    'fuels',
     'inactiveDrain',
     'miningSpeed',
     'power',
@@ -151,8 +144,8 @@ export const flags: Record<FlagSet, Set<Flag>> = {
   ]),
   coi: new Set(['hideMachineSettings']),
   ffy: new Set(['duplicators']),
-  tta: new Set(['fuels', 'power']),
-  fay: new Set(['fuels', 'power', 'miningSpeed', 'beltStack']),
+  tta: new Set(['power']),
+  fay: new Set(['power', 'miningSpeed', 'beltStack']),
   mds: new Set(['power', 'mods']),
   fdy: new Set(['power']),
 };

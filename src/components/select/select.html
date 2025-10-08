@@ -87,6 +87,7 @@
       [id]="controlId() + '-listbox'"
       role="listbox"
       class="overflow-y-auto py-1"
+      [attr.aria-multiselectable]="multi()"
       tabindex="-1"
     >
       @for (opt of options(); track opt.value) {
@@ -100,7 +101,7 @@
             class="flex min-h-9 cursor-pointer items-center overflow-hidden ps-2 pe-4 outline-none select-none"
             [attr.tabindex]="opt.disabled ? -1 : 0"
             [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
-            [attr.aria-selected]="opt.value === value()"
+            [attr.aria-selected]="opt.value === value() || checked"
             [attr.aria-checked]="checked"
             [class]="
               opt.value === value()

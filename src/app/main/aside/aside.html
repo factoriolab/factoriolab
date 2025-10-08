@@ -271,11 +271,11 @@
       ></lab-select>
     </lab-form-field>
 
-    @if (settingsStore.options().locations.length > 1) {
+    @if (options().locations.length > 1) {
       <lab-form-field label="aside.locations">
         <lab-select
           #locationSelect
-          [options]="settingsStore.options().locations"
+          [options]="options().locations"
           labTooltip="aside.locationsTooltip"
           labTooltipPosition="adjacent"
           [ngModel]="settings().locationIds"
@@ -298,6 +298,46 @@
             [icon]="faChevronDown"
           ></fa-icon>
         </lab-select>
+      </lab-form-field>
+    }
+
+    @if (options().modules.length) {
+      <lab-form-field label="aside.modifierRank">
+        <lab-rank-select
+          placeholder="aside.modifierRankEmpty"
+          labTooltip="aside.modifierRankTooltip"
+          labTooltipPosition="adjacent"
+          [options]="options().modules"
+          [ngModel]="settings().moduleRankIds"
+          (ngModelChange)="
+            settingsStore.updateField(
+              'moduleRankIds',
+              $event,
+              settings().defaultModuleRankIds
+            )
+          "
+        >
+        </lab-rank-select>
+      </lab-form-field>
+    }
+
+    @if (options().fuels.length) {
+      <lab-form-field label="aside.fuelRank">
+        <lab-rank-select
+          placeholder="aside.fuelRankEmpty"
+          labTooltip="aside.fuelRankTooltip"
+          labTooltipPosition="adjacent"
+          [options]="options().fuels"
+          [ngModel]="settings().fuelRankIds"
+          (ngModelChange)="
+            settingsStore.updateField(
+              'fuelRankIds',
+              $event,
+              settings().defaultFuelRankIds
+            )
+          "
+        >
+        </lab-rank-select>
       </lab-form-field>
     }
   </lab-accordion-item>
