@@ -2,6 +2,13 @@
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/mixins/breakpoints';
 
+:host {  
+  position: sticky;  
+  top: 6rem;  
+  z-index: 1;  
+  background: var(--surface-ground);  
+}
+
 .objectives-content {
   max-width: 1000px;
 }
