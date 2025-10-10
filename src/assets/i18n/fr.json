@@ -258,6 +258,7 @@
     "nameSavedState": "Entrez un nom",
     "saveState": "Sauvegarder",
     "requestMod": "Demander un mod",
+    "stickyObjectives": "Épingler le panneau d'objectifs dans la vue",
     "game": "Jeu",
     "gameTooltip": "Séléctionnez quel jeu le calculateur utilise, ou utilisez le lien sur la barre de titre",
     "modSet": "Version ou mod",

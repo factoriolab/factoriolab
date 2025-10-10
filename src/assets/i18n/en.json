@@ -327,7 +327,7 @@
     "openCosts": "Open cost settings",
     "bypassLanding": "Always skip landing page",
     "disablePaginator": "Disable list paginator",
-    "stickyObjectives": "Keep objectives panel in view",
+    "stickyObjectives": "Pin objectives panel in view",
     "netProductionOnly": "Net production only",
     "netProductionOnlyTooltip": "If checked, recipes that both produce and consume the same item are reduced to the net production only",
     "requireMachinesOutput": "Require machines output",

@@ -3,8 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  inject,
   HostBinding,
+  inject,
   Input,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';

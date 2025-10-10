@@ -323,6 +323,7 @@
     "openCosts": "Abrir configurações de custo",
     "bypassLanding": "Sempre pular página de destino",
     "disablePaginator": "Desabilitar paginação de lista",
+    "stickyObjectives": "Fixar painel de objetivos na visualização",
     "netProductionOnly": "Apenas produção líquida",
     "netProductionOnlyTooltip": "Se marcado, receitas que produzem e consomem o mesmo item são reduzidos apenas para a produção líquida",
     "requireMachinesOutput": "Requerer produção das máquinas",

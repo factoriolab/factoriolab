@@ -313,6 +313,7 @@
     "openCosts": "コスト設定を開く",
     "bypassLanding": "ランディングページを常にスキップする",
     "disablePaginator": "リストのページャを無効にする",
+    "stickyObjectives": "目標パネルをビューに固定する",
     "netProductionOnly": "正味生産量のみとする",
     "netProductionOnlyTooltip": "チェックすると、消費と生産で同じアイテムが登場するレシピのとき、正味の生産量まで減らされます。",
     "surplusMachinesOutput": "余剰生産を行う",
