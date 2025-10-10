@@ -225,6 +225,7 @@ export const preferencesState: PreferencesState = {
   paused: false,
   convertObjectiveValues: false,
   flowSettings: flowSettings,
+  stickyObjectives: false,
 };
 export let matrixResultSolved: MatrixResult;
 

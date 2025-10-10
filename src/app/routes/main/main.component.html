@@ -19,7 +19,9 @@
 >
   <main class="px-sm-4 py-4">
     @if (mod()) {
-      <lab-objectives></lab-objectives>
+      <lab-objectives
+        [sticky]="preferencesSvc.stickyObjectives()"
+      ></lab-objectives>
       <p-card styleClass="mt-4" [header]="'app.factory' | translate">
         @if (tabItems$ | async; as model) {
           <p-tabMenu [model]="model"></p-tabMenu>

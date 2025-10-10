@@ -4,6 +4,8 @@ import {
   Component,
   computed,
   inject,
+  HostBinding,
+  Input,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Message } from 'primeng/api';
@@ -82,6 +84,8 @@ export class ObjectivesComponent {
   settingsSvc = inject(SettingsService);
   trackSvc = inject(TrackService);
   translateSvc = inject(TranslateService);
+
+  @HostBinding('class.sticky') @Input() sticky = false;
 
   result = this.objectivesSvc.matrixResult;
   itemsState = this.itemsSvc.settings;
