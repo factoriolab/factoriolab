@@ -15,6 +15,7 @@ import {
   input,
   OnDestroy,
 } from '@angular/core';
+import { filter, take } from 'rxjs';
 
 import { AdjustedRecipe } from '~/data/schema/recipe';
 
@@ -26,10 +27,11 @@ import { TooltipType } from './tooltip-type';
   selector: '[labTooltip]',
   host: {
     '(mouseenter)': 'show()',
-    '(touchstart)': 'show()',
     '(mouseleave)': 'hide($event)',
-    '(touchend)': 'hide()',
-    '(touchcancel)': 'hide()',
+    '(touchstart)': 'touch()',
+    '(touchend)': 'cancelTouch()',
+    '(touchcancel)': 'cancelTouch()',
+    '(touchmove)': 'cancelTouch()',
   },
 })
 export class Tooltip implements OnDestroy {
@@ -84,6 +86,18 @@ export class Tooltip implements OnDestroy {
     });
 
     const ref = this.overlay.create({ positionStrategy });
+
+    // Watch for click events to hide after touchstart on mobile
+    ref
+      .outsidePointerEvents()
+      .pipe(
+        filter((e) => e.type === 'click'),
+        take(1),
+      )
+      .subscribe(() => {
+        this.hide();
+      });
+
     ref.attach(new ComponentPortal(TooltipOverlay, undefined, injector));
     this.overlayRef = ref;
     ref.hostElement.addEventListener('mouseleave', (event) => {
@@ -99,6 +113,18 @@ export class Tooltip implements OnDestroy {
       },
       { injector: this.injector },
     );
+  }
+
+  private touchTimer: number | undefined;
+  touch(): void {
+    this.touchTimer = setTimeout(() => {
+      this.show();
+      delete this.touchTimer;
+    }, 500);
+  }
+
+  cancelTouch(): void {
+    clearTimeout(this.touchTimer);
   }
 
   hide(event?: Event): void {
