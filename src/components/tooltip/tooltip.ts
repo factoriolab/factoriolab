@@ -15,7 +15,6 @@ import {
   input,
   OnDestroy,
 } from '@angular/core';
-import { filter, take } from 'rxjs';
 
 import { AdjustedRecipe } from '~/data/schema/recipe';
 
@@ -26,9 +25,11 @@ import { TooltipType } from './tooltip-type';
 @Directive({
   selector: '[labTooltip]',
   host: {
-    '(mouseover)': 'show()',
+    '(mouseenter)': 'show()',
     '(touchstart)': 'show()',
-    '(mouseout)': 'hide()',
+    '(mouseleave)': 'hide($event)',
+    '(touchend)': 'hide()',
+    '(touchcancel)': 'hide()',
   },
 })
 export class Tooltip implements OnDestroy {
@@ -83,18 +84,13 @@ export class Tooltip implements OnDestroy {
     });
 
     const ref = this.overlay.create({ positionStrategy });
-    // Watch for click events to hide after touchstart on mobile
-    ref
-      .outsidePointerEvents()
-      .pipe(
-        filter((e) => e.type === 'click'),
-        take(1),
-      )
-      .subscribe(() => {
-        this.hide();
-      });
     ref.attach(new ComponentPortal(TooltipOverlay, undefined, injector));
     this.overlayRef = ref;
+    ref.hostElement.addEventListener('mouseleave', (event) => {
+      const target = event.relatedTarget as Node | null;
+      if (this.elementRef.nativeElement.contains(target)) return;
+      this.hide();
+    });
 
     /** Update position after next render to account for tooltip size */
     afterNextRender(
@@ -105,8 +101,11 @@ export class Tooltip implements OnDestroy {
     );
   }
 
-  hide(): void {
+  hide(event?: Event): void {
     if (!this.overlayRef) return;
+    const target = (event as MouseEvent | undefined)
+      ?.relatedTarget as Node | null;
+    if (target && this.overlayRef.overlayElement.contains(target)) return;
     this.overlayRef.dispose();
     delete this.overlayRef;
   }
