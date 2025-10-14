@@ -1,0 +1,9 @@
+@utility bg-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-gray-950),
+    var(--color-gray-950) calc(var(--spacing) * 3),
+    var(--color-gray-900) calc(var(--spacing) * 3),
+    var(--color-gray-900) calc(var(--spacing) * 6)
+  );
+}

@@ -44,6 +44,7 @@ import { filter, map, switchMap } from 'rxjs';
 import { AccordionModule } from '~/components/accordion/accordion-module';
 import { BeaconsSelect } from '~/components/beacons-select/beacons-select';
 import { Button } from '~/components/button/button';
+import { Checkbox } from '~/components/checkbox/checkbox';
 import { Confirm } from '~/components/confirm/confirm';
 import { FormField } from '~/components/form-field/form-field';
 import { Icon } from '~/components/icon/icon';
@@ -57,11 +58,13 @@ import { gameInfo } from '~/data/game-info';
 import { FilterOptionsPipe } from '~/option/filter-options-pipe';
 import { OptionPipe } from '~/option/option-pipe';
 import { rational } from '~/rational/rational';
+import { BeaconSettings } from '~/state/beacon-settings';
 import { Hydration } from '~/state/hydration';
 import { MachinesStore } from '~/state/machines/machines-store';
 import { ModuleSettings } from '~/state/module-settings';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
+import { inserterTargetOptions } from '~/state/settings/inserter-target';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
@@ -94,6 +97,7 @@ const host = cva(
     AccordionModule,
     BeaconsSelect,
     Button,
+    Checkbox,
     FilterOptionsPipe,
     FormField,
     Icon,
@@ -155,6 +159,7 @@ export class Aside {
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   protected readonly gameOptions = gameOptions;
+  protected readonly inserterTargetOptions = inserterTargetOptions;
   protected readonly options = this.settingsStore.options;
   protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
@@ -281,13 +286,29 @@ export class Aside {
     );
   }
 
-  changeModules(id: string, value: ModuleSettings[]): void {
+  changeModules(machineId: string, value: ModuleSettings[]): void {
     const modules = this.hydration.dehydrateModules(
       value,
-      coalesce(this.machinesStore.settings()[id].moduleOptions, []),
+      coalesce(this.machinesStore.settings()[machineId].moduleOptions, []),
       this.settings().moduleRankIds,
-      this.data().machineRecord[id].modules,
+      this.data().machineRecord[machineId].modules,
     );
-    this.machinesStore.updateRecord(id, { modules });
+    this.machinesStore.updateRecord(machineId, { modules });
+  }
+
+  changeBeacons(machineId: string, value: BeaconSettings[]): void {
+    const def = this.settings().beacons;
+    const beacons = this.hydration.dehydrateBeacons(value, def);
+    this.machinesStore.updateRecord(machineId, { beacons });
+  }
+
+  removeMachine(id: string): void {
+    const settings = this.settings();
+    const ids = settings.machineRankIds.filter((i) => i !== id);
+    this.settingsStore.updateField(
+      'machineRankIds',
+      ids,
+      settings.defaultMachineRankIds,
+    );
   }
 }

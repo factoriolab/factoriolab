@@ -27,7 +27,7 @@ import { TooltipType } from './tooltip-type';
   selector: '[labTooltip]',
   host: {
     '(mouseenter)': 'show()',
-    '(mouseleave)': 'hide($event)',
+    '(mouseleave)': 'hide()',
     '(touchstart)': 'touch()',
     '(touchend)': 'cancelTouch()',
     '(touchcancel)': 'cancelTouch()',
@@ -100,9 +100,7 @@ export class Tooltip implements OnDestroy {
 
     ref.attach(new ComponentPortal(TooltipOverlay, undefined, injector));
     this.overlayRef = ref;
-    ref.hostElement.addEventListener('mouseleave', (event) => {
-      const target = event.relatedTarget as Node | null;
-      if (this.elementRef.nativeElement.contains(target)) return;
+    ref.hostElement.addEventListener('mouseleave', () => {
       this.hide();
     });
 
@@ -127,11 +125,8 @@ export class Tooltip implements OnDestroy {
     clearTimeout(this.touchTimer);
   }
 
-  hide(event?: Event): void {
+  hide(): void {
     if (!this.overlayRef) return;
-    const target = (event as MouseEvent | undefined)
-      ?.relatedTarget as Node | null;
-    if (target && this.overlayRef.overlayElement.contains(target)) return;
     this.overlayRef.dispose();
     delete this.overlayRef;
   }

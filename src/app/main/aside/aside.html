@@ -474,6 +474,7 @@
                       ></lab-select>
                     } @else if (machine.modules != null) {
                       <lab-modules-select
+                        class="-ms-px"
                         [machine]="machine"
                         rounded="none"
                         [ngModel]="ms.modules"
@@ -481,12 +482,211 @@
                       ></lab-modules-select>
                     }
                   }
+
+                  @if (data().flags.has('overclock')) {
+                    <lab-input-number
+                      class="-ms-px w-16"
+                      rounded="none"
+                      [minimum]="rational.one"
+                      [maximum]="rational(250)"
+                      [step]="rational(10)"
+                      [percent]="true"
+                      [ngModel]="ms.overclock"
+                      (ngModelChange)="
+                        machinesStore.updateRecordField(
+                          machineId,
+                          'overclock',
+                          $event,
+                          ms.defaultOverclock
+                        )
+                      "
+                    ></lab-input-number>
+                  }
+
+                  @if (ms.beacons && ms.beacons.length) {
+                    <lab-beacons-select
+                      class="-ms-px"
+                      rounded="none"
+                      [ngModel]="ms.beacons"
+                      (ngModelChange)="changeBeacons(machineId, $event)"
+                    ></lab-beacons-select>
+                  }
                 </div>
+
+                <span class="bg-stripes grow border-y border-gray-700"> </span>
+
+                <button
+                  type="button"
+                  labButton
+                  rounded="end"
+                  [faIcon]="faXmark"
+                  [attr.aria-label]="
+                    'aside.removeMachinePreference' | translate
+                  "
+                  (click)="removeMachine(machineId)"
+                ></button>
               </div>
             }
           }
         }
       </div>
+    }
+
+    @if (data().flags.has('beacons')) {
+      <div
+        class="flex items-center"
+        labTooltip="aside.estimateBeaconPowerUsageTooltip"
+        labTooltipPosition="adjacent"
+      >
+        <lab-checkbox
+          controlId="estimate-beacons"
+          [ngModel]="settings().beaconReceivers != null"
+          (ngModelChange)="
+            settingsStore.apply({
+              beaconReceivers: $event ? rational.one : undefined,
+            })
+          "
+        ></lab-checkbox>
+        <label for="estimate-beacons" class="cursor-pointer ps-1 select-none">{{
+          'aside.estimateBeaconPowerUsage' | translate
+        }}</label>
+      </div>
+    }
+
+    @if (settings().beaconReceivers; as beaconReceivers) {
+      <lab-form-field label="aside.averageBeaconReceivers">
+        <lab-input-number
+          [buttons]="true"
+          [minimum]="rational.one"
+          labTooltip="aside.averageBeaconReceiversTooltip"
+          labTooltipPosition="adjacent"
+          [ngModel]="beaconReceivers"
+          (ngModelChange)="settingsStore.apply({ beaconReceivers: $event })"
+        ></lab-input-number>
+      </lab-form-field>
+    }
+
+    @if (data().flags.has('proliferator')) {
+      <lab-form-field label="aside.proliferatorSelfSpray">
+        <lab-select
+          [options]="options().proliferatorModules"
+          labTooltip="aside.proliferatorSelfSprayTooltip"
+          labTooltipPosition="adjacent"
+          [ngModel]="settings().proliferatorSprayId"
+          (ngModelChange)="settingsStore.apply({ proliferatorSprayId: $event })"
+        ></lab-select>
+      </lab-form-field>
+    }
+
+    <lab-form-field label="aside.defaultTransportBelt">
+      <lab-select
+        [options]="options().belts"
+        labTooltip="aside.defaultTransportBeltTooltip"
+        labTooltipPosition="adjacent"
+        [ngModel]="settings().beltId"
+        (ngModelChange)="
+          settingsStore.updateField('beltId', $event, settings().defaultBeltId)
+        "
+      ></lab-select>
+    </lab-form-field>
+
+    @if (data().flags.has('beltStack')) {
+      <lab-form-field label="aside.defaultStack">
+        <lab-input-number
+          [buttons]="true"
+          [minimum]="rational.one"
+          labTooltip="aside.defaultStackTooltip"
+          labTooltipPosition="adjacent"
+          [ngModel]="settings().stack ?? rational.one"
+          (ngModelChange)="settingsStore.apply({ stack: $event })"
+        ></lab-input-number>
+      </lab-form-field>
+    }
+
+    @if (options().pipes.length > 1) {
+      <lab-form-field label="aside.defaultPipe">
+        <lab-select
+          [options]="options().pipes"
+          labTooltip="aside.defaultPipeTooltip"
+          labTooltipPosition="adjacent"
+          [ngModel]="settings().pipeId"
+          (ngModelChange)="
+            settingsStore.updateField(
+              'pipeId',
+              $event,
+              settings().defaultPipeId
+            )
+          "
+        ></lab-select>
+      </lab-form-field>
+    }
+
+    @if (options().cargoWagons.length > 1) {
+      <lab-form-field label="aside.defaultCargoWagon">
+        <lab-select
+          [options]="options().cargoWagons"
+          labTooltip="aside.defaultCargoWagonTooltip"
+          labTooltipPosition="adjacent"
+          [ngModel]="settings().cargoWagonId"
+          (ngModelChange)="
+            settingsStore.updateField(
+              'cargoWagonId',
+              $event,
+              settings().defaultCargoWagonId
+            )
+          "
+        ></lab-select>
+      </lab-form-field>
+    }
+
+    @if (options().fluidWagons.length > 1) {
+      <lab-form-field label="aside.defaultFluidWagon">
+        <lab-select
+          [options]="options().fluidWagons"
+          labTooltip="aside.defaultFluidWagonTooltip"
+          labTooltipPosition="adjacent"
+          [ngModel]="settings().fluidWagonId"
+          (ngModelChange)="
+            settingsStore.updateField(
+              'fluidWagonId',
+              $event,
+              settings().defaultFluidWagonId
+            )
+          "
+        ></lab-select>
+      </lab-form-field>
+    }
+
+    @if (data().flags.has('flowRate')) {
+      <lab-form-field label="aside.pipeFlowRate">
+        <div class="flex items-stretch">
+          <lab-input-number
+            [minimum]="rational.one"
+            [step]="rational(100)"
+            rounded="start"
+            labTooltip="aside.pipeFlowRateTooltip"
+            labTooltipPosition="adjacent"
+            [ngModel]="settings().flowRate"
+            (ngModelChange)="settingsStore.apply({ flowRate: $event })"
+          ></lab-input-number>
+          <span
+            class="flex items-center rounded-e-xs border border-s-0 border-gray-700 px-2 text-nowrap"
+            >{{ 'aside.flowRateUnit' | translate }}</span
+          >
+        </div>
+      </lab-form-field>
+    }
+
+    @if (data().flags.has('inserterEstimation')) {
+      <lab-form-field label="aside.inserterTarget">
+        <lab-select
+          [options]="inserterTargetOptions"
+          labTooltip="aside.inserterTargetTooltip"
+          labTooltipPosition="adjacent"
+          [ngModel]="settings().inserterTarget"
+          (ngModelChange)="settingsStore.apply({ inserterTarget: $event })"
+        ></lab-select>
+      </lab-form-field>
     }
   </lab-accordion-item>
 </lab-accordion>
