@@ -10,7 +10,7 @@
     <lab-select
       [options]="languageOptions"
       [ngModel]="state().language"
-      (ngModelChange)="preferencesStore.apply({ language: $event })"
+      (ngModelChange)="apply({ language: $event })"
     ></lab-select>
   </lab-form-field>
 
@@ -18,19 +18,50 @@
     <lab-select
       [options]="themeOptions"
       [ngModel]="state().theme"
-      (ngModelChange)="preferencesStore.apply({ theme: $event })"
+      (ngModelChange)="apply({ theme: $event })"
     ></lab-select>
   </lab-form-field>
 
   <lab-form-field label="userPreferences.hue">
     <lab-hue
       [ngModel]="state().hue"
-      (ngModelChange)="preferencesStore.apply({ hue: $event })"
+      (ngModelChange)="apply({ hue: $event })"
     ></lab-hue>
   </lab-form-field>
+
+  <div class="flex items-center">
+    <lab-checkbox
+      controlId="bypass-landing"
+      [ngModel]="state().bypassLanding"
+      (ngModelChange)="apply({ bypassLanding: $event })"
+    ></lab-checkbox>
+    <label for="bypass-landing" class="cursor-pointer ps-1 select-none">{{
+      'userPreferences.bypassLanding' | translate
+    }}</label>
+  </div>
+
+  <div class="flex items-center">
+    <lab-checkbox
+      controlId="convert-objective-values"
+      [ngModel]="state().convertObjectiveValues"
+      (ngModelChange)="apply({ convertObjectiveValues: $event })"
+    ></lab-checkbox>
+    <label
+      for="convert-objective-values"
+      class="cursor-pointer ps-1 select-none"
+      >{{ 'userPreferences.convertObjectiveValues' | translate }}</label
+    >
+  </div>
 </div>
 
-<div class="flex justify-end">
+<div class="flex justify-end gap-1 sm:gap-2">
+  <button
+    type="button"
+    labButton
+    text="reset"
+    [faIcon]="faRotateLeft"
+    (click)="reset()"
+  ></button>
   <button
     type="button"
     labButton

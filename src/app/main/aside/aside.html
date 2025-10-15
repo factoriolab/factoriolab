@@ -4,15 +4,6 @@
   <h2 class="grow text-2xl font-light">{{ 'aside.header' | translate }}</h2>
   <button
     type="button"
-    labButton
-    [faIcon]="faTrash"
-    [border]="false"
-    labTooltip="aside.reset"
-    [attr.aria-label]="'aside.reset' | translate"
-    (click)="reset()"
-  ></button>
-  <button
-    type="button"
     class="xl:inline-flex"
     labButton
     [faIcon]="faXmark"
@@ -768,12 +759,3 @@
     </lab-accordion-item>
   }
 </lab-accordion>
-
-<input
-  type="range"
-  min="0"
-  max="360"
-  class="accent-brand-500"
-  [ngModel]="preferencesStore.hue()"
-  (ngModelChange)="preferencesStore.apply({ hue: $event })"
-/>

@@ -66,6 +66,10 @@
   </table>
 </div>
 
+<lab-form-field label="columns.powerUnit">
+  <lab-select [options]="powerUnitOptions" [(ngModel)]="powerUnit"></lab-select>
+</lab-form-field>
+
 <div class="flex justify-end gap-1 sm:gap-2">
   @if (modified) {
     <button

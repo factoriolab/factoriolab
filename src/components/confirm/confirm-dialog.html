@@ -2,7 +2,7 @@
   @if (dialogData.icon; as icon) {
     <fa-icon size="xl" [icon]="icon"></fa-icon>
   }
-  <p>{{ dialogData.message | translate }}</p>
+  <p [innerHTML]="dialogData.message | translate"></p>
 </div>
 
 <div class="flex justify-end gap-1 sm:gap-2">

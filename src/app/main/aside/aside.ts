@@ -23,11 +23,9 @@ import {
   faArrowTrendUp,
   faArrowUpRightFromSquare,
   faBoxesStacked,
-  faCheck,
   faChevronDown,
   faCopy,
   faEllipsisVertical,
-  faExclamationTriangle,
   faFlaskVial,
   faFloppyDisk,
   faGrip,
@@ -40,7 +38,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
-import { filter, map, switchMap } from 'rxjs';
+import { map } from 'rxjs';
 
 import { AccordionModule } from '~/components/accordion/accordion-module';
 import { BeaconsSelect } from '~/components/beacons-select/beacons-select';
@@ -170,29 +168,6 @@ export class Aside {
   protected readonly rational = rational;
   protected readonly researchBonusOptions = researchBonusOptions;
   protected readonly settings = this.settingsStore.settings;
-
-  reset(): void {
-    this.confirm
-      .open({
-        header: 'aside.reset',
-        message: 'aside.resetWarning',
-        icon: faExclamationTriangle,
-        actions: [
-          { text: 'yes', value: true, icon: faCheck },
-          { text: 'cancel', value: false, icon: faXmark },
-        ],
-      })
-      .pipe(
-        filter((result) => !!result),
-        switchMap(() => {
-          localStorage.clear();
-          return this.router.navigate([this.settingsStore.modId()]);
-        }),
-      )
-      .subscribe(() => {
-        this.windowClient.reload();
-      });
-  }
 
   setParams(params: string): void {
     const tree = this.router.parseUrl(this.router.url);

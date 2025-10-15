@@ -31,7 +31,8 @@
     "header": "Column settings",
     "hidden": "Hidden",
     "notApplicable": "N/A",
-    "visibility": "Visibility"
+    "visibility": "Visibility",
+    "powerUnit": "Power units"
   },
   "costs": {
     "excluded": "Excluded",
@@ -544,14 +545,19 @@
   },
   "userPreferences": {
     "header": "User preferences",
-    "subheader": "These preferences are stored in the browser, and are not included as part of the shareable URL.",
+    "subheader": "These preferences are stored in the browser, not included in the shareable URL.",
     "language": "Language",
     "theme": "Theme",
-    "hue": "Hue"
+    "hue": "Hue",
+    "bypassLanding": "Always skip landing page",
+    "convertObjectiveValues": "Convert objective values",
+    "resetHeader": "Are you sure?",
+    "resetMessage": "Do you want to keep your saved states?<br>Selecting no will remove ALL saved data in this browser and reload the page."
   },
   "versions": {
     "mod": "Mod",
     "version": "Version"
   },
-  "yes": "Yes"
+  "yes": "Yes",
+  "no": "No"
 }
