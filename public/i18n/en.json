@@ -327,13 +327,13 @@
       "uncommon": "Uncommon"
     },
     "researchBonus": {
-      "speed0": "No research bonus",
-      "speed1": "Research speed 1",
-      "speed2": "Research speed 2",
-      "speed3": "Research speed 3",
-      "speed4": "Research speed 4",
-      "speed5": "Research speed 5",
-      "speed6": "Research speed 6"
+      "speed0": "No bonus",
+      "speed1": "Level 1 (20%)",
+      "speed2": "Level 2 (50%)",
+      "speed3": "Level 3 (90%)",
+      "speed4": "Level 4 (140%)",
+      "speed5": "Level 5 (190%)",
+      "speed6": "Level 6 (250%)"
     },
     "sankeyAlign": {
       "center": "Center",

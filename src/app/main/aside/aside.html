@@ -689,6 +689,84 @@
       </lab-form-field>
     }
   </lab-accordion-item>
+
+  @if (
+    data().flags.has('inserterEstimation') ||
+    data().flags.has('miningSpeed') ||
+    data().flags.has('miningProductivity') ||
+    data().flags.has('researchSpeed') ||
+    data().prodUpgradeTechs.length
+  ) {
+    <lab-accordion-item text="aside.bonuses">
+      @if (data().flags.has('miningSpeed')) {
+        <lab-form-field label="aside.miningSpeed">
+          <lab-input-number
+            [percent]="true"
+            [buttons]="true"
+            [minimum]="rational(100)"
+            [step]="rational(10)"
+            labTooltip="aside.miningSpeedTooltip"
+            labTooltipPosition="adjacent"
+            [ngModel]="settings().miningBonus.add(rational(100))"
+            (ngModelChange)="
+              settingsStore.apply({ miningBonus: $event.sub(rational(100)) })
+            "
+          ></lab-input-number>
+        </lab-form-field>
+      }
+
+      @if (data().flags.has('miningProductivity')) {
+        <lab-form-field label="aside.miningProductivity">
+          <lab-input-number
+            [bonus]="true"
+            [percent]="true"
+            [buttons]="true"
+            [step]="rational(10)"
+            labTooltip="aside.miningProductivityTooltip"
+            labTooltipPosition="adjacent"
+            [ngModel]="settings().miningBonus"
+            (ngModelChange)="settingsStore.apply({ miningBonus: $event })"
+          ></lab-input-number>
+        </lab-form-field>
+      }
+
+      @if (data().flags.has('researchSpeed')) {
+        <lab-form-field label="aside.researchSpeed">
+          <lab-select
+            [options]="researchBonusOptions"
+            labTooltip="aside.researchSpeedTooltip"
+            labTooltipPosition="adjacent"
+            [ngModel]="settings().researchBonus"
+            (ngModelChange)="settingsStore.apply({ researchBonus: $event })"
+          ></lab-select>
+        </lab-form-field>
+      }
+
+      @if (data().flags.has('inserterEstimation')) {
+        <lab-form-field label="aside.inserterCapacity">
+          <lab-select
+            [options]="inserterCapacityOptions"
+            labTooltip="aside.inserterCapacityTooltip"
+            labTooltipPosition="adjacent"
+            [ngModel]="settings().inserterCapacity"
+            (ngModelChange)="settingsStore.apply({ inserterCapacity: $event })"
+          ></lab-select>
+        </lab-form-field>
+      }
+
+      @if (data().prodUpgradeTechs.length) {
+        <button
+          type="button"
+          labButton
+          [faIcon]="faArrowTrendUp"
+          text="aside.recipeProductivity"
+          labTooltip="aside.recipeProductivityTooltip"
+          labTooltipPosition="adjacent"
+          (click)="openRecipeProductivity()"
+        ></button>
+      }
+    </lab-accordion-item>
+  }
 </lab-accordion>
 
 <input

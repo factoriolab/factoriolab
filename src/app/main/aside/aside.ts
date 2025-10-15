@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
+  faArrowTrendUp,
   faArrowUpRightFromSquare,
   faBoxesStacked,
   faCheck,
@@ -64,13 +65,16 @@ import { MachinesStore } from '~/state/machines/machines-store';
 import { ModuleSettings } from '~/state/module-settings';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
+import { inserterCapacityOptions } from '~/state/settings/inserter-capacity';
 import { inserterTargetOptions } from '~/state/settings/inserter-target';
+import { researchBonusOptions } from '~/state/settings/research-bonus';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 import { WindowClient } from '~/window/window-client';
 
 import { RankSelect } from './rank-select/rank-select';
+import { RecipeProductivityDialog } from './recipe-productivity-dialog/recipe-productivity-dialog';
 import { TechnologiesDialog } from './technologies-dialog/technologies-dialog';
 import { VersionsDialog } from './versions-dialog/versions-dialog';
 
@@ -143,6 +147,7 @@ export class Aside {
   readonly editValue = signal('');
 
   protected readonly data = this.settingsStore.dataset;
+  protected readonly faArrowTrendUp = faArrowTrendUp;
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
   protected readonly faBoxesStacked = faBoxesStacked;
   protected readonly faChevronDown = faChevronDown;
@@ -159,9 +164,11 @@ export class Aside {
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   protected readonly gameOptions = gameOptions;
+  protected readonly inserterCapacityOptions = inserterCapacityOptions;
   protected readonly inserterTargetOptions = inserterTargetOptions;
   protected readonly options = this.settingsStore.options;
   protected readonly rational = rational;
+  protected readonly researchBonusOptions = researchBonusOptions;
   protected readonly settings = this.settingsStore.settings;
 
   reset(): void {
@@ -310,5 +317,11 @@ export class Aside {
       ids,
       settings.defaultMachineRankIds,
     );
+  }
+
+  openRecipeProductivity(): void {
+    this.dialog.open(RecipeProductivityDialog, {
+      data: { header: 'aside.recipeProductivity' },
+    });
   }
 }

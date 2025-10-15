@@ -1,0 +1,50 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>{{ 'data.recipe' | translate }}</th>
+      <th>{{ 'data.productivity' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (techId of data().prodUpgradeTechs; track techId) {
+      @if (data().itemRecord[techId]; as tech) {
+        <tr>
+          <td>
+            <div class="flex items-center gap-2">
+              <lab-icon [value]="techId" type="item"></lab-icon>
+              {{ tech.name }}
+            </div>
+          </td>
+          <td>
+            <lab-input-number
+              [bonus]="true"
+              [percent]="true"
+              [buttons]="true"
+              [step]="rational(10)"
+              [ngModel]="editValue()[techId]"
+              (ngModelChange)="updateValue(techId, $event)"
+            ></lab-input-number>
+          </td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>
+
+<div class="flex justify-end gap-1 sm:gap-2">
+  <button
+    type="button"
+    labButton
+    text="ok"
+    [faIcon]="faCheck"
+    color="brand"
+    (click)="save()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    text="cancel"
+    [faIcon]="faXmark"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

@@ -30,15 +30,10 @@ const control = cva(
   {
     variants: {
       rounded: roundedVariants,
-      percent: {
-        true: 'pe-6',
-      },
-      border: {
-        false: 'border-transparent',
-      },
-      disabled: {
-        true: 'opacity-40 pointer-events-none',
-      },
+      bonus: { true: 'ps-5' },
+      percent: { true: 'pe-6' },
+      border: { false: 'border-transparent' },
+      disabled: { true: 'opacity-40 pointer-events-none' },
     },
   },
 );
@@ -79,6 +74,7 @@ export class InputNumber extends Control<Rational> implements OnInit {
   readonly rounded = input<Rounded>('all');
   readonly border = input(true);
   readonly buttons = input(false);
+  readonly bonus = input<boolean>();
   readonly percent = input<boolean>();
 
   private value$ = new Subject<ChangeEvent>();
@@ -103,6 +99,7 @@ export class InputNumber extends Control<Rational> implements OnInit {
   readonly controlClass = computed(() =>
     control({
       rounded: this.rounded(),
+      bonus: this.bonus(),
       percent: this.percent(),
       border: this.border(),
       disabled: this.disabled(),

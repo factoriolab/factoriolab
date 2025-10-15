@@ -39,6 +39,15 @@
     ></button>
   </div>
 }
+@if (bonus()) {
+  <span class="pointer-events-none absolute top-1.5 left-1.5 z-3 text-base/snug"
+    >+</span
+  >
+}
 @if (percent()) {
-  <span class="pointer-events-none absolute top-1.5 right-1.5 z-3">%</span>
+  <span
+    class="pointer-events-none absolute top-1.5 z-3"
+    [class]="buttons() ? 'right-11' : 'right-1.5'"
+    >%</span
+  >
 }
