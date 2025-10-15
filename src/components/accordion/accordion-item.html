@@ -2,7 +2,7 @@
   type="button"
   [id]="controlId()"
   [attr.aria-controls]="controlId() + '-region'"
-  class="-mt-px flex h-9 cursor-pointer items-center gap-1 border-t border-b border-gray-700 p-2 hover:bg-gray-700 md:h-auto md:p-3"
+  class="flex h-9 cursor-pointer items-center gap-1 border-b border-gray-600 p-2 hover:bg-gray-600 md:h-auto md:p-3"
   (click)="toggle()"
 >
   <fa-icon
@@ -24,7 +24,7 @@
     class="grid grid-rows-[1fr] overflow-hidden transition-[grid-template-rows] duration-300 starting:grid-rows-[0fr]"
     animate.leave="animate-shrink-y"
   >
-    <div class="min-h-0 border-b border-gray-700">
+    <div class="min-h-0 border-b border-gray-600">
       <div class="flex flex-col gap-1 p-4 sm:gap-2">
         <ng-content></ng-content>
       </div>

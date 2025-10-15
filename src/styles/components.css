@@ -1,7 +1,7 @@
 @layer components {
   .input {
     flex-grow: 1;
-    border: 1px solid var(--color-gray-700);
+    border: 1px solid var(--color-gray-600);
     background-color: var(--color-gray-950);
     padding-inline: calc(var(--spacing) * 2);
     width: 100%;
@@ -14,11 +14,11 @@
     &:hover,
     &:focus-visible {
       z-index: 2;
-      border-color: var(--color-brand-700);
+      border-color: var(--color-brand-600);
     }
 
     &:focus-visible {
-      outline: 1px solid var(--color-brand-700);
+      outline: 1px solid var(--color-brand-600);
     }
 
     &::placeholder {
@@ -41,7 +41,7 @@
 
     td,
     th {
-      border-bottom: 1px solid var(--color-gray-700);
+      border-bottom: 1px solid var(--color-gray-600);
       padding-block: calc(var(--spacing) * 1);
       padding-inline: calc(var(--spacing) * 2);
       height: 49px;

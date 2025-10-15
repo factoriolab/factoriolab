@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,15 +7,11 @@ import {
   model,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import {
-  FaIconComponent,
-  IconDefinition,
-} from '@fortawesome/angular-fontawesome';
-import { faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faBars,
   faChevronDown,
-  faHandHoldingDollar,
+  faUserGear,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
@@ -25,11 +22,8 @@ import { gameInfo } from '~/data/game-info';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
-interface ExternalLink {
-  text: string;
-  icon: IconDefinition;
-  href: string;
-}
+import { externalLinks } from './external-link';
+import { UserPreferencesDialog } from './user-preferences-dialog/user-preferences-dialog';
 
 @Component({
   selector: 'header[labHeader], header[lab-header]',
@@ -46,38 +40,23 @@ interface ExternalLink {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex justify-between min-h-19 md:min-h-16 items-center flex-wrap sm:px-3 lg:px-6 xl:flex-nowrap md:sticky top-0 backdrop-blur-md border-b border-gray-700 z-5',
+      'flex justify-between min-h-19 md:min-h-16 items-center flex-wrap px-1 sm:px-3 lg:px-6 xl:flex-nowrap md:sticky top-0 backdrop-blur-md border-b border-gray-600 z-5',
   },
 })
 export class Header {
+  private readonly dialog = inject(Dialog);
   private readonly router = inject(Router);
   private readonly settingsStore = inject(SettingsStore);
 
   readonly asideOpen = model.required<boolean>();
   readonly asideXlHidden = model.required<boolean>();
 
-  protected readonly game = this.settingsStore.game;
-  protected readonly gameInfo = this.settingsStore.gameInfo;
-
   protected readonly faBars = faBars;
   protected readonly faChevronDown = faChevronDown;
-  protected readonly links: ExternalLink[] = [
-    {
-      text: 'header.discord',
-      icon: faDiscord,
-      href: 'https://discord.gg/N4FKV687x2',
-    },
-    {
-      text: 'header.sponsor',
-      icon: faHandHoldingDollar,
-      href: 'https://ko-fi.com/dcbroad3',
-    },
-    {
-      text: 'header.source',
-      icon: faGithub,
-      href: 'https://github.com/factoriolab/factoriolab',
-    },
-  ];
+  protected readonly faUserGear = faUserGear;
+  protected readonly game = this.settingsStore.game;
+  protected readonly gameInfo = this.settingsStore.gameInfo;
+  protected readonly externalLinks = externalLinks;
 
   protected readonly gameOptions = computed(() =>
     gameOptions.filter((o) => o.value !== this.settingsStore.game()),
@@ -89,5 +68,11 @@ export class Header {
 
   setGame(game: Game): void {
     void this.router.navigate([gameInfo[game].modId]);
+  }
+
+  openUserPreferences(): void {
+    this.dialog.open(UserPreferencesDialog, {
+      data: { header: 'userPreferences.header' },
+    });
   }
 }

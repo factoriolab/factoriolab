@@ -17,8 +17,6 @@ export interface PreferencesState {
   theme: Theme;
   bypassLanding: boolean;
   showTechLabels: boolean;
-  rows: number;
-  disablePaginator: boolean;
   paused: boolean;
   convertObjectiveValues: boolean;
   flowSettings: FlowSettings;
@@ -33,8 +31,6 @@ export const initialPreferencesState: PreferencesState = {
   theme: 'system',
   bypassLanding: false,
   showTechLabels: false,
-  rows: 50,
-  disablePaginator: false,
   paused: false,
   convertObjectiveValues: false,
   flowSettings: {

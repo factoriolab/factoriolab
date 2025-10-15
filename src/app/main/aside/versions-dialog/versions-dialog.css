@@ -1,6 +1,6 @@
 td,
 th {
-  border-bottom: 1px solid var(--color-gray-700);
+  border-bottom: 1px solid var(--color-gray-600);
   padding: calc(var(--spacing) * 2);
   text-align: start;
 }

@@ -46,12 +46,12 @@ let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
 
 const host = cva(
-  'inline-flex overflow-hidden grow cursor-pointer min-h-9 items-center select-none hover:border-brand-700 hover:z-2 focus-visible:border-brand-700 focus-visible:outline focus:z-2 group outline-brand-700 px-1',
+  'inline-flex overflow-hidden grow cursor-pointer min-h-9 items-center select-none hover:border-brand-600 hover:z-2 focus-visible:border-brand-600 focus-visible:outline focus:z-2 group outline-brand-600 px-1',
   {
     variants: {
       opened: {
-        true: 'border-brand-700 outline z-2',
-        false: 'border-gray-700',
+        true: 'border-brand-600 outline z-2',
+        false: 'border-gray-600',
       },
       border: {
         true: 'border',

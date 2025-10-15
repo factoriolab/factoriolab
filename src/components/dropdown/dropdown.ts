@@ -16,18 +16,18 @@ import { Button } from '../button/button';
 import { Rounded, roundedVariants } from '../rounding';
 
 const host = cva(
-  'inline-flex cursor-pointer border justify-center items-center min-h-9 min-w-9 relative hover:bg-gray-800 group outline-brand-700 focus-visible:outline hover:border-brand-700',
+  'inline-flex cursor-pointer border justify-center items-center min-h-9 min-w-9 relative hover:bg-gray-800 group outline-brand-600 focus-visible:outline hover:border-brand-600',
   {
     variants: {
       opened: {
-        true: 'border-brand-700 outline z-2',
+        true: 'border-brand-600 outline z-2',
       },
-      border: { false: 'hover:border-brand-700' },
+      border: { false: 'hover:border-brand-600' },
       rounded: roundedVariants,
       disabled: { true: 'pointer-events-none' },
     },
     compoundVariants: [
-      { border: true, opened: false, class: 'border-gray-700' },
+      { border: true, opened: false, class: 'border-gray-600' },
     ],
   },
 );

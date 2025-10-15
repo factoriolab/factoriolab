@@ -354,11 +354,9 @@
       "recipes": "Recipes"
     },
     "theme": {
-      "black": "Black",
       "dark": "Dark",
       "light": "Light",
-      "system": "System",
-      "white": "White"
+      "system": "System"
     }
   },
   "picker": {
@@ -477,7 +475,6 @@
     "researchSpeedTooltip": "Enter the current level of research speed bonus; this setting only affects research",
     "reset": "Reset all settings",
     "resetWarning": "This will delete all saved FactorioLab settings in this browser, are you sure you want to continue?",
-    "saveSavedState": "Save",
     "saveState": "Save state",
     "savedStateMenuLabel": "Saved state menu",
     "savedStates": "Saved states",
@@ -544,6 +541,13 @@
     "researched": "Researched",
     "showLabels": "Show labels",
     "unlockAll": "Unlock all"
+  },
+  "userPreferences": {
+    "header": "User preferences",
+    "subheader": "These preferences are stored in the browser, and are not included as part of the shareable URL.",
+    "language": "Language",
+    "theme": "Theme",
+    "hue": "Hue"
   },
   "versions": {
     "mod": "Mod",

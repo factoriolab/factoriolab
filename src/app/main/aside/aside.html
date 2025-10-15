@@ -1,5 +1,5 @@
 <div
-  class="flex items-center justify-between border-b border-gray-700 p-2 md:min-h-16 md:p-3"
+  class="flex items-center justify-between border-b border-gray-600 p-2 md:min-h-16 md:p-3"
 >
   <h2 class="grow text-2xl font-light">{{ 'aside.header' | translate }}</h2>
   <button
@@ -117,7 +117,7 @@
           ></button>
           <ng-template #editStateMenu>
             <div
-              class="flex flex-col rounded-xs border border-gray-700 bg-gray-950 py-1"
+              class="flex flex-col rounded-xs border border-gray-600 bg-gray-950 py-1"
               cdkMenu
             >
               <button
@@ -347,7 +347,7 @@
         </div>
         <div class="flex">
           <span
-            class="flex size-9 items-center justify-center rounded-s-xs border border-gray-700"
+            class="flex size-9 items-center justify-center rounded-s-xs border border-gray-600"
           >
             <fa-icon [icon]="faIndustry"></fa-icon>
           </span>
@@ -408,7 +408,7 @@
                 <div class="flex items-center bg-gray-950">
                   <div
                     cdkDragHandle
-                    class="flex size-9 cursor-grab items-center justify-center rounded-s-xs border border-gray-700"
+                    class="flex size-9 cursor-grab items-center justify-center rounded-s-xs border border-gray-600"
                   >
                     <fa-icon [icon]="faGrip"></fa-icon>
                   </div>
@@ -513,7 +513,7 @@
                   }
                 </div>
 
-                <span class="bg-stripes grow border-y border-gray-700"> </span>
+                <span class="bg-stripes grow border-y border-gray-600"> </span>
 
                 <button
                   type="button"
@@ -670,7 +670,7 @@
             (ngModelChange)="settingsStore.apply({ flowRate: $event })"
           ></lab-input-number>
           <span
-            class="flex items-center rounded-e-xs border border-s-0 border-gray-700 px-2 text-nowrap"
+            class="flex items-center rounded-e-xs border border-s-0 border-gray-600 px-2 text-nowrap"
             >{{ 'aside.flowRateUnit' | translate }}</span
           >
         </div>

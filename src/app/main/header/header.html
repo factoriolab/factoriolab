@@ -67,7 +67,7 @@
   </div>
 </div>
 <div class="flex w-full items-center gap-2 md:w-auto">
-  @for (link of links; track link.href) {
+  @for (link of externalLinks; track link.href) {
     <a
       [href]="link.href"
       target="_blank"
@@ -79,4 +79,14 @@
       [border]="false"
     ></a>
   }
+  <button
+    type="button"
+    labButton
+    size="large"
+    [border]="false"
+    [faIcon]="faUserGear"
+    labTooltip="userPreferences.header"
+    [attr.aria-label]="'userPreferences.header' | translate"
+    (click)="openUserPreferences()"
+  ></button>
 </div>

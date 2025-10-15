@@ -17,13 +17,13 @@ import { cva } from 'class-variance-authority';
 import { Control, LAB_CONTROL } from '../control';
 
 const host = cva(
-  'inline-flex transition-all relative justify-center items-center rounded-xs hover:bg-gray-900 has-focus-visible:outline outline-brand-700',
+  'inline-flex transition-all relative justify-center items-center rounded-xs hover:bg-gray-900 has-focus-visible:outline outline-brand-600',
   {
     variants: {
       value: {
-        true: 'text-brand-700 hover:text-brand-500',
+        true: 'text-brand-600 hover:text-brand-500',
         false: 'text-gray-400 hover:text-brand-500',
-        undefined: 'text-brand-700 hover:text-brand-500',
+        undefined: 'text-brand-600 hover:text-brand-500',
       },
       disabled: {
         true: 'pointer-events-none',

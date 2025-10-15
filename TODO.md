@@ -10,13 +10,7 @@
 
 ## Icon
 
-- Sum icon?
 - Invert
-
-## Picker
-
-- Need to pass in defaults where relevant using dialog data
-- Multiselect support
 
 ## Translate
 
@@ -39,3 +33,4 @@
 - Re-check tooltips
 - Apply sorting to tailwind classes in component files
 - Remove productivity adjustment for research products
+- Experiment with darker default text color

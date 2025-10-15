@@ -1,0 +1,21 @@
+<div class="flex grow items-center">
+  <input
+    type="range"
+    min="0"
+    max="360"
+    class="accent-brand-500 w-full"
+    [ngModel]="value()"
+    (ngModelChange)="setValue($event)"
+  />
+</div>
+<div>
+  <input
+    type="number"
+    min="0"
+    max="360"
+    step="15"
+    class="input"
+    [ngModel]="value()"
+    (ngModelChange)="setValue($event)"
+  />
+</div>

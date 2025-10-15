@@ -18,7 +18,7 @@
   @for (opt of tabs(); track opt.value) {
     <a
       #tab
-      class="flex shrink-0 cursor-pointer items-center gap-2 overflow-hidden rounded-t-xs border-b-2 border-gray-700 px-3 py-2 select-none"
+      class="flex shrink-0 cursor-pointer items-center gap-2 overflow-hidden rounded-t-xs border-b-2 border-gray-600 px-3 py-2 select-none"
       role="tab"
       labRipple
       [routerLink]="opt.routerLink"
@@ -43,7 +43,7 @@
       }}</span>
     </a>
   }
-  <span class="grow border-b-2 border-gray-700"></span>
+  <span class="grow border-b-2 border-gray-600"></span>
   <div
     class="bg-brand-400 absolute bottom-0 h-0.5 transition-[left,width] duration-300"
     [style]="indicatorStyle()?.()"

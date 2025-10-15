@@ -24,9 +24,9 @@ const host = cva(
   {
     variants: {
       color: {
-        gray: 'text-gray-50 outline-brand-700 focus-visible:border-brand-700',
+        gray: 'text-gray-50 outline-brand-600 focus-visible:border-brand-600',
         brand:
-          'text-brand-50 outline-gray-300 bg-brand-950 focus-visible:border-gray-300 z-1',
+          'text-brand-50 outline-gray-300 bg-brand-950 focus-visible:border-gray-600 z-1',
         complement:
           'text-complement-50 outline-gray-300 bg-complement-950 focus-visible:border-gray-300 z-1',
       },
@@ -47,7 +47,7 @@ const host = cva(
         false: 'px-3',
       },
       toggle: {
-        true: 'border-brand-700 hover:border',
+        true: 'border-brand-600 hover:border',
       },
       disabled: {
         true: 'pointer-events-none opacity-40',
@@ -57,17 +57,17 @@ const host = cva(
       {
         color: 'gray',
         border: true,
-        class: 'hover:bg-gray-700 border-gray-700',
+        class: 'hover:bg-gray-600 border-gray-600',
       },
       {
         color: 'brand',
         border: true,
-        class: 'hover:bg-brand-700 border-brand-700',
+        class: 'hover:bg-brand-600 border-brand-600',
       },
       {
         color: 'complement',
         border: true,
-        class: 'hover:bg-complement-700 border-complement-700',
+        class: 'hover:bg-complement-600 border-complement-600',
       },
       {
         color: 'gray',

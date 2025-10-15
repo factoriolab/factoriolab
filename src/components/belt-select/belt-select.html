@@ -1,4 +1,9 @@
-<lab-dropdown [controlId]="controlId()" (open)="open()" (save)="save()">
+<lab-dropdown
+  [controlId]="controlId()"
+  [border]="false"
+  (open)="open()"
+  (save)="save()"
+>
   <ng-container button>
     @if (value()?.beltId; as beltId) {
       @let stack = value()?.stack;
