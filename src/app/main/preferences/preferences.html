@@ -23,7 +23,7 @@
     [faIcon]="faXmark"
     [hide]="true"
     [border]="false"
-    [attr.aria-label]="'settings.hide' | translate"
+    [attr.aria-label]="'preferences.hide' | translate"
     (click)="xlHidden.set(true)"
   ></button>
   <button
@@ -32,20 +32,22 @@
     labButton
     [faIcon]="faXmark"
     [border]="false"
-    [attr.aria-label]="'settings.hide' | translate"
+    [attr.aria-label]="'preferences.hide' | translate"
     (click)="open.set(false)"
   ></button>
 </div>
 
 <div class="flex flex-col gap-2 p-4">
   <div class="flex flex-col">
-    <span class="mx-1 text-sm text-gray-300">Saved states</span>
+    <span class="mx-1 text-sm text-gray-300">{{
+      'preferences.savedStates' | translate
+    }}</span>
     <div class="flex">
       @if (editStatus()) {
         <input
           type="text"
           class="input"
-          [placeholder]="'settings.nameSavedState' | translate"
+          [placeholder]="'preferences.nameSavedState' | translate"
           required
           [(ngModel)]="editValue"
           (keydown.enter)="saveState()"
@@ -56,8 +58,8 @@
           rounded="none"
           class="-ms-px"
           [faIcon]="faFloppyDisk"
-          labTooltip="settings.saveState"
-          [attr.aria-label]="'settings.saveState' | translate"
+          labTooltip="preferences.saveState"
+          [attr.aria-label]="'preferences.saveState' | translate"
           (click)="saveState()"
         ></button>
         <button
@@ -74,8 +76,7 @@
         <lab-select
           rounded="start"
           [options]="settingsStore.stateOptions()"
-          placeholder="settings.selectSavedState"
-          labTooltip="settings.selectSavedState"
+          placeholder="preferences.selectSavedState"
           [ngModel]="state()"
           (ngModelChange)="setState($event)"
         ></lab-select>
@@ -86,7 +87,7 @@
             labButton
             rounded="end"
             [faIcon]="faEllipsisVertical"
-            [attr.aria-label]="'settings.savedStateMenuLabel' | translate"
+            [attr.aria-label]="'preferences.savedStateMenuLabel' | translate"
             [cdkMenuTriggerFor]="editStateMenu"
           ></button>
           <ng-template #editStateMenu>
@@ -100,7 +101,7 @@
                 cdkMenuItem
                 [border]="false"
                 [faIcon]="faPlus"
-                text="settings.createSavedState"
+                text="preferences.createSavedState"
                 textAlign="left"
                 (click)="createState()"
               ></button>
@@ -110,7 +111,7 @@
                 cdkMenuItem
                 [border]="false"
                 [faIcon]="faPencil"
-                text="settings.editSavedState"
+                text="preferences.editSavedState"
                 textAlign="left"
                 (click)="editState(state)"
               ></button>
@@ -120,7 +121,7 @@
                 cdkMenuItem
                 [border]="false"
                 [faIcon]="faTrash"
-                text="settings.deleteSavedState"
+                text="preferences.deleteSavedState"
                 textAlign="left"
                 (click)="deleteState(state)"
               ></button>
@@ -133,8 +134,8 @@
             labButton
             rounded="end"
             [faIcon]="faPlus"
-            labTooltip="settings.createSavedState"
-            [attr.aria-label]="'settings.createSavedState' | translate"
+            labTooltip="preferences.createSavedState"
+            [attr.aria-label]="'preferences.createSavedState' | translate"
             (click)="createState()"
           ></button>
         }
@@ -144,14 +145,14 @@
           labButton
           class="w-full"
           [faIcon]="faPlus"
-          text="settings.createSavedState"
+          text="preferences.createSavedState"
           (click)="createState()"
         ></button>
       }
     </div>
   </div>
 
-  <lab-form-field label="userPreferences.language">
+  <lab-form-field label="preferences.language">
     <lab-select
       [options]="languageOptions"
       [ngModel]="preferences().language"
@@ -159,7 +160,7 @@
     ></lab-select>
   </lab-form-field>
 
-  <lab-form-field label="userPreferences.theme">
+  <lab-form-field label="preferences.theme">
     <lab-select
       [options]="themeOptions"
       [ngModel]="preferences().theme"
@@ -167,7 +168,7 @@
     ></lab-select>
   </lab-form-field>
 
-  <lab-form-field label="userPreferences.hue">
+  <lab-form-field label="preferences.hue">
     <lab-hue
       [ngModel]="preferences().hue"
       (ngModelChange)="apply({ hue: $event })"
@@ -181,7 +182,7 @@
       (ngModelChange)="apply({ bypassLanding: $event })"
     ></lab-checkbox>
     <label for="bypass-landing" class="cursor-pointer ps-1 select-none">{{
-      'userPreferences.bypassLanding' | translate
+      'preferences.bypassLanding' | translate
     }}</label>
   </div>
 
@@ -194,7 +195,7 @@
     <label
       for="convert-objective-values"
       class="cursor-pointer ps-1 select-none"
-      >{{ 'userPreferences.convertObjectiveValues' | translate }}</label
+      >{{ 'preferences.convertObjectiveValues' | translate }}</label
     >
   </div>
 </div>

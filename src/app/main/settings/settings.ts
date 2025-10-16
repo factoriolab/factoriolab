@@ -12,7 +12,6 @@ import {
   Component,
   computed,
   inject,
-  linkedSignal,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -26,16 +25,11 @@ import {
   faChevronDown,
   faCircleInfo,
   faCopy,
-  faEllipsisVertical,
   faFlaskVial,
-  faFloppyDisk,
   faGrip,
   faIndustry,
   faInfo,
   faMicrochip,
-  faPencil,
-  faPlus,
-  faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
@@ -135,13 +129,6 @@ export class Settings {
   readonly params = toSignal(
     this.route.queryParams.pipe(map(() => window.location.search.substring(1))),
   );
-  readonly state = linkedSignal(() => {
-    const params = this.params();
-    const states = this.settingsStore.modStates();
-    return Object.keys(states).find((s) => states[s] === params);
-  });
-  readonly editStatus = signal<'create' | 'edit' | null>(null);
-  readonly editValue = signal('');
 
   protected readonly data = this.settingsStore.dataset;
   protected readonly faArrowTrendUp = faArrowTrendUp;
@@ -150,16 +137,11 @@ export class Settings {
   protected readonly faChevronDown = faChevronDown;
   protected readonly faCircleInfo = faCircleInfo;
   protected readonly faCopy = faCopy;
-  protected readonly faEllipsisVertical = faEllipsisVertical;
   protected readonly faFlaskVial = faFlaskVial;
-  protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faGrip = faGrip;
   protected readonly faIndustry = faIndustry;
   protected readonly faInfo = faInfo;
   protected readonly faMicrochip = faMicrochip;
-  protected readonly faPencil = faPencil;
-  protected readonly faPlus = faPlus;
-  protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   protected readonly gameOptions = gameOptions;
   protected readonly inserterCapacityOptions = inserterCapacityOptions;
@@ -174,48 +156,6 @@ export class Settings {
     const urlParams = new URLSearchParams(params);
     urlParams.forEach((value, key) => (tree.queryParams[key] = value));
     void this.router.navigateByUrl(tree);
-  }
-
-  saveState(): void {
-    const editValue = this.editValue();
-    const editState = this.editStatus();
-    const params = this.params();
-    if (!editValue || !editState || params == null) return;
-
-    const modId = this.settingsStore.dataset().modId;
-    this.preferencesStore.saveState(modId, editValue, params);
-
-    const state = this.state();
-    if (editState === 'edit' && state)
-      this.preferencesStore.removeState(modId, state);
-
-    this.editStatus.set(null);
-    this.state.set(editValue);
-  }
-
-  async setState(id: string): Promise<void> {
-    const states = this.settingsStore.modStates();
-    const query = states[id];
-    if (!query) return;
-    await this.router.navigate([], {
-      queryParams: this.routerSync.toParams(query),
-    });
-    this.state.set(id);
-  }
-
-  createState(): void {
-    this.editValue.set('');
-    this.editStatus.set('create');
-  }
-
-  editState(state: string): void {
-    this.editValue.set(state);
-    this.editStatus.set('edit');
-  }
-
-  deleteState(state: string): void {
-    this.preferencesStore.removeState(this.data().modId, state);
-    this.state.set('');
   }
 
   setGame(game: Game): void {

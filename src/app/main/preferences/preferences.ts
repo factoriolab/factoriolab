@@ -125,8 +125,8 @@ export class Preferences {
   reset(): void {
     this.confirm
       .open({
-        header: 'userPreferences.resetHeader',
-        message: 'userPreferences.resetMessage',
+        header: 'preferences.resetHeader',
+        message: 'preferences.resetMessage',
         icon: faExclamationTriangle,
         actions: [
           { text: 'yes', value: 1, icon: faRotateLeft },
