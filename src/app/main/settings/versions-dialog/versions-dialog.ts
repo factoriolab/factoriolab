@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
+import { DialogData } from '~/components/dialog/dialog';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
@@ -18,7 +19,9 @@ import { TranslatePipe } from '~/translate/translate-pipe';
       'flex flex-col p-3 sm:p-6 pt-0 gap-3 sm:gap-6 sm:pt-0 overflow-hidden w-md max-w-full',
   },
 })
-export class VersionsDialog {
+export class VersionsDialog implements DialogData {
+  readonly header = 'settings.modVersions';
+
   protected readonly dialogRef = inject(DialogRef);
   protected readonly settingsStore = inject(SettingsStore);
 

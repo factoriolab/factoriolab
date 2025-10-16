@@ -25,6 +25,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
 
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
+import { DialogData } from '../dialog/dialog';
 import { FormField } from '../form-field/form-field';
 import { Select } from '../select/select';
 
@@ -38,7 +39,9 @@ import { Select } from '../select/select';
       'flex flex-col p-3 sm:p-6 pt-0 gap-3 sm:gap-6 sm:pt-0 overflow-hidden max-w-full w-sm',
   },
 })
-export class FlowSettingsDialog {
+export class FlowSettingsDialog implements DialogData {
+  readonly header = 'flowSettings.header';
+
   protected readonly dialogRef = inject(DialogRef);
   private readonly preferencesStore = inject(PreferencesStore);
   protected readonly settingsStore = inject(SettingsStore);

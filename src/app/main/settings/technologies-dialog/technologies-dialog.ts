@@ -19,6 +19,7 @@ import { filter } from 'rxjs';
 
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
+import { DialogData } from '~/components/dialog/dialog';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -45,7 +46,9 @@ import { TechnologiesSet } from './technologies-set';
       'flex flex-col p-3 sm:p-6 pt-px gap-3 sm:pt-px sm:gap-6 overflow-hidden max-w-full md:w-[80dvw] xl:w-[60dvw] 2xl:w-[50dvw]',
   },
 })
-export class TechnologiesDialog {
+export class TechnologiesDialog implements DialogData {
+  readonly header = 'technologies.header';
+
   protected readonly dialog = inject(Dialog);
   protected readonly dialogRef = inject(DialogRef);
   protected readonly preferencesStore = inject(PreferencesStore);
@@ -130,9 +133,7 @@ export class TechnologiesDialog {
   }
 
   openImport(): void {
-    const ref = this.dialog.open<string[]>(TechnologiesImportDialog, {
-      data: { header: 'technologies.importHeader' },
-    });
+    const ref = this.dialog.open<string[]>(TechnologiesImportDialog);
     ref.closed.pipe(filter((result) => result != null)).subscribe((result) => {
       const set = new Set(result);
       this.addPrerequisites(set);

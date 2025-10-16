@@ -36,7 +36,7 @@
 
   @if (multi) {
     <lab-checkbox
-      class="-ms-px border border-gray-600 pe-2"
+      class="-ms-px border border-gray-600"
       [class.rounded-e-xs]="!recyclingSet().size"
       label="picker.includeAll"
       [ngModel]="allSelected()"
@@ -45,7 +45,7 @@
 
     @if (recyclingSet().size) {
       <lab-checkbox
-        class="-ms-px rounded-e-xs border border-gray-600 pe-2"
+        class="-ms-px rounded-e-xs border border-gray-600"
         label="picker.includeAllRecycling"
         [ngModel]="allRecyclingSelected()"
         (ngModelChange)="selectAllRecycling($event)"

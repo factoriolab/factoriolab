@@ -59,6 +59,7 @@ import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
 import { inserterCapacityOptions } from '~/state/settings/inserter-capacity';
 import { inserterTargetOptions } from '~/state/settings/inserter-target';
+import { maximizeTypeOptions } from '~/state/settings/maximize-type';
 import { researchBonusOptions } from '~/state/settings/research-bonus';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
@@ -112,7 +113,7 @@ const host = cva(
 export class Settings {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly dialog = inject(Dialog);
+  protected readonly dialog = inject(Dialog);
   private readonly hydration = inject(Hydration);
   protected readonly machinesStore = inject(MachinesStore);
   protected readonly picker = inject(Picker);
@@ -146,10 +147,13 @@ export class Settings {
   protected readonly gameOptions = gameOptions;
   protected readonly inserterCapacityOptions = inserterCapacityOptions;
   protected readonly inserterTargetOptions = inserterTargetOptions;
+  protected readonly maximizeTypeOptions = maximizeTypeOptions;
   protected readonly options = this.settingsStore.options;
   protected readonly rational = rational;
   protected readonly researchBonusOptions = researchBonusOptions;
   protected readonly settings = this.settingsStore.settings;
+  protected readonly TechnologiesDialog = TechnologiesDialog;
+  protected readonly VersionsDialog = VersionsDialog;
 
   setParams(params: string): void {
     const tree = this.router.parseUrl(this.router.url);
@@ -164,18 +168,6 @@ export class Settings {
 
   setMod(modId: string): void {
     void this.router.navigate([modId, 'list']);
-  }
-
-  openVersions(): void {
-    this.dialog.open(VersionsDialog, {
-      data: { header: 'settings.modVersions' },
-    });
-  }
-
-  openTechnologies(): void {
-    this.dialog.open(TechnologiesDialog, {
-      data: { header: 'technologies.header' },
-    });
   }
 
   addMachine(machineId: string): void {

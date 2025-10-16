@@ -26,6 +26,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
+import { DialogData } from '../dialog/dialog';
 import { FormField } from '../form-field/form-field';
 import { Select } from '../select/select';
 import { PrecisionExamplePipe } from './precision-example-pipe';
@@ -48,7 +49,9 @@ import { PrecisionExamplePipe } from './precision-example-pipe';
       'flex flex-col p-3 sm:p-6 pt-0 gap-3 sm:gap-6 sm:pt-0 overflow-hidden',
   },
 })
-export class ColumnsDialog {
+export class ColumnsDialog implements DialogData {
+  readonly header = 'columns.header';
+
   protected readonly ref = inject(ChangeDetectorRef);
   protected readonly dialogRef = inject(DialogRef);
   protected readonly preferencesStore = inject(PreferencesStore);

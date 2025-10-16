@@ -37,7 +37,7 @@ import {
 import { Options } from './options';
 import { RecipeSettings } from './recipes/recipe-settings';
 import { RecipeState } from './recipes/recipe-state';
-import { CostSettings } from './settings/cost-settings';
+import { CostSettingsState } from './settings/cost-settings';
 import { AdjustedDataset, Dataset } from './settings/dataset';
 import { Settings } from './settings/settings';
 
@@ -587,7 +587,7 @@ export class Adjustment {
     recipeIds: string[],
     adjustedRecipe: Record<string, Recipe>,
     recipes: Record<string, RecipeSettings>,
-    costs: CostSettings,
+    costs: CostSettingsState,
     data: Dataset,
   ): void {
     recipeIds

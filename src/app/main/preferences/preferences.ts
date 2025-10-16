@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
@@ -32,9 +33,9 @@ import { map } from 'rxjs';
 
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
-import { Columns } from '~/components/columns/columns';
+import { ColumnsDialog } from '~/components/columns-dialog/columns-dialog';
 import { Confirm } from '~/components/confirm/confirm';
-import { FlowSettings } from '~/components/flow-settings/flow-settings';
+import { FlowSettingsDialog } from '~/components/flow-settings-dialog/flow-settings-dialog';
 import { FormField } from '~/components/form-field/form-field';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
@@ -85,9 +86,8 @@ const host = cva(
 export class Preferences {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  protected readonly columns = inject(Columns);
+  protected readonly dialog = inject(Dialog);
   private readonly confirm = inject(Confirm);
-  protected readonly flowSettingsClient = inject(FlowSettings);
   protected readonly preferencesStore = inject(PreferencesStore);
   protected readonly routerSync = inject(RouterSync);
   protected readonly settingsStore = inject(SettingsStore);
@@ -113,6 +113,7 @@ export class Preferences {
   protected readonly apply = this.preferencesStore.apply.bind(
     this.preferencesStore,
   );
+  protected readonly ColumnsDialog = ColumnsDialog;
   protected readonly faArrowRotateLeft = faArrowRotateLeft;
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
   protected readonly faCircleInfo = faCircleInfo;
@@ -125,6 +126,7 @@ export class Preferences {
   protected readonly faTableColumns = faTableColumns;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
+  protected readonly FlowSettingsDialog = FlowSettingsDialog;
   protected readonly languageOptions = languageOptions;
   protected readonly powerUnitOptions = powerUnitOptions;
   protected readonly preferences = this.preferencesStore.state;

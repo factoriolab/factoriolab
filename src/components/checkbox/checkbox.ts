@@ -49,7 +49,7 @@ let nextUniqueId = 0;
     },
     { provide: LAB_CONTROL, useExisting: Checkbox },
   ],
-  host: { class: 'flex items-center' },
+  host: { class: 'inline-flex items-center' },
 })
 export class Checkbox extends Control<boolean | undefined> {
   private uniqueId = (nextUniqueId++).toString();

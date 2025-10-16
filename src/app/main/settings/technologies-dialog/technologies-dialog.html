@@ -11,13 +11,13 @@
     ></fa-icon>
   </div>
   <lab-checkbox
-    class="border border-s-0 border-gray-600 pe-2"
+    class="border border-s-0 border-gray-600"
     label="technologies.unlockAll"
     [ngModel]="allSelected()"
     (ngModelChange)="selectAll($event)"
   ></lab-checkbox>
   <lab-checkbox
-    class="border border-s-0 border-gray-600 pe-2"
+    class="border border-s-0 border-gray-600"
     label="technologies.showLabels"
     [ngModel]="preferencesStore.showTechLabels()"
     (ngModelChange)="preferencesStore.apply({ showTechLabels: $event })"

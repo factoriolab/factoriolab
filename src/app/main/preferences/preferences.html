@@ -153,6 +153,13 @@
   </div>
 
   <lab-form-field label="preferences.language">
+    <a
+      action
+      class="link text-sm"
+      href="https://github.com/factoriolab/factoriolab/wiki/Translating-FactorioLab"
+      target="_blank"
+      >{{ 'preferences.helpTranslate' | translate }}</a
+    >
     <lab-select
       [options]="languageOptions"
       [ngModel]="preferences().language"
@@ -193,7 +200,7 @@
     labButton
     [faIcon]="faTableColumns"
     text="columns.header"
-    (click)="columns.open()"
+    (click)="dialog.open(ColumnsDialog)"
   ></button>
 
   <button
@@ -201,6 +208,6 @@
     labButton
     [faIcon]="faDiagramProject"
     text="flowSettings.header"
-    (click)="flowSettingsClient.open()"
+    (click)="dialog.open(FlowSettingsDialog)"
   ></button>
 </div>

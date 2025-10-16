@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -42,7 +43,7 @@ import { BeaconsSelect } from '../beacons-select/beacons-select';
 import { BeltSelect } from '../belt-select/belt-select';
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
-import { Columns } from '../columns/columns';
+import { ColumnsDialog } from '../columns-dialog/columns-dialog';
 import { Icon } from '../icon/icon';
 import { InputNumber } from '../input-number/input-number';
 import { ModulesSelect } from '../modules-select/modules-select';
@@ -83,7 +84,7 @@ import { SortHeader } from './sort-header/sort-header';
   host: { class: 'flex flex-col gap-1 sm:gap-2' },
 })
 export class Steps {
-  protected readonly columns = inject(Columns);
+  protected readonly dialog = inject(Dialog);
   protected readonly exporter = inject(Exporter);
   private readonly hydration = inject(Hydration);
   protected readonly itemsStore = inject(ItemsStore);
@@ -96,6 +97,7 @@ export class Steps {
   readonly focus = input(false);
 
   protected readonly cols = this.settingsStore.columnsState;
+  protected readonly ColumnsDialog = ColumnsDialog;
   protected readonly data = this.recipesStore.adjustedDataset;
   protected readonly displayRateInfo = this.settingsStore.displayRateInfo;
   protected readonly faAngleRight = faAngleRight;

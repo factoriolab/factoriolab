@@ -100,7 +100,7 @@
             [faIcon]="faInfo"
             labTooltip="settings.modVersions"
             [attr.aria-label]="'settings.modVersions' | translate"
-            (click)="openVersions()"
+            (click)="dialog.open(VersionsDialog)"
           ></button>
         </div>
       </lab-form-field>
@@ -118,7 +118,7 @@
       [interpolateParams]="{ count: settings().researchedTechnologyIds.size }"
       labTooltip="settings.techsTooltip"
       labTooltipPosition="adjacent"
-      (click)="openTechnologies()"
+      (click)="dialog.open(TechnologiesDialog)"
     ></button>
 
     <button
@@ -143,6 +143,7 @@
       (click)="picker.pickExcludedItems()"
     ></button>
   </lab-accordion-item>
+
   <lab-accordion-item
     text="settings.factory"
     [note]="(settings().preset | option: settingsStore.presetOptions())?.label"
@@ -424,6 +425,7 @@
 
     @if (data().flags.has('beacons')) {
       <lab-checkbox
+        class="self-start"
         label="settings.estimateBeaconPowerUsage"
         labTooltip="settings.estimateBeaconPowerUsageTooltip"
         labTooltipPosition="adjacent"
@@ -650,4 +652,34 @@
       }
     </lab-accordion-item>
   }
+
+  <lab-accordion-item text="settings.advanced">
+    <lab-form-field label="settings.maximizeType">
+      <lab-select
+        [options]="maximizeTypeOptions"
+        labTooltip="settings.maximizeTypeTooltip"
+        labTooltipPosition="adjacent"
+        [ngModel]="settings().maximizeType"
+        (ngModelChange)="settingsStore.apply({ maximizeType: $event })"
+      ></lab-select>
+    </lab-form-field>
+
+    <lab-checkbox
+      class="self-start"
+      label="settings.netProductionOnly"
+      labTooltip="settings.netProductionOnlyTooltip"
+      labTooltipPosition="adjacent"
+      [ngModel]="settings().netProductionOnly"
+      (ngModelChange)="settingsStore.apply({ netProductionOnly: $event })"
+    ></lab-checkbox>
+
+    <lab-checkbox
+      class="self-start"
+      label="settings.requireMachinesOutput"
+      labTooltip="settings.requireMachinesOutputTooltip"
+      labTooltipPosition="adjacent"
+      [ngModel]="settings().requireMachinesOutput"
+      (ngModelChange)="settingsStore.apply({ requireMachinesOutput: $event })"
+    ></lab-checkbox>
+  </lab-accordion-item>
 </lab-accordion>

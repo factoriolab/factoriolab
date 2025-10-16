@@ -14,6 +14,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
+import { DialogData } from '~/components/dialog/dialog';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { WindowClient } from '~/window/window-client';
@@ -28,7 +29,9 @@ import { WindowClient } from '~/window/window-client';
       'flex flex-col p-3 sm:p-6 pt-px gap-3 sm:pt-px sm:gap-6 overflow-hidden max-w-full',
   },
 })
-export class TechnologiesImportDialog {
+export class TechnologiesImportDialog implements DialogData {
+  readonly header = 'technologies.importHeader';
+
   protected readonly dialogRef = inject<DialogRef<string[]>>(DialogRef);
   protected readonly settingsStore = inject(SettingsStore);
   private readonly windowClient = inject(WindowClient);

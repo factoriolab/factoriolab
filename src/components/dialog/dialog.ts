@@ -15,7 +15,8 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Button } from '../button/button';
 
 export interface DialogData {
-  header?: string | [string, InterpolateParams];
+  header?: string;
+  headerParams?: InterpolateParams;
 }
 
 @Component({
@@ -42,12 +43,16 @@ export class Dialog extends CdkDialogContainer implements OnInit {
   }
 
   parseData(): void {
-    const data = this.dialogRef.config.data as unknown;
-    if (data == null || typeof data !== 'object') return;
-    const header = (data as DialogData).header;
-    if (typeof header === 'string') this.header = header;
-    else if (typeof header === 'object')
-      [this.header, this.headerParams] = [...header];
+    let data: DialogData | undefined;
+    const componentData = this.dialogRef.componentInstance as DialogData;
+    if (componentData.header) data = componentData;
+    else {
+      const configData = this.dialogRef.config.data as DialogData;
+      if (configData.header) data = configData;
+    }
+
+    this.header = data?.header;
+    this.headerParams = data?.headerParams;
   }
 
   animateClose(result?: unknown): void {

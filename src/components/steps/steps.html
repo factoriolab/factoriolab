@@ -4,7 +4,7 @@
     labButton
     [faIcon]="faTableColumns"
     text="columns.header"
-    (click)="columns.open()"
+    (click)="dialog.open(ColumnsDialog)"
   ></button>
   @if (objectivesStore.steps().length) {
     <button
