@@ -50,8 +50,6 @@ import { PrecisionExamplePipe } from './precision-example-pipe';
   },
 })
 export class ColumnsDialog implements DialogData {
-  readonly header = 'columns.header';
-
   protected readonly ref = inject(ChangeDetectorRef);
   protected readonly dialogRef = inject(DialogRef);
   protected readonly preferencesStore = inject(PreferencesStore);
@@ -61,6 +59,7 @@ export class ColumnsDialog implements DialogData {
   protected readonly faCheck = faCheck;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faXmark = faXmark;
+  readonly header = 'columns.header';
   protected readonly powerUnitOptions = powerUnitOptions;
 
   protected value = copyColumnsState(this.settingsStore.columnsState());

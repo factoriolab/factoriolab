@@ -681,5 +681,13 @@
       [ngModel]="settings().requireMachinesOutput"
       (ngModelChange)="settingsStore.apply({ requireMachinesOutput: $event })"
     ></lab-checkbox>
+
+    <button
+      type="button"
+      labButton
+      [faIcon]="faDollar"
+      text="costs.header"
+      (click)="dialog.open(CostSettingsDialog)"
+    ></button>
   </lab-accordion-item>
 </lab-accordion>

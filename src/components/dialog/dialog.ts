@@ -45,10 +45,10 @@ export class Dialog extends CdkDialogContainer implements OnInit {
   parseData(): void {
     let data: DialogData | undefined;
     const componentData = this.dialogRef.componentInstance as DialogData;
-    if (componentData.header) data = componentData;
+    if (componentData?.header) data = componentData;
     else {
       const configData = this.dialogRef.config.data as DialogData;
-      if (configData.header) data = configData;
+      if (configData?.header) data = configData;
     }
 
     this.header = data?.header;

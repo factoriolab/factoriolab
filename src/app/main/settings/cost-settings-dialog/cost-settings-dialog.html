@@ -1,1 +1,102 @@
-<p>cost-settings-dialog works!</p>
+<div class="flex flex-col gap-2">
+  <lab-form-field label="costs.recipe">
+    <lab-input-number
+      labTooltip="costs.recipeTooltip"
+      labTooltipPosition="adjacent"
+      [ngModel]="editValue().factor"
+      (ngModelChange)="apply('factor', $event)"
+    ></lab-input-number>
+  </lab-form-field>
+
+  <lab-form-field label="costs.machine">
+    <lab-input-number
+      labTooltip="costs.machineTooltip"
+      labTooltipPosition="adjacent"
+      [ngModel]="editValue().machine"
+      (ngModelChange)="apply('machine', $event)"
+    ></lab-input-number>
+  </lab-form-field>
+
+  <lab-form-field label="costs.recycling">
+    <lab-input-number
+      labTooltip="costs.recyclingTooltip"
+      labTooltipPosition="adjacent"
+      [ngModel]="editValue().recycling"
+      (ngModelChange)="apply('recycling', $event)"
+    ></lab-input-number>
+  </lab-form-field>
+
+  <lab-form-field label="costs.footprint">
+    <lab-input-number
+      labTooltip="costs.footprintTooltip"
+      labTooltipPosition="adjacent"
+      [ngModel]="editValue().footprint"
+      (ngModelChange)="apply('footprint', $event)"
+    ></lab-input-number>
+  </lab-form-field>
+
+  <lab-form-field label="costs.unproduceable">
+    <lab-input-number
+      labTooltip="costs.unproduceableTooltip"
+      labTooltipPosition="adjacent"
+      [ngModel]="editValue().unproduceable"
+      (ngModelChange)="apply('unproduceable', $event)"
+    ></lab-input-number>
+  </lab-form-field>
+
+  <lab-form-field label="costs.excluded">
+    <lab-input-number
+      labTooltip="costs.excludedTooltip"
+      labTooltipPosition="adjacent"
+      [ngModel]="editValue().excluded"
+      (ngModelChange)="apply('excluded', $event)"
+    ></lab-input-number>
+  </lab-form-field>
+
+  <lab-form-field label="costs.surplus">
+    <lab-input-number
+      labTooltip="costs.surplusTooltip"
+      labTooltipPosition="adjacent"
+      [ngModel]="editValue().surplus"
+      (ngModelChange)="apply('surplus', $event)"
+    ></lab-input-number>
+  </lab-form-field>
+
+  <lab-form-field label="costs.maximize">
+    <lab-input-number
+      [minimum]="undefined"
+      [maximum]="rational.zero"
+      labTooltip="costs.maximizeTooltip"
+      labTooltipPosition="adjacent"
+      [ngModel]="editValue().maximize"
+      (ngModelChange)="apply('maximize', $event)"
+    ></lab-input-number>
+  </lab-form-field>
+</div>
+
+<div class="flex justify-end gap-1 sm:gap-2">
+  @if (modified()) {
+    <button
+      type="button"
+      labButton
+      text="reset"
+      [faIcon]="faRotateLeft"
+      (click)="reset()"
+    ></button>
+  }
+  <button
+    type="button"
+    labButton
+    color="brand"
+    text="ok"
+    [faIcon]="faCheck"
+    (click)="save()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    text="cancel"
+    [faIcon]="faXmark"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

@@ -1,7 +1,7 @@
 import { Rational, rational } from '~/rational/rational';
 
 import { BeaconSettings } from '../beacon-settings';
-import { CostSettingsState } from './cost-settings';
+import { CostSettings } from './cost-settings';
 import { DisplayRate } from './display-rate';
 import { InserterCapacity } from './inserter-capacity';
 import { InserterTarget } from './inserter-target';
@@ -40,11 +40,11 @@ export interface SettingsState {
   inserterCapacity: InserterCapacity;
   researchedTechnologyIds?: Set<string>;
   locationIds?: Set<string>;
-  costs: CostSettingsState;
+  costs: CostSettings;
 }
 
 export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
-  costs?: Partial<CostSettingsState>;
+  costs?: Partial<CostSettings>;
 };
 
 export const initialSettingsState: SettingsState = {

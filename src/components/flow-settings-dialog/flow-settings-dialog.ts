@@ -17,7 +17,7 @@ import {
   FlowDiagram,
   flowDiagramOptions,
 } from '~/state/preferences/flow-diagram';
-import { FlowSettingsState } from '~/state/preferences/flow-settings-state';
+import { FlowSettings } from '~/state/preferences/flow-settings';
 import { initialPreferencesState } from '~/state/preferences/preferences-state';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { sankeyAlignOptions } from '~/state/preferences/sankey-align';
@@ -40,8 +40,6 @@ import { Select } from '../select/select';
   },
 })
 export class FlowSettingsDialog implements DialogData {
-  readonly header = 'flowSettings.header';
-
   protected readonly dialogRef = inject(DialogRef);
   private readonly preferencesStore = inject(PreferencesStore);
   protected readonly settingsStore = inject(SettingsStore);
@@ -52,7 +50,7 @@ export class FlowSettingsDialog implements DialogData {
   protected readonly modified = computed(() => {
     const edit = this.editValue();
     const init = initialPreferencesState.flowSettings;
-    const keys = Object.keys(init) as (keyof FlowSettingsState)[];
+    const keys = Object.keys(init) as (keyof FlowSettings)[];
     return keys.some((k) => init[k] !== edit[k]);
   });
 
@@ -61,10 +59,11 @@ export class FlowSettingsDialog implements DialogData {
   protected readonly faXmark = faXmark;
   protected readonly FlowDiagram = FlowDiagram;
   protected readonly flowDiagramOptions = flowDiagramOptions;
+  readonly header = 'flowSettings.header';
   protected readonly linkValueOptions = this.settingsStore.linkValueOptions;
   protected readonly sankeyAlignOptions = sankeyAlignOptions;
 
-  apply(value: Partial<FlowSettingsState>): void {
+  apply(value: Partial<FlowSettings>): void {
     this.editValue.update((e) => ({ ...e, ...value }));
   }
 

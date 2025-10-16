@@ -30,8 +30,6 @@ import { WindowClient } from '~/window/window-client';
   },
 })
 export class TechnologiesImportDialog implements DialogData {
-  readonly header = 'technologies.importHeader';
-
   protected readonly dialogRef = inject<DialogRef<string[]>>(DialogRef);
   protected readonly settingsStore = inject(SettingsStore);
   private readonly windowClient = inject(WindowClient);
@@ -43,6 +41,7 @@ export class TechnologiesImportDialog implements DialogData {
   protected readonly faCopy = faCopy;
   protected readonly faLink = faLink;
   protected readonly faXmark = faXmark;
+  readonly header = 'technologies.importHeader';
 
   async copyScript(): Promise<void> {
     await this.windowClient.copyToClipboard(`/c local list = {}

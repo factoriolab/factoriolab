@@ -25,6 +25,7 @@ import {
   faChevronDown,
   faCircleInfo,
   faCopy,
+  faDollar,
   faFlaskVial,
   faGrip,
   faIndustry,
@@ -66,6 +67,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 import { WindowClient } from '~/window/window-client';
 
+import { CostSettingsDialog } from './cost-settings-dialog/cost-settings-dialog';
 import { RankSelect } from './rank-select/rank-select';
 import { RecipeProductivityDialog } from './recipe-productivity-dialog/recipe-productivity-dialog';
 import { TechnologiesDialog } from './technologies-dialog/technologies-dialog';
@@ -131,6 +133,7 @@ export class Settings {
     this.route.queryParams.pipe(map(() => window.location.search.substring(1))),
   );
 
+  protected readonly CostSettingsDialog = CostSettingsDialog;
   protected readonly data = this.settingsStore.dataset;
   protected readonly faArrowTrendUp = faArrowTrendUp;
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
@@ -138,6 +141,7 @@ export class Settings {
   protected readonly faChevronDown = faChevronDown;
   protected readonly faCircleInfo = faCircleInfo;
   protected readonly faCopy = faCopy;
+  protected readonly faDollar = faDollar;
   protected readonly faFlaskVial = faFlaskVial;
   protected readonly faGrip = faGrip;
   protected readonly faIndustry = faIndustry;

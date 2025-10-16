@@ -1,7 +1,7 @@
 import { AdjustedRecipe } from '~/data/schema/recipe';
 import { Rational } from '~/rational/rational';
 import { ObjectiveState, RecipeObjective } from '~/state/objectives/objective';
-import { CostSettingsState } from '~/state/settings/cost-settings';
+import { CostSettings } from '~/state/settings/cost-settings';
 import { AdjustedDataset } from '~/state/settings/dataset';
 import { MaximizeType } from '~/state/settings/maximize-type';
 
@@ -32,6 +32,6 @@ export interface SimplexState {
   data: AdjustedDataset;
   maximizeType: MaximizeType;
   requireMachinesOutput: boolean;
-  costs: CostSettingsState;
+  costs: CostSettings;
   hasSurplusCost: boolean;
 }

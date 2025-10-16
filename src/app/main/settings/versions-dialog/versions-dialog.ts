@@ -20,10 +20,9 @@ import { TranslatePipe } from '~/translate/translate-pipe';
   },
 })
 export class VersionsDialog implements DialogData {
-  readonly header = 'settings.modVersions';
-
   protected readonly dialogRef = inject(DialogRef);
   protected readonly settingsStore = inject(SettingsStore);
 
   protected readonly faCheck = faCheck;
+  readonly header = 'settings.modVersions';
 }

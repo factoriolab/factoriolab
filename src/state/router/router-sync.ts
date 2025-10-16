@@ -35,7 +35,7 @@ import { ObjectiveUnit } from '../objectives/objective-unit';
 import { ObjectivesStore } from '../objectives/objectives-store';
 import { RecipeState } from '../recipes/recipe-state';
 import { RecipesStore } from '../recipes/recipes-store';
-import { CostSettingsState } from '../settings/cost-settings';
+import { CostSettings } from '../settings/cost-settings';
 import { Dataset } from '../settings/dataset';
 import {
   initialSettingsState,
@@ -1006,7 +1006,7 @@ export class RouterSync {
       locationIds: sub('loc', modHash.locations ?? []),
     };
 
-    const costs: Partial<CostSettingsState> = {
+    const costs: Partial<CostSettings> = {
       factor: rat('cfa'),
       machine: rat('cma'),
       footprint: rat('cfp'),

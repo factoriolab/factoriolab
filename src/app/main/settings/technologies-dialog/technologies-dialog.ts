@@ -47,8 +47,6 @@ import { TechnologiesSet } from './technologies-set';
   },
 })
 export class TechnologiesDialog implements DialogData {
-  readonly header = 'technologies.header';
-
   protected readonly dialog = inject(Dialog);
   protected readonly dialogRef = inject(DialogRef);
   protected readonly preferencesStore = inject(PreferencesStore);
@@ -100,6 +98,7 @@ export class TechnologiesDialog implements DialogData {
   protected readonly faFileImport = faFileImport;
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
   protected readonly faXmark = faXmark;
+  readonly header = 'technologies.header';
 
   selectAll(value: boolean): void {
     this.selection.set(new Set(value ? [...this.data().technologyIds] : null));

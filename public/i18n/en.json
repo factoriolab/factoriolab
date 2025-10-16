@@ -38,7 +38,7 @@
     "excluded": "Excluded",
     "excludedTooltip": "Cost of items that have been explicitly excluded",
     "footprint": "Footprint",
-    "footprintTooltip": "Whether to multiply cost by tile area of machines",
+    "footprintTooltip": "Multiplies cost by the tile area of machines",
     "header": "Cost settings",
     "machine": "Machine",
     "machineTooltip": "Multiplies cost by number of machines running recipes",
