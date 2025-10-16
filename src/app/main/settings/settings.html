@@ -423,24 +423,17 @@
     }
 
     @if (data().flags.has('beacons')) {
-      <div
-        class="flex items-center"
+      <lab-checkbox
+        label="settings.estimateBeaconPowerUsage"
         labTooltip="settings.estimateBeaconPowerUsageTooltip"
         labTooltipPosition="adjacent"
-      >
-        <lab-checkbox
-          controlId="estimate-beacons"
-          [ngModel]="settings().beaconReceivers != null"
-          (ngModelChange)="
-            settingsStore.apply({
-              beaconReceivers: $event ? rational.one : undefined,
-            })
-          "
-        ></lab-checkbox>
-        <label for="estimate-beacons" class="cursor-pointer ps-1 select-none">{{
-          'settings.estimateBeaconPowerUsage' | translate
-        }}</label>
-      </div>
+        [ngModel]="settings().beaconReceivers != null"
+        (ngModelChange)="
+          settingsStore.apply({
+            beaconReceivers: $event ? rational.one : undefined,
+          })
+        "
+      ></lab-checkbox>
     }
 
     @if (settings().beaconReceivers; as beaconReceivers) {

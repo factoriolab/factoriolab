@@ -12,20 +12,13 @@
       @for (column of settingsStore.columnOptions(); track column.value) {
         <tr>
           <td>
-            <div
-              class="flex items-center gap-1"
+            <lab-checkbox
+              [label]="column.label"
               [class.opacity-40]="column.disabled"
-            >
-              <lab-checkbox
-                [controlId]="column.value"
-                [(ngModel)]="value[column.value].show"
-                [disabled]="!!column.disabled"
-                (ngModelChange)="ref.markForCheck()"
-              ></lab-checkbox>
-              <label [for]="column.value" class="cursor-pointer select-none">{{
-                column.label | translate
-              }}</label>
-            </div>
+              [(ngModel)]="value[column.value].show"
+              [disabled]="!!column.disabled"
+              (ngModelChange)="ref.markForCheck()"
+            ></lab-checkbox>
           </td>
           @if (
             !columnsInfo[column.value].hasPrecision || !value[column.value].show

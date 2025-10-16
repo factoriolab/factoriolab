@@ -35,41 +35,21 @@
   }
 
   @if (multi) {
-    <div
-      class="-ms-px flex items-center border border-gray-600 pe-2"
+    <lab-checkbox
+      class="-ms-px border border-gray-600 pe-2"
       [class.rounded-e-xs]="!recyclingSet().size"
-    >
-      <lab-checkbox
-        controlId="all-selected"
-        [ngModel]="allSelected()"
-        (ngModelChange)="selectAll($event)"
-      ></lab-checkbox>
-
-      <label
-        for="all-selected"
-        class="cursor-pointer ps-1 text-nowrap select-none"
-      >
-        {{ 'picker.includeAll' | translate }}
-      </label>
-    </div>
+      label="picker.includeAll"
+      [ngModel]="allSelected()"
+      (ngModelChange)="selectAll($event)"
+    ></lab-checkbox>
 
     @if (recyclingSet().size) {
-      <div
-        class="-ms-px flex items-center rounded-e-xs border border-gray-600 pe-2"
-      >
-        <lab-checkbox
-          controlId="all-recycling-selected"
-          [ngModel]="allRecyclingSelected()"
-          (ngModelChange)="selectAllRecycling($event)"
-        ></lab-checkbox>
-
-        <label
-          for="all-recycling-selected"
-          class="cursor-pointer ps-1 text-nowrap select-none"
-        >
-          {{ 'picker.includeAllRecycling' | translate }}
-        </label>
-      </div>
+      <lab-checkbox
+        class="-ms-px rounded-e-xs border border-gray-600 pe-2"
+        label="picker.includeAllRecycling"
+        [ngModel]="allRecyclingSelected()"
+        (ngModelChange)="selectAllRecycling($event)"
+      ></lab-checkbox>
     }
   }
 </div>

@@ -16,6 +16,7 @@ import {
   faArrowUpRightFromSquare,
   faCircleInfo,
   faCopy,
+  faDiagramProject,
   faEllipsisVertical,
   faExclamationTriangle,
   faFloppyDisk,
@@ -33,6 +34,7 @@ import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
 import { Columns } from '~/components/columns/columns';
 import { Confirm } from '~/components/confirm/confirm';
+import { FlowSettings } from '~/components/flow-settings/flow-settings';
 import { FormField } from '~/components/form-field/form-field';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
@@ -85,6 +87,7 @@ export class Preferences {
   private readonly router = inject(Router);
   protected readonly columns = inject(Columns);
   private readonly confirm = inject(Confirm);
+  protected readonly flowSettingsClient = inject(FlowSettings);
   protected readonly preferencesStore = inject(PreferencesStore);
   protected readonly routerSync = inject(RouterSync);
   protected readonly settingsStore = inject(SettingsStore);
@@ -114,6 +117,7 @@ export class Preferences {
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
   protected readonly faCircleInfo = faCircleInfo;
   protected readonly faCopy = faCopy;
+  protected readonly faDiagramProject = faDiagramProject;
   protected readonly faEllipsisVertical = faEllipsisVertical;
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faPencil = faPencil;

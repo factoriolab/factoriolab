@@ -14,9 +14,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
+import { TranslatePipe } from '~/translate/translate-pipe';
+
 import { Control, LAB_CONTROL } from '../control';
 
-const host = cva(
+const check = cva(
   'inline-flex transition-all relative justify-center items-center rounded-xs hover:bg-gray-900 has-focus-visible:outline outline-brand-600',
   {
     variants: {
@@ -36,7 +38,7 @@ let nextUniqueId = 0;
 
 @Component({
   selector: 'lab-checkbox',
-  imports: [FormsModule, FaIconComponent],
+  imports: [FormsModule, FaIconComponent, TranslatePipe],
   templateUrl: './checkbox.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -47,7 +49,7 @@ let nextUniqueId = 0;
     },
     { provide: LAB_CONTROL, useExisting: Checkbox },
   ],
-  host: { '[class]': 'hostClass()' },
+  host: { class: 'flex items-center' },
 })
 export class Checkbox extends Control<boolean | undefined> {
   private uniqueId = (nextUniqueId++).toString();
@@ -56,9 +58,10 @@ export class Checkbox extends Control<boolean | undefined> {
   readonly value = model<boolean | undefined>();
   readonly disabled = model(false);
   readonly labelledBy = input<string>();
+  readonly label = input<string>();
 
-  readonly hostClass = computed(() =>
-    host({ value: this.value(), disabled: this.disabled() }),
+  readonly checkClass = computed(() =>
+    check({ value: this.value(), disabled: this.disabled() }),
   );
 
   readonly icon = computed(() => {

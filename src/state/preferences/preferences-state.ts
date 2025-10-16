@@ -3,7 +3,7 @@ import { Language } from '~/translate/language';
 
 import { ColumnsState, initialColumnsState } from './columns-state';
 import { FlowDiagram } from './flow-diagram';
-import { FlowSettings } from './flow-settings';
+import { FlowSettingsState } from './flow-settings-state';
 import { LinkValue } from './link-value';
 import { PowerUnit } from './power-unit';
 import { SankeyAlign } from './sankey-align';
@@ -19,7 +19,7 @@ export interface PreferencesState {
   showTechLabels: boolean;
   paused: boolean;
   convertObjectiveValues: boolean;
-  flowSettings: FlowSettings;
+  flowSettings: FlowSettingsState;
 }
 
 export const initialPreferencesState: PreferencesState = {

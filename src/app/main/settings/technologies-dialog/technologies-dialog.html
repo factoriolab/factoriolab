@@ -10,26 +10,18 @@
       [icon]="faMagnifyingGlass"
     ></fa-icon>
   </div>
-  <div class="flex items-center gap-1 border border-s-0 border-gray-600 pe-2">
-    <lab-checkbox
-      controlId="select-all"
-      [ngModel]="allSelected()"
-      (ngModelChange)="selectAll($event)"
-    ></lab-checkbox>
-    <label for="select-all" class="cursor-pointer select-none">{{
-      'technologies.unlockAll' | translate
-    }}</label>
-  </div>
-  <div class="flex items-center gap-1 border border-s-0 border-gray-600 pe-2">
-    <lab-checkbox
-      controlId="show-labels"
-      [ngModel]="preferencesStore.showTechLabels()"
-      (ngModelChange)="preferencesStore.apply({ showTechLabels: $event })"
-    ></lab-checkbox>
-    <label for="show-labels" class="cursor-pointer select-none">{{
-      'technologies.showLabels' | translate
-    }}</label>
-  </div>
+  <lab-checkbox
+    class="border border-s-0 border-gray-600 pe-2"
+    label="technologies.unlockAll"
+    [ngModel]="allSelected()"
+    (ngModelChange)="selectAll($event)"
+  ></lab-checkbox>
+  <lab-checkbox
+    class="border border-s-0 border-gray-600 pe-2"
+    label="technologies.showLabels"
+    [ngModel]="preferencesStore.showTechLabels()"
+    (ngModelChange)="preferencesStore.apply({ showTechLabels: $event })"
+  ></lab-checkbox>
   <button
     type="button"
     class="-ms-px"

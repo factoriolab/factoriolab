@@ -175,6 +175,19 @@
     ></lab-hue>
   </lab-form-field>
 
+  <lab-checkbox
+    label="preferences.bypassLanding"
+    [ngModel]="preferences().bypassLanding"
+    (ngModelChange)="apply({ bypassLanding: $event })"
+  ></lab-checkbox>
+
+  <lab-checkbox
+    label="preferences.convertObjectiveValues"
+    labTooltip="preferences.convertObjectiveValuesTooltip"
+    [ngModel]="preferences().convertObjectiveValues"
+    (ngModelChange)="apply({ convertObjectiveValues: $event })"
+  ></lab-checkbox>
+
   <button
     type="button"
     labButton
@@ -183,27 +196,11 @@
     (click)="columns.open()"
   ></button>
 
-  <div class="flex items-center">
-    <lab-checkbox
-      controlId="bypass-landing"
-      [ngModel]="preferences().bypassLanding"
-      (ngModelChange)="apply({ bypassLanding: $event })"
-    ></lab-checkbox>
-    <label for="bypass-landing" class="cursor-pointer ps-1 select-none">{{
-      'preferences.bypassLanding' | translate
-    }}</label>
-  </div>
-
-  <div class="flex items-center">
-    <lab-checkbox
-      controlId="convert-objective-values"
-      [ngModel]="preferences().convertObjectiveValues"
-      (ngModelChange)="apply({ convertObjectiveValues: $event })"
-    ></lab-checkbox>
-    <label
-      for="convert-objective-values"
-      class="cursor-pointer ps-1 select-none"
-      >{{ 'preferences.convertObjectiveValues' | translate }}</label
-    >
-  </div>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faDiagramProject"
+    text="flowSettings.header"
+    (click)="flowSettingsClient.open()"
+  ></button>
 </div>

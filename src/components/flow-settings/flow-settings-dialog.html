@@ -1,0 +1,68 @@
+<div class="flex flex-col gap-2">
+  <lab-form-field label="flowSettings.diagram">
+    <lab-select
+      [options]="flowDiagramOptions"
+      [ngModel]="editValue().diagram"
+      (ngModelChange)="apply({ diagram: $event })"
+    ></lab-select>
+  </lab-form-field>
+
+  @if (editValue().diagram === FlowDiagram.Sankey) {
+    <lab-form-field label="flowSettings.sankeyAlign">
+      <lab-select
+        [options]="sankeyAlignOptions"
+        [ngModel]="editValue().sankeyAlign"
+        (ngModelChange)="apply({ sankeyAlign: $event })"
+      ></lab-select>
+    </lab-form-field>
+  }
+
+  <lab-form-field label="flowSettings.linkSize">
+    <lab-select
+      [options]="linkValueOptions()"
+      [ngModel]="editValue().linkSize"
+      (ngModelChange)="apply({ linkSize: $event })"
+    ></lab-select>
+  </lab-form-field>
+
+  <lab-form-field label="flowSettings.linkText">
+    <lab-select
+      [options]="linkValueOptions()"
+      [ngModel]="editValue().linkText"
+      (ngModelChange)="apply({ linkText: $event })"
+    ></lab-select>
+  </lab-form-field>
+
+  <lab-checkbox
+    label="flowSettings.hideExcluded"
+    [ngModel]="editValue().hideExcluded"
+    (ngModelChange)="apply({ hideExcluded: $event })"
+  ></lab-checkbox>
+</div>
+
+<div class="flex justify-end gap-1 sm:gap-2">
+  @if (modified()) {
+    <button
+      type="button"
+      labButton
+      text="reset"
+      [faIcon]="faRotateLeft"
+      (click)="reset()"
+    ></button>
+  }
+  <button
+    type="button"
+    labButton
+    color="brand"
+    text="ok"
+    [faIcon]="faCheck"
+    (click)="save()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    text="cancel"
+    [faIcon]="faXmark"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

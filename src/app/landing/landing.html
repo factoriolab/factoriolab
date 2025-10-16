@@ -80,16 +80,11 @@
       routerLink="list"
       queryParamsHandling="preserve"
     ></a>
-    <div class="flex items-center">
-      <lab-checkbox
-        controlId="bypass"
-        [ngModel]="preferencesStore.state().bypassLanding"
-        (ngModelChange)="preferencesStore.apply({ bypassLanding: $event })"
-      ></lab-checkbox>
-      <label for="bypass" class="cursor-pointer ps-1 select-none">{{
-        'landing.bypass' | translate
-      }}</label>
-    </div>
+    <lab-checkbox
+      label="landing.bypass"
+      [ngModel]="preferencesStore.state().bypassLanding"
+      (ngModelChange)="preferencesStore.apply({ bypassLanding: $event })"
+    ></lab-checkbox>
   }
 
   <span class="mt-auto mb-4 text-center"
