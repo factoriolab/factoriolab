@@ -13,18 +13,20 @@ import { FileClient } from '~/data/file-client';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
-import { Aside } from './aside/aside';
 import { Header } from './header/header';
 import { Objectives } from './objectives/objectives';
+import { Preferences } from './preferences/preferences';
+import { Settings } from './settings/settings';
 
 @Component({
   selector: 'lab-main',
   imports: [
     AsyncPipe,
     RouterOutlet,
-    Aside,
     Header,
     Objectives,
+    Preferences,
+    Settings,
     Tabs,
     TranslatePipe,
   ],

@@ -9,8 +9,8 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
-  faBars,
   faChevronDown,
+  faSliders,
   faUserGear,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -23,7 +23,6 @@ import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { externalLinks } from './external-link';
-import { UserPreferencesDialog } from './user-preferences-dialog/user-preferences-dialog';
 
 @Component({
   selector: 'header[labHeader], header[lab-header]',
@@ -40,7 +39,7 @@ import { UserPreferencesDialog } from './user-preferences-dialog/user-preference
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex justify-between min-h-19 md:min-h-16 items-center flex-wrap px-1 sm:px-3 lg:px-6 xl:flex-nowrap md:sticky top-0 backdrop-blur-md border-b border-gray-600 z-5',
+      'flex justify-between min-h-19 md:min-h-16 items-center flex-wrap px-1 sm:px-3 lg:px-6 xl:flex-nowrap md:sticky top-0 backdrop-blur-md border-b border-gray-600 z-4',
   },
 })
 export class Header {
@@ -48,11 +47,13 @@ export class Header {
   private readonly router = inject(Router);
   private readonly settingsStore = inject(SettingsStore);
 
-  readonly asideOpen = model.required<boolean>();
-  readonly asideXlHidden = model.required<boolean>();
+  readonly preferencesOpen = model.required<boolean>();
+  readonly preferencesXlHidden = model.required<boolean>();
+  readonly settingsOpen = model.required<boolean>();
+  readonly settingsXlHidden = model.required<boolean>();
 
-  protected readonly faBars = faBars;
   protected readonly faChevronDown = faChevronDown;
+  protected readonly faSliders = faSliders;
   protected readonly faUserGear = faUserGear;
   protected readonly game = this.settingsStore.game;
   protected readonly gameInfo = this.settingsStore.gameInfo;
@@ -62,17 +63,15 @@ export class Header {
     gameOptions.filter((o) => o.value !== this.settingsStore.game()),
   );
 
-  toggleAside(): void {
-    this.asideOpen.update((o) => !o);
+  togglePreferences(): void {
+    this.preferencesOpen.update((o) => !o);
+  }
+
+  toggleSettings(): void {
+    this.settingsOpen.update((o) => !o);
   }
 
   setGame(game: Game): void {
     void this.router.navigate([gameInfo[game].modId]);
-  }
-
-  openUserPreferences(): void {
-    this.dialog.open(UserPreferencesDialog, {
-      data: { header: 'userPreferences.header' },
-    });
   }
 }

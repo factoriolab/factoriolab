@@ -1,7 +1,12 @@
 <div
   class="flex items-center justify-between border-b border-gray-600 p-2 md:min-h-16 md:p-3"
 >
-  <h2 class="grow text-2xl font-light">{{ 'aside.header' | translate }}</h2>
+  <div class="flex grow items-center gap-3" labTooltip="settings.tooltip">
+    <h2 class="text-2xl font-light">
+      {{ 'settings.header' | translate }}
+    </h2>
+    <fa-icon [icon]="faCircleInfo"></fa-icon>
+  </div>
   <button
     type="button"
     class="xl:inline-flex"
@@ -9,7 +14,7 @@
     [faIcon]="faXmark"
     [hide]="true"
     [border]="false"
-    [attr.aria-label]="'aside.hide' | translate"
+    [attr.aria-label]="'settings.hide' | translate"
     (click)="xlHidden.set(true)"
   ></button>
   <button
@@ -18,51 +23,54 @@
     labButton
     [faIcon]="faXmark"
     [border]="false"
-    [attr.aria-label]="'aside.hide' | translate"
+    [attr.aria-label]="'settings.hide' | translate"
     (click)="open.set(false)"
   ></button>
 </div>
 
-<lab-accordion class="overflow-y-auto" [multi]="true">
-  <lab-accordion-item text="aside.savedStates" [note]="state()">
-    @if (windowClient.isStandalone) {
-      <div class="flex">
-        <input
-          #paramsInput
-          [ngModel]="params()"
-          type="text"
-          class="input square rounded-s-xs"
-          [placeholder]="'aside.queryParamsPlaceholder' | translate"
-        />
-        <button
-          type="button"
-          labButton
-          rounded="none"
-          class="-ms-px"
-          [faIcon]="faArrowUpRightFromSquare"
-          labTooltip="aside.applyQueryParams"
-          [attr.aria-label]="'aside.applyQueryParams' | translate"
-          (click)="setParams(paramsInput.value)"
-        ></button>
-        <button
-          type="button"
-          labButton
-          rounded="end"
-          class="-ms-px"
-          [faIcon]="faCopy"
-          labTooltip="aside.copyQueryParams"
-          [attr.aria-label]="'aside.copyQueryParams' | translate"
-          (click)="windowClient.copyToClipboard(paramsInput.value)"
-        ></button>
-      </div>
-    }
+@if (windowClient.isStandalone) {
+  <div class="flex flex-col border-b border-gray-600 p-4">
+    <span class="mx-1 text-sm text-gray-300">Query parameters</span>
+    <div class="flex">
+      <input
+        #paramsInput
+        [ngModel]="params()"
+        type="text"
+        class="input square rounded-s-xs"
+        [placeholder]="'settings.queryParamsPlaceholder' | translate"
+      />
+      <button
+        type="button"
+        labButton
+        rounded="none"
+        class="-ms-px"
+        [faIcon]="faArrowUpRightFromSquare"
+        labTooltip="settings.applyQueryParams"
+        [attr.aria-label]="'settings.applyQueryParams' | translate"
+        (click)="setParams(paramsInput.value)"
+      ></button>
+      <button
+        type="button"
+        labButton
+        rounded="end"
+        class="-ms-px"
+        [faIcon]="faCopy"
+        labTooltip="settings.copyQueryParams"
+        [attr.aria-label]="'settings.copyQueryParams' | translate"
+        (click)="windowClient.copyToClipboard(paramsInput.value)"
+      ></button>
+    </div>
+  </div>
+}
 
+<lab-accordion class="overflow-y-auto" [multi]="true">
+  <!-- <lab-accordion-item text="settings.savedStates" [note]="state()">
     <div class="flex">
       @if (editStatus()) {
         <input
           type="text"
           class="input"
-          [placeholder]="'aside.nameSavedState' | translate"
+          [placeholder]="'settings.nameSavedState' | translate"
           required
           [(ngModel)]="editValue"
           (keydown.enter)="saveState()"
@@ -73,8 +81,8 @@
           rounded="none"
           class="-ms-px"
           [faIcon]="faFloppyDisk"
-          labTooltip="aside.saveState"
-          [attr.aria-label]="'aside.saveState' | translate"
+          labTooltip="settings.saveState"
+          [attr.aria-label]="'settings.saveState' | translate"
           (click)="saveState()"
         ></button>
         <button
@@ -91,8 +99,8 @@
         <lab-select
           rounded="start"
           [options]="settingsStore.stateOptions()"
-          placeholder="aside.selectSavedState"
-          labTooltip="aside.selectSavedState"
+          placeholder="settings.selectSavedState"
+          labTooltip="settings.selectSavedState"
           [ngModel]="state()"
           (ngModelChange)="setState($event)"
         ></lab-select>
@@ -103,7 +111,7 @@
             labButton
             rounded="end"
             [faIcon]="faEllipsisVertical"
-            [attr.aria-label]="'aside.savedStateMenuLabel' | translate"
+            [attr.aria-label]="'settings.savedStateMenuLabel' | translate"
             [cdkMenuTriggerFor]="editStateMenu"
           ></button>
           <ng-template #editStateMenu>
@@ -117,7 +125,7 @@
                 cdkMenuItem
                 [border]="false"
                 [faIcon]="faPlus"
-                text="aside.createSavedState"
+                text="settings.createSavedState"
                 textAlign="left"
                 (click)="createState()"
               ></button>
@@ -127,7 +135,7 @@
                 cdkMenuItem
                 [border]="false"
                 [faIcon]="faPencil"
-                text="aside.editSavedState"
+                text="settings.editSavedState"
                 textAlign="left"
                 (click)="editState(state)"
               ></button>
@@ -137,7 +145,7 @@
                 cdkMenuItem
                 [border]="false"
                 [faIcon]="faTrash"
-                text="aside.deleteSavedState"
+                text="settings.deleteSavedState"
                 textAlign="left"
                 (click)="deleteState(state)"
               ></button>
@@ -150,8 +158,8 @@
             labButton
             rounded="end"
             [faIcon]="faPlus"
-            labTooltip="aside.createSavedState"
-            [attr.aria-label]="'aside.createSavedState' | translate"
+            labTooltip="settings.createSavedState"
+            [attr.aria-label]="'settings.createSavedState' | translate"
             (click)="createState()"
           ></button>
         }
@@ -161,17 +169,17 @@
           labButton
           class="w-full"
           [faIcon]="faPlus"
-          text="aside.createSavedState"
+          text="settings.createSavedState"
           (click)="createState()"
         ></button>
       }
     </div>
-  </lab-accordion-item>
+  </lab-accordion-item> -->
   <lab-accordion-item text="game" [note]="settingsStore.modId()">
     <lab-form-field label="game">
       <lab-select
         [options]="gameOptions"
-        labTooltip="aside.gameTooltip"
+        labTooltip="settings.gameTooltip"
         labTooltipPosition="adjacent"
         [ngModel]="data().game"
         (ngModelChange)="setGame($event)"
@@ -185,7 +193,7 @@
           class="link text-sm"
           href="https://github.com/factoriolab/factoriolab/issues/new?assignees=&labels=mod+support&template=mod-request.md&title="
           target="_blank"
-          >{{ 'aside.requestMod' | translate }}</a
+          >{{ 'settings.requestMod' | translate }}</a
         >
         <div class="flex">
           <lab-select
@@ -201,8 +209,8 @@
             labButton
             rounded="end"
             [faIcon]="faInfo"
-            labTooltip="aside.modVersions"
-            [attr.aria-label]="'aside.modVersions' | translate"
+            labTooltip="settings.modVersions"
+            [attr.aria-label]="'settings.modVersions' | translate"
             (click)="openVersions()"
           ></button>
         </div>
@@ -215,11 +223,11 @@
       [faIcon]="faMicrochip"
       [text]="
         settingsStore.researchedTechnologyIds()
-          ? 'aside.techsResearched'
-          : 'aside.allTechsResearched'
+          ? 'settings.techsResearched'
+          : 'settings.allTechsResearched'
       "
       [interpolateParams]="{ count: settings().researchedTechnologyIds.size }"
-      labTooltip="aside.techsTooltip"
+      labTooltip="settings.techsTooltip"
       labTooltipPosition="adjacent"
       (click)="openTechnologies()"
     ></button>
@@ -228,9 +236,9 @@
       type="button"
       labButton
       [faIcon]="faFlaskVial"
-      text="aside.recipesExcluded"
+      text="settings.recipesExcluded"
       [interpolateParams]="{ count: settings().excludedRecipeIds.size }"
-      labTooltip="aside.recipesTooltip"
+      labTooltip="settings.recipesTooltip"
       labTooltipPosition="adjacent"
       (click)="picker.pickExcludedRecipes()"
     ></button>
@@ -239,22 +247,22 @@
       type="button"
       labButton
       [faIcon]="faBoxesStacked"
-      text="aside.itemsExcluded"
+      text="settings.itemsExcluded"
       [interpolateParams]="{ count: settings().excludedItemIds.size }"
-      labTooltip="aside.itemsTooltip"
+      labTooltip="settings.itemsTooltip"
       labTooltipPosition="adjacent"
       (click)="picker.pickExcludedItems()"
     ></button>
   </lab-accordion-item>
   <lab-accordion-item
-    text="aside.factory"
+    text="settings.factory"
     [note]="(settings().preset | option: settingsStore.presetOptions())?.label"
     [expanded]="true"
   >
-    <lab-form-field label="aside.preset">
+    <lab-form-field label="settings.preset">
       <lab-select
         [options]="settingsStore.presetOptions()"
-        labTooltip="aside.presetTooltip"
+        labTooltip="settings.presetTooltip"
         labTooltipPosition="adjacent"
         [ngModel]="settings().preset"
         (ngModelChange)="settingsStore.apply({ preset: $event })"
@@ -262,11 +270,11 @@
     </lab-form-field>
 
     @if (options().locations.length > 1) {
-      <lab-form-field label="aside.locations">
+      <lab-form-field label="settings.locations">
         <lab-select
           #locationSelect
           [options]="options().locations"
-          labTooltip="aside.locationsTooltip"
+          labTooltip="settings.locationsTooltip"
           labTooltipPosition="adjacent"
           [ngModel]="settings().locationIds"
           (ngModelChange)="
@@ -292,10 +300,10 @@
     }
 
     @if (options().modules.length) {
-      <lab-form-field label="aside.modifierRank">
+      <lab-form-field label="settings.modifierRank">
         <lab-rank-select
-          placeholder="aside.modifierRankEmpty"
-          labTooltip="aside.modifierRankTooltip"
+          placeholder="settings.modifierRankEmpty"
+          labTooltip="settings.modifierRankTooltip"
           labTooltipPosition="adjacent"
           [options]="options().modules"
           [ngModel]="settings().moduleRankIds"
@@ -312,10 +320,10 @@
     }
 
     @if (options().fuels.length) {
-      <lab-form-field label="aside.fuelRank">
+      <lab-form-field label="settings.fuelRank">
         <lab-rank-select
-          placeholder="aside.fuelRankEmpty"
-          labTooltip="aside.fuelRankTooltip"
+          placeholder="settings.fuelRankEmpty"
+          labTooltip="settings.fuelRankTooltip"
           labTooltipPosition="adjacent"
           [options]="options().fuels"
           [ngModel]="settings().fuelRankIds"
@@ -334,7 +342,7 @@
     @if (!data().flags.has('hideMachineSettings')) {
       <div>
         <div class="mx-1 text-sm text-gray-300">
-          {{ 'aside.machineRank' | translate }}
+          {{ 'settings.machineRank' | translate }}
         </div>
         <div class="flex">
           <span
@@ -414,7 +422,7 @@
                     "
                     [labTooltip]="machineId"
                     labTooltipType="machine"
-                    labTooltipAction="aside.machineTooltip"
+                    labTooltipAction="settings.machineTooltip"
                     [ngModel]="machineId"
                     (ngModelChange)="changeMachine($index, $event)"
                   ></lab-select>
@@ -448,13 +456,15 @@
                         rounded="none"
                         [options]="ms.moduleOptions"
                         [labTooltip]="
-                          ms.modules[0].id || 'aside.modifierTooltip'
+                          ms.modules[0].id || 'settings.modifierTooltip'
                         "
                         [labTooltipType]="
                           ms.modules[0].id ? 'module' : undefined
                         "
                         [labTooltipAction]="
-                          ms.modules[0].id ? 'aside.modifierTooltip' : undefined
+                          ms.modules[0].id
+                            ? 'settings.modifierTooltip'
+                            : undefined
                         "
                         [ngModel]="ms.modules[0].id"
                         (ngModelChange)="
@@ -512,7 +522,7 @@
                   rounded="end"
                   [faIcon]="faXmark"
                   [attr.aria-label]="
-                    'aside.removeMachinePreference' | translate
+                    'settings.removeMachinePreference' | translate
                   "
                   (click)="removeMachine(machineId)"
                 ></button>
@@ -526,7 +536,7 @@
     @if (data().flags.has('beacons')) {
       <div
         class="flex items-center"
-        labTooltip="aside.estimateBeaconPowerUsageTooltip"
+        labTooltip="settings.estimateBeaconPowerUsageTooltip"
         labTooltipPosition="adjacent"
       >
         <lab-checkbox
@@ -539,17 +549,17 @@
           "
         ></lab-checkbox>
         <label for="estimate-beacons" class="cursor-pointer ps-1 select-none">{{
-          'aside.estimateBeaconPowerUsage' | translate
+          'settings.estimateBeaconPowerUsage' | translate
         }}</label>
       </div>
     }
 
     @if (settings().beaconReceivers; as beaconReceivers) {
-      <lab-form-field label="aside.averageBeaconReceivers">
+      <lab-form-field label="settings.averageBeaconReceivers">
         <lab-input-number
           [buttons]="true"
           [minimum]="rational.one"
-          labTooltip="aside.averageBeaconReceiversTooltip"
+          labTooltip="settings.averageBeaconReceiversTooltip"
           labTooltipPosition="adjacent"
           [ngModel]="beaconReceivers"
           (ngModelChange)="settingsStore.apply({ beaconReceivers: $event })"
@@ -558,10 +568,10 @@
     }
 
     @if (data().flags.has('proliferator')) {
-      <lab-form-field label="aside.proliferatorSelfSpray">
+      <lab-form-field label="settings.proliferatorSelfSpray">
         <lab-select
           [options]="options().proliferatorModules"
-          labTooltip="aside.proliferatorSelfSprayTooltip"
+          labTooltip="settings.proliferatorSelfSprayTooltip"
           labTooltipPosition="adjacent"
           [ngModel]="settings().proliferatorSprayId"
           (ngModelChange)="settingsStore.apply({ proliferatorSprayId: $event })"
@@ -569,10 +579,10 @@
       </lab-form-field>
     }
 
-    <lab-form-field label="aside.defaultTransportBelt">
+    <lab-form-field label="settings.defaultTransportBelt">
       <lab-select
         [options]="options().belts"
-        labTooltip="aside.defaultTransportBeltTooltip"
+        labTooltip="settings.defaultTransportBeltTooltip"
         labTooltipPosition="adjacent"
         [ngModel]="settings().beltId"
         (ngModelChange)="
@@ -582,11 +592,11 @@
     </lab-form-field>
 
     @if (data().flags.has('beltStack')) {
-      <lab-form-field label="aside.defaultStack">
+      <lab-form-field label="settings.defaultStack">
         <lab-input-number
           [buttons]="true"
           [minimum]="rational.one"
-          labTooltip="aside.defaultStackTooltip"
+          labTooltip="settings.defaultStackTooltip"
           labTooltipPosition="adjacent"
           [ngModel]="settings().stack ?? rational.one"
           (ngModelChange)="settingsStore.apply({ stack: $event })"
@@ -595,10 +605,10 @@
     }
 
     @if (options().pipes.length > 1) {
-      <lab-form-field label="aside.defaultPipe">
+      <lab-form-field label="settings.defaultPipe">
         <lab-select
           [options]="options().pipes"
-          labTooltip="aside.defaultPipeTooltip"
+          labTooltip="settings.defaultPipeTooltip"
           labTooltipPosition="adjacent"
           [ngModel]="settings().pipeId"
           (ngModelChange)="
@@ -613,10 +623,10 @@
     }
 
     @if (options().cargoWagons.length > 1) {
-      <lab-form-field label="aside.defaultCargoWagon">
+      <lab-form-field label="settings.defaultCargoWagon">
         <lab-select
           [options]="options().cargoWagons"
-          labTooltip="aside.defaultCargoWagonTooltip"
+          labTooltip="settings.defaultCargoWagonTooltip"
           labTooltipPosition="adjacent"
           [ngModel]="settings().cargoWagonId"
           (ngModelChange)="
@@ -631,10 +641,10 @@
     }
 
     @if (options().fluidWagons.length > 1) {
-      <lab-form-field label="aside.defaultFluidWagon">
+      <lab-form-field label="settings.defaultFluidWagon">
         <lab-select
           [options]="options().fluidWagons"
-          labTooltip="aside.defaultFluidWagonTooltip"
+          labTooltip="settings.defaultFluidWagonTooltip"
           labTooltipPosition="adjacent"
           [ngModel]="settings().fluidWagonId"
           (ngModelChange)="
@@ -649,30 +659,30 @@
     }
 
     @if (data().flags.has('flowRate')) {
-      <lab-form-field label="aside.pipeFlowRate">
+      <lab-form-field label="settings.pipeFlowRate">
         <div class="flex items-stretch">
           <lab-input-number
             [minimum]="rational.one"
             [step]="rational(100)"
             rounded="start"
-            labTooltip="aside.pipeFlowRateTooltip"
+            labTooltip="settings.pipeFlowRateTooltip"
             labTooltipPosition="adjacent"
             [ngModel]="settings().flowRate"
             (ngModelChange)="settingsStore.apply({ flowRate: $event })"
           ></lab-input-number>
           <span
             class="flex items-center rounded-e-xs border border-s-0 border-gray-600 px-2 text-nowrap"
-            >{{ 'aside.flowRateUnit' | translate }}</span
+            >{{ 'settings.flowRateUnit' | translate }}</span
           >
         </div>
       </lab-form-field>
     }
 
     @if (data().flags.has('inserterEstimation')) {
-      <lab-form-field label="aside.inserterTarget">
+      <lab-form-field label="settings.inserterTarget">
         <lab-select
           [options]="inserterTargetOptions"
-          labTooltip="aside.inserterTargetTooltip"
+          labTooltip="settings.inserterTargetTooltip"
           labTooltipPosition="adjacent"
           [ngModel]="settings().inserterTarget"
           (ngModelChange)="settingsStore.apply({ inserterTarget: $event })"
@@ -688,15 +698,15 @@
     data().flags.has('researchSpeed') ||
     data().prodUpgradeTechs.length
   ) {
-    <lab-accordion-item text="aside.bonuses">
+    <lab-accordion-item text="settings.bonuses">
       @if (data().flags.has('miningSpeed')) {
-        <lab-form-field label="aside.miningSpeed">
+        <lab-form-field label="settings.miningSpeed">
           <lab-input-number
             [percent]="true"
             [buttons]="true"
             [minimum]="rational(100)"
             [step]="rational(10)"
-            labTooltip="aside.miningSpeedTooltip"
+            labTooltip="settings.miningSpeedTooltip"
             labTooltipPosition="adjacent"
             [ngModel]="settings().miningBonus.add(rational(100))"
             (ngModelChange)="
@@ -707,13 +717,13 @@
       }
 
       @if (data().flags.has('miningProductivity')) {
-        <lab-form-field label="aside.miningProductivity">
+        <lab-form-field label="settings.miningProductivity">
           <lab-input-number
             [bonus]="true"
             [percent]="true"
             [buttons]="true"
             [step]="rational(10)"
-            labTooltip="aside.miningProductivityTooltip"
+            labTooltip="settings.miningProductivityTooltip"
             labTooltipPosition="adjacent"
             [ngModel]="settings().miningBonus"
             (ngModelChange)="settingsStore.apply({ miningBonus: $event })"
@@ -722,10 +732,10 @@
       }
 
       @if (data().flags.has('researchSpeed')) {
-        <lab-form-field label="aside.researchSpeed">
+        <lab-form-field label="settings.researchSpeed">
           <lab-select
             [options]="researchBonusOptions"
-            labTooltip="aside.researchSpeedTooltip"
+            labTooltip="settings.researchSpeedTooltip"
             labTooltipPosition="adjacent"
             [ngModel]="settings().researchBonus"
             (ngModelChange)="settingsStore.apply({ researchBonus: $event })"
@@ -734,10 +744,10 @@
       }
 
       @if (data().flags.has('inserterEstimation')) {
-        <lab-form-field label="aside.inserterCapacity">
+        <lab-form-field label="settings.inserterCapacity">
           <lab-select
             [options]="inserterCapacityOptions"
-            labTooltip="aside.inserterCapacityTooltip"
+            labTooltip="settings.inserterCapacityTooltip"
             labTooltipPosition="adjacent"
             [ngModel]="settings().inserterCapacity"
             (ngModelChange)="settingsStore.apply({ inserterCapacity: $event })"
@@ -750,8 +760,8 @@
           type="button"
           labButton
           [faIcon]="faArrowTrendUp"
-          text="aside.recipeProductivity"
-          labTooltip="aside.recipeProductivityTooltip"
+          text="settings.recipeProductivity"
+          labTooltip="settings.recipeProductivityTooltip"
           labTooltipPosition="adjacent"
           (click)="openRecipeProductivity()"
         ></button>

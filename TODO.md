@@ -1,8 +1,13 @@
 # TODO
 
+## DSP
+
+- Data causing hang?
+
 ## Header
 
 - Settings button? To pick language, etc.
+- Mobile positioning of user preferences button
 
 ## Machine Rate Pipe
 

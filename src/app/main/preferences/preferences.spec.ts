@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserPreferencesDialog } from './user-preferences-dialog';
+import { Preferences } from './preferences';
 
-describe('UserPreferencesDialog', () => {
-  let component: UserPreferencesDialog;
-  let fixture: ComponentFixture<UserPreferencesDialog>;
+describe('Preferences', () => {
+  let component: Preferences;
+  let fixture: ComponentFixture<Preferences>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UserPreferencesDialog]
+      imports: [Preferences]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UserPreferencesDialog);
+    fixture = TestBed.createComponent(Preferences);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

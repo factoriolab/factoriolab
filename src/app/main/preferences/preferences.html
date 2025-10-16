@@ -1,0 +1,200 @@
+<div
+  class="flex items-center justify-between border-b border-gray-600 p-2 md:min-h-16 md:p-3"
+>
+  <div class="flex grow items-center gap-3" labTooltip="preferences.tooltip">
+    <h2 class="text-2xl font-light">
+      {{ 'preferences.header' | translate }}
+    </h2>
+    <fa-icon [icon]="faCircleInfo"></fa-icon>
+  </div>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faArrowRotateLeft"
+    [border]="false"
+    labTooltip="reset"
+    [attr.aria-label]="'reset' | translate"
+    (click)="reset()"
+  ></button>
+  <button
+    type="button"
+    class="xl:inline-flex"
+    labButton
+    [faIcon]="faXmark"
+    [hide]="true"
+    [border]="false"
+    [attr.aria-label]="'settings.hide' | translate"
+    (click)="xlHidden.set(true)"
+  ></button>
+  <button
+    type="button"
+    class="xl:hidden"
+    labButton
+    [faIcon]="faXmark"
+    [border]="false"
+    [attr.aria-label]="'settings.hide' | translate"
+    (click)="open.set(false)"
+  ></button>
+</div>
+
+<div class="flex flex-col gap-2 p-4">
+  <div class="flex flex-col">
+    <span class="mx-1 text-sm text-gray-300">Saved states</span>
+    <div class="flex">
+      @if (editStatus()) {
+        <input
+          type="text"
+          class="input"
+          [placeholder]="'settings.nameSavedState' | translate"
+          required
+          [(ngModel)]="editValue"
+          (keydown.enter)="saveState()"
+        />
+        <button
+          type="button"
+          labButton
+          rounded="none"
+          class="-ms-px"
+          [faIcon]="faFloppyDisk"
+          labTooltip="settings.saveState"
+          [attr.aria-label]="'settings.saveState' | translate"
+          (click)="saveState()"
+        ></button>
+        <button
+          type="button"
+          labButton
+          rounded="end"
+          class="-ms-px"
+          [faIcon]="faXmark"
+          labTooltip="cancel"
+          [attr.aria-label]="'cancel' | translate"
+          (click)="editStatus.set(null)"
+        ></button>
+      } @else if (settingsStore.stateOptions().length) {
+        <lab-select
+          rounded="start"
+          [options]="settingsStore.stateOptions()"
+          placeholder="settings.selectSavedState"
+          labTooltip="settings.selectSavedState"
+          [ngModel]="state()"
+          (ngModelChange)="setState($event)"
+        ></lab-select>
+        @if (state(); as state) {
+          <button
+            type="button"
+            class="-ms-px"
+            labButton
+            rounded="end"
+            [faIcon]="faEllipsisVertical"
+            [attr.aria-label]="'settings.savedStateMenuLabel' | translate"
+            [cdkMenuTriggerFor]="editStateMenu"
+          ></button>
+          <ng-template #editStateMenu>
+            <div
+              class="flex flex-col rounded-xs border border-gray-600 bg-gray-950 py-1"
+              cdkMenu
+            >
+              <button
+                type="button"
+                labButton
+                cdkMenuItem
+                [border]="false"
+                [faIcon]="faPlus"
+                text="settings.createSavedState"
+                textAlign="left"
+                (click)="createState()"
+              ></button>
+              <button
+                type="button"
+                labButton
+                cdkMenuItem
+                [border]="false"
+                [faIcon]="faPencil"
+                text="settings.editSavedState"
+                textAlign="left"
+                (click)="editState(state)"
+              ></button>
+              <button
+                type="button"
+                labButton
+                cdkMenuItem
+                [border]="false"
+                [faIcon]="faTrash"
+                text="settings.deleteSavedState"
+                textAlign="left"
+                (click)="deleteState(state)"
+              ></button>
+            </div>
+          </ng-template>
+        } @else {
+          <button
+            type="button"
+            class="-ms-px"
+            labButton
+            rounded="end"
+            [faIcon]="faPlus"
+            labTooltip="settings.createSavedState"
+            [attr.aria-label]="'settings.createSavedState' | translate"
+            (click)="createState()"
+          ></button>
+        }
+      } @else {
+        <button
+          type="button"
+          labButton
+          class="w-full"
+          [faIcon]="faPlus"
+          text="settings.createSavedState"
+          (click)="createState()"
+        ></button>
+      }
+    </div>
+  </div>
+
+  <lab-form-field label="userPreferences.language">
+    <lab-select
+      [options]="languageOptions"
+      [ngModel]="preferences().language"
+      (ngModelChange)="apply({ language: $event })"
+    ></lab-select>
+  </lab-form-field>
+
+  <lab-form-field label="userPreferences.theme">
+    <lab-select
+      [options]="themeOptions"
+      [ngModel]="preferences().theme"
+      (ngModelChange)="apply({ theme: $event })"
+    ></lab-select>
+  </lab-form-field>
+
+  <lab-form-field label="userPreferences.hue">
+    <lab-hue
+      [ngModel]="preferences().hue"
+      (ngModelChange)="apply({ hue: $event })"
+    ></lab-hue>
+  </lab-form-field>
+
+  <div class="flex items-center">
+    <lab-checkbox
+      controlId="bypass-landing"
+      [ngModel]="preferences().bypassLanding"
+      (ngModelChange)="apply({ bypassLanding: $event })"
+    ></lab-checkbox>
+    <label for="bypass-landing" class="cursor-pointer ps-1 select-none">{{
+      'userPreferences.bypassLanding' | translate
+    }}</label>
+  </div>
+
+  <div class="flex items-center">
+    <lab-checkbox
+      controlId="convert-objective-values"
+      [ngModel]="preferences().convertObjectiveValues"
+      (ngModelChange)="apply({ convertObjectiveValues: $event })"
+    ></lab-checkbox>
+    <label
+      for="convert-objective-values"
+      class="cursor-pointer ps-1 select-none"
+      >{{ 'userPreferences.convertObjectiveValues' | translate }}</label
+    >
+  </div>
+</div>

@@ -494,10 +494,12 @@
                         [iconOnly]="true"
                         [border]="false"
                         [options]="step.recipeSettings.moduleOptions ?? []"
-                        [labTooltip]="modules[0].id || 'aside.modifierTooltip'"
+                        [labTooltip]="
+                          modules[0].id || 'settings.modifierTooltip'
+                        "
                         [labTooltipType]="modules[0].id ? 'module' : undefined"
                         [labTooltipAction]="
-                          modules[0].id ? 'aside.modifierTooltip' : undefined
+                          modules[0].id ? 'settings.modifierTooltip' : undefined
                         "
                         [ngModel]="modules[0].id"
                         (ngModelChange)="

@@ -24,6 +24,7 @@ import {
   faArrowUpRightFromSquare,
   faBoxesStacked,
   faChevronDown,
+  faCircleInfo,
   faCopy,
   faEllipsisVertical,
   faFlaskVial,
@@ -44,7 +45,6 @@ import { AccordionModule } from '~/components/accordion/accordion-module';
 import { BeaconsSelect } from '~/components/beacons-select/beacons-select';
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
-import { Confirm } from '~/components/confirm/confirm';
 import { FormField } from '~/components/form-field/form-field';
 import { Icon } from '~/components/icon/icon';
 import { InputNumber } from '~/components/input-number/input-number';
@@ -87,8 +87,8 @@ const host = cva(
 );
 
 @Component({
-  selector: 'aside[labAside], aside[lab-aside]',
-  exportAs: 'labAside',
+  selector: 'aside[labSettings], aside[lab-settings]',
+  exportAs: 'labSettings',
   imports: [
     FormsModule,
     CdkDrag,
@@ -111,15 +111,14 @@ const host = cva(
     Tooltip,
     TranslatePipe,
   ],
-  templateUrl: './aside.html',
+  templateUrl: './settings.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[class]': 'hostClass()' },
 })
-export class Aside {
+export class Settings {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly dialog = inject(Dialog);
-  private readonly confirm = inject(Confirm);
   private readonly hydration = inject(Hydration);
   protected readonly machinesStore = inject(MachinesStore);
   protected readonly picker = inject(Picker);
@@ -149,6 +148,7 @@ export class Aside {
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
   protected readonly faBoxesStacked = faBoxesStacked;
   protected readonly faChevronDown = faChevronDown;
+  protected readonly faCircleInfo = faCircleInfo;
   protected readonly faCopy = faCopy;
   protected readonly faEllipsisVertical = faEllipsisVertical;
   protected readonly faFlaskVial = faFlaskVial;
@@ -227,7 +227,9 @@ export class Aside {
   }
 
   openVersions(): void {
-    this.dialog.open(VersionsDialog, { data: { header: 'aside.modVersions' } });
+    this.dialog.open(VersionsDialog, {
+      data: { header: 'settings.modVersions' },
+    });
   }
 
   openTechnologies(): void {
@@ -296,7 +298,7 @@ export class Aside {
 
   openRecipeProductivity(): void {
     this.dialog.open(RecipeProductivityDialog, {
-      data: { header: 'aside.recipeProductivity' },
+      data: { header: 'settings.recipeProductivity' },
     });
   }
 }

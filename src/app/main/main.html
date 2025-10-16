@@ -1,18 +1,28 @@
-<aside #aside="labAside" labAside></aside>
+<aside #settings="labSettings" labSettings></aside>
 <div
   role="none"
-  class="fixed z-2 hidden h-dvh w-dvw bg-gray-950/75 xl:hidden"
-  [class.hidden]="!aside.open()"
-  (click)="aside.open.set(false)"
+  class="fixed z-5 hidden h-dvh w-dvw bg-gray-950/75 xl:hidden"
+  [class.hidden]="!settings.open()"
+  (click)="settings.open.set(false)"
+></div>
+<aside #preferences="labPreferences" labPreferences></aside>
+<div
+  role="none"
+  class="fixed z-5 hidden h-dvh w-dvw bg-gray-950/75 xl:hidden"
+  [class.hidden]="!preferences.open()"
+  (click)="preferences.open.set(false)"
 ></div>
 <div
   class="flex h-full flex-col transition-[margin]"
-  [class.xl:ms-80]="!aside.xlHidden()"
+  [class.xl:ms-80]="!settings.xlHidden()"
+  [class.xl:me-80]="!preferences.xlHidden()"
 >
   <header
     labHeader
-    [(asideOpen)]="aside.open"
-    [(asideXlHidden)]="aside.xlHidden"
+    [(preferencesOpen)]="preferences.open"
+    [(preferencesXlHidden)]="preferences.xlHidden"
+    [(settingsOpen)]="settings.open"
+    [(settingsXlHidden)]="settings.xlHidden"
   ></header>
   <main class="flex grow flex-col">
     <lab-objectives></lab-objectives>
