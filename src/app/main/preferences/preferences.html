@@ -175,6 +175,14 @@
     ></lab-hue>
   </lab-form-field>
 
+  <button
+    type="button"
+    labButton
+    [faIcon]="faTableColumns"
+    text="columns.header"
+    (click)="columns.open()"
+  ></button>
+
   <div class="flex items-center">
     <lab-checkbox
       controlId="bypass-landing"

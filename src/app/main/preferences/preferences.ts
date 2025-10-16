@@ -22,6 +22,7 @@ import {
   faPencil,
   faPlus,
   faRotateLeft,
+  faTableColumns,
   faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
@@ -30,6 +31,7 @@ import { map } from 'rxjs';
 
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
+import { Columns } from '~/components/columns/columns';
 import { Confirm } from '~/components/confirm/confirm';
 import { FormField } from '~/components/form-field/form-field';
 import { Select } from '~/components/select/select';
@@ -81,6 +83,7 @@ const host = cva(
 export class Preferences {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  protected readonly columns = inject(Columns);
   private readonly confirm = inject(Confirm);
   protected readonly preferencesStore = inject(PreferencesStore);
   protected readonly routerSync = inject(RouterSync);
@@ -107,6 +110,7 @@ export class Preferences {
   protected readonly apply = this.preferencesStore.apply.bind(
     this.preferencesStore,
   );
+  protected readonly faArrowRotateLeft = faArrowRotateLeft;
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
   protected readonly faCircleInfo = faCircleInfo;
   protected readonly faCopy = faCopy;
@@ -114,7 +118,7 @@ export class Preferences {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
-  protected readonly faArrowRotateLeft = faArrowRotateLeft;
+  protected readonly faTableColumns = faTableColumns;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   protected readonly languageOptions = languageOptions;
