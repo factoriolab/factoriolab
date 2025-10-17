@@ -2,7 +2,7 @@ import { Directive, DOCUMENT, inject } from '@angular/core';
 
 @Directive({
   selector: '[labRipple]',
-  host: { class: 'relative', '(mousedown)': 'ripple($event)' },
+  host: { class: 'relative overflow-hidden', '(mousedown)': 'ripple($event)' },
 })
 export class Ripple {
   private readonly document = inject(DOCUMENT);

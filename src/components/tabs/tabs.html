@@ -1,14 +1,16 @@
 @if (scroll.scrollWidth > scroll.clientWidth + 4 && scroll.scrollLeft !== 0) {
-  <button
-    type="button"
-    labButton
-    [faIcon]="faAngleLeft"
-    rounded="end"
-    tabindex="-1"
-    aria-hidden="true"
-    class="absolute left-0 z-1 h-full bg-gray-950 shadow-sm shadow-gray-700"
-    (click)="scrollNext(scroll, -1)"
-  ></button>
+  <div class="absolute left-0 z-1 h-full">
+    <button
+      type="button"
+      labButton
+      [faIcon]="faAngleLeft"
+      rounded="end"
+      tabindex="-1"
+      aria-hidden="true"
+      class="h-full bg-gray-950 shadow-sm shadow-gray-700"
+      (click)="scrollNext(scroll, -1)"
+    ></button>
+  </div>
 }
 <div
   #scroll
@@ -53,14 +55,16 @@
   scroll.scrollWidth > scroll.clientWidth + 4 &&
   scroll.scrollLeft <= scroll.scrollWidth - scroll.clientWidth - 2
 ) {
-  <button
-    type="button"
-    labButton
-    [faIcon]="faAngleRight"
-    tabindex="-1"
-    aria-hidden="true"
-    rounded="start"
-    class="absolute right-0 z-1 h-full bg-gray-950 shadow-sm shadow-gray-700"
-    (click)="scrollNext(scroll, 1)"
-  ></button>
+  <div class="absolute right-0 z-1 h-full">
+    <button
+      type="button"
+      labButton
+      [faIcon]="faAngleRight"
+      tabindex="-1"
+      aria-hidden="true"
+      rounded="start"
+      class="h-full bg-gray-950 shadow-sm shadow-gray-700"
+      (click)="scrollNext(scroll, 1)"
+    ></button>
+  </div>
 }

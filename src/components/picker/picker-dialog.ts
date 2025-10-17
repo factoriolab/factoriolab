@@ -49,7 +49,7 @@ let lastCategory: string | null = null;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex flex-col gap-2 lg:w-3xl xl:w-[80dvw] 2xl:w-[70dvw] p-3 pt-0 max-h-[50rem] h-[90dvh] sm:h-[80dvh]',
+      'flex flex-col gap-2 lg:w-3xl xl:w-[80dvw] 2xl:w-[70dvw] max-w-5xl p-3 pt-0 max-h-[50rem] h-[90dvh] sm:h-[80dvh]',
   },
 })
 export class PickerDialog {

@@ -8,14 +8,15 @@
     />
 
     @if (filter()) {
-      <button
-        type="button"
-        class="absolute right-0"
-        aria-hidden="true"
-        labButton
-        [faIcon]="faXmark"
-        (click)="filter.set('')"
-      ></button>
+      <div class="absolute right-0 z-3">
+        <button
+          type="button"
+          aria-hidden="true"
+          labButton
+          [faIcon]="faXmark"
+          (click)="filter.set('')"
+        ></button>
+      </div>
     } @else {
       <fa-icon
         class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
