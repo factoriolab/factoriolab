@@ -132,6 +132,9 @@ export class Settings {
   readonly params = toSignal(
     this.route.queryParams.pipe(map(() => window.location.search.substring(1))),
   );
+  protected readonly miningSpeed = computed(() =>
+    this.settings().miningBonus.add(rational(100n)),
+  );
 
   protected readonly CostSettingsDialog = CostSettingsDialog;
   protected readonly data = this.settingsStore.dataset;
@@ -236,5 +239,9 @@ export class Settings {
     this.dialog.open(RecipeProductivityDialog, {
       data: { header: 'settings.recipeProductivity' },
     });
+  }
+
+  onChange(event: unknown): void {
+    console.log(event);
   }
 }

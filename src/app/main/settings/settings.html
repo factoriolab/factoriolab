@@ -592,7 +592,7 @@
             [step]="rational(10)"
             labTooltip="settings.miningSpeedTooltip"
             labTooltipPosition="adjacent"
-            [ngModel]="settings().miningBonus.add(rational(100))"
+            [ngModel]="miningSpeed()"
             (ngModelChange)="
               settingsStore.apply({ miningBonus: $event.sub(rational(100)) })
             "
