@@ -399,8 +399,8 @@
     "resetMessage": "Do you want to keep your saved states?<br>Selecting no will remove ALL saved data in this browser and reload the page."
   },
   "settings": {
+    "addMachine": "Add machine",
     "tooltip": "The settings in this panel are included in the shareable URL.",
-    "addMachineTooltip": "Add a machine preference",
     "advanced": "Advanced",
     "allTechsResearched": "All technologies researched",
     "applyQueryParams": "Apply query parameters",

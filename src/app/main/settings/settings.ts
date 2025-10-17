@@ -135,6 +135,7 @@ export class Settings {
   protected readonly miningSpeed = computed(() =>
     this.settings().miningBonus.add(rational(100n)),
   );
+  protected readonly addMachineValue = signal<string | null>(null);
 
   protected readonly CostSettingsDialog = CostSettingsDialog;
   protected readonly data = this.settingsStore.dataset;
@@ -185,6 +186,11 @@ export class Settings {
       ids,
       settings.defaultMachineRankIds,
     );
+
+    // Reset control value
+    setTimeout(() => {
+      this.addMachineValue.set(null);
+    });
   }
 
   changeMachine(index: number, value: string): void {
@@ -239,9 +245,5 @@ export class Settings {
     this.dialog.open(RecipeProductivityDialog, {
       data: { header: 'settings.recipeProductivity' },
     });
-  }
-
-  onChange(event: unknown): void {
-    console.log(event);
   }
 }
