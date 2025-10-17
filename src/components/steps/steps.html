@@ -605,8 +605,17 @@
         }
       </tr>
       @if (expanded) {
-        <tr class="transition-all" animate.enter="animate-enter-translate-y">
-          <td colspan="100">expansion row</td>
+        <tr>
+          <td colspan="100" class="h-auto p-0">
+            <div class="flex flex-col bg-gray-900">
+              <div
+                class="grid grid-rows-[1fr] overflow-hidden transition-[grid-template-rows] duration-300 starting:grid-rows-[0fr]"
+                animate.leave="animate-shrink-y"
+              >
+                <div class="min-h-0">hello from expansion content</div>
+              </div>
+            </div>
+          </td>
         </tr>
       }
     }

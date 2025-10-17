@@ -146,8 +146,6 @@
   --animate-fade-y: fade-y 300ms var(--default-transition-timing-function);
   --animate-fade: fade var(--default-transition-duration)
     var(--default-transition-timing-function);
-  --animate-enter-translate-y: translate-y var(--default-transition-duration)
-    var(--default-transition-timing-function);
   --animate-ripple: ripple-animation 300ms linear forwards;
   --animate-shrink-y: shrink-y 300ms var(--default-transition-timing-function);
 
@@ -184,18 +182,6 @@
     100% {
       opacity: 0;
       scale: 1 0.75;
-    }
-  }
-
-  @keyframes translate-y {
-    0% {
-      transform: translateY(-25%);
-      opacity: 0;
-    }
-
-    100% {
-      transform: translateY(0);
-      opacity: 1;
     }
   }
 
