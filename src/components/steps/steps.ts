@@ -55,7 +55,7 @@ import { StepHrefPipe } from './pipes/step-href-pipe';
 import { RecipesSelect } from './recipes-select/recipes-select';
 import { SortColumn } from './sort-column';
 import { SortHeader } from './sort-header/sort-header';
-import { Totals } from './totals/totals';
+import { TotalCell } from './total-cell/total-cell';
 
 @Component({
   selector: 'lab-steps',
@@ -79,7 +79,7 @@ import { Totals } from './totals/totals';
     RecipesSelect,
     SortHeader,
     StepHrefPipe,
-    Totals,
+    TotalCell,
   ],
   templateUrl: './steps.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -111,12 +111,13 @@ export class Steps {
   protected readonly faTableColumns = faTableColumns;
   protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
+  protected readonly totals = this.objectivesStore.totals;
   protected readonly tree = this.objectivesStore.stepTree;
 
-  expandedSteps = signal<Set<string>>(new Set());
-  sort = signal<[SortColumn, -1 | 1] | null>(null);
+  protected readonly expandedSteps = signal<Set<string>>(new Set());
+  readonly sort = signal<[SortColumn, -1 | 1] | null>(null);
 
-  sortedSteps = computed(() => {
+  protected readonly sortedSteps = computed(() => {
     const sort = this.sort();
     let steps = this.objectivesStore.steps();
     if (sort == null) return steps;

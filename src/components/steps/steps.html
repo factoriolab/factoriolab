@@ -612,6 +612,50 @@
     }
   </tbody>
   @if (!focus()) {
-    <tfoot labTotals></tfoot>
+    <tfoot>
+      <tr>
+        <td></td>
+        @if (cols().checkbox.show) {
+          <td></td>
+        }
+        @if (cols().tree.show) {
+          <td></td>
+        }
+        <td colspan="3" class="text-center">{{ 'steps.total' | translate }}</td>
+        @if (cols().belts.show) {
+          <td colspan="2" labTotalCell [value]="totals().belts"></td>
+        }
+        @if (cols().wagons.show) {
+          <td colspan="2" labTotalCell [value]="totals().wagons"></td>
+        }
+        @if (cols().rockets.show) {
+          <td colspan="2"></td>
+        }
+        <td colspan="2" labTotalCell [value]="totals().machines"></td>
+        @if (cols().beacons.show) {
+          <td colspan="2" labTotalCell [value]="totals().beacons"></td>
+        }
+        @if (cols().power.show) {
+          <td>
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              totals().power
+                | power
+                  : cols().power.precision
+                  : objectivesStore.effectivePowerUnit()
+            }}</span>
+          </td>
+        }
+        @if (cols().pollution.show) {
+          <td>
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              totals().pollution | rate: cols().pollution.precision
+            }}</span>
+          </td>
+        }
+        @if (cols().link.show) {
+          <td></td>
+        }
+      </tr>
+    </tfoot>
   }
 </table>

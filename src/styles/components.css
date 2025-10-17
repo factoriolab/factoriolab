@@ -41,13 +41,17 @@
 
     td,
     th {
-      border-bottom: 1px solid var(--color-gray-600);
       padding-block: calc(var(--spacing) * 1);
       padding-inline: calc(var(--spacing) * 2);
+    }
+
+    tbody td,
+    thead th {
+      border-bottom: 1px solid var(--color-gray-600);
       height: 49px;
     }
 
-    th {
+    thead th {
       position: sticky;
       top: 0;
       z-index: 1;

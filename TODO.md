@@ -1,9 +1,5 @@
 # TODO
 
-## Machine Rate Pipe
-
-- Replace with machine (or recipe?) setting for percentages
-
 ## Icon
 
 - Invert

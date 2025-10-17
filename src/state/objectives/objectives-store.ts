@@ -7,6 +7,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { filter, pairwise, switchMap } from 'rxjs';
 
+import { TooltipType } from '~/components/tooltip/tooltip-type';
+import { IconType } from '~/data/icon-type';
 import { Option } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 import { Solver } from '~/solver/solver';
@@ -14,7 +16,7 @@ import { Step } from '~/solver/step';
 import { InterpolateParams } from '~/translate/translate';
 import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
-import { addValueByIds, toRecord } from '~/utils/record';
+import { toRecord } from '~/utils/record';
 
 import { Adjustment } from '../adjustment';
 import { ItemsStore } from '../items/items-store';
@@ -34,6 +36,7 @@ import { ObjectiveUnit } from './objective-unit';
 import { StepDetail } from './step-detail';
 import { StepDetailTab } from './step-detail-tab';
 import { StepOutput } from './step-output';
+import { TotalValue } from './total-value';
 
 @Injectable({ providedIn: 'root' })
 export class ObjectivesStore extends RecordStore<ObjectiveState> {
@@ -133,12 +136,10 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     const itemsState = this.itemsStore.settings();
     const data = this.recipesStore.adjustedDataset();
 
-    const belts: Record<string, Rational> = {};
-    const wagons: Record<string, Rational> = {};
-    const machines: Record<string, Rational> = {};
-    const modules: Record<string, Rational> = {};
-    const beacons: Record<string, Rational> = {};
-    const beaconModules: Record<string, Rational> = {};
+    const belts: Record<string, TotalValue> = {};
+    const wagons: Record<string, TotalValue> = {};
+    const machines: Record<string, TotalValue> = {};
+    const beacons: Record<string, TotalValue> = {};
     let power = rational.zero;
     let pollution = rational.zero;
 
@@ -148,9 +149,13 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         if (step.belts?.nonzero()) {
           const belt = itemsState[step.itemId].beltId;
           if (belt != null) {
-            if (!belts[belt]) belts[belt] = rational.zero;
+            belts[belt] ??= {
+              total: rational.zero,
+              iconType: 'item',
+              tooltipType: 'belt',
+            };
 
-            belts[belt] = belts[belt].add(step.belts.ceil());
+            belts[belt].total = belts[belt].total.add(step.belts.ceil());
           }
         }
 
@@ -158,11 +163,34 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         if (step.wagons?.nonzero()) {
           const wagon = itemsState[step.itemId].wagonId;
           if (wagon != null) {
-            if (!wagons[wagon]) wagons[wagon] = rational.zero;
+            wagons[wagon] ??= {
+              total: rational.zero,
+              iconType: 'item',
+              tooltipType: data.cargoWagonRecord[wagon]
+                ? 'cargo-wagon'
+                : 'fluid-wagon',
+            };
 
-            wagons[wagon] = wagons[wagon].add(step.wagons.ceil());
+            wagons[wagon].total = wagons[wagon].total.add(step.wagons.ceil());
           }
         }
+      }
+
+      function addValueByIds(
+        record: Record<string, TotalValue>,
+        ids: string[],
+        tooltipType: TooltipType,
+        value: Rational,
+      ): void {
+        ids.forEach((id) => {
+          record[id] ??= {
+            total: rational.zero,
+            iconType: 'item',
+            tooltipType,
+          };
+
+          record[id].total = record[id].total.add(value);
+        });
       }
 
       if (
@@ -177,22 +205,30 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
           if (!recipe.part && !recipe.flags.has('hideProducer')) {
             const settings = step.recipeSettings;
             let machine = settings.machineId;
+            let iconType: IconType = 'item';
+            let tooltipType: TooltipType = 'machine';
             if (machine && data.machineRecord[machine].totalRecipe) {
               // Use recipe id (vein type) in place of mining machine for DSP mining
               machine = step.recipeId;
+              iconType = 'recipe';
+              tooltipType = 'recipe';
             }
 
             if (machine != null) {
-              if (!machines[machine]) machines[machine] = rational.zero;
+              machines[machine] ??= {
+                total: rational.zero,
+                iconType,
+                tooltipType,
+              };
 
               const value = step.machines.ceil();
-              machines[machine] = machines[machine].add(value);
+              machines[machine].total = machines[machine].total.add(value);
 
               // Check for modules to add
               if (settings.modules != null) {
                 settings.modules.forEach((m) => {
                   if (!m.id || m.count == null) return;
-                  addValueByIds(modules, [m.id], value.mul(m.count));
+                  addValueByIds(machines, [m.id], 'module', value.mul(m.count));
                 });
               }
             }
@@ -208,16 +244,20 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
 
             if (beaconId == null || !total?.nonzero()) continue;
 
-            if (!beacons[beaconId]) beacons[beaconId] = rational.zero;
+            beacons[beaconId] ??= {
+              total: rational.zero,
+              iconType: 'item',
+              tooltipType: 'beacon',
+            };
 
             const value = total.ceil();
-            beacons[beaconId] = beacons[beaconId].add(value);
+            beacons[beaconId].total = beacons[beaconId].total.add(value);
 
             // Check for modules to add
             if (beacon.modules != null) {
               beacon.modules.forEach((m) => {
                 if (!m.id || m.count == null) return;
-                addValueByIds(beaconModules, [m.id], value.mul(m.count));
+                addValueByIds(beacons, [m.id], 'module', value.mul(m.count));
               });
             }
           }
@@ -235,9 +275,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
       belts,
       wagons,
       machines,
-      modules,
       beacons,
-      beaconModules,
       power,
       pollution,
     };

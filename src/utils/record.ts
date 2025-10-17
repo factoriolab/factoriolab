@@ -4,17 +4,6 @@ import { Rational, rational } from '~/rational/rational';
 
 import { spread } from './object';
 
-export function addValueByIds(
-  record: Record<string, Rational>,
-  ids: string[],
-  value: Rational,
-): void {
-  ids.forEach((id) => {
-    if (!record[id]) record[id] = rational.zero;
-    record[id] = record[id].add(value);
-  });
-}
-
 export function cloneRecord<T>(value: Record<string, T>): Record<string, T>;
 export function cloneRecord<T>(
   value: Record<string, T> | undefined,

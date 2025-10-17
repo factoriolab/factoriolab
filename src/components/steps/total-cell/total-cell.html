@@ -1,0 +1,15 @@
+<div class="flex">
+  <div class="flex w-0 grow flex-wrap gap-2">
+    @for (tot of value() | keyvalue: sortByValue; track tot.key) {
+      <div class="flex items-center gap-1">
+        <span class="font-mono whitespace-pre">{{ tot.value.total }}</span>
+        <lab-icon
+          [value]="tot.key"
+          [type]="tot.value.iconType"
+          [labTooltip]="tot.key"
+          [labTooltipType]="tot.value.tooltipType"
+        ></lab-icon>
+      </div>
+    }
+  </div>
+</div>
