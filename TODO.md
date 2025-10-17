@@ -38,4 +38,3 @@
 - Re-check tooltips
 - Apply sorting to tailwind classes in component files
 - Remove productivity adjustment for research products
-- Experiment with darker default text color

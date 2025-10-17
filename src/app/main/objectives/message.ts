@@ -20,7 +20,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 const host = cva(
-  'border rounded-xs py-2 px-3 border-l-8 max-w-3xl text-brand-50 bg-brand-950 items-center border-brand-600 gap-3',
+  'border rounded-xs py-2 px-3 border-l-8 max-w-3xl text-brand-100 bg-brand-950 items-center border-brand-600 gap-3',
   {
     variants: {
       hidden: {

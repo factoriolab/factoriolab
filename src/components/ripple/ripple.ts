@@ -12,7 +12,7 @@ export class Ripple {
     ripple.classList.add(
       'absolute',
       'rounded-full',
-      'bg-gray-50/40',
+      'bg-gray-100/40',
       'animate-ripple',
       'pointer-events-none',
     );

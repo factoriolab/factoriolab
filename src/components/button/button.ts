@@ -24,11 +24,11 @@ const host = cva(
   {
     variants: {
       color: {
-        gray: 'text-gray-50 outline-brand-600 focus-visible:border-brand-600',
+        gray: 'text-gray-100 outline-brand-600 focus-visible:border-brand-600',
         brand:
-          'text-brand-50 outline-gray-300 bg-brand-950 focus-visible:border-gray-600 z-1',
+          'text-brand-100 outline-gray-300 bg-brand-950 focus-visible:border-gray-600 z-1',
         complement:
-          'text-complement-50 outline-gray-300 bg-complement-950 focus-visible:border-gray-300 z-1',
+          'text-complement-100 outline-gray-300 bg-complement-950 focus-visible:border-gray-300 z-1',
       },
       size: {
         micro: 'w-9',

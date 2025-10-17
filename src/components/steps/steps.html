@@ -187,7 +187,7 @@
               @if (sort() == null && _tree.length) {
                 @for (trail of _tree; track $index) {
                   <div
-                    class="mb-6 self-end border-dotted border-gray-50"
+                    class="mb-6 self-end border-dotted border-gray-100"
                     [class]="{
                       'border-e-2': trail || $last,
                       'ms-2': $first,
@@ -198,7 +198,7 @@
                     }"
                   ></div>
                 }
-                <div class="w-2 border-t-2 border-dotted border-gray-50"></div>
+                <div class="w-2 border-t-2 border-dotted border-gray-100"></div>
               }
               <div class="z-1 flex flex-col items-center">
                 @if (step.itemId && step.recipeObjectiveId == null) {
