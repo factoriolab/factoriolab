@@ -181,26 +181,30 @@
         }
         <!-- Tree -->
         @if (!focus() && cols().tree.show) {
-          <td class="px-0 py-0 sm:px-2">
+          <td class="overflow-hidden px-0 py-0 sm:px-2">
             <div class="flex h-12 items-center">
-              @let _tree = objectivesStore.stepTree()[step.id];
-              @if (sort() == null && _tree.length) {
-                @for (trail of _tree; track $index) {
+              @let tree = objectivesStore.stepTree()[step.id];
+              @if (sort() == null && tree.length) {
+                @for (trail of tree; track $index) {
                   <div
-                    class="mb-6 self-end border-dotted border-gray-100"
+                    class="self-end border-e-2 border-dotted"
                     [class]="{
-                      'border-e-2': trail || $last,
+                      'border-gray-100': trail || $last,
                       'ms-2': $first,
                       'ms-4': !$first,
                       'sm:ms-4.5': $first,
                       'sm:ms-6': !$first,
                       'h-12.5': trail || $last,
+                      'mb-6': $last && !trail,
                     }"
                   ></div>
                 }
                 <div class="w-2 border-t-2 border-dotted border-gray-100"></div>
               }
-              <div class="z-1 flex flex-col items-center">
+
+              <div
+                class="relative flex h-full flex-col items-center justify-center"
+              >
                 @if (step.itemId && step.recipeObjectiveId == null) {
                   <lab-exclude-button
                     [itemId]="step.itemId"
@@ -215,6 +219,20 @@
                     labTooltipPosition="adjacent"
                     [labTooltipAdjustedRecipe]="step.recipe"
                   ></lab-icon>
+                }
+
+                @let nextId = sortedSteps()[$index + 1]?.id;
+                @if (nextId) {
+                  @let nextTree = objectivesStore.stepTree()[nextId];
+                  @if (nextTree.length > tree.length) {
+                    <span
+                      class="absolute bottom-0 -z-1 h-4 border-e-2 border-dotted border-gray-100"
+                      [class]="{
+                        'left-4.5': !tree.length,
+                        'left-4': tree.length,
+                      }"
+                    ></span>
+                  }
                 }
               </div>
             </div>

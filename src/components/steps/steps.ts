@@ -112,7 +112,6 @@ export class Steps {
   protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
   protected readonly totals = this.objectivesStore.totals;
-  protected readonly tree = this.objectivesStore.stepTree;
 
   protected readonly expandedSteps = signal<Set<string>>(new Set());
   readonly sort = signal<[SortColumn, -1 | 1] | null>(null);
