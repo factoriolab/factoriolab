@@ -12,6 +12,7 @@ import {
   model,
   viewChildren,
 } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +21,7 @@ import { IconType } from '~/data/icon-type';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
-import { Control } from '../control';
+import { Control, LAB_CONTROL } from '../control';
 import { Icon } from '../icon/icon';
 import { Ripple } from '../ripple/ripple';
 import { TabData } from './tab-data';
@@ -49,8 +50,19 @@ let nextUniqueId = 0;
     '[attr.aria-labelledby]': 'labelledBy() ?? null',
     '(keydown)': 'onKeydown($event)',
   },
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: Tabs,
+    },
+    { provide: LAB_CONTROL, useExisting: Tabs },
+  ],
 })
-export class Tabs extends Control<string> implements AfterViewInit {
+export class Tabs<T extends string = string>
+  extends Control<T>
+  implements AfterViewInit
+{
   private readonly ref = inject(ChangeDetectorRef);
   private readonly injector = inject(Injector);
   private readonly tabElements =
@@ -59,10 +71,10 @@ export class Tabs extends Control<string> implements AfterViewInit {
   private uniqueId = (nextUniqueId++).toString();
 
   readonly controlId = input(`lab-tabs-${this.uniqueId}`);
-  readonly value = model<string>();
+  readonly value = model<T>();
   readonly disabled = model(false);
   readonly labelledBy = input<string>();
-  readonly tabs = input.required<TabData[]>();
+  readonly tabs = input.required<TabData<T>[]>();
   readonly type = input<IconType>();
 
   protected readonly faAngleLeft = faAngleLeft;
@@ -88,6 +100,14 @@ export class Tabs extends Control<string> implements AfterViewInit {
   }
 
   onScrollEnd(): void {
+    this.checkAfterRender();
+  }
+
+  ngAfterViewInit(): void {
+    this.checkAfterRender();
+  }
+
+  private checkAfterRender(): void {
     afterNextRender(
       () => {
         this.ref.markForCheck();
@@ -96,8 +116,9 @@ export class Tabs extends Control<string> implements AfterViewInit {
     );
   }
 
-  ngAfterViewInit(): void {
-    this.ref.markForCheck();
+  select(tab: TabData<T>): void {
+    this.setValue(tab.value);
+    if (tab.command) tab.command();
   }
 
   onKeydown(event: KeyboardEvent): void {

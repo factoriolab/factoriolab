@@ -34,7 +34,6 @@ import {
 } from '~/data/schema/quality';
 import { parseRecipe, Recipe } from '~/data/schema/recipe';
 import { Technology } from '~/data/schema/technology';
-import { MenuItem } from '~/models/menu-item';
 import { getIdOptions, Option, OptionParams } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 import { flags } from '~/state/flags';
@@ -190,11 +189,11 @@ export class SettingsStore extends Store<SettingsState> {
       pipes: itemOptions(data.pipeIds, { tooltipType: 'pipe' }),
       cargoWagons: itemOptions(data.cargoWagonIds, {
         exclude: data.itemQIds,
-        tooltipType: 'cargo-wagon',
+        tooltipType: 'wagon',
       }),
       fluidWagons: itemOptions(data.fluidWagonIds, {
         exclude: data.itemQIds,
-        tooltipType: 'fluid-wagon',
+        tooltipType: 'wagon',
       }),
       fuels: itemOptions(data.fuelIds, {
         exclude: data.itemQIds,
@@ -243,7 +242,7 @@ export class SettingsStore extends Store<SettingsState> {
     );
   });
 
-  modMenuItem = computed((): MenuItem => {
+  modMenuItem = computed((): unknown => {
     const mod = this.mod();
 
     return {

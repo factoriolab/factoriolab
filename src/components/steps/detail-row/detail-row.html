@@ -1,0 +1,111 @@
+<td class="pe-0">
+  @if (items(); as items) {
+    <div class="flex items-center justify-end">
+      <span class="font-mono whitespace-pre">{{
+        items | rate: cols().items.precision
+      }}</span>
+    </div>
+  }
+</td>
+
+<td>
+  @if (itemId(); as itemId) {
+    <div class="flex items-center">
+      <lab-icon
+        [value]="itemId"
+        type="item"
+        [labTooltip]="itemId"
+        labTooltipType="item"
+        labTooltipPosition="adjacent"
+      ></lab-icon>
+    </div>
+  }
+</td>
+
+@if (cols().belts.show) {
+  <td class="pe-0">
+    @if (belts(); as belts) {
+      <div class="flex items-center justify-end">
+        <span class="font-mono whitespace-pre">{{
+          belts | rate: cols().belts.precision
+        }}</span>
+      </div>
+    }
+  </td>
+  <td>
+    @if (beltId(); as beltId) {
+      <div class="flex items-center">
+        <lab-icon
+          [value]="beltId"
+          type="item"
+          [text]="stack()?.gt(rational.one) ? stack()?.toString() : ''"
+          [labTooltip]="beltId"
+          labTooltipType="belt"
+          labTooltipPosition="adjacent"
+        ></lab-icon>
+      </div>
+    }
+  </td>
+}
+
+@if (cols().wagons.show) {
+  <td class="pe-0">
+    @if (wagons(); as wagons) {
+      <div class="flex items-center justify-end">
+        <span class="font-mono whitespace-pre">{{
+          wagons | rate: cols().wagons.precision
+        }}</span>
+      </div>
+    }
+  </td>
+  <td>
+    @if (wagonId(); as wagonId) {
+      <div class="flex items-center">
+        <lab-icon
+          [value]="wagonId"
+          type="item"
+          [labTooltip]="wagonId"
+          labTooltipType="wagon"
+          labTooltipPosition="adjacent"
+        ></lab-icon>
+      </div>
+    }
+  </td>
+}
+
+<td class="pe-0">
+  @if (
+    !data().machineRecord[machineId() ?? '']?.hideRate && machines();
+    as machines
+  ) {
+    <div class="flex items-center justify-end">
+      <span class="font-mono whitespace-pre">{{
+        machines | rate: cols().machines.precision
+      }}</span>
+    </div>
+  }
+</td>
+<td>
+  <div class="flex items-center">
+    @if (recipeId(); as recipeId) {
+      @let objId = recipeObjectiveId();
+      <lab-icon
+        [value]="recipeId"
+        type="recipe"
+        [text]="objId ? '#' + objId : ''"
+        [labTooltip]="recipeId"
+        labTooltipType="recipe"
+        labTooltipPosition="adjacent"
+      ></lab-icon>
+    }
+    @if (machineId(); as machineId) {
+      <lab-icon
+        [value]="machineId"
+        type="item"
+        [labTooltip]="machineId"
+        labTooltipType="machine"
+        labTooltipPosition="adjacent"
+      ></lab-icon>
+    }
+  </div>
+</td>

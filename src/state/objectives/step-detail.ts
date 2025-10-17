@@ -1,10 +1,11 @@
-import { MenuItem } from '~/models/menu-item';
+import { TabData } from '~/components/tabs/tab-data';
 import { Option } from '~/option/option';
 
+import { StepDetailTab } from './step-detail-tab';
 import { StepOutput } from './step-output';
 
 export interface StepDetail {
-  tabs: MenuItem[];
+  tabs: TabData<StepDetailTab>[];
   outputs: StepOutput[];
   recipeIds: string[];
   recipesEnabled: string[];

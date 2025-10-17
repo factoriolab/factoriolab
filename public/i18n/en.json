@@ -352,8 +352,7 @@
     "stepDetailTab": {
       "item": "Item",
       "machine": "Machine",
-      "recipe": "Recipe",
-      "recipes": "Recipes"
+      "recipe": "Recipe"
     },
     "theme": {
       "dark": "Dark",
@@ -500,6 +499,7 @@
   },
   "steps": {
     "beaconEachTooltip": "Beacons per machine",
+    "linkLabel": "Link to this step",
     "beaconTotalTooltip": "Total beacons",
     "beaconsUndoTooltip": "Undo all beacon modifications",
     "beltSelectTooltip": "Click to select belt and stack size",

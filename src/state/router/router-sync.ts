@@ -195,7 +195,7 @@ export class RouterSync {
 
   async updateUrl(zState: ZipState): Promise<void> {
     const queryParams = await this.getHash(zState);
-    await this.router.navigate([], { queryParams });
+    await this.router.navigate([], { queryParams, preserveFragment: true });
     const url = this.router.url;
     const path = url.split('?')[0];
     // Only cache list / flow routes

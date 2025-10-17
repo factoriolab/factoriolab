@@ -1,24 +1,32 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { AsyncPipe } from '@angular/common';
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
+  DOCUMENT,
   inject,
+  Injector,
   input,
+  linkedSignal,
+  OnInit,
   signal,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   faAngleRight,
   faArrowRotateLeft,
   faArrowUpRightFromSquare,
   faFileArrowDown,
+  faLink,
   faRotateLeft,
   faSquareCheck,
   faTableColumns,
 } from '@fortawesome/free-solid-svg-icons';
+import { combineLatestWith, filter, take } from 'rxjs';
 
 import { RatePipe } from '~/components/steps/pipes/rate-pipe';
 import { Exporter } from '~/exporter/exporter';
@@ -31,14 +39,17 @@ import { ItemsStore } from '~/state/items/items-store';
 import { MachinesStore } from '~/state/machines/machines-store';
 import { ModuleSettings } from '~/state/module-settings';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
+import { StepDetailTab } from '~/state/objectives/step-detail-tab';
 import { RecipeState } from '~/state/recipes/recipe-state';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { RouterSync } from '~/state/router/router-sync';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
+import { spread } from '~/utils/object';
 import { updateSetIds } from '~/utils/set';
 
+import { StepIdPipe } from '../../state/objectives/step-id-pipe';
 import { BeaconsSelect } from '../beacons-select/beacons-select';
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
@@ -47,8 +58,10 @@ import { Icon } from '../icon/icon';
 import { InputNumber } from '../input-number/input-number';
 import { ModulesSelect } from '../modules-select/modules-select';
 import { Select } from '../select/select';
+import { Tabs } from '../tabs/tabs';
 import { Tooltip } from '../tooltip/tooltip';
 import { BeltSelect } from './belt-select/belt-select';
+import { DetailRow } from './detail-row/detail-row';
 import { ExcludeButton } from './exclude-button/exclude-button';
 import { PowerPipe } from './pipes/power-pipe';
 import { StepHrefPipe } from './pipes/step-href-pipe';
@@ -70,22 +83,28 @@ import { TotalCell } from './total-cell/total-cell';
     InputNumber,
     ModulesSelect,
     Select,
+    Tabs,
     Tooltip,
     TranslatePipe,
     BeltSelect,
+    DetailRow,
     ExcludeButton,
     PowerPipe,
     RatePipe,
     RecipesSelect,
     SortHeader,
     StepHrefPipe,
+    StepIdPipe,
     TotalCell,
   ],
   templateUrl: './steps.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col gap-1 sm:gap-2' },
 })
-export class Steps {
+export class Steps implements OnInit {
+  private readonly document = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
+  protected readonly route = inject(ActivatedRoute);
   protected readonly dialog = inject(Dialog);
   protected readonly exporter = inject(Exporter);
   private readonly hydration = inject(Hydration);
@@ -101,20 +120,35 @@ export class Steps {
   protected readonly cols = this.settingsStore.columnsState;
   protected readonly ColumnsDialog = ColumnsDialog;
   protected readonly data = this.recipesStore.adjustedDataset;
+  protected readonly details = this.objectivesStore.stepDetails;
   protected readonly displayRateInfo = this.settingsStore.displayRateInfo;
   protected readonly faAngleRight = faAngleRight;
   protected readonly faArrowRotateLeft = faArrowRotateLeft;
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
   protected readonly faFileArrowDown = faFileArrowDown;
+  protected readonly faLink = faLink;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faSquareCheck = faSquareCheck;
   protected readonly faTableColumns = faTableColumns;
+  protected readonly items = this.itemsStore.settings;
   protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
   protected readonly totals = this.objectivesStore.totals;
 
   protected readonly expandedSteps = signal<Set<string>>(new Set());
   readonly sort = signal<[SortColumn, -1 | 1] | null>(null);
+  readonly activeTab = linkedSignal<Record<string, StepDetailTab>>(() => {
+    const steps = this.objectivesStore.steps();
+    const details = this.details();
+    return steps.reduce<Record<string, StepDetailTab>>((e, s) => {
+      const detail = details[s.id];
+      const id = StepIdPipe.transform(s);
+      if (detail) {
+        e[id] = detail.tabs[0].value;
+      }
+      return e;
+    }, {});
+  });
 
   protected readonly sortedSteps = computed(() => {
     const sort = this.sort();
@@ -132,6 +166,41 @@ export class Steps {
     );
     return steps;
   });
+
+  ngOnInit(): void {
+    this.route.fragment
+      .pipe(
+        take(1),
+        filter((f) => f != null),
+        combineLatestWith(
+          toObservable(this.objectivesStore.steps, { injector: this.injector }),
+        ),
+        filter(([_, steps]) => steps.length > 0),
+        take(1),
+      )
+      .subscribe(([fragment, steps]) => {
+        const step = StepIdPipe.find(fragment, steps);
+        if (step == null) return;
+
+        // Toggle the selected step to be expanded
+        this.toggleStep(step);
+
+        // Scroll the selected step into view
+        const [type, id, tab] = fragment.split('_');
+        afterNextRender(
+          () => {
+            this.document.querySelector(`#${type}_${id}`)?.scrollIntoView();
+          },
+          { injector: this.injector },
+        );
+
+        // If included, open the selected tab
+        if (tab)
+          this.activeTab.update((value) =>
+            spread(value, { [id]: tab as StepDetailTab }),
+          );
+      });
+  }
 
   changeSort(column: SortColumn): void {
     this.sort.update((current) => {
@@ -270,5 +339,9 @@ export class Steps {
   resetBeacons(): void {
     this.objectivesStore.resetFields('beacons');
     this.recipesStore.resetFields('beacons');
+  }
+
+  setActiveTab(id: string, tab: StepDetailTab): void {
+    this.activeTab.update((value) => spread(value, { [id]: tab }));
   }
 }

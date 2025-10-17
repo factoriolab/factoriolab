@@ -102,7 +102,7 @@
       ></th>
       <!-- Beacons -->
       @if (cols().beacons.show) {
-        <th colspan="2">
+        <th>
           <div class="flex items-center gap-2">
             <span>{{ 'options.column.beacons' | translate }}</span>
             @if (objectivesStore.recipesModified().beacons) {
@@ -144,14 +144,7 @@
       <tr>
         <!-- Row Actions -->
         <td>
-          @let stepId = 'step_' + step.id;
-          <div [id]="stepId" class="hidden"></div>
-          @for (
-            item of objectivesStore.stepDetails()[step.id].tabs;
-            track item.label
-          ) {
-            <div [id]="stepId + '_' + item.label" class="hidden"></div>
-          }
+          <div [id]="step | stepId"></div>
           <div class="flex">
             @let tooltip = expanded ? 'steps.hideDetails' : 'steps.showDetails';
             <button
@@ -162,8 +155,6 @@
               [faIcon]="faAngleRight"
               [border]="false"
               [attr.aria-label]="tooltip | translate"
-              [labTooltip]="tooltip"
-              labTooltipPosition="adjacent"
               (click)="toggleStep(step)"
             ></button>
           </div>
@@ -239,7 +230,7 @@
           </td>
         }
         <!-- Items (Value & Icon) -->
-        <td>
+        <td class="pe-0">
           @if (step.surplus) {
             <span
               class="text-brand-400 flex justify-end font-mono whitespace-pre"
@@ -247,14 +238,14 @@
             >
           }
         </td>
-        <td class="w-0 pe-0">
+        <td class="w-0 px-0">
           @if (step.items) {
             <span class="flex justify-end font-mono whitespace-pre">{{
               step.items | rate: cols().items.precision
             }}</span>
           }
         </td>
-        <td class="ps-0">
+        <td>
           @if (step.itemId) {
             <div class="relative flex">
               <span
@@ -268,7 +259,7 @@
         </td>
         <!-- Belts (Value & Icon) -->
         @if (cols().belts.show) {
-          <td>
+          <td class="pe-0">
             @if (step.belts) {
               <span class="flex justify-end font-mono whitespace-pre">{{
                 step.belts | rate: cols().belts.precision
@@ -276,10 +267,7 @@
             }
           </td>
           <td>
-            @if (
-              step.itemId && itemsStore.settings()[step.itemId];
-              as itemSettings
-            ) {
+            @if (step.itemId && items()[step.itemId]; as itemSettings) {
               @if (itemSettings.beltId; as beltId) {
                 <div class="flex items-center">
                   @if (
@@ -344,7 +332,7 @@
         }
         <!-- Wagons (Value & Icon) -->
         @if (cols().wagons.show) {
-          <td>
+          <td class="pe-0">
             @if (step.wagons) {
               <span class="flex justify-end font-mono whitespace-pre">{{
                 step.wagons | rate: cols().wagons.precision
@@ -352,10 +340,7 @@
             }
           </td>
           <td>
-            @if (
-              step.itemId && itemsStore.settings()[step.itemId];
-              as itemSettings
-            ) {
+            @if (step.itemId && items()[step.itemId]; as itemSettings) {
               @if (itemSettings.wagonId; as wagonId) {
                 <div class="flex">
                   @if (
@@ -375,9 +360,7 @@
                         ]
                       "
                       [labTooltip]="wagonId"
-                      [labTooltipType]="
-                        type === 'cargo-wagon' ? 'cargo-wagon' : 'fluid-wagon'
-                      "
+                      labTooltipType="wagon"
                       labTooltipAction="steps.wagonTooltip"
                       labTooltipPosition="adjacent"
                       [ngModel]="wagonId"
@@ -398,7 +381,7 @@
         }
         <!-- Rockets (Value & Icon) -->
         @if (cols().rockets.show) {
-          <td>
+          <td class="pe-0">
             @if (step.rockets) {
               <span class="flex justify-end font-mono whitespace-pre">{{
                 step.rockets | rate: cols().rockets.precision
@@ -426,7 +409,7 @@
               }}</span>
             }
           </td>
-          <td class="ps-0">
+          <td>
             @if (step.recipeId && step.recipe && step.recipeSettings) {
               <div class="relative flex items-center gap-1">
                 <span
@@ -543,14 +526,14 @@
             }
           </td>
         } @else {
-          <td></td>
-          <td class="ps-0">
+          <td class="pe-0"></td>
+          <td>
             <lab-recipes-select [step]="step"></lab-recipes-select>
           </td>
         }
         <!-- Beacons -->
         @if (cols().beacons.show) {
-          <td colspan="2">
+          <td>
             @if (
               step.recipeId &&
               step.recipeSettings &&
@@ -622,7 +605,8 @@
           </td>
         }
       </tr>
-      @if (expanded) {
+      @let detail = details()[step.id];
+      @if (expanded && detail?.tabs; as tabs) {
         <tr>
           <td colspan="100" class="h-auto p-0">
             <div class="flex flex-col bg-gray-900">
@@ -630,7 +614,72 @@
                 class="grid grid-rows-[1fr] overflow-hidden transition-[grid-template-rows] duration-300 starting:grid-rows-[0fr]"
                 animate.leave="animate-shrink-y"
               >
-                <div class="min-h-0">hello from expansion content</div>
+                <div class="min-h-0">
+                  <div class="p-4">
+                    <div class="flex items-center gap-1">
+                      <a
+                        labButton
+                        [faIcon]="faLink"
+                        [border]="false"
+                        routerLink="."
+                        [relativeTo]="route"
+                        queryParamsHandling="preserve"
+                        [fragment]="step | stepId"
+                        [attr.aria-label]="'steps.linkLabel' | translate"
+                      ></a>
+                      @let id = step | stepId;
+                      <lab-tabs
+                        class="grow"
+                        [tabs]="tabs"
+                        [ngModel]="activeTab()[id]"
+                        (ngModelChange)="setActiveTab(id, $event)"
+                      ></lab-tabs>
+                    </div>
+                    @switch (activeTab()[id]) {
+                      @case ('item') {
+                        @if (step.itemId; as itemId) {
+                          <table class="table">
+                            <tr>
+                              <td colspan="100" class="font-semibold">
+                                {{ 'steps.sources' | translate }}
+                              </td>
+                            </tr>
+                            @for (output of detail.outputs; track $index) {
+                              <tr
+                                lab-detail-row
+                                [items]="step.items?.mul(output.value)"
+                                [itemId]="itemId"
+                                [belts]="step.belts?.mul(output.value)"
+                                [beltId]="items()[itemId].beltId"
+                                [stack]="items()[itemId].stack"
+                                [wagons]="step.wagons?.mul(output.value)"
+                                [wagonId]="items()[itemId].wagonId"
+                                [machines]="output.step?.machines"
+                                [recipeId]="output.step?.recipeId"
+                                [recipeObjectiveId]="
+                                  output.step?.recipeObjectiveId
+                                "
+                                [machineId]="
+                                  output.step?.recipeSettings?.machineId
+                                "
+                                [percent]="output.value"
+                                [percentOnDest]="true"
+                                [destId]="step.itemId"
+                                [isInput]="output.inputs"
+                              ></tr>
+                            }
+                          </table>
+                        }
+                      }
+                      @case ('recipe') {
+                        <span>recipe</span>
+                      }
+                      @case ('machine') {
+                        <span>machine</span>
+                      }
+                    }
+                  </div>
+                </div>
               </div>
             </div>
           </td>
@@ -660,7 +709,7 @@
         }
         <td colspan="2" labTotalCell [value]="totals().machines"></td>
         @if (cols().beacons.show) {
-          <td colspan="2" labTotalCell [value]="totals().beacons"></td>
+          <td labTotalCell [value]="totals().beacons"></td>
         }
         @if (cols().power.show) {
           <td>

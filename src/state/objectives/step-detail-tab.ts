@@ -1,15 +1,10 @@
-export enum StepDetailTab {
-  None = 'none',
-  Item = 'item',
-  Recipe = 'recipe',
-  Machine = 'machine',
-  Recipes = 'recipes',
-}
+import { IconDefinition } from '@fortawesome/angular-fontawesome';
+import { faBox, faFlask, faIndustry } from '@fortawesome/free-solid-svg-icons';
 
-export const stepDetailIcon: Record<StepDetailTab, string> = {
-  [StepDetailTab.None]: '',
-  [StepDetailTab.Item]: 'fa-solid fa-box',
-  [StepDetailTab.Recipe]: 'fa-solid fa-flask',
-  [StepDetailTab.Machine]: 'fa-solid fa-industry',
-  [StepDetailTab.Recipes]: 'fa-solid fa-flask-vial',
+export type StepDetailTab = 'item' | 'recipe' | 'machine';
+
+export const stepDetailIcon: Record<StepDetailTab, IconDefinition> = {
+  item: faBox,
+  recipe: faFlask,
+  machine: faIndustry,
 };

@@ -1,9 +1,10 @@
 import { IconDefinition } from '@fortawesome/angular-fontawesome';
 
-export interface TabData {
+export interface TabData<T = string> {
   label: string;
-  value: string;
+  value: T;
   icon?: string;
   faIcon?: IconDefinition;
   routerLink?: string;
+  command?: () => void;
 }

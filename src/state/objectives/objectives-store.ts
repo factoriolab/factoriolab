@@ -13,6 +13,7 @@ import { Option } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 import { Solver } from '~/solver/solver';
 import { Step } from '~/solver/step';
+import { StepIdPipe } from '~/state/objectives/step-id-pipe';
 import { InterpolateParams } from '~/translate/translate';
 import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
@@ -34,7 +35,7 @@ import { isRecipeObjective, ObjectiveBase, ObjectiveState } from './objective';
 import { ObjectiveType } from './objective-type';
 import { ObjectiveUnit } from './objective-unit';
 import { StepDetail } from './step-detail';
-import { StepDetailTab } from './step-detail-tab';
+import { stepDetailIcon, StepDetailTab } from './step-detail-tab';
 import { StepOutput } from './step-output';
 import { TotalValue } from './total-value';
 
@@ -166,9 +167,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
             wagons[wagon] ??= {
               total: rational.zero,
               iconType: 'item',
-              tooltipType: data.cargoWagonRecord[wagon]
-                ? 'cargo-wagon'
-                : 'fluid-wagon',
+              tooltipType: 'wagon',
             };
 
             wagons[wagon].total = wagons[wagon].total.add(step.wagons.ceil());
@@ -293,7 +292,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
       let recipesEnabled: string[] = [];
       if (s.itemId != null && s.items != null) {
         const itemId = s.itemId; // Store null-checked id
-        tabs.push(StepDetailTab.Item);
+        tabs.push('item');
         outputs.push(
           ...steps
             .filter(fnPropsNotNullish('outputs', 'recipeId', 'machines'))
@@ -319,12 +318,11 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         outputs.sort((a, b) => b.value.sub(a.value).toNumber());
       }
 
-      if (s.recipeId != null) tabs.push(StepDetailTab.Recipe);
-      if (s.machines?.nonzero()) tabs.push(StepDetailTab.Machine);
+      if (s.recipeId != null) tabs.push('recipe');
+      if (s.machines?.nonzero()) tabs.push('machine');
 
       if (s.itemId != null) {
         recipeIds = data.itemRecipeIds[s.itemId];
-        if (recipeIds.length) tabs.push(StepDetailTab.Recipes);
         recipesEnabled = recipeIds.filter(
           (r) => !settings.excludedRecipeIds.has(r),
         );
@@ -345,18 +343,19 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
       );
 
       e[s.id] = {
-        tabs: tabs.map((t) => {
-          const id = `step_${s.id}_${t}_tab`;
+        tabs: tabs.map((value) => {
+          const id = StepIdPipe.transform(s);
           return {
-            id,
-            label: t,
+            label: `options.stepDetailTab.${value}`,
+            value,
+            faIcon: stepDetailIcon[value],
             command:
               // istanbul ignore next: Simple assignment function; testing is unnecessary
               (): void => {
                 history.replaceState(
                   {},
                   '',
-                  `${window.location.href.replace(/#(.*)$/, '')}#${id}`,
+                  `${window.location.href.replace(/#(.*)$/, '')}#${id}_${value}`,
                 );
               },
           };

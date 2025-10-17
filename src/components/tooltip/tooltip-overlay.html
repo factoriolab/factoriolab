@@ -123,25 +123,21 @@
           </tr>
         </table>
       }
-      @case ('cargo-wagon') {
-        @if (item.cargoWagon; as wagon) {
-          <table>
+      @case ('wagon') {
+        <table>
+          @if (item.cargoWagon; as wagon) {
             <tr>
               <td>{{ 'data.storageSize' | translate }}</td>
               <td>{{ wagon.size }}</td>
             </tr>
-          </table>
-        }
-      }
-      @case ('fluid-wagon') {
-        @if (item.fluidWagon; as wagon) {
-          <table>
+          }
+          @if (item.fluidWagon; as wagon) {
             <tr>
               <td>{{ 'data.fluidCapacity' | translate }}</td>
               <td>{{ wagon.capacity }}</td>
             </tr>
-          </table>
-        }
+          }
+        </table>
       }
       @case ('fuel') {
         @if (item.fuel; as fuel) {

@@ -15,7 +15,12 @@
   >
     <div class="flex group-hover:opacity-40">
       @if (step().recipeId; as recipeId) {
-        <lab-icon type="recipe" [value]="recipeId"></lab-icon>
+        @let objId = step().recipeObjectiveId;
+        <lab-icon
+          type="recipe"
+          [value]="recipeId"
+          [text]="objId ? '#' + objId : ''"
+        ></lab-icon>
       } @else {
         <fa-icon [icon]="faFlaskVial"></fa-icon>
       }

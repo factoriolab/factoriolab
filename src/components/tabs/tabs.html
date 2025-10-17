@@ -17,31 +17,31 @@
   class="relative inline-flex grow overflow-hidden scroll-smooth"
   (scrollend)="onScrollEnd()"
 >
-  @for (opt of tabs(); track opt.value) {
+  @for (tab of tabs(); track tab.value) {
     <a
       #tab
       class="flex shrink-0 cursor-pointer items-center gap-2 overflow-hidden rounded-t-xs border-b-2 border-gray-600 px-3 py-2 select-none"
       role="tab"
       labRipple
-      [routerLink]="opt.routerLink"
+      [routerLink]="tab.routerLink"
       routerLinkActive
       queryParamsHandling="preserve"
-      (isActiveChange)="$event ? value.set(opt.value) : null"
+      (isActiveChange)="$event ? value.set(tab.value) : null"
       [class]="
-        opt.value === value()
+        tab.value === value()
           ? 'text-brand-400 group-focus-visible:outline-brand-400 -outline-offset-1 group-focus-visible:outline'
           : 'hover:text-brand-400'
       "
-      (click)="value.set(opt.value)"
+      (click)="select(tab)"
     >
-      @if (opt.faIcon) {
-        <fa-icon [icon]="opt.faIcon"></fa-icon>
+      @if (tab.faIcon) {
+        <fa-icon [icon]="tab.faIcon"></fa-icon>
       }
       @if (type(); as type) {
-        <lab-icon [type]="type" [value]="opt.icon ?? opt.value"></lab-icon>
+        <lab-icon [type]="type" [value]="tab.icon ?? tab.value"></lab-icon>
       }
       <span class="font-semibold lg:line-clamp-1" [class.hidden]="!!type()">{{
-        opt.label | translate
+        tab.label | translate
       }}</span>
     </a>
   }
