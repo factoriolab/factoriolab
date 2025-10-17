@@ -102,7 +102,7 @@
       ></th>
       <!-- Beacons -->
       @if (cols().beacons.show) {
-        <th>
+        <th colspan="2">
           <div class="flex items-center gap-2">
             <span>{{ 'options.column.beacons' | translate }}</span>
             @if (objectivesStore.recipesModified().beacons) {
@@ -223,19 +223,17 @@
         <!-- Items (Value & Icon) -->
         <td>
           @if (step.surplus) {
-            <div
+            <span
               class="text-brand-400 flex justify-end font-mono whitespace-pre"
+              >(+{{ step.surplus | rate: cols().items.precision }})</span
             >
-              (+{{ step.surplus | rate: cols().items.precision }})
-            </div>
           }
         </td>
         <td class="w-0 pe-0">
           @if (step.items) {
-            <div
-              class="flex justify-end font-mono whitespace-pre"
-              [innerHTML]="step.items | rate: cols().items.precision"
-            ></div>
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              step.items | rate: cols().items.precision
+            }}</span>
           }
         </td>
         <td class="ps-0">
@@ -254,9 +252,9 @@
         @if (cols().belts.show) {
           <td>
             @if (step.belts) {
-              <div class="flex justify-end font-mono whitespace-pre">
-                {{ step.belts | rate: cols().belts.precision }}
-              </div>
+              <span class="flex justify-end font-mono whitespace-pre">{{
+                step.belts | rate: cols().belts.precision
+              }}</span>
             }
           </td>
           <td>
@@ -330,9 +328,9 @@
         @if (cols().wagons.show) {
           <td>
             @if (step.wagons) {
-              <div class="flex justify-end font-mono whitespace-pre">
-                {{ step.wagons | rate: cols().wagons.precision }}
-              </div>
+              <span class="flex justify-end font-mono whitespace-pre">{{
+                step.wagons | rate: cols().wagons.precision
+              }}</span>
             }
           </td>
           <td>
@@ -384,15 +382,17 @@
         @if (cols().rockets.show) {
           <td>
             @if (step.rockets) {
-              <div class="flex justify-end font-mono whitespace-pre">
-                {{ step.rockets | rate: cols().rockets.precision }}
-              </div>
+              <span class="flex justify-end font-mono whitespace-pre">{{
+                step.rockets | rate: cols().rockets.precision
+              }}</span>
             }
           </td>
           <td>
-            <div class="flex items-center">
-              <lab-icon value="rocket-silo" type="item"></lab-icon>
-            </div>
+            @if (step.rockets) {
+              <div class="flex items-center">
+                <lab-icon value="rocket-silo" type="item"></lab-icon>
+              </div>
+            }
           </td>
         }
         <!-- Machines (Value & Icon) -->
@@ -403,9 +403,9 @@
               step.machines.nonzero() &&
               !data().machineRecord[machineId].hideRate
             ) {
-              <div class="flex justify-end font-mono whitespace-pre">
-                {{ step.machines | rate: cols().machines.precision }}
-              </div>
+              <span class="flex justify-end font-mono whitespace-pre">{{
+                step.machines | rate: cols().machines.precision
+              }}</span>
             }
           </td>
           <td class="ps-0">
@@ -532,7 +532,7 @@
         }
         <!-- Beacons -->
         @if (cols().beacons.show) {
-          <td>
+          <td colspan="2">
             @if (
               step.recipeId &&
               step.recipeSettings &&
@@ -552,26 +552,20 @@
         <!-- Power -->
         @if (cols().power.show) {
           <td>
-            @if (step.power) {
-              <div class="flex justify-end font-mono whitespace-pre">
-                {{
-                  step.power
-                    | power
-                      : cols().power.precision
-                      : objectivesStore.effectivePowerUnit()
-                }}
-              </div>
-            }
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              step.power
+                | power
+                  : cols().power.precision
+                  : objectivesStore.effectivePowerUnit()
+            }}</span>
           </td>
         }
         <!-- Pollution -->
         @if (cols().pollution.show) {
           <td>
-            @if (step.pollution) {
-              <span class="flex justify-end font-mono whitespace-pre">{{
-                step.pollution | rate: cols().pollution.precision
-              }}</span>
-            }
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              step.pollution | rate: cols().pollution.precision
+            }}</span>
           </td>
         }
         <!-- Link -->
@@ -617,4 +611,7 @@
       }
     }
   </tbody>
+  @if (!focus()) {
+    <tfoot labTotals></tfoot>
+  }
 </table>

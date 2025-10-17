@@ -8,17 +8,16 @@ import {
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { Control, LAB_CONTROL } from '~/components/control';
+import { Dropdown } from '~/components/dropdown/dropdown';
+import { Icon } from '~/components/icon/icon';
+import { InputNumber } from '~/components/input-number/input-number';
+import { Select } from '~/components/select/select';
+import { Tooltip } from '~/components/tooltip/tooltip';
 import { Rational, rational } from '~/rational/rational';
 import { ItemSettings } from '~/state/items/item-settings';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { spread } from '~/utils/object';
-
-import { Control, LAB_CONTROL } from '../control';
-import { Dropdown } from '../dropdown/dropdown';
-import { Icon } from '../icon/icon';
-import { InputNumber } from '../input-number/input-number';
-import { Select } from '../select/select';
-import { Tooltip } from '../tooltip/tooltip';
 
 let nextUniqueId = 0;
 

@@ -1,14 +1,5 @@
 # TODO
 
-## DSP
-
-- Data causing hang?
-
-## Header
-
-- Settings button? To pick language, etc.
-- Mobile positioning of user preferences button
-
 ## Machine Rate Pipe
 
 - Replace with machine (or recipe?) setting for percentages
@@ -38,3 +29,4 @@
 - Re-check tooltips
 - Apply sorting to tailwind classes in component files
 - Remove productivity adjustment for research products
+- Allow "none" for rocket / wagon / belt?

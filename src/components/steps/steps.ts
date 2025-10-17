@@ -40,7 +40,6 @@ import { coalesce } from '~/utils/nullish';
 import { updateSetIds } from '~/utils/set';
 
 import { BeaconsSelect } from '../beacons-select/beacons-select';
-import { BeltSelect } from '../belt-select/belt-select';
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
 import { ColumnsDialog } from '../columns-dialog/columns-dialog';
@@ -49,12 +48,14 @@ import { InputNumber } from '../input-number/input-number';
 import { ModulesSelect } from '../modules-select/modules-select';
 import { Select } from '../select/select';
 import { Tooltip } from '../tooltip/tooltip';
+import { BeltSelect } from './belt-select/belt-select';
 import { ExcludeButton } from './exclude-button/exclude-button';
 import { PowerPipe } from './pipes/power-pipe';
 import { StepHrefPipe } from './pipes/step-href-pipe';
 import { RecipesSelect } from './recipes-select/recipes-select';
 import { SortColumn } from './sort-column';
 import { SortHeader } from './sort-header/sort-header';
+import { Totals } from './totals/totals';
 
 @Component({
   selector: 'lab-steps',
@@ -63,21 +64,22 @@ import { SortHeader } from './sort-header/sort-header';
     FormsModule,
     RouterLink,
     BeaconsSelect,
-    BeltSelect,
     Button,
     Checkbox,
-    ExcludeButton,
     Icon,
     InputNumber,
     ModulesSelect,
+    Select,
+    Tooltip,
+    TranslatePipe,
+    BeltSelect,
+    ExcludeButton,
     PowerPipe,
     RatePipe,
     RecipesSelect,
-    Select,
     SortHeader,
     StepHrefPipe,
-    Tooltip,
-    TranslatePipe,
+    Totals,
   ],
   templateUrl: './steps.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

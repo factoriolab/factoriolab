@@ -4,7 +4,12 @@ import { Rational, rational } from '../../../rational/rational';
 
 @Pipe({ name: 'rate', standalone: true })
 export class RatePipe implements PipeTransform {
-  static transform(value: Rational, precision: number | null): string {
+  static transform(
+    value: Rational | null | undefined,
+    precision: number | null,
+  ): string {
+    if (value == null) return '';
+
     if (precision == null) return value.toFraction(true, true);
 
     if (precision === -2) {
@@ -31,7 +36,10 @@ export class RatePipe implements PipeTransform {
     return result;
   }
 
-  transform(value: Rational, precision: number | null): string {
+  transform(
+    value: Rational | null | undefined,
+    precision: number | null,
+  ): string {
     return RatePipe.transform(value, precision);
   }
 }

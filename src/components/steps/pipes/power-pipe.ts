@@ -8,10 +8,12 @@ import { Rational, rational } from '../../../rational/rational';
 @Pipe({ name: 'power' })
 export class PowerPipe implements PipeTransform {
   transform(
-    value: Rational,
+    value: Rational | null | undefined,
     precision: number | null,
     unit?: PowerUnit,
   ): string {
+    if (value == null) return '';
+
     switch (unit) {
       case PowerUnit.GW:
         return `${RatePipe.transform(
