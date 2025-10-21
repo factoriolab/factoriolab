@@ -58,6 +58,40 @@
       background-color: var(--color-gray-950);
       font-weight: var(--font-weight-semibold);
     }
+
+    tr.detail td {
+      background-color: var(--color-gray-900);
+      height: auto;
+    }
+
+    /* tr.detail > td {
+      transition-duration: 300ms;
+      transition-property: padding;
+      transition-timing-function: var(
+        --tw-ease,
+        var(--default-transition-timing-function)
+      );
+      height: auto;
+
+      @starting-style {
+        padding-block: 0;
+      }
+
+      > div {
+        transition-duration: 300ms;
+        transition-property: max-height;
+        transition-timing-function: var(
+          --tw-ease,
+          var(--default-transition-timing-function)
+        );
+        max-height: calc(var(--spacing) * 12);
+        overflow: hidden;
+
+        @starting-style {
+          max-height: 0;
+        }
+      }
+    } */
   }
 
   .link {

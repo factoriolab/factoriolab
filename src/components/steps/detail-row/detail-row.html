@@ -1,3 +1,5 @@
+<td [colSpan]="steps.leftSpan()"></td>
+
 <td class="pe-0">
   @if (items(); as items) {
     <div class="flex items-center justify-end">
@@ -73,6 +75,10 @@
   </td>
 }
 
+@if (cols().rockets.show) {
+  <td colspan="2"></td>
+}
+
 <td class="pe-0">
   @if (
     !data().machineRecord[machineId() ?? '']?.hideRate && machines();
@@ -85,7 +91,7 @@
     </div>
   }
 </td>
-<td>
+<td [colSpan]="machineIdSpan()">
   <div class="flex items-center">
     @if (recipeId(); as recipeId) {
       @let objId = recipeObjectiveId();
@@ -98,6 +104,7 @@
         labTooltipPosition="adjacent"
       ></lab-icon>
     }
+
     @if (machineId(); as machineId) {
       <lab-icon
         [value]="machineId"
@@ -106,6 +113,27 @@
         labTooltipType="machine"
         labTooltipPosition="adjacent"
       ></lab-icon>
+    }
+
+    @if (percent(); as percent) {
+      <div
+        class="flex items-center justify-center p-2"
+        [class.order-1]="!percentOnDest()"
+      >
+        <fa-icon [icon]="faArrowRightLong"></fa-icon>
+      </div>
+      <span class="font-mono whitespace-pre">{{
+        percent | rate: -2 | percentPad
+      }}</span>
+      @if (destId(); as destId) {
+        <lab-icon
+          class="order-2"
+          [value]="destId"
+          [type]="destType()"
+          [labTooltip]="destId"
+          [labTooltipType]="destType()"
+        ></lab-icon>
+      }
     }
   </div>
 </td>

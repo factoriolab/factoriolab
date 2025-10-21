@@ -1,5 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, KeyValue, KeyValuePipe } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -30,7 +30,7 @@ import { combineLatestWith, filter, take } from 'rxjs';
 
 import { RatePipe } from '~/components/steps/pipes/rate-pipe';
 import { Exporter } from '~/exporter/exporter';
-import { rational } from '~/rational/rational';
+import { Rational, rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { BeaconSettings } from '~/state/beacon-settings';
 import { Hydration } from '~/state/hydration';
@@ -75,6 +75,7 @@ import { TotalCell } from './total-cell/total-cell';
   imports: [
     AsyncPipe,
     FormsModule,
+    KeyValuePipe,
     RouterLink,
     BeaconsSelect,
     Button,
@@ -133,6 +134,7 @@ export class Steps implements OnInit {
   protected readonly items = this.itemsStore.settings;
   protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
+  protected readonly stepMap = this.objectivesStore.stepById;
   protected readonly totals = this.objectivesStore.totals;
 
   protected readonly expandedSteps = signal<Set<string>>(new Set());
@@ -165,6 +167,14 @@ export class Steps implements OnInit {
           .toNumber() * dir,
     );
     return steps;
+  });
+
+  readonly leftSpan = computed(() => {
+    const cols = this.cols();
+    let colspan = 2;
+    if (cols.checkbox.show) colspan++;
+    if (cols.tree.show) colspan++;
+    return colspan;
   });
 
   ngOnInit(): void {
@@ -343,5 +353,16 @@ export class Steps implements OnInit {
 
   setActiveTab(id: string, tab: StepDetailTab): void {
     this.activeTab.update((value) => spread(value, { [id]: tab }));
+  }
+
+  sortByValue(
+    a: KeyValue<string, Rational>,
+    b: KeyValue<string, Rational>,
+  ): number {
+    return b.value.sub(a.value).toNumber();
+  }
+
+  test(value: string): void {
+    console.log(value);
   }
 }

@@ -607,83 +607,108 @@
       </tr>
       @let detail = details()[step.id];
       @if (expanded && detail?.tabs; as tabs) {
-        <tr>
-          <td colspan="100" class="h-auto p-0">
-            <div class="flex flex-col bg-gray-900">
-              <div
-                class="grid grid-rows-[1fr] overflow-hidden transition-[grid-template-rows] duration-300 starting:grid-rows-[0fr]"
-                animate.leave="animate-shrink-y"
-              >
-                <div class="min-h-0">
-                  <div class="p-4">
-                    <div class="flex items-center gap-1">
-                      <a
-                        labButton
-                        [faIcon]="faLink"
-                        [border]="false"
-                        routerLink="."
-                        [relativeTo]="route"
-                        queryParamsHandling="preserve"
-                        [fragment]="step | stepId"
-                        [attr.aria-label]="'steps.linkLabel' | translate"
-                      ></a>
-                      @let id = step | stepId;
-                      <lab-tabs
-                        class="grow"
-                        [tabs]="tabs"
-                        [ngModel]="activeTab()[id]"
-                        (ngModelChange)="setActiveTab(id, $event)"
-                      ></lab-tabs>
-                    </div>
-                    @switch (activeTab()[id]) {
-                      @case ('item') {
-                        @if (step.itemId; as itemId) {
-                          <table class="table">
-                            <tr>
-                              <td colspan="100" class="font-semibold">
-                                {{ 'steps.sources' | translate }}
-                              </td>
-                            </tr>
-                            @for (output of detail.outputs; track $index) {
-                              <tr
-                                lab-detail-row
-                                [items]="step.items?.mul(output.value)"
-                                [itemId]="itemId"
-                                [belts]="step.belts?.mul(output.value)"
-                                [beltId]="items()[itemId].beltId"
-                                [stack]="items()[itemId].stack"
-                                [wagons]="step.wagons?.mul(output.value)"
-                                [wagonId]="items()[itemId].wagonId"
-                                [machines]="output.step?.machines"
-                                [recipeId]="output.step?.recipeId"
-                                [recipeObjectiveId]="
-                                  output.step?.recipeObjectiveId
-                                "
-                                [machineId]="
-                                  output.step?.recipeSettings?.machineId
-                                "
-                                [percent]="output.value"
-                                [percentOnDest]="true"
-                                [destId]="step.itemId"
-                                [isInput]="output.inputs"
-                              ></tr>
-                            }
-                          </table>
-                        }
-                      }
-                      @case ('recipe') {
-                        <span>recipe</span>
-                      }
-                      @case ('machine') {
-                        <span>machine</span>
-                      }
-                    }
-                  </div>
-                </div>
-              </div>
-            </div>
+        <tr class="detail">
+          <td labDetailCell class="border-b-0">
+            <a
+              labButton
+              [faIcon]="faLink"
+              [border]="false"
+              routerLink="."
+              [relativeTo]="route"
+              queryParamsHandling="preserve"
+              [fragment]="step | stepId"
+              [attr.aria-label]="'steps.linkLabel' | translate"
+            ></a>
+          </td>
+          <td labDetailCell colspan="100" class="border-b-0 px-0">
+            @let id = step | stepId;
+            <lab-tabs
+              class="grow"
+              [tabs]="tabs"
+              [ngModel]="activeTab()[id]"
+              (ngModelChange)="setActiveTab(id, $event)"
+            ></lab-tabs>
           </td>
         </tr>
+        @switch (activeTab()[id]) {
+          @case ('item') {
+            @if (step.itemId; as itemId) {
+              <tr class="detail">
+                <td labDetailCell [colSpan]="leftSpan()"></td>
+                <td colspan="100" class="font-semibold" labDetailCell>
+                  {{ 'steps.sources' | translate }}
+                </td>
+              </tr>
+              @for (output of detail.outputs; track $index) {
+                <tr
+                  labDetailRow
+                  [items]="step.items?.mul(output.value)"
+                  [itemId]="itemId"
+                  [belts]="step.belts?.mul(output.value)"
+                  [beltId]="items()[itemId].beltId"
+                  [stack]="items()[itemId].stack"
+                  [wagons]="step.wagons?.mul(output.value)"
+                  [wagonId]="items()[itemId].wagonId"
+                  [machines]="output.step?.machines"
+                  [recipeId]="output.step?.recipeId"
+                  [recipeObjectiveId]="output.step?.recipeObjectiveId"
+                  [machineId]="output.step?.recipeSettings?.machineId"
+                  [percent]="output.value"
+                  [percentOnDest]="true"
+                  [destId]="step.itemId"
+                  [isInput]="output.inputs"
+                ></tr>
+              }
+              @if (step.parents) {
+                <tr class="detail">
+                  <td [colSpan]="leftSpan()"></td>
+                  <td colspan="100">
+                    <div class="font-semibold">
+                      {{ 'steps.destinations' | translate }}
+                    </div>
+                  </td>
+                </tr>
+                @for (
+                  parent of step.parents | keyvalue: sortByValue;
+                  track parent.key
+                ) {
+                  <tr
+                    lab-detail-row
+                    [items]="step.items?.mul(parent.value)"
+                    [itemId]="itemId"
+                    [belts]="step.belts?.mul(parent.value)"
+                    [beltId]="items()[itemId].beltId"
+                    [stack]="items()[itemId].stack"
+                    [wagons]="step.wagons?.mul(parent.value)"
+                    [wagonId]="items()[itemId].wagonId"
+                    [machines]="
+                      details()[step.id].outputs.length === 1
+                        ? step.machines?.mul(parent.value)
+                        : undefined
+                    "
+                    [recipeId]="step.recipeId"
+                    [recipeObjectiveId]="step.recipeObjectiveId"
+                    [machineId]="
+                      details()[step.id].outputs.length === 1
+                        ? step.recipeSettings?.machineId
+                        : undefined
+                    "
+                    [percent]="parent.value"
+                    [destId]="stepMap()[parent.key]?.recipeId"
+                    destType="recipe"
+                    [isOutput]="parent.key === ''"
+                  ></tr>
+                }
+              }
+            }
+          }
+          @case ('recipe') {
+            <span>recipe</span>
+          }
+          @case ('machine') {
+            <span>machine</span>
+          }
+        }
       }
     }
   </tbody>
