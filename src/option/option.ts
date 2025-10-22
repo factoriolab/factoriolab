@@ -1,4 +1,5 @@
 import { IconDefinition } from '@fortawesome/angular-fontawesome';
+import { faSimCard } from '@fortawesome/free-solid-svg-icons';
 
 import { TooltipType } from '~/components/tooltip/tooltip-type';
 import { IconType } from '~/data/icon-type';
@@ -6,8 +7,7 @@ import { IconType } from '~/data/icon-type';
 export interface Option<T = string> {
   label: string;
   value: T;
-  faIcon?: IconDefinition;
-  icon?: string;
+  icon?: string | IconDefinition;
   iconType?: IconType;
   tooltip?: string;
   tooltipType?: TooltipType;
@@ -53,8 +53,7 @@ export function getIdOptions(
     list.unshift({
       label: 'none',
       value: '',
-      icon: 'module',
-      iconType: 'system',
+      icon: faSimCard,
     });
 
   return list;

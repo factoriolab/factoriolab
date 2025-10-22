@@ -5,11 +5,7 @@
     [class.group-hover:opacity-40]="iconOnly()"
     [class.opacity-40]="iconOnly() && opened()"
   >
-    @if (_selectedOption && _selectedOption.faIcon) {
-      <fa-icon [icon]="_selectedOption.faIcon"></fa-icon>
-    } @else if (
-      _selectedOption && _selectedOption.icon && _selectedOption.iconType
-    ) {
+    @if (_selectedOption && _selectedOption.icon) {
       <lab-icon
         [value]="_selectedOption.icon"
         [type]="_selectedOption.iconType"
@@ -124,9 +120,8 @@
                 [ngModel]="checked"
               ></lab-checkbox>
             }
-            @if (opt.faIcon) {
-              <fa-icon [icon]="opt.faIcon"></fa-icon>
-            } @else if (opt.icon && opt.iconType) {
+
+            @if (opt.icon) {
               <lab-icon [value]="opt.icon" [type]="opt.iconType"></lab-icon>
             }
             <span class="ms-1 line-clamp-1">{{ label }}</span>

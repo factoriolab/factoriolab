@@ -43,6 +43,7 @@ export class DetailRow {
   readonly percent = input<Rational>();
   readonly percentOnDest = input<boolean>();
   readonly destId = input<string>();
+  readonly destRecipeObjectiveId = input<string>();
   readonly destType = input<'item' | 'recipe'>('item');
   readonly isInput = input<boolean>();
   readonly isOutput = input<boolean>();

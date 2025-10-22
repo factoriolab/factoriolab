@@ -673,7 +673,7 @@
                   track parent.key
                 ) {
                   <tr
-                    lab-detail-row
+                    labDetailRow
                     [items]="step.items?.mul(parent.value)"
                     [itemId]="itemId"
                     [belts]="step.belts?.mul(parent.value)"
@@ -703,7 +703,129 @@
             }
           }
           @case ('recipe') {
-            <span>recipe</span>
+            @if (step.recipe; as recipe) {
+              @if (
+                data().flags.has('miningDepletion') &&
+                recipe.flags.has('mining')
+              ) {
+                <tr class="detail">
+                  <td [colSpan]="leftSpan()"></td>
+                  <td colspan="100">
+                    <div class="font-semibold">
+                      {{ 'steps.depletion' | translate }}
+                    </div>
+                  </td>
+                </tr>
+                @for (
+                  output of step.outputs | keyvalue: sortByValue;
+                  track output.key
+                ) {
+                  @let rowStep = stepItemMap()[output.key];
+                  @let rowPercent = step.outputs?.[output.key];
+                  @if (rowStep && rowStep.items && rowPercent) {
+                    <tr
+                      labDetailRow
+                      [items]="
+                        rowStep.items
+                          .mul(rowPercent)
+                          .div(step.recipe.effects.productivity)
+                      "
+                      [itemId]="output.key"
+                    ></tr>
+                  }
+                }
+              }
+
+              <tr class="detail">
+                <td [colSpan]="leftSpan()"></td>
+                <td colspan="100">
+                  <div class="font-semibold">
+                    {{ 'steps.inputs' | translate }}
+                  </div>
+                </td>
+              </tr>
+              <tr class="detail">
+                <td [colSpan]="leftSpan()"></td>
+                <td class="pe-0">
+                  <div class="flex items-center justify-end">
+                    <span class="font-mono whitespace-pre">{{
+                      step.recipe.time | rate: cols().items.precision
+                    }}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="flex items-center">
+                    <lab-icon [value]="faStopwatch"></lab-icon>
+                  </div>
+                </td>
+                <td colspan="100"></td>
+              </tr>
+              @for (
+                input of step.recipe.in | keyvalue: sortByValue;
+                track input.key
+              ) {
+                @let rowStep = stepItemMap()[input.key];
+                @let rowPercent = rowStep?.parents?.[step.id];
+                @let outputs = details()[rowStep.id].outputs;
+                @let output = outputs.length === 1 ? outputs[0] : undefined;
+                @if (rowStep && rowStep.itemId && rowPercent) {
+                  <tr
+                    labDetailRow
+                    [items]="rowStep.items?.mul(rowPercent)"
+                    [itemId]="input.key"
+                    [belts]="rowStep.belts?.mul(rowPercent)"
+                    [beltId]="items()[input.key].beltId"
+                    [stack]="items()[input.key].stack"
+                    [wagons]="rowStep.wagons?.mul(rowPercent)"
+                    [wagonId]="items()[input.key].wagonId"
+                    [machines]="output?.step?.machines?.mul(rowPercent)"
+                    [recipeId]="output?.step?.recipeId"
+                    [recipeObjectiveId]="output?.step?.recipeObjectiveId"
+                    [machineId]="output?.step?.recipeSettings?.machineId"
+                    [percent]="rowPercent"
+                    [destId]="step.recipeId"
+                    [destRecipeObjectiveId]="step.recipeObjectiveId"
+                    destType="recipe"
+                  ></tr>
+                }
+              }
+
+              <tr class="detail">
+                <td [colSpan]="leftSpan()"></td>
+                <td colspan="100">
+                  <div class="font-semibold">
+                    {{ 'steps.outputs' | translate }}
+                  </div>
+                </td>
+              </tr>
+              @for (
+                output of step.recipe.out | keyvalue: sortByValue;
+                track output.key
+              ) {
+                @let rowStep = stepItemMap()[output.key];
+                @let rowPercent = step.outputs?.[output.key];
+                @if (rowStep && rowStep.itemId && rowPercent) {
+                  <tr
+                    labDetailRow
+                    [items]="rowStep.items?.mul(rowPercent)"
+                    [itemId]="output.key"
+                    [belts]="rowStep.belts?.mul(rowPercent)"
+                    [beltId]="items()[output.key].beltId"
+                    [stack]="items()[output.key].stack"
+                    [wagons]="rowStep.wagons?.mul(rowPercent)"
+                    [wagonId]="items()[output.key].wagonId"
+                    [machines]="step.machines"
+                    [recipeId]="step.recipeId"
+                    [recipeObjectiveId]="step.recipeObjectiveId"
+                    [machineId]="step.recipeSettings?.machineId"
+                    [percent]="rowPercent"
+                    [percentOnDest]="true"
+                    [destId]="output.key"
+                    [destRecipeObjectiveId]="step.recipeObjectiveId"
+                  ></tr>
+                }
+              }
+            }
           }
           @case ('machine') {
             <span>machine</span>

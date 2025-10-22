@@ -24,6 +24,7 @@ import {
   faLink,
   faRotateLeft,
   faSquareCheck,
+  faStopwatch,
   faTableColumns,
 } from '@fortawesome/free-solid-svg-icons';
 import { combineLatestWith, filter, take } from 'rxjs';
@@ -130,11 +131,13 @@ export class Steps implements OnInit {
   protected readonly faLink = faLink;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faSquareCheck = faSquareCheck;
+  protected readonly faStopwatch = faStopwatch;
   protected readonly faTableColumns = faTableColumns;
   protected readonly items = this.itemsStore.settings;
   protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
   protected readonly stepMap = this.objectivesStore.stepById;
+  protected readonly stepItemMap = this.objectivesStore.stepByItemRecord;
   protected readonly totals = this.objectivesStore.totals;
 
   protected readonly expandedSteps = signal<Set<string>>(new Set());
@@ -197,9 +200,10 @@ export class Steps implements OnInit {
 
         // Scroll the selected step into view
         const [type, id, tab] = fragment.split('_');
+        const typeId = `${type}_${id}`;
         afterNextRender(
           () => {
-            this.document.querySelector(`#${type}_${id}`)?.scrollIntoView();
+            this.document.querySelector(`#${typeId}`)?.scrollIntoView();
           },
           { injector: this.injector },
         );
@@ -207,7 +211,7 @@ export class Steps implements OnInit {
         // If included, open the selected tab
         if (tab)
           this.activeTab.update((value) =>
-            spread(value, { [id]: tab as StepDetailTab }),
+            spread(value, { [typeId]: tab as StepDetailTab }),
           );
       });
   }

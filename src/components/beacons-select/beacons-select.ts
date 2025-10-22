@@ -7,7 +7,7 @@ import {
   model,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSimCard, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { Rational, rational } from '~/rational/rational';
 import { BeaconSettings } from '~/state/beacon-settings';
@@ -68,6 +68,7 @@ export class BeaconsSelect extends Control<BeaconSettings[]> {
   protected readonly editValue = linkedSignal(() => this.value() ?? []);
 
   protected readonly faPlus = faPlus;
+  protected readonly faSimCard = faSimCard;
   protected readonly faXmark = faXmark;
 
   open(): void {

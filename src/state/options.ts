@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { faSimCard } from '@fortawesome/free-solid-svg-icons';
 
 import { Beacon } from '~/data/schema/beacon';
 import { Machine, MachineJson } from '~/data/schema/machine';
@@ -141,8 +142,7 @@ export class Options {
       options.unshift({
         label: 'none',
         value: '',
-        icon: 'module',
-        iconType: 'system',
+        icon: faSimCard,
       });
     }
     return options;

@@ -1,6 +1,6 @@
 @let r = recipe();
 <div class="flex flex-wrap items-center justify-center">
-  <lab-icon value="time" type="system" [text]="r.time | round"></lab-icon>
+  <lab-icon [value]="faStopwatch" [text]="r.time | round"></lab-icon>
   @for (input of r.in | keyvalue; track input.key) {
     <lab-icon
       [value]="input.key"

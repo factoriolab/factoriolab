@@ -7,7 +7,10 @@ import {
   input,
 } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faArrowRightLong } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowRightLong,
+  faStopwatch,
+} from '@fortawesome/free-solid-svg-icons';
 
 import { RoundPipe } from '~/rational/round-pipe';
 import { RecipesStore } from '~/state/recipes/recipes-store';
@@ -33,6 +36,7 @@ export class RecipeProcess {
 
   protected readonly data = this.settingsStore.dataset;
   protected readonly faArrowRightLong = faArrowRightLong;
+  protected readonly faStopwatch = faStopwatch;
 
   protected readonly recipe = computed(
     () => this.data().recipeRecord[this.value()],
