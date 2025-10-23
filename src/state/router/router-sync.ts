@@ -935,10 +935,8 @@ export class RouterSync {
     rat('moc', (s) => s.overclock);
     rat('mbr', (s) => s.beaconReceivers);
     str('mps', (s) => s.proliferatorSprayId, hash.modules);
-    num('mit', (s) => s.inserterTarget);
     rat('bmi', (s) => s.miningBonus);
     rat('bre', (s) => s.researchBonus);
-    num('bic', (s) => s.inserterCapacity);
     sub(
       'tre',
       (s) => s.researchedTechnologyIds,
@@ -1000,10 +998,8 @@ export class RouterSync {
       overclock: rat('moc'),
       beaconReceivers: rat('mbr'),
       proliferatorSprayId: str('mps', hash?.modules),
-      inserterTarget: num('mit'),
       miningBonus: rat('bmi'),
       researchBonus: rat('bre'),
-      inserterCapacity: num('bic'),
       researchedTechnologyIds: sub('tre', modHash.technologies),
       locationIds: sub('loc', modHash.locations ?? []),
     };

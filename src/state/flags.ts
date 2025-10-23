@@ -7,7 +7,6 @@ export type Flag =
   | 'expensive'
   | 'hideMachineSettings'
   | 'inactiveDrain'
-  | 'inserterEstimation'
   | 'flowRate'
   | 'fluidCostRatio'
   | 'maximumFactor'
@@ -50,7 +49,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'beltStack',
     'diminishingBeacons',
     'fluidCostRatio',
-    'inserterEstimation',
     'maximumFactor',
     'minimumFactor',
     'miningDepletion',
@@ -67,7 +65,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'beacons',
     'diminishingBeacons',
     'fluidCostRatio',
-    'inserterEstimation',
     'maximumFactor',
     'minimumFactor',
     'miningDepletion',
@@ -82,7 +79,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'beacons',
     'diminishingBeacons',
     'fluidCostRatio',
-    'inserterEstimation',
     'maximumFactor',
     'minimumFactor',
     'miningDepletion',
@@ -98,7 +94,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'beacons',
     'flowRate',
     'fluidCostRatio',
-    'inserterEstimation',
     'minimumFactor',
     'minimumRecipeTime',
     'miningDepletion',
@@ -115,7 +110,6 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'expensive',
     'flowRate',
     'fluidCostRatio',
-    'inserterEstimation',
     'minimumFactor',
     'minimumRecipeTime',
     'miningDepletion',

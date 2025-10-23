@@ -58,8 +58,6 @@ import { MachinesStore } from '~/state/machines/machines-store';
 import { ModuleSettings } from '~/state/module-settings';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
-import { inserterCapacityOptions } from '~/state/settings/inserter-capacity';
-import { inserterTargetOptions } from '~/state/settings/inserter-target';
 import { maximizeTypeOptions } from '~/state/settings/maximize-type';
 import { researchBonusOptions } from '~/state/settings/research-bonus';
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -153,8 +151,6 @@ export class Settings {
   protected readonly faMicrochip = faMicrochip;
   protected readonly faXmark = faXmark;
   protected readonly gameOptions = gameOptions;
-  protected readonly inserterCapacityOptions = inserterCapacityOptions;
-  protected readonly inserterTargetOptions = inserterTargetOptions;
   protected readonly maximizeTypeOptions = maximizeTypeOptions;
   protected readonly options = this.settingsStore.options;
   protected readonly rational = rational;

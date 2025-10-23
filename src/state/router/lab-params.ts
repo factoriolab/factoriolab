@@ -65,8 +65,6 @@ export interface LabParams {
   mbe?: string;
   /** `Rational` Overclock */
   moc?: string;
-  /** `number` Inserter target */
-  mit?: string;
   /** `Rational` Beacon receivers */
   mbr?: string;
   /** `string` Proliferator spray */
@@ -75,8 +73,6 @@ export interface LabParams {
   bmi?: string;
   /** `Rational` Research bonus */
   bre?: string;
-  /** `number` Inserter capacity */
-  bic?: string;
   /** `Set` Researched technologies */
   tre?: string;
   /** V10 Legacy researched technologies */

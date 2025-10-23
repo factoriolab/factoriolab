@@ -3,8 +3,6 @@ import { Rational, rational } from '~/rational/rational';
 import { BeaconSettings } from '../beacon-settings';
 import { CostSettings } from './cost-settings';
 import { DisplayRate } from './display-rate';
-import { InserterCapacity } from './inserter-capacity';
-import { InserterTarget } from './inserter-target';
 import { MaximizeType } from './maximize-type';
 import { Preset } from './preset';
 import { researchBonusValue } from './research-bonus';
@@ -34,10 +32,8 @@ export interface SettingsState {
   overclock?: Rational;
   beaconReceivers?: Rational;
   proliferatorSprayId: string;
-  inserterTarget: InserterTarget;
   miningBonus: Rational;
   researchBonus: Rational;
-  inserterCapacity: InserterCapacity;
   researchedTechnologyIds?: Set<string>;
   locationIds?: Set<string>;
   costs: CostSettings;
@@ -59,10 +55,8 @@ export const initialSettingsState: SettingsState = {
   checkedRecipeIds: new Set(),
   netProductionOnly: false,
   proliferatorSprayId: '',
-  inserterTarget: InserterTarget.ExpressTransportBelt,
   miningBonus: rational.zero,
   researchBonus: researchBonusValue.speed6,
-  inserterCapacity: InserterCapacity.Capacity7,
   costs: {
     factor: rational.one,
     machine: rational.one,
