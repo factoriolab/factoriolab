@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { faSquarePen } from '@fortawesome/free-solid-svg-icons';
+import { faBan } from '@fortawesome/free-solid-svg-icons';
 
 import { Beacon } from '~/data/schema/beacon';
 import { Machine, MachineJson } from '~/data/schema/machine';
@@ -142,7 +142,7 @@ export class Options {
       options.unshift({
         label: 'none',
         value: '',
-        icon: faSquarePen,
+        icon: faBan,
       });
     }
     return options;

@@ -1,5 +1,5 @@
 import { IconDefinition } from '@fortawesome/angular-fontawesome';
-import { faSquarePen } from '@fortawesome/free-solid-svg-icons';
+import { faBan } from '@fortawesome/free-solid-svg-icons';
 
 import { TooltipType } from '~/components/tooltip/tooltip-type';
 import { IconType } from '~/data/icon-type';
@@ -53,7 +53,7 @@ export function getIdOptions(
     list.unshift({
       label: 'none',
       value: '',
-      icon: faSquarePen,
+      icon: faBan,
     });
 
   return list;
