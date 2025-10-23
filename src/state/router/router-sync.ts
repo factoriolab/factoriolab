@@ -1,12 +1,10 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { ActivatedRoute, EventType, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
-  audit,
   combineLatest,
-  first,
+  filter,
   firstValueFrom,
   map,
-  shareReplay,
   Subject,
   switchMap,
   tap,
@@ -111,14 +109,6 @@ export class RouterSync {
   zipTail: LabParams = { v: this.version };
   route$ = new Subject<ActivatedRoute>();
   ready = signal(false);
-  navigating$ = this.router.events.pipe(
-    map(
-      (e) =>
-        e.type !== EventType.NavigationEnd &&
-        e.type !== EventType.NavigationSkipped,
-    ),
-    shareReplay(1),
-  );
   stored = storedSignal('router');
 
   get empty(): ZipData<LabParams> {
@@ -142,7 +132,15 @@ export class RouterSync {
             queryParams: r.queryParams,
           }),
         ),
-        audit(() => this.navigating$.pipe(first((n) => !n))),
+        /** Skip any navigations triggered by `RouterSync.updateUrl` */
+        filter(
+          () =>
+            !(
+              this.router.currentNavigation()?.extras.info as
+                | { sync?: true }
+                | undefined
+            )?.sync,
+        ),
         switchMap(async ({ params, queryParams }) => {
           queryParams = await this.unzipQueryParams(queryParams);
           return { params, queryParams };
@@ -187,7 +185,6 @@ export class RouterSync {
         tap((z) => {
           this.zipConfig.set(z.config);
         }),
-        audit(() => this.navigating$.pipe(first((n) => !n))),
         switchMap((z) => this.updateUrl(z)),
       )
       .subscribe();
@@ -195,7 +192,12 @@ export class RouterSync {
 
   async updateUrl(zState: ZipState): Promise<void> {
     const queryParams = await this.getHash(zState);
-    await this.router.navigate([], { queryParams, preserveFragment: true });
+    await this.router.navigate([], {
+      queryParams,
+      preserveFragment: true,
+      // Use sync: true to indicate we should not re-apply this state
+      info: { sync: true },
+    });
     const url = this.router.url;
     const path = url.split('?')[0];
     // Only cache list / flow routes

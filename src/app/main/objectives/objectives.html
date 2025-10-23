@@ -181,7 +181,7 @@
       <lab-select
         [options]="displayRateOptions"
         [ngModel]="settingsStore.displayRate()"
-        (ngModelChange)="settingsStore.apply({ displayRate: $event })"
+        (ngModelChange)="objectivesStore.adjustDisplayRate($event)"
       ></lab-select>
     </lab-form-field>
   </div>

@@ -114,6 +114,10 @@ export class InputNumber extends Control<Rational> implements OnInit {
     });
   }
 
+  override valuesEqual(a: Rational, b: Rational | undefined): boolean {
+    return b != null && a.eq(b);
+  }
+
   onChange(event: Event): void {
     const type = event.type as EventType;
     try {

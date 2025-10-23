@@ -4,6 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class PercentPadPipe implements PipeTransform {
   transform(value: string | undefined): string {
     if (value == null) return '';
-    return `${' '.repeat(4 - value.length)}${value}%`;
+    const repeat = Math.max(0, 4 - value.length);
+    return `${' '.repeat(repeat)}${value}%`;
   }
 }

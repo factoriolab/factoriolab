@@ -18,9 +18,18 @@ export abstract class Control<T = unknown> implements ControlValueAccessor {
   onFormChange?: (value: T) => void;
   onFormTouched?: () => void;
 
+  /**
+   * Override this function to provide a custom equality function for the
+   * control. Calls to `setValue` with a value equal to the current control
+   * value will be skipped.
+   */
+  valuesEqual(a: T, b: T | undefined): boolean {
+    return a === b;
+  }
+
   setValue(value: T): void {
     this.markAsTouched();
-    if (value === this.value()) return;
+    if (this.valuesEqual(value, this.value())) return;
 
     this.writeValue(value);
     this.onFormChange?.(value);

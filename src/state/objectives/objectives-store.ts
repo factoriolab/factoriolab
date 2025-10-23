@@ -1,11 +1,9 @@
-import { computed, effect, inject, Injectable, Injector } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { computed, effect, inject, Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {
   faExclamationCircle,
   faPauseCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { filter, pairwise, switchMap } from 'rxjs';
 
 import { TooltipType } from '~/components/tooltip/tooltip-type';
 import { IconType } from '~/data/icon-type';
@@ -27,7 +25,7 @@ import { PowerUnit } from '../preferences/power-unit';
 import { PreferencesStore } from '../preferences/preferences-store';
 import { RecipeState } from '../recipes/recipe-state';
 import { RecipesStore } from '../recipes/recipes-store';
-import { displayRateInfo } from '../settings/display-rate';
+import { DisplayRate, displayRateInfo } from '../settings/display-rate';
 import { SettingsStore } from '../settings/settings-store';
 import { RecordStore } from '../store';
 import { MessageData } from './message-data';
@@ -528,25 +526,6 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
   constructor() {
     super();
 
-    // TODO: Can this be removed entirely and replaced with signal-based logic?
-    const injector = inject(Injector);
-    this.settingsStore.load$
-      .pipe(
-        switchMap(() =>
-          toObservable(this.settingsStore.displayRate, { injector }).pipe(
-            pairwise(),
-            filter(([before, after]) => before !== after),
-          ),
-        ),
-        takeUntilDestroyed(),
-      )
-      .subscribe(([before, after]) => {
-        const factor = displayRateInfo[after].value.div(
-          displayRateInfo[before].value,
-        );
-        this.adjustDisplayRate(factor);
-      });
-
     effect(() => {
       const objectives = this.baseObjectives();
       const data = this.settingsStore.dataset();
@@ -606,7 +585,11 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     }
   }
 
-  adjustDisplayRate(factor: Rational): void {
+  adjustDisplayRate(displayRate: DisplayRate): void {
+    const current = this.settingsStore.displayRate();
+    const factor = displayRateInfo[displayRate].value.div(
+      displayRateInfo[current].value,
+    );
     this.reduce((state) => {
       const next = spread(state);
       const ids = Object.keys(next);
@@ -623,6 +606,8 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
 
       return next;
     });
+
+    this.settingsStore.apply({ displayRate });
   }
 
   private reduceObjectives(
