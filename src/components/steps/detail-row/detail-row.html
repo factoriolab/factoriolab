@@ -116,25 +116,27 @@
     }
 
     @if (percent(); as percent) {
-      <div
-        class="flex items-center justify-center p-2"
-        [class.order-1]="!percentOnDest()"
-      >
-        <fa-icon [icon]="faArrowRightLong"></fa-icon>
+      <div class="flex items-center gap-1 ps-2">
+        <div
+          class="flex items-center justify-center p-2"
+          [class.order-1]="!percentOnDest()"
+        >
+          <fa-icon [icon]="faArrowRightLong"></fa-icon>
+        </div>
+        <span class="font-mono whitespace-pre">{{
+          percent | rate: -2 | percentPad
+        }}</span>
+        @if (destId(); as destId) {
+          <lab-icon
+            class="order-2"
+            [value]="destId"
+            [type]="destType()"
+            [text]="destRecipeObjectiveId()"
+            [labTooltip]="destId"
+            [labTooltipType]="destType()"
+          ></lab-icon>
+        }
       </div>
-      <span class="font-mono whitespace-pre">{{
-        percent | rate: -2 | percentPad
-      }}</span>
-      @if (destId(); as destId) {
-        <lab-icon
-          class="order-2"
-          [value]="destId"
-          [type]="destType()"
-          [text]="destRecipeObjectiveId()"
-          [labTooltip]="destId"
-          [labTooltipType]="destType()"
-        ></lab-icon>
-      }
     }
   </div>
 </td>
