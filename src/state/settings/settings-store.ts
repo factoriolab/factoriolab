@@ -11,7 +11,7 @@ import { CargoWagon } from '~/data/schema/cargo-wagon';
 import { Category } from '~/data/schema/category';
 import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
-import { IconData } from '~/data/schema/icon-data';
+import { IconData, IconJson } from '~/data/schema/icon-data';
 import { Item, ItemJson, parseItem } from '~/data/schema/item';
 import { Machine, typeHasCraftingSpeed } from '~/data/schema/machine';
 import { ModHash } from '~/data/schema/mod-hash';
@@ -707,12 +707,12 @@ export class SettingsStore extends Store<SettingsState> {
     const file = `url("data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp")`;
     function toIconRecord(
       ids: string[],
-      rec: Record<string, Category | Item | Recipe>,
+      rec: Record<string, Category | Item | Recipe | IconJson>,
     ): Record<string, IconData> {
       return ids.reduce<Record<string, IconData>>((e, i) => {
         const entity = rec[i];
-        const id = coalesce(entity.icon, i);
-        const text = entity.iconText;
+        const id = coalesce((entity as Category | Item | Recipe).icon, i);
+        const text = (entity as Category | Item | Recipe).iconText;
         const quality = (entity as Item | Recipe).quality;
         e[i] = { ...iconData[id], file, text, quality };
         return e;
@@ -722,6 +722,7 @@ export class SettingsStore extends Store<SettingsState> {
     // Generate Icon Record
     const iconRecord: Record<IconType, Record<string, IconData>> = {
       system: systemIconsRecord,
+      game: toIconRecord(iconIds, iconData),
       category: toIconRecord(categoryIds, categoryRecord),
       item: toIconRecord(itemIds, itemRecord),
       recipe: toIconRecord(recipeIds, recipeRecord),

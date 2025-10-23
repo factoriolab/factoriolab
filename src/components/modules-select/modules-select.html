@@ -9,7 +9,7 @@
     @for (module of value(); track module.id) {
       @if (module.id === '') {
         <lab-icon
-          [value]="faSquarePen"
+          value="module"
           [text]="module.count?.toString()"
           labTooltip="modulesSelect.tooltip"
         ></lab-icon>

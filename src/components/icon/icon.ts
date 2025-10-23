@@ -33,9 +33,10 @@ export class Icon {
   readonly icon = computed(() => {
     const value = this.value();
     if (typeof value !== 'string') return undefined;
-    return this.settingsStore.dataset().iconRecord[this.type() ?? 'system'][
-      value
-    ];
+    const record = this.settingsStore.dataset().iconRecord;
+    const type = this.type();
+    if (type) return record[type][value];
+    return record.game[value] ?? record.system[value];
   });
 
   readonly faIcon = computed(() => {

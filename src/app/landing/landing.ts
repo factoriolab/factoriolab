@@ -65,12 +65,13 @@ export class Landing extends ObjectiveForm {
   protected readonly gameOptions = gameOptions;
   protected readonly stateOptions = this.settingsStore.stateOptions;
 
-  addObjective(value: ObjectiveBase): void {
-    this.objectivesStore.create(value);
-    void this.router.navigate(['list'], {
+  async addObjective(value: ObjectiveBase): Promise<void> {
+    await this.router.navigate(['list'], {
       relativeTo: this.route,
       queryParamsHandling: 'preserve',
     });
+
+    this.objectivesStore.create(value);
   }
 
   setState(query: string): void {

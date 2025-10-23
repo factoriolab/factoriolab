@@ -1,1 +1,7 @@
-export type IconType = 'system' | 'category' | 'item' | 'recipe' | 'location';
+export type IconType =
+  | 'system'
+  | 'game'
+  | 'category'
+  | 'item'
+  | 'recipe'
+  | 'location';

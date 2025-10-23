@@ -7,7 +7,6 @@ import {
   model,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { faSquarePen } from '@fortawesome/free-solid-svg-icons';
 
 import { Machine } from '~/data/schema/machine';
 import { ModuleSettings } from '~/state/module-settings';
@@ -50,8 +49,6 @@ export class ModulesSelect extends Control<ModuleSettings[]> {
   readonly recipeId = input<string>();
 
   readonly editValue = linkedSignal(() => this.value() ?? []);
-
-  protected readonly faSquarePen = faSquarePen;
 
   open(): void {
     this.editValue.set(this.value() ?? []);

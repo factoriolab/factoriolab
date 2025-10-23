@@ -1,4 +1,5 @@
 import { computed, inject, signal } from '@angular/core';
+import { EMPTY, switchMap } from 'rxjs';
 
 import { rational } from '~/rational/rational';
 import { ObjectiveBase } from '~/state/objectives/objective';
@@ -19,15 +20,20 @@ export abstract class ObjectiveForm {
     const targetId$ = this.isRecipe()
       ? this.picker.pickRecipe()
       : this.picker.pickItem();
-    targetId$.subscribe((targetId) => {
-      this.addObjective({
-        targetId,
-        value: this.value(),
-        unit: this.unit(),
-        type: this.type(),
-      });
-    });
+    targetId$
+      .pipe(
+        switchMap((targetId) => {
+          const result = this.addObjective({
+            targetId,
+            value: this.value(),
+            unit: this.unit(),
+            type: this.type(),
+          });
+          return result ?? EMPTY;
+        }),
+      )
+      .subscribe();
   }
 
-  abstract addObjective(value: ObjectiveBase): void;
+  abstract addObjective(value: ObjectiveBase): Promise<void> | void;
 }
