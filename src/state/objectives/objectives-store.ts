@@ -308,7 +308,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         }, rational.one);
         if (inputs.nonzero()) {
           outputs.push({
-            inputs: true,
+            isInput: true,
             value: inputs,
           });
         }
