@@ -1,16 +1,16 @@
-@if (details(); as details) {
+@if (recipes(); as recipes) {
   <lab-select
     #select
     class="group"
     [border]="false"
     [iconOnly]="true"
-    [options]="details.recipeOptions"
+    [options]="recipes.options"
     [labTooltip]="step().recipeId"
     labTooltipType="recipe"
     labTooltipPosition="adjacent"
     labTooltipAction="steps.selectRecipesTooltip"
     [labTooltipAdjustedRecipe]="step().recipe"
-    [ngModel]="details.recipesEnabled"
+    [ngModel]="recipes.enabledIds"
     (ngModelChange)="changeRecipesIncluded($event)"
   >
     <div class="flex group-hover:opacity-40">

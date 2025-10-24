@@ -8,12 +8,12 @@ import {
 import { TooltipType } from '~/components/tooltip/tooltip-type';
 import { IconType } from '~/data/icon-type';
 import { Option } from '~/option/option';
+import { sortedKeyValues } from '~/rational/key-value-sorted';
 import { Rational, rational } from '~/rational/rational';
 import { Solver } from '~/solver/solver';
 import { Step } from '~/solver/step';
-import { StepIdPipe } from '~/state/objectives/step-id-pipe';
 import { InterpolateParams } from '~/translate/translate';
-import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
+import { coalesce, notNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 import { toRecord } from '~/utils/record';
 
@@ -28,13 +28,14 @@ import { RecipesStore } from '../recipes/recipes-store';
 import { DisplayRate, displayRateInfo } from '../settings/display-rate';
 import { SettingsStore } from '../settings/settings-store';
 import { RecordStore } from '../store';
+import { ItemSource } from './item-source';
 import { MessageData } from './message-data';
 import { isRecipeObjective, ObjectiveBase, ObjectiveState } from './objective';
 import { ObjectiveType } from './objective-type';
 import { ObjectiveUnit } from './objective-unit';
-import { StepDetail } from './step-detail';
-import { stepDetailIcon, StepDetailTab } from './step-detail-tab';
-import { StepOutput } from './step-output';
+import { StepDetailRow } from './step-detail-row';
+import { StepDetailSection } from './step-detail-section';
+import { StepRecipes } from './step-recipes';
 import { TotalValue } from './total-value';
 
 @Injectable({ providedIn: 'root' })
@@ -278,58 +279,224 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     };
   });
 
+  itemSourceMap = computed(() => {
+    const steps = this.steps();
+    const result = steps.reduce<Record<string, ItemSource[]>>((e, step) => {
+      if (step.outputs == null) return e;
+
+      for (const itemId of Object.keys(step.outputs)) {
+        e[itemId] ??= [];
+        e[itemId].push({ step, value: step.outputs[itemId] });
+      }
+
+      return e;
+    }, {});
+
+    for (const itemId of Object.keys(result)) {
+      const inputs = result[itemId].reduce((r: Rational, o) => {
+        return r.sub(o.value);
+      }, rational.one);
+      if (inputs.nonzero()) {
+        result[itemId].push({
+          isInput: true,
+          value: inputs,
+        });
+      }
+
+      result[itemId].sort((a, b) => b.value.sub(a.value).toNumber());
+    }
+
+    return result;
+  });
+
   stepDetails = computed(() => {
     const steps = this.steps();
-    const settings = this.settingsStore.settings();
-    const data = this.recipesStore.adjustedDataset();
+    const stepById = this.stepById();
+    const stepByItem = this.stepByItemRecord();
+    const data = this.settingsStore.dataset();
+    const itemsState = this.itemsStore.settings();
+    const itemSourceMap = this.itemSourceMap();
 
-    return steps.reduce((e: Record<string, StepDetail>, s) => {
-      const tabs: StepDetailTab[] = [];
-      const outputs: StepOutput[] = [];
-      let recipeIds: string[] = [];
-      let recipesEnabled: string[] = [];
+    return steps.reduce<
+      Record<string, Record<StepDetailSection, StepDetailRow[]>>
+    >((e, s) => {
+      let destinations: StepDetailRow[] = [];
+      let sources: StepDetailRow[] = [];
+      let depletion: StepDetailRow[] = [];
+      let inputs: StepDetailRow[] = [];
+      let outputs: StepDetailRow[] = [];
       if (s.itemId != null && s.items != null) {
         const itemId = s.itemId; // Store null-checked id
-        tabs.push('item');
-        outputs.push(
-          ...steps
-            .filter(fnPropsNotNullish('outputs', 'recipeId', 'machines'))
-            .filter((s) => s.outputs[itemId] != null)
-            .map(
-              (s): StepOutput => ({
-                step: s,
-                value: s.outputs[itemId],
-              }),
-            ),
-        );
+        const itemSettings = itemsState[itemId];
+        const itemSources = itemSourceMap[itemId];
+        if (s.parents) {
+          destinations = sortedKeyValues(s.parents).map(([key, value]) => {
+            const row: StepDetailRow = {
+              items: s.items?.mul(value),
+              itemId,
+              belts: s.belts?.mul(value),
+              beltId: itemSettings.beltId,
+              stack: itemSettings.stack,
+              wagons: s.wagons?.mul(value),
+              wagonId: itemSettings.wagonId,
+              recipeId: s.recipeId,
+              recipeObjectiveId: s.recipeObjectiveId,
+              percent: value,
+              destId: stepById[key]?.recipeId,
+              destType: 'recipe',
+              isOutput: key === '',
+            };
+            if (itemSources.length === 1) {
+              row.machines = s.machines?.mul(value);
+              row.machineId = s.recipeSettings?.machineId;
+            }
 
-        const inputs = outputs.reduce((r: Rational, o) => {
-          return r.sub(o.value);
-        }, rational.one);
-        if (inputs.nonzero()) {
-          outputs.push({
-            isInput: true,
-            value: inputs,
+            return row;
           });
         }
 
-        outputs.sort((a, b) => b.value.sub(a.value).toNumber());
+        if (
+          itemSources.length > 1 ||
+          (itemSources.length === 1 && itemSources[0].step?.id !== s.id)
+        ) {
+          sources = itemSources.map((i) => ({
+            items: s.items?.mul(i.value),
+            itemId,
+            belts: s.belts?.mul(i.value),
+            beltId: itemSettings.beltId,
+            stack: itemSettings.stack,
+            wagons: s.wagons?.mul(i.value),
+            wagonId: itemSettings.wagonId,
+            machines: i.step?.machines,
+            machineId: i.step?.recipeSettings?.machineId,
+            recipeId: i.step?.recipeId,
+            recipeObjectiveId: i.step?.recipeObjectiveId,
+            percent: i.value,
+            percentOnDest: true,
+            destId: s.id,
+            destType: 'item',
+            isInput: i.isInput,
+          }));
+        }
       }
 
-      if (s.recipeId != null) tabs.push('recipe');
-      if (s.machines?.nonzero()) tabs.push('machine');
+      if (s.recipe) {
+        const recipe = s.recipe;
+        if (s.outputs) {
+          const outputs = s.outputs;
+          if (
+            data.flags.has('miningDepletion') &&
+            s.recipe.flags.has('mining')
+          ) {
+            depletion = sortedKeyValues(s.outputs)
+              .map(([key]) => {
+                const step = stepByItem[key];
+                const percent = outputs[key];
+                if (step == null || percent == null) return undefined;
+                return {
+                  items: step.items
+                    ?.mul(percent)
+                    .div(recipe.effects.productivity),
+                  itemId: key,
+                };
+              })
+              .filter(notNullish);
+          }
+        }
+
+        inputs = sortedKeyValues(recipe.in)
+          .map(([key]): StepDetailRow | undefined => {
+            const step = stepByItem[key];
+            const percent = step?.parents?.[s.id];
+            let source: ItemSource | undefined;
+            if (step.itemId && itemSourceMap[step.itemId].length === 1)
+              source = itemSourceMap[step.itemId][0];
+
+            if (step == null || percent == null) return undefined;
+            return {
+              items: step.items?.mul(percent),
+              itemId: key,
+              belts: step.belts?.mul(percent),
+              beltId: itemsState[key].beltId,
+              stack: itemsState[key].stack,
+              wagons: step.wagons?.mul(percent),
+              wagonId: itemsState[key].wagonId,
+              machines: source?.step?.machines?.mul(percent),
+              machineId: source?.step?.recipeSettings?.machineId,
+              recipeId: source?.step?.recipeId,
+              recipeObjectiveId: source?.step?.recipeObjectiveId,
+              percent,
+              destId: s.recipeId,
+              destRecipeObjectiveId: s.recipeObjectiveId,
+              destType: 'recipe',
+            };
+          })
+          .filter(notNullish);
+
+        const outKeys = Object.keys(recipe.out);
+        if (
+          outKeys.length > 1 ||
+          (outKeys.length === 1 && outKeys[0] !== s.itemId)
+        ) {
+          outputs = sortedKeyValues(recipe.out)
+            .map(([key]): StepDetailRow | undefined => {
+              const step = stepByItem[key];
+              const percent = s.outputs?.[key];
+              if (step == null || percent == null) return undefined;
+
+              return {
+                items: step.items?.mul(percent),
+                itemId: key,
+                belts: step.belts?.mul(percent),
+                beltId: itemsState[key].beltId,
+                stack: itemsState[key].stack,
+                wagons: step.wagons?.mul(percent),
+                wagonId: itemsState[key].wagonId,
+                machines: s.machines,
+                machineId: s.recipeSettings?.machineId,
+                recipeId: s.recipeId,
+                recipeObjectiveId: s.recipeObjectiveId,
+                percent,
+                percentOnDest: true,
+                destId: key,
+                destType: 'item',
+                destRecipeObjectiveId: s.recipeObjectiveId,
+              };
+            })
+            .filter(notNullish);
+        }
+      }
+
+      e[s.id] = {
+        sources,
+        destinations,
+        depletion,
+        inputs,
+        outputs,
+      };
+
+      return e;
+    }, {});
+  });
+
+  stepRecipes = computed(() => {
+    const steps = this.steps();
+    const data = this.recipesStore.adjustedDataset();
+    const settings = this.settingsStore.settings();
+
+    return steps.reduce<Record<string, StepRecipes>>((e, s) => {
+      let ids: string[] = [];
+      let enabledIds: string[] = [];
 
       if (s.itemId != null) {
-        recipeIds = data.itemRecipeIds[s.itemId];
-        recipesEnabled = recipeIds.filter(
-          (r) => !settings.excludedRecipeIds.has(r),
-        );
+        ids = data.itemRecipeIds[s.itemId];
+        enabledIds = ids.filter((r) => !settings.excludedRecipeIds.has(r));
       } else if (s.recipeId != null) {
-        recipeIds = [s.recipeId];
-        recipesEnabled = [s.recipeId];
+        ids = [s.recipeId];
+        enabledIds = [s.recipeId];
       }
 
-      const recipeOptions = recipeIds.map(
+      const options = ids.map(
         (i): Option => ({
           label: data.recipeRecord[i].name,
           value: i,
@@ -340,29 +507,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         }),
       );
 
-      e[s.id] = {
-        tabs: tabs.map((value) => {
-          const id = StepIdPipe.transform(s);
-          return {
-            label: `options.stepDetailTab.${value}`,
-            value,
-            faIcon: stepDetailIcon[value],
-            command:
-              // istanbul ignore next: Simple assignment function; testing is unnecessary
-              (): void => {
-                history.replaceState(
-                  {},
-                  '',
-                  `${window.location.href.replace(/#(.*)$/, '')}#${id}_${value}`,
-                );
-              },
-          };
-        }),
-        outputs,
-        recipeIds,
-        recipesEnabled,
-        recipeOptions,
-      };
+      e[s.id] = { ids, enabledIds, options };
 
       return e;
     }, {});

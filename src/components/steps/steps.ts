@@ -1,19 +1,13 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { AsyncPipe, KeyValue, KeyValuePipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
-  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
-  DOCUMENT,
   inject,
-  Injector,
   input,
-  linkedSignal,
-  OnInit,
   signal,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -27,11 +21,10 @@ import {
   faStopwatch,
   faTableColumns,
 } from '@fortawesome/free-solid-svg-icons';
-import { combineLatestWith, filter, take } from 'rxjs';
 
 import { RatePipe } from '~/components/steps/pipes/rate-pipe';
 import { Exporter } from '~/exporter/exporter';
-import { Rational, rational } from '~/rational/rational';
+import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { BeaconSettings } from '~/state/beacon-settings';
 import { Hydration } from '~/state/hydration';
@@ -40,14 +33,13 @@ import { ItemsStore } from '~/state/items/items-store';
 import { MachinesStore } from '~/state/machines/machines-store';
 import { ModuleSettings } from '~/state/module-settings';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
-import { StepDetailTab } from '~/state/objectives/step-detail-tab';
+import { stepDetailSections } from '~/state/objectives/step-detail-section';
 import { RecipeState } from '~/state/recipes/recipe-state';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { RouterSync } from '~/state/router/router-sync';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
-import { spread } from '~/utils/object';
 import { updateSetIds } from '~/utils/set';
 
 import { StepIdPipe } from '../../state/objectives/step-id-pipe';
@@ -59,7 +51,6 @@ import { Icon } from '../icon/icon';
 import { InputNumber } from '../input-number/input-number';
 import { ModulesSelect } from '../modules-select/modules-select';
 import { Select } from '../select/select';
-import { Tabs } from '../tabs/tabs';
 import { Tooltip } from '../tooltip/tooltip';
 import { BeltSelect } from './belt-select/belt-select';
 import { DetailRow } from './detail-row/detail-row';
@@ -76,7 +67,6 @@ import { TotalCell } from './total-cell/total-cell';
   imports: [
     AsyncPipe,
     FormsModule,
-    KeyValuePipe,
     RouterLink,
     BeaconsSelect,
     Button,
@@ -85,7 +75,6 @@ import { TotalCell } from './total-cell/total-cell';
     InputNumber,
     ModulesSelect,
     Select,
-    Tabs,
     Tooltip,
     TranslatePipe,
     BeltSelect,
@@ -103,9 +92,7 @@ import { TotalCell } from './total-cell/total-cell';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col gap-1 sm:gap-2' },
 })
-export class Steps implements OnInit {
-  private readonly document = inject(DOCUMENT);
-  private readonly injector = inject(Injector);
+export class Steps {
   protected readonly route = inject(ActivatedRoute);
   protected readonly dialog = inject(Dialog);
   protected readonly exporter = inject(Exporter);
@@ -123,6 +110,7 @@ export class Steps implements OnInit {
   protected readonly ColumnsDialog = ColumnsDialog;
   protected readonly data = this.recipesStore.adjustedDataset;
   protected readonly details = this.objectivesStore.stepDetails;
+  protected readonly stepDetailSections = stepDetailSections;
   protected readonly displayRateInfo = this.settingsStore.displayRateInfo;
   protected readonly faAngleRight = faAngleRight;
   protected readonly faArrowRotateLeft = faArrowRotateLeft;
@@ -142,18 +130,6 @@ export class Steps implements OnInit {
 
   protected readonly expandedSteps = signal<Set<string>>(new Set());
   readonly sort = signal<[SortColumn, -1 | 1] | null>(null);
-  readonly activeTab = linkedSignal<Record<string, StepDetailTab>>(() => {
-    const steps = this.objectivesStore.steps();
-    const details = this.details();
-    return steps.reduce<Record<string, StepDetailTab>>((e, s) => {
-      const detail = details[s.id];
-      const id = StepIdPipe.transform(s);
-      if (detail) {
-        e[id] = detail.tabs[0].value;
-      }
-      return e;
-    }, {});
-  });
 
   protected readonly sortedSteps = computed(() => {
     const sort = this.sort();
@@ -179,42 +155,6 @@ export class Steps implements OnInit {
     if (cols.tree.show) colspan++;
     return colspan;
   });
-
-  ngOnInit(): void {
-    this.route.fragment
-      .pipe(
-        take(1),
-        filter((f) => f != null),
-        combineLatestWith(
-          toObservable(this.objectivesStore.steps, { injector: this.injector }),
-        ),
-        filter(([_, steps]) => steps.length > 0),
-        take(1),
-      )
-      .subscribe(([fragment, steps]) => {
-        const step = StepIdPipe.find(fragment, steps);
-        if (step == null) return;
-
-        // Toggle the selected step to be expanded
-        this.toggleStep(step);
-
-        // Scroll the selected step into view
-        const [type, id, tab] = fragment.split('_');
-        const typeId = `${type}_${id}`;
-        afterNextRender(
-          () => {
-            this.document.querySelector(`#${typeId}`)?.scrollIntoView();
-          },
-          { injector: this.injector },
-        );
-
-        // If included, open the selected tab
-        if (tab)
-          this.activeTab.update((value) =>
-            spread(value, { [typeId]: tab as StepDetailTab }),
-          );
-      });
-  }
 
   changeSort(column: SortColumn): void {
     this.sort.update((current) => {
@@ -353,20 +293,5 @@ export class Steps implements OnInit {
   resetBeacons(): void {
     this.objectivesStore.resetFields('beacons');
     this.recipesStore.resetFields('beacons');
-  }
-
-  setActiveTab(id: string, tab: StepDetailTab): void {
-    this.activeTab.update((value) => spread(value, { [id]: tab }));
-  }
-
-  sortByValue(
-    a: KeyValue<string, Rational>,
-    b: KeyValue<string, Rational>,
-  ): number {
-    return b.value.sub(a.value).toNumber();
-  }
-
-  test(value: string): void {
-    console.log(value);
   }
 }

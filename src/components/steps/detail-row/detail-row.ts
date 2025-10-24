@@ -10,7 +10,8 @@ import { faArrowRightLong } from '@fortawesome/free-solid-svg-icons';
 
 import { Icon } from '~/components/icon/icon';
 import { Tooltip } from '~/components/tooltip/tooltip';
-import { Rational, rational } from '~/rational/rational';
+import { rational } from '~/rational/rational';
+import { StepDetailRow } from '~/state/objectives/step-detail-row';
 import { SettingsStore } from '~/state/settings/settings-store';
 
 import { RatePipe } from '../pipes/rate-pipe';
@@ -29,24 +30,7 @@ export class DetailRow {
   protected readonly settingsStore = inject(SettingsStore);
   protected readonly steps = inject(Steps);
 
-  readonly items = input<Rational>();
-  readonly itemId = input<string>();
-  readonly belts = input<Rational>();
-  readonly beltId = input<string>();
-  readonly stack = input<Rational>();
-  readonly wagons = input<Rational>();
-  readonly wagonId = input<string>();
-  readonly machines = input<Rational>();
-  readonly recipeId = input<string>();
-  readonly recipeObjectiveId = input<string>();
-  readonly machineId = input<string>();
-  readonly percent = input<Rational>();
-  readonly percentOnDest = input<boolean>();
-  readonly destId = input<string>();
-  readonly destRecipeObjectiveId = input<string>();
-  readonly destType = input<'item' | 'recipe'>('item');
-  readonly isInput = input<boolean>();
-  readonly isOutput = input<boolean>();
+  readonly value = input.required<StepDetailRow>();
 
   protected readonly cols = this.settingsStore.columnsState;
   protected readonly data = this.settingsStore.dataset;

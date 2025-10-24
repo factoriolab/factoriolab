@@ -1,7 +1,7 @@
 <td [colSpan]="steps.leftSpan()"></td>
 
 <td class="pe-0">
-  @if (items(); as items) {
+  @if (value().items; as items) {
     <div class="flex items-center justify-end">
       <span class="font-mono whitespace-pre">{{
         items | rate: cols().items.precision
@@ -11,9 +11,10 @@
 </td>
 
 <td>
-  @if (itemId(); as itemId) {
+  @if (value().itemId; as itemId) {
     <div class="flex items-center">
       <lab-icon
+        class="mx-0.5"
         [value]="itemId"
         type="item"
         [labTooltip]="itemId"
@@ -26,7 +27,7 @@
 
 @if (cols().belts.show) {
   <td class="pe-0">
-    @if (belts(); as belts) {
+    @if (value().belts; as belts) {
       <div class="flex items-center justify-end">
         <span class="font-mono whitespace-pre">{{
           belts | rate: cols().belts.precision
@@ -35,12 +36,15 @@
     }
   </td>
   <td>
-    @if (beltId(); as beltId) {
+    @if (value().beltId; as beltId) {
       <div class="flex items-center">
         <lab-icon
+          class="mx-0.5"
           [value]="beltId"
           type="item"
-          [text]="stack()?.gt(rational.one) ? stack()?.toString() : ''"
+          [text]="
+            value().stack?.gt(rational.one) ? value().stack?.toString() : ''
+          "
           [labTooltip]="beltId"
           labTooltipType="belt"
           labTooltipPosition="adjacent"
@@ -52,7 +56,7 @@
 
 @if (cols().wagons.show) {
   <td class="pe-0">
-    @if (wagons(); as wagons) {
+    @if (value().wagons; as wagons) {
       <div class="flex items-center justify-end">
         <span class="font-mono whitespace-pre">{{
           wagons | rate: cols().wagons.precision
@@ -61,9 +65,10 @@
     }
   </td>
   <td>
-    @if (wagonId(); as wagonId) {
+    @if (value().wagonId; as wagonId) {
       <div class="flex items-center">
         <lab-icon
+          class="mx-0.5"
           [value]="wagonId"
           type="item"
           [labTooltip]="wagonId"
@@ -81,7 +86,8 @@
 
 <td class="pe-0">
   @if (
-    !data().machineRecord[machineId() ?? '']?.hideRate && machines();
+    !data().machineRecord[value().machineId ?? '']?.hideRate &&
+      value().machines;
     as machines
   ) {
     <div class="flex items-center justify-end">
@@ -93,47 +99,51 @@
 </td>
 <td [colSpan]="machineIdSpan()">
   <div class="flex items-center">
-    @if (recipeId(); as recipeId) {
-      @let objId = recipeObjectiveId();
-      <lab-icon
-        [value]="recipeId"
-        type="recipe"
-        [text]="objId ? '#' + objId : ''"
-        [labTooltip]="recipeId"
-        labTooltipType="recipe"
-        labTooltipPosition="adjacent"
-      ></lab-icon>
-    }
+    <div class="flex items-center gap-1">
+      @if (value().recipeId; as recipeId) {
+        @let objId = value().recipeObjectiveId;
+        <lab-icon
+          class="mx-0.5"
+          [value]="recipeId"
+          type="recipe"
+          [text]="objId ? '#' + objId : ''"
+          [labTooltip]="recipeId"
+          labTooltipType="recipe"
+          labTooltipPosition="adjacent"
+        ></lab-icon>
+      }
 
-    @if (machineId(); as machineId) {
-      <lab-icon
-        [value]="machineId"
-        type="item"
-        [labTooltip]="machineId"
-        labTooltipType="machine"
-        labTooltipPosition="adjacent"
-      ></lab-icon>
-    }
+      @if (value().machineId; as machineId) {
+        <lab-icon
+          class="mx-0.5"
+          [value]="machineId"
+          type="item"
+          [labTooltip]="machineId"
+          labTooltipType="machine"
+          labTooltipPosition="adjacent"
+        ></lab-icon>
+      }
+    </div>
 
-    @if (percent(); as percent) {
+    @if (value().percent; as percent) {
       <div class="flex items-center gap-1 ps-2">
         <div
           class="flex items-center justify-center p-2"
-          [class.order-1]="!percentOnDest()"
+          [class.order-1]="!value().percentOnDest"
         >
           <fa-icon [icon]="faArrowRightLong"></fa-icon>
         </div>
         <span class="font-mono whitespace-pre">{{
           percent | rate: -2 | percentPad
         }}</span>
-        @if (destId(); as destId) {
+        @if (value().destId; as destId) {
           <lab-icon
-            class="order-2"
+            class="order-2 mx-0.5"
             [value]="destId"
-            [type]="destType()"
-            [text]="destRecipeObjectiveId()"
+            [type]="value().destType"
+            [text]="value().destRecipeObjectiveId"
             [labTooltip]="destId"
-            [labTooltipType]="destType()"
+            [labTooltipType]="value().destType"
           ></lab-icon>
         }
       </div>

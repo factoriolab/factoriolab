@@ -18,9 +18,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
   imports: [FaIconComponent],
   templateUrl: './icon.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'inline-flex shrink-0 relative size-8 ',
-  },
+  host: { class: 'inline-flex shrink-0 relative size-8' },
 })
 export class Icon {
   private readonly settingsStore = inject(SettingsStore);
@@ -30,7 +28,7 @@ export class Icon {
   readonly text = input<string>();
   readonly alt = input<string>();
 
-  readonly icon = computed(() => {
+  protected readonly icon = computed(() => {
     const value = this.value();
     if (typeof value !== 'string') return undefined;
     const record = this.settingsStore.dataset().iconRecord;
@@ -39,7 +37,7 @@ export class Icon {
     return record.game[value] ?? record.system[value];
   });
 
-  readonly faIcon = computed(() => {
+  protected readonly faIcon = computed(() => {
     const value = this.value();
     if (typeof value === 'string') return undefined;
     return value;

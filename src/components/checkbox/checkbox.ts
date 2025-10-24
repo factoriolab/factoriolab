@@ -25,7 +25,7 @@ const check = cva(
       value: {
         true: 'text-brand-600 hover:text-brand-500',
         false: 'text-gray-400 hover:text-brand-500',
-        undefined: 'text-brand-600 hover:text-brand-500',
+        null: 'text-brand-600 hover:text-brand-500',
       },
       disabled: {
         true: 'pointer-events-none',
@@ -61,7 +61,7 @@ export class Checkbox extends Control<boolean | undefined> {
   readonly label = input<string>();
 
   readonly checkClass = computed(() =>
-    check({ value: this.value(), disabled: this.disabled() }),
+    check({ value: this.value() ?? 'null', disabled: this.disabled() }),
   );
 
   readonly icon = computed(() => {

@@ -14,7 +14,7 @@ import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { Step } from '~/solver/step';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
-import { StepDetail } from '~/state/objectives/step-detail';
+import { StepRecipes } from '~/state/objectives/step-recipes';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { updateSetIds } from '~/utils/set';
 
@@ -31,17 +31,17 @@ export class RecipesSelect {
 
   readonly step = input.required<Step>();
 
-  protected readonly details = computed<StepDetail | undefined>(
-    () => this.objectivesStore.stepDetails()[this.step().id],
+  protected readonly recipes = computed<StepRecipes | undefined>(
+    () => this.objectivesStore.stepRecipes()[this.step().id],
   );
 
   protected readonly faChevronDown = faChevronDown;
   protected readonly faFlaskVial = faFlaskVial;
 
   changeRecipesIncluded(includedIds: string[]): void {
-    const details = this.details();
-    if (details == null) return;
-    const allIds = details.recipeIds;
+    const recipes = this.recipes();
+    if (recipes == null) return;
+    const allIds = recipes.ids;
     const settings = this.settingsStore.settings();
     let value = updateSetIds(allIds, true, settings.excludedRecipeIds);
     value = updateSetIds(includedIds, false, value);
