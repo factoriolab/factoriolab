@@ -373,7 +373,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
             recipeObjectiveId: i.step?.recipeObjectiveId,
             percent: i.value,
             percentOnDest: true,
-            destId: s.id,
+            destId: s.itemId,
             destType: 'item',
             isInput: i.isInput,
           }));
