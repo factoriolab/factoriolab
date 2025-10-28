@@ -28,7 +28,8 @@ import { TooltipType } from './tooltip-type';
   host: {
     '(mouseenter)': 'show()',
     '(mouseleave)': 'hide()',
-    '(touchstart)': 'touch()',
+    '(touchstart)': 'touch($event)',
+    '(click)': 'cancelTouch()',
     '(touchend)': 'cancelTouch()',
     '(touchcancel)': 'cancelTouch()',
     '(touchmove)': 'cancelTouch()',
@@ -114,7 +115,13 @@ export class Tooltip implements OnDestroy {
   }
 
   private touchTimer: number | undefined;
-  touch(): void {
+  touch(event: TouchEvent): void {
+    if (
+      !event.target ||
+      !this.elementRef.nativeElement.contains(event.target as Node)
+    )
+      return;
+
     this.touchTimer = setTimeout(() => {
       this.show();
       delete this.touchTimer;
