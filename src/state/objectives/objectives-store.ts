@@ -433,38 +433,32 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
           })
           .filter(notNullish);
 
-        const outKeys = Object.keys(recipe.out);
-        if (
-          outKeys.length > 1 ||
-          (outKeys.length === 1 && outKeys[0] !== s.itemId)
-        ) {
-          outputs = sortedKeyValues(recipe.out)
-            .map(([key]): StepDetailRow | undefined => {
-              const step = stepByItem[key];
-              const percent = s.outputs?.[key];
-              if (step == null || percent == null) return undefined;
+        outputs = sortedKeyValues(recipe.out)
+          .map(([key]): StepDetailRow | undefined => {
+            const step = stepByItem[key];
+            const percent = s.outputs?.[key];
+            if (step == null || percent == null) return undefined;
 
-              return {
-                items: step.items?.mul(percent),
-                itemId: key,
-                belts: step.belts?.mul(percent),
-                beltId: itemsState[key].beltId,
-                stack: itemsState[key].stack,
-                wagons: step.wagons?.mul(percent),
-                wagonId: itemsState[key].wagonId,
-                machines: s.machines,
-                machineId: s.recipeSettings?.machineId,
-                recipeId: s.recipeId,
-                recipeObjectiveId: s.recipeObjectiveId,
-                percent,
-                percentOnDest: true,
-                destId: key,
-                destType: 'item',
-                destRecipeObjectiveId: s.recipeObjectiveId,
-              };
-            })
-            .filter(notNullish);
-        }
+            return {
+              items: step.items?.mul(percent),
+              itemId: key,
+              belts: step.belts?.mul(percent),
+              beltId: itemsState[key].beltId,
+              stack: itemsState[key].stack,
+              wagons: step.wagons?.mul(percent),
+              wagonId: itemsState[key].wagonId,
+              machines: s.machines,
+              machineId: s.recipeSettings?.machineId,
+              recipeId: s.recipeId,
+              recipeObjectiveId: s.recipeObjectiveId,
+              percent,
+              percentOnDest: true,
+              destId: key,
+              destType: 'item',
+              destRecipeObjectiveId: s.recipeObjectiveId,
+            };
+          })
+          .filter(notNullish);
       }
 
       e[s.id] = {
