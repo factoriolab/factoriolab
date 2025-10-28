@@ -217,10 +217,10 @@
                   @let nextTree = objectivesStore.stepTree()[nextId];
                   @if (nextTree.length > tree.length) {
                     <span
-                      class="absolute bottom-0 -z-1 h-4 border-e-2 border-dotted border-gray-100"
+                      class="absolute bottom-0 left-2 -z-1 h-4 border-e-2 border-dotted border-gray-100"
                       [class]="{
-                        'left-4.5': !tree.length,
-                        'left-4': tree.length,
+                        'sm:left-4.5': !tree.length,
+                        'sm:left-4': tree.length,
                       }"
                     ></span>
                   }
