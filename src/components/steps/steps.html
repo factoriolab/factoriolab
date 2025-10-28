@@ -610,13 +610,23 @@
         @for (section of stepDetailSections; track section) {
           @if (detail[section].length) {
             <tr class="detail">
-              <td [colSpan]="leftSpan()"></td>
-              <td colspan="100" class="font-semibold">
-                {{ 'steps.' + section | translate }}
+              <td [colSpan]="leftSpan()" class="p-0">
+                <div class="flex items-center justify-end">
+                  <lab-checkbox #checkbox [value]="true"></lab-checkbox>
+                </div>
+              </td>
+              <td colspan="100" class="ps-0 font-semibold">
+                <label
+                  [for]="checkbox.controlId()"
+                  class="cursor-pointer ps-2"
+                  >{{ 'steps.' + section | translate }}</label
+                >
               </td>
             </tr>
-            @for (value of detail[section]; track $index) {
-              <tr labDetailRow [value]="value"></tr>
+            @if (checkbox.value()) {
+              @for (value of detail[section]; track $index) {
+                <tr labDetailRow [value]="value"></tr>
+              }
             }
           }
         }
