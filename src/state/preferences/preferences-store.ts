@@ -5,6 +5,7 @@ import { applyHue } from '~/utils/color';
 import { spread } from '~/utils/object';
 import { storedSignal, storeValue } from '~/utils/stored-signal';
 
+import { StepDetailSection } from '../objectives/step-detail-section';
 import { initialPreferencesState, PreferencesState } from './preferences-state';
 
 @Injectable({ providedIn: 'root' })
@@ -74,6 +75,14 @@ export class PreferencesStore extends Store<PreferencesState> {
       const gameStates = this._removeEntry(state.states[modId], id);
       const states = spread(state.states, { [modId]: gameStates });
       return { states };
+    });
+  }
+
+  setSectionDefault(section: StepDetailSection, value: boolean): void {
+    this.update((state) => {
+      return spread(state, {
+        sections: spread(state.sections, { [section]: value }),
+      });
     });
   }
 }

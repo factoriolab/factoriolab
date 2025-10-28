@@ -34,6 +34,7 @@ import { MachinesStore } from '~/state/machines/machines-store';
 import { ModuleSettings } from '~/state/module-settings';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { stepDetailSections } from '~/state/objectives/step-detail-section';
+import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RecipeState } from '~/state/recipes/recipe-state';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { RouterSync } from '~/state/router/router-sync';
@@ -100,6 +101,7 @@ export class Steps {
   protected readonly itemsStore = inject(ItemsStore);
   private readonly machinesStore = inject(MachinesStore);
   protected readonly objectivesStore = inject(ObjectivesStore);
+  protected readonly preferencesStore = inject(PreferencesStore);
   protected readonly recipesStore = inject(RecipesStore);
   protected readonly routerSync = inject(RouterSync);
   protected readonly settingsStore = inject(SettingsStore);

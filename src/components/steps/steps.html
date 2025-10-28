@@ -612,7 +612,10 @@
             <tr class="detail">
               <td [colSpan]="leftSpan()" class="p-0">
                 <div class="flex items-center justify-end">
-                  <lab-checkbox #showCheckbox [value]="true"></lab-checkbox>
+                  <lab-checkbox
+                    #showCheckbox
+                    [value]="preferencesStore.state().sections[section]"
+                  ></lab-checkbox>
                 </div>
               </td>
               <td colspan="100" class="p-0 font-semibold">
@@ -637,6 +640,15 @@
                       }"
                     ></lab-checkbox>
                   }
+
+                  <lab-checkbox
+                    class="ms-auto me-2"
+                    [ngModel]="preferencesStore.state().sections[section]"
+                    (ngModelChange)="
+                      preferencesStore.setSectionDefault(section, $event)
+                    "
+                    label="Default"
+                  ></lab-checkbox>
                 </div>
               </td>
             </tr>

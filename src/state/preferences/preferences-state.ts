@@ -1,6 +1,7 @@
 import { Theme } from '~/state/preferences/theme';
 import { Language } from '~/translate/language';
 
+import { StepDetailSection } from '../objectives/step-detail-section';
 import { ColumnsState, initialColumnsState } from './columns-state';
 import { FlowDiagram } from './flow-diagram';
 import { FlowSettings } from './flow-settings';
@@ -20,6 +21,7 @@ export interface PreferencesState {
   paused: boolean;
   convertObjectiveValues: boolean;
   flowSettings: FlowSettings;
+  sections: Record<StepDetailSection, boolean>;
 }
 
 export const initialPreferencesState: PreferencesState = {
@@ -39,5 +41,12 @@ export const initialPreferencesState: PreferencesState = {
     linkText: LinkValue.Items,
     sankeyAlign: SankeyAlign.Justify,
     hideExcluded: false,
+  },
+  sections: {
+    sources: true,
+    destinations: true,
+    depletion: true,
+    inputs: true,
+    outputs: true,
   },
 };
