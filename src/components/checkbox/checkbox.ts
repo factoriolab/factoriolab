@@ -14,6 +14,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
+import { InterpolateParams } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Control, LAB_CONTROL } from '../control';
@@ -59,6 +60,7 @@ export class Checkbox extends Control<boolean | undefined> {
   readonly disabled = model(false);
   readonly labelledBy = input<string>();
   readonly label = input<string>();
+  readonly labelParams = input<InterpolateParams>();
 
   readonly checkClass = computed(() =>
     check({ value: this.value() ?? 'null', disabled: this.disabled() }),

@@ -612,20 +612,47 @@
             <tr class="detail">
               <td [colSpan]="leftSpan()" class="p-0">
                 <div class="flex items-center justify-end">
-                  <lab-checkbox #checkbox [value]="true"></lab-checkbox>
+                  <lab-checkbox #showCheckbox [value]="true"></lab-checkbox>
                 </div>
               </td>
-              <td colspan="100" class="ps-0 font-semibold">
-                <label
-                  [for]="checkbox.controlId()"
-                  class="cursor-pointer ps-2 select-none"
-                  >{{ 'steps.' + section | translate }}</label
-                >
+              <td colspan="100" class="p-0 font-semibold">
+                <div class="flex items-center gap-2">
+                  <label
+                    [for]="showCheckbox.controlId()"
+                    class="cursor-pointer ps-2 select-none"
+                    >{{ 'options.detailSection.' + section | translate }}</label
+                  >
+                  @if (
+                    section === 'inputs' &&
+                    step.recipeId &&
+                    step.machines &&
+                    step.machines.gt(rational.one)
+                  ) {
+                    <lab-checkbox
+                      [ngModel]="perMachine[step.recipeId] ?? false"
+                      (ngModelChange)="perMachine[step.recipeId] = $event"
+                      label="steps.perMachine"
+                      [labelParams]="{
+                        count: step.machines.ceil().toString(),
+                      }"
+                    ></lab-checkbox>
+                  }
+                </div>
               </td>
             </tr>
-            @if (checkbox.value()) {
+            @if (showCheckbox.value()) {
               @for (value of detail[section]; track $index) {
-                <tr labDetailRow [value]="value"></tr>
+                <tr
+                  labDetailRow
+                  [value]="value"
+                  [factor]="
+                    (section === 'inputs' || section === 'outputs') &&
+                    step.recipeId &&
+                    perMachine[step.recipeId]
+                      ? (step.machines?.ceil() ?? rational.one)
+                      : rational.one
+                  "
+                ></tr>
               }
             }
           }

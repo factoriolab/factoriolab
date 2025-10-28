@@ -156,6 +156,9 @@ export class Steps {
     return colspan;
   });
 
+  // Store per-recipe preferences in component memory
+  perMachine: Record<string, boolean | undefined> = {};
+
   changeSort(column: SortColumn): void {
     this.sort.update((current) => {
       if (current == null || current[0] !== column) return [column, 1];

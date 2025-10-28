@@ -358,6 +358,13 @@
       "dark": "Dark",
       "light": "Light",
       "system": "System"
+    },
+    "detailSection": {
+      "outputs": "Recipe outputs",
+      "inputs": "Recipe inputs",
+      "sources": "Item sources",
+      "depletion": "Resource depletion",
+      "destinations": "Item destinations"
     }
   },
   "picker": {
@@ -507,8 +514,6 @@
     "beltsUndoTooltip": "Undo all belt modifications",
     "checkedUndoTooltip": "Undo all checkmarks",
     "columnSettings": "Column settings",
-    "depletion": "Resource depletion",
-    "destinations": "Item destinations",
     "downloadAsCsv": "Download as CSV",
     "emptyMessage": "Click on a node in the diagram to view details",
     "excludeItemTooltip": "Click to exclude",
@@ -516,21 +521,21 @@
     "includeItemTooltip": "Click to include",
     "includedRecipes": "Included recipes",
     "includedRecipesInfo": "Click recipes to include or exclude them. Excluded recipes will not be used in the solution.",
-    "inputs": "Recipe inputs",
+    "inputs": "Inputs",
     "inserterCountInfo": "* Inserters are calculated using target/capacity settings and 0.18 experimental data from the <a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">wiki.</a>",
     "itemsUndoTooltip": "Undo all excluded items",
     "machinesUndoTooltip": "Undo all machine modifications",
     "modifierCountTooltip": "Select modifier count",
     "openNewTabTooltip": "Open in a new tab",
-    "outputs": "Recipe outputs",
+    "outputs": "Outputs",
     "overclockTooltip": "Overclock percentage",
     "selectFuelTooltip": "Click to select fuel",
     "selectMachineTooltip": "Click to select machine",
     "selectRecipesTooltip": "Click to select recipes",
     "showDetails": "Show details",
-    "sources": "Item sources",
     "stepUndoTooltip": "Undo modifications to this step",
     "time": "Time",
+    "perMachine": "Per machine (Divide by {{ count }})",
     "total": "Total",
     "wagonTooltip": "Click to select wagon",
     "wagonsUndoTooltip": "Undo all wagon modifications"
