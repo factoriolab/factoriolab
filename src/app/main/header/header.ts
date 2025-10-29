@@ -46,7 +46,6 @@ export class Header {
   private readonly settingsStore = inject(SettingsStore);
 
   readonly preferencesOpen = model.required<boolean>();
-  readonly preferencesXlHidden = model.required<boolean>();
   readonly settingsOpen = model.required<boolean>();
   readonly settingsXlHidden = model.required<boolean>();
 

@@ -78,23 +78,9 @@
       [border]="false"
     ></a>
   }
-  @if (preferencesXlHidden()) {
-    <button
-      type="button"
-      labButton
-      class="xl:inline-flex"
-      [faIcon]="faUserGear"
-      size="large"
-      [border]="false"
-      [hide]="true"
-      labTooltip="preferences.header"
-      [attr.aria-label]="'preferences.header' | translate"
-      (click)="preferencesXlHidden.set(false)"
-    ></button>
-  }
   <button
     type="button"
-    class="md:inline-flex xl:hidden"
+    class="md:inline-flex"
     labButton
     [faIcon]="faUserGear"
     size="large"

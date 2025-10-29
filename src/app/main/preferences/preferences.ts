@@ -59,7 +59,6 @@ const host = cva(
   {
     variants: {
       open: { false: 'translate-x-full' },
-      xlHidden: { true: 'xl:translate-x-full', false: 'xl:translate-none' },
     },
   },
 );
@@ -94,11 +93,8 @@ export class Preferences {
   private readonly windowClient = inject(WindowClient);
 
   readonly open = signal(false);
-  readonly xlHidden = signal(false);
 
-  readonly hostClass = computed(() =>
-    host({ open: this.open(), xlHidden: this.xlHidden() }),
-  );
+  readonly hostClass = computed(() => host({ open: this.open() }));
   readonly params = toSignal(
     this.route.queryParams.pipe(map(() => window.location.search.substring(1))),
   );

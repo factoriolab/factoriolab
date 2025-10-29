@@ -15,12 +15,11 @@
 <div
   class="flex h-full flex-col transition-[margin]"
   [class.xl:ms-80]="!settings.xlHidden()"
-  [class.xl:me-80]="!preferences.xlHidden()"
+  [class.xl:me-80]="preferences.open()"
 >
   <header
     labHeader
     [(preferencesOpen)]="preferences.open"
-    [(preferencesXlHidden)]="preferences.xlHidden"
     [(settingsOpen)]="settings.open"
     [(settingsXlHidden)]="settings.xlHidden"
   ></header>
