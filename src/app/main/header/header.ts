@@ -1,4 +1,3 @@
-import { Dialog } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -43,7 +42,6 @@ import { externalLinks } from './external-link';
   },
 })
 export class Header {
-  private readonly dialog = inject(Dialog);
   private readonly router = inject(Router);
   private readonly settingsStore = inject(SettingsStore);
 

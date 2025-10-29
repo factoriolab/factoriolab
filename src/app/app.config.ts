@@ -3,7 +3,7 @@ import {
   DialogConfig,
   DialogRef,
 } from '@angular/cdk/dialog';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import {
   ApplicationConfig,
   inject,
@@ -44,8 +44,7 @@ export const APP_DIALOG_CONFIG: DialogConfig = {
 };
 
 async function initializeApp(): Promise<unknown> {
-  inject(Translate).load();
-  return loadModule('glpk.all.wasm');
+  return Promise.all([inject(Translate).load(), loadModule('glpk.all.wasm')]);
 }
 
 export const appConfig: ApplicationConfig = {
@@ -55,7 +54,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',

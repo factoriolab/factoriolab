@@ -12,7 +12,7 @@ import { cva } from 'class-variance-authority';
 
 import { IconType } from '~/data/icon-type';
 import { Color } from '~/state/preferences/color';
-import { InterpolateParams } from '~/translate/translate';
+import { TranslateParams } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Icon } from '../icon/icon';
@@ -126,7 +126,7 @@ export class Button {
   readonly toggled = input(false);
   readonly disabled = input(false);
   readonly textAlign = input<'left' | 'center' | 'right'>('center');
-  readonly interpolateParams = input<InterpolateParams>();
+  readonly textParams = input<TranslateParams>();
 
   readonly hostClass = computed(() =>
     host({

@@ -13,7 +13,7 @@
 }
 @if (text(); as text) {
   <span class="line-clamp-1 grow" [class]="alignClass()">{{
-    text | translate: interpolateParams()
+    text | translate: textParams()
   }}</span>
 }
 @if (toggleIcon(); as icon) {

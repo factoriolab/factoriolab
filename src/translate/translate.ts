@@ -1,103 +1,56 @@
-import { HttpClient } from '@angular/common/http';
-import { effect, inject, Injectable } from '@angular/core';
-import {
-  BehaviorSubject,
-  combineLatest,
-  distinctUntilChanged,
-  first,
-  map,
-  Observable,
-  of,
-  shareReplay,
-  switchMap,
-} from 'rxjs';
+import { httpResource } from '@angular/common/http';
+import { computed, inject, Injectable } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, firstValueFrom } from 'rxjs';
 
 import { PreferencesStore } from '~/state/preferences/preferences-store';
-import { log } from '~/utils/log';
-import { coalesce } from '~/utils/nullish';
-
-import { Language } from './language';
 
 export interface LangData {
   [key: string]: LangData | string;
 }
-export type InterpolateVal = string | number | null | undefined;
-export type InterpolateParams = Record<string, InterpolateVal>;
+export type TranslateData = Record<string, string | undefined>;
+export type TranslateVal = string | number | null | undefined;
+export type TranslateParams = Record<string, TranslateVal>;
+
+interface ParseEntry {
+  data: LangData;
+  key: string;
+  path: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class Translate {
-  private readonly http = inject(HttpClient);
   private readonly preferences = inject(PreferencesStore);
 
-  private templateMatcher = /{{\s?([^{}\s]*)\s?}}/g;
-  private langDataCache: Record<string, Observable<LangData>> = {};
-  private defaultLang$ = new BehaviorSubject<Language>('en');
-  private currentLang$ = new BehaviorSubject<Language>(
-    this.preferences.language(),
-  );
-  private defaultLangData$ = this.defaultLang$.pipe(
-    distinctUntilChanged(),
-    switchMap((lang) => this.getLangData(lang)),
-  );
-  private currentLangData$ = this.currentLang$.pipe(
-    distinctUntilChanged(),
-    switchMap((lang) => this.getLangData(lang)),
+  private readonly templateMatcher = /{{\s?([^{}\s]*)\s?}}/g;
+
+  private readonly defaultData = httpResource<LangData>(() => `i18n/en.json`);
+  private readonly currentData = httpResource<LangData>(
+    () => `i18n/${this.preferences.language()}.json`,
   );
 
-  protected getLangData(lang: string): Observable<LangData> {
-    this.langDataCache[lang] ??= this.http
-      .get<LangData>(`i18n/${lang}.json`)
-      .pipe(shareReplay(1));
+  data = computed(() => {
+    const curData = this.currentData.value();
+    const defData = this.defaultData.value();
+    const result: TranslateData = {};
+    if (defData != null) this.parseLangData(result, defData);
+    if (curData != null) this.parseLangData(result, curData);
+    return result;
+  });
 
-    return this.langDataCache[lang];
+  load(): Promise<boolean> {
+    return firstValueFrom(
+      toObservable(this.currentData.isLoading).pipe(filter((v) => v)),
+    );
   }
 
-  lang$ = this.currentLang$.asObservable();
-
-  get currentLang(): string {
-    return this.currentLang$.value;
+  get(key: string, params?: TranslateParams): string {
+    const result = this.data()[key];
+    if (result == null) return key;
+    return this.interpolate(result, params);
   }
 
-  constructor() {
-    effect(() => {
-      const lang = this.preferences.language();
-      if (this.currentLang$.value === lang) return;
-      this.currentLang$.next(lang);
-      log('set_lang', lang);
-    });
-  }
-
-  /** Subscribe to language data to ensure it is ready to use */
-  load(): void {
-    combineLatest([this.defaultLangData$, this.currentLangData$])
-      .pipe(first())
-      .subscribe();
-  }
-
-  getValue(langData: LangData, key: string): LangData | string | undefined {
-    let target: LangData | string | undefined = langData;
-    const keys = key.split('.');
-    key = '';
-    do {
-      key += coalesce(keys.shift(), '');
-      if (
-        typeof target === 'object' &&
-        target[key] != null &&
-        (typeof target[key] === 'object' || !keys.length)
-      ) {
-        target = target[key];
-        key = '';
-      } else if (!keys.length) {
-        target = undefined;
-      } else {
-        key += '.';
-      }
-    } while (keys.length);
-
-    return target;
-  }
-
-  interpolate(value: string, params?: InterpolateParams): string {
+  private interpolate(value: string, params?: TranslateParams): string {
     if (params == null) return value;
 
     return value.replace(
@@ -106,26 +59,26 @@ export class Translate {
     );
   }
 
-  get(key: string, params?: InterpolateParams): Observable<string> {
-    return this.currentLangData$.pipe(
-      switchMap((langData) => {
-        const result = this.getValue(langData, key);
-        if (typeof result === 'string') return of(result);
-        return this.defaultLangData$.pipe(
-          map((langData) => {
-            const result = this.getValue(langData, key);
-            return typeof result === 'string' ? result : key;
-          }),
-        );
-      }),
-      map((value) => this.interpolate(value, params)),
+  private parseLangData(result: TranslateData, data: LangData): void {
+    const entries = Object.keys(data).map(
+      (key): ParseEntry => ({ data, key, path: key }),
     );
-  }
-
-  multi<T extends string[]>(
-    keys: [...T],
-  ): Observable<{ [Index in keyof T]: string }>;
-  multi(keys: string[]): Observable<string[]> {
-    return combineLatest([...keys].map((k) => this.get(k)));
+    while (entries.length) {
+      const entry = entries.pop();
+      if (entry == null) break;
+      const data = entry.data[entry.key];
+      if (typeof data === 'string') result[entry.path] = data;
+      else {
+        entries.push(
+          ...Object.keys(data).map(
+            (key): ParseEntry => ({
+              data,
+              key,
+              path: `${entry.path}.${key}`,
+            }),
+          ),
+        );
+      }
+    }
   }
 }

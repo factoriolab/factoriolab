@@ -1,56 +1,27 @@
-import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { distinctUntilChanged, Subject, switchMap } from 'rxjs';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 
-import { InterpolateParams, Translate } from './translate';
-
-/**
- * Determines whether two records contain the same values. Nullish or empty
- * records are treated as equal.
- */
-function areRecordsEqual<T>(
-  a: Record<string, T> | undefined,
-  b: Record<string, T> | undefined,
-  compareFn: (a: T, b: T) => boolean = (a, b) => a === b,
-): boolean {
-  if (a == null) return b == null || !Object.keys(b).length;
-  if (b == null) return !Object.keys(a).length;
-
-  const aKeys = Object.keys(a);
-  const bKeys = Object.keys(b);
-  return (
-    aKeys.length === bKeys.length && aKeys.every((k) => compareFn(a[k], b[k]))
-  );
-}
+import { Translate, TranslateData, TranslateParams } from './translate';
 
 @Pipe({ name: 'translate', pure: false })
 export class TranslatePipe implements PipeTransform {
-  private readonly ref = inject(ChangeDetectorRef);
   private readonly translate = inject(Translate);
 
-  private params$ = new Subject<[string, InterpolateParams | undefined]>();
-  value = '';
+  private value = '';
+  private key: string | undefined;
+  private params: TranslateParams | undefined;
+  private data: TranslateData | undefined;
 
-  constructor() {
-    this.params$
-      .pipe(
-        distinctUntilChanged(
-          ([pKey, pParams], [cKey, cParams]) =>
-            pKey === cKey && areRecordsEqual(pParams, cParams),
-        ),
-
-        switchMap((params) => this.translate.get(...params)),
-        takeUntilDestroyed(),
-      )
-      .subscribe((value) => {
-        this.value = value;
-        this.ref.markForCheck();
-      });
-  }
-
-  transform(key?: string, interpolateParams?: InterpolateParams): string {
+  transform(key?: string, params?: TranslateParams): string {
     if (key == null) return '';
-    this.params$.next([key, interpolateParams]);
+
+    const data = this.translate.data();
+    if (key !== this.key || params !== this.params || data !== this.data) {
+      this.value = this.translate.get(key, params);
+      this.key = key;
+      this.params = params;
+      this.data = data;
+    }
+
     return this.value;
   }
 }

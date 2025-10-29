@@ -2,6 +2,7 @@ import { DOCUMENT, effect, inject, Injectable } from '@angular/core';
 
 import { Store } from '~/state/store';
 import { applyHue } from '~/utils/color';
+import { log } from '~/utils/log';
 import { spread } from '~/utils/object';
 import { storedSignal, storeValue } from '~/utils/stored-signal';
 
@@ -59,6 +60,10 @@ export class PreferencesStore extends Store<PreferencesState> {
       const hue = this.hue();
       applyHue(hue, 'brand', this.document.documentElement);
       applyHue(hue + 180, 'complement', this.document.documentElement);
+    });
+
+    effect(() => {
+      log('set_lang', this.language());
     });
   }
 

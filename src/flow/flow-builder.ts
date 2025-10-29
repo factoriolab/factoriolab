@@ -10,8 +10,10 @@ import { PreferencesState } from '~/state/preferences/preferences-state';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { AdjustedDataset } from '~/state/settings/dataset';
+import { displayRateInfo } from '~/state/settings/display-rate';
 import { Settings } from '~/state/settings/settings';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { Translate } from '~/translate/translate';
 
 import { FlowData } from './flow-data';
 
@@ -23,13 +25,16 @@ export class FlowBuilder {
   private readonly preferencesStore = inject(PreferencesStore);
   private readonly recipesStore = inject(RecipesStore);
   private readonly settingsStore = inject(SettingsStore);
+  private readonly translate = inject(Translate);
 
   flowData = computed(() => {
     const steps = this.objectivesStore.steps();
     const settings = this.settingsStore.settings();
     const preferences = this.preferencesStore.state();
     const data = this.recipesStore.adjustedDataset();
-    return this.buildGraph(steps, settings, preferences, data);
+    const suffixKey = displayRateInfo[settings.displayRate].suffix;
+    const suffix = this.translate.get(suffixKey);
+    return this.buildGraph(steps, suffix, settings, preferences, data);
   });
 
   recipeStepNodeType(step: Step): string {
@@ -38,13 +43,11 @@ export class FlowBuilder {
 
   buildGraph(
     steps: Step[],
+    suffix: string,
     settings: Settings,
     preferences: PreferencesState,
     data: AdjustedDataset,
   ): FlowData {
-    // TODO
-    const suffix = 'suffix';
-
     const itemPrec = preferences.columns.items.precision;
     const machinePrec = preferences.columns.machines.precision;
     const flow: FlowData = {

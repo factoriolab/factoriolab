@@ -12,7 +12,7 @@ import { sortedKeyValues } from '~/rational/key-value-sorted';
 import { Rational, rational } from '~/rational/rational';
 import { Solver } from '~/solver/solver';
 import { Step } from '~/solver/step';
-import { InterpolateParams } from '~/translate/translate';
+import { TranslateParams } from '~/translate/translate';
 import { coalesce, notNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 import { toRecord } from '~/utils/record';
@@ -622,7 +622,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     let detail = 'objectives.errorDetail';
     let recipeId: string | undefined;
     const info = 'objectives.errorSimplexInfo';
-    const params: InterpolateParams = {
+    const params: TranslateParams = {
       returnCode: coalesce(matrixResult.returnCode, 'unknown'),
       simplexStatus: coalesce(matrixResult.simplexStatus, 'unknown'),
     };

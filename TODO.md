@@ -4,11 +4,6 @@
 
 - Invert
 
-## Translate
-
-- Pure translate pipe?
-- Signal-based translate injectable?
-
 ## Performance
 
 - Optimize so that store / router sync are not part of initial bundle?

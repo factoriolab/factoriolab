@@ -9,14 +9,14 @@ import {
 } from '@angular/core';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
-import { InterpolateParams } from '~/translate/translate';
+import { TranslateParams } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
 
 export interface DialogData {
   header?: string;
-  headerParams?: InterpolateParams;
+  headerParams?: TranslateParams;
 }
 
 @Component({
@@ -36,7 +36,7 @@ export class Dialog extends CdkDialogContainer implements OnInit {
   protected faXmark = faXmark;
 
   protected header?: string;
-  protected headerParams?: InterpolateParams;
+  protected headerParams?: TranslateParams;
 
   ngOnInit(): void {
     this.parseData();

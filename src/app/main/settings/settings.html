@@ -116,7 +116,7 @@
             ? 'settings.techsResearched'
             : 'settings.allTechsResearched'
         "
-        [interpolateParams]="{ count: settings().researchedTechnologyIds.size }"
+        [textParams]="{ count: settings().researchedTechnologyIds.size }"
         labTooltip="settings.techsTooltip"
         labTooltipPosition="adjacent"
         (click)="dialog.open(TechnologiesDialog)"
@@ -127,7 +127,7 @@
         labButton
         [faIcon]="faFlaskVial"
         text="settings.recipesExcluded"
-        [interpolateParams]="{ count: settings().excludedRecipeIds.size }"
+        [textParams]="{ count: settings().excludedRecipeIds.size }"
         labTooltip="settings.recipesTooltip"
         labTooltipPosition="adjacent"
         (click)="picker.pickExcludedRecipes()"
@@ -138,7 +138,7 @@
         labButton
         [faIcon]="faBoxesStacked"
         text="settings.itemsExcluded"
-        [interpolateParams]="{ count: settings().excludedItemIds.size }"
+        [textParams]="{ count: settings().excludedItemIds.size }"
         labTooltip="settings.itemsTooltip"
         labTooltipPosition="adjacent"
         (click)="picker.pickExcludedItems()"
