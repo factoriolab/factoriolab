@@ -26,6 +26,7 @@ export interface Dataset {
   categoryRecord: Record<string, Category>;
   itemCategoryRows: Record<string, string[][]>;
   recipeCategoryRows: Record<string, string[][]>;
+  iconFile: string;
   iconIds: string[];
   iconRecord: Record<IconType, Record<string, IconData>>;
   itemIds: string[];

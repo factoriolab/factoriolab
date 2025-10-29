@@ -704,7 +704,8 @@ export class SettingsStore extends Store<SettingsState> {
       }
     }
 
-    const file = `url("data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp")`;
+    const iconFile = `data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp`;
+    const file = `url("${iconFile}")`;
     function toIconRecord(
       ids: string[],
       rec: Record<string, Category | Item | Recipe | IconJson>,
@@ -739,6 +740,7 @@ export class SettingsStore extends Store<SettingsState> {
       categoryRecord,
       itemCategoryRows,
       recipeCategoryRows,
+      iconFile,
       iconIds,
       iconRecord,
       itemIds,

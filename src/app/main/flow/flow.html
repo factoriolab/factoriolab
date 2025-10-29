@@ -1,1 +1,21 @@
-<p>flow works!</p>
+<div class="flex gap-1 sm:gap-2">
+  <button
+    type="button"
+    labButton
+    [faIcon]="faGear"
+    text="flow.flowSettings"
+  ></button>
+  @if (flowBuilder.flowData().nodes.length) {
+    <button
+      type="button"
+      labButton
+      [faIcon]="faFileArrowDown"
+      text="flow.downloadAsJson"
+      (click)="exporter.flowToJson(flowBuilder.flowData())"
+    ></button>
+  }
+</div>
+
+<div id="lab-flow-svg" class="overflow-auto" #svg></div>
+<!-- <lab-steps [focus]="true" [selectedId]="selectedId()"></lab-steps>
+<lab-flow-settings #flowSettingsDlg></lab-flow-settings> -->
