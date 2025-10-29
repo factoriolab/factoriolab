@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -15,6 +16,8 @@ import { drag, select, Selection, zoom } from 'd3';
 import { combineLatest, debounceTime } from 'rxjs';
 
 import { Button } from '~/components/button/button';
+import { FlowSettingsDialog } from '~/components/flow-settings-dialog/flow-settings-dialog';
+import { Steps } from '~/components/steps/steps';
 import {
   sankeyCenter,
   sankeyJustify,
@@ -50,14 +53,15 @@ const NODE_WIDTH = 32;
 
 @Component({
   selector: 'lab-flow',
-  imports: [Button],
+  imports: [Button, Steps],
   templateUrl: './flow.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex flex-col gap-1 sm:gap-2' },
+  host: { class: 'flex flex-col gap-1 sm:gap-2 pb-3 lg:pb-6' },
 })
 export class Flow implements AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly ref = inject(ChangeDetectorRef);
+  protected readonly dialog = inject(Dialog);
   protected readonly exporter = inject(Exporter);
   protected readonly flowBuilder = inject(FlowBuilder);
   private readonly preferencesStore = inject(PreferencesStore);
@@ -70,7 +74,7 @@ export class Flow implements AfterViewInit {
     | SankeyLayout<SankeyGraphMinimal<Node, Link>, Node, Link>
     | undefined;
 
-  selectedId = signal<string | null>(null);
+  selectedId = signal<string | undefined>(undefined);
   data$ = combineLatest({
     data: toObservable(this.flowBuilder.flowData),
     settings: toObservable(this.preferencesStore.flowSettings),
@@ -78,6 +82,7 @@ export class Flow implements AfterViewInit {
 
   protected readonly faFileArrowDown = faFileArrowDown;
   protected readonly faGear = faGear;
+  protected readonly FlowSettingsDialog = FlowSettingsDialog;
 
   ngAfterViewInit(): void {
     this.data$

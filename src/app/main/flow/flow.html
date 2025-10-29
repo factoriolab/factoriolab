@@ -4,6 +4,7 @@
     labButton
     [faIcon]="faGear"
     text="flow.flowSettings"
+    (click)="dialog.open(FlowSettingsDialog)"
   ></button>
   @if (flowBuilder.flowData().nodes.length) {
     <button
@@ -17,5 +18,4 @@
 </div>
 
 <div id="lab-flow-svg" class="overflow-auto" #svg></div>
-<!-- <lab-steps [focus]="true" [selectedId]="selectedId()"></lab-steps>
-<lab-flow-settings #flowSettingsDlg></lab-flow-settings> -->
+<lab-steps [focus]="true" [selectedId]="selectedId()"></lab-steps>

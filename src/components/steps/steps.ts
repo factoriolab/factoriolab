@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   input,
   signal,
@@ -107,6 +108,7 @@ export class Steps {
   protected readonly settingsStore = inject(SettingsStore);
 
   readonly focus = input(false);
+  readonly selectedId = input<string>();
 
   protected readonly cols = this.settingsStore.columnsState;
   protected readonly ColumnsDialog = ColumnsDialog;
@@ -133,9 +135,15 @@ export class Steps {
   protected readonly expandedSteps = signal<Set<string>>(new Set());
   readonly sort = signal<[SortColumn, -1 | 1] | null>(null);
 
+  protected readonly steps = computed(() => {
+    const steps = this.objectivesStore.steps();
+    if (!this.focus()) return steps;
+    return steps.filter((s) => s.id === this.selectedId());
+  });
+
   protected readonly sortedSteps = computed(() => {
     const sort = this.sort();
-    let steps = this.objectivesStore.steps();
+    let steps = this.steps();
     if (sort == null) return steps;
 
     const [col, dir] = sort;
@@ -158,6 +166,13 @@ export class Steps {
     return colspan;
   });
 
+  private readonly expandSelected = effect(() => {
+    const selectedId = this.selectedId();
+    if (selectedId == null) return;
+    if (this.expandedSteps().has(selectedId)) return;
+    this.toggleStep(selectedId);
+  });
+
   // Store per-recipe preferences in component memory
   perMachine: Record<string, boolean | undefined> = {};
 
@@ -169,11 +184,11 @@ export class Steps {
     });
   }
 
-  toggleStep(step: Step): void {
+  toggleStep(stepId: string): void {
     this.expandedSteps.update((s) =>
-      s.has(step.id)
-        ? new Set(Array.from(s).filter((s) => s !== step.id))
-        : new Set([...Array.from(s), step.id]),
+      s.has(stepId)
+        ? new Set(Array.from(s).filter((s) => s !== stepId))
+        : new Set([...Array.from(s), stepId]),
     );
   }
 

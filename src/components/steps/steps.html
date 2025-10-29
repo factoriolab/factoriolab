@@ -155,7 +155,7 @@
               [faIcon]="faAngleRight"
               [border]="false"
               [attr.aria-label]="tooltip | translate"
-              (click)="toggleStep(step)"
+              (click)="toggleStep(step.id)"
             ></button>
           </div>
         </td>
@@ -669,6 +669,16 @@
             }
           }
         }
+      }
+    } @empty {
+      @if (focus()) {
+        <tr>
+          <td colspan="100" class="border-b-0">
+            <div class="flex items-center justify-center">
+              {{ 'steps.emptyMessage' | translate }}
+            </div>
+          </td>
+        </tr>
       }
     }
   </tbody>
