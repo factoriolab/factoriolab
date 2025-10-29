@@ -2,7 +2,7 @@
   class="flex px-0.5 select-none group-hover:opacity-40"
   [class.opacity-40]="opened()"
 >
-  <ng-content select="[button]"></ng-content>
+  <ng-content></ng-content>
 </div>
 
 <fa-icon
@@ -24,7 +24,7 @@
     class="mt-1 flex origin-top flex-col gap-2 rounded-xs border border-gray-600 bg-gray-950 p-4 transition-all starting:scale-y-75 starting:opacity-0"
     animate.leave="animate-fade-y"
   >
-    <ng-content select="[overlay]"></ng-content>
+    <ng-container [ngTemplateOutlet]="content()"></ng-container>
     <div class="flex gap-2">
       <button
         type="button"

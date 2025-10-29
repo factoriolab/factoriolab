@@ -1,12 +1,15 @@
 import { CdkOverlayOrigin, OverlayModule } from '@angular/cdk/overlay';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChild,
   inject,
   input,
   output,
   signal,
+  TemplateRef,
 } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCheck, faGear, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -32,7 +35,7 @@ const host = cva(
 
 @Component({
   selector: 'lab-dropdown',
-  imports: [OverlayModule, FaIconComponent, Button],
+  imports: [NgTemplateOutlet, OverlayModule, FaIconComponent, Button],
   templateUrl: './dropdown.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -52,6 +55,8 @@ const host = cva(
 })
 export class Dropdown {
   protected readonly overlayOrigin = inject(CdkOverlayOrigin);
+  protected readonly content =
+    contentChild.required<TemplateRef<unknown>>('content');
 
   readonly controlId = input.required();
   readonly disabled = input(false);

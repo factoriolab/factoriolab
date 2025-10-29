@@ -5,31 +5,31 @@
   (open)="open()"
   (save)="save()"
 >
-  <ng-container button>
-    @for (module of value(); track module.id) {
-      @if (module.id === '') {
-        <lab-icon
-          value="module"
-          [text]="module.count?.toString()"
-          labTooltip="modulesSelect.tooltip"
-        ></lab-icon>
-      } @else if (module.id) {
-        <lab-icon
-          [value]="module.id"
-          type="item"
-          [text]="module.count?.toString()"
-          [labTooltip]="module.id"
-          labTooltipType="module"
-          labTooltipAction="modulesSelect.tooltip"
-        ></lab-icon>
-      }
+  @for (module of value(); track module.id) {
+    @if (module.id === '') {
+      <lab-icon
+        value="module"
+        [text]="module.count?.toString()"
+        labTooltip="modulesSelect.tooltip"
+      ></lab-icon>
+    } @else if (module.id) {
+      <lab-icon
+        [value]="module.id"
+        type="item"
+        [text]="module.count?.toString()"
+        [labTooltip]="module.id"
+        labTooltipType="module"
+        labTooltipAction="modulesSelect.tooltip"
+      ></lab-icon>
     }
-  </ng-container>
+  }
 
-  <lab-modules
-    overlay
-    [(value)]="editValue"
-    [entity]="machine()"
-    [recipeId]="recipeId()"
-  ></lab-modules>
+  <ng-template #content>
+    <lab-modules
+      overlay
+      [(value)]="editValue"
+      [entity]="machine()"
+      [recipeId]="recipeId()"
+    ></lab-modules>
+  </ng-template>
 </lab-dropdown>
