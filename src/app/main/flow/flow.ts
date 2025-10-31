@@ -170,7 +170,7 @@ export class Flow implements AfterViewInit {
       .append('textPath')
       .attr('startOffset', '4px')
       .attr('href', (l) => `#${l.index.toString()}`)
-      .attr('class', 'text-shadow-solid pointer-events-none')
+      .attr('class', 'pointer-events-none')
       .text((l) => `${l.text} ${l.name}`);
 
     // For use inside drag function
