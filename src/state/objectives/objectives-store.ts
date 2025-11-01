@@ -282,6 +282,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
   itemSourceMap = computed(() => {
     const steps = this.steps();
     const result = steps.reduce<Record<string, ItemSource[]>>((e, step) => {
+      if (step.itemId) e[step.itemId] ??= [];
       if (step.outputs == null) return e;
 
       for (const itemId of Object.keys(step.outputs)) {
@@ -293,17 +294,19 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     }, {});
 
     for (const itemId of Object.keys(result)) {
-      const inputs = result[itemId].reduce((r: Rational, o) => {
+      const sources = result[itemId];
+      if (sources == null) continue;
+      const inputs = sources.reduce((r: Rational, o) => {
         return r.sub(o.value);
       }, rational.one);
       if (inputs.nonzero()) {
-        result[itemId].push({
+        sources.push({
           isInput: true,
           value: inputs,
         });
       }
 
-      result[itemId].sort((a, b) => b.value.sub(a.value).toNumber());
+      sources.sort((a, b) => b.value.sub(a.value).toNumber());
     }
 
     return result;
@@ -357,7 +360,9 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
 
         if (
           itemSources.length > 1 ||
-          (itemSources.length === 1 && itemSources[0].step?.id !== s.id)
+          (itemSources.length === 1 &&
+            itemSources[0].step?.id !== s.id &&
+            !itemSources[0].isInput)
         ) {
           sources = itemSources.map((i) => ({
             items: s.items?.mul(i.value),
