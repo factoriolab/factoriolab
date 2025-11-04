@@ -12,8 +12,9 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { faFileArrowDown, faGear } from '@fortawesome/free-solid-svg-icons';
-import { drag, select, Selection, zoom } from 'd3';
-import { combineLatest, debounceTime } from 'rxjs';
+import { drag, line, select, Selection, zoom } from 'd3';
+import ELK, { ElkExtendedEdge, ElkNode } from 'elkjs';
+import { combineLatest, debounceTime, switchMap } from 'rxjs';
 
 import { Button } from '~/components/button/button';
 import { FlowSettingsDialog } from '~/components/flow-settings-dialog/flow-settings-dialog';
@@ -51,6 +52,11 @@ import { spread } from '~/utils/object';
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
 
+interface ElkGraph extends ElkNode {
+  children: (Node & ElkNode)[];
+  edges: (Link & ElkExtendedEdge)[];
+}
+
 @Component({
   selector: 'lab-flow',
   imports: [Button, Steps],
@@ -70,9 +76,6 @@ export class Flow implements AfterViewInit {
 
   height = window.innerHeight * 0.75;
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
-  skLayout:
-    | SankeyLayout<SankeyGraphMinimal<Node, Link>, Node, Link>
-    | undefined;
 
   selectedId = signal<string | undefined>(undefined);
   data$ = combineLatest({
@@ -80,43 +83,44 @@ export class Flow implements AfterViewInit {
     settings: toObservable(this.preferencesStore.flowSettings),
   });
 
+  private readonly elk = new ELK();
   protected readonly faFileArrowDown = faFileArrowDown;
   protected readonly faGear = faGear;
   protected readonly FlowSettingsDialog = FlowSettingsDialog;
 
   ngAfterViewInit(): void {
     this.data$
-      .pipe(debounceTime(0), takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ data, settings }) => {
-        this.rebuildChart(data, settings);
-      });
+      .pipe(
+        debounceTime(0),
+        takeUntilDestroyed(this.destroyRef),
+        switchMap(({ data, settings }) => this.rebuildChart(data, settings)),
+      )
+      .subscribe();
   }
 
-  rebuildChart(flowData: FlowData, flowSettings: FlowSettings): void {
+  async rebuildChart(
+    flowData: FlowData,
+    flowSettings: FlowSettings,
+  ): Promise<void> {
     select(`#${SVG_ID} > *`).remove();
 
     if (flowData.nodes.length && flowData.links.length) {
       if (flowSettings.diagram === FlowDiagram.Sankey) {
         this.rebuildSankey(flowData, flowSettings);
       } else {
-        this.rebuildBoxLine(flowData);
+        await this.rebuildBoxLine(flowData);
       }
     }
-
-    this.ref.detectChanges();
   }
 
   rebuildSankey(flowData: FlowData, flowSettings: FlowSettings): void {
-    let skGraph = this.getLayout(
-      flowData,
-      flowSettings.sankeyAlign,
-      800,
-      this.height,
-    );
+    let layout = this.getLayout(flowSettings.sankeyAlign, 800, this.height);
+    let skGraph = this.getGraph(layout, flowData);
     const columns = Math.max(...skGraph.nodes.map((d) => coalesce(d.depth, 0)));
     const width = (columns + 1) * NODE_WIDTH + columns * NODE_WIDTH * 8;
     const height = Math.min(this.height, width * 0.75);
-    skGraph = this.getLayout(flowData, flowSettings.sankeyAlign, width, height);
+    layout = this.getLayout(flowSettings.sankeyAlign, width, height);
+    skGraph = this.getGraph(layout, flowData);
 
     const svg = select(this.svgElement().nativeElement)
       .append('svg')
@@ -173,13 +177,10 @@ export class Flow implements AfterViewInit {
       .attr('class', 'pointer-events-none')
       .text((l) => `${l.text} ${l.name}`);
 
-    // For use inside drag function
-    const layout = this.skLayout;
-
     // Draw rects for nodes
     svg
       .append('g')
-      .attr('stroke', 'var(--surface-border)')
+      .attr('stroke', 'var(--color-gray-700)')
       .selectAll<SVGRectElement, SankeyNode<Node, Link>>('rect')
       .data(skGraph.nodes)
       .join('rect')
@@ -210,9 +211,7 @@ export class Flow implements AfterViewInit {
 
             // also move the image
             select(`[id='image-${d.id}']`).attr('transform', transform);
-            if (layout) {
-              layout.update(skGraph);
-            }
+            layout.update(skGraph);
 
             // force an update of the path
             path.attr('d', (l) => {
@@ -257,100 +256,147 @@ export class Flow implements AfterViewInit {
           (coalesce(d.y1, 0) + coalesce(d.y0, 0)) / 2 -
           Math.min(30, this.nodeHeight(d) - 2) / 2,
       )
-      .style('pointer-events', 'none')
+      .attr('class', 'pointer-events-none')
       .append('image')
       .attr('href', (d) => coalesce(d.href, ''));
 
     this.svg = svg;
   }
 
-  rebuildBoxLine(flow: FlowData): void {
-    // const nodes = flow.nodes.map((n) => ({
-    //   id: n.id,
-    //   data: n,
-    // }));
-    // const links = flow.links.map((l) => ({
-    //   id: `${l.source}|${l.target}`,
-    //   data: {
-    //     id: `${l.source}|${l.target}`,
-    //     source: l.source,
-    //     target: l.target,
-    //     value: l.value,
-    //     color: l.color,
-    //     label: `${l.text}\n${l.name}`,
-    //   },
-    // }));
-    // const max = Math.max(...flow.links.map((l) => l.value));
-    // const color =
-    //   getComputedStyle(this.svgElement().nativeElement).getPropertyValue(
-    //     '--text-color',
-    //   ) || 'black';
-    // const layout = {
-    //   name: 'elk',
-    //   fit: true,
-    //   elk: {
-    //     algorithm: 'layered',
-    //     'spacing.nodeNode': 50,
-    //     'spacing.nodeNodeBetweenLayers': 100,
-    //   },
-    // } as unknown as cytoscape.LayoutOptions; // Elk layout unrecognized
-    // this.cy = cytoscape({
-    //   container: this.svgElement().nativeElement,
-    //   elements: [...nodes, ...links],
-    //   wheelSensitivity: 0.1,
-    //   style: [
-    //     {
-    //       selector: 'node',
-    //       style: {
-    //         shape: 'round-rectangle',
-    //         height: '64px',
-    //         width: '64px',
-    //         'border-color': 'data(color)',
-    //         'border-width': '4px',
-    //         'background-color': 'data(color)',
-    //         'background-image': 'data(href)',
-    //         'background-position-x': 'data(posX)',
-    //         'background-position-y': 'data(posY)',
-    //         label: 'data(text)',
-    //         color,
-    //         'font-size': '12px',
-    //         'text-valign': 'bottom',
-    //         'text-margin-y': 6,
-    //       },
-    //     } as unknown as cytoscape.Stylesheet,
-    //     {
-    //       selector: 'edge',
-    //       style: {
-    //         width: `mapData(value, 0, ${max.toString()}, 1, 16)`,
-    //         label: 'data(label)',
-    //         'text-rotation': 'autorotate',
-    //         color,
-    //         'font-size': '12px',
-    //         'text-wrap': 'wrap',
-    //         'target-arrow-shape': 'triangle',
-    //         'curve-style': 'bezier',
-    //         'line-color': 'data(color)',
-    //         'target-arrow-color': 'data(color)',
-    //         'control-point-step-size': 96,
-    //       },
-    //     },
-    //   ],
-    //   layout,
-    // });
-    // this.cy.nodes().on('click', (e) => {
-    //   this.selectedId.set(
-    //     (e.target as { data: () => { stepId: string } }).data().stepId,
-    //   );
-    // });
+  async rebuildBoxLine(flow: FlowData): Promise<void> {
+    const graph: ElkGraph = {
+      id: 'root',
+      layoutOptions: { 'elk.algorithm': 'layered' },
+      children: flow.nodes.map((n) => ({ ...n, ...{ width: 36, height: 36 } })),
+      edges: flow.links.map((n) => ({
+        ...n,
+        ...{
+          id: n.source + '|' + n.target,
+          sources: [n.source],
+          targets: [n.target],
+        },
+      })),
+    };
+    const result = await this.elk.layout(graph);
+
+    console.log(result);
+
+    if (
+      result.children == null ||
+      result.edges == null ||
+      result.width == null ||
+      result.height == null
+    )
+      return;
+
+    const svg = select(this.svgElement().nativeElement)
+      .append('svg')
+      .attr(
+        'viewBox',
+        `0 0 ${result.width.toString()} ${result.height.toString()}`,
+      )
+      .attr('class', 'min-h-[75dvh]');
+
+    svg.call(
+      zoom<SVGSVGElement, unknown>().on(
+        'zoom',
+        (e: { transform: string }): void => {
+          svg.selectAll('svg > g').attr('transform', e.transform);
+        },
+      ),
+    );
+
+    const edge = svg
+      .append('g')
+      .attr('fill', 'none')
+      .selectAll('g')
+      .data(result.edges)
+      .join('g')
+      .style('mix-blend-mode', 'multiply');
+
+    const marker = svg
+      .append('defs')
+      .selectAll('marker')
+      .data(result.edges)
+      .join('marker')
+      .attr('id', (e) => `arrow-${e.id}`)
+      .attr('viewBox', [0, 0, 640, 640])
+      .attr('refX', 540)
+      .attr('refY', 320)
+      .attr('markerWidth', 6)
+      .attr('markerHeight', 6)
+      .attr('orient', 'auto-start-reverse')
+      .append('path')
+      .attr(
+        'd',
+        'M187.2 100.9C174.8 94.1 159.8 94.4 147.6 101.6C135.4 108.8 128 121.9 128 136L128 504C128 518.1 135.5 531.2 147.6 538.4C159.7 545.6 174.8 545.9 187.2 539.1L523.2 355.1C536 348.1 544 334.6 544 320C544 305.4 536 291.9 523.2 284.9L187.2 100.9z',
+      )
+      .attr('fill', (e) => e.color);
+
+    const path = edge
+      .append('path')
+      .attr('d', (e) =>
+        line()(
+          coalesce(e.sections, []).flatMap((section) => [
+            [section.startPoint.x, section.startPoint.y],
+            [section.endPoint.x, section.endPoint.y],
+          ]),
+        ),
+      )
+      .attr('stroke', (e) => e.color)
+      .attr('stroke-width', 2)
+      .attr('marker-end', (e) => `url(#arrow-${e.id})`);
+
+    edge.append('title').text((e) => e.name);
+
+    // Draw rects for nodes
+    svg
+      .append('g')
+      .attr('stroke', 'var(--color-gray-700')
+      .selectAll<SVGRectElement, SankeyNode<Node, Link>>('rect')
+      .data(result.children)
+      .join('rect')
+      .attr('class', 'cursor-pointer hover:stroke-brand-500')
+      .attr('x', (d) => coalesce(d.x, 0))
+      .attr('y', (d) => coalesce(d.y, 0))
+      .attr('ry', 2)
+      .attr('rx', 2)
+      .attr('height', 36)
+      .attr('width', 36)
+      .attr('fill', (d) => d.color)
+      .on('click', (e: Event, d) => {
+        if (e.defaultPrevented) return;
+        this.selectedId.set(d.stepId);
+      })
+      .append('title')
+      .text((d) => d.name);
+
+    // TODO: Handle rect drag
+
+    svg
+      .append('g')
+      .selectAll('svg')
+      .data(result.children)
+      .join('g')
+      .append('svg')
+      .attr('viewBox', (d) => d.viewBox)
+      .attr('width', 32)
+      .attr('height', 32)
+      .attr('x', (d) => coalesce(d.x, 0) + 2)
+      .attr('y', (d) => coalesce(d.y, 0) + 2)
+      .attr('class', 'pointer-events-none')
+      .append('image')
+      .attr('href', (d) => d.href);
+
+    this.svg = svg;
   }
 
-  getLayout(
-    data: FlowData,
+  private getLayout(
     align: SankeyAlign,
     width: number,
     height: number,
-  ): SankeyGraph<Node, Link> {
-    this.skLayout = sankey<Node, Link>()
+  ): SankeyLayout<SankeyGraphMinimal<Node, Link>, Node, Link> {
+    return sankey<Node, Link>()
       .nodeId((d) => d.id)
       .nodeWidth(NODE_WIDTH)
       .nodeAlign(this.getAlign(align))
@@ -358,8 +404,13 @@ export class Flow implements AfterViewInit {
         [1, 5],
         [width - 1, height - 5],
       ]);
+  }
 
-    return this.skLayout({
+  private getGraph(
+    layout: SankeyLayout<SankeyGraphMinimal<Node, Link>, Node, Link>,
+    data: FlowData,
+  ): SankeyGraph<Node, Link> {
+    return layout({
       nodes: data.nodes
         .filter((n) =>
           data.links.some((l) => l.source === n.id || l.target === n.id),
@@ -369,7 +420,7 @@ export class Flow implements AfterViewInit {
     });
   }
 
-  getAlign(
+  private getAlign(
     align: SankeyAlign | undefined,
   ): (node: SankeyNode<Node, Link>, n: number) => number {
     switch (align) {
@@ -384,7 +435,7 @@ export class Flow implements AfterViewInit {
     }
   }
 
-  nodeHeight(d: SankeyNode<Node, Link>): number {
+  private nodeHeight(d: SankeyNode<Node, Link>): number {
     return coalesce(d.y1, 0) - coalesce(d.y0, 0);
   }
 }
