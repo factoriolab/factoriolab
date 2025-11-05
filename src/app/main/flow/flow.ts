@@ -52,8 +52,11 @@ import { spread } from '~/utils/object';
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
 
+type BoxNode = Node & ElkNode;
+type BoxEdge = Link & { id: string; sourceNode: BoxNode; targetNode: BoxNode };
+
 interface ElkGraph extends ElkNode {
-  children: (Node & ElkNode)[];
+  children: BoxNode[];
   edges: (Link & ElkExtendedEdge)[];
 }
 
@@ -289,6 +292,16 @@ export class Flow implements AfterViewInit {
     )
       return;
 
+    const boxes = result.children;
+    const edges = flow.links.map(
+      (l): BoxEdge =>
+        spread<BoxEdge>(l as unknown as BoxEdge, {
+          id: `${l.source}|${l.target}`,
+          sourceNode: boxes.find((b) => b.id === l.source),
+          targetNode: boxes.find((b) => b.id === l.target),
+        }),
+    );
+
     const svg = select(this.svgElement().nativeElement)
       .append('svg')
       .attr(
@@ -310,18 +323,18 @@ export class Flow implements AfterViewInit {
       .append('g')
       .attr('fill', 'none')
       .selectAll('g')
-      .data(result.edges)
+      .data(edges)
       .join('g')
       .style('mix-blend-mode', 'multiply');
 
     const marker = svg
       .append('defs')
       .selectAll('marker')
-      .data(result.edges)
+      .data(edges)
       .join('marker')
       .attr('id', (e) => `arrow-${e.id}`)
       .attr('viewBox', [0, 0, 640, 640])
-      .attr('refX', 540)
+      .attr('refX', 320)
       .attr('refY', 320)
       .attr('markerWidth', 6)
       .attr('markerHeight', 6)
@@ -333,16 +346,68 @@ export class Flow implements AfterViewInit {
       )
       .attr('fill', (e) => e.color);
 
+    function getPoint(value: number | undefined): number {
+      value = coalesce(value, 0);
+      return value + 18;
+    }
+
+    function getIntersect(
+      source: [number, number],
+      target: [number, number],
+    ): [number, number] {
+      const [ox, oy] = source;
+      const [x0, y0] = target;
+      const vx = ox - x0;
+      const vy = oy - y0;
+
+      const distance = 18;
+
+      const dx = vx > 0 ? 1 : -1;
+      const ex = x0 + dx * distance;
+      const dy = vy > 0 ? 1 : -1;
+      const ey = y0 + dy * distance;
+      if (vx === 0) return [x0, ey];
+      if (vy === 0) return [ex, y0];
+      const tx = (ex - x0) / vx;
+      const ty = (ey - y0) / vy;
+
+      if (tx <= ty) return [ex, y0 + tx * vy];
+      return [x0 + ty * vx, ey];
+    }
+
+    function getOffset(
+      source: [number, number],
+      target: [number, number],
+      distance: number,
+    ): [number, number] {
+      const [ox, oy] = target;
+      const [x0, y0] = source;
+      const vx = x0 - ox;
+      const vy = y0 - oy;
+      const m = Math.sqrt(vx * vx + vy * vy);
+      if (m === 0) return target;
+      const ux = vx / m;
+      const uy = vy / m;
+      const nx = ox + ux * distance;
+      const ny = oy + uy * distance;
+      return [nx, ny];
+    }
+
     const path = edge
       .append('path')
-      .attr('d', (e) =>
-        line()(
-          coalesce(e.sections, []).flatMap((section) => [
-            [section.startPoint.x, section.startPoint.y],
-            [section.endPoint.x, section.endPoint.y],
-          ]),
-        ),
-      )
+      .attr('d', (e) => {
+        const source: [number, number] = [
+          getPoint(e.sourceNode.x),
+          getPoint(e.sourceNode.y),
+        ];
+        const target: [number, number] = [
+          getPoint(e.targetNode.x),
+          getPoint(e.targetNode.y),
+        ];
+        const intersect = getIntersect(source, target);
+        const offset = getOffset(source, intersect, 5);
+        return line()([source, offset]);
+      })
       .attr('stroke', (e) => e.color)
       .attr('stroke-width', 2)
       .attr('marker-end', (e) => `url(#arrow-${e.id})`);
@@ -380,6 +445,20 @@ export class Flow implements AfterViewInit {
             select(`[id='image-${d.id}']`)
               .attr('x', d.x + 2)
               .attr('y', d.y + 2);
+
+            path.attr('d', (e) => {
+              const source: [number, number] = [
+                getPoint(e.sourceNode.x),
+                getPoint(e.sourceNode.y),
+              ];
+              const target: [number, number] = [
+                getPoint(e.targetNode.x),
+                getPoint(e.targetNode.y),
+              ];
+              const intersect = getIntersect(source, target);
+              const offset = getOffset(source, intersect, 5);
+              return line()([source, offset]);
+            });
           }),
       )
       .append('title')
