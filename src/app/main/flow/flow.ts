@@ -368,10 +368,22 @@ export class Flow implements AfterViewInit {
         if (e.defaultPrevented) return;
         this.selectedId.set(d.stepId);
       })
+      .call(
+        drag<SVGRectElement, Node & ElkNode>()
+          .subject((d) => d as Node & ElkNode)
+          .on('drag', function (this, event: { dy: number; dx: number }, d) {
+            d.y = coalesce(d.y, 0) + event.dy;
+            d.x = coalesce(d.x, 0) + event.dx;
+            select(this).attr('x', d.x).attr('y', d.y);
+
+            // also move the image
+            select(`[id='image-${d.id}']`)
+              .attr('x', d.x + 2)
+              .attr('y', d.y + 2);
+          }),
+      )
       .append('title')
       .text((d) => d.name);
-
-    // TODO: Handle rect drag
 
     svg
       .append('g')
@@ -384,6 +396,7 @@ export class Flow implements AfterViewInit {
       .attr('height', 32)
       .attr('x', (d) => coalesce(d.x, 0) + 2)
       .attr('y', (d) => coalesce(d.y, 0) + 2)
+      .attr('id', (d) => `image-${d.id}`)
       .attr('class', 'pointer-events-none')
       .append('image')
       .attr('href', (d) => d.href);
