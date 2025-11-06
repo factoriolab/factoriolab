@@ -4,6 +4,7 @@ import {
   STANDARD_DROPDOWN_ADJACENT_POSITIONS,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '@angular/cdk/overlay';
+import { Platform } from '@angular/cdk/platform';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
   afterNextRender,
@@ -26,6 +27,7 @@ import { TooltipType } from './tooltip-type';
 @Directive({
   selector: '[labTooltip]',
   host: {
+    '(mouseenter)': 'enter()',
     '(mouseleave)': 'hide()',
     '(touchstart)': 'touch()',
     '(touchend)': 'cancelTouch()',
@@ -37,6 +39,7 @@ export class Tooltip implements OnDestroy {
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly overlay = inject(Overlay);
   private readonly injector = inject(Injector);
+  private readonly platform = inject(Platform);
 
   readonly labTooltip = input<string>();
   readonly labTooltipType = input<TooltipType>();
@@ -99,9 +102,6 @@ export class Tooltip implements OnDestroy {
 
     ref.attach(new ComponentPortal(TooltipOverlay, undefined, injector));
     this.overlayRef = ref;
-    ref.hostElement.addEventListener('mouseleave', () => {
-      this.hide();
-    });
 
     /** Update position after next render to account for tooltip size */
     afterNextRender(
@@ -110,6 +110,12 @@ export class Tooltip implements OnDestroy {
       },
       { injector: this.injector },
     );
+  }
+
+  enter(): void {
+    // Ignore mouse enter on mobile
+    if (this.platform.IOS || this.platform.ANDROID) return;
+    this.show();
   }
 
   private touchTimer: number | undefined;
