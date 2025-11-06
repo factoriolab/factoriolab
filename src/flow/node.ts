@@ -9,8 +9,8 @@ export interface Node extends BaseData {
   machineId?: string;
 
   stepId: string;
-  posX: string;
-  posY: string;
   viewBox: string;
   href: string;
+
+  subBox?: string;
 }

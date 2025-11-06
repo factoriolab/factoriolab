@@ -89,7 +89,7 @@ export class FlowBuilder {
           color: icon.color,
           stepId: step.id,
           href: data.iconFile,
-          ...this.positionProps(icon),
+          viewBox: this.viewBox(icon),
         });
 
         if (step.parents) {
@@ -131,7 +131,7 @@ export class FlowBuilder {
             color: 'var(--color-complement-500)',
             stepId: step.id,
             href: data.iconFile,
-            ...this.positionProps(icon),
+            viewBox: this.viewBox(icon),
           });
           flow.links.push({
             source: id,
@@ -164,7 +164,7 @@ export class FlowBuilder {
             color: 'var(--color-brand-500)',
             stepId: step.id,
             href: data.iconFile,
-            ...this.positionProps(icon),
+            viewBox: this.viewBox(icon),
           });
           flow.links.push({
             source: id,
@@ -191,17 +191,19 @@ export class FlowBuilder {
       if (step.recipeId && step.machines && step.recipeSettings?.machineId) {
         const recipe = data.recipeRecord[step.recipeId];
         const machine = data.itemRecord[step.recipeSettings?.machineId];
-        const icon = data.iconRecord.recipe[recipe.id];
+        const machineIcon = data.iconRecord.item[machine.id];
+        const recipeIcon = data.iconRecord.recipe[recipe.id];
         const id = `${this.recipeStepNodeType(step)}|${step.recipeId}`;
         flow.nodes.push({
           id,
           name: recipe.name,
           text: `${step.machines.toString(machinePrec)} ${machine.name}`,
-          color: icon.color,
+          color: recipeIcon.color,
           stepId: step.id,
           href: data.iconFile,
           recipe,
-          ...this.positionProps(icon),
+          viewBox: this.viewBox(machineIcon),
+          subBox: this.viewBox(recipeIcon),
         });
 
         if (step.outputs) {
@@ -274,14 +276,8 @@ export class FlowBuilder {
     }
   }
 
-  positionProps(icon: IconData): {
-    posX: string;
-    posY: string;
-    viewBox: string;
-  } {
-    const [posX, posY] = icon.position.split(' ');
-    const viewBox = `${icon.position.replace(/px/g, '').replace(/-/g, '')} 64 64`;
-    return { posX, posY, viewBox };
+  viewBox(icon: IconData): string {
+    return `${icon.position.replace(/px/g, '').replace(/-/g, '')} 64 64`;
   }
 
   linkSize(

@@ -1,7 +1,6 @@
 import { Link, link, linkHorizontal, Path } from 'd3';
 
-import { coalesce } from '~/utils/nullish';
-
+import { num } from '../helpers';
 import {
   SankeyLink,
   SankeyLinkExtraProperties,
@@ -68,10 +67,6 @@ function bumpSankeyLoopX(
 ): (context: CanvasRenderingContext2D | Path) => BumpSankeyLoop {
   return (context: CanvasRenderingContext2D | Path) =>
     new BumpSankeyLoop(context, width, padding, bottom0, bottom1);
-}
-
-function num(n: number | undefined): number {
-  return coalesce(n, 0);
 }
 
 export class BumpSankeyLoop {

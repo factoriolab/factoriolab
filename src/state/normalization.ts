@@ -3,8 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import {
   SankeyLinkExtraProperties,
   SankeyNodeExtraProperties,
-} from '~/d3-sankey/models';
-import { sankey } from '~/d3-sankey/sankey';
+} from '~/d3/sankey/models';
+import { sankey } from '~/d3/sankey/sankey';
 import { EnergyType } from '~/data/schema/energy-type';
 import { Rational, rational } from '~/rational/rational';
 import { Step } from '~/solver/step';

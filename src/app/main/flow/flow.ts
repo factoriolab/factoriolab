@@ -12,31 +12,33 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { faFileArrowDown, faGear } from '@fortawesome/free-solid-svg-icons';
-import { drag, line, select, Selection, zoom } from 'd3';
+import { drag, select, Selection, zoom } from 'd3';
 import ELK, { ElkExtendedEdge, ElkNode } from 'elkjs';
 import { combineLatest, debounceTime, switchMap } from 'rxjs';
 
 import { Button } from '~/components/button/button';
 import { FlowSettingsDialog } from '~/components/flow-settings-dialog/flow-settings-dialog';
 import { Steps } from '~/components/steps/steps';
+import { boxEdgeLine } from '~/d3/box-line/box-line-edge';
+import { BoxEdge, BoxNode } from '~/d3/box-line/models';
 import {
   sankeyCenter,
   sankeyJustify,
   sankeyLeft,
   sankeyRight,
-} from '~/d3-sankey/align';
+} from '~/d3/sankey/align';
 import {
   SankeyGraph,
   SankeyGraphMinimal,
   SankeyLayout,
   SankeyLinkExtraProperties,
   SankeyNode,
-} from '~/d3-sankey/models';
-import { sankey } from '~/d3-sankey/sankey';
+} from '~/d3/sankey/models';
+import { sankey } from '~/d3/sankey/sankey';
 import {
   sankeyLinkHorizontal,
   sankeyLinkLoop,
-} from '~/d3-sankey/sankey-link-horizontal';
+} from '~/d3/sankey/sankey-link-horizontal';
 import { Exporter } from '~/exporter/exporter';
 import { FlowBuilder } from '~/flow/flow-builder';
 import { FlowData } from '~/flow/flow-data';
@@ -51,9 +53,6 @@ import { spread } from '~/utils/object';
 
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
-
-type BoxNode = Node & ElkNode;
-type BoxEdge = Link & { id: string; sourceNode: BoxNode; targetNode: BoxNode };
 
 interface ElkGraph extends ElkNode {
   children: BoxNode[];
@@ -327,7 +326,7 @@ export class Flow implements AfterViewInit {
       .join('g')
       .style('mix-blend-mode', 'multiply');
 
-    const marker = svg
+    svg
       .append('defs')
       .selectAll('marker')
       .data(edges)
@@ -346,139 +345,120 @@ export class Flow implements AfterViewInit {
       )
       .attr('fill', (e) => e.color);
 
-    function getPoint(value: number | undefined): number {
-      value = coalesce(value, 0);
-      return value + 18;
-    }
-
-    function getIntersect(
-      source: [number, number],
-      target: [number, number],
-    ): [number, number] {
-      const [ox, oy] = source;
-      const [x0, y0] = target;
-      const vx = ox - x0;
-      const vy = oy - y0;
-
-      const distance = 18;
-
-      const dx = vx > 0 ? 1 : -1;
-      const ex = x0 + dx * distance;
-      const dy = vy > 0 ? 1 : -1;
-      const ey = y0 + dy * distance;
-      if (vx === 0) return [x0, ey];
-      if (vy === 0) return [ex, y0];
-      const tx = (ex - x0) / vx;
-      const ty = (ey - y0) / vy;
-
-      if (tx <= ty) return [ex, y0 + tx * vy];
-      return [x0 + ty * vx, ey];
-    }
-
-    function getOffset(
-      source: [number, number],
-      target: [number, number],
-      distance: number,
-    ): [number, number] {
-      const [ox, oy] = target;
-      const [x0, y0] = source;
-      const vx = x0 - ox;
-      const vy = y0 - oy;
-      const m = Math.sqrt(vx * vx + vy * vy);
-      if (m === 0) return target;
-      const ux = vx / m;
-      const uy = vy / m;
-      const nx = ox + ux * distance;
-      const ny = oy + uy * distance;
-      return [nx, ny];
-    }
-
     const path = edge
       .append('path')
-      .attr('d', (e) => {
-        const source: [number, number] = [
-          getPoint(e.sourceNode.x),
-          getPoint(e.sourceNode.y),
-        ];
-        const target: [number, number] = [
-          getPoint(e.targetNode.x),
-          getPoint(e.targetNode.y),
-        ];
-        const intersect = getIntersect(source, target);
-        const offset = getOffset(source, intersect, 5);
-        return line()([source, offset]);
-      })
+      .attr('d', (e) => boxEdgeLine(5)(e))
       .attr('stroke', (e) => e.color)
       .attr('stroke-width', 2)
       .attr('marker-end', (e) => `url(#arrow-${e.id})`);
+    const textPath = edge
+      .append('path')
+      .attr('id', (e) => e.id)
+      .attr('d', (e) => boxEdgeLine(5, true)(e));
 
     edge.append('title').text((e) => e.name);
 
-    // Draw rects for nodes
     svg
       .append('g')
-      .attr('stroke', 'var(--color-gray-700')
-      .selectAll<SVGRectElement, SankeyNode<Node, Link>>('rect')
+      .selectAll('text')
+      .data(edges)
+      .join('text')
+      .attr('dy', '-2px')
+      .attr('class', 'fill-gray-50 text-[6px]')
+      .append('textPath')
+      .attr('startOffset', '50%')
+      .style('text-anchor', 'middle')
+      .attr('href', (e) => `#${e.id}`)
+      .attr('class', 'pointer-events-none')
+      .text((l) => `${l.text} ${l.name}`);
+
+    // Main node svg
+    const node = svg
+      .append('g')
+      .selectAll<SVGSVGElement, unknown>('svg')
       .data(result.children)
-      .join('rect')
-      .attr('class', 'cursor-pointer hover:stroke-brand-500')
+      .join('svg')
+      .attr('class', 'overflow-visible')
       .attr('x', (d) => coalesce(d.x, 0))
       .attr('y', (d) => coalesce(d.y, 0))
-      .attr('ry', 2)
-      .attr('rx', 2)
-      .attr('height', 36)
-      .attr('width', 36)
-      .attr('fill', (d) => d.color)
       .on('click', (e: Event, d) => {
         if (e.defaultPrevented) return;
         this.selectedId.set(d.stepId);
       })
       .call(
-        drag<SVGRectElement, Node & ElkNode>()
+        drag<SVGSVGElement, Node & ElkNode>()
           .subject((d) => d as Node & ElkNode)
           .on('drag', function (this, event: { dy: number; dx: number }, d) {
             d.y = coalesce(d.y, 0) + event.dy;
             d.x = coalesce(d.x, 0) + event.dx;
             select(this).attr('x', d.x).attr('y', d.y);
-
-            // also move the image
-            select(`[id='image-${d.id}']`)
-              .attr('x', d.x + 2)
-              .attr('y', d.y + 2);
-
-            path.attr('d', (e) => {
-              const source: [number, number] = [
-                getPoint(e.sourceNode.x),
-                getPoint(e.sourceNode.y),
-              ];
-              const target: [number, number] = [
-                getPoint(e.targetNode.x),
-                getPoint(e.targetNode.y),
-              ];
-              const intersect = getIntersect(source, target);
-              const offset = getOffset(source, intersect, 5);
-              return line()([source, offset]);
-            });
+            path.attr('d', (e) => boxEdgeLine(5)(e));
+            textPath.attr('d', (e) => boxEdgeLine(5, true)(e));
           }),
-      )
+      );
+
+    // Node rect
+    node
+      .append('rect')
+      .attr('stroke', 'var(--color-gray-700')
+      .attr('class', 'cursor-pointer hover:stroke-brand-500')
+      .attr('x', 1)
+      .attr('y', 1)
+      .attr('ry', 2)
+      .attr('rx', 2)
+      .attr('height', 36)
+      .attr('width', 36)
+
+      .attr('fill', (d) => d.color)
       .append('title')
       .text((d) => d.name);
 
-    svg
-      .append('g')
-      .selectAll('svg')
-      .data(result.children)
-      .join('g')
+    // Node text
+    node
+      .append('text')
+      .attr('class', 'fill-gray-50 text-[6px]')
+      .style('text-anchor', 'middle')
+      .attr('y', 44)
+      .attr('x', 18)
+      .text((d) => d.text);
+
+    // Node image
+    node
       .append('svg')
       .attr('viewBox', (d) => d.viewBox)
       .attr('width', 32)
       .attr('height', 32)
-      .attr('x', (d) => coalesce(d.x, 0) + 2)
-      .attr('y', (d) => coalesce(d.y, 0) + 2)
-      .attr('id', (d) => `image-${d.id}`)
-      .attr('class', 'pointer-events-none')
+      .attr('x', 2)
+      .attr('y', 2)
       .append('image')
-      .attr('href', (d) => d.href);
+      .attr('href', (d) => d.href)
+      .attr('class', 'pointer-events-none');
+
+    // Filter nodes with subBox
+    const subNode = node.filter((d) => d.subBox != null);
+
+    // Add subBox rect
+    subNode
+      .append('rect')
+      .attr('width', 20)
+      .attr('height', 20)
+      .attr('ry', 4)
+      .attr('rx', 4)
+      .attr('x', 8)
+      .attr('y', 8)
+      .attr('class', 'pointer-events-none fill-black/75');
+
+    // Add subBox image
+    subNode
+      .append('svg')
+      .attr('viewBox', (d) => d.subBox ?? '')
+      .attr('width', 16)
+      .attr('height', 16)
+      .attr('x', 10)
+      .attr('y', 10)
+      .append('image')
+      .attr('href', (d) => d.href)
+      .attr('class', 'pointer-events-none');
 
     this.svg = svg;
   }
