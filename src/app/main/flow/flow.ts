@@ -364,13 +364,16 @@ export class Flow implements AfterViewInit {
       .data(edges)
       .join('text')
       .attr('dy', '-2px')
-      .attr('class', 'fill-gray-50 text-[6px]')
+      .attr(
+        'class',
+        'fill-gray-50 text-[6px] text-shadow-sm text-shadow-gray-950',
+      )
       .append('textPath')
       .attr('startOffset', '50%')
       .style('text-anchor', 'middle')
       .attr('href', (e) => `#${e.id}`)
       .attr('class', 'pointer-events-none')
-      .text((l) => `${l.text} ${l.name}`);
+      .text((l) => l.text);
 
     // Main node svg
     const node = svg
@@ -413,15 +416,6 @@ export class Flow implements AfterViewInit {
       .append('title')
       .text((d) => d.name);
 
-    // Node text
-    node
-      .append('text')
-      .attr('class', 'fill-gray-50 text-[6px]')
-      .style('text-anchor', 'middle')
-      .attr('y', 44)
-      .attr('x', 18)
-      .text((d) => d.text);
-
     // Node image
     node
       .append('svg')
@@ -442,11 +436,11 @@ export class Flow implements AfterViewInit {
       .append('rect')
       .attr('width', 20)
       .attr('height', 20)
-      .attr('ry', 4)
-      .attr('rx', 4)
+      .attr('ry', 10)
+      .attr('rx', 10)
       .attr('x', 8)
       .attr('y', 8)
-      .attr('class', 'pointer-events-none fill-black/75');
+      .attr('class', 'pointer-events-none fill-black blur-[2.5px]');
 
     // Add subBox image
     subNode
@@ -459,6 +453,18 @@ export class Flow implements AfterViewInit {
       .append('image')
       .attr('href', (d) => d.href)
       .attr('class', 'pointer-events-none');
+
+    // Node text
+    node
+      .append('text')
+      .attr(
+        'class',
+        'fill-gray-50 text-[6px] text-shadow-sm text-shadow-black pointer-events-none',
+      )
+      .style('text-anchor', 'middle')
+      .attr('y', 35)
+      .attr('x', 18)
+      .text((d) => d.text);
 
     this.svg = svg;
   }

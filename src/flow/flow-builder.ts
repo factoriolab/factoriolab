@@ -197,7 +197,7 @@ export class FlowBuilder {
         flow.nodes.push({
           id,
           name: recipe.name,
-          text: `${step.machines.toString(machinePrec)} ${machine.name}`,
+          text: step.machines.toString(machinePrec),
           color: recipeIcon.color,
           stepId: step.id,
           href: data.iconFile,
