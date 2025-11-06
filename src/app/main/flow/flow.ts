@@ -281,8 +281,6 @@ export class Flow implements AfterViewInit {
     };
     const result = await this.elk.layout(graph);
 
-    console.log(result);
-
     if (
       result.children == null ||
       result.edges == null ||

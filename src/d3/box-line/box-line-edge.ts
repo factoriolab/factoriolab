@@ -1,7 +1,8 @@
-import { line } from 'd3';
+import { curveBasis, line } from 'd3';
 
 import { coalesce } from '~/utils/nullish';
 
+import { num } from '../helpers';
 import { BoxEdge, BoxNode } from './models';
 
 export function boxEdgeLine(
@@ -10,6 +11,9 @@ export function boxEdgeLine(
 ): (e: BoxEdge) => string | null {
   const generator = line();
   return (e: BoxEdge): string | null => {
+    if (e.sourceNode === e.targetNode)
+      return generator.curve(curveBasis)(getLoop(e, offset, forceLtr));
+
     const source = getNodePoint(e.sourceNode);
     const target = getNodePoint(e.targetNode);
     const start = getIntersect(target, source, e.sourceNode);
@@ -19,6 +23,35 @@ export function boxEdgeLine(
   };
 }
 
+function getLoop(
+  e: BoxEdge,
+  offset: number,
+  forceLtr: boolean,
+): [number, number][] {
+  const width = num(e.sourceNode.width);
+  const height = num(e.sourceNode.height);
+  const source: [number, number] = [
+    num(e.sourceNode.x) + width - 1,
+    num(e.sourceNode.y) + 1,
+  ];
+  const target: [number, number] = [
+    num(e.sourceNode.x) + 1,
+    num(e.sourceNode.y) + 1,
+  ];
+  const step1: [number, number] = [
+    source[0] + width / 2,
+    source[1] - height / 2,
+  ];
+  const step2: [number, number] = [
+    target[0] - width / 2,
+    target[1] - height / 2,
+  ];
+  const end = getOffset(target, step2, offset);
+  const result = [source, step1, step2, end];
+  if (forceLtr) result.reverse();
+  return result;
+}
+
 function getEndPoint(
   source: [number, number],
   target: [number, number],
@@ -26,6 +59,14 @@ function getEndPoint(
   offset: number,
 ): [number, number] {
   const intersect = getIntersect(source, target, e.targetNode);
+  return getOffset(intersect, source, offset);
+}
+
+function getOffset(
+  intersect: [number, number],
+  source: [number, number],
+  offset: number,
+): [number, number] {
   const [ox, oy] = intersect;
   const [x0, y0] = source;
   const vx = x0 - ox;
