@@ -15,15 +15,15 @@
         (ngModelChange)="apply({ sankeyAlign: $event })"
       ></lab-select>
     </lab-form-field>
-  }
 
-  <lab-form-field label="flowSettings.linkSize">
-    <lab-select
-      [options]="linkValueOptions()"
-      [ngModel]="editValue().linkSize"
-      (ngModelChange)="apply({ linkSize: $event })"
-    ></lab-select>
-  </lab-form-field>
+    <lab-form-field label="flowSettings.linkSize">
+      <lab-select
+        [options]="linkValueOptions()"
+        [ngModel]="editValue().linkSize"
+        (ngModelChange)="apply({ linkSize: $event })"
+      ></lab-select>
+    </lab-form-field>
+  }
 
   <lab-form-field label="flowSettings.linkText">
     <lab-select
