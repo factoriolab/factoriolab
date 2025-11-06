@@ -269,7 +269,7 @@ export class Flow implements AfterViewInit {
     const graph: ElkGraph = {
       id: 'root',
       layoutOptions: { 'elk.algorithm': 'layered' },
-      children: flow.nodes.map((n) => ({ ...n, ...{ width: 36, height: 36 } })),
+      children: flow.nodes.map((n) => ({ ...n, ...{ width: 38, height: 38 } })),
       edges: flow.links.map((n) => ({
         ...n,
         ...{
@@ -347,14 +347,14 @@ export class Flow implements AfterViewInit {
 
     const path = edge
       .append('path')
-      .attr('d', (e) => boxEdgeLine(5)(e))
+      .attr('d', (e) => boxEdgeLine(4)(e))
       .attr('stroke', (e) => e.color)
       .attr('stroke-width', 2)
       .attr('marker-end', (e) => `url(#arrow-${e.id})`);
     const textPath = edge
       .append('path')
       .attr('id', (e) => e.id)
-      .attr('d', (e) => boxEdgeLine(5, true)(e));
+      .attr('d', (e) => boxEdgeLine(0, true)(e));
 
     edge.append('title').text((e) => e.name);
 
@@ -392,8 +392,8 @@ export class Flow implements AfterViewInit {
             d.y = coalesce(d.y, 0) + event.dy;
             d.x = coalesce(d.x, 0) + event.dx;
             select(this).attr('x', d.x).attr('y', d.y);
-            path.attr('d', (e) => boxEdgeLine(5)(e));
-            textPath.attr('d', (e) => boxEdgeLine(5, true)(e));
+            path.attr('d', (e) => boxEdgeLine(4)(e));
+            textPath.attr('d', (e) => boxEdgeLine(0, true)(e));
           }),
       );
 

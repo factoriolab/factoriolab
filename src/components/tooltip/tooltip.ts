@@ -26,7 +26,6 @@ import { TooltipType } from './tooltip-type';
 @Directive({
   selector: '[labTooltip]',
   host: {
-    '(mouseenter)': 'show()',
     '(mouseleave)': 'hide()',
     '(touchstart)': 'touch()',
     '(touchend)': 'cancelTouch()',
