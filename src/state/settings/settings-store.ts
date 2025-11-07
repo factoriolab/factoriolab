@@ -11,7 +11,7 @@ import { CargoWagon } from '~/data/schema/cargo-wagon';
 import { Category } from '~/data/schema/category';
 import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
-import { IconData, IconJson } from '~/data/schema/icon-data';
+import { getViewBox, IconData, IconJson } from '~/data/schema/icon-data';
 import { Item, ItemJson, parseItem } from '~/data/schema/item';
 import { Machine, typeHasCraftingSpeed } from '~/data/schema/machine';
 import { ModHash } from '~/data/schema/mod-hash';
@@ -704,8 +704,8 @@ export class SettingsStore extends Store<SettingsState> {
       }
     }
 
-    const iconFile = `data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp`;
-    const file = `url("${iconFile}")`;
+    const file = `data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp`;
+    const image = `url("${file}")`;
     function toIconRecord(
       ids: string[],
       rec: Record<string, Category | Item | Recipe | IconJson>,
@@ -713,9 +713,11 @@ export class SettingsStore extends Store<SettingsState> {
       return ids.reduce<Record<string, IconData>>((e, i) => {
         const entity = rec[i];
         const id = coalesce((entity as Category | Item | Recipe).icon, i);
+        const data = iconData[id];
         const text = (entity as Category | Item | Recipe).iconText;
         const quality = (entity as Item | Recipe).quality;
-        e[i] = { ...iconData[id], file, text, quality };
+        const viewBox = getViewBox(data.position);
+        e[i] = { ...data, file, image, viewBox, text, quality };
         return e;
       }, {});
     }
@@ -740,7 +742,6 @@ export class SettingsStore extends Store<SettingsState> {
       categoryRecord,
       itemCategoryRows,
       recipeCategoryRows,
-      iconFile,
       iconIds,
       iconRecord,
       itemIds,

@@ -1,4 +1,4 @@
-import { IconJson } from '~/data/schema/icon-data';
+import { getViewBox, IconData, IconJson } from '~/data/schema/icon-data';
 import { toRecord } from '~/utils/record';
 
 export const systemIcons: IconJson[] = [
@@ -10,7 +10,7 @@ export const systemIcons: IconJson[] = [
   {
     id: 'module',
     position: '-132px 0',
-    color: '#ffffff',
+    color: '#fff',
   },
   {
     id: 'pipe',
@@ -100,5 +100,14 @@ export const systemIcons: IconJson[] = [
 ];
 
 export const systemIconsRecord = toRecord(
-  systemIcons.map((i) => ({ ...i, ...{ file: 'url("icons/icons.webp")' } })),
+  systemIcons.map(
+    (i): IconData => ({
+      ...i,
+      ...{
+        file: 'icons/icons.webp',
+        image: 'url("icons/icons.webp")',
+        viewBox: getViewBox(i.position),
+      },
+    }),
+  ),
 );

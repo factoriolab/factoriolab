@@ -13,9 +13,11 @@ import {
 import { IconType } from '~/data/icon-type';
 import { SettingsStore } from '~/state/settings/settings-store';
 
+import { IsLightPipe } from './is-light-pipe';
+
 @Component({
   selector: 'lab-icon',
-  imports: [FaIconComponent],
+  imports: [FaIconComponent, IsLightPipe],
   templateUrl: './icon.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex shrink-0 relative size-8' },

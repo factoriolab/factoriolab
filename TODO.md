@@ -1,9 +1,5 @@
 # TODO
 
-## Icon
-
-- Invert
-
 ## Performance
 
 - Optimize so that store / router sync are not part of initial bundle?

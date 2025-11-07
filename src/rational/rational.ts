@@ -156,7 +156,11 @@ export class Rational {
     return Number(this.p) / Number(this.q);
   }
 
-  toLocaleString(maximumFractionDigits = 2, fixedDigits = false): string {
+  toLocaleString(
+    maximumFractionDigits: number | null = 2,
+    fixedDigits = false,
+  ): string {
+    if (maximumFractionDigits == null) return this.toFraction();
     return this.toNumber().toLocaleString(undefined, {
       minimumFractionDigits: fixedDigits ? maximumFractionDigits : undefined,
       maximumFractionDigits,

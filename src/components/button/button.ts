@@ -117,6 +117,7 @@ export class Button {
   readonly faIcon = input<IconDefinition>();
   readonly iconType = input<IconType>();
   readonly icon = input<string>();
+  readonly iconText = input<string>();
   readonly color = input<Color>('gray');
   readonly size = input<'micro' | 'small' | 'standard' | 'large'>('standard');
   readonly border = input(true);

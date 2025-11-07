@@ -45,6 +45,11 @@
                   objective.unit === ObjectiveUnit.Machines ? 'recipe' : 'item'
                 "
                 [icon]="objective.targetId"
+                [iconText]="
+                  objective.unit === ObjectiveUnit.Machines
+                    ? '#' + objective.id
+                    : undefined
+                "
                 rounded="start"
                 [attr.aria-label]="
                   (objective.unit === ObjectiveUnit.Machines
@@ -63,6 +68,11 @@
                   objective.unit === ObjectiveUnit.Machines ? 'recipe' : 'item'
                 "
                 [icon]="objective.targetId"
+                [iconText]="
+                  objective.unit === ObjectiveUnit.Machines
+                    ? '#' + objective.id
+                    : undefined
+                "
                 [text]="
                   (objective.unit === ObjectiveUnit.Machines
                     ? data().recipeRecord

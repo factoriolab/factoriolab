@@ -1,8 +1,9 @@
 @if (icon(); as icon) {
   <span
     class="absolute size-16 origin-top-left scale-50"
-    [style.background-image]="icon.file"
+    [style.background-image]="icon.image"
     [style.background-position]="icon.position"
+    [class.light:invert]="icon.color | isLight"
   >
   </span>
 
@@ -12,7 +13,7 @@
 
   @if (icon.text; as text) {
     <span
-      class="text-shadow-solid pointer-events-none absolute top-0 left-0 text-sm/3.5 font-bold text-white select-none text-shadow-black"
+      class="text-shadow-solid pointer-events-none absolute top-0 left-0 text-sm/3.5 font-semibold text-white select-none text-shadow-black"
       >{{ text }}</span
     >
   }
@@ -24,14 +25,14 @@
 
 @if (alt(); as text) {
   <span
-    class="text-shadow-solid pointer-events-none absolute top-0 right-0 text-sm/3.5 font-bold text-white select-none text-shadow-black"
+    class="text-shadow-solid pointer-events-none absolute top-0 right-0 text-sm/3.5 font-semibold text-white select-none text-shadow-black"
     >{{ text }}</span
   >
 }
 
 @if (text(); as text) {
   <span
-    class="text-shadow-solid pointer-events-none absolute right-0 bottom-0 text-sm/3.5 font-bold text-white select-none text-shadow-black"
+    class="text-shadow-solid pointer-events-none absolute right-0 bottom-0 text-sm/3.5 font-semibold text-white select-none text-shadow-black"
     >{{ text }}</span
   >
 }

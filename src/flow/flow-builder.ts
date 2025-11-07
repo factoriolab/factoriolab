@@ -1,6 +1,5 @@
 import { computed, inject, Injectable } from '@angular/core';
 
-import { IconData } from '~/data/schema/icon-data';
 import { Rational, rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
@@ -85,11 +84,10 @@ export class FlowBuilder {
         flow.nodes.push({
           id,
           name: item.name,
-          text: `${step.items.toString(itemPrec)}${suffix}`,
+          text: `${step.items.toLocaleString(itemPrec)}${suffix}`,
           color: icon.color,
           stepId: step.id,
-          href: data.iconFile,
-          viewBox: this.viewBox(icon),
+          icon,
         });
 
         if (step.parents) {
@@ -102,7 +100,6 @@ export class FlowBuilder {
             flow.links.push({
               source: id,
               target: `${this.recipeStepNodeType(parent)}|${parent.recipeId}`,
-              name: item.name,
               text: this.linkText(
                 stepText[step.id],
                 step.parents[stepId],
@@ -127,16 +124,14 @@ export class FlowBuilder {
           flow.nodes.push({
             id: surplusId,
             name: item.name,
-            text: `${step.surplus.toString(itemPrec)}${suffix}`,
+            text: `${step.surplus.toLocaleString(itemPrec)}${suffix}`,
             color: 'var(--color-complement-500)',
             stepId: step.id,
-            href: data.iconFile,
-            viewBox: this.viewBox(icon),
+            icon,
           });
           flow.links.push({
             source: id,
             target: surplusId,
-            name: item.name,
             text: this.linkText(
               stepText[step.id],
               percent,
@@ -160,16 +155,14 @@ export class FlowBuilder {
           flow.nodes.push({
             id: outputId,
             name: item.name,
-            text: `${step.output.toString(itemPrec)}${suffix}`,
+            text: `${step.output.toLocaleString(itemPrec)}${suffix}`,
             color: 'var(--color-brand-500)',
             stepId: step.id,
-            href: data.iconFile,
-            viewBox: this.viewBox(icon),
+            icon,
           });
           flow.links.push({
             source: id,
             target: outputId,
-            name: item.name,
             text: this.linkText(
               stepText[step.id],
               percent,
@@ -197,13 +190,13 @@ export class FlowBuilder {
         flow.nodes.push({
           id,
           name: recipe.name,
-          text: step.machines.toString(machinePrec),
+          text: step.machines.toLocaleString(machinePrec),
           color: recipeIcon.color,
           stepId: step.id,
-          href: data.iconFile,
           recipe,
-          viewBox: this.viewBox(machineIcon),
-          subBox: this.viewBox(recipeIcon),
+          icon: machineIcon,
+          recipeIcon: recipeIcon,
+          recipeObjectiveId: step.recipeObjectiveId,
         });
 
         if (step.outputs) {
@@ -218,7 +211,6 @@ export class FlowBuilder {
             flow.links.push({
               source: id,
               target: `i|${itemId}`,
-              name: item.name,
               text: this.linkText(
                 stepText[itemStep.id],
                 step.outputs[itemId],
@@ -284,10 +276,6 @@ export class FlowBuilder {
     }
   }
 
-  viewBox(icon: IconData): string {
-    return `${icon.position.replace(/px/g, '').replace(/-/g, '')} 64 64`;
-  }
-
   linkSize(
     value: Rational,
     percent: Rational,
@@ -323,8 +311,7 @@ export class FlowBuilder {
           : '';
         const result = value.mul(percent);
         const precision = this.linkPrecision(prop, columns);
-        if (precision == null) return result.toFraction() + suffix;
-        return result.toPrecision(precision).toString() + suffix;
+        return `${result.toLocaleString(precision)}${suffix}`;
       }
     }
   }

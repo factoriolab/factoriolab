@@ -8,6 +8,12 @@ export interface IconJson {
 
 export interface IconData extends IconJson {
   file: string;
+  image: string;
+  viewBox: string;
   text?: string;
   quality?: Quality;
+}
+
+export function getViewBox(position: string): string {
+  return `${position.replace(/px/g, '').replace(/-/g, '')} 64 64`;
 }

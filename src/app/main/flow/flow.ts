@@ -2,7 +2,6 @@ import { Dialog } from '@angular/cdk/dialog';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   DestroyRef,
   ElementRef,
@@ -21,6 +20,7 @@ import { FlowSettingsDialog } from '~/components/flow-settings-dialog/flow-setti
 import { Steps } from '~/components/steps/steps';
 import { boxEdgeLine } from '~/d3/box-line/box-line-edge';
 import { BoxEdge, BoxNode } from '~/d3/box-line/models';
+import { num } from '~/d3/helpers';
 import {
   sankeyCenter,
   sankeyJustify,
@@ -39,6 +39,7 @@ import {
   sankeyLinkHorizontal,
   sankeyLinkLoop,
 } from '~/d3/sankey/sankey-link-horizontal';
+import { IconData } from '~/data/schema/icon-data';
 import { Exporter } from '~/exporter/exporter';
 import { FlowBuilder } from '~/flow/flow-builder';
 import { FlowData } from '~/flow/flow-data';
@@ -48,11 +49,12 @@ import { FlowDiagram } from '~/state/preferences/flow-diagram';
 import { FlowSettings } from '~/state/preferences/flow-settings';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { SankeyAlign } from '~/state/preferences/sankey-align';
+import { systemIconsRecord } from '~/state/settings/system-icons';
 import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 
 export const SVG_ID = 'lab-flow-svg';
-const NODE_WIDTH = 32;
+const NODE_WIDTH = 36;
 
 interface ElkGraph extends ElkNode {
   children: BoxNode[];
@@ -68,7 +70,6 @@ interface ElkGraph extends ElkNode {
 })
 export class Flow implements AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);
-  private readonly ref = inject(ChangeDetectorRef);
   protected readonly dialog = inject(Dialog);
   protected readonly exporter = inject(Exporter);
   protected readonly flowBuilder = inject(FlowBuilder);
@@ -114,10 +115,10 @@ export class Flow implements AfterViewInit {
   }
 
   rebuildSankey(flowData: FlowData, flowSettings: FlowSettings): void {
-    let layout = this.getLayout(flowSettings.sankeyAlign, 800, this.height);
+    let layout = this.getLayout(flowSettings.sankeyAlign, 1, 1);
     let skGraph = this.getGraph(layout, flowData);
     const columns = Math.max(...skGraph.nodes.map((d) => coalesce(d.depth, 0)));
-    const width = (columns + 1) * NODE_WIDTH + columns * NODE_WIDTH * 8;
+    const width = (columns + 1) * NODE_WIDTH + columns * NODE_WIDTH * 3;
     const height = Math.min(this.height, width * 0.75);
     layout = this.getLayout(flowSettings.sankeyAlign, width, height);
     skGraph = this.getGraph(layout, flowData);
@@ -136,7 +137,7 @@ export class Flow implements AfterViewInit {
       ),
     );
 
-    // Draw linkages (draw first so rects are drawn over them)
+    // Draw links (draw first so nodes are drawn over them)
     const link = svg
       .append('g')
       .attr('fill', 'none')
@@ -145,7 +146,7 @@ export class Flow implements AfterViewInit {
       .selectAll('g')
       .data(skGraph.links)
       .join('g')
-      .style('mix-blend-mode', 'multiply');
+      .attr('class', 'mix-blend-multiply');
 
     const path = link
       .append('path')
@@ -163,39 +164,36 @@ export class Flow implements AfterViewInit {
       .attr('stroke', (l) => l.color)
       .attr('stroke-width', (l) => Math.max(1, coalesce(l.width, 0)));
 
-    link.append('title').text((l) => l.name);
-
     svg
       .append('g')
       .selectAll('text')
       .data(skGraph.links)
       .join('text')
-      .attr('class', 'fill-gray-50 translate-y-2')
+      .attr(
+        'class',
+        'fill-white text-xs text-shadow-sm text-shadow-black translate-y-2',
+      )
       .append('textPath')
       .attr('startOffset', '4px')
       .attr('href', (l) => `#${l.index.toString()}`)
       .attr('class', 'pointer-events-none')
-      .text((l) => `${l.text} ${l.name}`);
+      .text((l) => l.text);
 
-    // Draw rects for nodes
-    svg
+    // Main node svg
+    const node = svg
       .append('g')
-      .attr('stroke', 'var(--color-gray-700)')
-      .selectAll<SVGRectElement, SankeyNode<Node, Link>>('rect')
+      .selectAll<SVGSVGElement, SankeyNode<Node, Link>>('svg')
       .data(skGraph.nodes)
-      .join('rect')
-      .attr('class', 'cursor-pointer hover:stroke-brand-500')
+      .join('svg')
+      .attr('class', 'overflow-visible')
       .attr('x', (d) => coalesce(d.x0, 0))
       .attr('y', (d) => coalesce(d.y0, 0))
-      .attr('height', (d) => this.nodeHeight(d))
-      .attr('width', (d) => coalesce(d.x1, 0) - coalesce(d.x0, 0))
-      .attr('fill', (d) => d.color)
       .on('click', (e: Event, d) => {
         if (e.defaultPrevented) return;
         this.selectedId.set(d.stepId);
       })
       .call(
-        drag<SVGRectElement, SankeyNode<Node, Link>>()
+        drag<SVGSVGElement, SankeyNode<Node, Link>>()
           .subject((d) => d as SankeyNode<Node, Link>)
           .on('drag', function (this, event: { dy: number; dx: number }, d) {
             const rectY = parseFloat(select(this).attr('y'));
@@ -209,8 +207,6 @@ export class Flow implements AfterViewInit {
             const transform = `translate(${trX.toString()},${trY.toString()})`;
             select(this).attr('transform', transform);
 
-            // also move the image
-            select(`[id='image-${d.id}']`).attr('transform', transform);
             layout.update(skGraph);
 
             // force an update of the path
@@ -229,36 +225,116 @@ export class Flow implements AfterViewInit {
               )(l);
             });
           }),
-      )
+      );
+
+    // Node rect
+    node
+      .append('rect')
+      .attr('class', 'cursor-pointer hover:stroke-brand-500 stroke-gray-700')
+      .attr('x', 1)
+      .attr('y', 1)
+      .attr('height', (d) => this.nodeHeight(d))
+      .attr('width', (d) => coalesce(d.x1, 0) - coalesce(d.x0, 0))
+      .attr('fill', (d) => d.color)
       .append('title')
       .text((d) => d.name);
 
-    // Draw icons (for rect height >= 16px)
-    svg
-      .append('g')
-      .selectAll('svg')
-      .data(skGraph.nodes.filter((d) => this.nodeHeight(d) >= 16))
-      .join('g')
-      .attr('id', (d) => `image-${d.id}`)
+    // Node image (for rect height >= 16px)
+    const imageNode = node.filter((d) => this.nodeHeight(d) >= 32);
+    imageNode
       .append('svg')
-      .attr('viewBox', (d) => d.viewBox)
-      .attr('width', (d) => Math.min(30, this.nodeHeight(d) - 2))
-      .attr('height', (d) => Math.min(30, this.nodeHeight(d) - 2))
-      .attr(
-        'x',
-        (d) =>
-          (coalesce(d.x1, 0) + coalesce(d.x0, 0)) / 2 -
-          Math.min(30, this.nodeHeight(d) - 2) / 2,
-      )
-      .attr(
-        'y',
-        (d) =>
-          (coalesce(d.y1, 0) + coalesce(d.y0, 0)) / 2 -
-          Math.min(30, this.nodeHeight(d) - 2) / 2,
-      )
-      .attr('class', 'pointer-events-none')
+      .attr('viewBox', (d) => d.icon.viewBox)
+      .attr('width', 32)
+      .attr('height', 32)
+      .attr('x', 4)
+      .attr('y', (d) => this.imageOffset(d))
       .append('image')
-      .attr('href', (d) => coalesce(d.href, ''));
+      .attr('href', (d) => d.icon.file)
+      .attr('class', 'pointer-events-none');
+
+    imageNode
+      .filter((d) => d.icon.quality != null)
+      .append('svg')
+      .attr('viewBox', (d) => systemIconsRecord[`q${d.icon.quality}`].viewBox)
+      .attr('width', 32)
+      .attr('height', 32)
+      .attr('x', 4)
+      .attr('y', (d) => this.imageOffset(d))
+      .append('image')
+      .attr('href', 'icons/icons.webp')
+      .attr('class', 'pointer-events-none');
+
+    const recipeIcon = imageNode.filter(
+      (d) => d.recipeIcon != null,
+    ) as Selection<
+      SVGSVGElement,
+      SankeyNode<Node, Link> & { recipeIcon: IconData },
+      SVGGElement,
+      unknown
+    >;
+
+    // Add recipe rect
+    recipeIcon
+      .append('rect')
+      .attr('width', 20)
+      .attr('height', 20)
+      .attr('ry', 10)
+      .attr('rx', 10)
+      .attr('x', 10)
+      .attr('y', (d) => this.imageOffset(d) + 4)
+      .attr('class', 'pointer-events-none fill-black blur-[2.5px]');
+
+    // Add recipe image
+    recipeIcon
+      .append('svg')
+      .attr('viewBox', (d) => d.recipeIcon.viewBox)
+      .attr('width', 16)
+      .attr('height', 16)
+      .attr('x', 12)
+      .attr('y', (d) => this.imageOffset(d) + 6)
+      .append('image')
+      .attr('href', (d) => d.recipeIcon.file)
+      .attr('class', 'pointer-events-none');
+
+    // Add recipe quality image
+    recipeIcon
+      .filter((d) => d.recipeIcon.quality != null)
+      .append('svg')
+      .attr(
+        'viewBox',
+        (d) => systemIconsRecord[`q${d.recipeIcon.quality}`].viewBox,
+      )
+      .attr('width', 16)
+      .attr('height', 16)
+      .attr('x', 12)
+      .attr('y', (d) => this.imageOffset(d) + 6)
+      .append('image')
+      .attr('href', 'icons/icons.webp')
+      .attr('class', 'pointer-events-none');
+
+    // Add objective id
+    recipeIcon
+      .filter((d) => d.recipeObjectiveId != null)
+      .append('text')
+      .attr(
+        'class',
+        'fill-white text-[6px] text-shadow-md text-shadow-black pointer-events-none font-semibold',
+      )
+      .attr('x', 22)
+      .attr('y', (d) => this.imageOffset(d) + 22)
+      .text((d) => '#' + coalesce(d.recipeObjectiveId, ''));
+
+    // Node text
+    node
+      .append('text')
+      .attr(
+        'class',
+        'fill-white text-xs text-shadow-md text-shadow-black pointer-events-none font-semibold',
+      )
+      .style('text-anchor', 'middle')
+      .attr('x', 20)
+      .attr('y', (d) => this.imageOffset(d) + 32)
+      .text((d) => d.text);
 
     this.svg = svg;
   }
@@ -317,6 +393,7 @@ export class Flow implements AfterViewInit {
       ),
     );
 
+    // Draw edges (draw first so nodes are drawn over them)
     const edge = svg
       .append('g')
       .attr('fill', 'none')
@@ -355,8 +432,6 @@ export class Flow implements AfterViewInit {
       .attr('id', (e) => e.id)
       .attr('d', (e) => boxEdgeLine(0, true)(e));
 
-    edge.append('title').text((e) => e.name);
-
     svg
       .append('g')
       .selectAll('text')
@@ -365,7 +440,7 @@ export class Flow implements AfterViewInit {
       .attr('dy', '-2px')
       .attr(
         'class',
-        'fill-gray-50 text-[6px] text-shadow-sm text-shadow-gray-950',
+        'fill-gray-50 text-[6px] text-shadow-md text-shadow-gray-950',
       )
       .append('textPath')
       .attr('startOffset', '50%')
@@ -416,20 +491,38 @@ export class Flow implements AfterViewInit {
     // Node image
     node
       .append('svg')
-      .attr('viewBox', (d) => d.viewBox)
+      .attr('viewBox', (d) => d.icon.viewBox)
       .attr('width', 32)
       .attr('height', 32)
       .attr('x', 2)
       .attr('y', 2)
       .append('image')
-      .attr('href', (d) => d.href)
+      .attr('href', (d) => d.icon.file)
       .attr('class', 'pointer-events-none');
 
-    // Filter nodes with subBox
-    const subNode = node.filter((d) => d.subBox != null);
+    // Node quality image
+    node
+      .filter((d) => d.icon.quality != null)
+      .append('svg')
+      .attr('viewBox', (d) => systemIconsRecord[`q${d.icon.quality}`].viewBox)
+      .attr('width', 32)
+      .attr('height', 32)
+      .attr('x', 2)
+      .attr('y', 2)
+      .append('image')
+      .attr('href', 'icons/icons.webp')
+      .attr('class', 'pointer-events-none');
 
-    // Add subBox rect
-    subNode
+    // Filter nodes with recipeIcon
+    const recipeIcon = node.filter((d) => d.recipeIcon != null) as Selection<
+      SVGSVGElement,
+      BoxNode & { recipeIcon: IconData },
+      SVGGElement,
+      unknown
+    >;
+
+    // Add recipe rect
+    recipeIcon
       .append('rect')
       .attr('width', 20)
       .attr('height', 20)
@@ -439,24 +532,52 @@ export class Flow implements AfterViewInit {
       .attr('y', 8)
       .attr('class', 'pointer-events-none fill-black blur-[2.5px]');
 
-    // Add subBox image
-    subNode
+    // Add recipe image
+    recipeIcon
       .append('svg')
-      .attr('viewBox', (d) => d.subBox ?? '')
+      .attr('viewBox', (d) => d.recipeIcon.viewBox)
       .attr('width', 16)
       .attr('height', 16)
       .attr('x', 10)
       .attr('y', 10)
       .append('image')
-      .attr('href', (d) => d.href)
+      .attr('href', (d) => d.recipeIcon.file)
       .attr('class', 'pointer-events-none');
+
+    // Add recipe quality image
+    recipeIcon
+      .filter((d) => d.recipeIcon.quality != null)
+      .append('svg')
+      .attr(
+        'viewBox',
+        (d) => systemIconsRecord[`q${d.recipeIcon.quality}`].viewBox,
+      )
+      .attr('width', 16)
+      .attr('height', 16)
+      .attr('x', 10)
+      .attr('y', 10)
+      .append('image')
+      .attr('href', 'icons/icons.webp')
+      .attr('class', 'pointer-events-none');
+
+    // Add objective id
+    recipeIcon
+      .filter((d) => d.recipeObjectiveId != null)
+      .append('text')
+      .attr(
+        'class',
+        'fill-white text-[6px] text-shadow-md text-shadow-black pointer-events-none font-semibold',
+      )
+      .attr('y', 26)
+      .attr('x', 20)
+      .text((d) => '#' + coalesce(d.recipeObjectiveId, ''));
 
     // Node text
     node
       .append('text')
       .attr(
         'class',
-        'fill-gray-50 text-[6px] text-shadow-sm text-shadow-black pointer-events-none',
+        'fill-white text-[6px] text-shadow-md text-shadow-black pointer-events-none font-semibold',
       )
       .style('text-anchor', 'middle')
       .attr('y', 35)
@@ -512,5 +633,9 @@ export class Flow implements AfterViewInit {
 
   private nodeHeight(d: SankeyNode<Node, Link>): number {
     return coalesce(d.y1, 0) - coalesce(d.y0, 0);
+  }
+
+  private imageOffset(d: SankeyNode<Node, Link>): number {
+    return (num(d.y1) - num(d.y0)) / 2 - 32 / 2;
   }
 }
