@@ -257,6 +257,14 @@ export class FlowBuilder {
       (l) => (l.source = removeNodes.get(l.source) ?? l.source),
     );
 
+    // Mark bidirectional nodes
+    flow.links.forEach((l) => {
+      if (
+        flow.links.some((m) => l.target === m.source && l.source === m.target)
+      )
+        l.bidi = true;
+    });
+
     return flow;
   }
 

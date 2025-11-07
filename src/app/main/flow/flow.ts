@@ -345,7 +345,7 @@ export class Flow implements AfterViewInit {
 
     const path = edge
       .append('path')
-      .attr('d', (e) => boxEdgeLine(4)(e))
+      .attr('d', (e) => boxEdgeLine(5)(e))
       .attr('stroke', (e) => e.color)
       .attr('stroke-width', 2)
       .attr('marker-end', (e) => `url(#arrow-${e.id})`);
@@ -393,7 +393,7 @@ export class Flow implements AfterViewInit {
             d.y = coalesce(d.y, 0) + event.dy;
             d.x = coalesce(d.x, 0) + event.dx;
             select(this).attr('x', d.x).attr('y', d.y);
-            path.attr('d', (e) => boxEdgeLine(4)(e));
+            path.attr('d', (e) => boxEdgeLine(5)(e));
             textPath.attr('d', (e) => boxEdgeLine(0, true)(e));
           }),
       );

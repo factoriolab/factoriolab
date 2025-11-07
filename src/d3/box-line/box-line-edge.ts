@@ -1,4 +1,4 @@
-import { curveBasis, line } from 'd3';
+import { curveBasis, curveNatural, line } from 'd3';
 
 import { coalesce } from '~/utils/nullish';
 
@@ -16,11 +16,37 @@ export function boxEdgeLine(
 
     const source = getNodePoint(e.sourceNode);
     const target = getNodePoint(e.targetNode);
-    const start = getIntersect(target, source, e.sourceNode);
-    const end = getEndPoint(source, target, e, offset);
-    if (forceLtr && end[0] < start[0]) return generator([end, start]);
-    return generator([start, end]);
+    const arc = e.bidi ? getArcPoint(source, target, e.sourceNode) : undefined;
+    const start = getIntersect(arc ?? target, source, e.sourceNode);
+    const end = getEndPoint(arc ?? source, target, e, offset);
+    const points = arc ? [start, arc, end] : [start, end];
+    if (forceLtr && end[0] < start[0]) points.reverse();
+
+    // const fn = generator;
+    const fn = e.bidi ? generator.curve(curveNatural) : generator;
+    return fn(points);
   };
+}
+
+function getArcPoint(
+  source: [number, number],
+  target: [number, number],
+  node: BoxNode,
+): [number, number] {
+  const [x0, y0] = source;
+  const [x2, y2] = target;
+  const x1 = (x0 + x2) / 2;
+  const y1 = (y0 + y2) / 2;
+  const dx = x2 - x0;
+  const dy = y2 - y0;
+  const m = Math.abs(dx / dy);
+  let d = num(node.width) * 0.75;
+  if (x2 > x0) d *= -1;
+  const dxa = d / Math.sqrt(1 + m * m);
+  const dya = m * dxa;
+  const xa = x1 + dxa;
+  const ya = y1 + dya;
+  return [xa, ya];
 }
 
 function getLoop(
@@ -91,9 +117,9 @@ function getIntersect(
   const vy = oy - y0;
 
   const dx = vx > 0 ? 1 : -1;
-  const ex = x0 + (dx * coalesce(node.width, 0)) / 2;
+  const ex = x0 + (dx * (coalesce(node.width, 0) - 2)) / 2;
   const dy = vy > 0 ? 1 : -1;
-  const ey = y0 + (dy * coalesce(node.height, 0)) / 2;
+  const ey = y0 + (dy * (coalesce(node.height, 0) - 2)) / 2;
   if (vx === 0) return [x0, ey];
   if (vy === 0) return [ex, y0];
   const tx = (ex - x0) / vx;
