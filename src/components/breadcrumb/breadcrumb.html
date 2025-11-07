@@ -1,0 +1,16 @@
+@for (crumb of crumbs(); track crumb.routerLink) {
+  @if (!$first) {
+    <fa-icon [icon]="faChevronRight"></fa-icon>
+  }
+
+  <a
+    [routerLink]="crumb.routerLink"
+    queryParamsHandling="preserve"
+    class="link flex gap-1"
+  >
+    @if (crumb.faIcon; as icon) {
+      <fa-icon [icon]="icon"></fa-icon>
+    }
+    {{ crumb.label }}
+  </a>
+}

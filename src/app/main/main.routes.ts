@@ -12,6 +12,6 @@ export const routes: Routes = [
   },
   {
     path: 'data',
-    loadComponent: () => import('./data/data').then((c) => c.Data),
+    loadChildren: () => import('./data/data.routes').then((m) => m.routes),
   },
 ];

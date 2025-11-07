@@ -1,4 +1,5 @@
 import { computed, effect, inject, Injectable } from '@angular/core';
+import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 
 import { DEFAULT_MOD, modOptions } from '~/data/datasets';
 import { Game } from '~/data/game';
@@ -34,6 +35,7 @@ import {
 } from '~/data/schema/quality';
 import { parseRecipe, Recipe } from '~/data/schema/recipe';
 import { Technology } from '~/data/schema/technology';
+import { LinkOption } from '~/option/link-option';
 import { getIdOptions, Option, OptionParams } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 import { flags } from '~/state/flags';
@@ -242,14 +244,13 @@ export class SettingsStore extends Store<SettingsState> {
     );
   });
 
-  modMenuItem = computed((): unknown => {
+  modMenuItem = computed((): LinkOption => {
     const mod = this.mod();
 
     return {
-      icon: 'fa-solid fa-database',
+      faIcon: faDatabase,
       routerLink: `/${coalesce(mod?.id, DEFAULT_MOD)}/data`,
-      queryParamsHandling: 'preserve',
-      label: mod?.name,
+      label: coalesce(mod?.name, ''),
     };
   });
 

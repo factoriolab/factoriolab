@@ -1,1 +1,35 @@
-<p>data works!</p>
+<lab-breadcrumb></lab-breadcrumb>
+
+<table class="table min-w-lg">
+  <thead>
+    <tr>
+      <th class="text-start">{{ 'data.collection' | translate }}</th>
+      <th class="text-start">{{ 'data.count' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (collection of collections; track collection.key) {
+      @let ids = settingsStore.dataset()[collection.key];
+      @if (ids.length; as count) {
+        <tr>
+          <td>
+            <a
+              [routerLink]="collection.routerLink"
+              queryParamsHandling="preserve"
+              class="link flex items-center gap-1"
+            >
+              <lab-icon
+                [value]="ids[0]"
+                [type]="collection.iconType"
+              ></lab-icon>
+              {{ collection.label | translate }}
+            </a>
+          </td>
+          <td>
+            {{ count }}
+          </td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>
