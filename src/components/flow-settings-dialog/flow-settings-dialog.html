@@ -1,40 +1,59 @@
 <div class="flex flex-col gap-2">
   <lab-form-field label="flowSettings.diagram">
     <lab-select
+      labTooltip="flowSettings.diagramTooltip"
+      labTooltipPosition="adjacent"
       [options]="flowDiagramOptions"
       [ngModel]="editValue().diagram"
       (ngModelChange)="apply({ diagram: $event })"
     ></lab-select>
   </lab-form-field>
 
-  @if (editValue().diagram === FlowDiagram.Sankey) {
-    <lab-form-field label="flowSettings.sankeyAlign">
-      <lab-select
-        [options]="sankeyAlignOptions"
-        [ngModel]="editValue().sankeyAlign"
-        (ngModelChange)="apply({ sankeyAlign: $event })"
-      ></lab-select>
-    </lab-form-field>
-
-    <lab-form-field label="flowSettings.linkSize">
-      <lab-select
-        [options]="linkValueOptions()"
-        [ngModel]="editValue().linkSize"
-        (ngModelChange)="apply({ linkSize: $event })"
-      ></lab-select>
-    </lab-form-field>
-  }
-
   <lab-form-field label="flowSettings.linkText">
     <lab-select
+      labTooltip="flowSettings.linkTextTooltip"
+      labTooltipPosition="adjacent"
       [options]="linkValueOptions()"
       [ngModel]="editValue().linkText"
       (ngModelChange)="apply({ linkText: $event })"
     ></lab-select>
   </lab-form-field>
+  @if (editValue().diagram === FlowDiagram.Sankey) {
+    <lab-form-field label="flowSettings.linkSize">
+      <lab-select
+        labTooltip="flowSettings.linkSizeTooltip"
+        labTooltipPosition="adjacent"
+        [options]="linkValueOptions()"
+        [ngModel]="editValue().linkSize"
+        (ngModelChange)="apply({ linkSize: $event })"
+      ></lab-select>
+    </lab-form-field>
+
+    <lab-form-field label="flowSettings.sankeyAlign">
+      <lab-select
+        labTooltip="flowSettings.sankeyAlignTooltip"
+        labTooltipPosition="adjacent"
+        [options]="sankeyAlignOptions"
+        [ngModel]="editValue().sankeyAlign"
+        (ngModelChange)="apply({ sankeyAlign: $event })"
+      ></lab-select>
+    </lab-form-field>
+  } @else {
+    <lab-form-field label="flowSettings.elkAlgorithm">
+      <lab-select
+        labTooltip="flowSettings.elkAlgorithmTooltip"
+        labTooltipPosition="adjacent"
+        [options]="elkAlgorithmOptions"
+        [ngModel]="editValue().elkAlgorithm"
+        (ngModelChange)="apply({ elkAlgorithm: $event })"
+      ></lab-select>
+    </lab-form-field>
+  }
 
   <lab-checkbox
     label="flowSettings.hideExcluded"
+    labTooltip="flowSettings.hideExcludedTooltip"
+    labTooltipPosition="adjacent"
     [ngModel]="editValue().hideExcluded"
     (ngModelChange)="apply({ hideExcluded: $event })"
   ></lab-checkbox>

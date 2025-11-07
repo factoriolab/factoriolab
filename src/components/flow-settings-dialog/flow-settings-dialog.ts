@@ -13,6 +13,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
+import { elkAlgorithmOptions } from '~/state/preferences/elk-algorithm';
 import {
   FlowDiagram,
   flowDiagramOptions,
@@ -28,10 +29,11 @@ import { Checkbox } from '../checkbox/checkbox';
 import { DialogData } from '../dialog/dialog';
 import { FormField } from '../form-field/form-field';
 import { Select } from '../select/select';
+import { Tooltip } from '../tooltip/tooltip';
 
 @Component({
   selector: 'lab-flow-settings-dialog',
-  imports: [FormsModule, Button, Checkbox, FormField, Select],
+  imports: [FormsModule, Button, Checkbox, FormField, Select, Tooltip],
   templateUrl: './flow-settings-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -54,6 +56,7 @@ export class FlowSettingsDialog implements DialogData {
     return keys.some((k) => init[k] !== edit[k]);
   });
 
+  protected readonly elkAlgorithmOptions = elkAlgorithmOptions;
   protected readonly faCheck = faCheck;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faXmark = faXmark;

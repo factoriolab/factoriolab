@@ -107,11 +107,9 @@ export class Flow implements AfterViewInit {
     select(`#${SVG_ID} > *`).remove();
 
     if (flowData.nodes.length && flowData.links.length) {
-      if (flowSettings.diagram === FlowDiagram.Sankey) {
+      if (flowSettings.diagram === FlowDiagram.Sankey)
         this.rebuildSankey(flowData, flowSettings);
-      } else {
-        await this.rebuildBoxLine(flowData);
-      }
+      else await this.rebuildBoxLine(flowData, flowSettings);
     }
   }
 
@@ -265,10 +263,13 @@ export class Flow implements AfterViewInit {
     this.svg = svg;
   }
 
-  async rebuildBoxLine(flow: FlowData): Promise<void> {
+  async rebuildBoxLine(
+    flow: FlowData,
+    flowSettings: FlowSettings,
+  ): Promise<void> {
     const graph: ElkGraph = {
       id: 'root',
-      layoutOptions: { 'elk.algorithm': 'layered' },
+      layoutOptions: { 'elk.algorithm': flowSettings.elkAlgorithm },
       children: flow.nodes.map((n) => ({ ...n, ...{ width: 38, height: 38 } })),
       edges: flow.links.map((n) => ({
         ...n,
@@ -322,7 +323,7 @@ export class Flow implements AfterViewInit {
       .selectAll('g')
       .data(edges)
       .join('g')
-      .style('mix-blend-mode', 'multiply');
+      .attr('class', 'mix-blend-multiply');
 
     svg
       .append('defs')
@@ -401,15 +402,13 @@ export class Flow implements AfterViewInit {
     // Node rect
     node
       .append('rect')
-      .attr('stroke', 'var(--color-gray-700')
-      .attr('class', 'cursor-pointer hover:stroke-brand-500')
+      .attr('class', 'cursor-pointer hover:stroke-brand-500 stroke-gray-700')
       .attr('x', 1)
       .attr('y', 1)
       .attr('ry', 2)
       .attr('rx', 2)
       .attr('height', 36)
       .attr('width', 36)
-
       .attr('fill', (d) => d.color)
       .append('title')
       .text((d) => d.name);

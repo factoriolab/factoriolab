@@ -156,7 +156,9 @@
     "linkText": "Link Text",
     "linkTextTooltip": "Select which property to display as text on flow links",
     "sankeyAlign": "Sankey Align",
-    "sankeyAlignTooltip": "Select option to determine how sankey nodes are aligned"
+    "sankeyAlignTooltip": "Select option to determine how sankey nodes are aligned",
+    "elkAlgorithm": "Elk algorithm",
+    "elkAlgorithmTooltip": "Select which ELK algorithm to use for the box-line layout"
   },
   "game": "Game",
   "header": {
@@ -239,6 +241,11 @@
       "perMinuteSuffix": "/m",
       "perSecond": "Units per second",
       "perSecondSuffix": "/s"
+    },
+    "elkAlgorithm": {
+      "layered": "Layered",
+      "force": "Force",
+      "stress": "Stress"
     },
     "flowDiagram": {
       "boxLine": "Box-line",

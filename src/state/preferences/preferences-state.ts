@@ -40,6 +40,7 @@ export const initialPreferencesState: PreferencesState = {
     linkSize: LinkValue.Items,
     linkText: LinkValue.Items,
     sankeyAlign: SankeyAlign.Justify,
+    elkAlgorithm: 'layered',
     hideExcluded: false,
   },
   sections: {
