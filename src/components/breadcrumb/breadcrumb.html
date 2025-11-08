@@ -3,14 +3,23 @@
     <fa-icon [icon]="faChevronRight"></fa-icon>
   }
 
-  <a
-    [routerLink]="crumb.routerLink"
-    queryParamsHandling="preserve"
-    class="link flex gap-1"
-  >
-    @if (crumb.faIcon; as icon) {
-      <fa-icon [icon]="icon"></fa-icon>
-    }
-    {{ crumb.label | translate }}
-  </a>
+  @if (crumb.routerLink) {
+    <a
+      [routerLink]="crumb.routerLink"
+      queryParamsHandling="preserve"
+      class="link flex gap-1"
+    >
+      @if (crumb.faIcon; as icon) {
+        <fa-icon [icon]="icon"></fa-icon>
+      }
+      {{ crumb.label | translate }}
+    </a>
+  } @else {
+    <div class="flex gap-1">
+      @if (crumb.faIcon; as icon) {
+        <fa-icon [icon]="icon"></fa-icon>
+      }
+      {{ crumb.label | translate }}
+    </div>
+  }
 }

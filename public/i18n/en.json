@@ -568,5 +568,12 @@
     "version": "Version"
   },
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "paginator": {
+    "label": "Showing {{ first }} to {{ last }} of {{ total }}",
+    "first": "First page",
+    "previous": "Previous page",
+    "next": "Next page",
+    "last": "Last page"
+  }
 }

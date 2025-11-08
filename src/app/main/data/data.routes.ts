@@ -1,6 +1,14 @@
 import { Route } from '@angular/router';
 
-export const routes: Route[] = [
+import { CollectionOption } from '~/components/collection-table/collection-option';
+
+interface DetailData {
+  collectionLabel: string;
+}
+
+type DataRoute = Route & { data?: CollectionOption | DetailData };
+
+export const routes: DataRoute[] = [
   {
     path: 'categories/:id',
     loadComponent: () => import('./category/category').then((c) => c.Category),
@@ -14,7 +22,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.categories',
-      type: 'category',
+      iconType: 'category',
       key: 'categoryIds',
     },
   },
@@ -31,7 +39,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.items',
-      type: 'item',
+      iconType: 'item',
       key: 'itemIds',
     },
   },
@@ -48,7 +56,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.beacons',
-      type: 'item',
+      iconType: 'item',
       key: 'beaconIds',
     },
   },
@@ -65,7 +73,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.belts',
-      type: 'item',
+      iconType: 'item',
       key: 'beltIds',
     },
   },
@@ -82,7 +90,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.cargoWagons',
-      type: 'item',
+      iconType: 'item',
       key: 'cargoWagonIds',
     },
   },
@@ -99,7 +107,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.fluidWagons',
-      type: 'item',
+      iconType: 'item',
       key: 'fluidWagonIds',
     },
   },
@@ -116,7 +124,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.fuels',
-      type: 'item',
+      iconType: 'item',
       key: 'fuelIds',
     },
   },
@@ -133,7 +141,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.machines',
-      type: 'item',
+      iconType: 'item',
       key: 'machineIds',
     },
   },
@@ -150,7 +158,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.modules',
-      type: 'item',
+      iconType: 'item',
       key: 'moduleIds',
     },
   },
@@ -167,7 +175,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.pumps',
-      type: 'item',
+      iconType: 'item',
       key: 'pipeIds',
     },
   },
@@ -184,7 +192,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.technologies',
-      type: 'item',
+      iconType: 'item',
       key: 'technologyIds',
     },
   },
@@ -201,7 +209,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.recipes',
-      type: 'recipe',
+      iconType: 'recipe',
       key: 'recipeIds',
     },
   },
@@ -218,7 +226,7 @@ export const routes: Route[] = [
       import('./collection/collection').then((c) => c.Collection),
     data: {
       label: 'data.locations',
-      type: 'location',
+      iconType: 'location',
       key: 'locationIds',
     },
   },

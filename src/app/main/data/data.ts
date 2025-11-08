@@ -3,31 +3,10 @@ import { RouterLink } from '@angular/router';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { Breadcrumb } from '~/components/breadcrumb/breadcrumb';
+import { CollectionOption } from '~/components/collection-table/collection-option';
 import { Icon } from '~/components/icon/icon';
-import { IconType } from '~/data/icon-type';
-import { LinkOption } from '~/option/link-option';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
-
-type CollectionKey =
-  | 'categoryIds'
-  | 'itemIds'
-  | 'beaconIds'
-  | 'beltIds'
-  | 'cargoWagonIds'
-  | 'fluidWagonIds'
-  | 'fuelIds'
-  | 'machineIds'
-  | 'moduleIds'
-  | 'pipeIds'
-  | 'technologyIds'
-  | 'recipeIds'
-  | 'locationIds';
-
-interface CollectionOption extends LinkOption {
-  key: CollectionKey;
-  iconType: IconType;
-}
 
 @Component({
   selector: 'lab-data',
