@@ -11,6 +11,6 @@
     @if (crumb.faIcon; as icon) {
       <fa-icon [icon]="icon"></fa-icon>
     }
-    {{ crumb.label }}
+    {{ crumb.label | translate }}
   </a>
 }

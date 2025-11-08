@@ -155,18 +155,18 @@ export const routes: Route[] = [
     },
   },
   {
-    path: 'pipes/:id',
+    path: 'pumps/:id',
     loadComponent: () => import('./item/item').then((c) => c.Item),
     data: {
-      collectionLabel: 'data.pipes',
+      collectionLabel: 'data.pumps',
     },
   },
   {
-    path: 'pipes',
+    path: 'pumps',
     loadComponent: () =>
       import('./collection/collection').then((c) => c.Collection),
     data: {
-      label: 'data.pipes',
+      label: 'data.pumps',
       type: 'item',
       key: 'pipeIds',
     },

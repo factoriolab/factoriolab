@@ -11,10 +11,11 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 import { LinkOption } from '~/option/link-option';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { TranslatePipe } from '~/translate/translate-pipe';
 
 @Component({
   selector: 'lab-breadcrumb',
-  imports: [RouterLink, FaIconComponent],
+  imports: [RouterLink, FaIconComponent, TranslatePipe],
   templateUrl: './breadcrumb.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex items-center gap-1 py-2 border-b border-gray-700' },

@@ -318,7 +318,7 @@ export class Flow implements AfterViewInit {
       .append('text')
       .attr(
         'class',
-        'fill-white text-[6px] text-shadow-md text-shadow-black pointer-events-none font-semibold',
+        'fill-white text-[6px] text-shadow-md text-shadow-black pointer-events-none',
       )
       .attr('x', 22)
       .attr('y', (d) => this.imageOffset(d) + 22)
@@ -329,7 +329,7 @@ export class Flow implements AfterViewInit {
       .append('text')
       .attr(
         'class',
-        'fill-white text-xs text-shadow-md text-shadow-black pointer-events-none font-semibold',
+        'fill-white text-xs text-shadow-md text-shadow-black pointer-events-none',
       )
       .style('text-anchor', 'middle')
       .attr('x', 20)
@@ -566,7 +566,7 @@ export class Flow implements AfterViewInit {
       .append('text')
       .attr(
         'class',
-        'fill-white text-[6px] text-shadow-md text-shadow-black pointer-events-none font-semibold',
+        'fill-white text-[6px] text-shadow-md text-shadow-black pointer-events-none',
       )
       .attr('y', 26)
       .attr('x', 20)
@@ -577,7 +577,7 @@ export class Flow implements AfterViewInit {
       .append('text')
       .attr(
         'class',
-        'fill-white text-[6px] text-shadow-md text-shadow-black pointer-events-none font-semibold',
+        'fill-white text-[6px] text-shadow-md text-shadow-black pointer-events-none',
       )
       .style('text-anchor', 'middle')
       .attr('y', 35)

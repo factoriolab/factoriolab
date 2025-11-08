@@ -103,8 +103,8 @@ export class Data {
     },
     {
       faIcon: faXmark,
-      label: 'data.pipes',
-      routerLink: 'pipes',
+      label: 'data.pumps',
+      routerLink: 'pumps',
       key: 'pipeIds',
       iconType: 'item',
     },
