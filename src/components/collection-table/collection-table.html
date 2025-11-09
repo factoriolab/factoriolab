@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (item of items() | page: pagingData(); track item.id) {
+    @for (item of items() | page: tableStore.state(); track item.id) {
       <tr>
         <td>
           <a
@@ -42,10 +42,7 @@
   <tfoot>
     <tr>
       <td colspan="2">
-        <lab-paginator
-          [(value)]="pagingData"
-          [total]="items().length"
-        ></lab-paginator>
+        <lab-paginator [total]="items().length"></lab-paginator>
       </td>
     </tr>
   </tfoot>

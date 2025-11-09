@@ -2,8 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
-  model,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -14,11 +14,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Option } from '~/option/option';
+import { TableStore } from '~/state/table/table-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
 import { Select } from '../select/select';
-import { PagingData } from './paging-data';
 
 type PaginatorButton = 'first' | 'previous' | 'next' | 'last';
 
@@ -30,11 +30,13 @@ type PaginatorButton = 'first' | 'previous' | 'next' | 'last';
   host: { class: 'flex items-center gap-2 justify-center w-full' },
 })
 export class Paginator {
-  readonly value = model.required<PagingData>();
+  protected readonly tableStore = inject(TableStore);
+
   readonly total = input.required<number>();
 
   protected readonly label = computed(() => {
-    const { page, rows } = this.value();
+    const page = this.tableStore.page();
+    const rows = this.tableStore.rows();
     const total = this.total();
 
     const first = Math.min(total, page * rows + 1);
@@ -43,13 +45,15 @@ export class Paginator {
   });
 
   protected readonly nextDisabled = computed(() => {
-    const { page, rows } = this.value();
+    const page = this.tableStore.page();
+    const rows = this.tableStore.rows();
     const total = this.total();
-    return page * rows >= total;
+    return (page + 1) * rows >= total;
   });
 
   protected readonly pageOptions = computed(() => {
-    const { page, rows } = this.value();
+    const page = this.tableStore.page();
+    const rows = this.tableStore.rows();
     const total = this.total();
     const last = Math.floor(total / rows);
     const result: number[] = [page];
@@ -72,19 +76,14 @@ export class Paginator {
     { label: '100', value: 100 },
   ];
 
-  goTo(page: number): void {
-    this.value.update((v) => ({ page, rows: v.rows }));
-  }
-
   goToButton(button: PaginatorButton): void {
-    this.value.update((v) => ({
-      page: this.getPage(v.page, v.rows, this.total(), button),
-      rows: v.rows,
-    }));
-  }
-
-  changeRows(rows: number): void {
-    this.value.update((v) => ({ page: v.page, rows }));
+    const page = this.getPage(
+      this.tableStore.page(),
+      this.tableStore.rows(),
+      this.total(),
+      button,
+    );
+    this.tableStore.apply({ page });
   }
 
   private getPage(

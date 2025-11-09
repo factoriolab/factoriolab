@@ -4,20 +4,19 @@ import {
   computed,
   inject,
   input,
-  signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { IconType } from '~/data/icon-type';
 import { Item } from '~/data/schema/item';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { TableStore } from '~/state/table/table-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
 import { Icon } from '../icon/icon';
 import { PagePipe } from '../paginator/page-pipe';
 import { Paginator } from '../paginator/paginator';
-import { PagingData } from '../paginator/paging-data';
 import { CollectionItem } from './collection-item';
 
 type RecordKey =
@@ -40,11 +39,10 @@ const recordKey: Partial<Record<IconType, RecordKey>> = {
 })
 export class CollectionTable {
   protected readonly settingsStore = inject(SettingsStore);
+  protected readonly tableStore = inject(TableStore);
 
   readonly ids = input.required<string[]>();
   readonly iconType = input.required<IconType>();
-
-  pagingData = signal<PagingData>({ page: 0, rows: 10 });
 
   protected readonly hasCategory = computed(() => {
     const type = this.iconType();
