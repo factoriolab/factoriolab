@@ -57,6 +57,7 @@
       z-index: 1;
       background-color: var(--color-gray-950);
       font-weight: var(--font-weight-semibold);
+      text-align: start;
     }
 
     tr.detail td {
