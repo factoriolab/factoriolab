@@ -95,4 +95,14 @@ export interface LabParams {
   cmx?: string;
   /** `Rational` Cost recycling */
   cre?: string;
+  /** `string` Table filter */
+  tfi?: string;
+  /** `string` Table sort column */
+  tso?: string;
+  /** `boolean` Table sort ascending */
+  tas?: string;
+  /** `number` Table page */
+  tpg?: string;
+  /** `number` Table rows */
+  tro?: string;
 }

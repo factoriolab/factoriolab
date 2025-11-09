@@ -83,9 +83,10 @@ export class Zip {
   zipDiffString(
     value: string | undefined,
     init: string | undefined,
-    hash: (string | null)[],
+    hash?: (string | null)[],
   ): string | [string, string] {
     if (value === init || value == null) return '';
+    if (hash == null) return value;
     return [value, this.compression.nToId(hash.indexOf(value))];
   }
 

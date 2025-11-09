@@ -41,6 +41,8 @@ import {
   SettingsState,
 } from '../settings/settings-state';
 import { SettingsStore } from '../settings/settings-store';
+import { initialTableState, TableRows, TableState } from '../table/table-state';
+import { TableStore } from '../table/table-store';
 import { Compression } from './compression';
 import { ZFIELDSEP } from './constants';
 import { LabParams } from './lab-params';
@@ -77,6 +79,7 @@ interface State {
   recipes: Record<string, RecipeState>;
   machines: Record<string, MachineState>;
   settings: SettingsState;
+  table: TableState;
   data: Dataset;
   hash: ModHash;
 }
@@ -87,6 +90,7 @@ interface PartialState {
   recipesState?: Record<string, RecipeState>;
   machinesState?: Record<string, MachineState>;
   settingsState?: PartialSettingsState;
+  tableState?: Partial<TableState>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -100,6 +104,7 @@ export class RouterSync {
   private readonly recipesStore = inject(RecipesStore);
   private readonly fileClient = inject(FileClient);
   private readonly settingsStore = inject(SettingsStore);
+  private readonly tableStore = inject(TableStore);
   private readonly zip = inject(Zip);
 
   state$ = new Subject<State>();
@@ -166,6 +171,7 @@ export class RouterSync {
       const recipes = this.recipesStore.state();
       const machines = this.machinesStore.state();
       const settings = this.settingsStore.state();
+      const table = this.tableStore.state();
       const data = this.settingsStore.dataset();
 
       this.state$.next({
@@ -174,6 +180,7 @@ export class RouterSync {
         recipes,
         machines,
         settings,
+        table,
         data,
         hash,
       });
@@ -205,8 +212,16 @@ export class RouterSync {
   }
 
   zipState(state: State): ZipState {
-    const { objectives, items, recipes, machines, settings, data, hash } =
-      state;
+    const {
+      objectives,
+      items,
+      recipes,
+      machines,
+      settings,
+      table,
+      data,
+      hash,
+    } = state;
     const zState = this.zipModulesBeacons(
       objectives,
       recipes,
@@ -220,6 +235,7 @@ export class RouterSync {
     this.zipRecipes(zState, recipes, hash);
     this.zipMachines(zState, machines, hash);
     this.zipSettings(zState, settings, Object.keys(objectives), data, hash);
+    this.zipTable(zState, table);
     return zState;
   }
 
@@ -382,6 +398,7 @@ export class RouterSync {
       modHash,
       hash,
     );
+    state.tableState = this.unzipTable(params);
 
     this.dispatch(state);
   }
@@ -392,6 +409,7 @@ export class RouterSync {
     this.recipesStore.load(state.recipesState);
     this.machinesStore.load(state.machinesState);
     this.settingsStore.load(state.settingsState);
+    this.tableStore.load(state.tableState);
     this.ready.set(true);
   }
 
@@ -902,6 +920,7 @@ export class RouterSync {
     hash: ModHash,
   ): void {
     const init = initialSettingsState;
+
     // Set up shorthand functions to zip state
     const set = this.zip.set(zState.config, state, init);
     const sub = set(this.zip.zipDiffSubset.bind(this.zip));
@@ -911,6 +930,7 @@ export class RouterSync {
     const rat = set(this.zip.zipDiffRational.bind(this.zip));
     const rnk = set(this.zip.zipDiffArray.bind(this.zip));
     const arr = set(this.zip.zipDiffIndices.bind(this.zip));
+
     // Zip state
     sub('och', (s) => s.checkedObjectiveIds, objectiveIds);
     num('omt', (s) => s.maximizeType);
@@ -1032,6 +1052,44 @@ export class RouterSync {
 
     prune(costs);
     if (Object.keys(costs).length) obj.costs = costs;
+
+    prune(obj);
+    if (!Object.keys(obj).length) return;
+
+    return obj;
+  }
+
+  zipTable(zState: ZipState, state: TableState): void {
+    const init = initialTableState;
+
+    // Set up shorthand functions to zip state
+    const set = this.zip.set(zState.config, state, init);
+    const num = set(this.zip.zipDiffNumber.bind(this.zip));
+    const bln = set(this.zip.zipDiffBool.bind(this.zip));
+    const str = set(this.zip.zipDiffString.bind(this.zip));
+
+    // Zip state
+    str('tfi', (s) => s.filter);
+    str('tso', (s) => s.sort);
+    bln('tas', (s) => s.asc);
+    num('tpg', (s) => s.page);
+    num('tro', (s) => s.rows);
+  }
+
+  unzipTable(params: LabParams): Partial<TableState> | undefined {
+    // Set up shorthand functions to parse state
+    const get = this.zip.get(params);
+    const num = get(this.zip.parseNumber.bind(this.zip));
+    const bln = get(this.zip.parseBool.bind(this.zip));
+    const str = get(this.zip.parseString.bind(this.zip));
+
+    const obj: Partial<TableState> = {
+      filter: str('tfi'),
+      sort: str('tso'),
+      asc: bln('tas'),
+      page: num('tpg'),
+      rows: num('tro') as TableRows,
+    };
 
     prune(obj);
     if (!Object.keys(obj).length) return;
