@@ -14,14 +14,15 @@ export class TableStore extends Store<TableState> {
     super(initialTableState);
   }
 
-  setSort(sort: string): void {
+  setSort(sort: string, defaultAscending = false): void {
     this.update((state) => {
       if (state.sort === sort) {
-        if (state.asc) return { sort: undefined, asc: false };
-        return { asc: true };
+        if (state.asc !== defaultAscending)
+          return { sort: undefined, asc: false };
+        return { asc: !defaultAscending };
       }
 
-      return { sort: sort };
+      return { sort: sort, asc: defaultAscending };
     });
   }
 }

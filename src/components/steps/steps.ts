@@ -7,6 +7,7 @@ import {
   effect,
   inject,
   input,
+  OnDestroy,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -95,7 +96,7 @@ import { TotalCell } from './total-cell/total-cell';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col gap-1 sm:gap-2' },
 })
-export class Steps {
+export class Steps implements OnDestroy {
   protected readonly route = inject(ActivatedRoute);
   protected readonly dialog = inject(Dialog);
   protected readonly exporter = inject(Exporter);
@@ -179,6 +180,10 @@ export class Steps {
 
   // Store per-recipe preferences in component memory
   perMachine: Record<string, boolean | undefined> = {};
+
+  ngOnDestroy(): void {
+    this.tableStore.reset();
+  }
 
   toggleStep(stepId: string): void {
     this.expandedSteps.update((s) =>

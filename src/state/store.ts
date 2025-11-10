@@ -76,6 +76,10 @@ export abstract class Store<T extends object> {
     this.apply(partial);
   }
 
+  reset(): void {
+    this._state.set(this.initial);
+  }
+
   protected set(state: T): void {
     this._state.set(state);
   }

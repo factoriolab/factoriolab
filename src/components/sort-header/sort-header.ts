@@ -30,7 +30,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
     class:
       'cursor-pointer select-none hover:bg-gray-900 overflow-hidden has-[button:hover]:bg-transparent',
     '[class.text-brand-400]': 'tableStore.sort() === column()',
-    '(click)': 'tableStore.setSort(column())',
+    '(click)': 'tableStore.setSort(column(), defaultAscending())',
   },
   hostDirectives: [Ripple],
 })
@@ -39,6 +39,7 @@ export class SortHeader {
 
   readonly text = input.required<string>();
   readonly column = input.required<string>();
+  readonly defaultAscending = input(false);
   readonly showUndo = input<boolean>();
   readonly undoTooltip = input<string>();
 
