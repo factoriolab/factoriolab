@@ -175,7 +175,7 @@
           <td class="overflow-hidden px-0 py-0 sm:px-2">
             <div class="flex h-12 items-center">
               @let tree = objectivesStore.stepTree()[step.id];
-              @if (sort() == null && tree.length) {
+              @if (tableStore.sort() == null && tree.length) {
                 @for (trail of tree; track $index) {
                   <div
                     class="self-end border-e-2 border-dotted"

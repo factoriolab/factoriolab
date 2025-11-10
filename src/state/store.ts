@@ -81,16 +81,11 @@ export abstract class Store<T extends object> {
   }
 
   protected reduce(fn: (state: T) => T): void {
-    const state = this._state();
-    const next = fn(state);
-    this.set(next);
+    this._state.update(fn);
   }
 
   protected update(fn: (state: T) => Partial<T>): void {
-    const state = this._state();
-    const apply = fn(state);
-    const next = spread(state, apply);
-    this.set(next);
+    this._state.update((state) => spread(state, fn(state)));
   }
 
   protected select<K extends keyof T>(field: K): Signal<T[K]> {

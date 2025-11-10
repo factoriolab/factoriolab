@@ -1,4 +1,4 @@
-export type SortColumn =
+export type StepsSort =
   | 'items'
   | 'belts'
   | 'wagons'

@@ -40,6 +40,7 @@ import { RecipeState } from '~/state/recipes/recipe-state';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { RouterSync } from '~/state/router/router-sync';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { TableStore } from '~/state/table/table-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 import { updateSetIds } from '~/utils/set';
@@ -53,6 +54,7 @@ import { Icon } from '../icon/icon';
 import { InputNumber } from '../input-number/input-number';
 import { ModulesSelect } from '../modules-select/modules-select';
 import { Select } from '../select/select';
+import { SortHeader } from '../sort-header/sort-header';
 import { Tooltip } from '../tooltip/tooltip';
 import { BeltSelect } from './belt-select/belt-select';
 import { DetailRow } from './detail-row/detail-row';
@@ -60,8 +62,7 @@ import { ExcludeButton } from './exclude-button/exclude-button';
 import { PowerPipe } from './pipes/power-pipe';
 import { StepHrefPipe } from './pipes/step-href-pipe';
 import { RecipesSelect } from './recipes-select/recipes-select';
-import { SortColumn } from './sort-column';
-import { SortHeader } from './sort-header/sort-header';
+import { StepsSort } from './steps-sort';
 import { TotalCell } from './total-cell/total-cell';
 
 @Component({
@@ -106,6 +107,7 @@ export class Steps {
   protected readonly recipesStore = inject(RecipesStore);
   protected readonly routerSync = inject(RouterSync);
   protected readonly settingsStore = inject(SettingsStore);
+  protected readonly tableStore = inject(TableStore);
 
   readonly focus = input(false);
   readonly selectedId = input<string>();
@@ -133,7 +135,6 @@ export class Steps {
   protected readonly totals = this.objectivesStore.totals;
 
   protected readonly expandedSteps = signal<Set<string>>(new Set());
-  readonly sort = signal<[SortColumn, -1 | 1] | null>(null);
 
   protected readonly steps = computed(() => {
     const steps = this.objectivesStore.steps();
@@ -142,19 +143,22 @@ export class Steps {
   });
 
   protected readonly sortedSteps = computed(() => {
-    const sort = this.sort();
+    const sort = this.tableStore.sort();
     let steps = this.steps();
     if (sort == null) return steps;
 
-    const [col, dir] = sort;
+    const col = sort as StepsSort;
 
     steps = [...steps];
-    steps.sort(
-      (a, b) =>
-        coalesce(b[col], rational.zero)
-          .sub(coalesce(a[col], rational.zero))
-          .toNumber() * dir,
+    steps.sort((a, b) =>
+      coalesce(b[col], rational.zero)
+        .sub(coalesce(a[col], rational.zero))
+        .toNumber(),
     );
+
+    const asc = this.tableStore.asc();
+    if (asc) steps.reverse();
+
     return steps;
   });
 
@@ -175,14 +179,6 @@ export class Steps {
 
   // Store per-recipe preferences in component memory
   perMachine: Record<string, boolean | undefined> = {};
-
-  changeSort(column: SortColumn): void {
-    this.sort.update((current) => {
-      if (current == null || current[0] !== column) return [column, 1];
-      if (current[1] === -1) return null;
-      return [column, -1];
-    });
-  }
 
   toggleStep(stepId: string): void {
     this.expandedSteps.update((s) =>
