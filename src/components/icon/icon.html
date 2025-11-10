@@ -1,6 +1,7 @@
 @if (icon(); as icon) {
   <span
-    class="absolute size-16 origin-top-left scale-50"
+    class="absolute size-16 origin-top-left"
+    [class.scale-50]="!full()"
     [style.background-image]="icon.image"
     [style.background-position]="icon.position"
     [class.light:invert]="icon.color | isLight"
@@ -8,7 +9,7 @@
   </span>
 
   @if (icon.quality; as q) {
-    <lab-icon type="system" [value]="'q' + q"></lab-icon>
+    <lab-icon type="system" [value]="'q' + q" [full]="full()"></lab-icon>
   }
 
   @if (icon.text; as text) {

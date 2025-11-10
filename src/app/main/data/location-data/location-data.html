@@ -1,0 +1,7 @@
+<lab-breadcrumb [items]="crumbs()"></lab-breadcrumb>
+@if (obj(); as obj) {
+  <h3 class="my-3 text-lg font-semibold">{{ obj.name }}</h3>
+  <lab-icon [value]="obj.id" type="location" [full]="true"></lab-icon>
+} @else {
+  <div>{{ 'data.notFound' | translate }}</div>
+}

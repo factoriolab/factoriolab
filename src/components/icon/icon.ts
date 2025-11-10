@@ -9,18 +9,28 @@ import {
   FaIconComponent,
   IconDefinition,
 } from '@fortawesome/angular-fontawesome';
+import { cva } from 'class-variance-authority';
 
 import { IconType } from '~/data/icon-type';
 import { SettingsStore } from '~/state/settings/settings-store';
 
 import { IsLightPipe } from './is-light-pipe';
 
+const host = cva('inline-flex shrink-0 relative', {
+  variants: {
+    full: {
+      true: 'size-16',
+      false: 'size-8',
+    },
+  },
+});
+
 @Component({
   selector: 'lab-icon',
   imports: [FaIconComponent, IsLightPipe],
   templateUrl: './icon.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'inline-flex shrink-0 relative size-8' },
+  host: { '[class]': 'hostClass()' },
 })
 export class Icon {
   private readonly settingsStore = inject(SettingsStore);
@@ -29,6 +39,9 @@ export class Icon {
   readonly type = input<IconType>();
   readonly text = input<string>();
   readonly alt = input<string>();
+  readonly full = input<boolean>(false);
+
+  protected readonly hostClass = computed(() => host({ full: this.full() }));
 
   protected readonly icon = computed(() => {
     const value = this.value();

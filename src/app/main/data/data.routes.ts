@@ -11,7 +11,8 @@ type DataRoute = Route & { data?: CollectionOption | DetailData };
 export const routes: DataRoute[] = [
   {
     path: 'categories/:id',
-    loadComponent: () => import('./category/category').then((c) => c.Category),
+    loadComponent: () =>
+      import('./category-data/category-data').then((c) => c.CategoryData),
     data: {
       collectionLabel: 'data.categories',
     },
@@ -28,7 +29,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'items/:id',
-    loadComponent: () => import('./item/item').then((c) => c.Item),
+    loadComponent: () =>
+      import('./item-data/item-data').then((c) => c.ItemData),
     data: {
       collectionLabel: 'data.items',
     },
@@ -45,7 +47,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'beacons/:id',
-    loadComponent: () => import('./item/item').then((c) => c.Item),
+    loadComponent: () =>
+      import('./item-data/item-data').then((c) => c.ItemData),
     data: {
       collectionLabel: 'data.beacons',
     },
@@ -62,7 +65,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'belts/:id',
-    loadComponent: () => import('./item/item').then((c) => c.Item),
+    loadComponent: () =>
+      import('./item-data/item-data').then((c) => c.ItemData),
     data: {
       collectionLabel: 'data.belts',
     },
@@ -79,7 +83,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'cargo-wagons/:id',
-    loadComponent: () => import('./item/item').then((c) => c.Item),
+    loadComponent: () =>
+      import('./item-data/item-data').then((c) => c.ItemData),
     data: {
       collectionLabel: 'data.cargoWagons',
     },
@@ -96,7 +101,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'fluid-wagons/:id',
-    loadComponent: () => import('./item/item').then((c) => c.Item),
+    loadComponent: () =>
+      import('./item-data/item-data').then((c) => c.ItemData),
     data: {
       collectionLabel: 'data.fluidWagons',
     },
@@ -113,7 +119,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'fuels/:id',
-    loadComponent: () => import('./item/item').then((c) => c.Item),
+    loadComponent: () =>
+      import('./item-data/item-data').then((c) => c.ItemData),
     data: {
       collectionLabel: 'data.fuels',
     },
@@ -130,7 +137,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'machines/:id',
-    loadComponent: () => import('./item/item').then((c) => c.Item),
+    loadComponent: () =>
+      import('./item-data/item-data').then((c) => c.ItemData),
     data: {
       collectionLabel: 'data.machines',
     },
@@ -147,7 +155,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'modules/:id',
-    loadComponent: () => import('./item/item').then((c) => c.Item),
+    loadComponent: () =>
+      import('./item-data/item-data').then((c) => c.ItemData),
     data: {
       collectionLabel: 'data.modules',
     },
@@ -164,7 +173,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'pumps/:id',
-    loadComponent: () => import('./item/item').then((c) => c.Item),
+    loadComponent: () =>
+      import('./item-data/item-data').then((c) => c.ItemData),
     data: {
       collectionLabel: 'data.pumps',
     },
@@ -181,7 +191,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'technologies/:id',
-    loadComponent: () => import('./item/item').then((c) => c.Item),
+    loadComponent: () =>
+      import('./item-data/item-data').then((c) => c.ItemData),
     data: {
       collectionLabel: 'data.technologies',
     },
@@ -198,7 +209,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'recipes/:id',
-    loadComponent: () => import('./recipe/recipe').then((c) => c.Recipe),
+    loadComponent: () =>
+      import('./recipe-data/recipe-data').then((c) => c.RecipeData),
     data: {
       collectionLabel: 'data.recipes',
     },
@@ -215,7 +227,8 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'locations/:id',
-    loadComponent: () => import('./location/location').then((c) => c.Location),
+    loadComponent: () =>
+      import('./location-data/location-data').then((c) => c.LocationData),
     data: {
       collectionLabel: 'data.locations',
     },
