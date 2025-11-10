@@ -11,6 +11,7 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 import { LinkOption } from '~/option/link-option';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { resetTableParams } from '~/state/table/table-state';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 @Component({
@@ -33,4 +34,5 @@ export class Breadcrumb {
   });
 
   protected readonly faChevronRight = faChevronRight;
+  protected readonly resetTableParams = resetTableParams;
 }

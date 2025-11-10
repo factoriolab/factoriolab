@@ -205,10 +205,7 @@ export class RouterSync {
       // Use sync: true to indicate we should not re-apply this state
       info: { sync: true },
     });
-    const url = this.router.url;
-    const path = url.split('?')[0];
-    // Only cache list / flow routes
-    if (path.endsWith('list') || path.endsWith('flow')) this.stored.set(url);
+    this.stored.set(this.router.url);
   }
 
   zipState(state: State): ZipState {
@@ -298,8 +295,6 @@ export class RouterSync {
       zState.config.bare,
       this.zipTail,
     );
-
-    if (Object.keys(bare).length === 1) return {};
 
     const hash = spread(
       zState.objectives.hash,

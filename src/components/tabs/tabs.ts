@@ -18,6 +18,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 import { IconType } from '~/data/icon-type';
+import { resetTableParams } from '~/state/table/table-state';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
@@ -79,6 +80,7 @@ export class Tabs<T extends string = string>
 
   protected readonly faAngleLeft = faAngleLeft;
   protected readonly faAngleRight = faAngleRight;
+  protected readonly resetTableParams = resetTableParams;
 
   readonly indicatorStyle = computed(() => {
     const tabs = this.tabs();

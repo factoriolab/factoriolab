@@ -6,7 +6,8 @@
   @if (crumb.routerLink) {
     <a
       [routerLink]="crumb.routerLink"
-      queryParamsHandling="preserve"
+      [queryParams]="resetTableParams"
+      queryParamsHandling="merge"
       class="link flex gap-1"
     >
       @if (crumb.faIcon; as icon) {

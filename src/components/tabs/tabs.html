@@ -24,8 +24,9 @@
       role="tab"
       labRipple
       [routerLink]="tab.routerLink"
+      [queryParams]="resetTableParams"
       routerLinkActive
-      queryParamsHandling="preserve"
+      queryParamsHandling="merge"
       (isActiveChange)="$event ? value.set(tab.value) : null"
       [class]="
         tab.value === value()

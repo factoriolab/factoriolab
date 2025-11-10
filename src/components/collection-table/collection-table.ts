@@ -4,13 +4,16 @@ import {
   computed,
   inject,
   input,
-  OnDestroy,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 import { IconType } from '~/data/icon-type';
 import { Item } from '~/data/schema/item';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { resetTableParams } from '~/state/table/table-state';
 import { TableStore } from '~/state/table/table-store';
 import { coalesce } from '~/utils/nullish';
 
@@ -34,16 +37,27 @@ const recordKey: Partial<Record<IconType, RecordKey>> = {
 
 @Component({
   selector: 'lab-collection-table',
-  imports: [RouterLink, Icon, Paginator, PaginatorPipe, SortHeader],
+  imports: [
+    FormsModule,
+    RouterLink,
+    FaIconComponent,
+    Icon,
+    Paginator,
+    PaginatorPipe,
+    SortHeader,
+  ],
   templateUrl: './collection-table.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionTable implements OnDestroy {
+export class CollectionTable {
   protected readonly settingsStore = inject(SettingsStore);
   protected readonly tableStore = inject(TableStore);
 
   readonly ids = input.required<string[]>();
   readonly iconType = input.required<IconType>();
+
+  protected readonly faMagnifyingGlass = faMagnifyingGlass;
+  protected readonly resetTableParams = resetTableParams;
 
   protected readonly hasCategory = computed(() => {
     const type = this.iconType();
@@ -54,7 +68,7 @@ export class CollectionTable implements OnDestroy {
     const data = this.settingsStore.dataset();
     const key = coalesce(recordKey[this.iconType()], 'itemRecord');
     const record = data[key];
-    const result = this.ids()
+    let result = this.ids()
       .map((i) => record[i])
       .map(
         (r): CollectionItem => ({
@@ -63,6 +77,10 @@ export class CollectionTable implements OnDestroy {
           category: data.categoryRecord[coalesce((r as Item).category, '')],
         }),
       );
+
+    const filter = this.tableStore.filter()?.toLowerCase();
+    if (filter)
+      result = result.filter((e) => e.name.toLowerCase().includes(filter));
 
     const sort = this.tableStore.sort();
     if (sort == null) return result;
@@ -79,8 +97,4 @@ export class CollectionTable implements OnDestroy {
 
     return result;
   });
-
-  ngOnDestroy(): void {
-    this.tableStore.reset();
-  }
 }

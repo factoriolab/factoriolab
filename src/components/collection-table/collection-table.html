@@ -18,6 +18,22 @@
         ></th>
       }
     </tr>
+    <tr>
+      <th>
+        <div class="relative flex font-medium">
+          <input
+            class="input"
+            [ngModel]="tableStore.filter()"
+            (ngModelChange)="tableStore.apply({ filter: $event })"
+          />
+          <fa-icon
+            class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+            [icon]="faMagnifyingGlass"
+          ></fa-icon>
+        </div>
+      </th>
+      <th></th>
+    </tr>
   </thead>
   <tbody>
     @for (item of items() | paginator: tableStore.state(); track item.id) {
@@ -25,7 +41,8 @@
         <td>
           <a
             [routerLink]="item.id"
-            queryParamsHandling="preserve"
+            [queryParams]="resetTableParams"
+            queryParamsHandling="merge"
             class="link flex items-center gap-1"
           >
             <lab-icon [value]="item.id" [type]="iconType()"></lab-icon>
@@ -36,7 +53,8 @@
           <td>
             <a
               [routerLink]="['../categories', item.category.id]"
-              queryParamsHandling="preserve"
+              [queryParams]="resetTableParams"
+              queryParamsHandling="merge"
               class="link flex items-center gap-1"
             >
               <lab-icon [value]="item.category.id" type="category"></lab-icon>

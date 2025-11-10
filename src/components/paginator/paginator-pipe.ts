@@ -15,9 +15,11 @@ export class PaginatorPipe implements PipeTransform {
   private readonly tableStore = inject(TableStore);
 
   transform<T>(value: T[], data: TableState): T[] {
+    if (!value.length) return value;
+
     const { page, rows } = data;
     let first = page * rows;
-    if (first > value.length - 1) {
+    if (first > value.length - 1 && page > 0) {
       // First item is outside range. Reset to first page.
       first = 0;
       afterNextRender(
