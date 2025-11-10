@@ -1,10 +1,17 @@
-import { inject, Pipe, PipeTransform } from '@angular/core';
+import {
+  afterNextRender,
+  inject,
+  Injector,
+  Pipe,
+  PipeTransform,
+} from '@angular/core';
 
 import { TableState } from '~/state/table/table-state';
 import { TableStore } from '~/state/table/table-store';
 
-@Pipe({ name: 'page' })
-export class PagePipe implements PipeTransform {
+@Pipe({ name: 'paginator' })
+export class PaginatorPipe implements PipeTransform {
+  private readonly injector = inject(Injector);
   private readonly tableStore = inject(TableStore);
 
   transform<T>(value: T[], data: TableState): T[] {
@@ -13,7 +20,12 @@ export class PagePipe implements PipeTransform {
     if (first > value.length - 1) {
       // First item is outside range. Reset to first page.
       first = 0;
-      this.tableStore.apply({ page: 0 });
+      afterNextRender(
+        () => {
+          this.tableStore.apply({ page: 0 });
+        },
+        { injector: this.injector },
+      );
     }
 
     const last = first + rows;

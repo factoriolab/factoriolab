@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (item of items() | page: tableStore.state(); track item.id) {
+    @for (item of items() | paginator: tableStore.state(); track item.id) {
       <tr>
         <td>
           <a

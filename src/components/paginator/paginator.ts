@@ -59,7 +59,7 @@ export class Paginator {
     const result: number[] = [page];
     for (let i = 1; i < last; i++) {
       if (page - i >= 0) result.unshift(page - i);
-      if (page + i <= total) result.push(page + i);
+      if (page + i <= last) result.push(page + i);
       if (result.length >= 5) break;
     }
     return result;

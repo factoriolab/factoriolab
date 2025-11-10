@@ -41,7 +41,7 @@ import {
   SettingsState,
 } from '../settings/settings-state';
 import { SettingsStore } from '../settings/settings-store';
-import { initialTableState, TableRows, TableState } from '../table/table-state';
+import { initialTableState, TableState } from '../table/table-state';
 import { TableStore } from '../table/table-store';
 import { Compression } from './compression';
 import { ZFIELDSEP } from './constants';
@@ -1088,7 +1088,7 @@ export class RouterSync {
       sort: str('tso'),
       asc: bln('tas'),
       page: num('tpg'),
-      rows: num('tro') as TableRows,
+      rows: num('tro'),
     };
 
     prune(obj);

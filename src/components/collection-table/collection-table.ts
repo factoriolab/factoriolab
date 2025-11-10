@@ -15,8 +15,8 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
 import { Icon } from '../icon/icon';
-import { PagePipe } from '../paginator/page-pipe';
 import { Paginator } from '../paginator/paginator';
+import { PaginatorPipe } from '../paginator/paginator-pipe';
 import { CollectionItem } from './collection-item';
 
 type RecordKey =
@@ -33,7 +33,7 @@ const recordKey: Partial<Record<IconType, RecordKey>> = {
 
 @Component({
   selector: 'lab-collection-table',
-  imports: [RouterLink, Icon, Paginator, PagePipe, TranslatePipe],
+  imports: [RouterLink, Icon, Paginator, PaginatorPipe, TranslatePipe],
   templateUrl: './collection-table.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

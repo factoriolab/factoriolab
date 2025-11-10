@@ -157,8 +157,8 @@
     "linkTextTooltip": "Select which property to display as text on flow links",
     "sankeyAlign": "Sankey Align",
     "sankeyAlignTooltip": "Select option to determine how sankey nodes are aligned",
-    "elkAlgorithm": "Elk algorithm",
-    "elkAlgorithmTooltip": "Select which ELK algorithm to use for the box-line layout"
+    "elkAlgorithm": "Layout algorithm",
+    "elkAlgorithmTooltip": "Select which ELK layout algorithm to use for the box-line layout"
   },
   "game": "Game",
   "header": {
