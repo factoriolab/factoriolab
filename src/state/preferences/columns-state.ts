@@ -34,7 +34,7 @@ export const columnsInfo: ColumnsInfo = {
   checkbox: { hideDefault: true },
   tree: {},
   items: { hasPrecision: true },
-  belts: { hasPrecision: true },
+  belts: { hasPrecision: true, flag: true },
   wagons: { hasPrecision: true, flag: true },
   rockets: { hasPrecision: true, flag: true },
   machines: { hasPrecision: true },

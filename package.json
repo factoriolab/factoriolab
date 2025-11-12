@@ -23,8 +23,9 @@
     "lint": "ng lint",
     "prettier": "prettier --check .",
     "stylelint": "stylelint **/*.css",
-    "minify-data": "bun scripts/minify-data.ts",
     "sort-i18n": "bun scripts/sort-i18n.ts",
+    "minify-data": "bun scripts/minify-data.ts",
+    "update-color": "bun scripts/update-color.ts",
     "update-hash": "bun scripts/update-hash.ts"
   },
   "dependencies": {
@@ -64,6 +65,7 @@
     "bun": "^1.2.19",
     "eslint": "^9.29.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "fast-average-color-node": "^3.1.0",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

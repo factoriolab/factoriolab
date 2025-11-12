@@ -494,8 +494,8 @@ export class Flow implements AfterViewInit {
       .attr('viewBox', (d) => d.icon.viewBox)
       .attr('width', 32)
       .attr('height', 32)
-      .attr('x', 2)
-      .attr('y', 2)
+      .attr('x', 3)
+      .attr('y', 3)
       .append('image')
       .attr('href', (d) => d.icon.file)
       .attr('class', 'pointer-events-none');
@@ -507,8 +507,8 @@ export class Flow implements AfterViewInit {
       .attr('viewBox', (d) => systemIconsRecord[`q${d.icon.quality}`].viewBox)
       .attr('width', 32)
       .attr('height', 32)
-      .attr('x', 2)
-      .attr('y', 2)
+      .attr('x', 3)
+      .attr('y', 3)
       .append('image')
       .attr('href', 'icons/icons.webp')
       .attr('class', 'pointer-events-none');
@@ -528,8 +528,8 @@ export class Flow implements AfterViewInit {
       .attr('height', 20)
       .attr('ry', 10)
       .attr('rx', 10)
-      .attr('x', 8)
-      .attr('y', 8)
+      .attr('x', 9)
+      .attr('y', 9)
       .attr('class', 'pointer-events-none fill-black blur-[2.5px]');
 
     // Add recipe image
@@ -538,8 +538,8 @@ export class Flow implements AfterViewInit {
       .attr('viewBox', (d) => d.recipeIcon.viewBox)
       .attr('width', 16)
       .attr('height', 16)
-      .attr('x', 10)
-      .attr('y', 10)
+      .attr('x', 11)
+      .attr('y', 11)
       .append('image')
       .attr('href', (d) => d.recipeIcon.file)
       .attr('class', 'pointer-events-none');
@@ -554,8 +554,8 @@ export class Flow implements AfterViewInit {
       )
       .attr('width', 16)
       .attr('height', 16)
-      .attr('x', 10)
-      .attr('y', 10)
+      .attr('x', 11)
+      .attr('y', 11)
       .append('image')
       .attr('href', 'icons/icons.webp')
       .attr('class', 'pointer-events-none');
@@ -569,7 +569,7 @@ export class Flow implements AfterViewInit {
         'fill-white text-[6px] text-shadow-md text-shadow-black pointer-events-none',
       )
       .attr('y', 26)
-      .attr('x', 20)
+      .attr('x', 21)
       .text((d) => '#' + coalesce(d.recipeObjectiveId, ''));
 
     // Node text
@@ -581,7 +581,7 @@ export class Flow implements AfterViewInit {
       )
       .style('text-anchor', 'middle')
       .attr('y', 35)
-      .attr('x', 18)
+      .attr('x', 19)
       .text((d) => d.text);
 
     this.svg = svg;

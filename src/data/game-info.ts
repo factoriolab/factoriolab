@@ -59,4 +59,9 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.outworldStation',
     modId: 'ows',
   },
+  skyformer: {
+    route: '/sky',
+    label: 'options.game.skyformer',
+    modId: 'sky',
+  },
 };

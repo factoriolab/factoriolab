@@ -10,6 +10,7 @@ export type Game =
   | 'mindustry'
   | 'outworld-station'
   | 'satisfactory'
+  | 'skyformer'
   | 'techtonica';
 
 export const gameOptions: Option<Game>[] = [
@@ -65,6 +66,12 @@ export const gameOptions: Option<Game>[] = [
     value: 'satisfactory',
     label: 'options.game.satisfactory',
     icon: 'satisfactory',
+    iconType: 'system',
+  },
+  {
+    value: 'skyformer',
+    label: 'options.game.skyformer',
+    icon: 'skyformer',
     iconType: 'system',
   },
   {

@@ -17,9 +17,9 @@ export const datasets: Datasets = {
     { id: '2.0q', name: '2.0 + Quality', game: 'factorio', flags: '2.0q' },
     { id: '1.1', name: '1.1', game: 'factorio', flags: '1.1' },
     { id: '1.1e', name: '1.1 Expensive', game: 'factorio', flags: '1.1' },
-    { id: '1.0', name: '1.0', game: 'factorio', flags: '1.1' },
-    { id: '017', name: '0.17', game: 'factorio', flags: '1.1' },
-    { id: '016', name: '0.16', game: 'factorio', flags: '1.1' },
+    { id: '1.0', name: '1.0', game: 'factorio', flags: '1.0' },
+    { id: '017', name: '0.17', game: 'factorio', flags: '1.0' },
+    { id: '016', name: '0.16', game: 'factorio', flags: '1.0' },
     { id: '248', name: '248k Standalone', game: 'factorio', flags: '1.1' },
     { id: '248o', name: '248k Overhaul', game: 'factorio', flags: '1.1' },
     {
@@ -106,6 +106,7 @@ export const datasets: Datasets = {
       game: 'outworld-station',
       flags: 'fdy',
     },
+    { id: 'sky', name: 'SkyFormer', game: 'skyformer', flags: 'sky' },
   ],
   modHashV0: [
     '1.1',
@@ -184,6 +185,7 @@ export const datasets: Datasets = {
     'fdy',
     'ows',
     'spa',
+    'sky',
   ],
 };
 

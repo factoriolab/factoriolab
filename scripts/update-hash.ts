@@ -1,9 +1,11 @@
+import fs from 'fs';
+
 import { datasets } from '~/data/datasets';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import { flags } from '~/state/flags';
 
-import { updateHash } from './utils/data';
+import { emptyModHash, updateHash } from './utils/data';
 import { getJsonData, writeJsonData } from './utils/file';
 
 const modId = process.argv[2];
@@ -25,7 +27,9 @@ const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
 
 const modData = getJsonData(modDataPath) as ModData;
-const modHash = getJsonData(modHashPath) as ModHash;
+const modHash = fs.existsSync(modHashPath)
+  ? (getJsonData(modHashPath) as ModHash)
+  : emptyModHash();
 const modFlags = flags[mod.flags];
 
 updateHash(modData, modHash, modFlags);

@@ -107,20 +107,22 @@
         </lab-form-field>
       }
 
-      <button
-        type="button"
-        labButton
-        [faIcon]="faMicrochip"
-        [text]="
-          settingsStore.researchedTechnologyIds()
-            ? 'settings.techsResearched'
-            : 'settings.allTechsResearched'
-        "
-        [textParams]="{ count: settings().researchedTechnologyIds.size }"
-        labTooltip="settings.techsTooltip"
-        labTooltipPosition="adjacent"
-        (click)="dialog.open(TechnologiesDialog)"
-      ></button>
+      @if (data().flags.has('technologies')) {
+        <button
+          type="button"
+          labButton
+          [faIcon]="faMicrochip"
+          [text]="
+            settingsStore.researchedTechnologyIds()
+              ? 'settings.techsResearched'
+              : 'settings.allTechsResearched'
+          "
+          [textParams]="{ count: settings().researchedTechnologyIds.size }"
+          labTooltip="settings.techsTooltip"
+          labTooltipPosition="adjacent"
+          (click)="dialog.open(TechnologiesDialog)"
+        ></button>
+      }
 
       <button
         type="button"
@@ -471,21 +473,23 @@
         </lab-form-field>
       }
 
-      <lab-form-field label="settings.defaultTransportBelt">
-        <lab-select
-          [options]="options().belts"
-          labTooltip="settings.defaultTransportBeltTooltip"
-          labTooltipPosition="adjacent"
-          [ngModel]="settings().beltId"
-          (ngModelChange)="
-            settingsStore.updateField(
-              'beltId',
-              $event,
-              settings().defaultBeltId
-            )
-          "
-        ></lab-select>
-      </lab-form-field>
+      @if (data().flags.has('belts')) {
+        <lab-form-field label="settings.defaultTransportBelt">
+          <lab-select
+            [options]="options().belts"
+            labTooltip="settings.defaultTransportBeltTooltip"
+            labTooltipPosition="adjacent"
+            [ngModel]="settings().beltId"
+            (ngModelChange)="
+              settingsStore.updateField(
+                'beltId',
+                $event,
+                settings().defaultBeltId
+              )
+            "
+          ></lab-select>
+        </lab-form-field>
+      }
 
       @if (data().flags.has('beltStack')) {
         <lab-form-field label="settings.defaultStack">
