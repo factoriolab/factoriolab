@@ -1,19 +1,16 @@
 import { Dialog } from '@angular/cdk/dialog';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
+  effect,
   ElementRef,
   inject,
   signal,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { faFileArrowDown, faGear } from '@fortawesome/free-solid-svg-icons';
 import { drag, select, Selection, zoom } from 'd3';
 import ELK, { ElkExtendedEdge, ElkNode } from 'elkjs';
-import { combineLatest, debounceTime, switchMap } from 'rxjs';
 
 import { Button } from '~/components/button/button';
 import { FlowSettingsDialog } from '~/components/flow-settings-dialog/flow-settings-dialog';
@@ -68,8 +65,8 @@ interface ElkGraph extends ElkNode {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col gap-1 sm:gap-2 pb-3 lg:pb-6' },
 })
-export class Flow implements AfterViewInit {
-  private readonly destroyRef = inject(DestroyRef);
+export class Flow {
+  // private readonly destroyRef = inject(DestroyRef);
   protected readonly dialog = inject(Dialog);
   protected readonly exporter = inject(Exporter);
   protected readonly flowBuilder = inject(FlowBuilder);
@@ -81,24 +78,18 @@ export class Flow implements AfterViewInit {
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
 
   selectedId = signal<string | undefined>(undefined);
-  data = combineLatest({
-    data: toObservable(this.flowBuilder.flowData),
-    settings: toObservable(this.preferencesStore.flowSettings),
-  });
 
   private readonly elk = new ELK();
   protected readonly faFileArrowDown = faFileArrowDown;
   protected readonly faGear = faGear;
   protected readonly FlowSettingsDialog = FlowSettingsDialog;
 
-  ngAfterViewInit(): void {
-    this.data
-      .pipe(
-        debounceTime(0),
-        takeUntilDestroyed(this.destroyRef),
-        switchMap(({ data, settings }) => this.rebuildChart(data, settings)),
-      )
-      .subscribe();
+  constructor() {
+    effect(() => {
+      const data = this.flowBuilder.flowData();
+      const settings = this.preferencesStore.flowSettings();
+      void this.rebuildChart(data, settings);
+    });
   }
 
   async rebuildChart(

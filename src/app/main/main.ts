@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {
@@ -9,7 +8,7 @@ import {
 
 import { TabData } from '~/components/tabs/tab-data';
 import { Tabs } from '~/components/tabs/tabs';
-import { FileClient } from '~/data/file-client';
+import { Release } from '~/data/release';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
@@ -21,7 +20,6 @@ import { Settings } from './settings/settings';
 @Component({
   selector: 'lab-main',
   imports: [
-    AsyncPipe,
     RouterOutlet,
     Header,
     Objectives,
@@ -35,8 +33,8 @@ import { Settings } from './settings/settings';
   host: { class: 'block h-full' },
 })
 export class Main {
-  protected readonly fileClient = inject(FileClient);
   private readonly objectivesStore = inject(ObjectivesStore);
+  protected readonly release = inject(Release);
 
   protected readonly result = this.objectivesStore.matrixResult;
   protected readonly tabs: TabData[] = [

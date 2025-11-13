@@ -1,11 +1,12 @@
+import { httpResource } from '@angular/common/http';
 import { computed, effect, inject, Injectable } from '@angular/core';
 import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 
-import { DEFAULT_MOD, modOptions } from '~/data/datasets';
+import { DEFAULT_MOD, modOptions, modRecord } from '~/data/datasets';
 import { Game } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
 import { IconType } from '~/data/icon-type';
-import { Mod } from '~/data/mod';
+import { ModInfo } from '~/data/mod';
 import { Beacon } from '~/data/schema/beacon';
 import { Belt, PIPE } from '~/data/schema/belt';
 import { CargoWagon } from '~/data/schema/cargo-wagon';
@@ -15,6 +16,7 @@ import { Fuel } from '~/data/schema/fuel';
 import { getViewBox, IconData, IconJson } from '~/data/schema/icon-data';
 import { Item, ItemJson, parseItem } from '~/data/schema/item';
 import { Machine, typeHasCraftingSpeed } from '~/data/schema/machine';
+import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import { ModI18n } from '~/data/schema/mod-i18n';
 import {
@@ -45,7 +47,6 @@ import { spread } from '~/utils/object';
 import { reduceRecord, toRecord } from '~/utils/record';
 
 import { BeaconSettings } from '../beacon-settings';
-import { DatasetsStore } from '../datasets/datasets-store';
 import { Hydration } from '../hydration';
 import { ModuleSettings } from '../module-settings';
 import { objectiveUnitOptions } from '../objectives/objective-unit';
@@ -64,7 +65,6 @@ import { systemIconsRecord } from './system-icons';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsStore extends Store<SettingsState> {
-  private readonly datasetsStore = inject(DatasetsStore);
   private readonly hydration = inject(Hydration);
   private readonly preferencesStore = inject(PreferencesStore);
 
@@ -75,30 +75,31 @@ export class SettingsStore extends Store<SettingsState> {
   preset = this.select('preset');
   researchedTechnologyIds = this.select('researchedTechnologyIds');
 
-  mod = computed(() => {
+  readonly modData = httpResource<ModData>(() => {
     const modId = this.modId();
     if (modId == null) return undefined;
-    const record = this.datasetsStore.modRecord();
-    return record[modId];
+    return `data/${modId}/data.json`;
   });
-
-  hash = computed(() => {
+  readonly modHash = httpResource<ModHash>(() => {
     const modId = this.modId();
     if (modId == null) return undefined;
-    const datasets = this.datasetsStore.state();
-    return datasets[modId]?.hash;
+    return `data/${modId}/hash.json`;
   });
-
-  i18n = computed(() => {
+  readonly modI18n = httpResource<ModI18n>(() => {
     const modId = this.modId();
-    if (modId == null) return undefined;
-    const datasets = this.datasetsStore.state();
     const lang = this.preferencesStore.language();
-    return datasets[modId]?.i18n?.[lang];
+    if (modId == null || lang === 'en') return undefined;
+    return `data/${modId}/i18n/${lang}.json`;
+  });
+
+  readonly modInfo = computed(() => {
+    const modId = this.modId();
+    if (modId == null) return undefined;
+    return modRecord[modId];
   });
 
   game = computed(() => {
-    const mod = this.mod();
+    const mod = this.modInfo();
     return coalesce<Game>(mod?.game, 'factorio');
   });
 
@@ -131,10 +132,18 @@ export class SettingsStore extends Store<SettingsState> {
     return modOptions(game);
   });
 
-  defaults = computed(() => this.computeDefaults(this.mod(), this.preset()));
+  defaults = computed(() =>
+    this.computeDefaults(this.modInfo(), this.modData.value(), this.preset()),
+  );
 
   dataset = computed(() =>
-    this.computeDataset(this.mod(), this.hash(), this.i18n(), this.game()),
+    this.computeDataset(
+      this.modInfo(),
+      this.modData.value(),
+      this.modHash.value(),
+      this.modI18n.value(),
+      this.game(),
+    ),
   );
 
   linkValueOptions = computed(() => {
@@ -149,9 +158,9 @@ export class SettingsStore extends Store<SettingsState> {
   });
 
   presetOptions = computed(() => {
-    const mod = this.mod();
+    const modData = this.modData.value();
     const data = this.dataset();
-    return presetOptions(data.flags, mod?.defaults);
+    return presetOptions(data.flags, modData?.defaults);
   });
 
   columnOptions = computed(() => {
@@ -245,7 +254,7 @@ export class SettingsStore extends Store<SettingsState> {
   });
 
   modMenuItem = computed((): LinkOption => {
-    const mod = this.mod();
+    const mod = this.modInfo();
 
     return {
       faIcon: faDatabase,
@@ -263,18 +272,19 @@ export class SettingsStore extends Store<SettingsState> {
     });
 
     effect(() => {
-      const mod = this.mod();
+      const mod = this.modInfo();
       if (mod) log('set_game', mod.game);
     });
   }
 
   computeDefaults(
-    mod: Mod | undefined,
+    modInfo: ModInfo | undefined,
+    modData: ModData | undefined,
     presetSetting: number,
   ): Defaults | undefined {
-    if (mod?.defaults == null) return;
+    if (modInfo == null || modData?.defaults == null) return undefined;
 
-    const m = mod.defaults;
+    const m = modData.defaults;
     if ('presets' in m) {
       const p = coalesce(
         m.presets.find((p) => p.id === presetSetting),
@@ -284,7 +294,7 @@ export class SettingsStore extends Store<SettingsState> {
       const beaconId = coalesce(p.beacon, m.beacon);
       if (beaconId) {
         const beaconBaseId = baseId(beaconId);
-        const beacon = mod.items.find((i) => i.id === beaconBaseId)?.beacon;
+        const beacon = modData.items.find((i) => i.id === beaconBaseId)?.beacon;
         if (beacon) {
           const beaconModule = coalesce(p.beaconModule, m.beaconModule);
           const modules: ModuleSettings[] = [
@@ -320,11 +330,11 @@ export class SettingsStore extends Store<SettingsState> {
     let beacons: BeaconSettings[] = [];
     let moduleRank: string[] | undefined;
     let overclock: Rational | undefined;
-    switch (mod.game) {
+    switch (modInfo.game) {
       case 'factorio': {
         moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
         if (m.beacon) {
-          const beacon = mod.items.find((i) => i.id === m.beacon)?.beacon;
+          const beacon = modData.items.find((i) => i.id === m.beacon)?.beacon;
           if (beacon) {
             const id = m.beacon;
             const modules: ModuleSettings[] = [
@@ -377,18 +387,19 @@ export class SettingsStore extends Store<SettingsState> {
   }
 
   computeDataset(
-    mod: Mod | undefined,
+    info: ModInfo | undefined,
+    data: ModData | undefined,
     hash: ModHash | undefined,
     i18n: ModI18n | undefined,
     game: Game,
   ): Dataset {
     // Map out records with mods
-    const categoryRecord = toRecord(coalesce(mod?.categories, []));
-    const iconData = toRecord(coalesce(mod?.icons, []));
-    const itemData = toRecord(coalesce(mod?.items, []));
-    const recipeData = toRecord(coalesce(mod?.recipes, []));
-    const limitations = reduceRecord(coalesce(mod?.limitations, {}));
-    const locationRecord = toRecord(coalesce(mod?.locations, []));
+    const categoryRecord = toRecord(coalesce(data?.categories, []));
+    const iconData = toRecord(coalesce(data?.icons, []));
+    const itemData = toRecord(coalesce(data?.items, []));
+    const recipeData = toRecord(coalesce(data?.recipes, []));
+    const limitations = reduceRecord(coalesce(data?.limitations, {}));
+    const locationRecord = toRecord(coalesce(data?.locations, []));
 
     // Apply localization
     if (i18n) {
@@ -440,7 +451,7 @@ export class SettingsStore extends Store<SettingsState> {
 
     const itemQIds = new Set<string>();
     const recipeQIds = new Set<string>();
-    const _flags = flags[coalesce(mod?.flags, DEFAULT_MOD)];
+    const _flags = flags[coalesce(info?.flags, DEFAULT_MOD)];
     if (_flags.has('quality')) {
       const qualities = [
         Quality.Uncommon,
@@ -705,7 +716,8 @@ export class SettingsStore extends Store<SettingsState> {
       }
     }
 
-    const file = `data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp`;
+    const modId = coalesce(info?.id, DEFAULT_MOD);
+    const file = `data/${modId}/icons.webp`;
     const image = `url("${file}")`;
     function toIconRecord(
       ids: string[],
@@ -735,10 +747,10 @@ export class SettingsStore extends Store<SettingsState> {
 
     return {
       game,
-      modId: coalesce(mod?.id, DEFAULT_MOD),
+      modId: modId,
       info: gameInfo[game],
       flags: _flags,
-      version: coalesce(mod?.version, {}),
+      version: coalesce(data?.version, {}),
       categoryIds,
       categoryRecord,
       itemCategoryRows,

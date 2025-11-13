@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -18,9 +17,9 @@ import { FormField } from '~/components/form-field/form-field';
 import { InputNumber } from '~/components/input-number/input-number';
 import { ObjectiveForm } from '~/components/objective-form';
 import { Select } from '~/components/select/select';
-import { FileClient } from '~/data/file-client';
 import { Game, gameOptions } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
+import { Release } from '~/data/release';
 import { ObjectiveBase } from '~/state/objectives/objective';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
@@ -31,7 +30,6 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 @Component({
   selector: 'lab-landing',
   imports: [
-    AsyncPipe,
     FormsModule,
     RouterLink,
     FaIconComponent,
@@ -49,9 +47,9 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 export class Landing extends ObjectiveForm {
   protected readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  protected readonly fileClient = inject(FileClient);
   private readonly objectivesStore = inject(ObjectivesStore);
   protected readonly preferencesStore = inject(PreferencesStore);
+  protected readonly release = inject(Release);
   protected readonly routerSync = inject(RouterSync);
   protected readonly settingsStore = inject(SettingsStore);
 

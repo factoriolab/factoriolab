@@ -13,7 +13,7 @@
       (ngModelChange)="setGame($event)"
     ></lab-select>
   </lab-form-field>
-  @if (settingsStore.mod()) {
+  @if (settingsStore.modInfo()) {
     @if (data().flags.has('mods') && settingsStore.modId(); as modId) {
       <lab-form-field label="modSet">
         <lab-select
@@ -87,7 +87,5 @@
     ></lab-checkbox>
   }
 
-  <span class="mt-auto mb-4 text-center"
-    >{{ fileClient.version | async }}
-  </span>
+  <span class="mt-auto mb-4 text-center">{{ release.version() }} </span>
 </div>

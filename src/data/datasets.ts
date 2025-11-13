@@ -1,6 +1,7 @@
 import { Game } from '~/data/game';
 import { ModInfo } from '~/data/mod';
 import { Option } from '~/option/option';
+import { toRecord } from '~/utils/record';
 
 export const DEFAULT_MOD = 'spa';
 
@@ -188,6 +189,8 @@ export const datasets: Datasets = {
     'sky',
   ],
 };
+
+export const modRecord = toRecord(datasets.mods);
 
 export function modOptions(game: Game): Option[] {
   return datasets.mods

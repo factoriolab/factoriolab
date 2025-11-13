@@ -7,7 +7,6 @@
 
 ## General
 
-- Remove usages of $ Observable suffix?
 - Re-check readonly / access modifiers across all files
 - Re-check mobile view
 - Re-check light theme (+ icon invert)

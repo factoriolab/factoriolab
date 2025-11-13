@@ -1,23 +1,23 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   combineLatest,
+  combineLatestWith,
   filter,
-  firstValueFrom,
+  first,
   map,
   Subject,
   switchMap,
   tap,
 } from 'rxjs';
 
-import { DEFAULT_MOD } from '~/data/datasets';
-import { FileClient } from '~/data/file-client';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { asString } from '~/utils/coercion';
-import { coalesce } from '~/utils/nullish';
+import { coalesce, filterNullish } from '~/utils/nullish';
 import { prune, spread } from '~/utils/object';
 import { storedSignal } from '~/utils/stored-signal';
 
@@ -102,7 +102,6 @@ export class RouterSync {
   private readonly migration = inject(Migration);
   private readonly objectivesStore = inject(ObjectivesStore);
   private readonly recipesStore = inject(RecipesStore);
-  private readonly fileClient = inject(FileClient);
   private readonly settingsStore = inject(SettingsStore);
   private readonly tableStore = inject(TableStore);
   private readonly zip = inject(Zip);
@@ -115,6 +114,13 @@ export class RouterSync {
   route = new Subject<ActivatedRoute>();
   ready = signal(false);
   stored = storedSignal('router');
+
+  private modData = toObservable(this.settingsStore.modData.value).pipe(
+    filterNullish(),
+  );
+  private modHash = toObservable(this.settingsStore.modHash.value).pipe(
+    filterNullish(),
+  );
 
   get empty(): ZipData<LabParams> {
     return { bare: {}, hash: {} };
@@ -156,15 +162,19 @@ export class RouterSync {
             queryParams,
           ),
         ),
-        switchMap(({ modId, params, isBare }) =>
-          this.updateState(modId, params, isBare),
+        combineLatestWith(
+          this.modData.pipe(first()),
+          this.modHash.pipe(first()),
         ),
+        tap(([{ modId, params, isBare }, modData, modHash]) => {
+          this.updateState(modId, params, isBare, modData, modHash);
+        }),
       )
       .subscribe();
 
     effect(() => {
       const ready = this.ready();
-      const hash = this.settingsStore.hash();
+      const hash = this.settingsStore.modHash.value();
       if (!ready || !hash) return;
       const objectives = this.objectivesStore.state();
       const items = this.itemsStore.state();
@@ -359,20 +369,19 @@ export class RouterSync {
     return queryParams;
   }
 
-  async updateState(
+  updateState(
     modId: string | undefined,
     params: LabParams,
     isBare: boolean,
-  ): Promise<void> {
+    modData: ModData,
+    modHash: ModHash,
+  ): void {
     if (modId == null && Object.keys(params).length === 0) {
       // Nothing to set up
       this.ready.set(true);
       return;
     }
 
-    const [modData, modHash] = await firstValueFrom(
-      this.fileClient.requestData(modId ?? DEFAULT_MOD),
-    );
     const hash = isBare ? undefined : modHash;
     const ms = this.unzipModules(params, hash);
     const bs = this.unzipBeacons(params, ms, hash);
