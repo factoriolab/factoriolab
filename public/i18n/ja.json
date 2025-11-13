@@ -369,6 +369,8 @@
     "showDetails": "詳細を表示",
     "stepUndoTooltip": "このステップのすべての変更をもとに戻す",
     "total": "合計",
+    "outputs": "出力",
+    "inputs": "入力",
     "wagonsUndoTooltip": "貨物車両のすべての変更をもとに戻す"
   },
   "technologies": {

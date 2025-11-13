@@ -255,6 +255,8 @@
     "showDetails": "montrer les details",
     "stepUndoTooltip": "Annuler les modifications de cette étape",
     "total": "Total",
+    "inputs": "Entrées",
+    "outputs": "Sorties",
     "wagonsUndoTooltip": "Annuler toutes les modifitions de wagons"
   },
   "technologies": {
