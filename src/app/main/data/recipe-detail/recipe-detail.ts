@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
@@ -31,6 +32,7 @@ import { DetailBase } from '../detail-base';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeDetail extends DetailBase<Recipe> {
+  protected readonly faArrowRotateLeft = faArrowRotateLeft;
   protected readonly settings = this.settingsStore.settings;
 
   protected readonly obj = computed(

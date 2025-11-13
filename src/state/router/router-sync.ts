@@ -107,7 +107,7 @@ export class RouterSync {
   private readonly zip = inject(Zip);
 
   private readonly state = new Subject<State>();
-  private readonly zipConfig = signal(this.empty);
+  readonly zipConfig = signal(this.empty);
   // Current hashing algorithm version
   private readonly version = ZipVersion.Version11;
   private readonly zipTail: LabParams = { v: this.version };

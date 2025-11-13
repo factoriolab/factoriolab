@@ -281,9 +281,9 @@
       "pollutionPerHour": "污染/时",
       "pollutionPerMinute": "污染/分",
       "pollutionPerSecond": "污染/秒",
-      "rocketsPerSecond": "火箭/秒",
-      "rocketsPerMinute": "火箭/分",
       "rocketsPerHour": "火箭/时",
+      "rocketsPerMinute": "火箭/分",
+      "rocketsPerSecond": "火箭/秒",
       "wagonsPerHour": "车厢/时",
       "wagonsPerMinute": "车厢/分",
       "wagonsPerSecond": "车厢/秒"

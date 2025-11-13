@@ -198,6 +198,24 @@
       }
       @if (recipeSettings(); as recipeSettings) {
         <tr>
+          <th colspan="2">
+            <div class="flex items-center justify-between">
+              <span class="grow text-lg/9 font-semibold">{{
+                'data.recipeSettings' | translate
+              }}</span>
+              @if (recipesStore.state()[id()]) {
+                <button
+                  type="button"
+                  labButton
+                  [faIcon]="faArrowRotateLeft"
+                  text="reset"
+                  (click)="recipesStore.resetId(id())"
+                ></button>
+              }
+            </div>
+          </th>
+        </tr>
+        <tr>
           <th>{{ 'data.excluded' | translate }}</th>
           <td>
             <div class="flex items-center justify-end">

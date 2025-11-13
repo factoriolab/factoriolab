@@ -113,12 +113,12 @@
       "wagons": "Wagons"
     },
     "displayRate": {
-      "perHourSuffix": "/h",
-      "perMinuteSuffix": "/m",
-      "perSecondSuffix": "/s",
       "perHour": "Unités par heure",
+      "perHourSuffix": "/h",
       "perMinute": "Unités par minute",
-      "perSecond": "Unités par seconde"
+      "perMinuteSuffix": "/m",
+      "perSecond": "Unités par seconde",
+      "perSecondSuffix": "/s"
     },
     "flowDiagram": {
       "boxLine": "Box-line",
@@ -174,9 +174,9 @@
       "pollutionPerHour": "Pollution/h",
       "pollutionPerMinute": "Pollution/m",
       "pollutionPerSecond": "Pollution/s",
-      "rocketsPerSecond": "Fusées/s",
-      "rocketsPerMinute": "Fusées/m",
       "rocketsPerHour": "Fusées/h",
+      "rocketsPerMinute": "Fusées/m",
+      "rocketsPerSecond": "Fusées/s",
       "wagonsPerHour": "Wagons/h",
       "wagonsPerMinute": "Wagons/m",
       "wagonsPerSecond": "Wagons/s"

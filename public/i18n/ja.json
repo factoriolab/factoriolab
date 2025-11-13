@@ -255,9 +255,9 @@
       "pollutionPerHour": "汚染/h",
       "pollutionPerMinute": "汚染/m",
       "pollutionPerSecond": "汚染/s",
-      "rocketsPerSecond": "ロケット/s",
-      "rocketsPerMinute": "ロケット/m",
       "rocketsPerHour": "ロケット/h",
+      "rocketsPerMinute": "ロケット/m",
+      "rocketsPerSecond": "ロケット/s",
       "wagonsPerHour": "貨物車両/h",
       "wagonsPerMinute": "貨物車両/m",
       "wagonsPerSecond": "貨物車両/s"

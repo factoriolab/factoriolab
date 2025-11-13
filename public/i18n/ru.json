@@ -236,9 +236,9 @@
       "pollutionPerHour": "Загрязнение/ч",
       "pollutionPerMinute": "Загрязнение/м",
       "pollutionPerSecond": "Загрязнение/с",
-      "rocketsPerSecond": "Ракеты/с",
-      "rocketsPerMinute": "Ракеты/м",
       "rocketsPerHour": "Ракеты/ч",
+      "rocketsPerMinute": "Ракеты/м",
+      "rocketsPerSecond": "Ракеты/с",
       "wagonsPerHour": "Вагонов/ч",
       "wagonsPerMinute": "Вагонов/м",
       "wagonsPerSecond": "Вагонов/с"

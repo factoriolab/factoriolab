@@ -163,9 +163,9 @@
       "machines": "Maschinen",
       "pollution": "Umweltverschmutzung",
       "power": "Strom",
+      "rockets": "Raketen",
       "tree": "Baum",
-      "wagons": "Wagons",
-      "rockets": "Raketen"
+      "wagons": "Wagons"
     },
     "displayRate": {
       "perHour": "Teile pro Stunde",
@@ -214,9 +214,9 @@
       "pollutionPerHour": "Umweltverschmutzung/h",
       "pollutionPerMinute": "Umweltverschmutzung/min",
       "pollutionPerSecond": "Umweltverschmutzung/s",
-      "rocketsPerSecond": "Raketen/s",
-      "rocketsPerMinute": "Raketen/min",
       "rocketsPerHour": "Raketen/h",
+      "rocketsPerMinute": "Raketen/min",
+      "rocketsPerSecond": "Raketen/s",
       "wagonsPerHour": "Wagons/h",
       "wagonsPerMinute": "Wagons/min",
       "wagonsPerSecond": "Wagons/s"

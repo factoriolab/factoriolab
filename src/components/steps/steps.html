@@ -465,6 +465,7 @@
                     [step]="rational(10)"
                     [percent]="true"
                     [border]="false"
+                    labTooltip="steps.overclockTooltip"
                     [ngModel]="step.recipeSettings.overclock"
                     (ngModelChange)="
                       objectivesStore.updateRecipeField(

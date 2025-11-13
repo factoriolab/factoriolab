@@ -1,7 +1,5 @@
 # TODO
 
-- Re-check readonly / access modifiers across all files
-- Re-check light theme (+ icon invert)
 - Re-check translations are being used
 - Re-check a11y
 - Re-check tooltips
