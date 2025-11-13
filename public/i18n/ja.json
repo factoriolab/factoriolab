@@ -1,14 +1,18 @@
 {
   "app": {
     "data": "データ",
-    "error": "エラー",
-    "errorDetail": "エラーが発生しました:",
     "factory": "工場",
     "flow": "フロー",
     "list": "リスト",
     "migrationWarning": "Migration warning",
-    "resetTooltip": "クリックしてリセット",
     "simplexSolved": "計算時間 {{ time }}ms、 コスト: {{ cost }}"
+  },
+  "beaconsSelect": {
+    "eachTooltip": "機械あたりのビーコン",
+    "totalTooltip": "ビーコンの合計数"
+  },
+  "beltSelect": {
+    "stackSizeTooltip": "スタックサイズ"
   },
   "cancel": "キャンセル",
   "columns": {
@@ -17,6 +21,7 @@
     "fractions": "分数",
     "header": "列設定",
     "notApplicable": "対象外",
+    "powerUnit": "電力の単位",
     "visibility": "表示"
   },
   "costs": {
@@ -37,9 +42,7 @@
     "unproduceableTooltip": "どのレシピでもアイテムを生産不可能とするコスト"
   },
   "data": {
-    "any": "すべて",
     "beacon": "ビーコン",
-    "beaconModuleRank": "ビーコンのモジュールランク",
     "beacons": "ビーコン",
     "belt": "ベルト",
     "beltSpeed": "速度 (個/s)",
@@ -57,7 +60,6 @@
     "cost": "コスト",
     "count": "件数",
     "craftingSpeed": "製作速度",
-    "currentPageReportTemplate": "{totalRecords}件中{first}から{last}件目を表示中",
     "dimensions": "設置サイズ",
     "disallowedEffects": "使用できないモジュール",
     "efficiency": "効率",
@@ -139,14 +141,9 @@
     "support": "支援する"
   },
   "landing": {
-    "addItems": "アイテムを追加",
-    "addMachines": "機械を追加",
     "bypass": "次回からこの画面を表示しない",
-    "help": "何から始めればいいの？",
     "loadLastState": "最後の状態を読み込む",
     "loadSavedState": "セーブデータを読み込む",
-    "selectARecipe": "レシピを選択",
-    "selectAnItem": "アイテムを選択",
     "skip": "スキップ",
     "welcome": "<b>FactorioLab</b>へようこそ! さあ、仕事を始めよう。"
   },
@@ -154,8 +151,6 @@
   "modSetTooltip": "使用するFactorioのバージョンまたはMODを選択してください。",
   "none": "なし",
   "objectives": {
-    "addItems": "アイテムを追加",
-    "addMachines": "機械を追加",
     "error": "解が見つかりません",
     "errorDetail": " <b>制限</b>と<b>最大化</b>目標を確認し、レシピを有効にしてください。",
     "errorInfeasible": "解なし",
@@ -168,15 +163,7 @@
     "pauseTooltip": "計算を一時停止／再開する",
     "pausedMessage": "計算は一時停止しています。再開するには再生ボタンをクリックしてください。",
     "removeTooltip": "目標を削除する",
-    "selectARecipe": "レシピを選んでください。",
-    "selectAnItem": "アイテムを選んでください。",
-    "selectDisplayRate": "表示レートを選んでください。",
-    "title": "目標",
-    "typeTooltip": "目標の種類を選んでください。",
-    "unitTooltip": "単位を選んでください。",
-    "valueRatioTooltip": "比率を設定してください。",
-    "valueTooltip": "値を設定してください。",
-    "valueWeightTooltip": "重量を設定してください。"
+    "title": "目標"
   },
   "ok": "OK",
   "options": {
@@ -192,6 +179,13 @@
       "rockets": "ロケット",
       "tree": "ツリー",
       "wagons": "貨物車両"
+    },
+    "detailSection": {
+      "depletion": "枯渇",
+      "destinations": "使用先",
+      "inputs": "入力",
+      "outputs": "出力",
+      "sources": "ソース"
     },
     "displayRate": {
       "perHour": "個/h",
@@ -216,17 +210,6 @@
       "outworldStation": "Outworld Station",
       "satisfactory": "Satisfactory",
       "techtonica": "Techtonica"
-    },
-    "inserterCapacity": {
-      "capacity0": "容量ボーナスなし",
-      "capacity2": "容量ボーナス2",
-      "capacity7": "容量ボーナス7"
-    },
-    "inserterTarget": {
-      "chest": "チェスト",
-      "expressTransportBelt": "超高速搬送ベルト",
-      "fastTransportBelt": "高速搬送ベルト",
-      "transportBelt": "搬送ベルト"
     },
     "linkValue": {
       "belts": "ベルトの数",
@@ -298,34 +281,37 @@
       "skipped": "スキップしました",
       "solved": "完了しました"
     },
-    "stepDetailTab": {
-      "item": "アイテム",
-      "machine": "機械",
-      "recipe": "レシピ",
-      "recipes": "レシピ"
-    },
     "theme": {
-      "black": "ブラック",
-      "dark": "ダーク (既定)",
+      "dark": "ダーク",
       "light": "ライト"
     }
+  },
+  "paginator": {
+    "label": "{{ total }}件中{{ first }}から{{ last }}件目を表示中"
   },
   "picker": {
     "includeAll": "すべて含める"
   },
   "reset": "リセット",
+  "preferences": {
+    "bypassLanding": "ランディングページを常にスキップする",
+    "createSavedState": "新規作成",
+    "deleteSavedState": "削除",
+    "editSavedState": "名前変更",
+    "helpTranslate": "翻訳を手伝う",
+    "language": "言語",
+    "nameSavedState": "名前を入力",
+    "saveState": "状態を保存",
+    "savedStates": "状態を保存",
+    "selectSavedState": "状態を選ぶ",
+    "theme": "テーマ"
+  },
   "settings": {
-    "addMachineTooltip": "機械の設定を追加します。",
     "advanced": "上級",
     "allTechsResearched": "すべてのテクノロジーが研究済みです",
     "averageBeaconReceivers": "ビーコンの効果を受ける機械の平均数",
     "averageBeaconReceiversTooltip": "各ビーコンの影響を受ける機械の平均数。1以上を入力してください。",
-    "beaconCountTooltip": "ビーコンの数を設定してください。",
-    "beaconModuleTooltip": "ビーコンのモジュールを選んでください。",
-    "beaconTooltip": "ビーコンの設定を選んでください。",
     "bonuses": "ボーナス",
-    "bypassLanding": "ランディングページを常にスキップする",
-    "createSavedState": "新規作成",
     "defaultCargoWagon": "Default cargo wagon",
     "defaultCargoWagonTooltip": "Select the default cargo wagon to be used by all items",
     "defaultFluidWagon": "Default fluid wagon",
@@ -334,32 +320,16 @@
     "defaultPipeTooltip": "Select the default pipe to be used by all fluids",
     "defaultTransportBelt": "既定の搬送ベルト",
     "defaultTransportBeltTooltip": "全てのアイテムが使用する搬送ベルトを選んでください。",
-    "deleteSavedState": "削除",
-    "disablePaginator": "リストのページャを無効にする",
-    "display": "表示",
-    "displayRate": "レート表示の単位",
-    "displayRateTooltip": "レートで使用する時間の単位を選んでください。",
-    "editSavedState": "名前変更",
     "estimateBeaconPowerUsage": "ビーコンの電力消費を見積もる",
     "estimateBeaconPowerUsageTooltip": "ビーコンの電力消費を見積もります。ビーコンの効果を受ける機械の平均数を元に見積もります。",
     "factory": "工場",
     "flowRateUnit": "u/sec",
     "fuelRank": "使用する燃料",
     "fuelRankTooltip": "使用する燃料と、優先順位を選んでください。",
-    "fuelTooltip": "燃料を選んでください。",
     "gameTooltip": "どのゲームの計算をするか選んでください。タイトルバーのリンクをクリックすることもできます。",
     "header": "設定",
-    "helpTranslate": "翻訳を手伝う",
-    "inserterCapacity": "インサータ容量",
-    "inserterCapacityTooltip": "現在のインサータ容量ボーナスのレベルを選んでください。この設定はインサータの見積もりにのみ影響します。",
-    "inserterTarget": "インサータの対象",
-    "inserterTargetTooltip": "インサータの対象を選んでください。",
     "itemsExcluded": "{{ count }} 個のアイテムを除外",
-    "itemsHeader": "含めるアイテムを設定",
     "itemsTooltip": "クリックすると含めるアイテムを変更できます。除外されたアイテムは計算上で生産されません。",
-    "language": "言語",
-    "languageTooltip": "言語を選んでください。",
-    "machineDefaults": "機械のデフォルト",
     "machineTooltip": "設定する機械を選んでください。",
     "maximizeType": "最大化する値の種類",
     "maximizeTypeTooltip": "最大化の目的とする値を選んでください。",
@@ -367,84 +337,44 @@
     "miningProductivityTooltip": "現在の掘削効率ボーナスを入力してください。デフォルトは 0% です。",
     "miningSpeed": "Mining speed",
     "miningSpeedTooltip": "Enter the current mining speed with bonus; Default is 100%",
-    "mod": "MOD",
     "modVersions": "バージョン",
-    "modifierCountTooltip": "モジュールの数を選んでください。",
-    "modifierTooltip": "モジュールを選んでください。",
-    "moveDown": "下へ",
-    "moveMachinePreference": "機械の設定を移動します。",
-    "moveUp": "上へ",
-    "nameSavedState": "名前を入力",
     "netProductionOnly": "正味生産量のみとする",
     "netProductionOnlyTooltip": "チェックすると、消費と生産で同じアイテムが登場するレシピのとき、正味の生産量まで減らされます。",
-    "openColumnSettings": "列設定を開く",
-    "openCosts": "コスト設定を開く",
-    "overclockTooltip": "Set overclock percentage",
     "pipeFlowRate": "パイプのフロー",
     "pipeFlowRateTooltip": "パイプのフローレートを入力してください。",
-    "powerUnit": "電力の単位",
-    "powerUnitTooltip": "電力の列で使用する電力の単位を選んでください。",
     "preset": "プリセット",
     "presetTooltip": "使用する機械のプリセットを選択してください。",
     "proliferatorSelfSpray": "Proliferator self-spray",
     "proliferatorSelfSprayTooltip": "Select the proliferator spray applied to proliferator itself",
     "recipesExcluded": "{{ count }} 個のレシピを除外",
-    "recipesHeader": "含めるレシピを設定",
     "recipesTooltip": "クリックすると含めるレシピを変更できます。除外されたレシピは計算に使われません。",
     "removeMachinePreference": "機械の設定を削除します。",
     "requestMod": "MODをリクエスト(GitHub)",
     "researchSpeed": "研究速度",
     "researchSpeedTooltip": "現在の研究速度ボーナスのレベルを選んでください。この設定は研究にのみ影響します。",
-    "reset": "すべての設定をリセット",
-    "resetWarning": "このブラウザに保存されたFactorioLabの設定がすべて削除されます。本当によろしいですか？",
-    "saveSavedState": "保存",
-    "saveState": "状態を保存",
-    "savedStates": "状態を保存",
-    "selectSavedState": "状態を選ぶ",
-    "surplusMachinesOutput": "余剰生産を行う",
-    "surplusMachinesOutputTooltip": "チェックした場合、マシン目標からの出力は必要ではなく余剰として扱われます。",
     "techsResearched": "{{ count }} 個のテクノロジーが研究済みです",
-    "techsTooltip": "クリックすると研究済みのテクノロジーを変更できます。開放されていないレシピは計算に使われません。",
-    "theme": "テーマ",
-    "themeTooltip": "テーマを選んでください。",
-    "version": "バージョン",
-    "wiki": "Wiki(英語)"
+    "techsTooltip": "クリックすると研究済みのテクノロジーを変更できます。開放されていないレシピは計算に使われません。"
   },
   "steps": {
-    "beaconEachTooltip": "機械あたりのビーコン",
-    "beaconTotalTooltip": "ビーコンの合計数",
     "beaconsUndoTooltip": "ビーコンのすべての変更をもとに戻す",
     "beltsUndoTooltip": "ベルトのすべての変更をもとに戻す",
     "checkedUndoTooltip": "すべてのチェックマークをもとに戻す",
-    "columnSettings": "列設定を開く",
-    "depletion": "枯渇",
-    "destinations": "使用先",
     "downloadAsCsv": "リストをCSVでダウンロード",
     "emptyMessage": "図のノードをクリックすると詳細が表示されます。",
     "hideDetails": "詳細を非表示",
-    "includedRecipes": "含まれるレシピ",
-    "includedRecipesInfo": "含める、または除外するレシピをクリックしてください。除外されたレシピは計算に使われなくなります。",
-    "inputs": "入力",
-    "inserterCountInfo": "* インサータは対象/容量の設定および、<a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">公式Wiki</a>のバージョン0.18での実験データを使って計算しています。",
     "itemsUndoTooltip": "すべての除外されたアイテムをもとに戻す",
     "machinesUndoTooltip": "機械のすべての変更をもとに戻す",
-    "modifierCountTooltip": "モジュールの数を選んでください。",
     "openNewTabTooltip": "新しいタブで開く",
-    "outputs": "出力",
     "overclockTooltip": "Overclock percentage",
     "showDetails": "詳細を表示",
-    "sources": "ソース",
     "stepUndoTooltip": "このステップのすべての変更をもとに戻す",
-    "time": "時間",
     "total": "合計",
     "wagonsUndoTooltip": "貨物車両のすべての変更をもとに戻す"
   },
-  "techPicker": {
+  "technologies": {
     "available": "研究可能",
     "exportCopyScript": "コンソールスクリプトを\nコピー",
     "exportFromFactorio": "Factorioから\nエクスポート",
-    "exportMod": "Export mod",
-    "exportScript": "コンソールスクリプトを\nコピー",
     "exportScriptCopied": "クリップボードにコピーしました",
     "exportUseMod": "MOD\n使用",
     "header": "研究済みテクノロジーの設定",
