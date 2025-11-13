@@ -10,7 +10,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
 @Component({ template: '' })
 export abstract class DetailBase<T extends Category | Item | Recipe> {
   protected readonly settingsStore = inject(SettingsStore);
-  private readonly recipesStore = inject(RecipesStore);
+  protected readonly recipesStore = inject(RecipesStore);
 
   readonly id = input.required<string>();
   readonly collectionLabel = input.required<string>();

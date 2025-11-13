@@ -1,1 +1,334 @@
-<lab-detail [crumbs]="crumbs()" [obj]="obj()" type="recipe"> </lab-detail>
+@if (obj(); as obj) {
+  <lab-detail [crumbs]="crumbs()" [obj]="obj" type="recipe">
+    <tbody>
+      @if (category(); as category) {
+        <tr>
+          <th>{{ 'data.category' | translate }}</th>
+          <td>
+            <div class="flex justify-end">
+              <a
+                [routerLink]="['../../categories', category.id]"
+                queryParamsHandling="preserve"
+                labButton
+                [border]="false"
+                [text]="category.name"
+                [icon]="category.id"
+                iconType="category"
+              >
+              </a>
+            </div>
+          </td>
+        </tr>
+      }
+      <tr>
+        <th>{{ 'data.time' | translate }}</th>
+        <td>{{ obj.time }}</td>
+      </tr>
+      @if (info().ingredientIds.length) {
+        <tr>
+          <th>{{ 'data.ingredients' | translate }}</th>
+          <td>
+            <div class="flex flex-col items-stretch gap-1">
+              @for (i of info().ingredientIds; track i) {
+                <a
+                  [routerLink]="['../../items', i]"
+                  queryParamsHandling="preserve"
+                  labButton
+                  [border]="false"
+                  [text]="data().itemRecord[i].name"
+                  [icon]="i"
+                  iconType="item"
+                  [iconText]="obj.in[i].toString()"
+                >
+                </a>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+      @if (info().catalystIds.length) {
+        <tr>
+          <th>{{ 'data.catalysts' | translate }}</th>
+          <td>
+            <div class="flex flex-col items-stretch gap-1">
+              @for (i of info().catalystIds; track i) {
+                <a
+                  [routerLink]="['../../items', i]"
+                  queryParamsHandling="preserve"
+                  labButton
+                  [border]="false"
+                  [text]="data().itemRecord[i].name"
+                  [icon]="i"
+                  iconType="item"
+                  [iconText]="obj.catalyst?.[i]?.toString()"
+                >
+                </a>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+      @if (info().productIds.length) {
+        <tr>
+          <th>{{ 'data.products' | translate }}</th>
+          <td>
+            <div class="flex flex-col items-stretch gap-1">
+              @for (i of info().productIds; track i) {
+                <a
+                  [routerLink]="['../../items', i]"
+                  queryParamsHandling="preserve"
+                  labButton
+                  [border]="false"
+                  [text]="data().itemRecord[i].name"
+                  [icon]="i"
+                  iconType="item"
+                  [iconText]="obj.out[i].toString()"
+                >
+                </a>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+      @if (!obj.flags.has('hideProducer')) {
+        <tr>
+          <th>{{ 'data.producers' | translate }}</th>
+          <td>
+            <div class="flex flex-col items-stretch gap-1">
+              @for (i of obj.producers; track i) {
+                <a
+                  [routerLink]="['../../machines', i]"
+                  queryParamsHandling="preserve"
+                  labButton
+                  [border]="false"
+                  [text]="data().itemRecord[i].name"
+                  [icon]="i"
+                  iconType="item"
+                >
+                </a>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+      @if (obj.locations) {
+        <tr>
+          <th>{{ 'data.locations' | translate }}</th>
+          <td>
+            <div class="flex flex-col items-stretch gap-1">
+              @for (i of obj.locations; track i) {
+                <a
+                  [routerLink]="['../../locations', i]"
+                  queryParamsHandling="preserve"
+                  labButton
+                  [border]="false"
+                  [text]="data().locationRecord[i].name"
+                  [icon]="i"
+                  iconType="location"
+                >
+                </a>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+      @if (obj.flags.has('locked')) {
+        <tr>
+          <th>{{ 'data.unlockedBy' | translate }}</th>
+          <td>
+            @for (i of unlockedBy(); track i) {
+              <div>
+                <a
+                  [routerLink]="['../../technologies', i]"
+                  queryParamsHandling="preserve"
+                  labButton
+                  [border]="false"
+                  [text]="data().itemRecord[i].name"
+                  [icon]="i"
+                  iconType="item"
+                >
+                </a>
+              </div>
+            }
+          </td>
+        </tr>
+      }
+      @if (obj.flags.has('mining')) {
+        <tr>
+          <th>{{ 'data.mining' | translate }}</th>
+          <td>
+            <div class="flex justify-end">
+              <lab-checkbox [ngModel]="true" [disabled]="true"></lab-checkbox>
+            </div>
+          </td>
+        </tr>
+      }
+      @if (obj.flags.has('technology')) {
+        <tr>
+          <th>{{ 'data.technology' | translate }}</th>
+          <td>
+            <div class="flex justify-end">
+              <lab-checkbox [ngModel]="true" [disabled]="true"></lab-checkbox>
+            </div>
+          </td>
+        </tr>
+      }
+      @if (obj.part) {
+        <tr>
+          <th>{{ 'data.rocketPart' | translate }}</th>
+          <td>
+            <a
+              [routerLink]="['../../items', obj.part]"
+              queryParamsHandling="preserve"
+              labButton
+              [border]="false"
+              [text]="data().itemRecord[obj.part].name"
+              [icon]="obj.part"
+              iconType="item"
+            >
+            </a>
+          </td>
+        </tr>
+      }
+      @if (obj.usage) {
+        <tr>
+          <th>{{ 'data.energyConsumption' | translate }}</th>
+          <td>{{ obj.usage | usage }}</td>
+        </tr>
+      }
+      @if (recipeSettings(); as recipeSettings) {
+        <tr>
+          <th>{{ 'data.excluded' | translate }}</th>
+          <td>
+            <div class="flex items-center justify-end">
+              <lab-checkbox
+                [ngModel]="settings().excludedRecipeIds.has(id())"
+                (ngModelChange)="changeExcluded($event)"
+              ></lab-checkbox>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>{{ 'data.checked' | translate }}</th>
+          <td>
+            <div class="flex items-center justify-end">
+              <lab-checkbox
+                [ngModel]="settings().checkedRecipeIds.has(id())"
+                (ngModelChange)="changeChecked($event)"
+              ></lab-checkbox>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>{{ 'data.machine' | translate }}</th>
+          <td>
+            @if (recipeSettings.machineId; as id) {
+              <a
+                [routerLink]="['../../machines', id]"
+                queryParamsHandling="preserve"
+                labButton
+                [border]="false"
+                [text]="data().itemRecord[id].name"
+                [icon]="id"
+                iconType="item"
+              >
+              </a>
+            }
+          </td>
+        </tr>
+        @if (recipeSettings.modules?.length) {
+          <tr>
+            <th>{{ 'data.modules' | translate }}</th>
+            <td>
+              <div class="flex flex-col items-stretch">
+                @for (module of recipeSettings.modules; track module.id) {
+                  @if (module.id === '') {
+                    <lab-icon
+                      value="module"
+                      [text]="module.count?.toString()"
+                    ></lab-icon>
+                  } @else if (module.id) {
+                    <a
+                      [routerLink]="['../../modules', module.id]"
+                      queryParamsHandling="preserve"
+                      labButton
+                      [border]="false"
+                      [text]="data().itemRecord[module.id].name"
+                      [icon]="module.id"
+                      iconType="item"
+                      [iconText]="module.count?.toString()"
+                    >
+                    </a>
+                  }
+                }
+              </div>
+            </td>
+          </tr>
+        }
+        @if (data().flags.has('beacons')) {
+          <tr>
+            <th>{{ 'data.beacons' | translate }}</th>
+            <td>
+              <div class="flex flex-col items-stretch">
+                @for (beacon of recipeSettings.beacons; track $index) {
+                  @if (beacon.id) {
+                    <a
+                      [routerLink]="['../../beacons', beacon.id]"
+                      queryParamsHandling="preserve"
+                      labButton
+                      [border]="false"
+                      [text]="data().itemRecord[beacon.id].name"
+                      [icon]="beacon.id"
+                      iconType="item"
+                      [iconText]="beacon.count?.toString()"
+                    >
+                    </a>
+                  }
+                  @for (module of beacon.modules; track module.id) {
+                    @if (module.id === '') {
+                      <lab-icon
+                        value="module"
+                        [text]="module.count?.toString()"
+                      ></lab-icon>
+                    } @else if (module.id) {
+                      <a
+                        [routerLink]="['../../modules', module.id]"
+                        queryParamsHandling="preserve"
+                        labButton
+                        [border]="false"
+                        [text]="data().itemRecord[module.id].name"
+                        [icon]="module.id"
+                        iconType="item"
+                        [iconText]="module.count?.toString()"
+                      >
+                      </a>
+                    }
+                  }
+                }
+              </div>
+            </td>
+          </tr>
+        }
+        @if (data().flags.has('overclock')) {
+          <tr>
+            <th>{{ 'data.overclock' | translate }}</th>
+            <td>{{ recipeSettings.overclock }}%</td>
+          </tr>
+        }
+        @if (data().adjustedRecipe[id()]?.cost; as cost) {
+          <tr>
+            <th>{{ 'data.cost' | translate }}</th>
+            <td>
+              <lab-input-number
+                [ngModel]="cost"
+                (ngModelChange)="
+                  recipesStore.updateRecordField(id(), 'cost', $event)
+                "
+              ></lab-input-number>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </lab-detail>
+}

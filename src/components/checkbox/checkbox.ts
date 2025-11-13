@@ -29,7 +29,7 @@ const check = cva(
         null: 'text-brand-600 hover:text-brand-500',
       },
       disabled: {
-        true: 'pointer-events-none',
+        true: 'pointer-events-none opacity-40',
       },
     },
   },

@@ -1,5 +1,5 @@
-<lab-detail [crumbs]="crumbs()" [obj]="obj()" type="item">
-  @if (obj(); as obj) {
+@if (obj(); as obj) {
+  <lab-detail [crumbs]="crumbs()" [obj]="obj" type="item">
     <tbody>
       @if (category(); as category) {
         <tr>
@@ -487,19 +487,21 @@
             } @else {
               <div class="flex flex-col items-stretch">
                 @for (module of machineSettings.modules; track module.id) {
-                  @if (module.id; as moduleId) {
+                  @if (module.id === '') {
+                    <lab-icon
+                      value="module"
+                      [text]="module.count?.toString()"
+                    ></lab-icon>
+                  } @else if (module.id) {
                     <a
-                      [routerLink]="
-                        moduleId === 'module'
-                          ? null
-                          : ['../../modules', moduleId]
-                      "
+                      [routerLink]="['../../modules', module.id]"
                       queryParamsHandling="preserve"
                       labButton
                       [border]="false"
-                      [text]="data().itemRecord[moduleId].name"
-                      [icon]="moduleId"
+                      [text]="data().itemRecord[module.id].name"
+                      [icon]="module.id"
                       iconType="item"
+                      [iconText]="module.count?.toString()"
                     >
                     </a>
                   }
@@ -528,25 +530,23 @@
                     </a>
                   }
                   @for (module of beacon.modules; track module.id) {
-                    @if (module.id; as moduleId) {
-                      @if (moduleId === '') {
-                        <lab-icon
-                          value="module"
-                          [text]="module.count?.toString()"
-                        ></lab-icon>
-                      } @else {
-                        <a
-                          [routerLink]="['../../modules', moduleId]"
-                          queryParamsHandling="preserve"
-                          labButton
-                          [border]="false"
-                          [text]="data().itemRecord[moduleId].name"
-                          [icon]="moduleId"
-                          iconType="item"
-                          [iconText]="module.count?.toString()"
-                        >
-                        </a>
-                      }
+                    @if (module.id === '') {
+                      <lab-icon
+                        value="module"
+                        [text]="module.count?.toString()"
+                      ></lab-icon>
+                    } @else if (module.id) {
+                      <a
+                        [routerLink]="['../../modules', module.id]"
+                        queryParamsHandling="preserve"
+                        labButton
+                        [border]="false"
+                        [text]="data().itemRecord[module.id].name"
+                        [icon]="module.id"
+                        iconType="item"
+                        [iconText]="module.count?.toString()"
+                      >
+                      </a>
                     }
                   }
                 }
@@ -562,47 +562,47 @@
         }
       }
     </tbody>
-  }
-  <ng-content collections>
-    @if (recipes().producedBy.length) {
-      <h3 class="my-3 text-lg font-semibold">
-        {{ 'data.producedByRecipes' | translate }}
-      </h3>
-      <lab-collection-table
-        [ids]="recipes().producedBy"
-        iconType="recipe"
-        [state]="{ page: 0, asc: false, rows: 10 }"
-      ></lab-collection-table>
-    }
-    @if (recipes().consumedBy.length) {
-      <h3 class="my-3 text-lg font-semibold">
-        {{ 'data.consumedByRecipes' | translate }}
-      </h3>
-      <lab-collection-table
-        [ids]="recipes().consumedBy"
-        iconType="recipe"
-        [state]="{ page: 0, asc: false, rows: 10 }"
-      ></lab-collection-table>
-    }
-    @if (recipes().producible.length) {
-      <h3 class="my-3 text-lg font-semibold">
-        {{ 'data.producibleRecipes' | translate }}
-      </h3>
-      <lab-collection-table
-        [ids]="recipes().producible"
-        iconType="recipe"
-        [state]="{ page: 0, asc: false, rows: 10 }"
-      ></lab-collection-table>
-    }
-    @if (recipes().unlocked.length) {
-      <h3 class="my-3 text-lg font-semibold">
-        {{ 'data.unlockedRecipes' | translate }}
-      </h3>
-      <lab-collection-table
-        [ids]="recipes().unlocked"
-        iconType="recipe"
-        [state]="{ page: 0, asc: false, rows: 10 }"
-      ></lab-collection-table>
-    }
-  </ng-content>
-</lab-detail>
+    <ng-content collections>
+      @if (recipes().producedBy.length) {
+        <h3 class="my-3 text-lg font-semibold">
+          {{ 'data.producedByRecipes' | translate }}
+        </h3>
+        <lab-collection-table
+          [ids]="recipes().producedBy"
+          iconType="recipe"
+          [state]="{ page: 0, asc: false, rows: 10 }"
+        ></lab-collection-table>
+      }
+      @if (recipes().consumedBy.length) {
+        <h3 class="my-3 text-lg font-semibold">
+          {{ 'data.consumedByRecipes' | translate }}
+        </h3>
+        <lab-collection-table
+          [ids]="recipes().consumedBy"
+          iconType="recipe"
+          [state]="{ page: 0, asc: false, rows: 10 }"
+        ></lab-collection-table>
+      }
+      @if (recipes().producible.length) {
+        <h3 class="my-3 text-lg font-semibold">
+          {{ 'data.producibleRecipes' | translate }}
+        </h3>
+        <lab-collection-table
+          [ids]="recipes().producible"
+          iconType="recipe"
+          [state]="{ page: 0, asc: false, rows: 10 }"
+        ></lab-collection-table>
+      }
+      @if (recipes().unlocked.length) {
+        <h3 class="my-3 text-lg font-semibold">
+          {{ 'data.unlockedRecipes' | translate }}
+        </h3>
+        <lab-collection-table
+          [ids]="recipes().unlocked"
+          iconType="recipe"
+          [state]="{ page: 0, asc: false, rows: 10 }"
+        ></lab-collection-table>
+      }
+    </ng-content>
+  </lab-detail>
+}
