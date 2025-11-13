@@ -1,1 +1,608 @@
-<lab-detail [crumbs]="crumbs()" [obj]="obj()" type="item"> </lab-detail>
+<lab-detail [crumbs]="crumbs()" [obj]="obj()" type="item">
+  @if (obj(); as obj) {
+    <tbody>
+      @if (category(); as category) {
+        <tr>
+          <th>{{ 'data.category' | translate }}</th>
+          <td>
+            <div class="flex justify-end">
+              <a
+                [routerLink]="['../../categories', category.id]"
+                queryParamsHandling="preserve"
+                labButton
+                [border]="false"
+                [text]="category.name"
+                [icon]="category.id"
+                iconType="category"
+              >
+              </a>
+            </div>
+          </td>
+        </tr>
+      }
+      @if (obj.stack) {
+        <tr>
+          <th>{{ 'data.stackSize' | translate }}</th>
+          <td>{{ obj.stack }}</td>
+        </tr>
+      }
+      @if (obj.beacon; as beacon) {
+        <tr>
+          <th colspan="2" class="text-lg/9 font-semibold">
+            {{ 'data.beacon' | translate }}
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.efficiency' | translate }}</th>
+          <td>{{ beacon.effectivity }}</td>
+        </tr>
+        <tr>
+          <th>{{ 'data.moduleSlots' | translate }}</th>
+          <td>{{ beacon.modules }}</td>
+        </tr>
+        @if (beacon.range) {
+          <tr>
+            <th>{{ 'data.range' | translate }}</th>
+            <td>{{ beacon.range }}</td>
+          </tr>
+        }
+        @if (beacon.type) {
+          <tr>
+            <th>{{ 'data.energySource' | translate }}</th>
+            <td>{{ beacon.type }}</td>
+          </tr>
+        }
+        @if (beacon.usage) {
+          <tr>
+            <th>{{ 'data.energyConsumption' | translate }}</th>
+            <td>{{ beacon.usage | usage }}</td>
+          </tr>
+        }
+        @if (beacon.disallowedEffects) {
+          <tr>
+            <th>{{ 'data.disallowedEffects' | translate }}</th>
+            <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+          </tr>
+        }
+        @if (beacon.size) {
+          <tr>
+            <th>{{ 'data.dimensions' | translate }}</th>
+            <td>{{ beacon.size[0] }}×{{ beacon.size[1] }}</td>
+          </tr>
+        }
+      }
+      @if (obj.belt; as belt) {
+        <tr>
+          <th colspan="2" class="text-lg/9 font-semibold">
+            {{ 'data.belt' | translate }}
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.beltSpeed' | translate }}</th>
+          <td>{{ belt.speed }}</td>
+        </tr>
+      }
+      @if (obj.cargoWagon; as cargoWagon) {
+        <tr>
+          <th colspan="2" class="text-lg/9 font-semibold">
+            {{ 'data.cargoWagon' | translate }}
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.storageSize' | translate }}</th>
+          <td>{{ cargoWagon.size }}</td>
+        </tr>
+      }
+      @if (obj.fluidWagon; as fluidWagon) {
+        <tr>
+          <th colspan="2" class="text-lg/9 font-semibold">
+            {{ 'data.fluidWagon' | translate }}
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.fluidCapacity' | translate }}</th>
+          <td>{{ fluidWagon.capacity }}</td>
+        </tr>
+      }
+      @if (obj.fuel; as fuel) {
+        <tr>
+          <th colspan="2" class="text-lg/9 font-semibold">
+            {{ 'data.fuel' | translate }}
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.fuelCategory' | translate }}</th>
+          <td>{{ fuel.category }}</td>
+        </tr>
+        <tr>
+          <th>{{ 'data.fuelValue' | translate }}</th>
+          <td>{{ fuel.value | round }} MJ</td>
+        </tr>
+        @if (fuel.result) {
+          <tr>
+            <th>{{ 'data.burntResult' | translate }}</th>
+            <td>
+              <div class="flex justify-end">
+                <a
+                  [routerLink]="['../../items/', fuel.result]"
+                  queryParamsHandling="preserve"
+                  labButton
+                  [border]="false"
+                  [text]="data().itemRecord[fuel.result].name"
+                  [icon]="fuel.result"
+                  iconType="item"
+                >
+                </a>
+              </div>
+            </td>
+          </tr>
+        }
+      }
+      @if (obj.machine; as machine) {
+        <tr>
+          <th colspan="2" class="text-lg/9 font-semibold">
+            {{ 'data.machine' | translate }}
+          </th>
+        </tr>
+        @if (machine.speed) {
+          <tr>
+            <th>{{ 'data.craftingSpeed' | translate }}</th>
+            <td>{{ machine.speed | round }}</td>
+          </tr>
+        }
+        @if (machine.modules) {
+          <tr>
+            <th>{{ 'data.moduleSlots' | translate }}</th>
+            <td>{{ machine.modules }}</td>
+          </tr>
+        }
+        @if (machine.disallowedEffects) {
+          <tr>
+            <th>{{ 'data.disallowedEffects' | translate }}</th>
+            <td>{{ machine.disallowedEffects.join(', ') }}</td>
+          </tr>
+        }
+        @if (machine.type) {
+          <tr>
+            <th>{{ 'data.energySource' | translate }}</th>
+            <td>{{ machine.type }}</td>
+          </tr>
+        }
+        @if (machine.fuelCategories) {
+          <tr>
+            <th>{{ 'data.fuelCategories' | translate }}</th>
+            <td>{{ machine.fuelCategories.join(', ') }}</td>
+          </tr>
+        }
+        @if (machine.fuel) {
+          <tr>
+            <th>{{ 'data.fuel' | translate }}</th>
+            <td>{{ machine.fuel }}</td>
+          </tr>
+        }
+        @if (machine.usage) {
+          <tr>
+            <th>{{ 'data.energyConsumption' | translate }}</th>
+            <td>{{ machine.usage | usage }}</td>
+          </tr>
+        }
+        @if (machine.drain) {
+          <tr>
+            <th>{{ 'data.energyDrain' | translate }}</th>
+            <td>{{ machine.drain | usage }}</td>
+          </tr>
+        }
+        @if (machine.pollution) {
+          <tr>
+            <th>{{ 'data.pollution' | translate }}</th>
+            <td>{{ machine.pollution }}/m</td>
+          </tr>
+        }
+        @if (machine.consumption) {
+          <tr>
+            <th>{{ 'data.consumption' | translate }}</th>
+            <td>
+              <div
+                class="d-flex align-items-center justify-content-center flex-wrap"
+              >
+                @for (kv of machine.consumption | keyvalue; track kv.key) {
+                  <lab-icon
+                    [value]="kv.key"
+                    type="item"
+                    [text]="kv.value | round"
+                  ></lab-icon>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+        @if (machine.size) {
+          <tr>
+            <th>{{ 'data.dimensions' | translate }}</th>
+            <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
+          </tr>
+        }
+        @if (machine.silo; as silo) {
+          <tr>
+            <th colspan="2" class="text-lg/9 font-semibold">
+              {{ 'data.rocketSilo' | translate }}
+            </th>
+          </tr>
+          <tr>
+            <th>{{ 'data.rocketPartsRequired' | translate }}</th>
+            <td>{{ silo.parts }}</td>
+          </tr>
+          <tr>
+            <th>{{ 'data.rocketLaunchTime' | translate }}</th>
+            <td>{{ silo.launch | round }}</td>
+          </tr>
+        }
+        @if (machine.locations) {
+          <tr>
+            <th>{{ 'data.locations' | translate }}</th>
+            <td>
+              <div class="flex flex-col items-stretch gap-1">
+                @for (i of machine.locations; track i) {
+                  <a
+                    [routerLink]="['../../locations/', i]"
+                    queryParamsHandling="preserve"
+                    labButton
+                    [border]="false"
+                    [text]="data().locationRecord[i].name"
+                    [icon]="i"
+                    iconType="location"
+                  >
+                  </a>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      }
+      @if (obj.module; as module) {
+        <tr>
+          <th colspan="2" class="text-lg/9 font-semibold">
+            {{ 'data.module' | translate }}
+          </th>
+        </tr>
+        @if (module.consumption) {
+          <tr>
+            <th>{{ 'data.energyConsumption' | translate }}</th>
+            <td>{{ module.consumption | bonusPercent }}</td>
+          </tr>
+        }
+        @if (module.speed) {
+          <tr>
+            <th>{{ 'data.speed' | translate }}</th>
+            <td>{{ module.speed | bonusPercent }}</td>
+          </tr>
+        }
+        @if (module.productivity) {
+          <tr>
+            <th>{{ 'data.productivity' | translate }}</th>
+            <td>{{ module.productivity | bonusPercent }}</td>
+          </tr>
+        }
+        @if (module.pollution) {
+          <tr>
+            <th>{{ 'data.pollution' | translate }}</th>
+            <td>{{ module.pollution | bonusPercent }}</td>
+          </tr>
+        }
+        @if (module.quality && module.quality.nonzero()) {
+          <tr>
+            <th>{{ 'data.quality' | translate }}</th>
+            <td>{{ module.quality | bonusPercent }}</td>
+          </tr>
+        }
+        @if (module.sprays) {
+          <tr>
+            <th>{{ 'data.sprays' | translate }}</th>
+            <td>{{ module.sprays | round }}</td>
+          </tr>
+        }
+        @if (module.proliferator) {
+          <tr>
+            <th>{{ 'data.proliferator' | translate }}</th>
+            <td>
+              <div class="flex justify-end">
+                <a
+                  [routerLink]="['../../items/', module.proliferator]"
+                  queryParamsHandling="preserve"
+                  labButton
+                  [border]="false"
+                  [text]="data().itemRecord[module.proliferator].name"
+                  [icon]="module.proliferator"
+                  iconType="item"
+                >
+                </a>
+              </div>
+            </td>
+          </tr>
+        }
+      }
+      @if (obj.pipe; as pipe) {
+        <tr>
+          <th colspan="2" class="text-lg/9 font-semibold">
+            {{ 'data.pipe' | translate }}
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.flowRate' | translate }}</th>
+          <td>{{ pipe.speed }}</td>
+        </tr>
+      }
+      @if (obj.technology; as technology) {
+        <tr>
+          <th colspan="2" class="text-lg/9 font-semibold">
+            {{ 'data.technology' | translate }}
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.prerequisites' | translate }}</th>
+          <td>
+            @if (!technology.prerequisites?.length) {
+              {{ 'none' | translate }}
+            } @else {
+              <div class="flex flex-col items-stretch">
+                @for (i of technology.prerequisites; track i) {
+                  <a
+                    [routerLink]="['../../technologies/', i]"
+                    queryParamsHandling="preserve"
+                    labButton
+                    [border]="false"
+                    [text]="data().itemRecord[i].name"
+                    [icon]="i"
+                    iconType="item"
+                  >
+                  </a>
+                }
+              </div>
+            }
+          </td>
+        </tr>
+      }
+      @if (category() && itemSettings(); as itemSettings) {
+        <tr>
+          <th colspan="2">
+            <div class="flex items-center justify-between">
+              <span class="grow text-lg/9 font-semibold">{{
+                'data.itemSettings' | translate
+              }}</span>
+              @if (itemsStore.state()[id()]) {
+                <button
+                  type="button"
+                  labButton
+                  [faIcon]="faArrowRotateLeft"
+                  text="reset"
+                  (click)="itemsStore.resetId(id())"
+                ></button>
+              }
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.excluded' | translate }}</th>
+          <td>
+            <div class="flex items-center justify-end">
+              <lab-checkbox
+                [ngModel]="settings().excludedItemIds.has(id())"
+                (ngModelChange)="changeExcluded($event)"
+              ></lab-checkbox>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>{{ 'data.checked' | translate }}</th>
+          <td>
+            <div class="flex items-center justify-end">
+              <lab-checkbox
+                [ngModel]="settings().checkedItemIds.has(id())"
+                (ngModelChange)="changeChecked($event)"
+              ></lab-checkbox>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>{{ 'data.belt' | translate }}</th>
+          @if (itemSettings.beltId; as beltId) {
+            <td>
+              <div class="flex justify-end">
+                <a
+                  [routerLink]="['../../items', beltId]"
+                  queryParamsHandling="preserve"
+                  labButton
+                  [border]="false"
+                  [text]="data().itemRecord[beltId].name"
+                  [icon]="beltId"
+                  iconType="item"
+                >
+                </a>
+              </div>
+            </td>
+          }
+        </tr>
+        @if (itemSettings.wagonId; as wagonId) {
+          <tr>
+            @if (obj.stack) {
+              <th>{{ 'data.cargoWagon' | translate }}</th>
+              <td>
+                <div class="flex justify-end">
+                  <a
+                    [routerLink]="['../../cargo-wagons/', wagonId]"
+                    queryParamsHandling="preserve"
+                    labButton
+                    [border]="false"
+                    [text]="data().itemRecord[wagonId].name"
+                    [icon]="wagonId"
+                    iconType="item"
+                  >
+                  </a>
+                </div>
+              </td>
+            } @else {
+              <th>{{ 'data.fluidWagon' | translate }}</th>
+              <td>
+                <div class="flex justify-end">
+                  <a
+                    [routerLink]="['../../fluid-wagons/', wagonId]"
+                    queryParamsHandling="preserve"
+                    labButton
+                    [border]="false"
+                    [text]="data().itemRecord[wagonId].name"
+                    [icon]="wagonId"
+                    iconType="item"
+                  >
+                  </a>
+                </div>
+              </td>
+            }
+          </tr>
+        }
+      }
+      @if (obj.machine && machineSettings(); as machineSettings) {
+        <tr>
+          <th colspan="2">
+            <div class="flex items-center justify-between">
+              <span class="grow text-lg/9 font-semibold">{{
+                'data.machineSettings' | translate
+              }}</span>
+              @if (machinesStore.state()[id()]) {
+                <button
+                  type="button"
+                  labButton
+                  [faIcon]="faArrowRotateLeft"
+                  text="reset"
+                  (click)="machinesStore.resetId(id())"
+                ></button>
+              }
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.moduleRank' | translate }}</th>
+          <td>
+            @if (!machineSettings.modules?.length) {
+              {{ 'none' | translate }}
+            } @else {
+              <div class="flex flex-col items-stretch">
+                @for (module of machineSettings.modules; track module.id) {
+                  @if (module.id; as moduleId) {
+                    <a
+                      [routerLink]="
+                        moduleId === 'module'
+                          ? null
+                          : ['../../modules', moduleId]
+                      "
+                      queryParamsHandling="preserve"
+                      labButton
+                      [border]="false"
+                      [text]="data().itemRecord[moduleId].name"
+                      [icon]="moduleId"
+                      iconType="item"
+                    >
+                    </a>
+                  }
+                }
+              </div>
+            }
+          </td>
+        </tr>
+        @if (data().flags.has('beacons')) {
+          <tr>
+            <th>{{ 'data.beacons' | translate }}</th>
+            <td>
+              <div class="flex flex-col items-stretch">
+                @for (beacon of machineSettings.beacons; track $index) {
+                  @if (beacon.id) {
+                    <a
+                      [routerLink]="['../../beacons', beacon.id]"
+                      queryParamsHandling="preserve"
+                      labButton
+                      [border]="false"
+                      [text]="data().itemRecord[beacon.id].name"
+                      [icon]="beacon.id"
+                      iconType="item"
+                      [iconText]="beacon.count?.toString()"
+                    >
+                    </a>
+                  }
+                  @for (module of beacon.modules; track module.id) {
+                    @if (module.id; as moduleId) {
+                      @if (moduleId === '') {
+                        <lab-icon
+                          value="module"
+                          [text]="module.count?.toString()"
+                        ></lab-icon>
+                      } @else {
+                        <a
+                          [routerLink]="['../../modules', moduleId]"
+                          queryParamsHandling="preserve"
+                          labButton
+                          [border]="false"
+                          [text]="data().itemRecord[moduleId].name"
+                          [icon]="moduleId"
+                          iconType="item"
+                          [iconText]="module.count?.toString()"
+                        >
+                        </a>
+                      }
+                    }
+                  }
+                }
+              </div>
+            </td>
+          </tr>
+        }
+        @if (data().flags.has('overclock')) {
+          <tr>
+            <th>{{ 'data.overclock' | translate }}</th>
+            <td>{{ machineSettings.overclock }}%</td>
+          </tr>
+        }
+      }
+    </tbody>
+  }
+  <ng-content collections>
+    @if (recipes().producedBy.length) {
+      <h3 class="my-3 text-lg font-semibold">
+        {{ 'data.producedByRecipes' | translate }}
+      </h3>
+      <lab-collection-table
+        [ids]="recipes().producedBy"
+        iconType="recipe"
+        [state]="{ page: 0, asc: false, rows: 10 }"
+      ></lab-collection-table>
+    }
+    @if (recipes().consumedBy.length) {
+      <h3 class="my-3 text-lg font-semibold">
+        {{ 'data.consumedByRecipes' | translate }}
+      </h3>
+      <lab-collection-table
+        [ids]="recipes().consumedBy"
+        iconType="recipe"
+        [state]="{ page: 0, asc: false, rows: 10 }"
+      ></lab-collection-table>
+    }
+    @if (recipes().producible.length) {
+      <h3 class="my-3 text-lg font-semibold">
+        {{ 'data.producibleRecipes' | translate }}
+      </h3>
+      <lab-collection-table
+        [ids]="recipes().producible"
+        iconType="recipe"
+        [state]="{ page: 0, asc: false, rows: 10 }"
+      ></lab-collection-table>
+    }
+    @if (recipes().unlocked.length) {
+      <h3 class="my-3 text-lg font-semibold">
+        {{ 'data.unlockedRecipes' | translate }}
+      </h3>
+      <lab-collection-table
+        [ids]="recipes().unlocked"
+        iconType="recipe"
+        [state]="{ page: 0, asc: false, rows: 10 }"
+      ></lab-collection-table>
+    }
+  </ng-content>
+</lab-detail>

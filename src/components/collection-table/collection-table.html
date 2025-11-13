@@ -20,24 +20,26 @@
         ></th>
       }
     </tr>
-    <tr>
-      <th>
-        <div class="relative flex font-medium">
-          <input
-            class="input"
-            [ngModel]="state().filter"
-            (ngModelChange)="updateApply(state, { filter: $event })"
-          />
-          <fa-icon
-            class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
-            [icon]="faMagnifyingGlass"
-          ></fa-icon>
-        </div>
-      </th>
-      @if (hasCategory()) {
-        <th></th>
-      }
-    </tr>
+    @if (items().length > 10) {
+      <tr>
+        <th>
+          <div class="relative flex font-medium">
+            <input
+              class="input"
+              [ngModel]="state().filter"
+              (ngModelChange)="updateApply(state, { filter: $event })"
+            />
+            <fa-icon
+              class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+              [icon]="faMagnifyingGlass"
+            ></fa-icon>
+          </div>
+        </th>
+        @if (hasCategory()) {
+          <th></th>
+        }
+      </tr>
+    }
   </thead>
   <tbody>
     @for (item of items() | paginator: state(); track item.id) {
@@ -53,17 +55,19 @@
             {{ item.name }}
           </a>
         </td>
-        @if (item.category) {
+        @if (hasCategory()) {
           <td>
-            <a
-              [routerLink]="['../categories', item.category.id]"
-              [queryParams]="resetTableParams"
-              queryParamsHandling="merge"
-              class="link flex items-center gap-1"
-            >
-              <lab-icon [value]="item.category.id" type="category"></lab-icon>
-              {{ item.category.name }}
-            </a>
+            @if (item.category) {
+              <a
+                [routerLink]="['../categories', item.category.id]"
+                [queryParams]="resetTableParams"
+                queryParamsHandling="merge"
+                class="link flex items-center gap-1"
+              >
+                <lab-icon [value]="item.category.id" type="category"></lab-icon>
+                {{ item.category.name }}
+              </a>
+            }
           </td>
         }
       </tr>

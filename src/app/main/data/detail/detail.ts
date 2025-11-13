@@ -13,6 +13,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
   selector: 'lab-detail',
   imports: [Breadcrumb, Icon, TranslatePipe],
   templateUrl: './detail.html',
+  styleUrl: './detail.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Detail {

@@ -17,7 +17,7 @@ export class UsagePipe implements PipeTransform {
     } else if (value >= 1000) {
       value /= 1000;
       suffix = ' MW';
-    } else suffix = 'kW';
+    } else suffix = ' kW';
 
     return (
       value.toLocaleString(undefined, { maximumFractionDigits: 2 }) + suffix
