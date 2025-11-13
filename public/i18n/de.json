@@ -1,15 +1,17 @@
 {
   "app": {
     "data": "Daten",
-    "error": "Fehler",
-    "errorDetail": "Die Applikation meldet einen Fehler:",
     "factory": "Fabrik",
     "flow": "Flow-Ansicht",
     "list": "Listenansicht",
-    "migrationWarning": "Warnung Migration",
-    "resetTooltip": "Zum Zurücksetzen klicken",
-    "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, Kosten: {{ cost }}",
-    "simplexUnsolved": "Simplex {{ resultType }}"
+    "migrationWarning": "Warnung Migration"
+  },
+  "beaconsSelect": {
+    "eachTooltip": "Effektverteiler pro Maschine",
+    "totalTooltip": "Totalanzahl an Effektverteilern"
+  },
+  "beltSelect": {
+    "stackTooltip": "Stackgrösse"
   },
   "cancel": "Abbrechen",
   "columns": {
@@ -18,6 +20,7 @@
     "fractions": "Brüche",
     "header": "Spalteneinstellungen",
     "notApplicable": "N/A",
+    "powerUnit": "Stromeinheiten",
     "visibility": "Sichtbarkeit"
   },
   "costs": {
@@ -36,9 +39,7 @@
     "unproduceableTooltip": "Kosten von Items, die nicht mit den inkludierten Rezepten hergestellt werden können"
   },
   "data": {
-    "any": "Beliebig",
     "beacon": "Effektverteiler",
-    "beaconModuleRank": "Effektverteiler Modulrang",
     "beacons": "Effektverteiler",
     "belt": "Förderband",
     "beltSpeed": "Geschwindigkeit (Items/s)",
@@ -55,7 +56,6 @@
     "cost": "Kosten",
     "count": "Anzahl",
     "craftingSpeed": "Herstelltempo",
-    "currentPageReportTemplate": "Zeige {first} bis {last} von {totalRecords}",
     "disallowedEffects": "Unerlaubte Effekte",
     "efficiency": "Effizienz",
     "energyConsumption": "Energieverbrauch",
@@ -85,7 +85,7 @@
     "name": "Name",
     "notFound": "Nicht gefunden",
     "overclock": "Übertaktung",
-    "pipes": "Leitungen",
+    "pumps": "Leitungen",
     "pollution": "Umweltverschmutzung",
     "prerequisites": "Bedingungen",
     "producedByRecipes": "Von Rezepten hergestellt",
@@ -102,7 +102,6 @@
     "rocketPart": "Raketenbauteil",
     "rocketPartsRequired": "benötigt Raketenbauteile",
     "rocketSilo": "Raketensilo",
-    "selectedLabel": "{0} gewählt",
     "speed": "Geschwindigkeit",
     "sprays": "Sprays",
     "stackSize": "Stackgrösse",
@@ -111,19 +110,13 @@
     "technology": "Technologie",
     "time": "Zeit (s)",
     "unlockedBy": "Freigeschaltet von",
-    "unlockedRecipes": "Entsperrte Rezepte",
-    "versions": "Versionen"
+    "unlockedRecipes": "Entsperrte Rezepte"
   },
   "game": "Spiel",
   "landing": {
-    "addItems": "Items hinzufügen",
-    "addMachines": "Maschinen hinzufügen",
     "bypass": "Zeige diese Meldung in Zukunft nicht wieder",
-    "help": "Hilfe, um loszulegen",
     "loadLastState": "Lade letzte Speicherung",
     "loadSavedState": "Lade eine Speicherung",
-    "selectARecipe": "Wähle eine Rezept",
-    "selectAnItem": "Wähle ein Item",
     "skip": "Überspringen",
     "welcome": "Willkommen bei <b>FactorioLab</b>! Lass uns starten."
   },
@@ -131,8 +124,7 @@
   "modSetTooltip": "Wähle deine Version von Factorio oder die gewünschten Mods",
   "none": "Keine Resultate",
   "objectives": {
-    "addItems": "Items hinzufügen",
-    "addMachines": "Maschinen hinzufügen",
+    "displayRate": "Einheiten für Raten",
     "error": "Es konnte keine Lösung gefunden werden",
     "errorDetail": "Überprüfe <b>Limit</b> und <b>Maximize</b> Ziele, sowie inkludierte Rezepte. ",
     "errorInfeasible": "Lösung ist undurchführbar",
@@ -144,13 +136,7 @@
     "errorUnboundedDetail": "<b>Limit</b> Ziele sind möglicherweise nicht restriktiv genug für <b>Maximize</b> Ziele.",
     "pauseTooltip": "Berechnung pausieren/fortfahren",
     "removeTooltip": "Ziel entfernen",
-    "selectARecipe": "Wähle Rezept",
-    "selectAnItem": "Wähle Item",
-    "selectDisplayRate": "Wähle Anzeigerate",
-    "title": "Ziele",
-    "typeTooltip": "Wähle Zieltyp",
-    "unitTooltip": "Einheiten wählen",
-    "valueTooltip": "Wert eingeben"
+    "title": "Ziele"
   },
   "ok": "OK",
   "options": {
@@ -166,6 +152,13 @@
       "rockets": "Raketen",
       "tree": "Baum",
       "wagons": "Wagons"
+    },
+    "detailSection": {
+      "depletion": "Rohstofferschöpfung",
+      "destinations": "Zielorte",
+      "inputs": "Eingänge",
+      "outputs": "Ausgänge",
+      "sources": "Quellen"
     },
     "displayRate": {
       "perHour": "Teile pro Stunde",
@@ -183,17 +176,6 @@
       "outworldStation": "Outworld Station",
       "satisfactory": "Satisfactory",
       "techtonica": "Techtonica"
-    },
-    "inserterCapacity": {
-      "capacity0": "Kein Kapazitätsbonus",
-      "capacity2": "Kapazitätsbonus 2",
-      "capacity7": "Kapazitätsbonus 7"
-    },
-    "inserterTarget": {
-      "chest": "Kiste",
-      "expressTransportBelt": "Expressförderband",
-      "fastTransportBelt": "Schnelles Förderband",
-      "transportBelt": "Förderband"
     },
     "maximizeType": {
       "ratio": "Verhältnis",
@@ -239,20 +221,26 @@
       "speed5": "Forschungsgeschwindigkeit 5",
       "speed6": "Forschungsgeschwindigkeit 6"
     },
-    "stepDetailTab": {
-      "item": "Item",
-      "machine": "Maschine",
-      "recipe": "Rezept",
-      "recipes": "Rezepte"
-    },
     "theme": {
-      "black": "Schwarz",
-      "dark": "Dunkel (Standard)",
+      "dark": "Dunkel",
       "light": "Hell"
     }
   },
   "picker": {
     "includeAll": "Inkludiere alle"
+  },
+  "preferences": {
+    "bypassLanding": "Startseite immer überspringen",
+    "createSavedState": "Erstellen",
+    "deleteSavedState": "Löschen",
+    "editSavedState": "Umbenennen",
+    "helpTranslate": "Beim Übersetzen mithelfen",
+    "language": "Sprache",
+    "nameSavedState": "Namen eingeben",
+    "saveState": "Speichere Speicherung",
+    "savedStates": "Speicherungen",
+    "selectSavedState": "Wähle Speicherung",
+    "theme": "Thema"
   },
   "reset": "Zurücksetzen",
   "settings": {
@@ -261,12 +249,7 @@
     "allTechsResearched": "Alle Technologien wurden erforscht",
     "averageBeaconReceivers": "Durchschnittliche Anzahl an Effektempfänger",
     "averageBeaconReceiversTooltip": "Durchschnittliche Anzahl an Maschinen, die von jedem Effektverteiler beeinflusst werden; Das Minimum beträgt 1",
-    "beaconCountTooltip": "Wähle Anzahl von Effektverteilern",
-    "beaconModuleTooltip": "Wähle Effektverteilermodul",
-    "beaconTooltip": "Wähle Effektverteilerpräferenz",
     "bonuses": "Boni",
-    "bypassLanding": "Startseite immer überspringen",
-    "createSavedState": "Erstellen",
     "defaultCargoWagon": "Standard-Güterwagon",
     "defaultCargoWagonTooltip": "Wähle den Standard-Güterwagon, der für alle Items genutzt werden soll",
     "defaultFluidWagon": "Standard-Tankwagon",
@@ -275,11 +258,6 @@
     "defaultPipeTooltip": "Wähle die Standard-Leitung, die für alle Flüssigkeiten genutzt werden soll",
     "defaultTransportBelt": "Standard-Förderband",
     "defaultTransportBeltTooltip": "Wähle das Standard-Förderband, welches für alle Items genutzt werden soll",
-    "deleteSavedState": "Löschen",
-    "display": "Anzeige/Grafik",
-    "displayRate": "Einheiten für Raten",
-    "displayRateTooltip": "Wähle die Zeiteinheit, die in Ratenangaben genutzt werden soll",
-    "editSavedState": "Umbenennen",
     "estimateBeaconPowerUsage": "Schätze Strombedarf von Effektverteilern",
     "estimateBeaconPowerUsageTooltip": "Aktiviere, um den Strombedarf der Effektverteiler anhand von einer geschätzten Durchschnittsanzahl von Effektempfänger pro Effektverteiler zu schätzen",
     "factory": "Fabrik",
@@ -289,17 +267,8 @@
     "fuelTooltip": "Wähle Brennstoff",
     "gameTooltip": "Wähle, welchen Rechner verwendet werden soll, oder benutze die links in der Titelleiste",
     "header": "Einstellungen",
-    "helpTranslate": "Beim Übersetzen mithelfen",
-    "inserterCapacity": "Greifarmkapazität",
-    "inserterCapacityTooltip": "Das aktuelle Level des Greifarmkapazitätsbonus eingeben; Diese Einstellung beeinflusst nur Greifarmschätzungen",
-    "inserterTarget": "Greifarmziel",
-    "inserterTargetTooltip": "Wähle Greifarmziel",
     "itemsExcluded": "{{ count }} Items exkludiert",
-    "itemsHeader": "Wähle inkludierte Items",
     "itemsTooltip": "Klicke, um die inkludierten Items zu ändern. Exkludierte Items werden in der Lösung nicht produziert werden.",
-    "language": "Sprache",
-    "languageTooltip": "Sprache wählen",
-    "machineDefaults": "Maschinenstandards",
     "machineTooltip": "Wähle Maschinenpräferenz",
     "maximizeType": "Typ von Maximierungswert",
     "maximizeTypeTooltip": "Wähle den Typ von Maximierungswert",
@@ -307,75 +276,41 @@
     "miningProductivityTooltip": "Wähle den aktuellen Produktivitätsbonus von Erzförderern in Prozent; Standard ist 0%",
     "miningSpeed": "Geschwindigkeit von Erzförderern",
     "miningSpeedTooltip": "Die aktuelle Geschwindigkeit von Erzförderern mit Bonus eingeben; Standard ist 100%",
-    "mod": "Mod",
     "modVersions": "Versionen",
     "modifierTooltip": "Wähle Modifier",
-    "moveDown": "Nach unten verschieben",
-    "moveMachinePreference": "Verschiebe Maschinenpräferenz",
-    "moveUp": "Nach oben verschieben",
-    "nameSavedState": "Namen eingeben",
     "netProductionOnly": "Nur Nettoproduktion",
     "netProductionOnlyTooltip": "Wenn aktiviert, werden Rezepte, die das gleiche Item sowohl produzieren als auch verbrauchen, auf die Nettoproduktion reduziert.",
-    "openColumnSettings": "Öffne Spalteneinstellungen",
-    "openCosts": "Öffne Einstellungen zu Kosten",
-    "overclockTooltip": "Wähle Übertaktung in Prozent",
     "pipeFlowRate": "Rohrdurchfluss",
     "pipeFlowRateTooltip": "Rohrdurchfluss eingeben",
-    "powerUnit": "Stromeinheiten",
-    "powerUnitTooltip": "Wähle die Einheiten für die Stromspalte",
     "preset": "Voreinstellung",
     "presetTooltip": "Wähle eine Standard-Voreinstellung für Maschineneinstellungen",
     "proliferatorSelfSpray": "Proliferator Selbstbesprühung",
     "proliferatorSelfSprayTooltip": "Wähle den Proliferatorspray, welcher auf den Proliferator selbst angewendet wurde",
     "recipesExcluded": "{{ count }} Rezepte exkludiert",
-    "recipesHeader": "Wähle inkludierte Rezepte",
     "recipesTooltip": "Klicke, um die inkludierten Rezepte zu ändern. Exkludierte Rezepte werden nicht in der Berechnung benutzt werden.",
     "removeMachinePreference": "Maschinenpräferenz entfernen",
     "requestMod": "Anfrage für Mod stellen",
     "researchSpeed": "Forschungsgeschwindigkeit",
     "researchSpeedTooltip": "Das aktuelle Level des Forschungsgeschwindigkeitsbonus eingeben; Dies beeinflusst nur die Forschung",
-    "reset": "Alle Einstellungen zurücksetzen",
-    "resetWarning": "Diese Aktion wird alle gespeicherten FactorioLab-Einstellungen in diesem Browser löschen, bist du sicher, dass du fortfahren willst?",
-    "saveSavedState": "Speichern",
-    "saveState": "Speichere Speicherung",
-    "savedStates": "Speicherungen",
-    "selectSavedState": "Wähle Speicherung",
-    "surplusMachinesOutput": "Maschinenausgabe als Überschuss",
-    "surplusMachinesOutputTooltip": "Wenn aktiviert, wird der Output von Maschinenzielen als Überschuss anstatt als benötigte Items betrachtet.",
     "techsResearched": "{{ count }} Technologien erforscht",
-    "techsTooltip": "Klicke, um die erforschten Technologien zu ändern. Gesperrte Rezepte werden in der Berechnung nicht genutzt werden.",
-    "theme": "Thema",
-    "themeTooltip": "Wähle Thema",
-    "version": "Version"
+    "techsTooltip": "Klicke, um die erforschten Technologien zu ändern. Gesperrte Rezepte werden in der Berechnung nicht genutzt werden."
   },
   "steps": {
-    "beaconEachTooltip": "Effektverteiler pro Maschine",
-    "beaconTotalTooltip": "Totalanzahl an Effektverteilern",
     "beaconsUndoTooltip": "Alle Effektverteilerveränderungen rückgängig machen",
     "beltsUndoTooltip": "Alle Förderbandveränderungen rückgängig machen",
     "checkedUndoTooltip": "Alle Markierungen rückgängig machen",
-    "columnSettings": "Öffne Spalteneinstellungen",
-    "depletion": "Rohstofferschöpfung",
-    "destinations": "Zielorte",
     "downloadAsCsv": "Liste als CSV-Datei herunterladen",
     "hideDetails": "Details ausblenden",
-    "includedRecipes": "Inkludierte Rezepte",
-    "includedRecipesInfo": "Klicke, Rezepte zu inkludieren oder exkludieren. Exkludierte Rezepte werden in der Berechnung nicht verwendet.",
-    "inputs": "Eingänge",
-    "inserterCountInfo": "* Greifarme werden anhand der Ziel/Kapazität Einstellungen und anhand experimentellen Daten (0.18) von <a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">wiki.</a> berechnet.",
     "itemsUndoTooltip": "Alle exkludierten Items rückgängig machen",
     "machinesUndoTooltip": "Alle Maschinenveränderungen rückgängig machen",
     "openNewTabTooltip": "In neuem Tab öffnen",
-    "outputs": "Ausgänge",
     "overclockTooltip": "Übertaktung in Prozent",
     "showDetails": "Details einblenden",
-    "sources": "Quellen",
     "stepUndoTooltip": "Alle Veränderungen bis hierhin rückgängig machen",
-    "time": "Zeit",
     "total": "Total",
     "wagonsUndoTooltip": "Alle Wagonveränderungen rückgängig machen"
   },
-  "techPicker": {
+  "technologies": {
     "available": "Verfügbar",
     "header": "Wähle erforschte Technologien",
     "import": "Importiere",

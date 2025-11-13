@@ -1,8 +1,7 @@
 # TODO
 
-- Re-check translations are being used
+- Update non-english translation data
 - Re-check a11y
-- Re-check tooltips
 - Apply sorting to tailwind classes in component files
 - Remove productivity adjustment for research products
 - Allow "none" for rocket / wagon / belt?
