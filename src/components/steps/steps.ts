@@ -115,7 +115,6 @@ export class Steps {
   protected readonly cols = this.settingsStore.columnsState;
   protected readonly ColumnsDialog = ColumnsDialog;
   protected readonly data = this.recipesStore.adjustedDataset;
-  protected readonly details = this.objectivesStore.stepDetails;
   protected readonly stepDetailSections = stepDetailSections;
   protected readonly displayRateInfo = this.settingsStore.displayRateInfo;
   protected readonly faAngleRight = faAngleRight;
@@ -130,8 +129,6 @@ export class Steps {
   protected readonly items = this.itemsStore.settings;
   protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
-  protected readonly stepMap = this.objectivesStore.stepById;
-  protected readonly stepItemMap = this.objectivesStore.stepByItemRecord;
   protected readonly totals = this.objectivesStore.totals;
 
   protected readonly expandedSteps = signal<Set<string>>(new Set());

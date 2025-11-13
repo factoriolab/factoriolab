@@ -19,8 +19,8 @@ import { inRange } from '~/utils/number';
   ],
 })
 export class ValidateRational {
-  minimum = input<Rational | undefined>(rational.zero);
-  maximum = input<Rational | undefined>(undefined);
+  readonly minimum = input<Rational | undefined>(rational.zero);
+  readonly maximum = input<Rational | undefined>(undefined);
 
   validate(
     control: AbstractControl<string | null | undefined>,

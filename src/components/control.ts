@@ -9,12 +9,12 @@ import { ControlValueAccessor } from '@angular/forms';
 export const LAB_CONTROL = new InjectionToken<Control>('LAB_CONTROL');
 
 export abstract class Control<T = unknown> implements ControlValueAccessor {
-  abstract controlId: InputSignal<string>;
-  abstract value: ModelSignal<T | undefined>;
-  abstract disabled: ModelSignal<boolean>;
-  abstract labelledBy: InputSignal<string | undefined>;
+  abstract readonly controlId: InputSignal<string>;
+  abstract readonly value: ModelSignal<T | undefined>;
+  abstract readonly disabled: ModelSignal<boolean>;
+  abstract readonly labelledBy: InputSignal<string | undefined>;
 
-  touched = signal(false);
+  readonly touched = signal(false);
   onFormChange?: (value: T) => void;
   onFormTouched?: () => void;
 

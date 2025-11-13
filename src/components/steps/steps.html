@@ -624,7 +624,7 @@
         }
       </tr>
       @if (expanded) {
-        @let detail = details()[step.id];
+        @let detail = objectivesStore.stepDetails()[step.id];
         @for (section of stepDetailSections; track section) {
           @if (detail[section].length) {
             <tr class="detail">

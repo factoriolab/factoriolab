@@ -50,7 +50,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
   private readonly settingsStore = inject(SettingsStore);
   private readonly solver = inject(Solver);
 
-  baseObjectives = computed(() => {
+  readonly baseObjectives = computed(() => {
     const state = this.state();
     const data = this.settingsStore.dataset();
 
@@ -63,7 +63,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
       );
   });
 
-  objectives = computed(() => {
+  readonly objectives = computed(() => {
     const objectives = this.baseObjectives();
     const itemsState = this.itemsStore.settings();
     const recipesState = this.recipesStore.settings();
@@ -83,13 +83,13 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     );
   });
 
-  normalizedObjectives = computed(() =>
+  readonly normalizedObjectives = computed(() =>
     this.objectives().map((o) =>
       spread(o, { value: this.normalization.normalizeRate(o) }),
     ),
   );
 
-  matrixResult = computed(() => {
+  readonly matrixResult = computed(() => {
     const objectives = this.normalizedObjectives();
     const settings = this.settingsStore.settings();
     const data = this.recipesStore.adjustedDataset();
@@ -98,14 +98,14 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     return this.solver.solve(objectives, settings, data, paused);
   });
 
-  steps = computed(() => {
+  readonly steps = computed(() => {
     const result = this.matrixResult();
     const objectives = this.objectives();
 
     return this.normalization.normalizeSteps(result.steps, objectives);
   });
 
-  stepsModified = computed(() => {
+  readonly stepsModified = computed(() => {
     const steps = this.steps();
     const objectives = this.baseObjectives();
     const itemsState = this.itemsStore.state();
@@ -131,7 +131,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     };
   });
 
-  totals = computed(() => {
+  readonly totals = computed(() => {
     const steps = this.steps();
     const itemsState = this.itemsStore.settings();
     const data = this.recipesStore.adjustedDataset();
@@ -279,7 +279,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     };
   });
 
-  itemSourceMap = computed(() => {
+  readonly itemSourceMap = computed(() => {
     const steps = this.steps();
     const result = steps.reduce<Record<string, ItemSource[]>>((e, step) => {
       if (step.itemId) e[step.itemId] ??= [];
@@ -312,7 +312,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     return result;
   });
 
-  stepDetails = computed(() => {
+  readonly stepDetails = computed(() => {
     const steps = this.steps();
     const stepById = this.stepById();
     const stepByItem = this.stepByItemRecord();
@@ -478,7 +478,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     }, {});
   });
 
-  stepRecipes = computed(() => {
+  readonly stepRecipes = computed(() => {
     const steps = this.steps();
     const data = this.recipesStore.adjustedDataset();
     const settings = this.settingsStore.settings();
@@ -512,12 +512,12 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     }, {});
   });
 
-  stepById = computed(() => {
+  readonly stepById = computed(() => {
     const steps = this.steps();
     return toRecord(steps);
   });
 
-  stepByItemRecord = computed(() => {
+  readonly stepByItemRecord = computed(() => {
     const steps = this.steps();
     return steps.reduce((e: Record<string, Step>, s) => {
       if (s.itemId != null) {
@@ -527,7 +527,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     }, {});
   });
 
-  stepTree = computed(() => {
+  readonly stepTree = computed(() => {
     const steps = this.steps();
 
     const tree: Record<string, boolean[]> = {};
@@ -569,7 +569,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     return tree;
   });
 
-  effectivePowerUnit = computed(() => {
+  readonly effectivePowerUnit = computed(() => {
     const powerUnit = this.preferencesStore.powerUnit();
     if (powerUnit !== PowerUnit.Auto) return powerUnit;
 
@@ -585,7 +585,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     else return PowerUnit.GW;
   });
 
-  recipesModified = computed(() => {
+  readonly recipesModified = computed(() => {
     const state = this.recipesStore.state();
     const objectives = this.baseObjectives();
 
@@ -612,7 +612,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     };
   });
 
-  message = computed((): MessageData | undefined => {
+  readonly message = computed((): MessageData | undefined => {
     const objectives = this.objectives();
     const matrixResult = this.matrixResult();
     const settings = this.settingsStore.settings();

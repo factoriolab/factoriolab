@@ -29,7 +29,7 @@ export class Translate {
     () => `i18n/${this.preferences.language()}.json`,
   );
 
-  data = computed(() => {
+  readonly data = computed(() => {
     const curData = this.currentData.value();
     const defData = this.defaultData.value();
     const result: TranslateData = {};

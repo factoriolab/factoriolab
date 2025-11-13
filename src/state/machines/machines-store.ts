@@ -19,7 +19,7 @@ export class MachinesStore extends RecordStore<MachineState> {
   private readonly options = inject(Options);
   private readonly settingsStore = inject(SettingsStore);
 
-  settings = computed(() =>
+  readonly settings = computed(() =>
     this.computeMachinesSettings(
       this.state(),
       this.settingsStore.settings(),

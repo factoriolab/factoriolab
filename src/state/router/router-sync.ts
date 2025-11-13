@@ -106,21 +106,21 @@ export class RouterSync {
   private readonly tableStore = inject(TableStore);
   private readonly zip = inject(Zip);
 
-  state = new Subject<State>();
-  zipConfig = signal(this.empty);
+  private readonly state = new Subject<State>();
+  private readonly zipConfig = signal(this.empty);
   // Current hashing algorithm version
-  version = ZipVersion.Version11;
-  zipTail: LabParams = { v: this.version };
-  route = new Subject<ActivatedRoute>();
-  ready = signal(false);
-  stored = storedSignal('router');
+  private readonly version = ZipVersion.Version11;
+  private readonly zipTail: LabParams = { v: this.version };
+  readonly route = new Subject<ActivatedRoute>();
+  private readonly ready = signal(false);
+  readonly stored = storedSignal('router');
 
-  private modData = toObservable(this.settingsStore.modData.value).pipe(
-    filterNullish(),
-  );
-  private modHash = toObservable(this.settingsStore.modHash.value).pipe(
-    filterNullish(),
-  );
+  private readonly modData = toObservable(
+    this.settingsStore.modData.value,
+  ).pipe(filterNullish());
+  private readonly modHash = toObservable(
+    this.settingsStore.modHash.value,
+  ).pipe(filterNullish());
 
   get empty(): ZipData<LabParams> {
     return { bare: {}, hash: {} };

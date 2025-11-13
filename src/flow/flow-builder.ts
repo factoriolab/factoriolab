@@ -26,7 +26,7 @@ export class FlowBuilder {
   private readonly settingsStore = inject(SettingsStore);
   private readonly translate = inject(Translate);
 
-  flowData = computed(() => {
+  readonly flowData = computed(() => {
     const steps = this.objectivesStore.steps();
     const settings = this.settingsStore.settings();
     const preferences = this.preferencesStore.state();

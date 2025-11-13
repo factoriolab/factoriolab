@@ -17,9 +17,9 @@ export class RecipesStore extends RecordStore<RecipeState> {
   private readonly machinesStore = inject(MachinesStore);
   private readonly settingsStore = inject(SettingsStore);
 
-  settings = computed(() => this.computeRecipesSettings(this.state()));
+  readonly settings = computed(() => this.computeRecipesSettings(this.state()));
 
-  adjustedDataset = computed(() => {
+  readonly adjustedDataset = computed(() => {
     const recipesState = this.settings();
     const itemsState = this.itemsStore.settings();
     const settings = this.settingsStore.settings();

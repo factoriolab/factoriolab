@@ -68,12 +68,12 @@ export class SettingsStore extends Store<SettingsState> {
   private readonly hydration = inject(Hydration);
   private readonly preferencesStore = inject(PreferencesStore);
 
-  modId = this.select('modId');
-  maximizeType = this.select('maximizeType');
-  displayRate = this.select('displayRate');
-  flowRate = this.select('flowRate');
-  preset = this.select('preset');
-  researchedTechnologyIds = this.select('researchedTechnologyIds');
+  readonly modId = this.select('modId');
+  readonly maximizeType = this.select('maximizeType');
+  readonly displayRate = this.select('displayRate');
+  readonly flowRate = this.select('flowRate');
+  readonly preset = this.select('preset');
+  readonly researchedTechnologyIds = this.select('researchedTechnologyIds');
 
   readonly modData = httpResource<ModData>(() => {
     const modId = this.modId();
@@ -726,11 +726,12 @@ export class SettingsStore extends Store<SettingsState> {
       return ids.reduce<Record<string, IconData>>((e, i) => {
         const entity = rec[i];
         const id = coalesce((entity as Category | Item | Recipe).icon, i);
-        const data = iconData[id];
+        const icon = iconData[id];
         const text = (entity as Category | Item | Recipe).iconText;
         const quality = (entity as Item | Recipe).quality;
-        const viewBox = getViewBox(data.position);
-        e[i] = { ...data, file, image, viewBox, text, quality };
+        if (icon == null) console.log(id);
+        const viewBox = getViewBox(icon.position);
+        e[i] = { ...icon, file, image, viewBox, text, quality };
         return e;
       }, {});
     }

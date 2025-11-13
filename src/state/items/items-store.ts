@@ -15,9 +15,9 @@ import { ItemState } from './item-state';
 export class ItemsStore extends RecordStore<ItemState> {
   private readonly settingsStore = inject(SettingsStore);
 
-  settings = computed(() => this.computeItemsSettings(this.state()));
+  readonly settings = computed(() => this.computeItemsSettings(this.state()));
 
-  itemsModified = computed(() => {
+  readonly itemsModified = computed(() => {
     const state = this.state();
 
     return {

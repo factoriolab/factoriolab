@@ -11,21 +11,21 @@ import { initialPreferencesState, PreferencesState } from './preferences-state';
 
 @Injectable({ providedIn: 'root' })
 export class PreferencesStore extends Store<PreferencesState> {
-  readonly document = inject(DOCUMENT);
+  private readonly document = inject(DOCUMENT);
 
-  stored = storedSignal('preferences');
+  readonly stored = storedSignal('preferences');
 
-  bypassLanding = this.select('bypassLanding');
-  columns = this.select('columns');
-  convertObjectiveValues = this.select('convertObjectiveValues');
-  flowSettings = this.select('flowSettings');
-  language = this.select('language');
-  paused = this.select('paused');
-  powerUnit = this.select('powerUnit');
-  showTechLabels = this.select('showTechLabels');
-  states = this.select('states');
-  theme = this.select('theme');
-  hue = this.select('hue');
+  readonly bypassLanding = this.select('bypassLanding');
+  readonly columns = this.select('columns');
+  readonly convertObjectiveValues = this.select('convertObjectiveValues');
+  readonly flowSettings = this.select('flowSettings');
+  readonly language = this.select('language');
+  readonly paused = this.select('paused');
+  readonly powerUnit = this.select('powerUnit');
+  readonly showTechLabels = this.select('showTechLabels');
+  readonly states = this.select('states');
+  readonly theme = this.select('theme');
+  readonly hue = this.select('hue');
 
   constructor() {
     super(initialPreferencesState, ['states', 'flowSettings']);

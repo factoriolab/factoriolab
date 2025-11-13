@@ -72,12 +72,11 @@ export class Flow {
   protected readonly flowBuilder = inject(FlowBuilder);
   private readonly preferencesStore = inject(PreferencesStore);
 
-  svgElement = viewChild.required<ElementRef<HTMLElement>>('svg');
+  private readonly svgElement =
+    viewChild.required<ElementRef<HTMLElement>>('svg');
+  private readonly height = window.innerHeight * 0.75;
 
-  height = window.innerHeight * 0.75;
-  svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
-
-  selectedId = signal<string | undefined>(undefined);
+  protected readonly selectedId = signal<string | undefined>(undefined);
 
   private readonly elk = new ELK();
   protected readonly faFileArrowDown = faFileArrowDown;
@@ -326,8 +325,6 @@ export class Flow {
       .attr('x', 20)
       .attr('y', (d) => this.imageOffset(d) + 32)
       .text((d) => d.text);
-
-    this.svg = svg;
   }
 
   async rebuildBoxLine(
@@ -574,8 +571,6 @@ export class Flow {
       .attr('y', 35)
       .attr('x', 19)
       .text((d) => d.text);
-
-    this.svg = svg;
   }
 
   private getLayout(
