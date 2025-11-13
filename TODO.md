@@ -8,7 +8,6 @@
 ## General
 
 - Re-check readonly / access modifiers across all files
-- Re-check mobile view
 - Re-check light theme (+ icon invert)
 - Re-check translations are being used
 - Re-check a11y
@@ -16,3 +15,4 @@
 - Apply sorting to tailwind classes in component files
 - Remove productivity adjustment for research products
 - Allow "none" for rocket / wagon / belt?
+- Determine replacement for inserter estimation
