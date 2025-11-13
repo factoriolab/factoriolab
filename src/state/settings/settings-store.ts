@@ -75,21 +75,36 @@ export class SettingsStore extends Store<SettingsState> {
   readonly preset = this.select('preset');
   readonly researchedTechnologyIds = this.select('researchedTechnologyIds');
 
-  readonly modData = httpResource<ModData>(() => {
+  private readonly modDataResource = httpResource<ModData>(() => {
     const modId = this.modId();
     if (modId == null) return undefined;
     return `data/${modId}/data.json`;
   });
-  readonly modHash = httpResource<ModHash>(() => {
+  private readonly modHashResource = httpResource<ModHash>(() => {
     const modId = this.modId();
     if (modId == null) return undefined;
     return `data/${modId}/hash.json`;
   });
-  readonly modI18n = httpResource<ModI18n>(() => {
+  private readonly modI18nResource = httpResource<ModI18n>(() => {
     const modId = this.modId();
     const lang = this.preferencesStore.language();
     if (modId == null || lang === 'en') return undefined;
     return `data/${modId}/i18n/${lang}.json`;
+  });
+
+  readonly modData = computed(() => {
+    if (this.modDataResource.error()) return undefined;
+    return this.modDataResource.value();
+  });
+
+  readonly modHash = computed(() => {
+    if (this.modHashResource.error()) return undefined;
+    return this.modHashResource.value();
+  });
+
+  readonly modI18n = computed(() => {
+    if (this.modI18nResource.error()) return undefined;
+    return this.modI18nResource.value();
   });
 
   readonly modInfo = computed(() => {
@@ -98,87 +113,87 @@ export class SettingsStore extends Store<SettingsState> {
     return modRecord[modId];
   });
 
-  game = computed(() => {
+  readonly game = computed(() => {
     const mod = this.modInfo();
     return coalesce<Game>(mod?.game, 'factorio');
   });
 
-  modStates = computed(() => {
+  readonly modStates = computed(() => {
     const modId = this.modId();
     if (modId == null) return {};
     const states = this.preferencesStore.states();
     return coalesce(states[modId], {});
   });
 
-  stateOptions = computed(() => {
+  readonly stateOptions = computed(() => {
     const states = this.modStates();
     return Object.keys(states)
       .sort()
       .map((i): Option => ({ label: i, value: i }));
   });
 
-  gameInfo = computed(() => {
+  readonly gameInfo = computed(() => {
     const game = this.game();
     return gameInfo[game];
   });
 
-  displayRateInfo = computed(() => {
+  readonly displayRateInfo = computed(() => {
     const displayRate = this.displayRate();
     return displayRateInfo[displayRate];
   });
 
-  modOptions = computed(() => {
+  readonly modOptions = computed(() => {
     const game = this.game();
     return modOptions(game);
   });
 
-  defaults = computed(() =>
-    this.computeDefaults(this.modInfo(), this.modData.value(), this.preset()),
+  readonly defaults = computed(() =>
+    this.computeDefaults(this.modInfo(), this.modData(), this.preset()),
   );
 
-  dataset = computed(() =>
+  readonly dataset = computed(() =>
     this.computeDataset(
       this.modInfo(),
-      this.modData.value(),
-      this.modHash.value(),
-      this.modI18n.value(),
+      this.modData(),
+      this.modHash(),
+      this.modI18n(),
       this.game(),
     ),
   );
 
-  linkValueOptions = computed(() => {
+  readonly linkValueOptions = computed(() => {
     const data = this.dataset();
     return linkValueOptions(data.flags);
   });
 
-  objectiveUnitOptions = computed(() => {
+  readonly objectiveUnitOptions = computed(() => {
     const dispRateInfo = this.displayRateInfo();
     const data = this.dataset();
     return objectiveUnitOptions(dispRateInfo, data.flags);
   });
 
-  presetOptions = computed(() => {
-    const modData = this.modData.value();
+  readonly presetOptions = computed(() => {
+    const modData = this.modData();
     const data = this.dataset();
     return presetOptions(data.flags, modData?.defaults);
   });
 
-  columnOptions = computed(() => {
+  readonly columnOptions = computed(() => {
     const data = this.dataset();
     return columnOptions(data.flags);
   });
 
-  columnsState = computed(() => {
+  readonly columnsState = computed(() => {
     const data = this.dataset();
     const columns = this.preferencesStore.columns();
     return gameColumnsState(columns, data.flags);
   });
 
-  settings = computed(() =>
+  readonly settings = computed(() =>
     this.computeSettings(this.state(), this.defaults(), this.dataset()),
   );
 
-  options = computed((): Options => {
+  readonly options = computed((): Options => {
     const data = this.dataset();
     const settings = this.settings();
     const itemSet = new Set(settings.availableItemIds);
@@ -223,7 +238,7 @@ export class SettingsStore extends Store<SettingsState> {
     };
   });
 
-  beltSpeed = computed(() => {
+  readonly beltSpeed = computed(() => {
     const data = this.dataset();
     const flowRate = this.flowRate();
 
@@ -239,7 +254,7 @@ export class SettingsStore extends Store<SettingsState> {
     return value;
   });
 
-  beltSpeedTxt = computed(() => {
+  readonly beltSpeedTxt = computed(() => {
     const beltSpeed = this.beltSpeed();
     const dispRateInfo = this.displayRateInfo();
 
@@ -253,7 +268,7 @@ export class SettingsStore extends Store<SettingsState> {
     );
   });
 
-  modMenuItem = computed((): LinkOption => {
+  readonly modMenuItem = computed((): LinkOption => {
     const mod = this.modInfo();
 
     return {

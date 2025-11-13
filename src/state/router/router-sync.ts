@@ -115,12 +115,12 @@ export class RouterSync {
   private readonly ready = signal(false);
   readonly stored = storedSignal('router');
 
-  private readonly modData = toObservable(
-    this.settingsStore.modData.value,
-  ).pipe(filterNullish());
-  private readonly modHash = toObservable(
-    this.settingsStore.modHash.value,
-  ).pipe(filterNullish());
+  private readonly modData = toObservable(this.settingsStore.modData).pipe(
+    filterNullish(),
+  );
+  private readonly modHash = toObservable(this.settingsStore.modHash).pipe(
+    filterNullish(),
+  );
 
   get empty(): ZipData<LabParams> {
     return { bare: {}, hash: {} };
@@ -174,7 +174,7 @@ export class RouterSync {
 
     effect(() => {
       const ready = this.ready();
-      const hash = this.settingsStore.modHash.value();
+      const hash = this.settingsStore.modHash();
       if (!ready || !hash) return;
       const objectives = this.objectivesStore.state();
       const items = this.itemsStore.state();
