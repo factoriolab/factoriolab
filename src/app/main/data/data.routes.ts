@@ -2,11 +2,8 @@ import { Route } from '@angular/router';
 
 import { CollectionOption } from '~/components/collection-table/collection-option';
 
-import { DetailType } from './detail/detail';
-
 interface DetailData {
   collectionLabel: string;
-  type: DetailType;
 }
 
 type DataRoute = Route & { data?: CollectionOption | DetailData };
@@ -14,11 +11,9 @@ type DataRoute = Route & { data?: CollectionOption | DetailData };
 export const routes: DataRoute[] = [
   {
     path: 'categories/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.categories',
-      type: 'category',
-    },
+    loadComponent: () =>
+      import('./category-detail/category-detail').then((c) => c.CategoryDetail),
+    data: { collectionLabel: 'data.categories' },
   },
   {
     path: 'categories',
@@ -32,11 +27,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'items/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.items',
-      type: 'item',
-    },
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.items' },
   },
   {
     path: 'items',
@@ -50,11 +43,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'beacons/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.beacons',
-      type: 'item',
-    },
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.beacons' },
   },
   {
     path: 'beacons',
@@ -68,11 +59,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'belts/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.belts',
-      type: 'item',
-    },
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.belts' },
   },
   {
     path: 'belts',
@@ -86,11 +75,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'cargo-wagons/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.cargoWagons',
-      type: 'item',
-    },
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.cargoWagons' },
   },
   {
     path: 'cargo-wagons',
@@ -104,11 +91,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'fluid-wagons/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.fluidWagons',
-      type: 'item',
-    },
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.fluidWagons' },
   },
   {
     path: 'fluid-wagons',
@@ -122,11 +107,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'fuels/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.fuels',
-      type: 'item',
-    },
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.fuels' },
   },
   {
     path: 'fuels',
@@ -140,11 +123,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'machines/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.machines',
-      type: 'item',
-    },
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.machines' },
   },
   {
     path: 'machines',
@@ -158,11 +139,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'modules/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.modules',
-      type: 'item',
-    },
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.modules' },
   },
   {
     path: 'modules',
@@ -176,11 +155,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'pumps/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.pumps',
-      type: 'item',
-    },
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.pumps' },
   },
   {
     path: 'pumps',
@@ -194,11 +171,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'technologies/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.technologies',
-      type: 'item',
-    },
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.technologies' },
   },
   {
     path: 'technologies',
@@ -212,11 +187,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'recipes/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.recipes',
-      type: 'recipe',
-    },
+    loadComponent: () =>
+      import('./recipe-detail/recipe-detail').then((c) => c.RecipeDetail),
+    data: { collectionLabel: 'data.recipes' },
   },
   {
     path: 'recipes',
@@ -230,11 +203,9 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'locations/:id',
-    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
-    data: {
-      collectionLabel: 'data.locations',
-      type: 'location',
-    },
+    loadComponent: () =>
+      import('./location-detail/location-detail').then((c) => c.LocationDetail),
+    data: { collectionLabel: 'data.locations' },
   },
   {
     path: 'locations',
