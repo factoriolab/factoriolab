@@ -2,8 +2,11 @@ import { Route } from '@angular/router';
 
 import { CollectionOption } from '~/components/collection-table/collection-option';
 
+import { DetailType } from './detail/detail';
+
 interface DetailData {
   collectionLabel: string;
+  type: DetailType;
 }
 
 type DataRoute = Route & { data?: CollectionOption | DetailData };
@@ -11,10 +14,10 @@ type DataRoute = Route & { data?: CollectionOption | DetailData };
 export const routes: DataRoute[] = [
   {
     path: 'categories/:id',
-    loadComponent: () =>
-      import('./category-data/category-data').then((c) => c.CategoryData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.categories',
+      type: 'category',
     },
   },
   {
@@ -29,10 +32,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'items/:id',
-    loadComponent: () =>
-      import('./item-data/item-data').then((c) => c.ItemData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.items',
+      type: 'item',
     },
   },
   {
@@ -47,10 +50,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'beacons/:id',
-    loadComponent: () =>
-      import('./item-data/item-data').then((c) => c.ItemData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.beacons',
+      type: 'item',
     },
   },
   {
@@ -65,10 +68,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'belts/:id',
-    loadComponent: () =>
-      import('./item-data/item-data').then((c) => c.ItemData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.belts',
+      type: 'item',
     },
   },
   {
@@ -83,10 +86,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'cargo-wagons/:id',
-    loadComponent: () =>
-      import('./item-data/item-data').then((c) => c.ItemData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.cargoWagons',
+      type: 'item',
     },
   },
   {
@@ -101,10 +104,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'fluid-wagons/:id',
-    loadComponent: () =>
-      import('./item-data/item-data').then((c) => c.ItemData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.fluidWagons',
+      type: 'item',
     },
   },
   {
@@ -119,10 +122,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'fuels/:id',
-    loadComponent: () =>
-      import('./item-data/item-data').then((c) => c.ItemData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.fuels',
+      type: 'item',
     },
   },
   {
@@ -137,10 +140,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'machines/:id',
-    loadComponent: () =>
-      import('./item-data/item-data').then((c) => c.ItemData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.machines',
+      type: 'item',
     },
   },
   {
@@ -155,10 +158,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'modules/:id',
-    loadComponent: () =>
-      import('./item-data/item-data').then((c) => c.ItemData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.modules',
+      type: 'item',
     },
   },
   {
@@ -173,10 +176,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'pumps/:id',
-    loadComponent: () =>
-      import('./item-data/item-data').then((c) => c.ItemData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.pumps',
+      type: 'item',
     },
   },
   {
@@ -191,10 +194,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'technologies/:id',
-    loadComponent: () =>
-      import('./item-data/item-data').then((c) => c.ItemData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.technologies',
+      type: 'item',
     },
   },
   {
@@ -209,10 +212,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'recipes/:id',
-    loadComponent: () =>
-      import('./recipe-data/recipe-data').then((c) => c.RecipeData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.recipes',
+      type: 'recipe',
     },
   },
   {
@@ -227,10 +230,10 @@ export const routes: DataRoute[] = [
   },
   {
     path: 'locations/:id',
-    loadComponent: () =>
-      import('./location-data/location-data').then((c) => c.LocationData),
+    loadComponent: () => import('./detail/detail').then((c) => c.Detail),
     data: {
       collectionLabel: 'data.locations',
+      type: 'location',
     },
   },
   {

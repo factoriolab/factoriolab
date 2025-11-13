@@ -5,7 +5,7 @@
   [faIcon]="faAnglesLeft"
   [border]="false"
   [attr.aria-label]="'paginator.first' | translate"
-  [disabled]="tableStore.page() === 0"
+  [disabled]="state().page === 0"
   (click)="goToButton('first')"
 ></button>
 <button
@@ -14,7 +14,7 @@
   [faIcon]="faAngleLeft"
   [border]="false"
   [attr.aria-label]="'paginator.previous' | translate"
-  [disabled]="tableStore.page() === 0"
+  [disabled]="state().page === 0"
   (click)="goToButton('previous')"
 ></button>
 @for (opt of pageOptions(); track $index) {
@@ -23,8 +23,8 @@
     labButton
     [border]="false"
     [text]="(opt + 1).toString()"
-    [color]="tableStore.page() === opt ? 'brand' : 'gray'"
-    (click)="tableStore.apply({ page: opt })"
+    [color]="state().page === opt ? 'brand' : 'gray'"
+    (click)="updateApply(state, { page: opt })"
   ></button>
 }
 <button
@@ -48,7 +48,7 @@
 <div>
   <lab-select
     [options]="rowsOptions"
-    [ngModel]="tableStore.rows()"
-    (ngModelChange)="tableStore.apply({ rows: $event })"
+    [ngModel]="state().rows"
+    (ngModelChange)="updateApply(state, { rows: $event })"
   ></lab-select>
 </div>

@@ -2,8 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  inject,
   input,
+  model,
   output,
 } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -17,8 +17,9 @@ import {
 import { Button } from '~/components/button/button';
 import { Ripple } from '~/components/ripple/ripple';
 import { Tooltip } from '~/components/tooltip/tooltip';
-import { TableStore } from '~/state/table/table-store';
+import { TableState } from '~/state/table/table-state';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { updateApply } from '~/utils/signal';
 
 @Component({
   selector: 'th[lab-sort-header], th[labSortHeader]',
@@ -29,30 +30,43 @@ import { TranslatePipe } from '~/translate/translate-pipe';
   host: {
     class:
       'cursor-pointer select-none hover:bg-gray-900 overflow-hidden has-[button:hover]:bg-transparent',
-    '[class.text-brand-400]': 'tableStore.sort() === column()',
-    '(click)': 'tableStore.setSort(column(), defaultAscending())',
+    '[class.text-brand-400]': 'state().sort === column()',
+    '(click)': 'updateApply(state, nextSort())',
   },
   hostDirectives: [Ripple],
 })
 export class SortHeader {
-  protected readonly tableStore = inject(TableStore);
-
   readonly text = input.required<string>();
   readonly column = input.required<string>();
+  readonly state = model.required<TableState>();
   readonly defaultAscending = input(false);
   readonly showUndo = input<boolean>();
   readonly undoTooltip = input<string>();
 
   readonly undo = output();
 
-  protected readonly icon = computed(() => {
-    const sort = this.tableStore.sort();
-    if (sort !== this.column()) return faUpDown;
+  protected readonly faArrowRotateLeft = faArrowRotateLeft;
+  protected readonly updateApply = updateApply;
 
-    return this.tableStore.asc() ? faArrowUpShortWide : faArrowDownWideShort;
+  protected readonly icon = computed(() => {
+    const state = this.state();
+    if (state.sort !== this.column()) return faUpDown;
+
+    return state.asc ? faArrowUpShortWide : faArrowDownWideShort;
   });
 
-  protected readonly faArrowRotateLeft = faArrowRotateLeft;
+  protected readonly nextSort = computed((): Partial<TableState> => {
+    const state = this.state();
+    const column = this.column();
+    const defaultAscending = this.defaultAscending();
+    if (state.sort === column) {
+      if (state.asc !== defaultAscending)
+        return { sort: undefined, asc: false };
+      return { asc: !defaultAscending };
+    }
+
+    return { sort: column, asc: defaultAscending };
+  });
 
   protected undoClicked(event: MouseEvent): void {
     event.stopPropagation();

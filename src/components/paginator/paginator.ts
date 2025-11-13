@@ -2,8 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  inject,
   input,
+  model,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -14,8 +14,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Option } from '~/option/option';
-import { TableStore } from '~/state/table/table-store';
+import { TableState } from '~/state/table/table-state';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { updateApply } from '~/utils/signal';
 
 import { Button } from '../button/button';
 import { Select } from '../select/select';
@@ -30,13 +31,11 @@ type PaginatorButton = 'first' | 'previous' | 'next' | 'last';
   host: { class: 'flex items-center gap-2 justify-center w-full' },
 })
 export class Paginator {
-  protected readonly tableStore = inject(TableStore);
-
+  readonly state = model.required<TableState>();
   readonly total = input.required<number>();
 
   protected readonly label = computed(() => {
-    const page = this.tableStore.page();
-    const rows = this.tableStore.rows();
+    const { page, rows } = this.state();
     const total = this.total();
 
     const first = Math.min(total, page * rows + 1);
@@ -45,15 +44,13 @@ export class Paginator {
   });
 
   protected readonly nextDisabled = computed(() => {
-    const page = this.tableStore.page();
-    const rows = this.tableStore.rows();
+    const { page, rows } = this.state();
     const total = this.total();
     return (page + 1) * rows >= total;
   });
 
   protected readonly pageOptions = computed(() => {
-    const page = this.tableStore.page();
-    const rows = this.tableStore.rows();
+    const { page, rows } = this.state();
     const total = this.total();
     const last = Math.floor(total / rows);
     const result: number[] = [page];
@@ -75,15 +72,12 @@ export class Paginator {
     { label: '50', value: 50 },
     { label: '100', value: 100 },
   ];
+  protected readonly updateApply = updateApply;
 
   goToButton(button: PaginatorButton): void {
-    const page = this.getPage(
-      this.tableStore.page(),
-      this.tableStore.rows(),
-      this.total(),
-      button,
-    );
-    this.tableStore.apply({ page });
+    const state = this.state();
+    const page = this.getPage(state.page, state.rows, this.total(), button);
+    updateApply(this.state, { page });
   }
 
   private getPage(

@@ -54,6 +54,8 @@
         column="items"
         [text]="displayRateInfo().itemsLabel"
         [showUndo]="!!settings().excludedItemIds.size"
+        [state]="tableStore.state()"
+        (stateChange)="tableStore.set($event)"
         undoTooltip="steps.itemsUndoTooltip"
         (undo)="resetExcludedItems()"
       ></th>
@@ -65,6 +67,8 @@
           column="belts"
           text="options.column.belts"
           [showUndo]="itemsStore.itemsModified().belts"
+          [state]="tableStore.state()"
+          (stateChange)="tableStore.set($event)"
           undoTooltip="steps.beltsUndoTooltip"
           (undo)="itemsStore.resetFields('beltId', 'stack')"
         ></th>
@@ -77,6 +81,8 @@
           column="wagons"
           [text]="displayRateInfo().wagonsLabel"
           [showUndo]="itemsStore.itemsModified().wagons"
+          [state]="tableStore.state()"
+          (stateChange)="tableStore.set($event)"
           undoTooltip="steps.wagonsUndoTooltip"
           (undo)="itemsStore.resetFields('wagonId')"
         ></th>
@@ -87,6 +93,8 @@
           colspan="2"
           labSortHeader
           column="rockets"
+          [state]="tableStore.state()"
+          (stateChange)="tableStore.set($event)"
           [text]="displayRateInfo().rocketsLabel"
         ></th>
       }
@@ -97,6 +105,8 @@
         column="machines"
         text="options.column.machines"
         [showUndo]="objectivesStore.recipesModified().machines"
+        [state]="tableStore.state()"
+        (stateChange)="tableStore.set($event)"
         undoTooltip="steps.machinesUndoTooltip"
         (undo)="resetMachines()"
       ></th>
@@ -122,7 +132,13 @@
       }
       <!-- Power -->
       @if (cols().power.show) {
-        <th labSortHeader column="power" text="options.column.power"></th>
+        <th
+          labSortHeader
+          column="power"
+          text="options.column.power"
+          [state]="tableStore.state()"
+          (stateChange)="tableStore.set($event)"
+        ></th>
       }
       <!-- Pollution -->
       @if (cols().pollution.show) {
@@ -130,6 +146,8 @@
           labSortHeader
           column="pollution"
           [text]="displayRateInfo().pollutionLabel"
+          [state]="tableStore.state()"
+          (stateChange)="tableStore.set($event)"
         ></th>
       }
       <!-- Link -->

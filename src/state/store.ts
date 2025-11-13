@@ -76,7 +76,7 @@ export abstract class Store<T extends object> {
     this.apply(partial);
   }
 
-  protected set(state: T): void {
+  set(state: T): void {
     this._state.set(state);
   }
 

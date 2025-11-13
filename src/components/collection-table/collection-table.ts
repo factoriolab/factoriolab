@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   input,
+  model,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -13,9 +14,9 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { IconType } from '~/data/icon-type';
 import { Item } from '~/data/schema/item';
 import { SettingsStore } from '~/state/settings/settings-store';
-import { resetTableParams } from '~/state/table/table-state';
-import { TableStore } from '~/state/table/table-store';
+import { initialTableState, resetTableParams } from '~/state/table/table-state';
 import { coalesce } from '~/utils/nullish';
+import { updateApply } from '~/utils/signal';
 
 import { Icon } from '../icon/icon';
 import { Paginator } from '../paginator/paginator';
@@ -51,13 +52,14 @@ const recordKey: Partial<Record<IconType, RecordKey>> = {
 })
 export class CollectionTable {
   protected readonly settingsStore = inject(SettingsStore);
-  protected readonly tableStore = inject(TableStore);
 
   readonly ids = input.required<string[]>();
   readonly iconType = input.required<IconType>();
+  readonly state = model(initialTableState);
 
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
   protected readonly resetTableParams = resetTableParams;
+  protected readonly updateApply = updateApply;
 
   protected readonly hasCategory = computed(() => {
     const type = this.iconType();
@@ -78,14 +80,14 @@ export class CollectionTable {
         }),
       );
 
-    const filter = this.tableStore.filter()?.toLowerCase();
+    const state = this.state();
+    const filter = state.filter?.toLowerCase();
     if (filter)
       result = result.filter((e) => e.name.toLowerCase().includes(filter));
 
-    const sort = this.tableStore.sort();
-    if (sort == null) return result;
+    if (state.sort == null) return result;
 
-    if (sort === 'category')
+    if (state.sort === 'category')
       result.sort((a, b) =>
         coalesce(b.category?.name, '').localeCompare(
           coalesce(a.category?.name, ''),
@@ -93,7 +95,7 @@ export class CollectionTable {
       );
     else result.sort((a, b) => b.name.localeCompare(a.name));
 
-    if (this.tableStore.asc()) result.reverse();
+    if (state.asc) result.reverse();
 
     return result;
   });

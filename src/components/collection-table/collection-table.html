@@ -6,6 +6,7 @@
         labSortHeader
         column="name"
         text="data.name"
+        [(state)]="state"
         [defaultAscending]="true"
       ></th>
       @if (hasCategory()) {
@@ -14,6 +15,7 @@
           labSortHeader
           column="category"
           text="data.category"
+          [(state)]="state"
           [defaultAscending]="true"
         ></th>
       }
@@ -23,8 +25,8 @@
         <div class="relative flex font-medium">
           <input
             class="input"
-            [ngModel]="tableStore.filter()"
-            (ngModelChange)="tableStore.apply({ filter: $event })"
+            [ngModel]="state().filter"
+            (ngModelChange)="updateApply(state, { filter: $event })"
           />
           <fa-icon
             class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
@@ -38,7 +40,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (item of items() | paginator: tableStore.state(); track item.id) {
+    @for (item of items() | paginator: state(); track item.id) {
       <tr>
         <td>
           <a
@@ -70,7 +72,10 @@
   <tfoot>
     <tr>
       <td colspan="2">
-        <lab-paginator [total]="items().length"></lab-paginator>
+        <lab-paginator
+          [(state)]="state"
+          [total]="items().length"
+        ></lab-paginator>
       </td>
     </tr>
   </tfoot>

@@ -12,6 +12,7 @@ import { CollectionTable } from '~/components/collection-table/collection-table'
 import { IconType } from '~/data/icon-type';
 import { LinkOption } from '~/option/link-option';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { TableStore } from '~/state/table/table-store';
 
 @Component({
   selector: 'lab-collection',
@@ -21,6 +22,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
 })
 export class Collection {
   private readonly settingsStore = inject(SettingsStore);
+  protected readonly tableStore = inject(TableStore);
 
   readonly label = input.required<string>();
   readonly key = input.required<CollectionKey>();

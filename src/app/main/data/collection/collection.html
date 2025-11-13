@@ -2,4 +2,6 @@
 <lab-collection-table
   [ids]="ids()"
   [iconType]="iconType()"
+  [state]="tableStore.state()"
+  (stateChange)="tableStore.set($event)"
 ></lab-collection-table>

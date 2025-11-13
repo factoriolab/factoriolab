@@ -1,0 +1,15 @@
+<lab-breadcrumb [items]="crumbs()"></lab-breadcrumb>
+@if (obj(); as obj) {
+  <h3 class="my-3 text-lg font-semibold">{{ obj.name }}</h3>
+  <lab-icon [value]="obj.id" [type]="type()" [full]="true"></lab-icon>
+
+  @switch (type()) {
+    @case ('category') {
+      <lab-category-detail [obj]="obj"></lab-category-detail>
+    }
+    @case ('item') {}
+    @case ('recipe') {}
+  }
+} @else {
+  <div>{{ 'data.notFound' | translate }}</div>
+}
