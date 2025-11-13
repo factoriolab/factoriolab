@@ -1,5 +1,4 @@
 import { computed, Signal, signal } from '@angular/core';
-import { Subject } from 'rxjs';
 
 import { Rational } from '~/rational/rational';
 import { areSetsEqual } from '~/utils/equality';
@@ -29,7 +28,6 @@ export function compareSet<T>(value: Set<T>, def: Set<T>): Set<T> | undefined {
 
 export abstract class Store<T extends object> {
   protected _state = signal(this.initial);
-  load$ = new Subject<void>();
   state = this._state.asReadonly();
 
   constructor(
@@ -39,7 +37,6 @@ export abstract class Store<T extends object> {
 
   /** Load recursive partial state, spreading any nested keys */
   load(partial: RecursivePartial<T> | undefined): void {
-    this.load$.next();
     if (partial == null) {
       this.set(this.initial);
       return;

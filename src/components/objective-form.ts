@@ -17,10 +17,10 @@ export abstract class ObjectiveForm {
   readonly isRecipe = computed(() => this.unit() === ObjectiveUnit.Machines);
 
   openPicker(): void {
-    const targetId$ = this.isRecipe()
+    const targetId = this.isRecipe()
       ? this.picker.pickRecipe()
       : this.picker.pickItem();
-    targetId$
+    targetId
       .pipe(
         switchMap((targetId) => {
           const result = this.addObjective({

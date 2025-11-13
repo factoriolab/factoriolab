@@ -33,10 +33,8 @@ export class FileClient {
     Record<string, Observable<ModI18n>>
   > = {};
 
-  readonly config$ = this.http
-    .get<Release>('release.json')
-    .pipe(shareReplay(1));
-  readonly version$ = this.config$.pipe(
+  readonly config = this.http.get<Release>('release.json').pipe(shareReplay(1));
+  readonly version = this.config.pipe(
     map((c) => `FactorioLab ${c.version || '(dev)'}`),
   );
 

@@ -81,7 +81,7 @@ export class Flow implements AfterViewInit {
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
 
   selectedId = signal<string | undefined>(undefined);
-  data$ = combineLatest({
+  data = combineLatest({
     data: toObservable(this.flowBuilder.flowData),
     settings: toObservable(this.preferencesStore.flowSettings),
   });
@@ -92,7 +92,7 @@ export class Flow implements AfterViewInit {
   protected readonly FlowSettingsDialog = FlowSettingsDialog;
 
   ngAfterViewInit(): void {
-    this.data$
+    this.data
       .pipe(
         debounceTime(0),
         takeUntilDestroyed(this.destroyRef),

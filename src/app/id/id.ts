@@ -13,6 +13,6 @@ export class Id {
   private readonly routerSvc = inject(RouterSync);
 
   constructor() {
-    this.routerSvc.route$.next(this.route);
+    this.routerSvc.route.next(this.route);
   }
 }

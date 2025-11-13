@@ -77,8 +77,8 @@ export class InputNumber extends Control<Rational> implements OnInit {
   readonly bonus = input<boolean>();
   readonly percent = input<boolean>();
 
-  private value$ = new Subject<ChangeEvent>();
-  private emit$ = this.value$.pipe(
+  private valueChange = new Subject<ChangeEvent>();
+  private emit = this.valueChange.pipe(
     takeUntilDestroyed(),
     debounce((e) => (e.type === 'input' ? timer(300) : of({}))),
     map((e) => e.value),
@@ -109,7 +109,7 @@ export class InputNumber extends Control<Rational> implements OnInit {
   protected readonly faChevronUp = faChevronUp;
 
   ngOnInit(): void {
-    this.emit$.subscribe((v) => {
+    this.emit.subscribe((v) => {
       this.setValue(v);
     });
   }
@@ -126,7 +126,7 @@ export class InputNumber extends Control<Rational> implements OnInit {
       const min = this.minimum();
       const max = this.maximum();
       if (inRange(value, min, max)) {
-        this.value$.next({ type, value });
+        this.valueChange.next({ type, value });
         if (value && event.type === 'keydown') this.text.set(value.toString());
         return;
       }
@@ -134,7 +134,7 @@ export class InputNumber extends Control<Rational> implements OnInit {
       // Ignore error
     }
 
-    this.value$.next({ value: undefined, type });
+    this.valueChange.next({ value: undefined, type });
   }
 
   increment(direction: 1 | -1): void {
@@ -146,6 +146,6 @@ export class InputNumber extends Control<Rational> implements OnInit {
     const max = this.maximum();
     if (min?.gt(value)) value = min;
     if (max?.lt(value)) value = max;
-    this.value$.next({ type: 'keydown', value });
+    this.valueChange.next({ type: 'keydown', value });
   }
 }

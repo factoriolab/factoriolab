@@ -107,12 +107,12 @@ export class RouterSync {
   private readonly tableStore = inject(TableStore);
   private readonly zip = inject(Zip);
 
-  state$ = new Subject<State>();
+  state = new Subject<State>();
   zipConfig = signal(this.empty);
   // Current hashing algorithm version
   version = ZipVersion.Version11;
   zipTail: LabParams = { v: this.version };
-  route$ = new Subject<ActivatedRoute>();
+  route = new Subject<ActivatedRoute>();
   ready = signal(false);
   stored = storedSignal('router');
 
@@ -129,7 +129,7 @@ export class RouterSync {
   }
 
   constructor() {
-    this.route$
+    this.route
       .pipe(
         switchMap((r) =>
           combineLatest({
@@ -174,7 +174,7 @@ export class RouterSync {
       const table = this.tableStore.state();
       const data = this.settingsStore.dataset();
 
-      this.state$.next({
+      this.state.next({
         objectives,
         items,
         recipes,
@@ -186,7 +186,7 @@ export class RouterSync {
       });
     });
 
-    this.state$
+    this.state
       .pipe(
         map((z) => this.zipState(z)),
         tap((z) => {
