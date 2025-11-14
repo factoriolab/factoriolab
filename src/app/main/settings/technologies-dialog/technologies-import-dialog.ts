@@ -26,7 +26,7 @@ import { WindowClient } from '~/window/window-client';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex flex-col p-3 sm:p-6 pt-px gap-3 sm:pt-px sm:gap-6 overflow-hidden max-w-full',
+      'flex max-w-full flex-col gap-3 overflow-hidden p-3 pt-px sm:gap-6 sm:p-6 sm:pt-px',
   },
 })
 export class TechnologiesImportDialog implements DialogData {

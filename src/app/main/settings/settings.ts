@@ -72,7 +72,7 @@ import { TechnologiesDialog } from './technologies-dialog/technologies-dialog';
 import { VersionsDialog } from './versions-dialog/versions-dialog';
 
 const host = cva(
-  'flex flex-col fixed z-6 top-0 left-0 h-full border-r border-gray-600 w-xs transition-transform bg-gray-950',
+  'fixed top-0 left-0 z-6 flex h-full w-xs flex-col border-r border-gray-600 bg-gray-950 transition-transform',
   {
     variants: {
       open: { false: '-translate-x-full' },

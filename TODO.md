@@ -1,7 +1,6 @@
 # TODO
 
 - Re-check a11y
-- Apply sorting to tailwind classes in component files
 - Remove productivity adjustment for research products
 - Allow "none" for rocket / wagon / belt?
 - Determine replacement for inserter estimation

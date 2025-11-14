@@ -63,7 +63,7 @@ interface ElkGraph extends ElkNode {
   imports: [Button, Steps],
   templateUrl: './flow.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex flex-col gap-1 sm:gap-2 pb-3 lg:pb-6' },
+  host: { class: 'flex flex-col gap-1 pb-3 sm:gap-2 lg:pb-6' },
 })
 export class Flow {
   // private readonly destroyRef = inject(DestroyRef);

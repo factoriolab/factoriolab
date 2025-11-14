@@ -45,7 +45,7 @@ let nextUniqueId = 0;
   host: {
     role: 'tablist',
     class:
-      'flex items-center relative group overflow-hidden outline-none shrink-0',
+      'group relative flex shrink-0 items-center overflow-hidden outline-none',
     '[attr.tabindex]': 'disabled() ? -1 : 0',
     '[attr.aria-disabled]': 'disabled() ? true : false',
     '[attr.aria-labelledby]': 'labelledBy() ?? null',

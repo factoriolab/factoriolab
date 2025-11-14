@@ -16,7 +16,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex flex-col p-3 sm:p-6 pt-0 gap-3 sm:gap-6 sm:pt-0 overflow-hidden w-md max-w-full',
+      'flex w-md max-w-full flex-col gap-3 overflow-hidden p-3 pt-0 sm:gap-6 sm:p-6 sm:pt-0',
   },
 })
 export class VersionsDialog implements DialogData {

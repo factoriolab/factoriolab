@@ -29,7 +29,7 @@ import { updateApply } from '~/utils/signal';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'cursor-pointer select-none hover:bg-gray-900 overflow-hidden has-[button:hover]:bg-transparent',
+      'cursor-pointer overflow-hidden select-none hover:bg-gray-900 has-[button:hover]:bg-transparent',
     '[class.text-brand-400]': 'state().sort === column()',
     '(click)': 'updateApply(state, nextSort())',
   },

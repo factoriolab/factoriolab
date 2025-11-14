@@ -38,7 +38,7 @@ import { externalLinks } from './external-link';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex justify-between min-h-19 md:min-h-16 items-center flex-wrap px-1 sm:px-3 lg:px-6 xl:flex-nowrap md:sticky top-0 backdrop-blur-md border-b border-gray-600 z-4',
+      'top-0 z-4 flex min-h-19 flex-wrap items-center justify-between border-b border-gray-600 px-1 backdrop-blur-md sm:px-3 md:sticky md:min-h-16 lg:px-6 xl:flex-nowrap',
   },
 })
 export class Header {

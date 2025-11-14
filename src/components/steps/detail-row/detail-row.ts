@@ -31,8 +31,8 @@ import { PercentPadPipe } from './percent-pad-pipe';
     PercentPadPipe,
   ],
   templateUrl: './detail-row.html',
+  styleUrl: './detail-row.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'detail' },
 })
 export class DetailRow {
   protected readonly settingsStore = inject(SettingsStore);

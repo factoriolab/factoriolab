@@ -46,7 +46,7 @@ import { PrecisionExamplePipe } from './precision-example-pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex flex-col p-3 sm:p-6 pt-0 gap-3 sm:gap-6 sm:pt-0 overflow-hidden',
+      'flex flex-col gap-3 overflow-hidden p-3 pt-0 sm:gap-6 sm:p-6 sm:pt-0',
   },
 })
 export class ColumnsDialog implements DialogData {

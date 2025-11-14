@@ -43,7 +43,7 @@ import { TechnologiesSet } from './technologies-set';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex flex-col p-3 sm:p-6 pt-px gap-3 sm:pt-px sm:gap-6 overflow-hidden max-w-full md:w-[80dvw] xl:w-[60dvw] 2xl:w-[50dvw]',
+      'flex max-w-full flex-col gap-3 overflow-hidden p-3 pt-px sm:gap-6 sm:p-6 sm:pt-px md:w-[80dvw] xl:w-[60dvw] 2xl:w-[50dvw]',
   },
 })
 export class TechnologiesDialog implements DialogData {

@@ -55,7 +55,7 @@ import { WindowClient } from '~/window/window-client';
 import { Hue } from './hue/hue';
 
 const host = cva(
-  'flex flex-col fixed z-6 top-0 right-0 h-full border-l border-gray-600 w-xs transition-transform bg-gray-950',
+  'fixed top-0 right-0 z-6 flex h-full w-xs flex-col border-l border-gray-600 bg-gray-950 transition-transform',
   {
     variants: {
       open: { false: 'translate-x-full' },

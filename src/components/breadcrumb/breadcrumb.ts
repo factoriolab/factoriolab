@@ -19,7 +19,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
   imports: [RouterLink, FaIconComponent, TranslatePipe],
   templateUrl: './breadcrumb.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex items-center gap-1 py-2 border-b border-gray-700' },
+  host: { class: 'flex items-center gap-1 border-b border-gray-700 py-2' },
 })
 export class Breadcrumb {
   private readonly settingsStore = inject(SettingsStore);

@@ -42,7 +42,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
   ],
   templateUrl: './landing.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex flex-col items-center justify-center h-dvh gap-2' },
+  host: { class: 'flex h-dvh flex-col items-center justify-center gap-2' },
 })
 export class Landing extends ObjectiveForm {
   protected readonly router = inject(Router);

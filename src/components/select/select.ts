@@ -40,7 +40,7 @@ let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
 
 const host = cva(
-  'inline-flex overflow-hidden grow cursor-pointer min-h-9 items-center select-none hover:border-brand-600 hover:z-2 focus-visible:border-brand-600 focus-visible:outline focus:z-2 group',
+  'hover:border-brand-600 focus-visible:border-brand-600 group inline-flex min-h-9 grow cursor-pointer items-center overflow-hidden select-none hover:z-2 focus:z-2 focus-visible:outline',
   {
     variants: {
       opened: {

@@ -28,7 +28,7 @@ type PaginatorButton = 'first' | 'previous' | 'next' | 'last';
   imports: [FormsModule, Button, Select, TranslatePipe],
   templateUrl: './paginator.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex items-center gap-2 justify-center w-full' },
+  host: { class: 'flex w-full items-center justify-center gap-2' },
 })
 export class Paginator {
   readonly state = model.required<TableState>();

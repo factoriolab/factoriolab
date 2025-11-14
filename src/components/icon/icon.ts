@@ -16,7 +16,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
 
 import { IsLightPipe } from './is-light-pipe';
 
-const host = cva('inline-flex shrink-0 relative', {
+const host = cva('relative inline-flex shrink-0', {
   variants: {
     full: {
       true: 'size-16',

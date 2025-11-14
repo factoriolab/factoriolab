@@ -58,7 +58,7 @@ interface ChangeEvent {
     },
     { provide: LAB_CONTROL, useExisting: InputNumber },
   ],
-  host: { class: 'inline-flex group relative' },
+  host: { class: 'group relative inline-flex' },
 })
 export class InputNumber extends Control<Rational> implements OnInit {
   private uniqueId = (nextUniqueId++).toString();
