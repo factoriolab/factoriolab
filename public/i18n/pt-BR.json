@@ -1,34 +1,35 @@
 {
   "app": {
     "data": "Dados",
-    "error": "Erro",
-    "errorDetail": "O aplicativo encontrou um erro:",
     "factory": "Fábrica",
     "flow": "Fluxo",
     "list": "Lista",
     "migrationWarning": "Aviso de migração",
-    "resetTooltip": "Clique para redefinir",
     "simplexSolved": "Resolvido, {{ time }}ms, custo: {{ cost }}",
     "updateAvailable": "Atualização disponível",
     "updateAvailableMessage": "Uma atualização está disponível. Deseja recarregar a página para atualizar?",
     "updateRequired": "Atualização necessária",
     "updateRequiredMessage": "Uma atualização está disponível, e a página deve ser recarregada para continuar."
   },
-  "beaconsOverlay": {
-    "addBeacons": "Adicionar transmissores",
-    "eachTooltip": "Transmissores por máquina",
-    "totalTooltip": "Transmissores totais"
+  "beaconsSelect": {
+    "addBeacons": "Add beacons",
+    "eachTooltip": "Beacons per machine",
+    "tooltip": "Click to select beacons",
+    "totalTooltip": "Total beacons"
   },
-  "beltOverlay": {
-    "stackTooltip": "Tamanho da pilha"
+  "beltSelect": {
+    "stackTooltip": "Stack size"
   },
   "cancel": "Cancelar",
+  "close": "Close",
   "columns": {
     "decimals": "Decimais",
     "example": "Exemplo",
     "fractions": "Fração",
     "header": "Configurações de coluna",
+    "hidden": "Hidden",
     "notApplicable": "N/A",
+    "powerUnit": "Power units",
     "visibility": "Visibilidade"
   },
   "costs": {
@@ -51,9 +52,7 @@
     "unproduceableTooltip": "Custo dos itens que não podem ser produzidos por qualquer das receitas incluídas"
   },
   "data": {
-    "any": "Qualquer",
     "beacon": "Transmissor",
-    "beaconModuleRank": "Nível do módulo do transmissor",
     "beacons": "Transmissores",
     "belt": "Esteira",
     "beltSpeed": "Velocidade (Itens/s)",
@@ -71,7 +70,6 @@
     "cost": "Custo",
     "count": "Contagem",
     "craftingSpeed": "Velocidade de produção",
-    "currentPageReportTemplate": "Mostrando {first} a {last} de {totalRecords}",
     "dimensions": "Dimensões",
     "disallowedEffects": "Efeitos não permitidos",
     "efficiency": "Eficiência",
@@ -89,7 +87,6 @@
     "fuelValue": "Poder calorífico",
     "fuels": "Combustíveis",
     "ingredients": "Ingredientes",
-    "item": "Item",
     "itemSettings": "Configurações de item",
     "items": "Itens",
     "locations": "Localizações",
@@ -105,8 +102,6 @@
     "notFound": "Não encontrado",
     "overclock": "Overclock",
     "pipe": "Cano",
-    "pipeFlowRate": "Taxa de fluxo (Itens/s)",
-    "pipes": "Canos",
     "pollution": "Poluição",
     "prerequisites": "Pré-requisitos",
     "producedByRecipes": "Produzido por receitas",
@@ -115,6 +110,7 @@
     "productivity": "Produtividade",
     "products": "Produtos",
     "proliferator": "Proliferator",
+    "pumps": "Pumps",
     "quality": "Qualidade",
     "range": "Alcance",
     "recipe": "Receita",
@@ -124,7 +120,6 @@
     "rocketPart": "Parte de foguete",
     "rocketPartsRequired": "Partes de foguete necessárias",
     "rocketSilo": "Silo de foguete",
-    "selectedLabel": "{0} selecionados",
     "speed": "Velocidade",
     "sprays": "Sprays",
     "stackSize": "Tamanho da pilha",
@@ -133,17 +128,19 @@
     "technology": "Tecnologia",
     "time": "Tempo (s)",
     "unlockedBy": "Desbloqueado por",
-    "unlockedRecipes": "Receitas desbloqueadas",
-    "versions": "Versões"
+    "unlockedRecipes": "Receitas desbloqueadas"
   },
+  "filter": "Filter",
   "flow": {
     "downloadAsJson": "Baixar como JSON",
-    "downloadAsPng": "Baixar como PNG",
     "flowSettings": "Configurações de fluxo"
   },
   "flowSettings": {
     "diagram": "Tipo de visualização",
     "diagramTooltip": "Selecione qual tipo de visualização de fluxo a ser utilizado",
+    "elkAlgorithm": "Layout algorithm",
+    "elkAlgorithmTooltip": "Select which ELK layout algorithm to use for the box-line layout",
+    "header": "Flow settings",
     "hideExcluded": "Esconder itens exclusos",
     "hideExcludedTooltip": "Se marcado, itens exclusos também serão excluídos do diagrama de fluxo",
     "linkSize": "Espessura do fluxo",
@@ -156,30 +153,35 @@
   "game": "Jogo",
   "header": {
     "discord": "Discord",
+    "resetTooltip": "Click to reset",
+    "selectGame": "Select game",
     "source": "Fonte",
-    "support": "Suporte"
+    "sponsor": "Sponsor"
+  },
+  "inputNumber": {
+    "decrement": "Decrement",
+    "increment": "Increment"
   },
   "landing": {
-    "addItems": "Adicionar itens",
-    "addMachines": "Adicionar máquinas",
     "bypass": "Não mostrar esta tela novamente",
-    "help": "Ajude-me a começar",
     "loadLastState": "Carregar o último estado",
     "loadSavedState": "Carregar um estado salvo",
-    "selectARecipe": "Selecionar uma receita",
-    "selectAnItem": "Selecionar um item",
     "skip": "Pular",
     "welcome": "Bem-vindo ao <b>FactorioLab</b>! Vamos ao trabalho."
   },
   "modSet": "Conjunto de mods",
   "modSetTooltip": "Selecione qual versão ou conjunto de mods do Factorio a ser utilizado",
   "modules": {
-    "eachTooltip": "Número de módulos"
+    "eachTooltip": "Número de módulos",
+    "moduleTooltip": "Click to select modifier"
   },
+  "modulesSelect": {
+    "tooltip": "Click to select modifiers"
+  },
+  "no": "No",
   "none": "Nenhum",
   "objectives": {
-    "addItems": "Adicionar itens",
-    "addMachines": "Adicionar máquinas",
+    "displayRate": "Display rate units",
     "error": "Nenhuma solução encontrada",
     "errorDetail": "Confira os objetivos de <b>Limitar</b> e <b>Maximizar</b> e receitas habilitadas.",
     "errorInfeasible": "Solução é inviável",
@@ -193,16 +195,13 @@
     "errorUnboundedDetail": "Os objetivos de <b>Limitar</b> podem não ser restritivos o suficiente para os objetivos de <b>Maximizar</b>. Para ver o motivo, tente trocar os seus objetivos de <b>Maximizar</b> para os objetivos de <b>Produção</b> com valores extremamente altos.",
     "pauseTooltip": "Pausar/continuar cálculos",
     "pausedMessage": "Cálculos estão pausados. Utilize o botão reproduzir acima para continuar.",
+    "playTooltip": "Resume calculations",
+    "quantity": "Quantity",
     "removeTooltip": "Remover objetivo",
-    "selectARecipe": "Selecionar uma receita",
-    "selectAnItem": "Selecionar um item",
-    "selectDisplayRate": "Selecionar taxa de exibição",
+    "target": "Target",
     "title": "Objetivos",
-    "typeTooltip": "Selecionar tipo de objetivo",
-    "unitTooltip": "Selecionar unidades",
-    "valueRatioTooltip": "Definir razão",
-    "valueTooltip": "Definir valor",
-    "valueWeightTooltip": "Definir peso"
+    "type": "Type",
+    "units": "Units"
   },
   "ok": "OK",
   "options": {
@@ -215,8 +214,16 @@
       "machines": "Máquinas",
       "pollution": "Poluição",
       "power": "Energia",
+      "rockets": "Rockets",
       "tree": "Árvore",
       "wagons": "Vagões"
+    },
+    "detailSection": {
+      "depletion": "Resource depletion",
+      "destinations": "Item destinations",
+      "inputs": "Recipe inputs",
+      "outputs": "Recipe outputs",
+      "sources": "Item sources"
     },
     "displayRate": {
       "perHour": "Unidades por hora",
@@ -225,6 +232,11 @@
       "perMinuteSuffix": "/m",
       "perSecond": "Unidades por segundo",
       "perSecondSuffix": "/s"
+    },
+    "elkAlgorithm": {
+      "force": "Force",
+      "layered": "Layered",
+      "stress": "Stress"
     },
     "flowDiagram": {
       "boxLine": "Box-line",
@@ -240,18 +252,8 @@
       "mindustry": "Mindustry",
       "outworldStation": "Outworld Station",
       "satisfactory": "Satisfactory",
+      "skyformer": "SkyFormer",
       "techtonica": "Techtonica"
-    },
-    "inserterCapacity": {
-      "capacity0": "Sem bônus de capacidade",
-      "capacity2": "Bônus de capacidade 2",
-      "capacity7": "Bônus de capacidade 7"
-    },
-    "inserterTarget": {
-      "chest": "Baú",
-      "expressTransportBelt": "Esteira expressa",
-      "fastTransportBelt": "Esteira rápida",
-      "transportBelt": "Esteira"
     },
     "linkValue": {
       "belts": "Esteiras",
@@ -267,9 +269,13 @@
     },
     "objectiveType": {
       "input": "Entrada",
+      "inputTooltip": "I am already producing this quantity<br><span class=\"text-sm italic\">(don't solve for it)</span>",
       "limit": "Limitar",
+      "limitTooltip": "I want to limit this production<br><span class=\"text-sm italic\">(usually for maximize)</span>",
       "maximize": "Maximizar",
-      "output": "Produção"
+      "maximizeTooltip": "I want to maximize this production<br><span class=\"text-sm italic\">(requires a limit)</span>",
+      "output": "Produção",
+      "outputTooltip": "I want to produce this quantity<br><span class=\"text-sm italic\">(default option)</span>"
     },
     "objectiveUnit": {
       "belts": "Esteiras",
@@ -280,6 +286,9 @@
       "pollutionPerHour": "Poluição/h",
       "pollutionPerMinute": "Poluição/m",
       "pollutionPerSecond": "Poluição/s",
+      "rocketsPerHour": "Rockets/h",
+      "rocketsPerMinute": "Rockets/m",
+      "rocketsPerSecond": "Rockets/s",
       "wagonsPerHour": "Vagões/h",
       "wagonsPerMinute": "Vagões/m",
       "wagonsPerSecond": "Vagões/s"
@@ -328,37 +337,67 @@
       "skipped": "Pulado",
       "solved": "Resolvido"
     },
-    "stepDetailTab": {
-      "item": "Item",
-      "machine": "Máquina",
-      "recipe": "Receita",
-      "recipes": "Receitas"
-    },
     "theme": {
-      "black": "Preto",
       "dark": "Escuro (Padrão)",
-      "light": "Claro"
+      "light": "Claro",
+      "system": "System"
     }
+  },
+  "paginator": {
+    "first": "First page",
+    "label": "Showing {{ first }} to {{ last }} of {{ total }}",
+    "last": "Last page",
+    "next": "Next page",
+    "previous": "Previous page"
   },
   "picker": {
     "includeAll": "Incluir tudo",
-    "toggleVisible": "Alternar visibilidade"
+    "includeAllRecycling": "Include all recycling",
+    "includedItems": "Set included items",
+    "includedRecipes": "Set included recipes",
+    "qualityFilter": "Quality filter",
+    "selectItem": "Select an item",
+    "selectRecipe": "Select a recipe"
   },
+  "preferences": {
+    "bypassLanding": "Always skip landing page",
+    "convertObjectiveValues": "Convert objective values",
+    "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
+    "createSavedState": "Create new",
+    "deleteSavedState": "Delete",
+    "editSavedState": "Rename",
+    "header": "Preferences",
+    "helpTranslate": "Help translate",
+    "hide": "Hide preferences panel",
+    "hue": "Hue",
+    "language": "Language",
+    "nameSavedState": "Enter a name",
+    "resetHeader": "Are you sure?",
+    "resetMessage": "Do you want to keep your saved states?<br>Selecting no will remove ALL saved data in this browser and reload the page.",
+    "saveState": "Save state",
+    "savedStateMenuLabel": "Saved state menu",
+    "savedStates": "Saved states",
+    "selectSavedState": "Select state",
+    "theme": "Theme",
+    "tooltip": "The preferences in this panel are stored in the browser, not included in the shareable URL."
+  },
+  "rankSelect": {
+    "label": "Rank (drag to reorder)"
+  },
+  "remove": "Remove",
   "reset": "Redefinir",
+  "select": {
+    "noMatches": "No matches found"
+  },
   "settings": {
-    "addMachineTooltip": "Adicionar uma preferência de máquina",
+    "addMachine": "Add machine",
     "advanced": "Avançado",
     "allTechsResearched": "Todas as tecnologias pesquisadas",
+    "applyQueryParams": "Apply query parameters",
     "averageBeaconReceivers": "Média de receptores por transmissor",
     "averageBeaconReceiversTooltip": "Número médio de máquinas afetadas por cada transmissor; valor mínimo é 1",
-    "beaconCountTooltip": "Definir número de transmissores",
-    "beaconModuleTooltip": "Selecionar módulo do transmissor",
-    "beaconTooltip": "Definir preferência de transmissor",
     "bonuses": "Bônus",
-    "bypassLanding": "Sempre pular página de destino",
-    "convertObjectiveValues": "Converter valores dos objetivos",
-    "convertObjectiveValuesTooltip": "Se marcado, os valores dos objetivos serão convertidos quando o tipo é alterado para preservar a quantidade de itens.",
-    "createSavedState": "Criar novo",
+    "copyQueryParams": "Copy current query parameters",
     "defaultCargoWagon": "Vagão de carga padrão",
     "defaultCargoWagonTooltip": "Selecione o vagão de carga a ser utilizado por todos os itens",
     "defaultFluidWagon": "Vagão de fluido padrão",
@@ -369,69 +408,45 @@
     "defaultStackTooltip": "Selecione o tamanho padrão da pilha nas esteiras",
     "defaultTransportBelt": "Esteira padrão",
     "defaultTransportBeltTooltip": "Selecione a esteira padrão a ser utilizada por todos os itens",
-    "deleteSavedState": "Deletar",
-    "disablePaginator": "Desabilitar paginação de lista",
-    "display": "Exibição",
-    "displayRate": "Unidades da taxa de exibição",
-    "displayRateTooltip": "Defina a unidade de tempo a ser utilizada em taxas",
-    "editSavedState": "Renomear",
     "estimateBeaconPowerUsage": "Estimar uso de energia do transmissor",
     "estimateBeaconPowerUsageTooltip": "Habilite para estimar o uso de energia dos transmissores, baseado em um número médio estimado de receptores por transmissor",
     "factory": "Fábrica",
     "flowRateUnit": "u/seg",
     "fuelRank": "Combustíveis preferidos",
+    "fuelRankEmpty": "No fuels selected",
     "fuelRankTooltip": "Selecionar a ordem dos combustíveis preferidos a ser utilizada onde aplicável",
-    "fuelTooltip": "Selecionar combustível",
     "gameTooltip": "Selecione qual calculadora de jogo usar, ou use os links na barra de título",
     "header": "Configurações",
-    "helpTranslate": "Ajude a traduzir",
-    "inserterCapacity": "Capacidade dos insersores",
-    "inserterCapacityTooltip": "Inserir o nível atual de bônus de capacidade de insersores; esta configuração afeta exclusivamente as estimativas de uso de insersores",
-    "inserterTarget": "Alvo do insersor",
-    "inserterTargetTooltip": "Selecione o alvo do insersor",
+    "hide": "Hide settings panel",
     "itemsExcluded": "{{ count }} itens excluídos",
-    "itemsHeader": "Definir itens inclusos",
     "itemsTooltip": "Clique para modificar quais itens estão inclusos. Itens excluídos não serão produzidos na solução.",
-    "language": "Idioma",
-    "languageTooltip": "Selecionar idioma",
     "locations": "Localizações",
     "locationsTooltip": "Selecione as localizações permitidas para receitas e máquinas",
-    "machineDefaults": "Padrões de máquina",
+    "machineRank": "Preferred machines",
     "machineTooltip": "Selecionar preferência de máquina",
-    "maxQuality": "Qualidade máxima",
     "maximizeType": "Tipo de valor a maximizar",
     "maximizeTypeTooltip": "Selecione o tipo de valor utilizado para o objetivo maximizar",
     "miningProductivity": "Produtividade de mineração",
     "miningProductivityTooltip": "Inserir a porcentagem de bônus de produtividade de mineração atual; padrão é 0%",
     "miningSpeed": "Velocidade de mineração",
     "miningSpeedTooltip": "Inserir a velocidade de mineração atual com bônus; Padrão é 100%",
-    "mod": "Mod",
     "modVersions": "Versões",
-    "modifierCountTooltip": "Selecionar número de modificadores",
     "modifierRank": "Modificadores preferidos",
+    "modifierRankEmpty": "No modifiers selected",
     "modifierRankTooltip": "Selecionar a ordem dos modificadores preferidos a ser utilizada onde aplicável",
     "modifierTooltip": "Selecionar modificador",
-    "moveDown": "Mover para baixo",
-    "moveMachinePreference": "Mover preferência de máquina",
-    "moveUp": "Mover para cima",
-    "nameSavedState": "Insira um nome",
     "netProductionOnly": "Apenas produção líquida",
     "netProductionOnlyTooltip": "Se marcado, receitas que produzem e consomem o mesmo item são reduzidos apenas para a produção líquida",
-    "openColumnSettings": "Abrir configurações de coluna",
-    "openCosts": "Abrir configurações de custo",
-    "overclockTooltip": "Definir porcentagem de overclock",
     "pipeFlowRate": "Vazão do cano",
     "pipeFlowRateTooltip": "Insira a vazão do cano",
-    "powerUnit": "Unidades de energia",
-    "powerUnitTooltip": "Defina a unidade de energia a ser utilizada na coluna de energia",
     "preset": "Predefinição",
     "presetTooltip": "Selecione uma predefinição padrão de configurações de máquinas a ser utilizada",
     "proliferatorSelfSpray": "Proliferator self-spray",
     "proliferatorSelfSprayTooltip": "Select the proliferator spray applied to proliferator itself",
+    "queryParamsPlaceholder": "Paste query parameters",
     "recipeProductivity": "Bônus de produtividade de receitas",
     "recipeProductivityTooltip": "Clique para definir os bônus de produtividade para receitas melhoradas por tecnologias",
     "recipesExcluded": "{{ count }} receitas excluídas",
-    "recipesHeader": "Definir receitas inclusas",
     "recipesTooltip": "Clique para modificar quais receitas estão inclusas. Receitas excluídas não serão utilizadas na solução.",
     "removeMachinePreference": "Remover preferência de máquina",
     "requestMod": "Solicitar um mod",
@@ -439,55 +454,41 @@
     "requireMachinesOutputTooltip": "Se marcado, produção dos objetivos de máquinas serão tratados como necessários em vez de excesso.",
     "researchSpeed": "Velocidade de pesquisa",
     "researchSpeedTooltip": "Inserir o nível atual de bônus de velocidade de pesquisa; esta configuração somente afeta pesquisas",
-    "reset": "Redefinir todas as configurações",
-    "resetWarning": "Isto vai deletar todas as configurações do FactorioLab salvas neste navegador, tem certeza que deseja continuar?",
-    "saveSavedState": "Salvar",
-    "saveState": "Salvar estado",
-    "savedStates": "Estados salvos",
-    "selectSavedState": "Selecionar estado",
     "techsResearched": "{{ count }} tecnologias pesquisadas",
     "techsTooltip": "Clique para modificar quais tecnologias estão pesquisadas. Receitas bloqueadas não serão utilizadas na solução.",
-    "theme": "Tema",
-    "themeTooltip": "Selecionar tema",
-    "version": "Versão",
-    "wiki": "Wiki"
+    "tooltip": "The settings in this panel are included in the shareable URL."
   },
   "steps": {
-    "beaconEachTooltip": "Transmissores por máquina",
-    "beaconTotalTooltip": "Transmissores totais",
     "beaconsUndoTooltip": "Desfazer todas as modificações de transmissores",
+    "beltSelectTooltip": "Click to select belt and stack size",
+    "beltTooltip": "Click to select belt",
     "beltsUndoTooltip": "Desfazer todas as modificações de esteira",
     "checkedUndoTooltip": "Desfazer todas as marcações",
-    "columnSettings": "Configurações de coluna",
-    "depletion": "Esgotamento",
-    "destinations": "Destinos",
     "downloadAsCsv": "Baixar como CSV",
     "emptyMessage": "Clique em um nó no diagrama para ver detalhes",
+    "excludeItemTooltip": "Click to exclude",
     "hideDetails": "Esconder detalhes",
-    "includedRecipes": "Receitas inclusas",
-    "includedRecipesInfo": "Clique em receitas para incluí-las ou excluí-las. Receitas excluídas não serão utilizadas na solução.",
+    "includeItemTooltip": "Click to include",
     "inputs": "Entradas",
-    "inserterCountInfo": "* Insersores são calculados usando configurações de alvo/capacidade e dados experimentais da v0.18 a partir da wiki de <a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">.</a>",
     "itemsUndoTooltip": "Desfazer todos os itens excluídos",
     "machinesUndoTooltip": "Desfazer todas as modificações de máquinas",
-    "modifierCountTooltip": "Selecionar número de modificadores",
     "openNewTabTooltip": "Abrir em uma nova aba",
     "outputs": "Saídas",
     "overclockTooltip": "Porcentagem de Overclock",
+    "perMachine": "Per machine (Divide by {{ count }})",
+    "selectFuelTooltip": "Click to select fuel",
+    "selectMachineTooltip": "Click to select machine",
     "selectRecipesTooltip": "Clique para selecionar receitas inclusas para este item",
     "showDetails": "Mostrar detalhes",
-    "sources": "Fontes",
     "stepUndoTooltip": "Desfazer modificações desta etapa",
-    "time": "Tempo",
     "total": "Total",
+    "wagonTooltip": "Click to select wagon",
     "wagonsUndoTooltip": "Desfazer todas as modificações de vagões"
   },
-  "techPicker": {
+  "technologies": {
     "available": "Disponível",
     "exportCopyScript": "Copiar script do console",
     "exportFromFactorio": "Exportar do Factorio",
-    "exportMod": "Exportar mod",
-    "exportScript": "Copiar script do console",
     "exportScriptCopied": "Copiado para a área de transferência",
     "exportUseMod": "Utilizar um mod",
     "header": "Definir tecnologias pesquisadas",
@@ -499,6 +500,10 @@
     "researched": "Pesquisado",
     "showLabels": "Mostrar rótulos",
     "unlockAll": "Desbloquear tudo"
+  },
+  "versions": {
+    "mod": "Mod",
+    "version": "Version"
   },
   "yes": "Sim"
 }

@@ -23,7 +23,7 @@
     "lint": "ng lint",
     "prettier": "prettier --check .",
     "stylelint": "stylelint **/*.css",
-    "sort-i18n": "bun scripts/sort-i18n.ts",
+    "sync-i18n": "bun scripts/sync-i18n.ts",
     "minify-data": "bun scripts/minify-data.ts",
     "update-color": "bun scripts/update-color.ts",
     "update-hash": "bun scripts/update-hash.ts"

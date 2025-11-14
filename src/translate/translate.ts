@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, linkedSignal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { filter, firstValueFrom } from 'rxjs';
 
@@ -24,23 +24,26 @@ export class Translate {
 
   private readonly templateMatcher = /{{\s?([^{}\s]*)\s?}}/g;
 
-  private readonly defaultData = httpResource<LangData>(() => `i18n/en.json`);
-  private readonly currentData = httpResource<LangData>(
+  private readonly httpData = httpResource<LangData>(
     () => `i18n/${this.preferences.language()}.json`,
   );
 
-  readonly data = computed(() => {
-    const curData = this.currentData.value();
-    const defData = this.defaultData.value();
-    const result: TranslateData = {};
-    if (defData != null) this.parseLangData(result, defData);
-    if (curData != null) this.parseLangData(result, curData);
-    return result;
+  private readonly safeHttpData = computed(() => {
+    if (this.httpData.error()) return undefined;
+    return this.httpData.value();
+  });
+
+  readonly data = linkedSignal<LangData | undefined, TranslateData>({
+    source: this.safeHttpData,
+    computation: (data, previous) => {
+      if (data == null && previous) return previous.value;
+      return this.parseLangData(data);
+    },
   });
 
   load(): Promise<boolean> {
     return firstValueFrom(
-      toObservable(this.currentData.isLoading).pipe(filter((v) => v)),
+      toObservable(this.httpData.isLoading).pipe(filter((v) => v)),
     );
   }
 
@@ -59,7 +62,10 @@ export class Translate {
     );
   }
 
-  private parseLangData(result: TranslateData, data: LangData): void {
+  private parseLangData(data: LangData | undefined): TranslateData {
+    const result: TranslateData = {};
+    if (data == null) return result;
+
     const entries = Object.keys(data).map(
       (key): ParseEntry => ({ data, key, path: key }),
     );
@@ -80,5 +86,7 @@ export class Translate {
         );
       }
     }
+
+    return result;
   }
 }

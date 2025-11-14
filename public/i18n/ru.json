@@ -1,22 +1,35 @@
 {
   "app": {
     "data": "Данные",
-    "error": "Ошибка",
-    "errorDetail": "В приложении произошла ошибка",
     "factory": "Завод",
     "flow": "Поток",
     "list": "Список",
     "migrationWarning": "Предупреждение о перемещении",
-    "resetTooltip": "Нажмите чтобы сбросить",
-    "simplexSolved": "Решено, {{ time }}мс, стоимость: {{ Cost }}"
+    "simplexSolved": "Решено, {{ time }}мс, стоимость: {{ Cost }}",
+    "updateAvailable": "Update available",
+    "updateAvailableMessage": "An update is available. Would you like to reload the page to update?",
+    "updateRequired": "Update required",
+    "updateRequiredMessage": "An update is available, and the page must be reloaded to proceed."
+  },
+  "beaconsSelect": {
+    "addBeacons": "Add beacons",
+    "eachTooltip": "Beacons per machine",
+    "tooltip": "Click to select beacons",
+    "totalTooltip": "Total beacons"
+  },
+  "beltSelect": {
+    "stackTooltip": "Stack size"
   },
   "cancel": "Отмена",
+  "close": "Close",
   "columns": {
     "decimals": "Дробь",
     "example": "Пример",
     "fractions": "Дроби",
     "header": "Свои настройки",
+    "hidden": "Hidden",
     "notApplicable": "N/A",
+    "powerUnit": "Power units",
     "visibility": "Видимость"
   },
   "costs": {
@@ -31,15 +44,15 @@
     "maximizeTooltip": "Затраты на максимизацию целей (должна быть отрицательной)",
     "recipe": "Рецепт",
     "recipeTooltip": "Умножает стоимость рецептов на определенную стоимость, обычно майнинг",
+    "recycling": "Recycling",
+    "recyclingTooltip": "Multiplies cost of recycling recipes by this number",
     "surplus": "Избыток",
     "surplusTooltip": "Затраты на производство излишков",
     "unproduceable": "Непроизводимый",
     "unproduceableTooltip": "Стоимость предметов, которые невозможно изготовить ни по одному из включенных рецептов"
   },
   "data": {
-    "any": "Любой",
     "beacon": "Маяк",
-    "beaconModuleRank": "Ранг модуля маяка",
     "beacons": "Маяки",
     "belt": "Конвеер",
     "beltSpeed": "Скорость (предметов/с)",
@@ -57,7 +70,6 @@
     "cost": "Расходы",
     "count": "Считать",
     "craftingSpeed": "Скорость крафта",
-    "currentPageReportTemplate": "Показаны {first}–{last} из {totalRecords}",
     "dimensions": "Размеры",
     "disallowedEffects": "Запрещенные эффекты",
     "efficiency": "Эффективность",
@@ -75,9 +87,9 @@
     "fuelValue": "Энергитическая ценность топлива",
     "fuels": "топливо",
     "ingredients": "Ингредиенты",
-    "item": "Предмет",
     "itemSettings": "Настройки элемента",
     "items": "Предметы",
+    "locations": "Locations",
     "machine": "Машина",
     "machineSettings": "Настройки машины",
     "machines": "Машины",
@@ -90,8 +102,6 @@
     "notFound": "Не найден",
     "overclock": "Разгон",
     "pipe": "Труба",
-    "pipeFlowRate": "Скорость потока (предметов/с)",
-    "pipes": "Трубы",
     "pollution": "Загрязнение",
     "prerequisites": "Предварительные условия",
     "producedByRecipes": "Изготовлено по рецептам",
@@ -100,6 +110,8 @@
     "productivity": "Производительность",
     "products": "Продукты",
     "proliferator": "Распространитель",
+    "pumps": "Pumps",
+    "quality": "Quality",
     "range": "Диапазон",
     "recipe": "Рецепт",
     "recipeSettings": "Настройки рецепта",
@@ -108,7 +120,6 @@
     "rocketPart": "Часть ракеты",
     "rocketPartsRequired": "Требуются детали ракеты",
     "rocketSilo": "Ракетная шахта",
-    "selectedLabel": "{0} выбрано",
     "speed": "Скорость",
     "sprays": "Спреи",
     "stackSize": "Размер стака",
@@ -117,12 +128,19 @@
     "technology": "Технологии",
     "time": "Время (с)",
     "unlockedBy": "Разблокировано пользователем",
-    "unlockedRecipes": "Разблокированные рецепты",
-    "versions": "Версии"
+    "unlockedRecipes": "Разблокированные рецепты"
+  },
+  "filter": "Filter",
+  "flow": {
+    "downloadAsJson": "Download as JSON",
+    "flowSettings": "Flow settings"
   },
   "flowSettings": {
     "diagram": "Тип визуализации",
     "diagramTooltip": "Выберите, какой тип визуализации потока использовать",
+    "elkAlgorithm": "Layout algorithm",
+    "elkAlgorithmTooltip": "Select which ELK layout algorithm to use for the box-line layout",
+    "header": "Flow settings",
     "hideExcluded": "Скрыть исключенные элементы",
     "hideExcludedTooltip": "Если этот флажок установлен, исключенные элементы также будут исключены из блок-схемы",
     "linkSize": "Размер ссылки",
@@ -133,24 +151,37 @@
     "sankeyAlignTooltip": "Выберите опцию, чтобы определить, как выровнены узлы Санки"
   },
   "game": "Игра",
+  "header": {
+    "discord": "Discord",
+    "resetTooltip": "Click to reset",
+    "selectGame": "Select game",
+    "source": "Source",
+    "sponsor": "Sponsor"
+  },
+  "inputNumber": {
+    "decrement": "Decrement",
+    "increment": "Increment"
+  },
   "landing": {
-    "addItems": "Добавить предметы",
-    "addMachines": "Добавить машины",
     "bypass": "Больше не показывать этот экран",
-    "help": "Помогите мне начать",
     "loadLastState": "Загрузить последнюю конфигурацию",
     "loadSavedState": "Загрузить сохраненную конфигурацию",
-    "selectARecipe": "Выбрать рецепт",
-    "selectAnItem": "Выбрать предмет",
     "skip": "Пропустить",
     "welcome": "Добро пожаловать в <b>FactorioLab</b>! Давай приступим к работе."
   },
   "modSet": "Набор модов",
   "modSetTooltip": "Выберите, какую версию или набор модов в Factorio использовать",
+  "modules": {
+    "eachTooltip": "Number of modules",
+    "moduleTooltip": "Click to select modifier"
+  },
+  "modulesSelect": {
+    "tooltip": "Click to select modifiers"
+  },
+  "no": "No",
   "none": "Ничего",
   "objectives": {
-    "addItems": "Добавить элементы",
-    "addMachines": "Добавить машины",
+    "displayRate": "Display rate units",
     "error": "Решение не найдено",
     "errorDetail": "Проверьте цели <b>Ограничить</b> и <b>Максимизировать</b> и активные рецепты. ",
     "errorInfeasible": "Решение невозможно",
@@ -158,18 +189,19 @@
     "errorMaximizeExcluded": "Невозможно использовать <b>Развернуть</b> с исключенной целью. Выберите другую цель или включите текущую цель.",
     "errorNoLimits": "Цели <b>Ограничения</b> не были добавлены. Добавьте цели <b>Ограничить</b>, чтобы ограничить цель <b>Максимизировать</b>.",
     "errorSimplexInfo": "<i>Код возврата: {{ returnCode }}, статус Simplex: {{ simplexStatus }}</i>",
+    "errorSimplexUnboundedAddRecipeLimit": "Add a limit for this recipe",
+    "errorSimplexUnboundedRecipe": "The solver indicates maximize objectives are unlimited due to the recipe:",
     "errorUnbounded": "Решение неограничено",
     "errorUnboundedDetail": "Цели <b>Ограничения</b> могут быть недостаточно строгими для целей <b>Максимизации</b>.",
     "pauseTooltip": "Приостановить/возобновить вычисления",
     "pausedMessage": "Вычисления приостановлены. Для возобновления используйте кнопку воспроизведения выше.",
+    "playTooltip": "Resume calculations",
+    "quantity": "Quantity",
     "removeTooltip": "Удалить цель",
-    "selectARecipe": "Выберите рецепт",
-    "selectAnItem": "Выберите элемент",
-    "selectDisplayRate": "Выберите скорость отображения",
+    "target": "Target",
     "title": "Объект",
-    "typeTooltip": "Выберите тип цели",
-    "unitTooltip": "Выберите юниты",
-    "valueTooltip": "Установить значение"
+    "type": "Type",
+    "units": "Units"
   },
   "ok": "OK",
   "options": {
@@ -186,6 +218,13 @@
       "tree": "Дерево",
       "wagons": "Вагоны"
     },
+    "detailSection": {
+      "depletion": "Resource depletion",
+      "destinations": "Item destinations",
+      "inputs": "Recipe inputs",
+      "outputs": "Recipe outputs",
+      "sources": "Item sources"
+    },
     "displayRate": {
       "perHour": "Единиц в час",
       "perHourSuffix": "/ч",
@@ -193,6 +232,15 @@
       "perMinuteSuffix": "/м",
       "perSecond": "Единиц в секунду",
       "perSecondSuffix": "/с"
+    },
+    "elkAlgorithm": {
+      "force": "Force",
+      "layered": "Layered",
+      "stress": "Stress"
+    },
+    "flowDiagram": {
+      "boxLine": "Box-line",
+      "sankey": "Sankey"
     },
     "game": {
       "captainOfIndustry": "Captain of Industry",
@@ -204,18 +252,16 @@
       "mindustry": "Mindustry",
       "outworldStation": "Outworld Station",
       "satisfactory": "Satisfactory",
+      "skyformer": "SkyFormer",
       "techtonica": "Techtonica"
     },
-    "inserterCapacity": {
-      "capacity0": "Нет бонуса за емкость",
-      "capacity2": "Бонус емкости 2",
-      "capacity7": "Бонус емкости 2"
-    },
-    "inserterTarget": {
-      "chest": "Сундук",
-      "expressTransportBelt": "Экспресс-конвейер",
-      "fastTransportBelt": "Быстрый конвейер",
-      "transportBelt": "Конвейер"
+    "linkValue": {
+      "belts": "Belts",
+      "items": "Items",
+      "machines": "Machines",
+      "none": "None",
+      "percent": "Percent",
+      "wagons": "Wagons"
     },
     "maximizeType": {
       "ratio": "Соотношение",
@@ -223,9 +269,13 @@
     },
     "objectiveType": {
       "input": "Вход",
+      "inputTooltip": "I am already producing this quantity<br><span class=\"text-sm italic\">(don't solve for it)</span>",
       "limit": "Лимит",
+      "limitTooltip": "I want to limit this production<br><span class=\"text-sm italic\">(usually for maximize)</span>",
       "maximize": "Максимизировать",
-      "output": "Выход"
+      "maximizeTooltip": "I want to maximize this production<br><span class=\"text-sm italic\">(requires a limit)</span>",
+      "output": "Выход",
+      "outputTooltip": "I want to produce this quantity<br><span class=\"text-sm italic\">(default option)</span>"
     },
     "objectiveUnit": {
       "belts": "Конвейеры",
@@ -243,6 +293,12 @@
       "wagonsPerMinute": "Вагонов/м",
       "wagonsPerSecond": "Вагонов/с"
     },
+    "powerUnit": {
+      "GW": "GW",
+      "MW": "MW",
+      "auto": "Auto",
+      "kW": "kW"
+    },
     "preset": {
       "beacon12": "12 Маяков",
       "beacon2": "2 Маяков",
@@ -251,6 +307,14 @@
       "modules": "Модули",
       "proliferated": "Распространенный",
       "upgraded": "Улучшено"
+    },
+    "quality": {
+      "any": "Any",
+      "epic": "Epic",
+      "legendary": "Legendary",
+      "normal": "Normal",
+      "rare": "Rare",
+      "uncommon": "Uncommon"
     },
     "researchBonus": {
       "speed0": "Без бонуса иследований",
@@ -261,74 +325,104 @@
       "speed5": "Скорость иследования 5",
       "speed6": "Скорость иследования 6"
     },
+    "sankeyAlign": {
+      "center": "Center",
+      "justify": "Justify",
+      "left": "Left",
+      "right": "Right"
+    },
     "simplexResultType": {
       "failed": "Неудача",
       "paused": "Пауза",
       "skipped": "Пропущено",
       "solved": "Решено"
     },
-    "stepDetailTab": {
-      "item": "Предмет",
-      "machine": "Машины",
-      "recipe": "Рецепт",
-      "recipes": "Рецепты"
-    },
     "theme": {
-      "black": "Чёрная",
       "dark": "Тёмная (По умолчанию)",
-      "light": "Светлая"
+      "light": "Светлая",
+      "system": "System"
     }
   },
-  "picker": {
-    "includeAll": "Включить все"
+  "paginator": {
+    "first": "First page",
+    "label": "Showing {{ first }} to {{ last }} of {{ total }}",
+    "last": "Last page",
+    "next": "Next page",
+    "previous": "Previous page"
   },
+  "picker": {
+    "includeAll": "Включить все",
+    "includeAllRecycling": "Include all recycling",
+    "includedItems": "Set included items",
+    "includedRecipes": "Set included recipes",
+    "qualityFilter": "Quality filter",
+    "selectItem": "Select an item",
+    "selectRecipe": "Select a recipe"
+  },
+  "preferences": {
+    "bypassLanding": "Always skip landing page",
+    "convertObjectiveValues": "Convert objective values",
+    "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
+    "createSavedState": "Create new",
+    "deleteSavedState": "Delete",
+    "editSavedState": "Rename",
+    "header": "Preferences",
+    "helpTranslate": "Help translate",
+    "hide": "Hide preferences panel",
+    "hue": "Hue",
+    "language": "Language",
+    "nameSavedState": "Enter a name",
+    "resetHeader": "Are you sure?",
+    "resetMessage": "Do you want to keep your saved states?<br>Selecting no will remove ALL saved data in this browser and reload the page.",
+    "saveState": "Save state",
+    "savedStateMenuLabel": "Saved state menu",
+    "savedStates": "Saved states",
+    "selectSavedState": "Select state",
+    "theme": "Theme",
+    "tooltip": "The preferences in this panel are stored in the browser, not included in the shareable URL."
+  },
+  "rankSelect": {
+    "label": "Rank (drag to reorder)"
+  },
+  "remove": "Remove",
   "reset": "Сброс",
+  "select": {
+    "noMatches": "No matches found"
+  },
   "settings": {
-    "addMachineTooltip": "Добавить предпочитаемые машины",
+    "addMachine": "Add machine",
     "advanced": "Продвинутые настройки",
     "allTechsResearched": "Все технологии исследованы",
+    "applyQueryParams": "Apply query parameters",
     "averageBeaconReceivers": "Среднее количество машин на маяк",
     "averageBeaconReceiversTooltip": "Среднее количество машин, на которые влияет каждый маяк; минимальное значение 1",
-    "beaconCountTooltip": "Установить количество маяков",
-    "beaconModuleTooltip": "Выберите модуль маяка",
-    "beaconTooltip": "Выберите предпочитаемые маяки",
     "bonuses": "Бонусы",
-    "bypassLanding": "Всегда пропускайте целевую страницу",
-    "createSavedState": "Создать новую",
+    "copyQueryParams": "Copy current query parameters",
     "defaultCargoWagon": "Грузовой вагон по умолчанию",
     "defaultCargoWagonTooltip": "Выберите грузовой вагон по умолчанию, который будет использоваться всеми предметами",
     "defaultFluidWagon": "Жидкостный фургон по умолчанию",
     "defaultFluidWagonTooltip": "Выберите жидкостный вагон по умолчанию, который будет использоваться всеми жидкостями",
     "defaultPipe": "Труба по умолчанию",
     "defaultPipeTooltip": "Выберите трубу по умолчанию, которая будет использоваться всеми жидкостями",
+    "defaultStack": "Default stack size",
+    "defaultStackTooltip": "Select the default stack size on belts",
     "defaultTransportBelt": "Конвейер по умолчанию",
     "defaultTransportBeltTooltip": "Выберите конвейер по умолчанию, который будет использоваться всеми предметами",
-    "deleteSavedState": "Удалить",
-    "disablePaginator": "Отключить разбивку по страницам списка",
-    "display": "Отображение",
-    "displayRate": "Отображение единиц скорости",
-    "displayRateTooltip": "Установите единицу времени для использования в расчетах скорости",
-    "editSavedState": "Переиминовать",
     "estimateBeaconPowerUsage": "Оценка энергопотребления маяков",
     "estimateBeaconPowerUsageTooltip": "Включите чтобыв результате отображалось энергопотребление маяков на основе примерного среднего количества приемников на маяк",
     "factory": "Фабрика",
     "flowRateUnit": "Предмет/с",
     "fuelRank": "Предпочтительное топливо",
+    "fuelRankEmpty": "No fuels selected",
     "fuelRankTooltip": "Выберите порядок предпочтительного топлива, которое будет использоваться там, где это применимо",
-    "fuelTooltip": "Выберите топливо",
     "gameTooltip": "Выберите, какой игровой калькулятор использовать, или воспользуйтесь ссылками в строке заголовка",
     "header": "Конфигурации",
-    "helpTranslate": "Помогите перевести",
-    "inserterCapacity": "Бонус ёмкости манипулятора",
-    "inserterCapacityTooltip": "Введите текущий уровень бонуса ёмкости манипулятора; этот параметр влияет только на оценки количества манипуляторов",
-    "inserterTarget": "Манипулятор",
-    "inserterTargetTooltip": "Выберите манипулятор",
+    "hide": "Hide settings panel",
     "itemsExcluded": "{{ count }} предметы исключены",
-    "itemsHeader": "Установить включенные элементы",
     "itemsTooltip": "Нажмите, чтобы изменить включенные предметы. Исключенные предметы не будут создаваться в решении.",
-    "language": "Язык",
-    "languageTooltip": "Выберите язык",
-    "machineDefaults": "Настройки машины по умолчанию",
+    "locations": "Locations",
+    "locationsTooltip": "Select the allowed locations for recipes and machines",
+    "machineRank": "Preferred machines",
     "machineTooltip": "Выберите предпочитаемые машины",
     "maximizeType": "Максимизировать тип значения",
     "maximizeTypeTooltip": "Выберите тип значения «Максимизировать цель»",
@@ -336,83 +430,65 @@
     "miningProductivityTooltip": "Введите текущий процент бонуса за производительность майнинга; по умолчанию 0%",
     "miningSpeed": "Скорость добычи",
     "miningSpeedTooltip": "Введите текущую скорость майнинга с бонусом; По умолчанию 100%.",
-    "mod": "Мод",
     "modVersions": "Версии",
-    "modifierCountTooltip": "Выберите количество модификаторов",
+    "modifierRank": "Preferred modifiers",
+    "modifierRankEmpty": "No modifiers selected",
+    "modifierRankTooltip": "Select the order of preferred modifiers to be used where applicable",
     "modifierTooltip": "Выберите модификатор",
-    "moveDown": "Вниз",
-    "moveMachinePreference": "Переместить настройки машины",
-    "moveUp": "Вверх",
-    "nameSavedState": "Введите имя",
     "netProductionOnly": "Только чистая продукция",
     "netProductionOnlyTooltip": "Если этот флажок установлен, рецепты, которые производят и потребляют один и тот же предмет, сокращаются только до чистого производства",
-    "openColumnSettings": "Открыть настройки столбца",
-    "openCosts": "Открыть настройки стоимости",
-    "overclockTooltip": "Установить процент разгона",
     "pipeFlowRate": "Расход трубы",
     "pipeFlowRateTooltip": "Введите расход трубы",
-    "powerUnit": "Единица измерения энергии",
-    "powerUnitTooltip": "Установите единицу измерения энегии в столбце энергопотребления",
     "preset": "Пресет",
     "presetTooltip": "Выберите пресет настроек машины по умолчанию для использования.",
     "proliferatorSelfSpray": "Пролифератор спрей",
     "proliferatorSelfSprayTooltip": "Выберите спрей от пролифератора, наносимый на сам пролифератор.",
+    "queryParamsPlaceholder": "Paste query parameters",
+    "recipeProductivity": "Recipe productivity bonuses",
+    "recipeProductivityTooltip": "Click to set productivity bonuses for recipes upgraded by technology",
     "recipesExcluded": "{{ count }} Установить включенные элементы",
-    "recipesHeader": "Набор включенных рецептов",
     "recipesTooltip": "Нажмите, чтобы изменить включенные рецепты. Исключенные рецепты не будут использоваться в решении.",
     "removeMachinePreference": "Удалить предпочитаемые машины",
     "requestMod": "Запросить мод",
+    "requireMachinesOutput": "Require machines output",
+    "requireMachinesOutputTooltip": "If checked, output from machine objectives will be treated as required instead of surplus.",
     "researchSpeed": "Скорость исследования",
     "researchSpeedTooltip": "Введите текущий уровень бонуса скорости исследования; эта настройка влияет только на исследования",
-    "reset": "Удалить все конфигурации",
-    "resetWarning": "Это приведет к удалению всех сохраненных настроек FactorioLab в этом браузере. Вы уверены, что хотите продолжить?",
-    "saveSavedState": "Сохранить",
-    "saveState": "Сохранить конфигурацию",
-    "savedStates": "Сохраненные конфигурации",
-    "selectSavedState": "Выберите конфигурацию",
-    "surplusMachinesOutput": "Избыточный выпуск машин",
-    "surplusMachinesOutputTooltip": "Если этот флажок установлен, производительность машинных целей будет считаться избыточной, а не необходимой.",
     "techsResearched": "{{ count }} исследовано технологий",
     "techsTooltip": "Нажмите, чтобы изменить исследуемые технологии. Заблокированные рецепты не будут использоваться в решении.",
-    "theme": "Тема",
-    "themeTooltip": "Выберите тему",
-    "version": "Версия"
+    "tooltip": "The settings in this panel are included in the shareable URL."
   },
   "steps": {
-    "beaconEachTooltip": "Маяков на машину",
-    "beaconTotalTooltip": "Всего маяков",
     "beaconsUndoTooltip": "Отменить все изменения маяков",
+    "beltSelectTooltip": "Click to select belt and stack size",
+    "beltTooltip": "Click to select belt",
     "beltsUndoTooltip": "Отменить все изменения конвееров",
     "checkedUndoTooltip": "Отменить все галочки",
-    "columnSettings": "Открыть настройки столбца",
-    "depletion": "Истощение",
-    "destinations": "Направления",
     "downloadAsCsv": "Загрузить список в формате CSV",
     "emptyMessage": "Нажмите на узел на диаграмме, чтобы просмотреть подробности",
+    "excludeItemTooltip": "Click to exclude",
     "hideDetails": "Скрыть детали",
-    "includedRecipes": "Включенные рецепты",
-    "includedRecipesInfo": "Нажмите на рецепты, чтобы включить или исключить их. Исключенные рецепты не будут использоваться в решении.",
+    "includeItemTooltip": "Click to include",
     "inputs": "Входы",
-    "inserterCountInfo": "* Инсертеры рассчитываются с использованием настроек цели/емкости и экспериментальных данных 0,18 из <a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">wiki .</a>",
     "itemsUndoTooltip": "Отменить все исключенные элементы",
     "machinesUndoTooltip": "Отменить все изменения машин",
-    "modifierCountTooltip": "Выберите количество модулей",
     "openNewTabTooltip": "Открыть в новой вкладке",
     "outputs": "Выходы",
-    "overlockTooltip": "Процент разгона",
+    "overclockTooltip": "Overclock percentage",
+    "perMachine": "Per machine (Divide by {{ count }})",
+    "selectFuelTooltip": "Click to select fuel",
+    "selectMachineTooltip": "Click to select machine",
+    "selectRecipesTooltip": "Click to select recipes",
     "showDetails": "Показать детали",
-    "sources": "Источники",
     "stepUndoTooltip": "Отменить изменения этого шага",
-    "time": "Время",
     "total": "Итог",
+    "wagonTooltip": "Click to select wagon",
     "wagonsUndoTooltip": "Отменить все изменения вагонов"
   },
-  "techPicker": {
+  "technologies": {
     "available": "Доступные",
     "exportCopyScript": "Копировать консольный скрипт",
     "exportFromFactorio": "Экспорт из Factorio",
-    "exportMod": "Экспорт мода",
-    "exportScript": "Копировать консольный скрипт",
     "exportScriptCopied": "Скопировано в буфер обмена",
     "exportUseMod": "Использовать мод",
     "header": "Установить исследованные технологии",
@@ -424,6 +500,10 @@
     "researched": "Изученные",
     "showLabels": "Показать названия",
     "unlockAll": "Открыть всё"
+  },
+  "versions": {
+    "mod": "Mod",
+    "version": "Version"
   },
   "yes": "Да"
 }

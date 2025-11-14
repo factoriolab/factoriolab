@@ -4,21 +4,30 @@
     "factory": "Fabrik",
     "flow": "Flow-Ansicht",
     "list": "Listenansicht",
-    "migrationWarning": "Warnung Migration"
+    "migrationWarning": "Warnung Migration",
+    "simplexSolved": "Solved, {{ time }}ms, cost: {{ cost }}",
+    "updateAvailable": "Update available",
+    "updateAvailableMessage": "An update is available. Would you like to reload the page to update?",
+    "updateRequired": "Update required",
+    "updateRequiredMessage": "An update is available, and the page must be reloaded to proceed."
   },
   "beaconsSelect": {
+    "addBeacons": "Add beacons",
     "eachTooltip": "Effektverteiler pro Maschine",
+    "tooltip": "Click to select beacons",
     "totalTooltip": "Totalanzahl an Effektverteilern"
   },
   "beltSelect": {
     "stackTooltip": "Stackgrösse"
   },
   "cancel": "Abbrechen",
+  "close": "Close",
   "columns": {
     "decimals": "Dezimalstellen",
     "example": "Beispiel",
     "fractions": "Brüche",
     "header": "Spalteneinstellungen",
+    "hidden": "Hidden",
     "notApplicable": "N/A",
     "powerUnit": "Stromeinheiten",
     "visibility": "Sichtbarkeit"
@@ -26,6 +35,8 @@
   "costs": {
     "excluded": "Exkludiert",
     "excludedTooltip": "Kosten von Items, die explizit exkludiert wurden",
+    "footprint": "Footprint",
+    "footprintTooltip": "Multiplies cost by the tile area of machines",
     "header": "Einstellungen für Kostenberechnung",
     "machine": "Maschine",
     "machineTooltip": "Multipliziert Kosten von physischen Maschinen, die Rezepte ausführen",
@@ -33,6 +44,8 @@
     "maximizeTooltip": "Kosten von Maximierungsziel (muss negativ sein)",
     "recipe": "Rezept",
     "recipeTooltip": "Multipliziert Rezeptkosten mit definierten Kosten, normalerweise Bergbau",
+    "recycling": "Recycling",
+    "recyclingTooltip": "Multiplies cost of recycling recipes by this number",
     "surplus": "Überschuss",
     "surplusTooltip": "Kosten, um Itemüberschuss zu produzieren",
     "unproduceable": "Nicht produzierbar",
@@ -53,15 +66,18 @@
     "checked": "Aktiviert",
     "collection": "Sammlung",
     "consumedByRecipes": "Von Rezepten verbraucht",
+    "consumption": "Consumption",
     "cost": "Kosten",
     "count": "Anzahl",
     "craftingSpeed": "Herstelltempo",
+    "dimensions": "Dimensions",
     "disallowedEffects": "Unerlaubte Effekte",
     "efficiency": "Effizienz",
     "energyConsumption": "Energieverbrauch",
     "energyDrain": "Energieabfluss",
     "energySource": "Energiequelle",
     "excluded": "Exkludiert",
+    "flowRate": "Flow rate",
     "fluidCapacity": "Flüssigkeitskapazität",
     "fluidWagon": "Tankwagon",
     "fluidWagons": "Tankwagons",
@@ -71,9 +87,9 @@
     "fuelValue": "Brennstoffwert",
     "fuels": "Brennstoffe",
     "ingredients": "Bestandteile",
-    "item": "Item",
     "itemSettings": "Itemeinstellungen",
     "items": "Items",
+    "locations": "Locations",
     "machine": "Maschine",
     "machineSettings": "Maschineneinstellungen",
     "machines": "Maschinen",
@@ -85,7 +101,7 @@
     "name": "Name",
     "notFound": "Nicht gefunden",
     "overclock": "Übertaktung",
-    "pumps": "Leitungen",
+    "pipe": "Pipe",
     "pollution": "Umweltverschmutzung",
     "prerequisites": "Bedingungen",
     "producedByRecipes": "Von Rezepten hergestellt",
@@ -94,6 +110,8 @@
     "productivity": "Produktivität",
     "products": "Produkte",
     "proliferator": "Proliferator",
+    "pumps": "Leitungen",
+    "quality": "Quality",
     "range": "Reichweite",
     "recipe": "Rezept",
     "recipeSettings": "Rezepteinstellungen",
@@ -112,7 +130,38 @@
     "unlockedBy": "Freigeschaltet von",
     "unlockedRecipes": "Entsperrte Rezepte"
   },
+  "filter": "Filter",
+  "flow": {
+    "downloadAsJson": "Download as JSON",
+    "flowSettings": "Flow settings"
+  },
+  "flowSettings": {
+    "diagram": "Visualization Type",
+    "diagramTooltip": "Select which type of flow visualization to use",
+    "elkAlgorithm": "Layout algorithm",
+    "elkAlgorithmTooltip": "Select which ELK layout algorithm to use for the box-line layout",
+    "header": "Flow settings",
+    "hideExcluded": "Hide excluded items",
+    "hideExcludedTooltip": "If checked, excluded items will also be excluded from the flow diagram",
+    "linkSize": "Link Size",
+    "linkSizeTooltip": "Select which property to use to determine flow link sizes",
+    "linkText": "Link Text",
+    "linkTextTooltip": "Select which property to display as text on flow links",
+    "sankeyAlign": "Sankey Align",
+    "sankeyAlignTooltip": "Select option to determine how sankey nodes are aligned"
+  },
   "game": "Spiel",
+  "header": {
+    "discord": "Discord",
+    "resetTooltip": "Click to reset",
+    "selectGame": "Select game",
+    "source": "Source",
+    "sponsor": "Sponsor"
+  },
+  "inputNumber": {
+    "decrement": "Decrement",
+    "increment": "Increment"
+  },
   "landing": {
     "bypass": "Zeige diese Meldung in Zukunft nicht wieder",
     "loadLastState": "Lade letzte Speicherung",
@@ -122,6 +171,14 @@
   },
   "modSet": "Mod gesetzt",
   "modSetTooltip": "Wähle deine Version von Factorio oder die gewünschten Mods",
+  "modules": {
+    "eachTooltip": "Number of modules",
+    "moduleTooltip": "Click to select modifier"
+  },
+  "modulesSelect": {
+    "tooltip": "Click to select modifiers"
+  },
+  "no": "No",
   "none": "Keine Resultate",
   "objectives": {
     "displayRate": "Einheiten für Raten",
@@ -132,11 +189,19 @@
     "errorMaximizeExcluded": "<b>Maximize</b> Ziele können nicht mit einem exkludierten Ziel verwendet werden. Wähle ein anderes Ziel oder inkludiere das aktuelle Ziel.",
     "errorNoLimits": "Keine <b>Limit</b> Ziele hinzugefügt. Füge <b>Limit</b> Ziele hinzu um das <b>Maximize</b> Ziel einzuschränken.",
     "errorSimplexInfo": "<i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>",
+    "errorSimplexUnboundedAddRecipeLimit": "Add a limit for this recipe",
+    "errorSimplexUnboundedRecipe": "The solver indicates maximize objectives are unlimited due to the recipe:",
     "errorUnbounded": "Lösung ist unbegrenzt",
     "errorUnboundedDetail": "<b>Limit</b> Ziele sind möglicherweise nicht restriktiv genug für <b>Maximize</b> Ziele.",
     "pauseTooltip": "Berechnung pausieren/fortfahren",
+    "pausedMessage": "Calculations are paused. Use play button above to resume.",
+    "playTooltip": "Resume calculations",
+    "quantity": "Quantity",
     "removeTooltip": "Ziel entfernen",
-    "title": "Ziele"
+    "target": "Target",
+    "title": "Ziele",
+    "type": "Type",
+    "units": "Units"
   },
   "ok": "OK",
   "options": {
@@ -168,14 +233,35 @@
       "perSecond": "Teile pro Sekunde",
       "perSecondSuffix": "/s"
     },
+    "elkAlgorithm": {
+      "force": "Force",
+      "layered": "Layered",
+      "stress": "Stress"
+    },
+    "flowDiagram": {
+      "boxLine": "Box-line",
+      "sankey": "Sankey"
+    },
     "game": {
       "captainOfIndustry": "Captain of Industry",
       "dysonSphereProgram": "Dyson Sphere Program",
+      "factorY": "Factor Y",
       "factorio": "Factorio",
+      "finalFactory": "Final Factory",
       "foundry": "Foundry",
+      "mindustry": "Mindustry",
       "outworldStation": "Outworld Station",
       "satisfactory": "Satisfactory",
+      "skyformer": "SkyFormer",
       "techtonica": "Techtonica"
+    },
+    "linkValue": {
+      "belts": "Belts",
+      "items": "Items",
+      "machines": "Machines",
+      "none": "None",
+      "percent": "Percent",
+      "wagons": "Wagons"
     },
     "maximizeType": {
       "ratio": "Verhältnis",
@@ -183,9 +269,13 @@
     },
     "objectiveType": {
       "input": "Eingang",
+      "inputTooltip": "I am already producing this quantity<br><span class=\"text-sm italic\">(don't solve for it)</span>",
       "limit": "Limit",
+      "limitTooltip": "I want to limit this production<br><span class=\"text-sm italic\">(usually for maximize)</span>",
       "maximize": "Maximiere",
-      "output": "Ausgang"
+      "maximizeTooltip": "I want to maximize this production<br><span class=\"text-sm italic\">(requires a limit)</span>",
+      "output": "Ausgang",
+      "outputTooltip": "I want to produce this quantity<br><span class=\"text-sm italic\">(default option)</span>"
     },
     "objectiveUnit": {
       "belts": "Förderbänder",
@@ -203,6 +293,12 @@
       "wagonsPerMinute": "Wagons/min",
       "wagonsPerSecond": "Wagons/s"
     },
+    "powerUnit": {
+      "GW": "GW",
+      "MW": "MW",
+      "auto": "Auto",
+      "kW": "kW"
+    },
     "preset": {
       "beacon12": "12 Effektverteiler",
       "beacon2": "2 Effektverteiler",
@@ -211,6 +307,14 @@
       "modules": "Module",
       "proliferated": "Vermehrt",
       "upgraded": "mit Upgrade"
+    },
+    "quality": {
+      "any": "Any",
+      "epic": "Epic",
+      "legendary": "Legendary",
+      "normal": "Normal",
+      "rare": "Rare",
+      "uncommon": "Uncommon"
     },
     "researchBonus": {
       "speed0": "Kein Forschungsbonus",
@@ -221,41 +325,87 @@
       "speed5": "Forschungsgeschwindigkeit 5",
       "speed6": "Forschungsgeschwindigkeit 6"
     },
+    "sankeyAlign": {
+      "center": "Center",
+      "justify": "Justify",
+      "left": "Left",
+      "right": "Right"
+    },
+    "simplexResultType": {
+      "failed": "Failed",
+      "paused": "Paused",
+      "skipped": "Skipped",
+      "solved": "Solved"
+    },
     "theme": {
       "dark": "Dunkel",
-      "light": "Hell"
+      "light": "Hell",
+      "system": "System"
     }
   },
+  "paginator": {
+    "first": "First page",
+    "label": "Showing {{ first }} to {{ last }} of {{ total }}",
+    "last": "Last page",
+    "next": "Next page",
+    "previous": "Previous page"
+  },
   "picker": {
-    "includeAll": "Inkludiere alle"
+    "includeAll": "Inkludiere alle",
+    "includeAllRecycling": "Include all recycling",
+    "includedItems": "Set included items",
+    "includedRecipes": "Set included recipes",
+    "qualityFilter": "Quality filter",
+    "selectItem": "Select an item",
+    "selectRecipe": "Select a recipe"
   },
   "preferences": {
     "bypassLanding": "Startseite immer überspringen",
+    "convertObjectiveValues": "Convert objective values",
+    "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
     "createSavedState": "Erstellen",
     "deleteSavedState": "Löschen",
     "editSavedState": "Umbenennen",
+    "header": "Preferences",
     "helpTranslate": "Beim Übersetzen mithelfen",
+    "hide": "Hide preferences panel",
+    "hue": "Hue",
     "language": "Sprache",
     "nameSavedState": "Namen eingeben",
+    "resetHeader": "Are you sure?",
+    "resetMessage": "Do you want to keep your saved states?<br>Selecting no will remove ALL saved data in this browser and reload the page.",
     "saveState": "Speichere Speicherung",
+    "savedStateMenuLabel": "Saved state menu",
     "savedStates": "Speicherungen",
     "selectSavedState": "Wähle Speicherung",
-    "theme": "Thema"
+    "theme": "Thema",
+    "tooltip": "The preferences in this panel are stored in the browser, not included in the shareable URL."
   },
+  "rankSelect": {
+    "label": "Rank (drag to reorder)"
+  },
+  "remove": "Remove",
   "reset": "Zurücksetzen",
+  "select": {
+    "noMatches": "No matches found"
+  },
   "settings": {
-    "addMachineTooltip": "Maschinenpräferenz hinzufügen",
+    "addMachine": "Add machine",
     "advanced": "Erweiterte Einstellungen",
     "allTechsResearched": "Alle Technologien wurden erforscht",
+    "applyQueryParams": "Apply query parameters",
     "averageBeaconReceivers": "Durchschnittliche Anzahl an Effektempfänger",
     "averageBeaconReceiversTooltip": "Durchschnittliche Anzahl an Maschinen, die von jedem Effektverteiler beeinflusst werden; Das Minimum beträgt 1",
     "bonuses": "Boni",
+    "copyQueryParams": "Copy current query parameters",
     "defaultCargoWagon": "Standard-Güterwagon",
     "defaultCargoWagonTooltip": "Wähle den Standard-Güterwagon, der für alle Items genutzt werden soll",
     "defaultFluidWagon": "Standard-Tankwagon",
     "defaultFluidWagonTooltip": "Wähle den Standard-Tankwagon, der für alle Flüssigkeiten genutzt werden soll",
     "defaultPipe": "Standard-Leitung",
     "defaultPipeTooltip": "Wähle die Standard-Leitung, die für alle Flüssigkeiten genutzt werden soll",
+    "defaultStack": "Default stack size",
+    "defaultStackTooltip": "Select the default stack size on belts",
     "defaultTransportBelt": "Standard-Förderband",
     "defaultTransportBeltTooltip": "Wähle das Standard-Förderband, welches für alle Items genutzt werden soll",
     "estimateBeaconPowerUsage": "Schätze Strombedarf von Effektverteilern",
@@ -263,12 +413,16 @@
     "factory": "Fabrik",
     "flowRateUnit": "u/sek",
     "fuelRank": "Bevorzugte Brenn-/Treibstoffe",
+    "fuelRankEmpty": "No fuels selected",
     "fuelRankTooltip": "Wähle die Reihenfolge von bevorzugten Brenn-/Treibstoffen, die überall, wo es möglich ist, genutzt werden sollen",
-    "fuelTooltip": "Wähle Brennstoff",
     "gameTooltip": "Wähle, welchen Rechner verwendet werden soll, oder benutze die links in der Titelleiste",
     "header": "Einstellungen",
+    "hide": "Hide settings panel",
     "itemsExcluded": "{{ count }} Items exkludiert",
     "itemsTooltip": "Klicke, um die inkludierten Items zu ändern. Exkludierte Items werden in der Lösung nicht produziert werden.",
+    "locations": "Locations",
+    "locationsTooltip": "Select the allowed locations for recipes and machines",
+    "machineRank": "Preferred machines",
     "machineTooltip": "Wähle Maschinenpräferenz",
     "maximizeType": "Typ von Maximierungswert",
     "maximizeTypeTooltip": "Wähle den Typ von Maximierungswert",
@@ -277,6 +431,9 @@
     "miningSpeed": "Geschwindigkeit von Erzförderern",
     "miningSpeedTooltip": "Die aktuelle Geschwindigkeit von Erzförderern mit Bonus eingeben; Standard ist 100%",
     "modVersions": "Versionen",
+    "modifierRank": "Preferred modifiers",
+    "modifierRankEmpty": "No modifiers selected",
+    "modifierRankTooltip": "Select the order of preferred modifiers to be used where applicable",
     "modifierTooltip": "Wähle Modifier",
     "netProductionOnly": "Nur Nettoproduktion",
     "netProductionOnlyTooltip": "Wenn aktiviert, werden Rezepte, die das gleiche Item sowohl produzieren als auch verbrauchen, auf die Nettoproduktion reduziert.",
@@ -286,34 +443,54 @@
     "presetTooltip": "Wähle eine Standard-Voreinstellung für Maschineneinstellungen",
     "proliferatorSelfSpray": "Proliferator Selbstbesprühung",
     "proliferatorSelfSprayTooltip": "Wähle den Proliferatorspray, welcher auf den Proliferator selbst angewendet wurde",
+    "queryParamsPlaceholder": "Paste query parameters",
+    "recipeProductivity": "Recipe productivity bonuses",
+    "recipeProductivityTooltip": "Click to set productivity bonuses for recipes upgraded by technology",
     "recipesExcluded": "{{ count }} Rezepte exkludiert",
     "recipesTooltip": "Klicke, um die inkludierten Rezepte zu ändern. Exkludierte Rezepte werden nicht in der Berechnung benutzt werden.",
     "removeMachinePreference": "Maschinenpräferenz entfernen",
     "requestMod": "Anfrage für Mod stellen",
+    "requireMachinesOutput": "Require machines output",
+    "requireMachinesOutputTooltip": "If checked, output from machine objectives will be treated as required instead of surplus.",
     "researchSpeed": "Forschungsgeschwindigkeit",
     "researchSpeedTooltip": "Das aktuelle Level des Forschungsgeschwindigkeitsbonus eingeben; Dies beeinflusst nur die Forschung",
     "techsResearched": "{{ count }} Technologien erforscht",
-    "techsTooltip": "Klicke, um die erforschten Technologien zu ändern. Gesperrte Rezepte werden in der Berechnung nicht genutzt werden."
+    "techsTooltip": "Klicke, um die erforschten Technologien zu ändern. Gesperrte Rezepte werden in der Berechnung nicht genutzt werden.",
+    "tooltip": "The settings in this panel are included in the shareable URL."
   },
   "steps": {
     "beaconsUndoTooltip": "Alle Effektverteilerveränderungen rückgängig machen",
+    "beltSelectTooltip": "Click to select belt and stack size",
+    "beltTooltip": "Click to select belt",
     "beltsUndoTooltip": "Alle Förderbandveränderungen rückgängig machen",
     "checkedUndoTooltip": "Alle Markierungen rückgängig machen",
     "downloadAsCsv": "Liste als CSV-Datei herunterladen",
+    "emptyMessage": "Click on a node in the diagram to view details",
+    "excludeItemTooltip": "Click to exclude",
     "hideDetails": "Details ausblenden",
+    "includeItemTooltip": "Click to include",
     "inputs": "Eingänge",
     "itemsUndoTooltip": "Alle exkludierten Items rückgängig machen",
     "machinesUndoTooltip": "Alle Maschinenveränderungen rückgängig machen",
     "openNewTabTooltip": "In neuem Tab öffnen",
     "outputs": "Ausgänge",
     "overclockTooltip": "Übertaktung in Prozent",
+    "perMachine": "Per machine (Divide by {{ count }})",
+    "selectFuelTooltip": "Click to select fuel",
+    "selectMachineTooltip": "Click to select machine",
+    "selectRecipesTooltip": "Click to select recipes",
     "showDetails": "Details einblenden",
     "stepUndoTooltip": "Alle Veränderungen bis hierhin rückgängig machen",
     "total": "Total",
+    "wagonTooltip": "Click to select wagon",
     "wagonsUndoTooltip": "Alle Wagonveränderungen rückgängig machen"
   },
   "technologies": {
     "available": "Verfügbar",
+    "exportCopyScript": "Copy console script",
+    "exportFromFactorio": "Export from Factorio",
+    "exportScriptCopied": "Script copied!",
+    "exportUseMod": "Use a mod",
     "header": "Wähle erforschte Technologien",
     "import": "Importiere",
     "importHeader": "Importiere erforschte Technologien",
@@ -323,6 +500,10 @@
     "researched": "Erforscht",
     "showLabels": "Zeige Namen",
     "unlockAll": "Alle freischalten"
+  },
+  "versions": {
+    "mod": "Mod",
+    "version": "Version"
   },
   "yes": "Ja"
 }

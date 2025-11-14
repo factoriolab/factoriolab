@@ -5,21 +5,29 @@
     "flow": "フロー",
     "list": "リスト",
     "migrationWarning": "Migration warning",
-    "simplexSolved": "計算時間 {{ time }}ms、 コスト: {{ cost }}"
+    "simplexSolved": "計算時間 {{ time }}ms、 コスト: {{ cost }}",
+    "updateAvailable": "Update available",
+    "updateAvailableMessage": "An update is available. Would you like to reload the page to update?",
+    "updateRequired": "Update required",
+    "updateRequiredMessage": "An update is available, and the page must be reloaded to proceed."
   },
   "beaconsSelect": {
+    "addBeacons": "Add beacons",
     "eachTooltip": "機械あたりのビーコン",
+    "tooltip": "Click to select beacons",
     "totalTooltip": "ビーコンの合計数"
   },
   "beltSelect": {
-    "stackSizeTooltip": "スタックサイズ"
+    "stackTooltip": "Stack size"
   },
   "cancel": "キャンセル",
+  "close": "Close",
   "columns": {
     "decimals": "桁数",
     "example": "サンプル",
     "fractions": "分数",
     "header": "列設定",
+    "hidden": "Hidden",
     "notApplicable": "対象外",
     "powerUnit": "電力の単位",
     "visibility": "表示"
@@ -36,6 +44,8 @@
     "maximizeTooltip": "最大化の目標になるコスト (負の値であること)",
     "recipe": "レシピ",
     "recipeTooltip": "レシピのコストと定義されたコスト（通常は採掘）を掛け合わせる。",
+    "recycling": "Recycling",
+    "recyclingTooltip": "Multiplies cost of recycling recipes by this number",
     "surplus": "余剰",
     "surplusTooltip": "余剰のアイテムを生産するコスト",
     "unproduceable": "生産不能",
@@ -77,9 +87,9 @@
     "fuelValue": "燃料の値",
     "fuels": "燃料",
     "ingredients": "材料",
-    "item": "アイテム",
     "itemSettings": "アイテム設定",
     "items": "アイテム",
+    "locations": "Locations",
     "machine": "機械",
     "machineSettings": "機械の設定",
     "machines": "機械",
@@ -92,8 +102,6 @@
     "notFound": "見つかりません",
     "overclock": "Overclock",
     "pipe": "Pipe",
-    "pipeFlowRate": "Flow rate (Items/s)",
-    "pipes": "パイプ",
     "pollution": "汚染",
     "prerequisites": "前提条件",
     "producedByRecipes": "生産するレシピ",
@@ -102,6 +110,8 @@
     "productivity": "生産力",
     "products": "製品",
     "proliferator": "Proliferator",
+    "pumps": "Pumps",
+    "quality": "Quality",
     "range": "範囲",
     "recipe": "レシピ",
     "recipeSettings": "レシピの設定",
@@ -110,7 +120,6 @@
     "rocketPart": "ロケット部品",
     "rocketPartsRequired": "必要なロケット部品",
     "rocketSilo": "ロケットサイロ",
-    "selectedLabel": "{0} 件選択されました",
     "speed": "速度",
     "sprays": "Sprays",
     "stackSize": "スタックサイズ",
@@ -119,12 +128,19 @@
     "technology": "テクノロジー",
     "time": "製作時間 (s)",
     "unlockedBy": "開放する研究",
-    "unlockedRecipes": "開放されるレシピ",
-    "versions": "バージョン"
+    "unlockedRecipes": "開放されるレシピ"
+  },
+  "filter": "Filter",
+  "flow": {
+    "downloadAsJson": "Download as JSON",
+    "flowSettings": "Flow settings"
   },
   "flowSettings": {
     "diagram": "グラフの種類",
     "diagramTooltip": "グラフの種類を選んでください。",
+    "elkAlgorithm": "Layout algorithm",
+    "elkAlgorithmTooltip": "Select which ELK layout algorithm to use for the box-line layout",
+    "header": "Flow settings",
     "hideExcluded": "除外されたアイテムを非表示にする",
     "hideExcludedTooltip": "チェックすると、除外されたアイテムはフロー図からも除外されます。",
     "linkSize": "リンクサイズ",
@@ -137,8 +153,14 @@
   "game": "ゲーム",
   "header": {
     "discord": "Discord",
+    "resetTooltip": "Click to reset",
+    "selectGame": "Select game",
     "source": "Source",
-    "support": "支援する"
+    "sponsor": "Sponsor"
+  },
+  "inputNumber": {
+    "decrement": "Decrement",
+    "increment": "Increment"
   },
   "landing": {
     "bypass": "次回からこの画面を表示しない",
@@ -149,8 +171,17 @@
   },
   "modSet": "MOD設定",
   "modSetTooltip": "使用するFactorioのバージョンまたはMODを選択してください。",
+  "modules": {
+    "eachTooltip": "Number of modules",
+    "moduleTooltip": "Click to select modifier"
+  },
+  "modulesSelect": {
+    "tooltip": "Click to select modifiers"
+  },
+  "no": "No",
   "none": "なし",
   "objectives": {
+    "displayRate": "Display rate units",
     "error": "解が見つかりません",
     "errorDetail": " <b>制限</b>と<b>最大化</b>目標を確認し、レシピを有効にしてください。",
     "errorInfeasible": "解なし",
@@ -158,12 +189,19 @@
     "errorMaximizeExcluded": "<b>最大化</b>を除外された対象に使うことはできません。他の対象を選ぶか、今の対象を含めるようにしてください。",
     "errorNoLimits": "<b>制限</b>目標が追加されていません。 <b>最大化</b>目標の制約となる<b>制限</b>目標を追加してください。",
     "errorSimplexInfo": "<i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>",
+    "errorSimplexUnboundedAddRecipeLimit": "Add a limit for this recipe",
+    "errorSimplexUnboundedRecipe": "The solver indicates maximize objectives are unlimited due to the recipe:",
     "errorUnbounded": "解が無限大",
     "errorUnboundedDetail": "<b>制限</b>目標が<b>最大化</b>目標の制約として不十分かもしれません。",
     "pauseTooltip": "計算を一時停止／再開する",
     "pausedMessage": "計算は一時停止しています。再開するには再生ボタンをクリックしてください。",
+    "playTooltip": "Resume calculations",
+    "quantity": "Quantity",
     "removeTooltip": "目標を削除する",
-    "title": "目標"
+    "target": "Target",
+    "title": "目標",
+    "type": "Type",
+    "units": "Units"
   },
   "ok": "OK",
   "options": {
@@ -195,6 +233,11 @@
       "perSecond": "個/s",
       "perSecondSuffix": "/s"
     },
+    "elkAlgorithm": {
+      "force": "Force",
+      "layered": "Layered",
+      "stress": "Stress"
+    },
     "flowDiagram": {
       "boxLine": "ボックス-ライン",
       "sankey": "サンキーグラフ"
@@ -209,6 +252,7 @@
       "mindustry": "Mindustry",
       "outworldStation": "Outworld Station",
       "satisfactory": "Satisfactory",
+      "skyformer": "SkyFormer",
       "techtonica": "Techtonica"
     },
     "linkValue": {
@@ -225,9 +269,13 @@
     },
     "objectiveType": {
       "input": "を入力",
+      "inputTooltip": "I am already producing this quantity<br><span class=\"text-sm italic\">(don't solve for it)</span>",
       "limit": "に制限",
+      "limitTooltip": "I want to limit this production<br><span class=\"text-sm italic\">(usually for maximize)</span>",
       "maximize": "を最大化",
-      "output": "を出力"
+      "maximizeTooltip": "I want to maximize this production<br><span class=\"text-sm italic\">(requires a limit)</span>",
+      "output": "を出力",
+      "outputTooltip": "I want to produce this quantity<br><span class=\"text-sm italic\">(default option)</span>"
     },
     "objectiveUnit": {
       "belts": "ベルト",
@@ -260,6 +308,14 @@
       "proliferated": "Proliferated",
       "upgraded": "アップグレード済"
     },
+    "quality": {
+      "any": "Any",
+      "epic": "Epic",
+      "legendary": "Legendary",
+      "normal": "Normal",
+      "rare": "Rare",
+      "uncommon": "Uncommon"
+    },
     "researchBonus": {
       "speed0": "研究速度ボーナスなし",
       "speed1": "研究速度ボーナス1",
@@ -283,41 +339,73 @@
     },
     "theme": {
       "dark": "ダーク",
-      "light": "ライト"
+      "light": "ライト",
+      "system": "System"
     }
   },
   "paginator": {
-    "label": "{{ total }}件中{{ first }}から{{ last }}件目を表示中"
+    "first": "First page",
+    "label": "{{ total }}件中{{ first }}から{{ last }}件目を表示中",
+    "last": "Last page",
+    "next": "Next page",
+    "previous": "Previous page"
   },
   "picker": {
-    "includeAll": "すべて含める"
+    "includeAll": "すべて含める",
+    "includeAllRecycling": "Include all recycling",
+    "includedItems": "Set included items",
+    "includedRecipes": "Set included recipes",
+    "qualityFilter": "Quality filter",
+    "selectItem": "Select an item",
+    "selectRecipe": "Select a recipe"
   },
-  "reset": "リセット",
   "preferences": {
     "bypassLanding": "ランディングページを常にスキップする",
+    "convertObjectiveValues": "Convert objective values",
+    "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
     "createSavedState": "新規作成",
     "deleteSavedState": "削除",
     "editSavedState": "名前変更",
+    "header": "Preferences",
     "helpTranslate": "翻訳を手伝う",
+    "hide": "Hide preferences panel",
+    "hue": "Hue",
     "language": "言語",
     "nameSavedState": "名前を入力",
+    "resetHeader": "Are you sure?",
+    "resetMessage": "Do you want to keep your saved states?<br>Selecting no will remove ALL saved data in this browser and reload the page.",
     "saveState": "状態を保存",
+    "savedStateMenuLabel": "Saved state menu",
     "savedStates": "状態を保存",
     "selectSavedState": "状態を選ぶ",
-    "theme": "テーマ"
+    "theme": "テーマ",
+    "tooltip": "The preferences in this panel are stored in the browser, not included in the shareable URL."
+  },
+  "rankSelect": {
+    "label": "Rank (drag to reorder)"
+  },
+  "remove": "Remove",
+  "reset": "リセット",
+  "select": {
+    "noMatches": "No matches found"
   },
   "settings": {
+    "addMachine": "Add machine",
     "advanced": "上級",
     "allTechsResearched": "すべてのテクノロジーが研究済みです",
+    "applyQueryParams": "Apply query parameters",
     "averageBeaconReceivers": "ビーコンの効果を受ける機械の平均数",
     "averageBeaconReceiversTooltip": "各ビーコンの影響を受ける機械の平均数。1以上を入力してください。",
     "bonuses": "ボーナス",
+    "copyQueryParams": "Copy current query parameters",
     "defaultCargoWagon": "Default cargo wagon",
     "defaultCargoWagonTooltip": "Select the default cargo wagon to be used by all items",
     "defaultFluidWagon": "Default fluid wagon",
     "defaultFluidWagonTooltip": "Select the default fluid wagon to be used by all fluids",
     "defaultPipe": "Default pipe",
     "defaultPipeTooltip": "Select the default pipe to be used by all fluids",
+    "defaultStack": "Default stack size",
+    "defaultStackTooltip": "Select the default stack size on belts",
     "defaultTransportBelt": "既定の搬送ベルト",
     "defaultTransportBeltTooltip": "全てのアイテムが使用する搬送ベルトを選んでください。",
     "estimateBeaconPowerUsage": "ビーコンの電力消費を見積もる",
@@ -325,11 +413,16 @@
     "factory": "工場",
     "flowRateUnit": "u/sec",
     "fuelRank": "使用する燃料",
+    "fuelRankEmpty": "No fuels selected",
     "fuelRankTooltip": "使用する燃料と、優先順位を選んでください。",
     "gameTooltip": "どのゲームの計算をするか選んでください。タイトルバーのリンクをクリックすることもできます。",
     "header": "設定",
+    "hide": "Hide settings panel",
     "itemsExcluded": "{{ count }} 個のアイテムを除外",
     "itemsTooltip": "クリックすると含めるアイテムを変更できます。除外されたアイテムは計算上で生産されません。",
+    "locations": "Locations",
+    "locationsTooltip": "Select the allowed locations for recipes and machines",
+    "machineRank": "Preferred machines",
     "machineTooltip": "設定する機械を選んでください。",
     "maximizeType": "最大化する値の種類",
     "maximizeTypeTooltip": "最大化の目的とする値を選んでください。",
@@ -338,6 +431,10 @@
     "miningSpeed": "Mining speed",
     "miningSpeedTooltip": "Enter the current mining speed with bonus; Default is 100%",
     "modVersions": "バージョン",
+    "modifierRank": "Preferred modifiers",
+    "modifierRankEmpty": "No modifiers selected",
+    "modifierRankTooltip": "Select the order of preferred modifiers to be used where applicable",
+    "modifierTooltip": "Select modifier",
     "netProductionOnly": "正味生産量のみとする",
     "netProductionOnlyTooltip": "チェックすると、消費と生産で同じアイテムが登場するレシピのとき、正味の生産量まで減らされます。",
     "pipeFlowRate": "パイプのフロー",
@@ -346,31 +443,46 @@
     "presetTooltip": "使用する機械のプリセットを選択してください。",
     "proliferatorSelfSpray": "Proliferator self-spray",
     "proliferatorSelfSprayTooltip": "Select the proliferator spray applied to proliferator itself",
+    "queryParamsPlaceholder": "Paste query parameters",
+    "recipeProductivity": "Recipe productivity bonuses",
+    "recipeProductivityTooltip": "Click to set productivity bonuses for recipes upgraded by technology",
     "recipesExcluded": "{{ count }} 個のレシピを除外",
     "recipesTooltip": "クリックすると含めるレシピを変更できます。除外されたレシピは計算に使われません。",
     "removeMachinePreference": "機械の設定を削除します。",
     "requestMod": "MODをリクエスト(GitHub)",
+    "requireMachinesOutput": "Require machines output",
+    "requireMachinesOutputTooltip": "If checked, output from machine objectives will be treated as required instead of surplus.",
     "researchSpeed": "研究速度",
     "researchSpeedTooltip": "現在の研究速度ボーナスのレベルを選んでください。この設定は研究にのみ影響します。",
     "techsResearched": "{{ count }} 個のテクノロジーが研究済みです",
-    "techsTooltip": "クリックすると研究済みのテクノロジーを変更できます。開放されていないレシピは計算に使われません。"
+    "techsTooltip": "クリックすると研究済みのテクノロジーを変更できます。開放されていないレシピは計算に使われません。",
+    "tooltip": "The settings in this panel are included in the shareable URL."
   },
   "steps": {
     "beaconsUndoTooltip": "ビーコンのすべての変更をもとに戻す",
+    "beltSelectTooltip": "Click to select belt and stack size",
+    "beltTooltip": "Click to select belt",
     "beltsUndoTooltip": "ベルトのすべての変更をもとに戻す",
     "checkedUndoTooltip": "すべてのチェックマークをもとに戻す",
     "downloadAsCsv": "リストをCSVでダウンロード",
     "emptyMessage": "図のノードをクリックすると詳細が表示されます。",
+    "excludeItemTooltip": "Click to exclude",
     "hideDetails": "詳細を非表示",
+    "includeItemTooltip": "Click to include",
+    "inputs": "入力",
     "itemsUndoTooltip": "すべての除外されたアイテムをもとに戻す",
     "machinesUndoTooltip": "機械のすべての変更をもとに戻す",
     "openNewTabTooltip": "新しいタブで開く",
+    "outputs": "出力",
     "overclockTooltip": "Overclock percentage",
+    "perMachine": "Per machine (Divide by {{ count }})",
+    "selectFuelTooltip": "Click to select fuel",
+    "selectMachineTooltip": "Click to select machine",
+    "selectRecipesTooltip": "Click to select recipes",
     "showDetails": "詳細を表示",
     "stepUndoTooltip": "このステップのすべての変更をもとに戻す",
     "total": "合計",
-    "outputs": "出力",
-    "inputs": "入力",
+    "wagonTooltip": "Click to select wagon",
     "wagonsUndoTooltip": "貨物車両のすべての変更をもとに戻す"
   },
   "technologies": {
@@ -388,6 +500,10 @@
     "researched": "研究済み",
     "showLabels": "ラベル表示",
     "unlockAll": "すべて開放"
+  },
+  "versions": {
+    "mod": "Mod",
+    "version": "Version"
   },
   "yes": "はい"
 }

@@ -1,6 +1,5 @@
 # TODO
 
-- Update non-english translation data
 - Re-check a11y
 - Apply sorting to tailwind classes in component files
 - Remove productivity adjustment for research products

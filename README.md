@@ -46,3 +46,35 @@ To run the automated unit tests:
 
 1. Install NodeJs, Angular CLI, and the dependencies as described above
 2. Build and run the tests, using `npm test`
+
+## Contributing language data
+
+Language data is stored in the [i18n](./public/i18n/) folder. Translations are managed via an automated script. The English file, [en.json](./public/i18n/en.json), is the main translation data file; any keys added to that file will be added to all other files, and any keys missing from that file will be removed from other files.
+
+### Setup
+
+In order to fully contribute, you must first fork FactorioLab in GitHub and clone your fork. If you are not experienced with GitHub and git, you are also welcome to copy and modify the raw JSON files, and share them via the [Discord](https://discord.gg/N4FKV687x2).
+
+### Updating files
+
+The main script that maintains translation data is `npm run sync-i18n`. This command:
+
+1. Sorts all of the translation keys in all files, including the English file
+1. Removes any translation keys in non-English data files that are not found in the English file
+1. Adds English translation values to non-English data files where they are missing
+
+As such, one of the best ways to contribute is to browse the non-English files and replace any English strings with a proper translation, or improve existing translations.
+
+### Adding a new language
+
+In order to add support for a new language, there are a few additional steps.
+
+1. Add a new file in the `i18n` folder, using the localization key for the language. This is usually a two-letter locale code but may include a country code as well where relevant (e.g. pt-BR is Brazilian Portuguese).
+1. Enter `{}` in the file for an empty JSON object.
+1. Run `npm run sync-i18n`. This should fill in the file with English translations.
+1. Replace the English strings with translations.
+1. Add the code (which should match the file name) to the Language string union type in [language.ts](./src/translate/language.ts)
+1. Add the langage as an `Option` in the `languageOptions` array in the same file.
+1. Open a Pull Request with your changes.
+
+Thanks for your help in improving FactorioLab!
