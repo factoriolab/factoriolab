@@ -1,11 +1,7 @@
 export type Flag =
-  | 'beacons'
-  | 'belts'
   | 'beltStack'
   | 'consumptionAsDrain'
-  | 'diminishingBeacons'
   | 'duplicators'
-  | 'expensive'
   | 'hideMachineSettings'
   | 'inactiveDrain'
   | 'flowRate'
@@ -26,9 +22,7 @@ export type Flag =
   | 'researchSpeed'
   | 'resourcePurity'
   | 'rockets'
-  | 'somersloop'
-  | 'technologies'
-  | 'wagons';
+  | 'somersloop';
 
 export type FlagSet =
   | 'spa'
@@ -49,10 +43,7 @@ export type FlagSet =
 
 export const flags: Record<FlagSet, Set<Flag>> = {
   spa: new Set([
-    'beacons',
-    'belts',
     'beltStack',
-    'diminishingBeacons',
     'fluidCostRatio',
     'maximumFactor',
     'minimumFactor',
@@ -64,13 +55,8 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'quality',
     'researchSpeed',
     'rockets',
-    'technologies',
-    'wagons',
   ]),
   '2.0': new Set([
-    'beacons',
-    'belts',
-    'diminishingBeacons',
     'fluidCostRatio',
     'maximumFactor',
     'minimumFactor',
@@ -80,13 +66,8 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'pollution',
     'power',
     'researchSpeed',
-    'technologies',
-    'wagons',
   ]),
   '2.0q': new Set([
-    'beacons',
-    'belts',
-    'diminishingBeacons',
     'fluidCostRatio',
     'maximumFactor',
     'minimumFactor',
@@ -97,12 +78,8 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'power',
     'quality',
     'researchSpeed',
-    'technologies',
-    'wagons',
   ]),
   '1.1': new Set([
-    'beacons',
-    'belts',
     'flowRate',
     'fluidCostRatio',
     'minimumFactor',
@@ -114,13 +91,8 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'pollution',
     'power',
     'researchSpeed',
-    'technologies',
-    'wagons',
   ]),
   '1.1e': new Set([
-    'beacons',
-    'belts',
-    'expensive',
     'flowRate',
     'fluidCostRatio',
     'minimumFactor',
@@ -132,12 +104,8 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'pollution',
     'power',
     'researchSpeed',
-    'technologies',
-    'wagons',
   ]),
   '1.0': new Set([
-    'beacons',
-    'belts',
     'flowRate',
     'fluidCostRatio',
     'minimumFactor',
@@ -149,31 +117,26 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'pollution',
     'power',
     'researchSpeed',
-    'wagons',
   ]),
   dsp: new Set([
-    'belts',
     'beltStack',
     'inactiveDrain',
     'miningSpeed',
     'power',
     'proliferator',
-    'technologies',
   ]),
   sfy: new Set([
-    'belts',
     'consumptionAsDrain',
     'overclock',
     'power',
     'resourcePurity',
     'somersloop',
-    'wagons',
   ]),
-  coi: new Set(['belts', 'hideMachineSettings']),
-  ffy: new Set(['belts', 'duplicators']),
-  tta: new Set(['belts', 'power']),
-  fay: new Set(['belts', 'power', 'miningSpeed', 'beltStack', 'technologies']),
-  mds: new Set(['belts', 'power', 'mods']),
-  fdy: new Set(['belts', 'power']),
+  coi: new Set(['hideMachineSettings']),
+  ffy: new Set(['duplicators']),
+  tta: new Set(['power']),
+  fay: new Set(['power', 'miningSpeed', 'beltStack']),
+  mds: new Set(['power', 'mods']),
+  fdy: new Set(['power']),
   sky: new Set([]),
 };

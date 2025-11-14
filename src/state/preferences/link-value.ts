@@ -1,5 +1,6 @@
 import { Option } from '~/option/option';
-import { Flag } from '~/state/flags';
+
+import { Dataset } from '../settings/dataset';
 
 export enum LinkValue {
   None = 0,
@@ -10,7 +11,7 @@ export enum LinkValue {
   Machines = 5,
 }
 
-export function linkValueOptions(flags: Set<Flag>): Option<LinkValue>[] {
+export function linkValueOptions(data: Dataset): Option<LinkValue>[] {
   const result: Option<LinkValue>[] = [
     { label: 'options.linkValue.none', value: LinkValue.None },
     { label: 'options.linkValue.percent', value: LinkValue.Percent },
@@ -20,7 +21,7 @@ export function linkValueOptions(flags: Set<Flag>): Option<LinkValue>[] {
     { label: 'options.linkValue.machines', value: LinkValue.Machines },
   ];
 
-  if (!flags.has('wagons'))
+  if (data.cargoWagonIds.length === 0 && data.fluidWagonIds.length === 0)
     return result.filter((i) => i.value !== LinkValue.Wagons);
 
   return result;

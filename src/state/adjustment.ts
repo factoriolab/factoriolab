@@ -217,14 +217,11 @@ export class Adjustment {
 
       // Beacons
       if (recipeState.beacons != null) {
-        let profileIndex: number | undefined;
-        if (data.flags.has('diminishingBeacons')) {
-          const total = recipeState.beacons.reduce(
-            (t, b) => t.add(coalesce(b.count, rational.zero)),
-            rational.zero,
-          );
-          profileIndex = Math.round(total.toNumber()) - 1;
-        }
+        const total = recipeState.beacons.reduce(
+          (t, b) => t.add(coalesce(b.count, rational.zero)),
+          rational.zero,
+        );
+        const profileIndex = Math.round(total.toNumber()) - 1;
 
         for (const beaconSettings of recipeState.beacons) {
           if (
@@ -238,12 +235,7 @@ export class Adjustment {
           const beacon = data.beaconRecord[beaconSettings.id];
 
           let scale = rational.one;
-          if (
-            beacon.profile &&
-            profileIndex &&
-            profileIndex >= 0 &&
-            profileIndex < beacon.profile.length
-          )
+          if (beacon.profile?.[profileIndex] != null)
             scale = beacon.profile[profileIndex];
 
           const factor = beaconSettings.count.mul(scale);

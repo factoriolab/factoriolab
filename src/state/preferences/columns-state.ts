@@ -1,6 +1,7 @@
 import { Option } from '~/option/option';
-import { Flag } from '~/state/flags';
 import { spread } from '~/utils/object';
+
+import { Dataset } from '../settings/dataset';
 
 export type ColumnKey =
   | 'checkbox'
@@ -23,7 +24,7 @@ export interface ColumnSettings {
 export interface ColumnInfo {
   hideDefault?: true;
   hasPrecision?: true;
-  flag?: true;
+  exclude?: (data: Dataset) => boolean;
 }
 
 export type ColumnsState = Record<ColumnKey, ColumnSettings>;
@@ -34,13 +35,23 @@ export const columnsInfo: ColumnsInfo = {
   checkbox: { hideDefault: true },
   tree: {},
   items: { hasPrecision: true },
-  belts: { hasPrecision: true, flag: true },
-  wagons: { hasPrecision: true, flag: true },
-  rockets: { hasPrecision: true, flag: true },
+  belts: { hasPrecision: true, exclude: (data) => data.beltIds.length === 0 },
+  wagons: {
+    hasPrecision: true,
+    exclude: (data) =>
+      data.cargoWagonIds.length + data.fluidWagonIds.length === 0,
+  },
+  rockets: {
+    hasPrecision: true,
+    exclude: (data) => !data.flags.has('rockets'),
+  },
   machines: { hasPrecision: true },
-  beacons: { flag: true },
-  power: { hasPrecision: true, flag: true },
-  pollution: { hasPrecision: true, flag: true },
+  beacons: { exclude: (data) => data.beaconIds.length === 0 },
+  power: { hasPrecision: true, exclude: (data) => !data.flags.has('power') },
+  pollution: {
+    hasPrecision: true,
+    exclude: (data) => !data.flags.has('pollution'),
+  },
   link: {},
 };
 
@@ -63,9 +74,9 @@ export const initialColumnsState: ColumnsState = allColumns.reduce(
 ) as ColumnsState;
 
 /** Get column options for passed game */
-export function columnOptions(flags: Set<Flag>): Option<ColumnKey>[] {
+export function columnOptions(data: Dataset): Option<ColumnKey>[] {
   return allColumns
-    .filter((c) => !columnsInfo[c].flag || flags.has(c as Flag))
+    .filter((c) => !columnsInfo[c].exclude?.(data))
     .map(
       (id): Option<ColumnKey> => ({
         label: `options.column.${id}`,
@@ -77,7 +88,7 @@ export function columnOptions(flags: Set<Flag>): Option<ColumnKey>[] {
 
 export function gameColumnsState(
   columnsState: ColumnsState,
-  flags: Set<Flag>,
+  data: Dataset,
 ): ColumnsState {
   // Apply all defaults
   columnsState = spread(initialColumnsState, columnsState);
@@ -90,7 +101,7 @@ export function gameColumnsState(
 
   // Hide any columns that are not relevant to the current game
   allColumns
-    .filter((c) => columnsInfo[c].flag && !flags.has(c as Flag))
+    .filter((c) => columnsInfo[c].exclude?.(data))
     .forEach((c) => {
       columnsState = spread(columnsState, {
         [c]: spread(columnsState[c], { show: false }),

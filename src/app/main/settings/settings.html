@@ -107,7 +107,7 @@
         </lab-form-field>
       }
 
-      @if (data().flags.has('technologies')) {
+      @if (data().technologyIds.length) {
         <button
           type="button"
           labButton
@@ -251,7 +251,7 @@
               [placeholder]="'settings.addMachine' | translate"
               [attr.aria-label]="'settings.addMachine' | translate"
               [rounded]="
-                data().flags.has('overclock') || data().flags.has('beacons')
+                data().flags.has('overclock') || data().beaconIds.length
                   ? 'none'
                   : 'end'
               "
@@ -265,7 +265,7 @@
             @if (data().flags.has('overclock')) {
               <lab-input-number
                 class="-ms-px w-16"
-                [rounded]="data().flags.has('beacons') ? 'none' : 'end'"
+                [rounded]="data().beaconIds.length ? 'none' : 'end'"
                 [minimum]="rational.one"
                 [maximum]="rational(250)"
                 [step]="rational(10)"
@@ -276,7 +276,7 @@
               </lab-input-number>
             }
 
-            @if (data().flags.has('beacons')) {
+            @if (data().beaconIds.length) {
               <lab-beacons-select
                 class="-ms-px"
                 rounded="end"
@@ -435,7 +435,7 @@
         </div>
       }
 
-      @if (data().flags.has('beacons')) {
+      @if (data().beaconIds.length) {
         <lab-checkbox
           class="self-start"
           label="settings.estimateBeaconPowerUsage"
@@ -477,7 +477,7 @@
         </lab-form-field>
       }
 
-      @if (data().flags.has('belts')) {
+      @if (data().beltIds.length) {
         <lab-form-field label="settings.defaultTransportBelt">
           <lab-select
             [options]="options().belts"

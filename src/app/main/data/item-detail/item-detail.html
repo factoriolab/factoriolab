@@ -514,7 +514,7 @@
             }
           </td>
         </tr>
-        @if (data().flags.has('beacons')) {
+        @if (data().beaconIds.length) {
           <tr>
             <th>{{ 'data.beacons' | translate }}</th>
             <td>

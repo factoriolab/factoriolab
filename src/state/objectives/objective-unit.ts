@@ -1,6 +1,6 @@
 import { Option } from '~/option/option';
-import { Flag } from '~/state/flags';
 
+import { Dataset } from '../settings/dataset';
 import { DisplayRateInfo } from '../settings/display-rate';
 
 export enum ObjectiveUnit {
@@ -12,7 +12,7 @@ export enum ObjectiveUnit {
 
 export function objectiveUnitOptions(
   dispRateInfo: DisplayRateInfo,
-  flags: Set<Flag>,
+  data: Dataset,
 ): Option<ObjectiveUnit>[] {
   const result: Option<ObjectiveUnit>[] = [
     { value: ObjectiveUnit.Items, label: dispRateInfo.itemsLabel },
@@ -21,7 +21,7 @@ export function objectiveUnitOptions(
     { value: ObjectiveUnit.Machines, label: 'options.objectiveUnit.machines' },
   ];
 
-  if (!flags.has('wagons'))
+  if (data.cargoWagonIds.length === 0 && data.fluidWagonIds.length === 0)
     return result.filter((i) => i.value !== ObjectiveUnit.Wagons);
 
   return result;

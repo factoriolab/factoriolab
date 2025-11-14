@@ -163,30 +163,30 @@ export class SettingsStore extends Store<SettingsState> {
 
   readonly linkValueOptions = computed(() => {
     const data = this.dataset();
-    return linkValueOptions(data.flags);
+    return linkValueOptions(data);
   });
 
   readonly objectiveUnitOptions = computed(() => {
     const dispRateInfo = this.displayRateInfo();
     const data = this.dataset();
-    return objectiveUnitOptions(dispRateInfo, data.flags);
+    return objectiveUnitOptions(dispRateInfo, data);
   });
 
   readonly presetOptions = computed(() => {
     const modData = this.modData();
     const data = this.dataset();
-    return presetOptions(data.flags, modData?.defaults);
+    return presetOptions(data, modData?.defaults);
   });
 
   readonly columnOptions = computed(() => {
     const data = this.dataset();
-    return columnOptions(data.flags);
+    return columnOptions(data);
   });
 
   readonly columnsState = computed(() => {
     const data = this.dataset();
     const columns = this.preferencesStore.columns();
-    return gameColumnsState(columns, data.flags);
+    return gameColumnsState(columns, data);
   });
 
   readonly settings = computed(() =>

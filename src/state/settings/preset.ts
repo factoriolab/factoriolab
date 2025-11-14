@@ -1,6 +1,7 @@
 import { DefaultsJson } from '~/data/schema/defaults';
 import { Option } from '~/option/option';
-import { Flag } from '~/state/flags';
+
+import { Dataset } from './dataset';
 
 export enum Preset {
   Minimum = 0,
@@ -10,7 +11,7 @@ export enum Preset {
 }
 
 export function presetOptions(
-  flags: Set<Flag>,
+  data: Dataset,
   defaults: DefaultsJson | undefined = undefined,
 ): Option<Preset>[] {
   if (defaults && 'presets' in defaults) {
@@ -25,7 +26,7 @@ export function presetOptions(
     { value: Preset.Modules, label: 'options.preset.upgraded' },
   ];
 
-  if (flags.has('beacons')) {
+  if (data.beaconIds.length) {
     options[1].label = 'options.preset.modules';
     options.push(
       { value: Preset.Beacon8, label: 'options.preset.beacon8' },
@@ -33,7 +34,7 @@ export function presetOptions(
     );
   }
 
-  if (flags.has('proliferator')) {
+  if (data.flags.has('proliferator')) {
     options.push({
       value: Preset.Beacon8,
       label: 'options.preset.proliferated',
