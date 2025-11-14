@@ -43,7 +43,7 @@ import { externalLinks } from './external-link';
 })
 export class Header {
   private readonly router = inject(Router);
-  private readonly settingsStore = inject(SettingsStore);
+  protected readonly settingsStore = inject(SettingsStore);
 
   readonly preferencesOpen = model.required<boolean>();
   readonly settingsOpen = model.required<boolean>();

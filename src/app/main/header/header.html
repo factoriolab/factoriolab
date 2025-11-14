@@ -26,7 +26,7 @@
   ></button>
   <div class="flex gap-px">
     <a
-      [routerLink]="gameInfo().route"
+      [routerLink]="['/', settingsStore.modId()]"
       labButton
       [text]="gameInfo().label"
       iconType="system"
