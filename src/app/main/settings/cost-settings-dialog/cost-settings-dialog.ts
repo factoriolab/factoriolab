@@ -15,22 +15,22 @@ import {
 
 import { Button } from '~/components/button/button';
 import { DialogData } from '~/components/dialog/dialog';
-import { FormField } from '~/components/form-field/form-field';
 import { InputNumber } from '~/components/input-number/input-number';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { Rational, rational } from '~/rational/rational';
-import { CostKey } from '~/state/settings/cost-settings';
+import { CostKey, costKeys } from '~/state/settings/cost-settings';
 import { initialSettingsState } from '~/state/settings/settings-state';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { TranslatePipe } from '~/translate/translate-pipe';
 
 @Component({
   selector: 'lab-cost-settings-dialog',
-  imports: [FormsModule, Button, FormField, InputNumber, Tooltip],
+  imports: [FormsModule, Button, InputNumber, Tooltip, TranslatePipe],
   templateUrl: './cost-settings-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex w-md max-w-full flex-col gap-3 overflow-hidden p-3 pt-0 sm:gap-6 sm:p-6 sm:pt-0',
+      'flex w-sm max-w-full flex-col gap-3 overflow-hidden p-3 pt-0 sm:gap-6 sm:p-6 sm:pt-0',
   },
 })
 export class CostSettingsDialog implements DialogData {
@@ -47,6 +47,7 @@ export class CostSettingsDialog implements DialogData {
     return keys.some((k) => init[k] !== edit[k]);
   });
 
+  protected readonly costKeys = costKeys;
   protected readonly faCheck = faCheck;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faXmark = faXmark;

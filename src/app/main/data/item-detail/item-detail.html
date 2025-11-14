@@ -382,10 +382,11 @@
           </th>
         </tr>
         <tr>
-          <th>{{ 'data.excluded' | translate }}</th>
+          <th id="excluded">{{ 'data.excluded' | translate }}</th>
           <td>
             <div class="flex items-center justify-end">
               <lab-checkbox
+                labelledBy="excluded"
                 [ngModel]="settings().excludedItemIds.has(id())"
                 (ngModelChange)="changeExcluded($event)"
               ></lab-checkbox>
@@ -393,10 +394,11 @@
           </td>
         </tr>
         <tr>
-          <th>{{ 'data.checked' | translate }}</th>
+          <th id="checked">{{ 'data.checked' | translate }}</th>
           <td>
             <div class="flex items-center justify-end">
               <lab-checkbox
+                labelledBy="checked"
                 [ngModel]="settings().checkedItemIds.has(id())"
                 (ngModelChange)="changeChecked($event)"
               ></lab-checkbox>
@@ -488,10 +490,12 @@
               <div class="flex flex-col items-stretch">
                 @for (module of machineSettings.modules; track module.id) {
                   @if (module.id === '') {
-                    <lab-icon
-                      value="module"
-                      [text]="module.count?.toString()"
-                    ></lab-icon>
+                    <div class="self-end">
+                      <lab-icon
+                        value="module"
+                        [text]="module.count?.toString()"
+                      ></lab-icon>
+                    </div>
                   } @else if (module.id) {
                     <a
                       [routerLink]="['../../modules', module.id]"
@@ -531,10 +535,12 @@
                   }
                   @for (module of beacon.modules; track module.id) {
                     @if (module.id === '') {
-                      <lab-icon
-                        value="module"
-                        [text]="module.count?.toString()"
-                      ></lab-icon>
+                      <div class="self-end">
+                        <lab-icon
+                          value="module"
+                          [text]="module.count?.toString()"
+                        ></lab-icon>
+                      </div>
                     } @else if (module.id) {
                       <a
                         [routerLink]="['../../modules', module.id]"

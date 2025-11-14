@@ -18,11 +18,11 @@
       @if (_selectedOption) {
         {{ _selectedOption.label | translate }}
       } @else if (placeholder()) {
-        <span class="text-gray-500">{{ placeholder() | translate }}</span>
+        <span class="text-gray-400">{{ placeholder() | translate }}</span>
       }
     </div>
     <fa-icon
-      class="text-gray-500 transition-transform"
+      class="text-gray-400 transition-transform"
       [class.-scale-y-100]="opened()"
       [icon]="faChevronDown"
     ></fa-icon>

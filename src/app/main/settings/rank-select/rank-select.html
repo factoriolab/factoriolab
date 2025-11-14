@@ -9,13 +9,13 @@
         "
       ></lab-icon>
     } @empty {
-      <span class="ms-1 text-gray-500 italic">
+      <span class="ms-1 text-gray-400 italic">
         {{ placeholder() | translate }}
       </span>
     }
   </div>
   <fa-icon
-    class="text-gray-500 transition-transform"
+    class="text-gray-400 transition-transform"
     [class.-scale-y-100]="opened()"
     [icon]="faChevronDown"
   ></fa-icon>

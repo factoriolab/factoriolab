@@ -61,7 +61,7 @@ export const initialSettingsState: SettingsState = {
     factor: rational.one,
     machine: rational.one,
     footprint: rational.one,
-    unproduceable: rational(1000000000n),
+    unproduceable: rational(1000000000000n),
     excluded: rational.zero,
     surplus: rational.zero,
     maximize: rational(-1000000000n),

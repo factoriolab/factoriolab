@@ -3,7 +3,7 @@
     <thead>
       <tr>
         <th>{{ 'columns.visibility' | translate }}</th>
-        <th>{{ 'columns.decimals' | translate }}</th>
+        <th id="decimals-label">{{ 'columns.decimals' | translate }}</th>
         <th id="fractions-label">{{ 'columns.fractions' | translate }}</th>
         <th>{{ 'columns.example' | translate }}</th>
       </tr>
@@ -35,6 +35,7 @@
               <input
                 type="number"
                 class="input"
+                aria-labelledby="decimals-label"
                 [(ngModel)]="value[column.value].precision"
               />
             </td>

@@ -1,78 +1,22 @@
-<div class="flex flex-col gap-2">
-  <lab-form-field label="costs.recipe">
-    <lab-input-number
-      labTooltip="costs.recipeTooltip"
-      labTooltipPosition="adjacent"
-      [ngModel]="editValue().factor"
-      (ngModelChange)="apply('factor', $event)"
-    ></lab-input-number>
-  </lab-form-field>
-
-  <lab-form-field label="costs.machine">
-    <lab-input-number
-      labTooltip="costs.machineTooltip"
-      labTooltipPosition="adjacent"
-      [ngModel]="editValue().machine"
-      (ngModelChange)="apply('machine', $event)"
-    ></lab-input-number>
-  </lab-form-field>
-
-  <lab-form-field label="costs.recycling">
-    <lab-input-number
-      labTooltip="costs.recyclingTooltip"
-      labTooltipPosition="adjacent"
-      [ngModel]="editValue().recycling"
-      (ngModelChange)="apply('recycling', $event)"
-    ></lab-input-number>
-  </lab-form-field>
-
-  <lab-form-field label="costs.footprint">
-    <lab-input-number
-      labTooltip="costs.footprintTooltip"
-      labTooltipPosition="adjacent"
-      [ngModel]="editValue().footprint"
-      (ngModelChange)="apply('footprint', $event)"
-    ></lab-input-number>
-  </lab-form-field>
-
-  <lab-form-field label="costs.unproduceable">
-    <lab-input-number
-      labTooltip="costs.unproduceableTooltip"
-      labTooltipPosition="adjacent"
-      [ngModel]="editValue().unproduceable"
-      (ngModelChange)="apply('unproduceable', $event)"
-    ></lab-input-number>
-  </lab-form-field>
-
-  <lab-form-field label="costs.excluded">
-    <lab-input-number
-      labTooltip="costs.excludedTooltip"
-      labTooltipPosition="adjacent"
-      [ngModel]="editValue().excluded"
-      (ngModelChange)="apply('excluded', $event)"
-    ></lab-input-number>
-  </lab-form-field>
-
-  <lab-form-field label="costs.surplus">
-    <lab-input-number
-      labTooltip="costs.surplusTooltip"
-      labTooltipPosition="adjacent"
-      [ngModel]="editValue().surplus"
-      (ngModelChange)="apply('surplus', $event)"
-    ></lab-input-number>
-  </lab-form-field>
-
-  <lab-form-field label="costs.maximize">
-    <lab-input-number
-      [minimum]="undefined"
-      [maximum]="rational.zero"
-      labTooltip="costs.maximizeTooltip"
-      labTooltipPosition="adjacent"
-      [ngModel]="editValue().maximize"
-      (ngModelChange)="apply('maximize', $event)"
-    ></lab-input-number>
-  </lab-form-field>
-</div>
+<table class="table">
+  <tbody>
+    @for (key of costKeys; track $index) {
+      @let id = 'cost-' + key;
+      <tr>
+        <th [id]="id">{{ 'costs.' + key | translate }}</th>
+        <td>
+          <lab-input-number
+            [labelledBy]="id"
+            [labTooltip]="'costs.' + key + 'Tooltip'"
+            labTooltipPosition="adjacent"
+            [ngModel]="editValue()[key]"
+            (ngModelChange)="apply(key, $event)"
+          ></lab-input-number>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
 
 <div class="flex justify-end gap-1 sm:gap-2">
   @if (modified()) {

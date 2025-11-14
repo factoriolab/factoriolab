@@ -3,6 +3,7 @@
     [id]="controlId()"
     type="checkbox"
     class="z-2 size-9 cursor-pointer opacity-0"
+    [attr.aria-label]="ariaLabel() | translate"
     [attr.aria-labelledby]="labelledBy()"
     [disabled]="disabled()"
     [ngModel]="value()"

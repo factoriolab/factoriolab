@@ -16,11 +16,12 @@ import { Step } from '~/solver/step';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { StepRecipes } from '~/state/objectives/step-recipes';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { TranslatePipe } from '~/translate/translate-pipe';
 import { updateSetIds } from '~/utils/set';
 
 @Component({
   selector: 'lab-recipes-select',
-  imports: [FormsModule, FaIconComponent, Icon, Select, Tooltip],
+  imports: [FormsModule, FaIconComponent, Icon, Select, Tooltip, TranslatePipe],
   templateUrl: './recipes-select.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex' },

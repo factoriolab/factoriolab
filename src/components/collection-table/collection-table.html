@@ -26,6 +26,7 @@
           <div class="relative flex font-medium">
             <input
               class="input"
+              [attr.aria-label]="'filter' | translate"
               [ngModel]="state().filter"
               (ngModelChange)="updateApply(state, { filter: $event })"
             />

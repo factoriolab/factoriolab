@@ -15,6 +15,7 @@ import { IconType } from '~/data/icon-type';
 import { Item } from '~/data/schema/item';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { initialTableState, resetTableParams } from '~/state/table/table-state';
+import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 import { updateApply } from '~/utils/signal';
 
@@ -46,6 +47,7 @@ const recordKey: Partial<Record<IconType, RecordKey>> = {
     Paginator,
     PaginatorPipe,
     SortHeader,
+    TranslatePipe,
   ],
   templateUrl: './collection-table.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

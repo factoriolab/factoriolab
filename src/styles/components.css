@@ -41,23 +41,26 @@
 
     td,
     th {
+      border-bottom: 1px solid var(--color-gray-600);
       padding-block: calc(var(--spacing) * 1);
       padding-inline: calc(var(--spacing) * 2);
-    }
-
-    tbody td,
-    thead th {
-      border-bottom: 1px solid var(--color-gray-600);
       height: 49px;
     }
 
-    thead th {
+    th {
       position: sticky;
       top: 0;
       z-index: 1;
       background-color: var(--color-gray-950);
       text-align: start;
       font-weight: var(--font-weight-semibold);
+    }
+
+    tr.detail {
+      td {
+        background-color: var(--color-gray-900);
+        height: auto;
+      }
     }
   }
 

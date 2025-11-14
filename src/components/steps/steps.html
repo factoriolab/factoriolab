@@ -182,6 +182,7 @@
           <td>
             <div class="flex justify-center">
               <lab-checkbox
+                ariaLabel="checked"
                 [ngModel]="step.checked"
                 (ngModelChange)="changeStepChecked(step, $event)"
               ></lab-checkbox>
@@ -308,6 +309,9 @@
                         labTooltipType="belt"
                         labTooltipAction="steps.beltSelectTooltip"
                         labTooltipPosition="adjacent"
+                        [attr.aria-label]="
+                          'steps.beltSelectTooltip' | translate
+                        "
                         [value]="itemSettings"
                         (valueChange)="changeBelts(step, $event)"
                       ></lab-belt-select>
@@ -324,6 +328,9 @@
                         labTooltipType="belt"
                         labTooltipAction="steps.beltTooltip"
                         labTooltipPosition="adjacent"
+                        [attr.aria-label]="
+                          'steps.beltSelectTooltip' | translate
+                        "
                         [ngModel]="beltId"
                         (ngModelChange)="
                           itemsStore.updateRecordField(
@@ -381,6 +388,7 @@
                       labTooltipType="wagon"
                       labTooltipAction="steps.wagonTooltip"
                       labTooltipPosition="adjacent"
+                      [attr.aria-label]="'steps.wagonTooltip' | translate"
                       [ngModel]="wagonId"
                       (ngModelChange)="
                         itemsStore.updateRecordField(
@@ -445,6 +453,7 @@
                     labTooltipType="machine"
                     labTooltipPosition="adjacent"
                     labTooltipAction="steps.selectMachineTooltip"
+                    [attr.aria-label]="'steps.selectMachineTooltip' | translate"
                     [ngModel]="machineId"
                     (ngModelChange)="
                       objectivesStore.updateRecipeField(
@@ -494,6 +503,7 @@
                       [labTooltip]="fuelId"
                       labTooltipType="fuel"
                       labTooltipAction="steps.selectFuelTooltip"
+                      [attr.aria-label]="'steps.selectFuelTooltip' | translate"
                       [ngModel]="fuelId"
                       (ngModelChange)="
                         objectivesStore.updateRecipeField(

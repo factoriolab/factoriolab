@@ -27,10 +27,13 @@
   }
 
   <div class="flex flex-col gap-2">
-    <div>{{ 'technologies.importInstructions' | translate }}</div>
+    <div id="import-instructions">
+      {{ 'technologies.importInstructions' | translate }}
+    </div>
     <textarea
       class="input w-full"
       rows="10"
+      aria-labelledby="import-instructions"
       [(ngModel)]="value"
       (keydown.enter)="save()"
     ></textarea>

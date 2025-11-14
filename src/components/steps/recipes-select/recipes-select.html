@@ -9,6 +9,7 @@
     labTooltipType="recipe"
     labTooltipPosition="adjacent"
     labTooltipAction="steps.selectRecipesTooltip"
+    [attr.aria-label]="'steps.selectRecipesTooltip' | translate"
     [labTooltipAdjustedRecipe]="step().recipe"
     [ngModel]="recipes.enabledIds"
     (ngModelChange)="changeRecipesIncluded($event)"

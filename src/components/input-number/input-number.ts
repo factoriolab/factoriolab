@@ -66,6 +66,7 @@ export class InputNumber extends Control<Rational> implements OnInit {
   readonly controlId = input(`lab-input-number-${this.uniqueId}`);
   readonly value = model<Rational>();
   readonly disabled = model(false);
+  readonly ariaLabel = input<string>();
   readonly labelledBy = input<string>();
   readonly minimum = input<Rational | undefined>(rational.zero);
   readonly maximum = input<Rational | undefined>(undefined);

@@ -6,6 +6,7 @@
   [minimum]="minimum()"
   [maximum]="maximum()"
   [class]="controlClass()"
+  [attr.aria-label]="ariaLabel() | translate"
   [attr.aria-labelledby]="labelledBy()"
   [disabled]="disabled()"
   (input)="onChange($event)"

@@ -249,6 +249,7 @@
             <lab-select
               class="-ms-px"
               [placeholder]="'settings.addMachine' | translate"
+              [attr.aria-label]="'settings.addMachine' | translate"
               [rounded]="
                 data().flags.has('overclock') || data().flags.has('beacons')
                   ? 'none'
@@ -318,6 +319,7 @@
                       [labTooltip]="machineId"
                       labTooltipType="machine"
                       labTooltipAction="settings.machineTooltip"
+                      [attr.aria-label]="'settings.machineTooltip' | translate"
                       [ngModel]="machineId"
                       (ngModelChange)="changeMachine($index, $event)"
                     ></lab-select>
@@ -330,6 +332,8 @@
                         [options]="ms.fuelOptions"
                         [labTooltip]="ms.fuelId"
                         labTooltipType="fuel"
+                        labTooltipAction="settings.fuelTooltip"
+                        [attr.aria-label]="'settings.fuelTooltip' | translate"
                         [ngModel]="ms.fuelId"
                         (ngModelChange)="
                           machinesStore.updateRecordField(

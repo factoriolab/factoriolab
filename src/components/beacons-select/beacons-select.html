@@ -60,6 +60,7 @@
                 rounded="start"
                 [buttons]="true"
                 labTooltip="beaconsSelect.eachTooltip"
+                ariaLabel="beaconsSelect.eachTooltip"
                 [ngModel]="beacon.count"
                 (ngModelChange)="setCount($index, $event)"
               ></lab-input-number>
@@ -69,6 +70,7 @@
                   rounded="none"
                   [buttons]="true"
                   labTooltip="beaconsSelect.totalTooltip"
+                  ariaLabel="beaconsSelect.totalTooltip"
                   [ngModel]="beacon.total"
                   (ngModelChange)="setTotal($index, $event)"
                 ></lab-input-number>
@@ -80,6 +82,8 @@
                 [options]="settingsStore.options().beacons"
                 [labTooltip]="beacon.id"
                 labTooltipType="beacon"
+                labTooltipAction="beaconsSelect.beaconTooltip"
+                [attr.aria-label]="'beaconsSelect.beaconTooltip' | translate"
                 [ngModel]="beacon.id"
                 (ngModelChange)="setId($index, $event)"
               >

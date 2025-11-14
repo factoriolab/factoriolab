@@ -34,7 +34,6 @@ import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { displayRateOptions } from '~/state/settings/display-rate';
 import { MaximizeType } from '~/state/settings/maximize-type';
-import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Conversion } from './conversion';
@@ -63,7 +62,6 @@ export class Objectives extends ObjectiveForm {
   protected readonly conversion = inject(Conversion);
   protected readonly objectivesStore = inject(ObjectivesStore);
   protected readonly preferencesStore = inject(PreferencesStore);
-  protected readonly settingsStore = inject(SettingsStore);
 
   protected readonly data = this.settingsStore.dataset;
   protected readonly displayRateOptions = displayRateOptions;

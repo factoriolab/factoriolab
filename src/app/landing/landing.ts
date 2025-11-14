@@ -24,7 +24,6 @@ import { ObjectiveBase } from '~/state/objectives/objective';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
-import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 @Component({
@@ -51,7 +50,6 @@ export class Landing extends ObjectiveForm {
   protected readonly preferencesStore = inject(PreferencesStore);
   protected readonly release = inject(Release);
   protected readonly routerSync = inject(RouterSync);
-  protected readonly settingsStore = inject(SettingsStore);
 
   protected readonly data = this.settingsStore.dataset;
   protected readonly faBoxOpen = faBoxOpen;

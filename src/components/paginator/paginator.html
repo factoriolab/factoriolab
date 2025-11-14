@@ -47,6 +47,7 @@
 ></button>
 <div>
   <lab-select
+    [attr.aria-label]="'paginator.rows' | translate"
     [options]="rowsOptions"
     [ngModel]="state().rows"
     (ngModelChange)="updateApply(state, { rows: $event })"

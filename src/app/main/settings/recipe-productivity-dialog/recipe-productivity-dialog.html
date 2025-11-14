@@ -10,7 +10,7 @@
       @if (data().itemRecord[techId]; as tech) {
         <tr>
           <td>
-            <div class="flex items-center gap-2">
+            <div [id]="techId" class="flex items-center gap-2">
               <lab-icon [value]="techId" type="item"></lab-icon>
               {{ tech.name }}
             </div>
@@ -21,6 +21,7 @@
               [percent]="true"
               [buttons]="true"
               [step]="rational(10)"
+              [labelledBy]="techId"
               [ngModel]="editValue()[techId]"
               (ngModelChange)="updateValue(techId, $event)"
             ></lab-input-number>

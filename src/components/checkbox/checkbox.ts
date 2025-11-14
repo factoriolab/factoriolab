@@ -58,6 +58,7 @@ export class Checkbox extends Control<boolean | undefined> {
   readonly controlId = input(`lab-checkbox-${this.uniqueId}`);
   readonly value = model<boolean | undefined>();
   readonly disabled = model(false);
+  readonly ariaLabel = input<string>();
   readonly labelledBy = input<string>();
   readonly label = input<string>();
   readonly labelParams = input<TranslateParams>();

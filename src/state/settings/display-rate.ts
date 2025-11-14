@@ -21,6 +21,7 @@ export interface DisplayRateInfo {
   rocketsLabel: string;
   pollutionLabel: string;
   value: Rational;
+  step: Rational;
 }
 
 export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
@@ -32,6 +33,7 @@ export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
     rocketsLabel: 'options.objectiveUnit.rocketsPerSecond',
     pollutionLabel: 'options.objectiveUnit.pollutionPerSecond',
     value: rational.one,
+    step: rational.one,
   },
   [DisplayRate.PerMinute]: {
     option: DisplayRate.PerMinute,
@@ -41,6 +43,7 @@ export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
     rocketsLabel: 'options.objectiveUnit.rocketsPerMinute',
     pollutionLabel: 'options.objectiveUnit.pollutionPerMinute',
     value: rational(60n),
+    step: rational(5n),
   },
   [DisplayRate.PerHour]: {
     option: DisplayRate.PerHour,
@@ -50,5 +53,6 @@ export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
     rocketsLabel: 'options.objectiveUnit.rocketsPerHour',
     pollutionLabel: 'options.objectiveUnit.pollutionPerHour',
     value: rational(3600n),
+    step: rational(100n),
   },
 };

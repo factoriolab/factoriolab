@@ -7,6 +7,7 @@
       [buttons]="true"
       [disabled]="!entry.id"
       labTooltip="modules.eachTooltip"
+      ariaLabel="modules.eachTooltip"
       [ngModel]="entry.count"
       (ngModelChange)="setCount($index, $event)"
     ></lab-input-number>
@@ -18,6 +19,7 @@
       [labTooltip]="entry.id || 'modules.moduleTooltip'"
       [labTooltipType]="entry.id ? 'module' : undefined"
       [labTooltipAction]="entry.id ? 'modules.moduleTooltip' : ''"
+      [attr.aria-label]="'modules.moduleTooltip' | translate"
       [ngModel]="entry.id"
       (ngModelChange)="setId($index, $event)"
     ></lab-select>

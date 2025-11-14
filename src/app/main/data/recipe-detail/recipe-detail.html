@@ -216,10 +216,11 @@
           </th>
         </tr>
         <tr>
-          <th>{{ 'data.excluded' | translate }}</th>
+          <th id="excluded">{{ 'data.excluded' | translate }}</th>
           <td>
             <div class="flex items-center justify-end">
               <lab-checkbox
+                labelledBy="excluded"
                 [ngModel]="settings().excludedRecipeIds.has(id())"
                 (ngModelChange)="changeExcluded($event)"
               ></lab-checkbox>
@@ -227,10 +228,11 @@
           </td>
         </tr>
         <tr>
-          <th>{{ 'data.checked' | translate }}</th>
+          <th id="checked">{{ 'data.checked' | translate }}</th>
           <td>
             <div class="flex items-center justify-end">
               <lab-checkbox
+                labelledBy="checked"
                 [ngModel]="settings().checkedRecipeIds.has(id())"
                 (ngModelChange)="changeChecked($event)"
               ></lab-checkbox>
@@ -261,10 +263,12 @@
               <div class="flex flex-col items-stretch">
                 @for (module of recipeSettings.modules; track module.id) {
                   @if (module.id === '') {
-                    <lab-icon
-                      value="module"
-                      [text]="module.count?.toString()"
-                    ></lab-icon>
+                    <div class="self-end">
+                      <lab-icon
+                        value="module"
+                        [text]="module.count?.toString()"
+                      ></lab-icon>
+                    </div>
                   } @else if (module.id) {
                     <a
                       [routerLink]="['../../modules', module.id]"
@@ -304,10 +308,12 @@
                   }
                   @for (module of beacon.modules; track module.id) {
                     @if (module.id === '') {
-                      <lab-icon
-                        value="module"
-                        [text]="module.count?.toString()"
-                      ></lab-icon>
+                      <div class="self-end">
+                        <lab-icon
+                          value="module"
+                          [text]="module.count?.toString()"
+                        ></lab-icon>
+                      </div>
                     } @else if (module.id) {
                       <a
                         [routerLink]="['../../modules', module.id]"
@@ -335,9 +341,10 @@
         }
         @if (data().adjustedRecipe[id()]?.cost; as cost) {
           <tr>
-            <th>{{ 'data.cost' | translate }}</th>
+            <th id="cost">{{ 'data.cost' | translate }}</th>
             <td>
               <lab-input-number
+                labelledBy="cost"
                 [ngModel]="cost"
                 (ngModelChange)="
                   recipesStore.updateRecordField(id(), 'cost', $event)

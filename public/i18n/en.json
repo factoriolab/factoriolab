@@ -15,7 +15,8 @@
     "addBeacons": "Add beacons",
     "eachTooltip": "Beacons per machine",
     "tooltip": "Click to select beacons",
-    "totalTooltip": "Total beacons"
+    "totalTooltip": "Total beacons",
+    "beaconTooltip": "Click to select beacon"
   },
   "beltSelect": {
     "stackTooltip": "Stack size"
@@ -42,8 +43,8 @@
     "machineTooltip": "Multiplies cost by number of machines running recipes",
     "maximize": "Maximize",
     "maximizeTooltip": "Cost of maximization objectives (must be negative)",
-    "recipe": "Recipe",
-    "recipeTooltip": "Multiplies cost of recipes with a defined cost, usually mining",
+    "factor": "Recipe",
+    "factorTooltip": "Multiplies cost of recipes with a defined cost, usually mining",
     "recycling": "Recycling",
     "recyclingTooltip": "Multiplies cost of recycling recipes by this number",
     "surplus": "Surplus",
@@ -348,7 +349,8 @@
     "label": "Showing {{ first }} to {{ last }} of {{ total }}",
     "last": "Last page",
     "next": "Next page",
-    "previous": "Previous page"
+    "previous": "Previous page",
+    "rows": "Rows per page"
   },
   "picker": {
     "includeAll": "Include all",
@@ -412,6 +414,7 @@
     "estimateBeaconPowerUsageTooltip": "Enable to estimate power usage of beacons, based on an estimated average number of receivers per beacon",
     "factory": "Factory",
     "flowRateUnit": "u/sec",
+    "fuelTooltip": "Click to select fuel preference",
     "fuelRank": "Preferred fuels",
     "fuelRankEmpty": "No fuels selected",
     "fuelRankTooltip": "Select the order of preferred fuels to be used where applicable",
@@ -463,6 +466,7 @@
     "beltSelectTooltip": "Click to select belt and stack size",
     "beltTooltip": "Click to select belt",
     "beltsUndoTooltip": "Undo all belt modifications",
+    "checked": "Step checked",
     "checkedUndoTooltip": "Undo all checkmarks",
     "downloadAsCsv": "Download as CSV",
     "emptyMessage": "Click on a node in the diagram to view details",

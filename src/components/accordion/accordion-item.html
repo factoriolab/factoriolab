@@ -1,7 +1,7 @@
 <button
   type="button"
   [id]="controlId()"
-  [attr.aria-controls]="controlId() + '-region'"
+  [attr.aria-controls]="expanded ? controlId() + '-region' : null"
   class="flex h-9 cursor-pointer items-center gap-1 border-b border-gray-600 p-2 hover:bg-gray-600 md:h-auto md:p-3"
   (click)="toggle()"
 >

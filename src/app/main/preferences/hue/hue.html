@@ -4,6 +4,8 @@
     min="0"
     max="360"
     class="accent-brand-500 w-full"
+    [disabled]="disabled()"
+    [attr.aria-labelledby]="labelledBy() ?? formField?.labelId ?? null"
     [ngModel]="value()"
     (ngModelChange)="setValue($event)"
   />
@@ -15,6 +17,8 @@
     max="360"
     step="15"
     class="input"
+    [disabled]="disabled()"
+    [attr.aria-labelledby]="labelledBy() ?? formField?.labelId ?? null"
     [ngModel]="value()"
     (ngModelChange)="setValue($event)"
   />
