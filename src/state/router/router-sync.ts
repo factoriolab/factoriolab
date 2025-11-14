@@ -249,8 +249,8 @@ export class RouterSync {
   async stepHref(
     step: Step,
     config: ZipData<LabParams>,
-    hash: ModHash | undefined,
   ): Promise<LabParams | null> {
+    const hash = this.settingsStore.modHash();
     if (hash == null) return null;
 
     let objectives: Record<string, ObjectiveState> | undefined;

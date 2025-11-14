@@ -70,12 +70,6 @@ export class Normalization {
       }
     }
 
-    // Adjust based on productivity for technology objectives
-    const recipe =
-      data.adjustedRecipe[data.itemRecipeIds[objective.targetId][0]];
-    if (recipe?.flags.has('technology'))
-      factor = factor.mul(recipe.effects.productivity);
-
     return rate.mul(factor);
   }
 
