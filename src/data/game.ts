@@ -11,7 +11,10 @@ export type Game =
   | 'outworld-station'
   | 'satisfactory'
   | 'skyformer'
-  | 'techtonica';
+  | 'techtonica'
+  | 'custom';
+
+export const CUSTOM_MOD = 'loc';
 
 export const gameOptions: Option<Game>[] = [
   {
@@ -78,6 +81,12 @@ export const gameOptions: Option<Game>[] = [
     value: 'techtonica',
     label: 'options.game.techtonica',
     icon: 'techtonica',
+    iconType: 'system',
+  },
+  {
+    value: 'custom',
+    label: 'options.game.custom',
+    icon: 'factoriolab',
     iconType: 'system',
   },
 ];

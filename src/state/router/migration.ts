@@ -145,7 +145,7 @@ export class Migration {
       const zip = asString(params[ZipSectionV10.Settings]);
       const s = zip.split(ZFIELDSEP);
       // Convert modId to V1
-      let modId = this.zip.parseString(s[0]);
+      let modId: string | null | undefined = this.zip.parseString(s[0]);
       modId = modId && datasets.modHash[datasets.modHashV0.indexOf(modId)];
       modId = modId ?? '';
       // Convert displayRate to V1
@@ -974,7 +974,7 @@ export class Migration {
     }
 
     // Mod
-    const oldMod = params[ZipSectionV10.Mod] as string | undefined;
+    const oldMod = params[ZipSectionV10.Mod] as string | null | undefined;
     delete params[ZipSectionV10.Mod];
     let newMod = oldMod;
     if (newMod && !state.isBare)

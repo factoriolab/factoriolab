@@ -245,6 +245,7 @@
     },
     "game": {
       "captainOfIndustry": "Captain of Industry",
+      "custom": "Custom",
       "dysonSphereProgram": "Dyson Sphere Program",
       "factorY": "Factor Y",
       "factorio": "Factorio",

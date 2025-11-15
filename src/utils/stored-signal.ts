@@ -1,6 +1,6 @@
 import { effect, signal, WritableSignal } from '@angular/core';
 
-type StorageKey = 'router' | 'preferences' | 'stepDetailTab';
+type StorageKey = 'data' | 'icons' | 'preferences' | 'router';
 
 export function getStoredValue(key: StorageKey): string | undefined {
   return localStorage.getItem(key) ?? undefined;

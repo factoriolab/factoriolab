@@ -8,7 +8,7 @@ export const DEFAULT_MOD = 'spa';
 export interface Datasets {
   mods: ModInfo[];
   modHashV0: string[];
-  modHash: string[];
+  modHash: (string | null)[];
 }
 
 export const datasets: Datasets = {
@@ -108,6 +108,7 @@ export const datasets: Datasets = {
       flags: 'fdy',
     },
     { id: 'sky', name: 'SkyFormer', game: 'skyformer', flags: 'sky' },
+    { id: 'loc', name: 'Custom', game: 'custom', flags: 'spa' },
   ],
   modHashV0: [
     '1.1',
@@ -138,7 +139,7 @@ export const datasets: Datasets = {
     'bobang',
     'dsp',
     'fep',
-    'ir2', // Obsolete
+    null,
     'kr2',
     'kr2sxp',
     'pys',

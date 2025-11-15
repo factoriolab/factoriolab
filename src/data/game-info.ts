@@ -1,4 +1,4 @@
-import { Game } from './game';
+import { CUSTOM_MOD, Game } from './game';
 
 /** Game information, nonconfigurable */
 export interface GameInfo {
@@ -25,4 +25,5 @@ export const gameInfo: Record<Game, GameInfo> = {
   foundry: { label: 'options.game.foundry', modId: 'fdy' },
   'outworld-station': { label: 'options.game.outworldStation', modId: 'ows' },
   skyformer: { label: 'options.game.skyformer', modId: 'sky' },
+  custom: { label: 'options.game.custom', modId: CUSTOM_MOD },
 };

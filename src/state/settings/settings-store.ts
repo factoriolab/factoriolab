@@ -3,7 +3,7 @@ import { computed, effect, inject, Injectable } from '@angular/core';
 import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 
 import { DEFAULT_MOD, modOptions, modRecord } from '~/data/datasets';
-import { Game } from '~/data/game';
+import { CUSTOM_MOD, Game } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
 import { IconType } from '~/data/icon-type';
 import { ModInfo } from '~/data/mod';
@@ -45,6 +45,7 @@ import { log } from '~/utils/log';
 import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 import { reduceRecord, toRecord } from '~/utils/record';
+import { storedSignal } from '~/utils/stored-signal';
 
 import { BeaconSettings } from '../beacon-settings';
 import { Hydration } from '../hydration';
@@ -68,6 +69,9 @@ export class SettingsStore extends Store<SettingsState> {
   private readonly hydration = inject(Hydration);
   private readonly preferencesStore = inject(PreferencesStore);
 
+  readonly customData = storedSignal('data');
+  readonly customIcons = storedSignal('icons');
+
   readonly modId = this.select('modId');
   readonly maximizeType = this.select('maximizeType');
   readonly displayRate = this.select('displayRate');
@@ -77,14 +81,16 @@ export class SettingsStore extends Store<SettingsState> {
 
   private readonly modDataResource = httpResource<ModData>(() => {
     const modId = this.modId();
-    if (modId == null) return undefined;
+    if (modId == null || modId === CUSTOM_MOD) return undefined;
     return `data/${modId}/data.json`;
   });
+
   private readonly modHashResource = httpResource<ModHash>(() => {
     const modId = this.modId();
-    if (modId == null) return undefined;
+    if (modId == null || modId === CUSTOM_MOD) return undefined;
     return `data/${modId}/hash.json`;
   });
+
   private readonly modI18nResource = httpResource<ModI18n>(() => {
     const modId = this.modId();
     const lang = this.preferencesStore.language();
