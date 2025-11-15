@@ -11,6 +11,9 @@
     "updateRequired": "Update required",
     "updateRequiredMessage": "An update is available, and the page must be reloaded to proceed."
   },
+  "customData": {
+    "header": "Select custom data"
+  },
   "beaconsSelect": {
     "addBeacons": "Add beacons",
     "eachTooltip": "Beacons per machine",

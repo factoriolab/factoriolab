@@ -99,6 +99,13 @@ export class SettingsStore extends Store<SettingsState> {
   });
 
   readonly modData = computed(() => {
+    const modId = this.modId();
+    if (modId == null) return undefined;
+    if (modId === 'loc') {
+      const data = this.customData();
+      if (data == null) return undefined;
+      return JSON.parse(data) as ModData;
+    }
     if (this.modDataResource.error()) return undefined;
     return this.modDataResource.value();
   });
