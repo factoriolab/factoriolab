@@ -1,0 +1,24 @@
+<input
+  type="file"
+  multiple
+  (ngModelChange)="selectFile($event)"
+  (change)="selectFile($event)"
+/>
+
+<div class="flex justify-end gap-1 sm:gap-2">
+  <button
+    type="button"
+    labButton
+    color="brand"
+    text="ok"
+    [faIcon]="faCheck"
+    (click)="save()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    text="cancel"
+    [faIcon]="faXmark"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

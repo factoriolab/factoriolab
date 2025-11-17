@@ -34,12 +34,13 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
-import { map } from 'rxjs';
+import { filter, map } from 'rxjs';
 
 import { AccordionModule } from '~/components/accordion/accordion-module';
 import { BeaconsSelect } from '~/components/beacons-select/beacons-select';
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
+import { CustomDataDialog } from '~/components/custom-data-dialog/custom-data-dialog';
 import { FormField } from '~/components/form-field/form-field';
 import { Icon } from '~/components/icon/icon';
 import { InputNumber } from '~/components/input-number/input-number';
@@ -167,7 +168,14 @@ export class Settings {
   }
 
   setGame(game: Game): void {
-    this.setMod(gameInfo[game].modId);
+    if (game === 'custom' && !this.settingsStore.customData()) {
+      this.dialog
+        .open<boolean>(CustomDataDialog)
+        .closed.pipe(filter((value) => value === true))
+        .subscribe(() => {
+          this.setMod(gameInfo[game].modId);
+        });
+    } else this.setMod(gameInfo[game].modId);
   }
 
   setMod(modId: string): void {
