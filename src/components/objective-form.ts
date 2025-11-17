@@ -1,4 +1,4 @@
-import { computed, inject, linkedSignal, signal } from '@angular/core';
+import { computed, inject, signal } from '@angular/core';
 import { EMPTY, switchMap } from 'rxjs';
 
 import { rational } from '~/rational/rational';
@@ -15,10 +15,7 @@ export abstract class ObjectiveForm {
 
   protected readonly displayRateInfo = this.settingsStore.displayRateInfo;
 
-  readonly value = linkedSignal(() => {
-    if (this.unit() !== ObjectiveUnit.Items) return rational.one;
-    return this.displayRateInfo().value;
-  });
+  readonly value = signal(rational.one);
   readonly unit = signal(ObjectiveUnit.Items);
   readonly type = signal(ObjectiveType.Output);
   readonly isRecipe = computed(() => this.unit() === ObjectiveUnit.Machines);

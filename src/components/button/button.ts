@@ -24,11 +24,11 @@ const host = cva(
   {
     variants: {
       color: {
-        gray: 'outline-brand-600 focus-visible:border-brand-600 text-gray-100',
+        gray: 'outline-brand-600 focus-visible:border-brand-600 text-gray-50',
         brand:
-          'text-brand-100 bg-brand-950 z-1 outline-gray-300 focus-visible:border-gray-600',
+          'text-brand-50 bg-brand-950 z-1 outline-gray-300 focus-visible:border-gray-600',
         complement:
-          'text-complement-100 bg-complement-950 z-1 outline-gray-300 focus-visible:border-gray-300',
+          'text-complement-50 bg-complement-950 z-1 outline-gray-300 focus-visible:border-gray-300',
       },
       size: {
         micro: 'w-9',
@@ -57,17 +57,17 @@ const host = cva(
       {
         color: 'gray',
         border: true,
-        class: 'hover:bg-gray-600 border-gray-600',
+        class: 'hover:bg-gray-800 border-gray-600',
       },
       {
         color: 'brand',
         border: true,
-        class: 'hover:bg-brand-600 border-brand-600',
+        class: 'hover:bg-brand-800 border-brand-600',
       },
       {
         color: 'complement',
         border: true,
-        class: 'hover:bg-complement-600 border-complement-600',
+        class: 'hover:bg-complement-800 border-complement-600',
       },
       {
         color: 'gray',
