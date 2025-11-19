@@ -47,3 +47,6 @@ scripts/logs
 
 # Mod settings files
 mod-settings.dat
+# pixi environments
+.pixi/*
+!.pixi/config.toml

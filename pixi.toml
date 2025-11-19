@@ -1,0 +1,11 @@
+[workspace]
+authors = ["Gabriel Nadler <nadler.gabriel@gmail.com>"]
+channels = ["conda-forge"]
+name = "factoriolab"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+nodejs = ">=24.9.0,<24.10"
