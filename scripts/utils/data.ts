@@ -7,7 +7,6 @@ import {
   qualityId,
   recipeHasQuality,
 } from '~/data/schema/quality';
-import { Flag } from '~/state/flags';
 
 const QUALITIES = [
   Quality.Uncommon,
@@ -80,12 +79,9 @@ export function updateHashItem(
   if (i.technology) addIfMissing(hash, hashSet, 'technologies', id);
 }
 
-export function updateHash(
-  data: ModData,
-  hash: ModHash,
-  flags: Set<Flag>,
-): void {
+export function updateHash(data: ModData, hash: ModHash): void {
   const hashSet = emptyModHashSet();
+  const flags = new Set(data.flags);
 
   data.items.forEach((i) => {
     updateHashItem(hash, hashSet, i, i.id);

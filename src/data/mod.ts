@@ -1,5 +1,3 @@
-import { FlagSet } from '~/state/flags';
-
 import { Game } from './game';
 // import { ModData } from './schema/mod-data';
 
@@ -11,7 +9,6 @@ export interface ModInfo {
   id: string;
   name: string;
   game: Game;
-  flags: FlagSet;
 }
 
 // export interface Mod extends ModData, ModInfo {}

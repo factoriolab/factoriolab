@@ -42,7 +42,6 @@ import { Technology } from '~/data/schema/technology';
 import { LinkOption } from '~/option/link-option';
 import { getIdOptions, Option, OptionParams } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
-import { flags } from '~/state/flags';
 import { log } from '~/utils/log';
 import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
@@ -497,8 +496,8 @@ export class SettingsStore extends Store<SettingsState> {
 
     const itemQIds = new Set<string>();
     const recipeQIds = new Set<string>();
-    const _flags = flags[coalesce(info?.flags, DEFAULT_MOD)];
-    if (_flags.has('quality')) {
+    const flags = new Set(data?.flags);
+    if (flags.has('quality')) {
       const qualities = [
         Quality.Uncommon,
         Quality.Rare,
@@ -733,7 +732,7 @@ export class SettingsStore extends Store<SettingsState> {
       return e;
     }, {});
 
-    if (_flags.has('quality')) {
+    if (flags.has('quality')) {
       const qualities = [
         Quality.Uncommon,
         Quality.Rare,
@@ -799,7 +798,7 @@ export class SettingsStore extends Store<SettingsState> {
       game,
       modId: modId,
       info: gameInfo[game],
-      flags: _flags,
+      flags,
       version: coalesce(data?.version, {}),
       categoryIds,
       categoryRecord,
