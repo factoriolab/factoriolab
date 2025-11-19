@@ -31,6 +31,7 @@ import {
   faIndustry,
   faInfo,
   faMicrochip,
+  faUpload,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
@@ -48,7 +49,7 @@ import { ModulesSelect } from '~/components/modules-select/modules-select';
 import { Picker } from '~/components/picker/picker';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
-import { Game, gameOptions } from '~/data/game';
+import { CUSTOM_MOD, Game, gameOptions } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
 import { FilterOptionsPipe } from '~/option/filter-options-pipe';
 import { OptionPipe } from '~/option/option-pipe';
@@ -137,6 +138,8 @@ export class Settings {
   protected readonly addMachineValue = signal<string | null>(null);
 
   protected readonly CostSettingsDialog = CostSettingsDialog;
+  protected readonly CUSTOM_MOD = CUSTOM_MOD;
+  protected readonly CustomDataDialog = CustomDataDialog;
   protected readonly data = this.settingsStore.dataset;
   protected readonly faArrowTrendUp = faArrowTrendUp;
   protected readonly faArrowUpRightFromSquare = faArrowUpRightFromSquare;
@@ -150,9 +153,11 @@ export class Settings {
   protected readonly faIndustry = faIndustry;
   protected readonly faInfo = faInfo;
   protected readonly faMicrochip = faMicrochip;
+  protected readonly faUpload = faUpload;
   protected readonly faXmark = faXmark;
   protected readonly gameOptions = gameOptions;
   protected readonly maximizeTypeOptions = maximizeTypeOptions;
+  protected readonly modId = this.settingsStore.modId;
   protected readonly options = this.settingsStore.options;
   protected readonly rational = rational;
   protected readonly researchBonusOptions = researchBonusOptions;

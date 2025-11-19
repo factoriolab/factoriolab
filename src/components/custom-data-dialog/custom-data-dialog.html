@@ -1,5 +1,48 @@
+<div class="flex flex-col gap-2">
+  <div>{{ 'customData.label' | translate }}</div>
+  <button
+    type="button"
+    labButton
+    text="customData.chooseFiles"
+    (click)="fileInput.click()"
+  ></button>
+</div>
+
+<div class="flex justify-between">
+  <div class="flex flex-col">
+    <div class="text-sm text-gray-300">
+      {{ 'customData.dataFile' | translate }}
+    </div>
+    <div>
+      @if (dataFile) {
+        {{ dataFile.name }}
+      } @else if (settingsStore.customData()) {
+        {{ 'customData.cached' | translate }}
+      } @else {
+        {{ 'none' | translate }}
+      }
+    </div>
+  </div>
+  <div class="flex flex-col items-end">
+    <div class="mx-1 text-sm text-gray-300">
+      {{ 'customData.iconsFile' | translate }}
+    </div>
+    <div>
+      @if (iconsFile) {
+        {{ iconsFile.name }}
+      } @else if (settingsStore.customIcons()) {
+        {{ 'customData.cached' | translate }}
+      } @else {
+        {{ 'none' | translate }}
+      }
+    </div>
+  </div>
+</div>
+
 <input
+  #fileInput
   type="file"
+  class="hidden"
   multiple
   (ngModelChange)="selectFile($event)"
   (change)="selectFile($event)"

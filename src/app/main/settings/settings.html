@@ -64,7 +64,7 @@
 }
 
 <lab-accordion class="overflow-y-auto" [multi]="true">
-  <lab-accordion-item text="game" [note]="settingsStore.modId()">
+  <lab-accordion-item text="game" [note]="modId()">
     <ng-template #content>
       <lab-form-field label="game">
         <lab-select
@@ -76,7 +76,7 @@
         ></lab-select>
       </lab-form-field>
 
-      @if (data().flags.has('mods') && settingsStore.modId(); as modId) {
+      @if (data().flags.has('mods') && modId(); as modId) {
         <lab-form-field label="modSet">
           <a
             action
@@ -105,6 +105,16 @@
             ></button>
           </div>
         </lab-form-field>
+      }
+
+      @if (modId() === CUSTOM_MOD) {
+        <button
+          type="button"
+          labButton
+          [faIcon]="faUpload"
+          text="customData.header"
+          (click)="dialog.open(CustomDataDialog)"
+        ></button>
       }
 
       @if (data().technologyIds.length) {

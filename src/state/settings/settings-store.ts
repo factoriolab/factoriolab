@@ -1,7 +1,9 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { httpResource } from '@angular/common/http';
 import { computed, effect, inject, Injectable } from '@angular/core';
 import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 
+import { CustomDataDialog } from '~/components/custom-data-dialog/custom-data-dialog';
 import { DEFAULT_MOD, modOptions, modRecord } from '~/data/datasets';
 import { CUSTOM_MOD, Game } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
@@ -66,10 +68,12 @@ import { systemIconsRecord } from './system-icons';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsStore extends Store<SettingsState> {
+  private readonly dialog = inject(Dialog);
   private readonly hydration = inject(Hydration);
   private readonly preferencesStore = inject(PreferencesStore);
 
   readonly customData = storedSignal('data');
+  readonly customHash = storedSignal('hash');
   readonly customIcons = storedSignal('icons');
 
   readonly modId = this.select('modId');
@@ -101,16 +105,27 @@ export class SettingsStore extends Store<SettingsState> {
   readonly modData = computed(() => {
     const modId = this.modId();
     if (modId == null) return undefined;
-    if (modId === 'loc') {
+
+    if (modId === CUSTOM_MOD) {
       const data = this.customData();
       if (data == null) return undefined;
       return JSON.parse(data) as ModData;
     }
+
     if (this.modDataResource.error()) return undefined;
     return this.modDataResource.value();
   });
 
   readonly modHash = computed(() => {
+    const modId = this.modId();
+    if (modId == null) return undefined;
+
+    if (modId === CUSTOM_MOD) {
+      const hash = this.customHash();
+      if (hash == null) return undefined;
+      return JSON.parse(hash) as ModHash;
+    }
+
     if (this.modHashResource.error()) return undefined;
     return this.modHashResource.value();
   });
@@ -297,6 +312,9 @@ export class SettingsStore extends Store<SettingsState> {
     effect(() => {
       const modId = this.modId();
       if (modId) log('set_mod_id', modId);
+
+      if (modId === CUSTOM_MOD && this.customData() == null)
+        this.dialog.open(CustomDataDialog);
     });
 
     effect(() => {
@@ -745,8 +763,11 @@ export class SettingsStore extends Store<SettingsState> {
     }
 
     const modId = coalesce(info?.id, DEFAULT_MOD);
-    const file = `data/${modId}/icons.webp`;
+    let file = `data/${modId}/icons.webp`;
+    if (modId === CUSTOM_MOD) file = coalesce(this.customIcons(), '');
+
     const image = `url("${file}")`;
+
     function toIconRecord(
       ids: string[],
       rec: Record<string, Category | Item | Recipe | IconJson>,

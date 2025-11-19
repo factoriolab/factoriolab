@@ -108,7 +108,7 @@ export const datasets: Datasets = {
       flags: 'fdy',
     },
     { id: 'sky', name: 'SkyFormer', game: 'skyformer', flags: 'sky' },
-    { id: 'loc', name: 'Custom', game: 'custom', flags: 'spa' },
+    { id: 'cst', name: 'Custom', game: 'custom', flags: 'spa' },
   ],
   modHashV0: [
     '1.1',

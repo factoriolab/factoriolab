@@ -3,14 +3,16 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 
+import { ModData } from '~/data/schema/mod-data';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
 import { DialogData } from '../dialog/dialog';
 
 @Component({
   selector: 'lab-custom-data-dialog',
-  imports: [FormsModule, Button],
+  imports: [FormsModule, Button, TranslatePipe],
   templateUrl: './custom-data-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -19,47 +21,50 @@ import { DialogData } from '../dialog/dialog';
 })
 export class CustomDataDialog implements DialogData {
   protected readonly dialogRef = inject<DialogRef<boolean>>(DialogRef);
-  private readonly settingsStore = inject(SettingsStore);
+  protected readonly settingsStore = inject(SettingsStore);
 
   readonly header = 'customData.header';
   protected readonly faCheck = faCheck;
   protected readonly faXmark = faXmark;
 
-  private data: string | undefined;
-  private icons: string | undefined;
+  dataFile: File | undefined;
+  iconsFile: File | undefined;
 
   selectFile(event: Event): void {
-    console.log(event);
     const files = (event.target as HTMLInputElement).files;
-    if (files) {
-      for (const file of files) {
-        if (file.name === 'data.json') {
-          const reader = new FileReader();
-          reader.onload = (ev): void => {
-            console.log(ev);
-            const result = ev.target?.result;
-            if (typeof result === 'string') this.data = result;
-          };
-          reader.readAsText(file);
-          console.log('data', file);
-        } else if (file.type.startsWith('image')) {
-          const reader = new FileReader();
-          reader.onload = (ev): void => {
-            console.log(ev);
-            const result = ev.target?.result;
-            if (typeof result === 'string') this.icons = result;
-          };
-          reader.readAsDataURL(file);
-          console.log('icons', file);
-        }
-      }
+    if (files == null) return;
+
+    for (const file of files) {
+      if (file.type === 'application/json') this.dataFile = file;
+      else if (file.type.startsWith('image')) this.iconsFile = file;
     }
   }
 
   save(): void {
-    console.log('save');
-    this.settingsStore.customData.set(this.data);
-    this.settingsStore.customIcons.set(this.icons);
+    if (this.dataFile) {
+      const reader = new FileReader();
+      reader.onload = (ev): void => {
+        const result = ev.target?.result;
+        if (typeof result === 'string')
+          this.settingsStore.customData.set(result);
+      };
+      reader.readAsText(this.dataFile);
+    }
+
+    if (this.iconsFile) {
+      const reader = new FileReader();
+      reader.onload = (ev): void => {
+        const result = ev.target?.result;
+        if (typeof result === 'string')
+          this.settingsStore.customIcons.set(result);
+      };
+      reader.readAsDataURL(this.iconsFile);
+    }
+
     this.dialogRef.close(true);
+  }
+
+  buildHash(data: ModData): void {
+    // TODO
   }
 }

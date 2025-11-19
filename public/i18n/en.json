@@ -12,7 +12,12 @@
     "updateRequiredMessage": "An update is available, and the page must be reloaded to proceed."
   },
   "customData": {
-    "header": "Select custom data"
+    "header": "Select custom data",
+    "label": "Select JSON data file and image sprite sheet",
+    "chooseFiles": "Choose files",
+    "dataFile": "Data file",
+    "iconsFile": "Icons file",
+    "cached": "Cached"
   },
   "beaconsSelect": {
     "addBeacons": "Add beacons",

@@ -14,7 +14,7 @@ export type Game =
   | 'techtonica'
   | 'custom';
 
-export const CUSTOM_MOD = 'loc';
+export const CUSTOM_MOD = 'cst';
 
 export const gameOptions: Option<Game>[] = [
   {
@@ -86,7 +86,7 @@ export const gameOptions: Option<Game>[] = [
   {
     value: 'custom',
     label: 'options.game.custom',
-    icon: 'factoriolab',
+    icon: 'custom',
     iconType: 'system',
   },
 ];
