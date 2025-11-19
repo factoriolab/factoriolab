@@ -223,7 +223,9 @@
                   <lab-icon
                     [value]="step.recipeId"
                     type="recipe"
-                    [text]="'#' + step.recipeObjectiveId"
+                    [text]="
+                      step.recipeObjectiveId ? '#' + step.recipeObjectiveId : ''
+                    "
                     [labTooltip]="step.recipeId"
                     labTooltipType="recipe"
                     labTooltipPosition="adjacent"

@@ -9,6 +9,8 @@
             [labelledBy]="id"
             [labTooltip]="'costs.' + key + 'Tooltip'"
             labTooltipPosition="adjacent"
+            [maximum]="key === 'maximize' ? rational.zero : undefined"
+            [minimum]="key === 'maximize' ? undefined : rational.zero"
             [ngModel]="editValue()[key]"
             (ngModelChange)="apply(key, $event)"
           ></lab-input-number>
