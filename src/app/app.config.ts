@@ -6,6 +6,7 @@ import {
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import {
   ApplicationConfig,
+  ErrorHandler,
   inject,
   isDevMode,
   provideAppInitializer,
@@ -20,6 +21,7 @@ import { Dialog } from '~/components/dialog/dialog';
 import { Translate } from '~/translate/translate';
 
 import { routes } from './app.routes';
+import { LabErrorHandler } from './error/error-handler';
 
 let closePredicateIndex = 0;
 export const APP_DIALOG_CONFIG: DialogConfig = {
@@ -50,6 +52,7 @@ async function initializeApp(): Promise<unknown> {
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: DEFAULT_DIALOG_CONFIG, useValue: APP_DIALOG_CONFIG },
+    { provide: ErrorHandler, useClass: LabErrorHandler },
     provideAppInitializer(() => initializeApp()),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),

@@ -777,7 +777,6 @@ export class SettingsStore extends Store<SettingsState> {
         const icon = iconData[id];
         const text = (entity as Category | Item | Recipe).iconText;
         const quality = (entity as Item | Recipe).quality;
-        if (icon == null) console.log(id);
         const viewBox = getViewBox(icon.position);
         e[i] = { ...icon, file, image, viewBox, text, quality };
         return e;

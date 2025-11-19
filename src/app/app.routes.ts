@@ -1,9 +1,15 @@
 import { Routes } from '@angular/router';
 
+import { errorGuard } from './error/error';
 import { idGuard } from './id/id-guard';
 import { landingGuard } from './landing/landing-guard';
 
 export const routes: Routes = [
+  {
+    path: 'error',
+    canActivate: [errorGuard],
+    loadComponent: () => import('./error/error').then((c) => c.Error),
+  },
   {
     path: ':id',
     canActivate: [idGuard],
