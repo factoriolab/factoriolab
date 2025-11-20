@@ -11,14 +11,6 @@
     "updateRequired": "Update required",
     "updateRequiredMessage": "An update is available, and the page must be reloaded to proceed."
   },
-  "customData": {
-    "header": "Select custom data",
-    "label": "Select JSON data file and image sprite sheet",
-    "chooseFiles": "Choose files",
-    "dataFile": "Data file",
-    "iconsFile": "Icons file",
-    "cached": "Cached"
-  },
   "beaconsSelect": {
     "addBeacons": "Add beacons",
     "eachTooltip": "Beacons per machine",
@@ -59,6 +51,14 @@
     "surplusTooltip": "Cost to produce surplus items",
     "unproduceable": "Unproduceable",
     "unproduceableTooltip": "Cost of items that cannot be produced by any included recipes"
+  },
+  "customData": {
+    "header": "Select custom data",
+    "label": "Select JSON data file and image sprite sheet",
+    "chooseFiles": "Choose files",
+    "dataFile": "Data file",
+    "iconsFile": "Icons file",
+    "cached": "Cached"
   },
   "data": {
     "beacon": "Beacon",
@@ -138,6 +138,11 @@
     "time": "Time (s)",
     "unlockedBy": "Unlocked by",
     "unlockedRecipes": "Unlocked recipes"
+  },
+  "error": {
+    "header": "An error occurred",
+    "deleteCustom": "Delete custom data",
+    "home": "Home"
   },
   "filter": "Filter",
   "flow": {

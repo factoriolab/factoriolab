@@ -1,1 +1,23 @@
-<p>error works!</p>
+<div class="text-complement-300 flex items-center gap-2 text-lg font-semibold">
+  <fa-icon [icon]="faExclamationCircle"></fa-icon>
+  {{ 'error.header' | translate }}
+</div>
+<div class="font-mono text-sm text-gray-200">{{ info?.message }}</div>
+
+<div class="flex flex-col items-center gap-2">
+  @if (settingsStore.customData()) {
+    <button
+      type="button"
+      labButton
+      color="brand"
+      [faIcon]="faTrash"
+      text="error.deleteCustom"
+      (click)="deleteCustom()"
+    ></button>
+  }
+
+  <a routerLink="/" class="link flex items-center gap-1">
+    <fa-icon [icon]="faHome"></fa-icon>
+    {{ 'error.home' | translate }}
+  </a>
+</div>
