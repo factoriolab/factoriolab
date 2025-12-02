@@ -44,8 +44,8 @@
   type="file"
   class="hidden"
   multiple
-  (ngModelChange)="selectFile($event)"
   (change)="selectFile($event)"
+  (click)="fileInput.value = ''"
 />
 
 <div class="flex justify-end gap-1 sm:gap-2">
