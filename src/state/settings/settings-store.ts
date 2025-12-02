@@ -42,6 +42,7 @@ import { Technology } from '~/data/schema/technology';
 import { LinkOption } from '~/option/link-option';
 import { getIdOptions, Option, OptionParams } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
+import { emptyModHash, updateHash } from '~/utils/hash';
 import { log } from '~/utils/log';
 import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
@@ -320,6 +321,21 @@ export class SettingsStore extends Store<SettingsState> {
       const mod = this.modInfo();
       if (mod) log('set_game', mod.game);
     });
+  }
+
+  setCustomData(json: string): void {
+    this.customData.set(json);
+    try {
+      const data = JSON.parse(json) as ModData;
+      const hashJson = this.customHash();
+      const hash = hashJson
+        ? (JSON.parse(hashJson) as ModHash)
+        : emptyModHash();
+      updateHash(data, hash);
+      this.customHash.set(JSON.stringify(hash));
+    } catch {
+      // Do nothing
+    }
   }
 
   computeDefaults(

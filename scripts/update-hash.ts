@@ -3,8 +3,8 @@ import fs from 'fs';
 import { datasets } from '~/data/datasets';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
+import { emptyModHash, updateHash } from '~/utils/hash';
 
-import { emptyModHash, updateHash } from './utils/data';
 import { getJsonData, writeJsonData } from './utils/file';
 
 const modId = process.argv[2];

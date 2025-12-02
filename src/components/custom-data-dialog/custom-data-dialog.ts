@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-import { ModData } from '~/data/schema/mod-data';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
@@ -46,7 +45,7 @@ export class CustomDataDialog implements DialogData {
       reader.onload = (ev): void => {
         const result = ev.target?.result;
         if (typeof result === 'string')
-          this.settingsStore.customData.set(result);
+          this.settingsStore.setCustomData(result);
       };
       reader.readAsText(this.dataFile);
     }
@@ -62,9 +61,5 @@ export class CustomDataDialog implements DialogData {
     }
 
     this.dialogRef.close(true);
-  }
-
-  buildHash(data: ModData): void {
-    // TODO
   }
 }

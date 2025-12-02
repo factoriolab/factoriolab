@@ -12,6 +12,7 @@ import { DEFAULT_MOD } from '~/data/datasets';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
+import { WindowClient } from '~/window/window-client';
 
 import { getErrorInfo } from './error-info';
 
@@ -33,17 +34,19 @@ export const errorGuard: CanActivateFn = () => {
 export class Error {
   private readonly router = inject(Router);
   protected readonly settingsStore = inject(SettingsStore);
+  private readonly windowClient = inject(WindowClient);
 
   protected readonly faExclamationCircle = faExclamationCircle;
   protected readonly faTrash = faTrash;
   protected readonly faHome = faHome;
   protected readonly info = getErrorInfo(this.router);
 
-  deleteCustom(): void {
+  async deleteCustom(): Promise<void> {
     this.settingsStore.customData.set(undefined);
-    void this.router.navigate([
+    await this.router.navigate([
       '/',
       coalesce(this.settingsStore.modId(), DEFAULT_MOD),
     ]);
+    this.windowClient.reload();
   }
 }

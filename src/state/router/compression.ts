@@ -130,7 +130,7 @@ export class Compression {
     return code;
   }
 
-  private base64ToBytes(str: string): Uint8Array {
+  private base64ToBytes(str: string): BufferSource {
     if (str.length % 4 !== 0) {
       throw new Error('Unable to parse base64 string.');
     }
@@ -172,7 +172,7 @@ export class Compression {
   }
 
   private async decompress(
-    byteArray: Uint8Array,
+    byteArray: BufferSource,
     encoding = 'deflate' as CompressionFormat,
   ): Promise<string> {
     const cs = new DecompressionStream(encoding);

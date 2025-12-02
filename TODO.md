@@ -8,4 +8,3 @@
 - #1759
 - #1752
 - #1745
-- Build hash on the fly

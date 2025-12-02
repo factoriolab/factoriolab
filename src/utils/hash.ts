@@ -15,6 +15,8 @@ const QUALITIES = [
   Quality.Legendary,
 ];
 
+type ModHashSet = Record<keyof ModHash, Set<string>>;
+
 export function emptyModHash(): ModHash {
   return {
     items: [],
@@ -24,13 +26,11 @@ export function emptyModHash(): ModHash {
     wagons: [],
     machines: [],
     modules: [],
-    technologies: [],
     recipes: [],
+    technologies: [],
     locations: [],
   };
 }
-
-type ModHashSet = Record<keyof ModHash, Set<string>>;
 
 export function emptyModHashSet(): ModHashSet {
   return {
@@ -115,7 +115,7 @@ export function updateHash(data: ModData, hash: ModHash): void {
   for (const key of keys) {
     if (hash[key] == null) continue;
     hash[key] = hash[key]?.map((i) =>
-      i != null && hashSet[key].has(i) ? i : (null as unknown as string),
+      i != null && hashSet[key].has(i) ? i : null,
     );
   }
 }
