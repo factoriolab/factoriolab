@@ -55,8 +55,7 @@ const host = cva(
 })
 export class Dropdown {
   protected readonly overlayOrigin = inject(CdkOverlayOrigin);
-  protected readonly content =
-    contentChild.required<TemplateRef<unknown>>('content');
+  protected readonly content = contentChild.required(TemplateRef);
 
   readonly controlId = input.required();
   readonly disabled = input(false);

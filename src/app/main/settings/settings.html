@@ -65,7 +65,7 @@
 
 <lab-accordion class="overflow-y-auto" [multi]="true">
   <lab-accordion-item text="game" [note]="modId()">
-    <ng-template #content>
+    <ng-template>
       <lab-form-field label="game">
         <lab-select
           [options]="gameOptions"
@@ -163,7 +163,7 @@
     [note]="(settings().preset | option: settingsStore.presetOptions())?.label"
     [expanded]="true"
   >
-    <ng-template #content>
+    <ng-template>
       <lab-form-field label="settings.preset">
         <lab-select
           [options]="settingsStore.presetOptions()"
@@ -601,7 +601,7 @@
     data().prodUpgradeTechs.length
   ) {
     <lab-accordion-item text="settings.bonuses">
-      <ng-template #content>
+      <ng-template>
         @if (data().flags.has('miningSpeed')) {
           <lab-form-field label="settings.miningSpeed">
             <lab-input-number
@@ -662,7 +662,7 @@
   }
 
   <lab-accordion-item text="settings.advanced">
-    <ng-template #content>
+    <ng-template>
       <lab-form-field label="settings.maximizeType">
         <lab-select
           [options]="maximizeTypeOptions"

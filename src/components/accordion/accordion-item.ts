@@ -23,8 +23,7 @@ let nextUniqueId = 0;
 })
 export class AccordionItem extends CdkAccordionItem {
   private uniqueId = (nextUniqueId++).toString();
-  protected readonly content =
-    contentChild.required<TemplateRef<unknown>>('content');
+  protected readonly content = contentChild.required(TemplateRef);
 
   readonly controlId = input(`lab-accordion-item-${this.uniqueId}`);
   readonly text = input.required<string>();

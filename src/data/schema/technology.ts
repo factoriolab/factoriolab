@@ -9,3 +9,5 @@ export interface TechnologyJson {
 
   effects?: TechnologyEffect[];
 }
+
+export type Technology = TechnologyJson;
