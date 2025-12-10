@@ -28,8 +28,9 @@
     "factorio-dump:mac": "scripts/factorio-dump-mac.sh",
     "factorio-dump:flatpak": "scripts/factorio-dump-flatpak.sh",
     "factorio-api": "bun scripts/factorio-api.ts",
-    "sync-i18n": "bun scripts/sync-i18n.ts",
+    "factorio-build": "bun scripts/factorio-build.ts",
     "minify-data": "bun scripts/minify-data.ts",
+    "sync-i18n": "bun scripts/sync-i18n.ts",
     "update-color": "bun scripts/update-color.ts",
     "update-hash": "bun scripts/update-hash.ts"
   },

@@ -132,7 +132,7 @@ const lang: string | undefined = process.argv[3];
 const mod = datasets.mods.find((m) => m.id === modId);
 if (!mod)
   throw new Error(
-    'Please define this mod set in `src/data/index.ts` before running build.',
+    'Please define this mod set in `src/data/datasets.ts` before running build.',
   );
 
 // Set up paths
@@ -141,7 +141,7 @@ const scriptOutputPath = `${factorioPath}/script-output`;
 const dataRawPath = `${scriptOutputPath}/data-raw-dump.json`;
 const tempPath = './scripts/temp';
 const tempIconsPath = `${tempPath}/icons`;
-const modPath = `./src/data/${modId}`;
+const modPath = `./public/data/${modId}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
 const modDefaultsPath = `${modPath}/defaults.json`;
