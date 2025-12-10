@@ -9,6 +9,10 @@ export function logTime(msg: string): void {
   console.log(formatTime(allTime), formatTime(stepTime), msg);
 }
 
+export function logWarn(msg: string): void {
+  console.log(`\x1b[33m${msg}\x1b[0m`);
+}
+
 function formatTime(milliseconds: number): string {
   const seconds = milliseconds / 1000;
   const duration = [
