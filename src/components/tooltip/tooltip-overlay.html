@@ -348,24 +348,95 @@
               }
             </div>
           }
-          @if (technology.unlockedRecipes; as recipes) {
-            @if (recipes.length > 5) {
+          @if (technology.recipeUnlock && technology.recipeUnlock.length <= 5) {
+            <div class="mt-1 text-sm">
+              {{ 'data.unlockedRecipes' | translate }}
+            </div>
+            <div>
+              @for (recipeId of technology.recipeUnlock; track recipeId) {
+                <lab-icon [value]="recipeId" type="recipe"></lab-icon>
+              }
+            </div>
+          }
+          @if (technology.recipeProductivity) {
+            <div class="mt-1 text-sm">
+              {{ 'data.recipeProductivity' | translate }}
+            </div>
+            <div>
+              @for (effect of technology.recipeProductivity; track effect.id) {
+                @if (!data().recipeQIds.has(effect.id)) {
+                  <lab-icon
+                    [value]="effect.id"
+                    [text]="effect.value | bonusPercent: true"
+                    type="recipe"
+                  ></lab-icon>
+                }
+              }
+            </div>
+          }
+          @if (technology.qualityUnlock) {
+            <div class="mt-1 text-sm">
+              {{ 'data.unlockQuality' | translate }}
+            </div>
+            <div>
+              @for (quality of technology.qualityUnlock; track quality) {
+                <lab-icon [value]="'q' + quality"></lab-icon>
+              }
+            </div>
+          }
+          @if (technology.recipeUnlock) {
+            @if (technology.recipeUnlock.length > 5) {
               <table>
                 <tr>
                   <td>{{ 'data.unlockedRecipes' | translate }}</td>
-                  <td>{{ recipes.length }}</td>
+                  <td>{{ technology.recipeUnlock.length }}</td>
                 </tr>
               </table>
-            } @else {
-              <div class="mt-1 text-sm">
-                {{ 'data.unlockedRecipes' | translate }}
-              </div>
-              <div>
-                @for (recipeId of recipes; track recipeId) {
-                  <lab-icon [value]="recipeId" type="recipe"></lab-icon>
-                }
-              </div>
             }
+          }
+          @if (
+            technology.beltStack ||
+            technology.inserterStack ||
+            technology.miningProductivity ||
+            technology.qualityUnlock ||
+            (technology.recipeUnlock && technology.recipeUnlock.length > 5) ||
+            technology.researchProductivity ||
+            technology.researchSpeed
+          ) {
+            <table>
+              @if (technology.beltStack) {
+                <tr>
+                  <td>{{ 'data.beltStack' | translate }}</td>
+                  <td>+{{ technology.beltStack }}</td>
+                </tr>
+              }
+              @if (technology.inserterStack) {
+                <tr>
+                  <td>{{ 'data.inserterStack' | translate }}</td>
+                  <td>
+                    {{ technology.inserterStack | inserterStack }}
+                  </td>
+                </tr>
+              }
+              @if (technology.miningProductivity) {
+                <tr>
+                  <td>{{ 'data.miningProductivity' | translate }}</td>
+                  <td>{{ technology.miningProductivity | bonusPercent }}</td>
+                </tr>
+              }
+              @if (technology.researchProductivity) {
+                <tr>
+                  <td>{{ 'data.researchProductivity' | translate }}</td>
+                  <td>{{ technology.researchProductivity | bonusPercent }}</td>
+                </tr>
+              }
+              @if (technology.researchSpeed) {
+                <tr>
+                  <td>{{ 'data.researchSpeed' | translate }}</td>
+                  <td>{{ technology.researchSpeed | bonusPercent }}</td>
+                </tr>
+              }
+            </table>
           }
         }
       }

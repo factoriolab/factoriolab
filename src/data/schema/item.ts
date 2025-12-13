@@ -8,7 +8,7 @@ import { Fuel, FuelJson, parseFuel } from './fuel';
 import { Machine, MachineJson, parseMachine } from './machine';
 import { Module, ModuleJson, parseModule } from './module';
 import { Quality } from './quality';
-import { Technology } from './technology';
+import { parseTechnology, Technology, TechnologyJson } from './technology';
 
 export interface ItemJson {
   id: string;
@@ -25,7 +25,7 @@ export interface ItemJson {
   fuel?: FuelJson;
   cargoWagon?: CargoWagonJson;
   fluidWagon?: FluidWagonJson;
-  technology?: Technology;
+  technology?: TechnologyJson;
   /** Used to link the item to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -71,7 +71,7 @@ export function parseItem(json: ItemJson): Item {
     fuel: parseFuel(json.fuel),
     cargoWagon: parseCargoWagon(json.cargoWagon),
     fluidWagon: parseFluidWagon(json.fluidWagon),
-    technology: json.technology,
+    technology: parseTechnology(json.technology),
     icon: json.icon,
     iconText: json.iconText,
   };

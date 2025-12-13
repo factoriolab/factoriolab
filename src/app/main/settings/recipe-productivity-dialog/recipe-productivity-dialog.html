@@ -6,7 +6,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (techId of data().prodUpgradeTechs; track techId) {
+    @for (techId of data().prodUpgradeTechIds; track techId) {
       @if (data().itemRecord[techId]; as tech) {
         <tr>
           <td>

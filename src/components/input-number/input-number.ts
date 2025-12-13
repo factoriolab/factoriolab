@@ -6,6 +6,7 @@ import {
   linkedSignal,
   model,
   OnInit,
+  output,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -78,6 +79,8 @@ export class InputNumber extends Control<Rational> implements OnInit {
   readonly bonus = input<boolean>();
   readonly percent = input<boolean>();
 
+  readonly valueReset = output();
+
   private valueChange = new Subject<ChangeEvent>();
   private emit = this.valueChange.pipe(
     takeUntilDestroyed(),
@@ -91,8 +94,17 @@ export class InputNumber extends Control<Rational> implements OnInit {
     source: this.value,
     computation: (val, previous) => {
       if (val == null) return '0';
-      if (previous != null && rational(previous.value).eq(val))
-        return previous.value;
+
+      let prev = rational.zero;
+      if (previous != null) {
+        try {
+          prev = rational(previous.value);
+        } catch {
+          // Ignore error
+        }
+      }
+
+      if (previous?.value != null && prev.eq(val)) return previous.value;
       return val.toString();
     },
   });
@@ -123,6 +135,10 @@ export class InputNumber extends Control<Rational> implements OnInit {
     const type = event.type as EventType;
     try {
       const text = this.text();
+
+      if (text === '' && (event.type === 'keydown' || event.type === 'blur'))
+        this.valueReset.emit();
+
       const value = rational(text);
       const min = this.minimum();
       const max = this.maximum();

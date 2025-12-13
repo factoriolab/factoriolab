@@ -512,7 +512,7 @@
             [minimum]="rational.one"
             labTooltip="settings.defaultStackTooltip"
             labTooltipPosition="adjacent"
-            [ngModel]="settings().stack ?? rational.one"
+            [ngModel]="settings().stack"
             (ngModelChange)="settingsStore.apply({ stack: $event })"
           ></lab-input-number>
         </lab-form-field>
@@ -598,7 +598,7 @@
     data().flags.has('miningSpeed') ||
     data().flags.has('miningProductivity') ||
     data().flags.has('researchSpeed') ||
-    data().prodUpgradeTechs.length
+    data().prodUpgradeTechIds.length
   ) {
     <lab-accordion-item text="settings.bonuses">
       <ng-template>
@@ -615,6 +615,7 @@
               (ngModelChange)="
                 settingsStore.apply({ miningBonus: $event.sub(rational(100)) })
               "
+              (valueReset)="settingsStore.apply({ miningBonus: undefined })"
             ></lab-input-number>
           </lab-form-field>
         }
@@ -630,23 +631,28 @@
               labTooltipPosition="adjacent"
               [ngModel]="settings().miningBonus"
               (ngModelChange)="settingsStore.apply({ miningBonus: $event })"
+              (valueReset)="settingsStore.apply({ miningBonus: undefined })"
             ></lab-input-number>
           </lab-form-field>
         }
 
         @if (data().flags.has('researchSpeed')) {
           <lab-form-field label="settings.researchSpeed">
-            <lab-select
-              [options]="researchBonusOptions"
+            <lab-input-number
+              [bonus]="true"
+              [percent]="true"
+              [buttons]="true"
+              [step]="rational(10)"
               labTooltip="settings.researchSpeedTooltip"
               labTooltipPosition="adjacent"
               [ngModel]="settings().researchBonus"
               (ngModelChange)="settingsStore.apply({ researchBonus: $event })"
-            ></lab-select>
+              (valueReset)="settingsStore.apply({ researchBonus: undefined })"
+            ></lab-input-number>
           </lab-form-field>
         }
 
-        @if (data().prodUpgradeTechs.length) {
+        @if (data().prodUpgradeTechIds.length) {
           <button
             type="button"
             labButton

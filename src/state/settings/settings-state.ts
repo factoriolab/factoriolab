@@ -5,7 +5,6 @@ import { CostSettings } from './cost-settings';
 import { DisplayRate } from './display-rate';
 import { MaximizeType } from './maximize-type';
 import { Preset } from './preset';
-import { researchBonusValue } from './research-bonus';
 
 export interface SettingsState {
   modId?: string;
@@ -32,8 +31,8 @@ export interface SettingsState {
   overclock?: Rational;
   beaconReceivers?: Rational;
   proliferatorSprayId: string;
-  miningBonus: Rational;
-  researchBonus: Rational;
+  miningBonus?: Rational;
+  researchBonus?: Rational;
   researchedTechnologyIds?: Set<string>;
   locationIds?: Set<string>;
   costs: CostSettings;
@@ -55,8 +54,6 @@ export const initialSettingsState: SettingsState = {
   checkedRecipeIds: new Set(),
   netProductionOnly: false,
   proliferatorSprayId: '',
-  miningBonus: rational.zero,
-  researchBonus: researchBonusValue.speed6,
   costs: {
     factor: rational(1, 10),
     machine: rational(1, 10),

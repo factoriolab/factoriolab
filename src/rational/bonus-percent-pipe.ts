@@ -5,7 +5,10 @@ import { toNumber } from '~/utils/number';
 
 @Pipe({ name: 'bonusPercent' })
 export class BonusPercentPipe implements PipeTransform {
-  transform(value: Rational | string | number | null | undefined): string {
+  transform(
+    value: Rational | string | number | null | undefined,
+    excludePlus = false,
+  ): string {
     if (value == null) return '';
     value = toNumber(value);
     if (value === 0) return '';
@@ -13,7 +16,7 @@ export class BonusPercentPipe implements PipeTransform {
     const pct = Math.round(value * 100).toLocaleString(undefined, {
       maximumFractionDigits: 2,
     });
-    if (value > 0) return `+${pct}%`;
+    if (value > 0 && !excludePlus) return `+${pct}%`;
     else return `${pct}%`;
   }
 }

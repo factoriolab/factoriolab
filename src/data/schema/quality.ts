@@ -3,10 +3,6 @@ import { Option } from '~/option/option';
 import { Item, ItemJson } from './item';
 import { Recipe, RecipeJson } from './recipe';
 
-export const LEGENDARY_QUALITY = 'legendary-quality';
-export const EPIC_QUALITY = 'epic-quality';
-export const QUALITY_MODULE_TECHNOLOGY = 'quality-module-technology';
-
 export enum Quality {
   Any = -1,
   Normal = 0,

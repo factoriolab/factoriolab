@@ -61,7 +61,6 @@ import { ModuleSettings } from '~/state/module-settings';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
 import { maximizeTypeOptions } from '~/state/settings/maximize-type';
-import { researchBonusOptions } from '~/state/settings/research-bonus';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
@@ -160,7 +159,6 @@ export class Settings {
   protected readonly modId = this.settingsStore.modId;
   protected readonly options = this.settingsStore.options;
   protected readonly rational = rational;
-  protected readonly researchBonusOptions = researchBonusOptions;
   protected readonly settings = this.settingsStore.settings;
   protected readonly TechnologiesDialog = TechnologiesDialog;
   protected readonly VersionsDialog = VersionsDialog;

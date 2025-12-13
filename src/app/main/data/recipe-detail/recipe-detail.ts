@@ -65,7 +65,7 @@ export class RecipeDetail extends DetailBase<Recipe> {
     const id = this.id();
     const data = this.data();
     return data.technologyIds.filter((i) =>
-      data.technologyRecord[i].unlockedRecipes?.includes(id),
+      data.technologyRecord[i].recipeUnlock?.includes(id),
     );
   });
 

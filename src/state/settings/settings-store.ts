@@ -29,11 +29,8 @@ import {
 } from '~/data/schema/module';
 import {
   baseId,
-  EPIC_QUALITY,
   itemHasQuality,
-  LEGENDARY_QUALITY,
   Quality,
-  QUALITY_MODULE_TECHNOLOGY,
   qualityId,
   recipeHasQuality,
 } from '~/data/schema/quality';
@@ -758,24 +755,23 @@ export class SettingsStore extends Store<SettingsState> {
       for (const quality of qualities) {
         for (const techId in technologyRecord) {
           const tech = technologyRecord[techId];
-          if (tech.prodUpgrades) {
-            for (const recipeId of tech.prodUpgrades.slice()) {
-              const id = qualityId(recipeId, quality);
-              if (recipeQIds.has(id)) tech.prodUpgrades.push(id);
+          if (tech.recipeProductivity) {
+            for (const effect of tech.recipeProductivity) {
+              const id = qualityId(effect.id, quality);
+              if (recipeQIds.has(id))
+                tech.recipeProductivity.push({
+                  id,
+                  value: effect.value,
+                });
             }
           }
         }
       }
     }
 
-    const prodUpgradeTechs: string[] = [];
-    const prodUpgrades: Record<string, string[]> = {};
-    for (const techId in technologyRecord) {
-      if (technologyRecord[techId].prodUpgrades) {
-        prodUpgradeTechs.push(techId);
-        prodUpgrades[techId] = technologyRecord[techId].prodUpgrades;
-      }
-    }
+    const prodUpgradeTechIds = technologyIds.filter(
+      (id) => technologyRecord[id].recipeProductivity,
+    );
 
     const modId = coalesce(info?.id, DEFAULT_MOD);
     let file = `data/${modId}/icons.webp`;
@@ -844,8 +840,7 @@ export class SettingsStore extends Store<SettingsState> {
       recipeIds,
       recipeQIds,
       recipeRecord,
-      prodUpgradeTechs,
-      prodUpgrades,
+      prodUpgradeTechIds,
       technologyIds,
       technologyRecord,
       locationIds,
@@ -878,24 +873,38 @@ export class SettingsStore extends Store<SettingsState> {
     if (locIds != null && defaultLocationIds.length > 0) locationIds = locIds;
 
     let quality = Quality.Normal;
-    if (data.flags.has('quality')) {
-      if (researchedTechnologyIds.has(LEGENDARY_QUALITY))
-        quality = Quality.Legendary;
-      else if (researchedTechnologyIds.has(EPIC_QUALITY))
-        quality = Quality.Epic;
-      else if (researchedTechnologyIds.has(QUALITY_MODULE_TECHNOLOGY))
-        quality = Quality.Rare;
-    }
+    let stack = rational.one;
+    let miningBonus = rational.zero;
+    let researchBonus = rational.zero;
+    researchedTechnologyIds.forEach((techId) => {
+      const tech = data.technologyRecord[techId];
+      if (tech.beltStack) stack = stack.add(tech.beltStack);
+      if (tech.miningProductivity)
+        miningBonus = miningBonus.add(
+          tech.miningProductivity.mul(rational(100n)),
+        );
+      if (tech.qualityUnlock) {
+        tech.qualityUnlock.forEach((q) => {
+          if (q > quality) quality = q;
+        });
+      }
+      if (tech.researchSpeed)
+        researchBonus = researchBonus.add(
+          tech.researchSpeed.mul(rational(100n)),
+        );
+    });
 
     // List of recipes that have been unlocked by technology
+    const researchedRecipeIds = new Set(
+      Array.from(researchedTechnologyIds).flatMap(
+        (t) => data.technologyRecord[t].recipeUnlock,
+      ),
+    );
     const unlockedRecipes = data.recipeIds
       .map((r) => data.recipeRecord[r])
       .filter(
         (r) =>
-          (!r.flags.has('locked') ||
-            Array.from(researchedTechnologyIds).some((t) =>
-              data.technologyRecord[t].unlockedRecipes?.includes(baseId(r.id)),
-            )) &&
+          (!r.flags.has('locked') || researchedRecipeIds.has(baseId(r.id))) &&
           (r.quality == null || r.quality <= quality),
       );
 
@@ -994,7 +1003,7 @@ export class SettingsStore extends Store<SettingsState> {
     return spread(state as Settings, {
       beltId,
       defaultBeltId,
-      stack: coalesce(state.stack, defaults?.beltStack),
+      stack: coalesce(state.stack, coalesce(defaults?.beltStack, stack)),
       pipeId,
       defaultPipeId,
       cargoWagonId,
@@ -1011,6 +1020,8 @@ export class SettingsStore extends Store<SettingsState> {
       defaultModuleRankIds,
       beacons: this.hydration.hydrateBeacons(state.beacons, defaultBeacons),
       overclock: state.overclock ?? defaults?.overclock,
+      miningBonus: coalesce(state.miningBonus, miningBonus),
+      researchBonus: coalesce(state.researchBonus, researchBonus),
       researchedTechnologyIds,
       locationIds,
       defaultLocationIds: new Set(data.locationIds),

@@ -75,7 +75,7 @@ export class ItemDetail extends DetailBase<Item> {
     const producedBy: string[] = [];
     const consumedBy: string[] = [];
     const producible: string[] = [];
-    const unlocked = data.technologyRecord[id]?.unlockedRecipes ?? [];
+    const unlocked = data.technologyRecord[id]?.recipeUnlock;
     for (const r of data.recipeIds) {
       const recipe = data.recipeRecord[r];
       if (recipe.out[id]) producedBy.push(r);

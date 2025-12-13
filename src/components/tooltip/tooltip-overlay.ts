@@ -23,6 +23,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Icon } from '../icon/icon';
 import { RecipeProcess } from '../recipe-process/recipe-process';
+import { InserterStackPipe } from './inserter-stack-pipe';
 import { TOOLTIP_DATA } from './tooltip-data';
 
 const positionVariants = {
@@ -98,6 +99,7 @@ const nub = cva(
     RoundPipe,
     TranslatePipe,
     UsagePipe,
+    InserterStackPipe,
   ],
   templateUrl: './tooltip-overlay.html',
   styleUrl: './tooltip-overlay.css',

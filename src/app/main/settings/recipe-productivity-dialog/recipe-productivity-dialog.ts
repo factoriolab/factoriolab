@@ -15,6 +15,7 @@ import { Rational, rational } from '~/rational/rational';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { coalesce } from '~/utils/nullish';
 
 @Component({
   selector: 'lab-recipe-productivity-dialog',
@@ -39,10 +40,15 @@ export class RecipeProductivityDialog {
   protected readonly editValue = linkedSignal(() => {
     const data = this.data();
     const recipesState = this.recipesStore.settings();
-    return data.prodUpgradeTechs.reduce<Record<string, Rational>>(
+    return data.prodUpgradeTechIds.reduce<Record<string, Rational>>(
       (e, techId) => {
-        const recipeId = data.prodUpgrades[techId][0];
-        e[techId] = recipesState[recipeId].productivity ?? rational.zero;
+        const tech = data.technologyRecord[techId];
+        const recipeId = tech.recipeProductivity?.[0]?.id;
+        if (recipeId == null) return e;
+        e[techId] = coalesce(
+          recipesState[recipeId].productivity,
+          rational.zero,
+        );
         return e;
       },
       {},
@@ -56,10 +62,11 @@ export class RecipeProductivityDialog {
   save(): void {
     const data = this.data();
     const editValue = this.editValue();
-    data.prodUpgradeTechs.forEach((techId) => {
-      data.prodUpgrades[techId].forEach((upgradedRecipe) => {
+    data.prodUpgradeTechIds.forEach((techId) => {
+      const tech = data.technologyRecord[techId];
+      tech.recipeProductivity?.forEach((e) => {
         this.recipesStore.updateRecordField(
-          upgradedRecipe,
+          e.id,
           'productivity',
           editValue[techId],
           rational.zero,

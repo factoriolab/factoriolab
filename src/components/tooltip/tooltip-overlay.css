@@ -1,5 +1,6 @@
 table {
   margin-top: calc(var(--spacing) * 1);
+  width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
   line-height: var(--tw-leading);
@@ -11,5 +12,9 @@ table {
 
   tr:not(:first-child) td {
     border-top: 1px solid var(--color-gray-800);
+  }
+
+  td:not(:first-child):last-child {
+    text-align: end;
   }
 }

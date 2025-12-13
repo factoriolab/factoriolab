@@ -632,9 +632,10 @@ export class Adjustment {
       .map((i) => adjustedRecipe[i])
       .forEach((recipe) => {
         finalizeRecipe(recipe);
-        Object.keys(recipe.out).forEach((productId) =>
-          itemRecipeIds[productId].push(recipe.id),
-        );
+        Object.keys(recipe.out).forEach((productId) => {
+          if (itemRecipeIds[productId] == null) console.log(productId);
+          itemRecipeIds[productId].push(recipe.id);
+        });
 
         if (!settings.excludedRecipeIds.has(recipe.id)) {
           recipe.produces.forEach((productId) =>

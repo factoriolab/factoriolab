@@ -11,6 +11,7 @@ import { MachineJson } from '~/data/schema/machine';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import { ModI18n } from '~/data/schema/mod-i18n';
+import { Quality } from '~/data/schema/quality';
 import { RecipeFlag, RecipeJson } from '~/data/schema/recipe';
 import { TechnologyJson } from '~/data/schema/technology';
 import { updateHash } from '~/utils/hash';
@@ -25,7 +26,9 @@ import {
   isAssemblingMachinePrototype,
   isAsteroidCollectorPrototype,
   isBeaconPrototype,
+  isBeltStackSizeBonusModifier,
   isBoilerPrototype,
+  isBulkInserterCapacityBonusModifier,
   isCargoWagonPrototype,
   isChangeRecipeProductivityModifier,
   isCreateAsteroidChunkEffectItem,
@@ -33,8 +36,12 @@ import {
   isFluidPrototype,
   isFluidWagonPrototype,
   isFurnacePrototype,
+  isInserterStackSizeBonusModifier,
   isItemGroup,
+  isLaboratoryProductivityModifier,
+  isLaboratorySpeedModifier,
   isLabPrototype,
+  isMiningDrillProductivityBonusModifier,
   isMiningDrillPrototype,
   isModulePrototype,
   isOffshorePumpPrototype,
@@ -48,6 +55,7 @@ import {
   isSurfacePrototype,
   isTechnologyPrototype,
   isTransportBeltPrototype,
+  isUnlockQualityModifier,
   isUnlockRecipeModifier,
   ItemGroup,
   PlantPrototype,
@@ -84,7 +92,6 @@ import {
   getLocations,
   getSurfacePropertyDefaults,
   getVersion,
-  pushEntityValue,
 } from './utils/data';
 import {
   factorioPath,
@@ -124,7 +131,7 @@ import {
 const modId = process.argv[2];
 if (!modId)
   throw new Error(
-    'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
+    'Please specify a mod to process by the folder name, e.g. "1.1" for public/data/1.1',
   );
 
 const lang: string | undefined = process.argv[3];
@@ -692,9 +699,8 @@ async function processMod(): Promise<void> {
 
   // Record of recipe id : technology id
   const recipesLocked = new Set<string>();
-  const prodUpgrades: Record<string, string[]> = {};
+  const recipeAliases: Partial<Record<string, string[]>> = {};
   const technologySet = new Set<TechnologyPrototype>();
-  const technologyUnlocks: Record<string, string[]> = {};
   for (const key of Object.keys(dataRaw.technology)) {
     const tech = dataRaw.technology[key];
 
@@ -711,19 +717,12 @@ async function processMod(): Promise<void> {
 
     if (!tech.hidden && tech.enabled !== false) {
       technologySet.add(tech);
-      const id = techId[tech.name];
 
-      const upgradedRecipes = [];
-      for (const effect of coerceArray(tech.effects)) {
-        if (isUnlockRecipeModifier(effect)) {
-          recipesLocked.add(effect.recipe);
-          pushEntityValue(technologyUnlocks, id, effect.recipe);
-        }
-
-        if (isChangeRecipeProductivityModifier(effect))
-          upgradedRecipes.push(effect.recipe);
-      }
-      if (upgradedRecipes.length) prodUpgrades[id] = upgradedRecipes;
+      tech.effects
+        ?.filter((e) => isUnlockRecipeModifier(e))
+        .forEach((e) => {
+          recipesLocked.add(e.recipe);
+        });
     }
   }
 
@@ -911,8 +910,6 @@ async function processMod(): Promise<void> {
     )
       continue;
 
-    if (recipe.category === 'recycling')
-      technologyUnlocks['recycling'].push(recipe.name);
     recipesEnabled[recipe.name] = recipe;
     recipeIngredientsMap[recipe.name] = ingredients;
     recipeResultsMap[recipe.name] = products;
@@ -1471,13 +1468,8 @@ async function processMod(): Promise<void> {
           if (disallowedEffects) recipe.disallowedEffects = disallowedEffects;
 
           if (id !== proto.name) {
-            // Need to update unlocked recipes
-            Object.keys(technologyUnlocks)
-              .map((t) => technologyUnlocks[t])
-              .filter((t) => t.includes(proto.name))
-              .forEach((t) => {
-                t.push(id);
-              });
+            recipeAliases[id] ??= [];
+            recipeAliases[id].push(id);
           }
 
           modData.recipes.push(recipe);
@@ -2123,10 +2115,61 @@ async function processMod(): Promise<void> {
         .filter((p) => technologyIds.includes(p))
         .map((p) => techId[p]);
     }
-    const unlockedRecipes = technologyUnlocks[id];
-    if (unlockedRecipes) technology.unlockedRecipes = unlockedRecipes;
 
-    if (id in prodUpgrades) technology.prodUpgrades = prodUpgrades[id];
+    const qualityMap: Partial<Record<string, Quality>> = {
+      uncommon: Quality.Uncommon,
+      rare: Quality.Rare,
+      epic: Quality.Epic,
+      legendary: Quality.Legendary,
+    };
+    for (const effect of coerceArray(tech.effects)) {
+      if (isBeltStackSizeBonusModifier(effect)) {
+        technology.beltStack ??= 0;
+        technology.beltStack += effect.modifier;
+      } else if (isInserterStackSizeBonusModifier(effect)) {
+        technology.inserterStack ??= [];
+        technology.inserterStack.push({ value: effect.modifier });
+      } else if (isBulkInserterCapacityBonusModifier(effect)) {
+        technology.inserterStack ??= [];
+        technology.inserterStack.push({
+          value: effect.modifier,
+          category: 'bulk',
+        });
+      } else if (isMiningDrillProductivityBonusModifier(effect)) {
+        technology.miningProductivity ??= 0;
+        technology.miningProductivity += effect.modifier;
+      } else if (isUnlockQualityModifier(effect)) {
+        const quality = qualityMap[effect.quality];
+        if (quality == null) continue;
+        technology.qualityUnlock ??= [];
+        technology.qualityUnlock.push(quality);
+      } else if (isChangeRecipeProductivityModifier(effect)) {
+        technology.recipeProductivity ??= [];
+        technology.recipeProductivity.push({
+          id: effect.recipe,
+          value: effect.change,
+        });
+
+        const aliases = recipeAliases[effect.recipe];
+        if (aliases) {
+          technology.recipeProductivity.push(
+            ...aliases.map((id) => ({ id, value: effect.change })),
+          );
+        }
+      } else if (isUnlockRecipeModifier(effect)) {
+        technology.recipeUnlock ??= [];
+        technology.recipeUnlock.push(effect.recipe);
+
+        const aliases = recipeAliases[effect.recipe];
+        if (aliases) technology.recipeUnlock.push(...aliases);
+      } else if (isLaboratoryProductivityModifier(effect)) {
+        technology.researchProductivity ??= 0;
+        technology.researchProductivity += effect.modifier;
+      } else if (isLaboratorySpeedModifier(effect)) {
+        technology.researchSpeed ??= 0;
+        technology.researchSpeed += effect.modifier;
+      }
+    }
 
     const inputs = Object.keys(techIngredientsMap[tech.name]);
     const row = inputs.length;

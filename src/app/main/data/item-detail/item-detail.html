@@ -361,6 +361,79 @@
             }
           </td>
         </tr>
+        @if (technology.beltStack; as effect) {
+          <tr>
+            <th>{{ 'data.beltStack' | translate }}</th>
+            <td>+{{ effect }}</td>
+          </tr>
+        }
+        @if (technology.inserterStack; as effect) {
+          <tr>
+            <th>{{ 'data.inserterStack' | translate }}</th>
+            <td>
+              @for (eff of effect; track $index) {
+                <div>
+                  +{{ eff.value }}
+                  @if (eff.category) {
+                    ({{ eff.category }})
+                  }
+                </div>
+              }
+            </td>
+          </tr>
+        }
+        @if (technology.miningProductivity; as effect) {
+          <tr>
+            <th>{{ 'data.miningProductivity' | translate }}</th>
+            <td>{{ effect | bonusPercent }}</td>
+          </tr>
+        }
+        @if (technology.qualityUnlock; as effect) {
+          <tr>
+            <th>{{ 'data.unlockQuality' | translate }}</th>
+            <td>
+              @for (eff of effect; track $index) {
+                <lab-icon type="system" [value]="'q' + eff"></lab-icon>
+              }
+            </td>
+          </tr>
+        }
+        @if (technology.recipeProductivity; as effect) {
+          <tr>
+            <th>{{ 'data.recipeProductivity' | translate }}</th>
+            <td>
+              @for (eff of effect; track $index) {
+                <div>
+                  {{ eff.value | bonusPercent }}
+                  <lab-icon type="recipe" [value]="eff.id"></lab-icon>
+                </div>
+              }
+            </td>
+          </tr>
+        }
+        @if (technology.recipeUnlock; as effect) {
+          <tr>
+            <th>{{ 'data.unlockRecipe' | translate }}</th>
+            <td>
+              @for (eff of effect; track $index) {
+                <lab-icon type="recipe" [value]="eff"></lab-icon>
+              }
+            </td>
+          </tr>
+        }
+        @if (technology.researchProductivity; as effect) {
+          <tr>
+            <th>{{ 'data.researchProductivity' | translate }}</th>
+            <td>{{ effect }}</td>
+          </tr>
+        }
+        @if (technology.researchSpeed; as effect) {
+          <!-- TODO -->
+          <tr>
+            <th>{{ 'data.researchSpeed' | translate }}</th>
+            <td>{{ effect }}</td>
+          </tr>
+        }
       }
       @if (category() && itemSettings(); as itemSettings) {
         <tr>
@@ -599,12 +672,13 @@
           [state]="{ page: 0, asc: false, rows: 10 }"
         ></lab-collection-table>
       }
-      @if (recipes().unlocked.length) {
+      @let unlocked = recipes().unlocked;
+      @if (unlocked && unlocked.length) {
         <h3 class="my-3 text-lg font-semibold">
           {{ 'data.unlockedRecipes' | translate }}
         </h3>
         <lab-collection-table
-          [ids]="recipes().unlocked"
+          [ids]="unlocked"
           iconType="recipe"
           [state]="{ page: 0, asc: false, rows: 10 }"
         ></lab-collection-table>

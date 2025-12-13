@@ -1,13 +1,21 @@
 import { Quality } from '~/data/schema/quality';
+import { Rational } from '~/rational/rational';
 
 import { SettingsState } from './settings-state';
 
-export interface Settings
-  extends Omit<SettingsState, 'excludedRecipeIds' | 'researchedTechnologyIds'> {
+export interface Settings extends Omit<
+  SettingsState,
+  | 'stack'
+  | 'excludedRecipeIds'
+  | 'miningBonus'
+  | 'researchSpeed'
+  | 'researchedTechnologyIds'
+> {
   defaultBeltId?: string;
   defaultPipeId?: string;
   defaultCargoWagonId?: string;
   defaultFluidWagonId?: string;
+  stack: Rational;
   excludedRecipeIds: Set<string>;
   defaultExcludedRecipeIds: Set<string>;
   machineRankIds: string[];
@@ -16,6 +24,8 @@ export interface Settings
   defaultFuelRankIds: string[];
   moduleRankIds: string[];
   defaultModuleRankIds: string[];
+  miningBonus: Rational;
+  researchBonus: Rational;
   researchedTechnologyIds: Set<string>;
   locationIds: Set<string>;
   defaultLocationIds: Set<string>;
