@@ -652,6 +652,26 @@
           </lab-form-field>
         }
 
+        @if (data().flags.has('researchProductivity')) {
+          <lab-form-field label="settings.researchProductivity">
+            <lab-input-number
+              [bonus]="true"
+              [percent]="true"
+              [buttons]="true"
+              [step]="rational(10)"
+              labTooltip="settings.researchProductivityTooltip"
+              labTooltipPosition="adjacent"
+              [ngModel]="settings().researchProductivity"
+              (ngModelChange)="
+                settingsStore.apply({ researchProductivity: $event })
+              "
+              (valueReset)="
+                settingsStore.apply({ researchProductivity: undefined })
+              "
+            ></lab-input-number>
+          </lab-form-field>
+        }
+
         @if (data().prodUpgradeTechIds.length) {
           <button
             type="button"

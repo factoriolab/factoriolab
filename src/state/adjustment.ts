@@ -73,17 +73,13 @@ export class Adjustment {
       },
     );
 
-    const {
-      proliferatorSprayId,
-      miningBonus,
-      researchBonus,
-      netProductionOnly,
-    } = settings;
-
-    const miningFactor = miningBonus.div(rational(100n));
-    const researchFactor = researchBonus
+    const miningBonus = settings.miningBonus.div(rational(100n));
+    const researchBonus = settings.researchBonus
       .add(rational(100n))
       .div(rational(100n));
+    const researchProductivity = settings.researchProductivity.div(
+      rational(100n),
+    );
 
     if (recipeState.machineId != null) {
       const machine = data.machineRecord[recipeState.machineId];
@@ -119,7 +115,7 @@ export class Adjustment {
 
       if (recipe.flags.has('technology') && data.flags.has('researchSpeed')) {
         // Adjust for research factor
-        recipe.time = recipe.time.div(researchFactor);
+        recipe.time = recipe.time.div(researchBonus);
       }
 
       // Calculate factors
@@ -127,7 +123,10 @@ export class Adjustment {
 
       // Adjust for mining bonus
       if (recipe.flags.has('mining'))
-        eff.productivity = eff.productivity.add(miningFactor);
+        eff.productivity = eff.productivity.add(miningBonus);
+
+      if (recipe.flags.has('technology'))
+        eff.productivity = eff.productivity.add(researchProductivity);
 
       // Adjust for base productivity
       if (machine.baseEffect) {
@@ -193,7 +192,7 @@ export class Adjustment {
           if (module.sprays) {
             let sprays = module.sprays;
             // If proliferator is applied to proliferator, apply productivity bonus to sprays
-            const pModule = data.moduleRecord[proliferatorSprayId];
+            const pModule = data.moduleRecord[settings.proliferatorSprayId];
             if (pModule) {
               sprays = sprays
                 .mul(
@@ -427,7 +426,7 @@ export class Adjustment {
         }
 
         // If proliferator spray is applied to proliferator, add its usage to inputs
-        const pModule = data.moduleRecord[proliferatorSprayId];
+        const pModule = data.moduleRecord[settings.proliferatorSprayId];
         if (pModule?.sprays) {
           const sprays = pModule.sprays
             .mul(
@@ -456,7 +455,7 @@ export class Adjustment {
       }
     }
 
-    if (netProductionOnly) {
+    if (settings.netProductionOnly) {
       for (const outId of Object.keys(recipe.out)) {
         const output = recipe.out[outId];
         if (recipe.in[outId] != null) {

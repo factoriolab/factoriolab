@@ -33,6 +33,7 @@ export interface SettingsState {
   proliferatorSprayId: string;
   miningBonus?: Rational;
   researchBonus?: Rational;
+  researchProductivity?: Rational;
   researchedTechnologyIds?: Set<string>;
   locationIds?: Set<string>;
   costs: CostSettings;

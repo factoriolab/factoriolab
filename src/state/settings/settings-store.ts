@@ -876,22 +876,34 @@ export class SettingsStore extends Store<SettingsState> {
     let stack = rational.one;
     let miningBonus = rational.zero;
     let researchBonus = rational.zero;
+    let researchProductivity = rational.zero;
     researchedTechnologyIds.forEach((techId) => {
       const tech = data.technologyRecord[techId];
       if (tech.beltStack) stack = stack.add(tech.beltStack);
-      if (tech.miningProductivity)
+
+      if (tech.miningProductivity) {
         miningBonus = miningBonus.add(
           tech.miningProductivity.mul(rational(100n)),
         );
+      }
+
       if (tech.qualityUnlock) {
         tech.qualityUnlock.forEach((q) => {
           if (q > quality) quality = q;
         });
       }
-      if (tech.researchSpeed)
+
+      if (tech.researchSpeed) {
         researchBonus = researchBonus.add(
           tech.researchSpeed.mul(rational(100n)),
         );
+      }
+
+      if (tech.researchProductivity) {
+        researchProductivity = researchProductivity.add(
+          tech.researchProductivity.mul(rational(100n)),
+        );
+      }
     });
 
     // List of recipes that have been unlocked by technology
@@ -1036,6 +1048,10 @@ export class SettingsStore extends Store<SettingsState> {
       overclock: state.overclock ?? defaults?.overclock,
       miningBonus: coalesce(state.miningBonus, miningBonus),
       researchBonus: coalesce(state.researchBonus, researchBonus),
+      researchProductivity: coalesce(
+        state.researchProductivity,
+        researchProductivity,
+      ),
       researchedTechnologyIds,
       locationIds,
       defaultLocationIds: new Set(data.locationIds),

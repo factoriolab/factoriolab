@@ -69,10 +69,12 @@ export interface LabParams {
   mbr?: string;
   /** `string` Proliferator spray */
   mps?: string;
-  /** `Rational` Mining bonus */
+  /** `Rational` Mining productivity bonus */
   bmi?: string;
-  /** `Rational` Research bonus */
+  /** `Rational` Research speed bonus */
   bre?: string;
+  /** `Rational` Research productivity bonus */
+  brp?: string;
   /** `Set` Researched technologies */
   tre?: string;
   /** V10 Legacy researched technologies */

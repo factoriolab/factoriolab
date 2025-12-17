@@ -479,6 +479,8 @@
     "requestMod": "Request a mod",
     "requireMachinesOutput": "Require machines output",
     "requireMachinesOutputTooltip": "If checked, output from machine objectives will be treated as required instead of surplus.",
+    "researchProductivity": "Research productivity",
+    "researchProductivityTooltip": "Enter the current level of research productivity bonus; this setting only affects research",
     "researchSpeed": "Research speed",
     "researchSpeedTooltip": "Enter the current level of research speed bonus; this setting only affects research",
     "techsResearched": "{{ count }} technologies researched",

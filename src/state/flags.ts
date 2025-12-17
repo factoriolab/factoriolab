@@ -19,6 +19,7 @@ export type Flag =
   | 'power'
   | 'proliferator'
   | 'quality'
+  | 'researchProductivity'
   | 'researchSpeed'
   | 'resourcePurity'
   | 'rockets'

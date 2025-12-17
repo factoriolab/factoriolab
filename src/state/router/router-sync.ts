@@ -961,6 +961,7 @@ export class RouterSync {
     str('mps', (s) => s.proliferatorSprayId, hash.modules);
     rat('bmi', (s) => s.miningBonus);
     rat('bre', (s) => s.researchBonus);
+    rat('brp', (s) => s.researchProductivity);
     sub(
       'tre',
       (s) => s.researchedTechnologyIds,
@@ -1024,6 +1025,7 @@ export class RouterSync {
       proliferatorSprayId: str('mps', hash?.modules),
       miningBonus: rat('bmi'),
       researchBonus: rat('bre'),
+      researchProductivity: rat('brp'),
       researchedTechnologyIds: sub('tre', modHash.technologies),
       locationIds: sub('loc', modHash.locations ?? []),
     };

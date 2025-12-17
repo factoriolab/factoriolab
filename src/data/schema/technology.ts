@@ -17,7 +17,7 @@ export interface TechnologyJson {
   recipeProductivity?: { id: string; value: number }[];
   /** Recipes unlocked */
   recipeUnlock?: string[];
-  /** TODO Research productivity bonus (%) */
+  /** Research productivity bonus (%) */
   researchProductivity?: number;
   /** Research speed bonus (%) */
   researchSpeed?: number;

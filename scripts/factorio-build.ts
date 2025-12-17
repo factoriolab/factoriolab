@@ -617,7 +617,8 @@ async function processMod(): Promise<void> {
 
   modData.version = getVersion(modsPath, factorioPath);
   if (modData.version['quality']) modData.flags.push('quality');
-  if (modData.version['space-age']) modData.flags.push('beltStack', 'rockets');
+  if (modData.version['space-age'])
+    modData.flags.push('beltStack', 'rockets', 'researchProductivity');
 
   const modDataReport: ModDataReport = {
     machineSpeedZero: [],

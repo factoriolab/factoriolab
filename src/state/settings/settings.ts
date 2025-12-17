@@ -3,14 +3,7 @@ import { Rational } from '~/rational/rational';
 
 import { SettingsState } from './settings-state';
 
-export interface Settings extends Omit<
-  SettingsState,
-  | 'stack'
-  | 'excludedRecipeIds'
-  | 'miningBonus'
-  | 'researchSpeed'
-  | 'researchedTechnologyIds'
-> {
+export interface Settings extends SettingsState {
   defaultBeltId?: string;
   defaultPipeId?: string;
   defaultCargoWagonId?: string;
@@ -27,6 +20,7 @@ export interface Settings extends Omit<
   defaultModuleRankIds: string[];
   miningBonus: Rational;
   researchBonus: Rational;
+  researchProductivity: Rational;
   researchedTechnologyIds: Set<string>;
   locationIds: Set<string>;
   defaultLocationIds: Set<string>;
