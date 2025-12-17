@@ -908,6 +908,19 @@ export class SettingsStore extends Store<SettingsState> {
           (r.quality == null || r.quality <= quality),
       );
 
+    // Recipe productivity bonuses unlocked by technology
+
+    const recipeBonus = Array.from(researchedTechnologyIds).reduce<
+      Partial<Record<string, Rational>>
+    >((result, b) => {
+      const tech = data.technologyRecord[b];
+      tech.recipeProductivity?.forEach((eff) => {
+        result[eff.id] ??= rational.zero;
+        result[eff.id] = result[eff.id]?.add(eff.value.mul(rational(100n)));
+      });
+      return result;
+    }, {});
+
     // Initialize list of items with those that have no recipe
     const noRecipeQualItemIds = Array.from(data.noRecipeItemIds)
       .map((i) => data.itemRecord[i])
@@ -1012,6 +1025,7 @@ export class SettingsStore extends Store<SettingsState> {
       defaultFluidWagonId,
       excludedRecipeIds,
       defaultExcludedRecipeIds,
+      recipeBonus,
       machineRankIds,
       defaultMachineRankIds,
       fuelRankIds,

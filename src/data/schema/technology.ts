@@ -13,7 +13,7 @@ export interface TechnologyJson {
   miningProductivity?: number;
   /** Qualities unlocked */
   qualityUnlock?: Quality[];
-  /** TODO Recipe productivity bonuses (%) */
+  /** Recipe productivity bonuses (%) */
   recipeProductivity?: { id: string; value: number }[];
   /** Recipes unlocked */
   recipeUnlock?: string[];

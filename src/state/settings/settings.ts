@@ -18,6 +18,7 @@ export interface Settings extends Omit<
   stack: Rational;
   excludedRecipeIds: Set<string>;
   defaultExcludedRecipeIds: Set<string>;
+  recipeBonus: Partial<Record<string, Rational>>;
   machineRankIds: string[];
   defaultMachineRankIds: string[];
   fuelRankIds: string[];

@@ -800,6 +800,7 @@ export class Adjustment {
 
     s.defaultOverclock = def?.overclock;
     s.overclock = coalesce(s.overclock, s.defaultOverclock);
+    s.productivity ??= settings.recipeBonus[recipe.id];
   }
 
   adjustObjective(
