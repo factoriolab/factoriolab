@@ -36,6 +36,7 @@ import {
   isFluidPrototype,
   isFluidWagonPrototype,
   isFurnacePrototype,
+  isInserterPrototype,
   isInserterStackSizeBonusModifier,
   isItemGroup,
   isLaboratoryProductivityModifier,
@@ -107,6 +108,7 @@ import {
   getCargoWagon,
   getEntitySize,
   getFluidWagon,
+  getInserter,
   getMachineBaseEffect,
   getMachineDisallowedEffects,
   getMachineDrain,
@@ -1133,6 +1135,15 @@ async function processMod(): Promise<void> {
         icon: await getIcon(proto),
         fluidWagon: getFluidWagon(proto),
       });
+    } else if (isInserterPrototype(proto)) {
+      modData.items.push({
+        id: proto.name,
+        name: entityLocale.names[proto.name],
+        category: group.name,
+        row: getItemRow(proto),
+        icon: await getIcon(proto),
+        inserter: getInserter(proto),
+      });
     } else {
       if (proto.weight != null) {
         itemWeight[proto.name] = proto.weight;
@@ -1224,6 +1235,12 @@ async function processMod(): Promise<void> {
         if (dataRaw['fluid-wagon'][result]) {
           const entity = dataRaw['fluid-wagon'][result];
           item.fluidWagon = getFluidWagon(entity);
+        }
+
+        // Parse inserter
+        if (dataRaw.inserter[result]) {
+          const entity = dataRaw.inserter[result];
+          item.inserter = getInserter(entity);
         }
       } else if (proto.name === 'spoilage') {
         item.machine = {

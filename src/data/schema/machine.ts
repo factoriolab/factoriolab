@@ -15,6 +15,7 @@ export const typeHasCraftingSpeed = new Set([
   'lab',
   'offshore-pump',
   'rocket-silo',
+  'boiler',
 ]);
 
 export interface MachineJson {

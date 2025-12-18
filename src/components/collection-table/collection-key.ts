@@ -10,5 +10,6 @@ export type CollectionKey =
   | 'moduleIds'
   | 'pipeIds'
   | 'technologyIds'
+  | 'inserterIds'
   | 'recipeIds'
   | 'locationIds';

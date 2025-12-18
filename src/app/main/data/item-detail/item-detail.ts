@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faArrowRotateLeft, faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
@@ -31,6 +32,7 @@ import { DetailBase } from '../detail-base';
     FormsModule,
     KeyValuePipe,
     RouterLink,
+    FaIconComponent,
     BonusPercentPipe,
     Button,
     Checkbox,
@@ -84,6 +86,8 @@ export class ItemDetail extends DetailBase<Item> {
     }
     return { producedBy, consumedBy, producible, unlocked };
   });
+
+  protected readonly faCheck = faCheck;
 
   changeExcluded(value: boolean): void {
     const excludedItemIds = updateSetIds(

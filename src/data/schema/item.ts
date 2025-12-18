@@ -5,6 +5,7 @@ import { Belt, BeltJson, parseBelt } from './belt';
 import { CargoWagon, CargoWagonJson, parseCargoWagon } from './cargo-wagon';
 import { FluidWagon, FluidWagonJson, parseFluidWagon } from './fluid-wagon';
 import { Fuel, FuelJson, parseFuel } from './fuel';
+import { Inserter, InserterJson, parseInserter } from './inserter';
 import { Machine, MachineJson, parseMachine } from './machine';
 import { Module, ModuleJson, parseModule } from './module';
 import { Quality } from './quality';
@@ -26,6 +27,7 @@ export interface ItemJson {
   cargoWagon?: CargoWagonJson;
   fluidWagon?: FluidWagonJson;
   technology?: TechnologyJson;
+  inserter?: InserterJson;
   /** Used to link the item to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -48,6 +50,7 @@ export interface Item {
   cargoWagon?: CargoWagon;
   fluidWagon?: FluidWagon;
   technology?: Technology;
+  inserter?: Inserter;
   /** Used to link the item to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -72,6 +75,7 @@ export function parseItem(json: ItemJson): Item {
     cargoWagon: parseCargoWagon(json.cargoWagon),
     fluidWagon: parseFluidWagon(json.fluidWagon),
     technology: parseTechnology(json.technology),
+    inserter: parseInserter(json.inserter),
     icon: json.icon,
     iconText: json.iconText,
   };

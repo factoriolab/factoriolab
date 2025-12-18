@@ -3,6 +3,7 @@ import { BeltJson } from '~/data/schema/belt';
 import { CargoWagonJson } from '~/data/schema/cargo-wagon';
 import { EnergyType } from '~/data/schema/energy-type';
 import { FluidWagonJson } from '~/data/schema/fluid-wagon';
+import { InserterJson } from '~/data/schema/inserter';
 import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
 
@@ -39,6 +40,17 @@ export function getCargoWagon(proto: M.CargoWagonPrototype): CargoWagonJson {
 
 export function getFluidWagon(proto: M.FluidWagonPrototype): FluidWagonJson {
   return { capacity: proto.capacity };
+}
+
+export function getInserter(proto: M.InserterPrototype): InserterJson {
+  const inserter: InserterJson = {
+    speed: proto.rotation_speed,
+    stack: proto.stack_size_bonus,
+  };
+  if (proto.bulk) inserter.category = 'bulk';
+  if (proto.uses_inserter_stack_size_bonus === false)
+    inserter.ignoresBonus = true;
+  return inserter;
 }
 
 export function getMachineDisallowedEffects(

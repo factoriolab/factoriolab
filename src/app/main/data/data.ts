@@ -19,20 +19,6 @@ export class Data {
   protected readonly collections: CollectionOption[] = [
     {
       faIcon: faXmark,
-      label: 'data.categories',
-      routerLink: 'categories',
-      key: 'categoryIds',
-      iconType: 'category',
-    },
-    {
-      faIcon: faXmark,
-      label: 'data.items',
-      routerLink: 'items',
-      key: 'itemIds',
-      iconType: 'item',
-    },
-    {
-      faIcon: faXmark,
       label: 'data.beacons',
       routerLink: 'beacons',
       key: 'beaconIds',
@@ -54,6 +40,13 @@ export class Data {
     },
     {
       faIcon: faXmark,
+      label: 'data.categories',
+      routerLink: 'categories',
+      key: 'categoryIds',
+      iconType: 'category',
+    },
+    {
+      faIcon: faXmark,
       label: 'data.fluidWagons',
       routerLink: 'fluid-wagons',
       key: 'fluidWagonIds',
@@ -65,6 +58,27 @@ export class Data {
       routerLink: 'fuels',
       key: 'fuelIds',
       iconType: 'item',
+    },
+    {
+      faIcon: faXmark,
+      label: 'data.inserters',
+      routerLink: 'inserters',
+      key: 'inserterIds',
+      iconType: 'item',
+    },
+    {
+      faIcon: faXmark,
+      label: 'data.items',
+      routerLink: 'items',
+      key: 'itemIds',
+      iconType: 'item',
+    },
+    {
+      faIcon: faXmark,
+      label: 'data.locations',
+      routerLink: 'locations',
+      key: 'locationIds',
+      iconType: 'location',
     },
     {
       faIcon: faXmark,
@@ -89,13 +103,6 @@ export class Data {
     },
     {
       faIcon: faXmark,
-      label: 'data.technologies',
-      routerLink: 'technologies',
-      key: 'technologyIds',
-      iconType: 'item',
-    },
-    {
-      faIcon: faXmark,
       label: 'data.recipes',
       routerLink: 'recipes',
       key: 'recipeIds',
@@ -103,10 +110,10 @@ export class Data {
     },
     {
       faIcon: faXmark,
-      label: 'data.locations',
-      routerLink: 'locations',
-      key: 'locationIds',
-      iconType: 'location',
+      label: 'data.technologies',
+      routerLink: 'technologies',
+      key: 'technologyIds',
+      iconType: 'item',
     },
   ];
 }

@@ -16,6 +16,7 @@ import { Category } from '~/data/schema/category';
 import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
 import { getViewBox, IconData, IconJson } from '~/data/schema/icon-data';
+import { Inserter } from '~/data/schema/inserter';
 import { Item, ItemJson, parseItem } from '~/data/schema/item';
 import { Machine, typeHasCraftingSpeed } from '~/data/schema/machine';
 import { ModData } from '~/data/schema/mod-data';
@@ -526,6 +527,7 @@ export class SettingsStore extends Store<SettingsState> {
       const itemsLen = items.length;
       const recipesLen = recipes.length;
       qualities.forEach((quality) => {
+        const eff = rational(quality);
         for (let i = 0; i < itemsLen; i++) {
           const item = items[i];
           if (!itemHasQuality(item)) continue;
@@ -544,7 +546,7 @@ export class SettingsStore extends Store<SettingsState> {
             qItem.machine.entityType &&
             typeHasCraftingSpeed.has(qItem.machine.entityType)
           ) {
-            const speed = rational(quality)
+            const speed = eff
               .mul(rational(3n, 10n))
               .add(rational.one)
               .mul(qItem.machine.speed);
@@ -552,9 +554,7 @@ export class SettingsStore extends Store<SettingsState> {
           }
 
           if (qItem.module) {
-            const factor = rational(quality)
-              .mul(rational(3n, 10n))
-              .add(rational.one);
+            const factor = eff.mul(rational(3n, 10n)).add(rational.one);
 
             for (const eff of Object.keys(effectPrecision) as ModuleEffect[]) {
               if (qItem.module[eff] && !filterEffect(qItem.module, eff)) {
@@ -582,11 +582,15 @@ export class SettingsStore extends Store<SettingsState> {
           }
 
           if (qItem.pipe) {
-            const factor = rational(quality)
-              .mul(rational(3n, 10n))
-              .add(rational.one);
+            const factor = eff.mul(rational(3n, 10n)).add(rational.one);
             const speed = qItem.pipe.speed.mul(factor);
             qItem.pipe = spread(qItem.pipe, { speed });
+          }
+
+          if (qItem.inserter) {
+            const factor = eff.mul(rational(3n, 10n)).add(rational.one);
+            const speed = qItem.inserter.speed.mul(factor);
+            qItem.inserter = spread(qItem.inserter, { speed });
           }
 
           items.push(qItem);
@@ -665,6 +669,9 @@ export class SettingsStore extends Store<SettingsState> {
     const technologyIds = items
       .filter(fnPropsNotNullish('technology'))
       .map((r) => r.id);
+    const inserterIds = items
+      .filter(fnPropsNotNullish('inserter'))
+      .map((i) => i.id);
 
     // Calculate category item rows
     const itemCategoryRows: Record<string, string[][]> = {};
@@ -719,6 +726,7 @@ export class SettingsStore extends Store<SettingsState> {
     const moduleRecord: Record<string, Module> = {};
     const fuelRecord: Record<string, Fuel> = {};
     const technologyRecord: Record<string, Technology> = {};
+    const inserterRecord: Record<string, Inserter> = {};
     const itemRecord = items.reduce((e: Record<string, Item>, i) => {
       if (i.beacon) beaconRecord[i.id] = i.beacon;
 
@@ -731,6 +739,7 @@ export class SettingsStore extends Store<SettingsState> {
       if (i.module) moduleRecord[i.id] = i.module;
       if (i.fuel) fuelRecord[i.id] = i.fuel;
       if (i.technology) technologyRecord[i.id] = i.technology;
+      if (i.inserter) inserterRecord[i.id] = i.inserter;
 
       e[i.id] = i;
       return e;
@@ -843,6 +852,8 @@ export class SettingsStore extends Store<SettingsState> {
       prodUpgradeTechIds,
       technologyIds,
       technologyRecord,
+      inserterIds,
+      inserterRecord,
       locationIds,
       locationRecord,
       limitations,

@@ -435,6 +435,35 @@
           </tr>
         }
       }
+      @if (obj.inserter; as inserter) {
+        <tr>
+          <th colspan="2" class="text-lg/9 font-semibold">
+            {{ 'data.inserter' | translate }}
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.rotationSpeed' | translate }}</th>
+          <td>{{ inserter.speed | round }}</td>
+        </tr>
+        @if (inserter.stack) {
+          <tr>
+            <th>{{ 'data.stackSize' | translate }}</th>
+            <td>{{ inserter.stack }}</td>
+          </tr>
+        }
+        @if (inserter.category) {
+          <tr>
+            <th>{{ 'data.category' | translate }}</th>
+            <td>{{ inserter.category }}</td>
+          </tr>
+        }
+        @if (inserter.ignoresBonus) {
+          <tr>
+            <th>{{ 'data.inserterIgnoresBonus' | translate }}</th>
+            <td><fa-icon [icon]="faCheck"></fa-icon></td>
+          </tr>
+        }
+      }
       @if (category() && itemSettings(); as itemSettings) {
         <tr>
           <th colspan="2">

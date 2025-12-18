@@ -5,13 +5,12 @@
 - Ability to pin objectives panel
 - #1762 Percent based machines should be based on machine object, not magic ids
 - #1759 Revisit unproduceable items logic
-- #1752 Heat exchangers and boilers should increase output at higher qualities
 - #1745 [Factorio: Space Age] Allow counting single trees
 - Restrict available entities if locked (machines, modules, etc)
 - Inserter estimation
+  - Inserter tooltip?
+  - Inserter column with calculation?
 - Implement technology effects
   - Inserter stack
-  - Recipe productivity
-  - Research productivity
 - Remove quality flag, use technologies?
 - Support for modded quality?

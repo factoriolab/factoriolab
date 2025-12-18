@@ -1,0 +1,31 @@
+import { Rational, rational } from '~/rational/rational';
+
+export interface InserterJson {
+  speed: number | string;
+  stack?: number | string;
+  category?: string;
+  ignoresBonus?: boolean;
+}
+
+export interface Inserter {
+  speed: Rational;
+  stack?: Rational;
+  category?: string;
+  ignoresBonus?: boolean;
+}
+
+export function parseInserter(json: InserterJson): Inserter;
+export function parseInserter(
+  json: InserterJson | undefined,
+): Inserter | undefined;
+export function parseInserter(
+  json: InserterJson | undefined,
+): Inserter | undefined {
+  if (json == null) return;
+  return {
+    speed: rational(json.speed),
+    stack: rational(json.stack),
+    category: json.category,
+    ignoresBonus: json.ignoresBonus,
+  };
+}

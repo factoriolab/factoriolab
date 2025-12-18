@@ -57,6 +57,7 @@ export interface DataRawDump {
   furnace: Record<string, M.FurnacePrototype>;
   gun: Record<string, M.GunPrototype>;
   item: Record<string, M.ItemPrototype>;
+  inserter: Record<string, M.InserterPrototype>;
   'item-group': Record<string, M.ItemGroup>;
   'item-subgroup': Record<string, M.ItemSubGroup>;
   'item-with-entity-data': Record<string, M.ItemWithEntityDataPrototype>;
@@ -146,7 +147,8 @@ export type AnyEntityPrototype =
   | M.FluidWagonPrototype
   | M.PumpPrototype
   | M.AsteroidCollectorPrototype
-  | M.AgriculturalTowerPrototype;
+  | M.AgriculturalTowerPrototype
+  | M.InserterPrototype;
 
 export type AnyLocationPrototype = M.PlanetPrototype | M.SurfacePrototype;
 
@@ -186,6 +188,7 @@ export const anyEntityKeys = [
   'pump',
   'asteroid-collector',
   'agricultural-tower',
+  'item',
 ] as const;
 
 export const anyItemKeys = [

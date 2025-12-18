@@ -8,6 +8,7 @@ import { Category } from '~/data/schema/category';
 import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
 import { IconData } from '~/data/schema/icon-data';
+import { Inserter } from '~/data/schema/inserter';
 import { Item } from '~/data/schema/item';
 import { Machine } from '~/data/schema/machine';
 import { ModHash } from '~/data/schema/mod-hash';
@@ -53,6 +54,8 @@ export interface Dataset {
   prodUpgradeTechIds: string[];
   technologyIds: string[];
   technologyRecord: Record<string, Technology>;
+  inserterIds: string[];
+  inserterRecord: Record<string, Inserter>;
   proliferatorModuleIds: string[];
   locationIds: string[];
   locationRecord: Record<string, Category>;

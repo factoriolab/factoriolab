@@ -186,6 +186,22 @@ export const routes: DataRoute[] = [
     },
   },
   {
+    path: 'inserters/:id',
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.inserters' },
+  },
+  {
+    path: 'inserters',
+    loadComponent: () =>
+      import('./collection/collection').then((c) => c.Collection),
+    data: {
+      label: 'data.inserters',
+      iconType: 'item',
+      key: 'inserterIds',
+    },
+  },
+  {
     path: 'recipes/:id',
     loadComponent: () =>
       import('./recipe-detail/recipe-detail').then((c) => c.RecipeDetail),
