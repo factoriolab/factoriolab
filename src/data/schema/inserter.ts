@@ -1,6 +1,7 @@
 import { Rational, rational } from '~/rational/rational';
 
 export interface InserterJson {
+  /** Rotation speed in °/s */
   speed: number | string;
   stack?: number | string;
   category?: string;
@@ -8,6 +9,7 @@ export interface InserterJson {
 }
 
 export interface Inserter {
+  /** Rotation speed in °/s */
   speed: Rational;
   stack?: Rational;
   category?: string;

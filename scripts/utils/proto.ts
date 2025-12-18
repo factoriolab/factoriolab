@@ -43,8 +43,9 @@ export function getFluidWagon(proto: M.FluidWagonPrototype): FluidWagonJson {
 }
 
 export function getInserter(proto: M.InserterPrototype): InserterJson {
+  const speed = proto.rotation_speed * 360 * 60;
   const inserter: InserterJson = {
-    speed: proto.rotation_speed,
+    speed,
     stack: proto.stack_size_bonus,
   };
   if (proto.bulk) inserter.category = 'bulk';

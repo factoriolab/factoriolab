@@ -424,14 +424,13 @@
         @if (technology.researchProductivity; as effect) {
           <tr>
             <th>{{ 'data.researchProductivity' | translate }}</th>
-            <td>{{ effect }}</td>
+            <td>{{ effect | bonusPercent }}</td>
           </tr>
         }
         @if (technology.researchSpeed; as effect) {
-          <!-- TODO -->
           <tr>
             <th>{{ 'data.researchSpeed' | translate }}</th>
-            <td>{{ effect }}</td>
+            <td>{{ effect | bonusPercent }}</td>
           </tr>
         }
       }
@@ -443,7 +442,7 @@
         </tr>
         <tr>
           <th>{{ 'data.rotationSpeed' | translate }}</th>
-          <td>{{ inserter.speed | round }}</td>
+          <td>{{ inserter.speed.toLocaleString() }}°/s</td>
         </tr>
         @if (inserter.stack) {
           <tr>
