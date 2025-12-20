@@ -1,0 +1,37 @@
+{
+  "extends": ["sfy"],
+  "add": {
+    "categories": [
+      {"id": "other", "name": "Other", "icon": "ficsmas-gift-tree"}
+    ],
+    "items": [
+      {"category": "parts", "id": "ficsmas-gift", "name": "Ficsmas Gift", "row": 3, "stack": 200},
+      {"category": "components", "id": "ficsmas-bow", "name": "Ficsmas Bow", "row": 14, "stack": 100},
+      {"category": "components", "id": "ficsmas-candy-cane", "name": "Ficsmas Candy Cane", "row": 14, "stack": 100},
+      {"category": "components", "id": "ficsmas-red-ornament", "name": "Ficsmas Red Ornament", "row": 14, "stack": 200},
+      {"category": "components", "id": "ficsmas-blue-ornament", "name": "Ficsmas Blue Ornament", "row": 14, "stack": 200},
+      {"category": "components", "id": "ficsmas-tree-branch", "name": "Ficsmas Tree Branch", "row": 14, "stack": 500},
+      {"category": "components", "id": "ficsmas-actual-snow", "name": "Ficsmas Actual Snow", "row": 14, "stack": 500},
+      {"category": "components", "id": "ficsmas-copper-ornament", "name": "Ficsmas Copper Ornament", "row": 14, "stack": 200},
+      {"category": "components", "id": "ficsmas-iron-ornament", "name": "Ficsmas Iron Ornament", "row": 14, "stack": 200},
+      {"category": "components", "id": "refined-power-carbon-dust", "name": "Carbon Dust", "row": 13, "stack": 100},
+      {"category": "components", "id": "refined-power-carbon-mesh", "name": "Carbon Mesh", "row": 13, "stack": 100},
+      {"category": "components", "id": "refined-power-reinforced-carbon-carbon", "name": "Reinforced Carbon Carbon", "row": 13, "stack": 100},
+      {"category": "other", "id": "ficsmas-gift-tree", "name": "Ficsmas Gift Tree", "row": 5, "machine": {"speed": 1, "type": "electric", "usage": 0, "modules": 1}}
+    ],
+    "recipes": [
+      {"id": "ficsmas-gift", "name": "Ficsmas Gift", "producers": ["ficsmas-gift-tree"], "time": 4, "cost": 500, "out": {"ficsmas-gift": 1}, "in": {}, "row": 0, "category": "parts", "flags": ["mining"]},
+      {"id": "ficsmas-tree-branch", "name": "Ficsmas Tree Branch", "producers": ["constructor-id"], "time": 6, "in": {"ficsmas-gift": 1}, "out": {"ficsmas-tree-branch": 1}, "row": 14, "category": "components"},
+      {"id": "ficsmas-candy-cane", "name": "Ficsmas Candy Cane", "producers": ["constructor-id"], "time": 12, "in": {"ficsmas-gift": 3}, "out": {"ficsmas-candy-cane": 1}, "row": 14, "category": "components"},
+      {"id": "ficsmas-bow", "name": "Ficsmas Bow", "producers": ["constructor-id"], "time": 12, "in": {"ficsmas-gift": 2}, "out": {"ficsmas-bow": 1}, "row": 14, "category": "components"},
+      {"id": "ficsmas-red-ornament", "name": "Ficsmas Red Ornament", "producers": ["smelter"], "time": 12, "in": {"ficsmas-gift": 1}, "out": {"ficsmas-red-ornament": 1}, "row": 14, "category": "components"},
+      {"id": "ficsmas-blue-ornament", "name": "Ficsmas Blue Ornament", "producers": ["smelter"], "time": 12, "in": {"ficsmas-gift": 1}, "out": {"ficsmas-blue-ornament": 2}, "row": 14, "category": "components"},
+      {"id": "ficsmas-copper-ornament", "name": "Ficsmas Copper Ornament", "producers": ["foundry"], "time": 12, "in": {"ficsmas-red-ornament": 2, "copper-ingot": 2}, "out": {"ficsmas-copper-ornament": 1}, "row": 14, "category": "components"},
+      {"id": "ficsmas-iron-ornament", "name": "Ficsmas Iron Ornament", "producers": ["foundry"], "time": 12, "in": {"ficsmas-blue-ornament": 3, "iron-ingot": 2}, "out": {"ficsmas-iron-ornament": 1}, "row": 14, "category": "components"},
+      {"id": "ficsmas-actual-snow", "name": "Ficsmas Actual Snow", "producers": ["constructor-id"], "time": 12, "in": {"ficsmas-gift": 5}, "out": {"ficsmas-actual-snow": 2}, "row": 14, "category": "components"},
+      {"id": "refined-power-carbon-dust", "name": "Carbon Dust", "producers": ["constructor-id"], "time": 3, "in": {"coal": 2}, "out": {"refined-power-carbon-dust": 5}, "row": 0, "category": "components"},
+      {"id": "refined-power-carbon-mesh", "name": "Carbon Mesh", "producers": ["assembler"], "time": 15, "in": {"refined-power-carbon-dust": 10, "wire": 20}, "out": {"refined-power-carbon-mesh": 5}, "row": 1, "category": "components"},
+      {"id": "refined-power-reinforced-carbon-carbon", "name": "Reinforced Carbon Carbon", "producers": ["assembler"], "time": 8, "in": {"refined-power-carbon-mesh": 3, "encased-industrial-beam": 1}, "out": {"refined-power-reinforced-carbon-carbon": 1}, "row": 2, "category": "components"}
+    ]
+  }
+}
