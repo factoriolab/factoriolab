@@ -39,7 +39,8 @@
     "update-hash": "ts-node -r tsconfig-paths/register scripts/update-hash.ts",
     "generate-hash": "ts-node -r tsconfig-paths/register scripts/generate-hash.ts",
     "extract-icons": "ts-node -r tsconfig-paths/register scripts/extract-icons.ts",
-    "build-icons": "ts-node -r tsconfig-paths/register scripts/build-icons.ts"
+    "build-icons": "ts-node -r tsconfig-paths/register scripts/build-icons.ts",
+    "normalize-icons": "ts-node -r tsconfig-paths/register scripts/normalize-icons.ts"
   },
   "dependencies": {
     "@angular/animations": "^18.1.0",
