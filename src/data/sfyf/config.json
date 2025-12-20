@@ -75,6 +75,13 @@
         "stack": 200
       },
       {
+        "category": "components",
+        "id": "ficsmas-ornament-bundle",
+        "name": "Ficsmas Ornament Bundle",
+        "row": 14,
+        "stack": 100
+      },
+      {
         "category": "other",
         "id": "ficsmas-gift-tree",
         "name": "Ficsmas Gift Tree",
@@ -216,6 +223,23 @@
         },
         "out": {
           "ficsmas-iron-ornament": 1
+        },
+        "row": 14,
+        "category": "components"
+      },
+      {
+        "id": "ficsmas-ornament-bundle",
+        "name": "Ficsmas Ornament Bundle",
+        "producers": [
+          "assembler"
+        ],
+        "time": 12,
+        "in": {
+          "icsmas-iron-ornament": 1,
+          "icsmas-copper-ornament": 1
+        },
+        "out": {
+          "ficsmas-ornament-bundle": 1
         },
         "row": 14,
         "category": "components"
