@@ -41,7 +41,8 @@
     "extract-icons": "ts-node -r tsconfig-paths/register scripts/extract-icons.ts",
     "build-icons": "ts-node -r tsconfig-paths/register scripts/build-icons.ts",
     "normalize-icons": "ts-node -r tsconfig-paths/register scripts/normalize-icons.ts",
-    "merge-mod-data": "ts-node -r tsconfig-paths/register scripts/merge-mod-data.ts"
+    "merge-mod-data": "ts-node -r tsconfig-paths/register scripts/merge-mod-data.ts",
+    "build-mod": "ts-node -r tsconfig-paths/register scripts/build-mod.ts"
   },
   "dependencies": {
     "@angular/animations": "^18.1.0",
