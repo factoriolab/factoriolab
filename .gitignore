@@ -50,3 +50,5 @@ mod-settings.dat
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+
+icons/
