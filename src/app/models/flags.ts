@@ -143,6 +143,7 @@ export const flags: Record<FlagSet, Set<Flag>> = {
   ]),
   sfy: new Set([
     'consumptionAsDrain',
+    'mods',
     'overclock',
     'power',
     'resourcePurity',

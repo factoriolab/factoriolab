@@ -131,6 +131,12 @@ export const data: AppData = {
     },
     { id: 'sfy', name: 'Satisfactory', game: Game.Satisfactory, flags: 'sfy' },
     {
+      id: 'sfyf',
+      name: 'Satisfactory + Ficsmas',
+      game: Game.Satisfactory,
+      flags: 'sfy',
+    },
+    {
       id: 'coi',
       name: 'Captain of Industry',
       game: Game.CaptainOfIndustry,
@@ -231,5 +237,6 @@ export const data: AppData = {
     'fdy',
     'ows',
     'spa',
+    'sfyf',
   ],
 };
