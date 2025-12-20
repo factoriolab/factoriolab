@@ -1,0 +1,182 @@
+{
+  "extends": [
+    "sfy"
+  ],
+  "add": {
+    "categories": [],
+    "items": [
+      {
+        "category": "components",
+        "id": "refined-power-carbon-dust",
+        "name": "Carbon Dust",
+        "row": 13,
+        "stack": 100
+      },
+      {
+        "category": "components",
+        "id": "refined-power-co2",
+        "name": "CO2",
+        "row": 13
+      },
+      {
+        "category": "components",
+        "id": "refined-power-low-pressure-steam",
+        "name": "Low Pressure Steam",
+        "row": 13
+      },
+      {
+        "category": "components",
+        "id": "refined-power-molten-salt",
+        "name": "Molten Salt",
+        "row": 13
+      },
+      {
+        "category": "components",
+        "id": "refined-power-toxic-gas",
+        "name": "Toxic Gas",
+        "row": 13
+      },
+      {
+        "category": "components",
+        "id": "refined-power-carbon-mesh",
+        "name": "Carbon Mesh",
+        "row": 13,
+        "stack": 100
+      },
+      {
+        "category": "components",
+        "id": "refined-power-reinforced-carbon-carbon",
+        "name": "Reinforced Carbon Carbon",
+        "row": 13,
+        "stack": 100
+      },
+      {
+        "category": "components",
+        "id": "refined-power-photovoltaic-cell",
+        "name": "Photovoltaic Cell",
+        "row": 13,
+        "stack": 100
+      }
+    ],
+    "recipes": [
+      {
+        "id": "refined-power-steam-water",
+        "name": "Steam Water",
+        "producers": [
+          "refinery"
+        ],
+        "time": 4,
+        "in": {
+          "water": 1,
+          "sulfur": 15
+        },
+        "out": {
+          "refined-power-molten-salt": 2
+        },
+        "row": 0,
+        "category": "components"
+      },
+      {
+        "id": "refined-power-carbon-dust",
+        "name": "Carbon Dust",
+        "producers": [
+          "constructor-id"
+        ],
+        "time": 3,
+        "in": {
+          "coal": 2
+        },
+        "out": {
+          "refined-power-carbon-dust": 5
+        },
+        "row": 0,
+        "category": "components"
+      },
+      {
+        "id": "refined-power-carbon-mesh",
+        "name": "Carbon Mesh",
+        "producers": [
+          "assembler"
+        ],
+        "time": 15,
+        "in": {
+          "refined-power-carbon-dust": 10,
+          "wire": 20
+        },
+        "out": {
+          "refined-power-carbon-mesh": 5
+        },
+        "row": 1,
+        "category": "components"
+      },
+      {
+        "id": "refined-power-reinforced-carbon-carbon",
+        "name": "Reinforced Carbon Carbon",
+        "producers": [
+          "assembler"
+        ],
+        "time": 8,
+        "in": {
+          "refined-power-carbon-mesh": 3,
+          "encased-industrial-beam": 1
+        },
+        "out": {
+          "refined-power-reinforced-carbon-carbon": 1
+        },
+        "row": 2,
+        "category": "components"
+      },
+      {
+        "id": "steel-ingot-carbon",
+        "name": "Carbon Steel Ingot",
+        "producers": [
+          "foundry"
+        ],
+        "time": 12,
+        "in": {
+          "iron-ingot": 3,
+          "refined-power-carbon-dust": 9
+        },
+        "out": {
+          "steel-ingot": 6
+        },
+        "row": 2,
+        "category": "components"
+      },
+      {
+        "id": "automated-wiring-carbon",
+        "name": "Carbon Automated Wiring",
+        "producers": [
+          "assembler"
+        ],
+        "time": 30,
+        "in": {
+          "refined-power-reinforced-carbon-carbon": 8,
+          "cable": 20
+        },
+        "out": {
+          "automated-wiring": 4
+        },
+        "row": 3,
+        "category": "components"
+      },
+      {
+        "id": "refined-power-photovoltaic-cell",
+        "name": "Photovoltaic Cell",
+        "producers": [
+          "assembler"
+        ],
+        "time": 10,
+        "in": {
+          "quartz-crystal": 10,
+          "refined-power-carbon-mesh": 5
+        },
+        "out": {
+          "refined-power-photovoltaic-cell": 1
+        },
+        "row": 2,
+        "category": "components"
+      }
+    ]
+  }
+}
