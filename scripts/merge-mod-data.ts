@@ -23,10 +23,8 @@
  *   }
  * }
  *
- * Icons workflow:
- * 1. Extended mods must have an icons/ folder (run extract-icons first if needed)
- * 2. This script copies icons from extended mods to target mod's icons/ folder
- * 3. After merging, run build-icons to generate the spritesheet and update data.json
+ * Icons are handled by build-icons, which reads config.json and collects icons
+ * from extended mods' icons/ folders automatically.
  */
 import * as fs from 'fs';
 import * as path from 'path';
@@ -63,45 +61,6 @@ function loadModData(modId: string): ModData {
     throw new Error(`data.json not found for mod: ${modId}`);
   }
   return JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-}
-
-/**
- * Copy icons from an extended mod's icons/ folder to the target mod's icons folder.
- * Returns the number of icons copied.
- */
-function copyIconsFromMod(
-  sourceModId: string,
-  targetIconsDir: string,
-  existingIcons: Set<string>,
-): number {
-  const sourceIconsDir = path.join(getDataDir(sourceModId), 'icons');
-
-  if (!fs.existsSync(sourceIconsDir)) {
-    console.warn(
-      `  Warning: No icons/ folder for ${sourceModId}. Run 'npm run extract-icons ${sourceModId}' first.`,
-    );
-    return 0;
-  }
-
-  const iconFiles = fs
-    .readdirSync(sourceIconsDir)
-    .filter((f) => f.endsWith('.png'));
-
-  let copiedCount = 0;
-  for (const iconFile of iconFiles) {
-    const iconId = iconFile.replace('.png', '');
-    if (existingIcons.has(iconId)) {
-      continue; // Don't overwrite existing icons (later mods take priority)
-    }
-
-    const sourcePath = path.join(sourceIconsDir, iconFile);
-    const targetPath = path.join(targetIconsDir, iconFile);
-    fs.copyFileSync(sourcePath, targetPath);
-    existingIcons.add(iconId);
-    copiedCount++;
-  }
-
-  return copiedCount;
 }
 
 function loadConfig(modId: string): ModConfig | null {
@@ -209,25 +168,8 @@ function mergeModData(modId: string): void {
   console.log(`Merging mod data for: ${modId}`);
 
   const targetDir = getDataDir(modId);
-  const targetIconsDir = path.join(targetDir, 'icons');
 
-  // Ensure target icons directory exists
-  if (!fs.existsSync(targetIconsDir)) {
-    fs.mkdirSync(targetIconsDir, { recursive: true });
-  }
-
-  // Track existing icons in target (these take priority)
-  const existingIcons = new Set<string>();
-  if (fs.existsSync(targetIconsDir)) {
-    for (const f of fs.readdirSync(targetIconsDir)) {
-      if (f.endsWith('.png')) {
-        existingIcons.add(f.replace('.png', ''));
-      }
-    }
-  }
-  const originalIconCount = existingIcons.size;
-
-  // Start with empty base data (icons handled separately via files)
+  // Start with empty base data (icons handled by build-icons)
   let baseData: ModData = {
     version: {},
     categories: [],
@@ -242,15 +184,7 @@ function mergeModData(modId: string): void {
       console.log(`  Extending from: ${baseModId}`);
       const extendedData = loadModData(baseModId);
 
-      // Copy icons from extended mod
-      const iconsCopied = copyIconsFromMod(
-        baseModId,
-        targetIconsDir,
-        existingIcons,
-      );
-      console.log(`    Copied ${iconsCopied} icons`);
-
-      // Merge each data type (except icons - handled by build-icons)
+      // Merge each data type (icons handled by build-icons)
       baseData = {
         version: { ...baseData.version, ...extendedData.version },
         categories: mergeById<CategoryJson>(
@@ -351,11 +285,8 @@ function mergeModData(modId: string): void {
   console.log(`  Categories: ${baseData.categories.length}`);
   console.log(`  Items: ${baseData.items.length}`);
   console.log(`  Recipes: ${baseData.recipes.length}`);
-  console.log(`  Icons: ${originalIconCount} original + ${existingIcons.size - originalIconCount} copied = ${existingIcons.size} total`);
   console.log(`\nOutput written to: ${outputPath}`);
-  console.log(`\nNext steps:`);
-  console.log(`  1. Run 'npm run normalize-icons ${modId}' to ensure all icons are 64x64`);
-  console.log(`  2. Run 'npm run build-icons ${modId}' to generate spritesheet and update data.json`);
+  console.log(`\nNext step: Run 'npm run build-icons ${modId}' to generate spritesheet`);
 }
 
 // Main
