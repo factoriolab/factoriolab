@@ -5,8 +5,8 @@
   "add": {
     "categories": [
       {
-        "id": "other",
-        "name": "Other",
+        "id": "ficsmas",
+        "name": "Ficsmas",
         "icon": "ficsmas-gift-tree"
       }
     ],
@@ -78,6 +78,13 @@
         "category": "components",
         "id": "ficsmas-ornament-bundle",
         "name": "Ficsmas Ornament Bundle",
+        "row": 14,
+        "stack": 100
+      },
+      {
+        "category": "components",
+        "id": "ficsmas-wreath",
+        "name": "Ficsmas Wreath",
         "row": 14,
         "stack": 100
       },
@@ -240,6 +247,23 @@
         },
         "out": {
           "ficsmas-ornament-bundle": 1
+        },
+        "row": 14,
+        "category": "components"
+      },
+      {
+        "id": "ficsmas-ornament-bundle",
+        "name": "Ficsmas Ornament Bundle",
+        "producers": [
+          "assembler"
+        ],
+        "time": 60,
+        "in": {
+          "ficsmas-tree-branch": 15,
+          "ficsmas-ornament-bundle": 6
+        },
+        "out": {
+          "ficsmas-wreath": 2
         },
         "row": 14,
         "category": "components"
