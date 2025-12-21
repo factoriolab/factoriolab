@@ -12,87 +12,75 @@
     ],
     "items": [
       {
-        "category": "parts",
+        "category": "ficsmas",
         "id": "ficsmas-gift",
         "name": "Ficsmas Gift",
-        "row": 3,
         "stack": 200
       },
       {
-        "category": "components",
+        "category": "ficsmas",
         "id": "ficsmas-bow",
         "name": "Ficsmas Bow",
-        "row": 14,
         "stack": 100
       },
       {
-        "category": "components",
+        "category": "ficsmas",
         "id": "ficsmas-candy-cane",
         "name": "Ficsmas Candy Cane",
-        "row": 14,
         "stack": 100
       },
       {
-        "category": "components",
+        "category": "ficsmas",
         "id": "ficsmas-red-ornament",
         "name": "Ficsmas Red Ornament",
-        "row": 14,
         "stack": 200
       },
       {
-        "category": "components",
+        "category": "ficsmas",
         "id": "ficsmas-blue-ornament",
         "name": "Ficsmas Blue Ornament",
-        "row": 14,
         "stack": 200
       },
       {
-        "category": "components",
+        "category": "ficsmas",
         "id": "ficsmas-tree-branch",
         "name": "Ficsmas Tree Branch",
-        "row": 14,
         "stack": 500
       },
       {
-        "category": "components",
+        "category": "ficsmas",
         "id": "ficsmas-actual-snow",
         "name": "Ficsmas Actual Snow",
-        "row": 14,
         "stack": 500
       },
       {
-        "category": "components",
+        "category": "ficsmas",
         "id": "ficsmas-copper-ornament",
         "name": "Ficsmas Copper Ornament",
-        "row": 14,
         "stack": 200
       },
       {
-        "category": "components",
+        "category": "ficsmas",
         "id": "ficsmas-iron-ornament",
         "name": "Ficsmas Iron Ornament",
-        "row": 14,
         "stack": 200
       },
       {
-        "category": "components",
+        "category": "ficsmas",
         "id": "ficsmas-ornament-bundle",
         "name": "Ficsmas Ornament Bundle",
-        "row": 14,
         "stack": 100
       },
       {
-        "category": "components",
+        "category": "ficsmas",
         "id": "ficsmas-wreath",
         "name": "Ficsmas Wreath",
-        "row": 14,
         "stack": 100
       },
       {
-        "category": "other",
+        "category": "ficsmas",
         "id": "ficsmas-gift-tree",
         "name": "Ficsmas Gift Tree",
-        "row": 5,
         "machine": {
           "speed": 1,
           "type": "electric",
@@ -114,7 +102,6 @@
           "ficsmas-gift": 1
         },
         "in": {},
-        "row": 0,
         "category": "parts",
         "flags": [
           "mining"
@@ -133,8 +120,7 @@
         "out": {
           "ficsmas-tree-branch": 1
         },
-        "row": 14,
-        "category": "components"
+        "category": "ficsmas"
       },
       {
         "id": "ficsmas-candy-cane",
@@ -149,8 +135,7 @@
         "out": {
           "ficsmas-candy-cane": 1
         },
-        "row": 14,
-        "category": "components"
+        "category": "ficsmas"
       },
       {
         "id": "ficsmas-bow",
@@ -165,8 +150,7 @@
         "out": {
           "ficsmas-bow": 1
         },
-        "row": 14,
-        "category": "components"
+        "category": "ficsmas"
       },
       {
         "id": "ficsmas-red-ornament",
@@ -181,8 +165,7 @@
         "out": {
           "ficsmas-red-ornament": 1
         },
-        "row": 14,
-        "category": "components"
+        "category": "ficsmas"
       },
       {
         "id": "ficsmas-blue-ornament",
@@ -197,8 +180,7 @@
         "out": {
           "ficsmas-blue-ornament": 2
         },
-        "row": 14,
-        "category": "components"
+        "category": "ficsmas"
       },
       {
         "id": "ficsmas-copper-ornament",
@@ -214,8 +196,7 @@
         "out": {
           "ficsmas-copper-ornament": 1
         },
-        "row": 14,
-        "category": "components"
+        "category": "ficsmas"
       },
       {
         "id": "ficsmas-iron-ornament",
@@ -231,8 +212,7 @@
         "out": {
           "ficsmas-iron-ornament": 1
         },
-        "row": 14,
-        "category": "components"
+        "category": "ficsmas"
       },
       {
         "id": "ficsmas-ornament-bundle",
@@ -248,8 +228,7 @@
         "out": {
           "ficsmas-ornament-bundle": 1
         },
-        "row": 14,
-        "category": "components"
+        "category": "ficsmas"
       },
       {
         "id": "ficsmas-ornament-bundle",
@@ -265,8 +244,7 @@
         "out": {
           "ficsmas-wreath": 2
         },
-        "row": 14,
-        "category": "components"
+        "category": "ficsmas"
       },
       {
         "id": "ficsmas-actual-snow",
@@ -281,8 +259,7 @@
         "out": {
           "ficsmas-actual-snow": 2
         },
-        "row": 14,
-        "category": "components"
+        "category": "ficsmas"
       }
     ]
   }
