@@ -222,8 +222,8 @@
         ],
         "time": 12,
         "in": {
-          "icsmas-iron-ornament": 1,
-          "icsmas-copper-ornament": 1
+          "ficsmas-iron-ornament": 1,
+          "ficsmas-copper-ornament": 1
         },
         "out": {
           "ficsmas-ornament-bundle": 1
@@ -231,7 +231,7 @@
         "category": "ficsmas"
       },
       {
-        "id": "ficsmas-ornament-bundle",
+        "id": "ficsmas-wreath",
         "name": "Ficsmas Ornament Bundle",
         "producers": [
           "assembler"
