@@ -241,6 +241,39 @@
         "category": "components"
       },
       {
+        "id": "refined-power-co2-dust",
+        "name": "Co2 Carbon Dust",
+        "producers": [
+          "refinery"
+        ],
+        "time": 3,
+        "in": {
+          "refined-power-co2": 15,
+          "limestone": 1
+        },
+        "out": {
+          "refined-power-carbon-dust": 9
+        },
+        "row": 13,
+        "category": "components"
+      },
+      {
+        "id": "refined-power-co2-consumer",
+        "name": "CO2 Consume",
+        "producers": [
+          "refined-power-co2-chimney"
+        ],
+        "time": 1,
+        "in": {
+          "refined-power-co2": 1
+        },
+        "out": {
+          "refined-power-co2": 0
+        },
+        "row": 13,
+        "category": "components"
+      },
+      {
         "id": "refined-power-carbon-dust",
         "name": "Carbon Dust",
         "producers": [
