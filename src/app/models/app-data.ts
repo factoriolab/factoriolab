@@ -136,6 +136,12 @@ export const data: AppData = {
       game: Game.Satisfactory,
       flags: 'sfy',
     },
+        {
+      id: 'sfyrp',
+      name: 'Satisfactory + Refined Power',
+      game: Game.Satisfactory,
+      flags: 'sfy',
+    },
     {
       id: 'coi',
       name: 'Captain of Industry',

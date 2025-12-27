@@ -56,6 +56,78 @@
         "name": "Photovoltaic Cell",
         "row": 13,
         "stack": 100
+      },
+      {
+        "category": "other",
+        "id": "refined-power-boiler-mk1",
+        "name": "Boiler Mk1",
+        "row": 5,
+        "machine": {
+          "speed": 1,
+          "type": "electric",
+          "usage": 0,
+          "modules": 1
+        }
+      },
+      {
+        "category": "other",
+        "id": "refined-power-coal-heater",
+        "name": "Coal Heater",
+        "row": 5,
+        "machine": {
+          "speed": 1,
+          "type": "electric",
+          "usage": 0,
+          "modules": 1
+        }
+      },
+      {
+        "category": "other",
+        "id": "refined-power-turbine-mk1",
+        "name": "Turbine Mk1",
+        "row": 5,
+        "machine": {
+          "speed": 1,
+          "type": "electric",
+          "usage": 0,
+          "modules": 1
+        }
+      },
+      {
+        "category": "other",
+        "id": "refined-power-steam-cooling-tower",
+        "name": "Steam Cooling Tower",
+        "row": 5,
+        "machine": {
+          "speed": 1,
+          "type": "electric",
+          "usage": 0,
+          "modules": 1
+        }
+      },
+      {
+        "category": "other",
+        "id": "refined-power-co2-chimney",
+        "name": "Co2 Chimney",
+        "row": 5,
+        "machine": {
+          "speed": 1,
+          "type": "electric",
+          "usage": 0,
+          "modules": 1
+        }
+      },
+      {
+        "category": "other",
+        "id": "refined-power-toxic-gas-extractor",
+        "name": "Co2 Chimney",
+        "row": 5,
+        "machine": {
+          "speed": 1,
+          "type": "electric",
+          "usage": 0,
+          "modules": 1
+        }
       }
     ],
     "recipes": [
