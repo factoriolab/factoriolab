@@ -26,6 +26,12 @@
       },
       {
         "category": "components",
+        "id": "refined-power-power",
+        "name": "Power",
+        "row": 13
+      },
+      {
+        "category": "components",
         "id": "refined-power-high-pressure-steam",
         "name": "High Pressure Steam",
         "row": 13
@@ -73,18 +79,6 @@
         "category": "other",
         "id": "refined-power-boiler-mk1",
         "name": "Boiler Mk1",
-        "row": 5,
-        "machine": {
-          "speed": 1,
-          "type": "electric",
-          "usage": 0,
-          "modules": 1
-        }
-      },
-      {
-        "category": "other",
-        "id": "refined-power-coal-heater",
-        "name": "Coal Heater",
         "row": 5,
         "machine": {
           "speed": 1,
@@ -212,22 +206,6 @@
         "category": "components"
       },
       {
-        "id": "refined-power-co2-coal",
-        "name": "CO2+Heat (Coal Heater)",
-        "producers": [
-          "refined-power-coal-heater"
-        ],
-        "time": 4,
-        "in": {
-          "coal": 1
-        },
-        "out": {
-          "refined-power-co2": 2
-        },
-        "row": 13,
-        "category": "components"
-      },
-      {
         "id": "refined-power-high-pressure-steam-boiler-mk1",
         "name": "High Pressure Steam (Boiler Mk1)",
         "producers": [
@@ -235,10 +213,12 @@
         ],
         "time": 4,
         "in": {
+          "coal": 1,
           "water": 3
         },
         "out": {
-          "refined-power-high-pressure-steam": 4
+          "refined-power-high-pressure-steam": 4,
+          "refined-power-co2": 2
         },
         "row": 13,
         "category": "components"
@@ -254,7 +234,8 @@
           "refined-power-high-pressure-steam": 1
         },
         "out": {
-          "refined-power-low-pressure-steam": 1
+          "refined-power-low-pressure-steam": 1,
+          "refined-power-power": 2.5
         },
         "row": 13,
         "category": "components"
