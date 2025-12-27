@@ -26,6 +26,12 @@
       },
       {
         "category": "components",
+        "id": "refined-power-high-pressure-steam",
+        "name": "High Pressure Steam",
+        "row": 13
+      },
+      {
+        "category": "components",
         "id": "refined-power-molten-salt",
         "name": "Molten Salt",
         "row": 13
@@ -34,6 +40,12 @@
         "category": "components",
         "id": "refined-power-toxic-gas",
         "name": "Toxic Gas",
+        "row": 13
+      },
+      {
+        "category": "components",
+        "id": "refined-power-methane-gas",
+        "name": "Methane Gas",
         "row": 13
       },
       {
@@ -120,7 +132,7 @@
       {
         "category": "other",
         "id": "refined-power-toxic-gas-extractor",
-        "name": "Co2 Chimney",
+        "name": "Toxic Gas Extractor",
         "row": 5,
         "machine": {
           "speed": 1,
@@ -132,8 +144,26 @@
     ],
     "recipes": [
       {
-        "id": "refined-power-steam-water",
-        "name": "Steam Water",
+        "id": "refined-power-toxic-gas",
+        "name": "Toxic Gas",
+        "producers": [
+          "refined-power-toxic-gas-extractor"
+        ],
+        "time": 5,
+        "cost": 1,
+        "out": {
+          "refined-power-toxic-gas": 1
+        },
+        "in": {},
+        "row": 13,
+        "category": "parts",
+        "flags": [
+          "mining"
+        ]
+      },
+      {
+        "id": "refined-power-molten-salt",
+        "name": "Molten Salt",
         "producers": [
           "refinery"
         ],
@@ -145,7 +175,40 @@
         "out": {
           "refined-power-molten-salt": 2
         },
-        "row": 0,
+        "row": 13,
+        "category": "components"
+      },
+      {
+        "id": "refined-power-methane-gas",
+        "name": "Methane Gas",
+        "producers": [
+          "refinery"
+        ],
+        "time": 4,
+        "in": {
+          "refined-power-toxic-gas": 2,
+          "refined-power-carbon-mesh": 2
+        },
+        "out": {
+          "refined-power-methane-gas": 1
+        },
+        "row": 13,
+        "category": "components"
+      },
+      {
+        "id": "refined-power-steam-water",
+        "name": "Steam Water",
+        "producers": [
+          "refinery"
+        ],
+        "time": 3,
+        "in": {
+          "refined-power-low-pressure-steam": 4
+        },
+        "out": {
+          "water": 3
+        },
+        "row": 13,
         "category": "components"
       },
       {
@@ -161,7 +224,7 @@
         "out": {
           "refined-power-carbon-dust": 5
         },
-        "row": 0,
+        "row": 13,
         "category": "components"
       },
       {
@@ -178,7 +241,7 @@
         "out": {
           "refined-power-carbon-mesh": 5
         },
-        "row": 1,
+        "row": 13,
         "category": "components"
       },
       {
@@ -195,7 +258,7 @@
         "out": {
           "refined-power-reinforced-carbon-carbon": 1
         },
-        "row": 2,
+        "row": 13,
         "category": "components"
       },
       {
@@ -212,7 +275,7 @@
         "out": {
           "steel-ingot": 6
         },
-        "row": 2,
+        "row": 13,
         "category": "components"
       },
       {
@@ -229,7 +292,7 @@
         "out": {
           "automated-wiring": 4
         },
-        "row": 3,
+        "row": 13,
         "category": "components"
       },
       {
@@ -246,7 +309,7 @@
         "out": {
           "refined-power-photovoltaic-cell": 1
         },
-        "row": 2,
+        "row": 13,
         "category": "components"
       }
     ]
