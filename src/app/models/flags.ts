@@ -149,7 +149,7 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'somersloop',
     'wagons',
   ]),
-  coi: new Set(['hideMachineSettings']),
+  coi: new Set(['hideMachineSettings', 'power']),
   ffy: new Set(['duplicators']),
   tta: new Set(['fuels', 'power']),
   fay: new Set(['fuels', 'power', 'miningSpeed', 'beltStack']),
