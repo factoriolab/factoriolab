@@ -8,6 +8,7 @@ export enum Language {
   Russian = 'ru',
   Japanese = 'ja',
   Portuguese = 'pt-BR',
+  Spanish = 'es',
 }
 
 export const languageOptions: SelectItem<Language>[] = [
@@ -18,4 +19,5 @@ export const languageOptions: SelectItem<Language>[] = [
   { label: '日本語 (Japanese)', value: Language.Japanese },
   { label: 'Português (Portuguese)', value: Language.Portuguese },
   { label: 'русский (Russian)', value: Language.Russian },
+  { label: 'Español (Spanish)', value: Language.Spanish },
 ];
