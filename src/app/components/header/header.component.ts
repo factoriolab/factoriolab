@@ -8,15 +8,18 @@ import {
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { combineLatest, map } from 'rxjs';
 
 import { APP } from '~/models/constants';
 import { Game, gameOptions } from '~/models/enum/game';
+import { languageOptions } from '~/models/enum/language';
 import { gameInfo } from '~/models/game-info';
 import { isRecipeObjective } from '~/models/objective';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
@@ -37,8 +40,10 @@ interface MenuLink {
   selector: 'lab-header',
   standalone: true,
   imports: [
+    FormsModule,
     RouterLink,
     ButtonModule,
+    DropdownModule,
     SplitButtonModule,
     TooltipModule,
     IconSmClassPipe,
@@ -79,6 +84,8 @@ export class HeaderComponent {
       }),
     ),
   );
+
+  languageOptions = languageOptions;
 
   links: MenuLink[] = [
     {
