@@ -32,6 +32,7 @@ export interface PreferencesState {
   paused: boolean;
   convertObjectiveValues: boolean;
   flowSettings: FlowSettings;
+  stickyObjectives: boolean;
 }
 
 export const initialPreferencesState: PreferencesState = {
@@ -53,6 +54,7 @@ export const initialPreferencesState: PreferencesState = {
     sankeyAlign: SankeyAlign.Justify,
     hideExcluded: false,
   },
+  stickyObjectives: false,
 };
 
 @Injectable({
@@ -74,6 +76,7 @@ export class PreferencesService extends Store<PreferencesState> {
   showTechLabels = this.select('showTechLabels');
   states = this.select('states');
   theme = this.select('theme');
+  stickyObjectives = this.select('stickyObjectives');
 
   constructor() {
     super(initialPreferencesState, ['states', 'flowSettings']);

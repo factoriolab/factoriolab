@@ -1451,13 +1451,23 @@
               "
             ></p-checkbox>
           </div>
-          <div>
+          <div class="pb-3">
             <p-checkbox
               [ngModel]="preferences().disablePaginator"
               [binary]="true"
               [label]="'settings.disablePaginator' | translate"
               (onChange)="
                 preferencesSvc.apply({ disablePaginator: $event.checked })
+              "
+            ></p-checkbox>
+          </div>
+          <div>
+            <p-checkbox
+              [ngModel]="preferences().stickyObjectives"
+              [binary]="true"
+              [label]="'settings.stickyObjectives' | translate"
+              (onChange)="
+                preferencesSvc.apply({ stickyObjectives: $event.checked })
               "
             ></p-checkbox>
           </div>

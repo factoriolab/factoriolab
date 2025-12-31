@@ -14,6 +14,7 @@ import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
 import { TranslateService } from '~/services/translate.service';
 import { ObjectivesService } from '~/store/objectives.service';
+import { PreferencesService } from '~/store/preferences.service';
 import { SettingsService } from '~/store/settings.service';
 
 @Component({
@@ -38,6 +39,7 @@ export class MainComponent {
   objectivesSvc = inject(ObjectivesService);
   settingsSvc = inject(SettingsService);
   translateSvc = inject(TranslateService);
+  preferencesSvc = inject(PreferencesService);
 
   mod = this.settingsSvc.mod;
   result = this.objectivesSvc.matrixResult;

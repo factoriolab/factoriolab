@@ -2,6 +2,24 @@
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/mixins/breakpoints';
 
+:host {
+  background: var(--surface-ground);
+
+  &.sticky {
+    position: sticky;
+    top: 4rem;
+    z-index: 2;
+  }
+
+  @include media-breakpoint-down(xl) {
+    &.sticky {
+      position: sticky;
+      top: 6rem;
+      z-index: 2;
+    }
+  }
+}
+
 .objectives-content {
   max-width: 1000px;
 }
