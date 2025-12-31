@@ -13,6 +13,7 @@
   },
   "beaconsSelect": {
     "addBeacons": "Add beacons",
+    "beaconTooltip": "Click to select beacon",
     "eachTooltip": "Beacons per machine",
     "tooltip": "Click to select beacons",
     "totalTooltip": "Total beacons"
@@ -35,6 +36,8 @@
   "costs": {
     "excluded": "已排除",
     "excludedTooltip": "被排除的物品的权重",
+    "factor": "配方",
+    "factorTooltip": "将配方成本与定义的权重（通常是采矿成本）相乘",
     "footprint": "空间占用",
     "footprintTooltip": "是否将设备的占地面积乘以权重",
     "header": "权重设置",
@@ -42,8 +45,6 @@
     "machineTooltip": "将运行配方的机器数量与定义的权重相乘",
     "maximize": "最大化目标",
     "maximizeTooltip": "最大化目标的权重 (必须为负)",
-    "factor": "配方",
-    "factorTooltip": "将配方成本与定义的权重（通常是采矿成本）相乘",
     "recycling": "回收",
     "recyclingTooltip": "将回收配方的成本与定义的权重相乘",
     "surplus": "过剩物品",
@@ -51,11 +52,20 @@
     "unproduceable": "不可制造",
     "unproduceableTooltip": "不可制造的物品的权重"
   },
+  "customData": {
+    "cached": "Cached",
+    "chooseFiles": "Choose files",
+    "dataFile": "Data file",
+    "header": "Select custom data",
+    "iconsFile": "Icons file",
+    "label": "Select JSON data file and image sprite sheet"
+  },
   "data": {
     "beacon": "插件效果分享塔",
     "beacons": "插件效果分享塔",
     "belt": "传送带",
     "beltSpeed": "速度 (物品/秒)",
+    "beltStack": "Belt stack",
     "belts": "传送带",
     "burntResult": "燃烧结果",
     "cargoWagon": "货运车厢",
@@ -87,6 +97,10 @@
     "fuelValue": "燃料数值",
     "fuels": "燃料",
     "ingredients": "原料",
+    "inserter": "Inserter",
+    "inserterIgnoresBonus": "Ignores stack size bonus",
+    "inserterStack": "Inserter stack",
+    "inserters": "Inserters",
     "itemSettings": "物品设置",
     "items": "物品",
     "locations": "地点",
@@ -94,6 +108,7 @@
     "machineSettings": "设备设置",
     "machines": "设备",
     "mining": "采集",
+    "miningProductivity": "Mining productivity",
     "module": "插件",
     "moduleRank": "插件等级",
     "moduleSlots": "插件槽",
@@ -114,12 +129,16 @@
     "quality": "品质",
     "range": "范围",
     "recipe": "配方",
+    "recipeProductivity": "Recipe productivity",
     "recipeSettings": "配方设置",
     "recipes": "配方",
+    "researchProductivity": "Research productivity",
+    "researchSpeed": "Research speed",
     "rocketLaunchTime": "火箭发射时间 (秒)",
     "rocketPart": "火箭组件",
     "rocketPartsRequired": "需要火箭组件",
     "rocketSilo": "火箭发射井",
+    "rotationSpeed": "Rotation speed",
     "speed": "速度",
     "sprays": "喷涂",
     "stackSize": "堆叠数",
@@ -127,8 +146,17 @@
     "technologies": "科技",
     "technology": "科技",
     "time": "时间 (秒)",
+    "type": "Type",
+    "unlockQuality": "Unlock quality",
+    "unlockRecipe": "Unlock recipe",
     "unlockedBy": "解锁自",
-    "unlockedRecipes": "成果"
+    "unlockedRecipes": "成果",
+    "value": "Value"
+  },
+  "error": {
+    "deleteCustom": "Delete custom data",
+    "header": "An error occurred",
+    "home": "Home"
   },
   "filter": "Filter",
   "flow": {
@@ -244,6 +272,7 @@
     },
     "game": {
       "captainOfIndustry": "工业巨头",
+      "custom": "Custom",
       "dysonSphereProgram": "戴森球计划",
       "factorY": "Factor Y",
       "factorio": "异星工厂",
@@ -348,7 +377,8 @@
     "label": "Showing {{ first }} to {{ last }} of {{ total }}",
     "last": "Last page",
     "next": "Next page",
-    "previous": "Previous page"
+    "previous": "Previous page",
+    "rows": "Rows per page"
   },
   "picker": {
     "includeAll": "包含全部",
@@ -415,6 +445,7 @@
     "fuelRank": "首选燃料",
     "fuelRankEmpty": "No fuels selected",
     "fuelRankTooltip": "选择燃料的使用顺序",
+    "fuelTooltip": "Click to select fuel preference",
     "gameTooltip": "选择要使用的游戏计算器",
     "header": "设置",
     "hide": "Hide settings panel",
@@ -452,6 +483,8 @@
     "requestMod": "没有找到您使用的Mod？",
     "requireMachinesOutput": "将机器输出设为必需",
     "requireMachinesOutputTooltip": "如果勾选，机器的目标输出将被视为必需品，而不是多余的产出",
+    "researchProductivity": "Research productivity",
+    "researchProductivityTooltip": "Enter the current level of research productivity bonus; this setting only affects research",
     "researchSpeed": "研发速度",
     "researchSpeedTooltip": "输入当前研发速度加成 (该设置只影响产品的研发)",
     "techsResearched": "已研究 {{ count }} 科技",
@@ -463,6 +496,7 @@
     "beltSelectTooltip": "Click to select belt and stack size",
     "beltTooltip": "Click to select belt",
     "beltsUndoTooltip": "取消所有对传送带的修改",
+    "checked": "Step checked",
     "checkedUndoTooltip": "取消所有勾选",
     "downloadAsCsv": "导出为 CSV 文件",
     "emptyMessage": "点击图表中的节点查看详细信息",

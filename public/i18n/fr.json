@@ -13,6 +13,7 @@
   },
   "beaconsSelect": {
     "addBeacons": "Add beacons",
+    "beaconTooltip": "Click to select beacon",
     "eachTooltip": "Balises par Usine",
     "tooltip": "Click to select beacons",
     "totalTooltip": "Nombre total de balises"
@@ -35,6 +36,8 @@
   "costs": {
     "excluded": "Exclu",
     "excludedTooltip": "Cout d'Article exclu explicitement",
+    "factor": "Recette",
+    "factorTooltip": "Recette a cout definit multipliable, généralement du minage",
     "footprint": "Surface au sol",
     "footprintTooltip": "Si il faut multiplier le cout par la surface en tuile de la machine",
     "header": "Paremetre de cout",
@@ -42,8 +45,6 @@
     "machineTooltip": "Multiplie le cout par le nombre de machine utilisant la recette",
     "maximize": "Maximiser",
     "maximizeTooltip": "Cout de maximisation des objectif (doit etre négatif)",
-    "factor": "Recette",
-    "factorTooltip": "Recette a cout definit multipliable, généralement du minage",
     "recycling": "Recylcage",
     "recyclingTooltip": "Multiplie le cout des recette de recyclage par ce nombre",
     "surplus": "Surplus",
@@ -51,11 +52,20 @@
     "unproduceable": "Non productible",
     "unproduceableTooltip": "Cout d'un article qui ne peu etre produit par auccune des recette incluse"
   },
+  "customData": {
+    "cached": "Cached",
+    "chooseFiles": "Choose files",
+    "dataFile": "Data file",
+    "header": "Select custom data",
+    "iconsFile": "Icons file",
+    "label": "Select JSON data file and image sprite sheet"
+  },
   "data": {
     "beacon": "Beacon",
     "beacons": "Beacons",
     "belt": "Belt",
     "beltSpeed": "Speed (Items/s)",
+    "beltStack": "Belt stack",
     "belts": "Belts",
     "burntResult": "Burnt result",
     "cargoWagon": "Cargo wagon",
@@ -87,6 +97,10 @@
     "fuelValue": "Fuel value",
     "fuels": "Fuels",
     "ingredients": "Ingredients",
+    "inserter": "Inserter",
+    "inserterIgnoresBonus": "Ignores stack size bonus",
+    "inserterStack": "Inserter stack",
+    "inserters": "Inserters",
     "itemSettings": "Item settings",
     "items": "Items",
     "locations": "Locations",
@@ -94,6 +108,7 @@
     "machineSettings": "Machine settings",
     "machines": "Machines",
     "mining": "Mining",
+    "miningProductivity": "Mining productivity",
     "module": "Module",
     "moduleRank": "Module rank",
     "moduleSlots": "Module slots",
@@ -114,12 +129,16 @@
     "quality": "Quality",
     "range": "Range",
     "recipe": "Recipe",
+    "recipeProductivity": "Recipe productivity",
     "recipeSettings": "Recipe settings",
     "recipes": "Recipes",
+    "researchProductivity": "Research productivity",
+    "researchSpeed": "Research speed",
     "rocketLaunchTime": "Rocket launch time (s)",
     "rocketPart": "Rocket part",
     "rocketPartsRequired": "Rocket parts required",
     "rocketSilo": "Rocket silo",
+    "rotationSpeed": "Rotation speed",
     "speed": "Speed",
     "sprays": "Sprays",
     "stackSize": "Stack size",
@@ -127,8 +146,17 @@
     "technologies": "Technologies",
     "technology": "Technology",
     "time": "Time (s)",
+    "type": "Type",
+    "unlockQuality": "Unlock quality",
+    "unlockRecipe": "Unlock recipe",
     "unlockedBy": "Unlocked by",
-    "unlockedRecipes": "Unlocked recipes"
+    "unlockedRecipes": "Unlocked recipes",
+    "value": "Value"
+  },
+  "error": {
+    "deleteCustom": "Delete custom data",
+    "header": "An error occurred",
+    "home": "Home"
   },
   "filter": "Filter",
   "flow": {
@@ -244,6 +272,7 @@
     },
     "game": {
       "captainOfIndustry": "Captain of Industry",
+      "custom": "Custom",
       "dysonSphereProgram": "Dyson Sphere Program",
       "factorY": "Factor Y",
       "factorio": "Factorio",
@@ -348,7 +377,8 @@
     "label": "Showing {{ first }} to {{ last }} of {{ total }}",
     "last": "Last page",
     "next": "Next page",
-    "previous": "Previous page"
+    "previous": "Previous page",
+    "rows": "Rows per page"
   },
   "picker": {
     "includeAll": "Tout inclure",
@@ -415,6 +445,7 @@
     "fuelRank": "Preferred fuels",
     "fuelRankEmpty": "No fuels selected",
     "fuelRankTooltip": "Select the order of preferred fuels to be used where applicable",
+    "fuelTooltip": "Click to select fuel preference",
     "gameTooltip": "Séléctionnez quel jeu le calculateur utilise, ou utilisez le lien sur la barre de titre",
     "header": "Paramètres",
     "hide": "Hide settings panel",
@@ -452,6 +483,8 @@
     "requestMod": "Demander un mod",
     "requireMachinesOutput": "Require machines output",
     "requireMachinesOutputTooltip": "If checked, output from machine objectives will be treated as required instead of surplus.",
+    "researchProductivity": "Research productivity",
+    "researchProductivityTooltip": "Enter the current level of research productivity bonus; this setting only affects research",
     "researchSpeed": "Vitesse de recherche",
     "researchSpeedTooltip": "Entrez le pourcentage de bonus de vitesse de la recherche actuel; ce paramètres n'affecte que les recherches",
     "techsResearched": "{{ count }} technologies researched",
@@ -463,6 +496,7 @@
     "beltSelectTooltip": "Click to select belt and stack size",
     "beltTooltip": "Click to select belt",
     "beltsUndoTooltip": "Annuler toutes les modifitions de convoyeurs",
+    "checked": "Step checked",
     "checkedUndoTooltip": "Undo all checkmarks",
     "downloadAsCsv": "Télécharger la liste sous CSV",
     "emptyMessage": "Click on a node in the diagram to view details",

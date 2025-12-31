@@ -1,6 +1,6 @@
 import { Option } from '~/option/option';
 
-export type Language = 'en' | 'zh' | 'de' | 'fr' | 'ru' | 'ja' | 'pt-BR';
+export type Language = 'en' | 'zh' | 'de' | 'fr' | 'ru' | 'ja' | 'pt-BR' | 'es';
 
 export const languageOptions: Option<Language>[] = [
   { label: 'English', value: 'en' },
@@ -10,4 +10,5 @@ export const languageOptions: Option<Language>[] = [
   { label: '日本語 (Japanese)', value: 'ja' },
   { label: 'Português (Portuguese)', value: 'pt-BR' },
   { label: 'русский (Russian)', value: 'ru' },
+  { label: 'Español (Spanish)', value: 'es' },
 ];

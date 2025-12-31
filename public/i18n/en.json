@@ -13,10 +13,10 @@
   },
   "beaconsSelect": {
     "addBeacons": "Add beacons",
+    "beaconTooltip": "Click to select beacon",
     "eachTooltip": "Beacons per machine",
     "tooltip": "Click to select beacons",
-    "totalTooltip": "Total beacons",
-    "beaconTooltip": "Click to select beacon"
+    "totalTooltip": "Total beacons"
   },
   "beltSelect": {
     "stackTooltip": "Stack size"
@@ -36,6 +36,8 @@
   "costs": {
     "excluded": "Excluded",
     "excludedTooltip": "Cost of items that have been explicitly excluded",
+    "factor": "Recipe",
+    "factorTooltip": "Multiplies cost of recipes with a defined cost, usually mining",
     "footprint": "Footprint",
     "footprintTooltip": "Multiplies cost by the tile area of machines",
     "header": "Cost settings",
@@ -43,8 +45,6 @@
     "machineTooltip": "Multiplies cost by number of machines running recipes",
     "maximize": "Maximize",
     "maximizeTooltip": "Cost of maximization objectives (must be negative)",
-    "factor": "Recipe",
-    "factorTooltip": "Multiplies cost of recipes with a defined cost, usually mining",
     "recycling": "Recycling",
     "recyclingTooltip": "Multiplies cost of recycling recipes by this number",
     "surplus": "Surplus",
@@ -53,20 +53,20 @@
     "unproduceableTooltip": "Cost of items that cannot be produced by any included recipes"
   },
   "customData": {
-    "header": "Select custom data",
-    "label": "Select JSON data file and image sprite sheet",
+    "cached": "Cached",
     "chooseFiles": "Choose files",
     "dataFile": "Data file",
+    "header": "Select custom data",
     "iconsFile": "Icons file",
-    "cached": "Cached"
+    "label": "Select JSON data file and image sprite sheet"
   },
   "data": {
     "beacon": "Beacon",
     "beacons": "Beacons",
     "belt": "Belt",
     "beltSpeed": "Speed (Items/s)",
-    "belts": "Belts",
     "beltStack": "Belt stack",
+    "belts": "Belts",
     "burntResult": "Burnt result",
     "cargoWagon": "Cargo wagon",
     "cargoWagons": "Cargo wagons",
@@ -98,10 +98,9 @@
     "fuels": "Fuels",
     "ingredients": "Ingredients",
     "inserter": "Inserter",
-    "inserters": "Inserters",
     "inserterIgnoresBonus": "Ignores stack size bonus",
-    "rotationSpeed": "Rotation speed",
     "inserterStack": "Inserter stack",
+    "inserters": "Inserters",
     "itemSettings": "Item settings",
     "items": "Items",
     "locations": "Locations",
@@ -139,6 +138,7 @@
     "rocketPart": "Rocket part",
     "rocketPartsRequired": "Rocket parts required",
     "rocketSilo": "Rocket silo",
+    "rotationSpeed": "Rotation speed",
     "speed": "Speed",
     "sprays": "Sprays",
     "stackSize": "Stack size",
@@ -154,8 +154,8 @@
     "value": "Value"
   },
   "error": {
-    "header": "An error occurred",
     "deleteCustom": "Delete custom data",
+    "header": "An error occurred",
     "home": "Home"
   },
   "filter": "Filter",
@@ -442,10 +442,10 @@
     "estimateBeaconPowerUsageTooltip": "Enable to estimate power usage of beacons, based on an estimated average number of receivers per beacon",
     "factory": "Factory",
     "flowRateUnit": "u/sec",
-    "fuelTooltip": "Click to select fuel preference",
     "fuelRank": "Preferred fuels",
     "fuelRankEmpty": "No fuels selected",
     "fuelRankTooltip": "Select the order of preferred fuels to be used where applicable",
+    "fuelTooltip": "Click to select fuel preference",
     "gameTooltip": "Select which game calculator to use, or use the links in the title bar",
     "header": "Settings",
     "hide": "Hide settings panel",
