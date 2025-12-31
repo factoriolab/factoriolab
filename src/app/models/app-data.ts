@@ -39,6 +39,7 @@ export const data: AppData = {
       flags: '1.1',
     },
     { id: 'bio', name: 'Bio Industries', game: Game.Factorio, flags: '1.1' },
+    { id: 'bno-stranded-q', name: 'BNO & Stranded & Quality', game: Game.Factorio, flags: '2.0q' },
     { id: 'bob', name: "Bob's Mods", game: Game.Factorio, flags: '1.1' },
     {
       id: 'bobang',
@@ -179,6 +180,7 @@ export const data: AppData = {
     '017',
     '016',
     'bio',
+    'bno-stranded-q',
     'bob',
     'bobang',
     'dsp',
