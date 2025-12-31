@@ -43,7 +43,7 @@
         "row": 13
       },
       {
-        "category": "components",
+        "category": "parts",
         "id": "refined-power-toxic-gas",
         "name": "Toxic Gas",
         "row": 13
@@ -95,7 +95,7 @@
         "machine": {
           "speed": 1,
           "type": "electric",
-          "usage": 0,
+          "usage": -150000,
           "modules": 1
         }
       },
@@ -203,7 +203,7 @@
           "water": 3
         },
         "row": 13,
-        "category": "components"
+        "category": "parts"
       },
       {
         "id": "refined-power-high-pressure-steam-boiler-mk1",
