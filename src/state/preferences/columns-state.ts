@@ -43,6 +43,7 @@ export const columnsInfo: ColumnsInfo = {
   },
   rockets: {
     hasPrecision: true,
+    hideDefault: true,
     exclude: (data) => !data.flags.has('rockets'),
   },
   machines: { hasPrecision: true },

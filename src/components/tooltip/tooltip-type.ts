@@ -2,10 +2,11 @@ export type TooltipType =
   | 'item'
   | 'beacon'
   | 'belt'
-  | 'wagon'
   | 'fuel'
+  | 'inserter'
   | 'machine'
   | 'module'
   | 'pipe'
+  | 'wagon'
   | 'technology'
   | 'recipe';

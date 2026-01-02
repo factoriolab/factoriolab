@@ -93,11 +93,13 @@
           colspan="2"
           labSortHeader
           column="rockets"
+          [text]="displayRateInfo().rocketsLabel"
           [state]="tableStore.state()"
           (stateChange)="tableStore.set($event)"
-          [text]="displayRateInfo().rocketsLabel"
         ></th>
       }
+      <!-- Inserters (Value & Icon) -->
+      <th colspan="2"></th>
       <!-- Machines (Value & Icon) -->
       <th
         colspan="2"
@@ -424,6 +426,8 @@
             }
           </td>
         }
+        <!-- Inserters (Value & Icon) -->
+        <td colspan="2"></td>
         <!-- Machines (Value & Icon) -->
         @if (step.recipeSettings?.machineId; as machineId) {
           <td class="pe-0">
@@ -733,6 +737,7 @@
         @if (cols().rockets.show) {
           <td colspan="2"></td>
         }
+        <td colspan="2"><!-- Inserters --></td>
         <td colspan="2" labTotalCell [value]="totals().machines"></td>
         @if (cols().beacons.show) {
           <td labTotalCell [value]="totals().beacons"></td>

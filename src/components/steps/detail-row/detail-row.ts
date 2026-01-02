@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   input,
+  linkedSignal,
 } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faArrowRightLong } from '@fortawesome/free-solid-svg-icons';
@@ -40,6 +41,25 @@ export class DetailRow {
 
   readonly value = input.required<StepDetailRow>();
   readonly factor = input<Rational>(rational.one);
+
+  protected readonly inserterId = linkedSignal(() => {
+    const data = this.data();
+    const value = this.value();
+    if (data.inserterIds.length === 0 || value.items == null) return undefined;
+    const factor = this.factor();
+    const items = value.items.div(factor);
+    const inserterSpeed = this.settingsStore.inserterSpeed();
+    const inserterIds = this.settingsStore.sortedInserterIds();
+    let inserterId: string | undefined;
+    for (const id of inserterIds) {
+      if (data.itemRecord[id].quality) continue;
+      inserterId = id;
+      const speed = inserterSpeed[inserterId];
+      if (speed.gte(items)) return inserterId;
+    }
+
+    return inserterId;
+  });
 
   protected readonly cols = this.settingsStore.columnsState;
   protected readonly data = this.settingsStore.dataset;

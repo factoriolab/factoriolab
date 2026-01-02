@@ -294,6 +294,38 @@ export class SettingsStore extends Store<SettingsState> {
     );
   });
 
+  readonly inserterSpeed = computed(() => {
+    const data = this.dataset();
+    const settings = this.settings();
+    const dispRateInfo = this.displayRateInfo();
+
+    const result = data.inserterIds.reduce<Record<string, Rational>>(
+      (result, id) => {
+        const inserter = data.inserterRecord[id];
+        const rotationsPerSec = inserter.speed.div(rational(360n));
+        let items = coalesce(settings.inserterBonus[''], rational.one);
+        if (inserter.category) {
+          const categoryBonus = settings.inserterBonus[inserter.category];
+          if (categoryBonus) items = items.add(categoryBonus);
+        }
+
+        result[id] = rotationsPerSec.mul(items).mul(dispRateInfo.value);
+        return result;
+      },
+      {},
+    );
+
+    console.log(result);
+    return result;
+  });
+
+  readonly sortedInserterIds = computed(() => {
+    const inserterSpeed = this.inserterSpeed();
+    return Object.entries(inserterSpeed)
+      .sort(([_aKey, aSpd], [_bKey, bSpd]) => aSpd.sub(bSpd).toNumber())
+      .map(([key]) => key);
+  });
+
   readonly modMenuItem = computed((): LinkOption => {
     const mod = this.modInfo();
 
@@ -885,12 +917,21 @@ export class SettingsStore extends Store<SettingsState> {
 
     let quality = Quality.Normal;
     let stack = rational.one;
+    const inserterBonus: Partial<Record<string, Rational>> = {};
     let miningBonus = rational.zero;
     let researchBonus = rational.zero;
     let researchProductivity = rational.zero;
     researchedTechnologyIds.forEach((techId) => {
       const tech = data.technologyRecord[techId];
       if (tech.beltStack) stack = stack.add(tech.beltStack);
+
+      if (tech.inserterStack) {
+        tech.inserterStack.forEach((eff) => {
+          const category = eff.category ?? '';
+          inserterBonus[category] ??= rational.zero;
+          inserterBonus[category] = inserterBonus[category].add(eff.value);
+        });
+      }
 
       if (tech.miningProductivity) {
         miningBonus = miningBonus.add(
@@ -1059,6 +1100,7 @@ export class SettingsStore extends Store<SettingsState> {
       overclock: state.overclock ?? defaults?.overclock,
       miningBonus: coalesce(state.miningBonus, miningBonus),
       researchBonus: coalesce(state.researchBonus, researchBonus),
+      inserterBonus,
       researchProductivity: coalesce(
         state.researchProductivity,
         researchProductivity,

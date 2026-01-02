@@ -84,6 +84,26 @@
   <td colspan="2"></td>
 }
 
+@if (data().inserterIds.length) {
+  <td>count</td>
+  <td>
+    @if (inserterId(); as inserterId) {
+      <div class="flex items-center">
+        <lab-icon
+          class="mx-0.5"
+          [value]="inserterId"
+          type="item"
+          [labTooltip]="inserterId"
+          labTooltipType="inserter"
+          labTooltipPosition="adjacent"
+        ></lab-icon>
+      </div>
+    }
+  </td>
+} @else {
+  <td colspan="2"></td>
+}
+
 <td class="pe-0">
   @if (
     !data().machineRecord[value().machineId ?? '']?.hideRate &&

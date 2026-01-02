@@ -821,6 +821,7 @@ async function processMod(): Promise<void> {
   }, []);
 
   const entityKeys = anyEntityKeys.reduce((result: string[], key) => {
+    if (dataRaw[key]?.['parameter-0']) console.log(key, 'here here');
     result.push(...Object.keys(dataRaw[key] ?? {}));
     return result;
   }, []);

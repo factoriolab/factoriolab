@@ -188,7 +188,7 @@ export const anyEntityKeys = [
   'pump',
   'asteroid-collector',
   'agricultural-tower',
-  'item',
+  'inserter',
 ] as const;
 
 export const anyItemKeys = [

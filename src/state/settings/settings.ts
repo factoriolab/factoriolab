@@ -21,6 +21,7 @@ export interface Settings extends SettingsState {
   miningBonus: Rational;
   researchBonus: Rational;
   researchProductivity: Rational;
+  inserterBonus: Partial<Record<string, Rational>>;
   researchedTechnologyIds: Set<string>;
   locationIds: Set<string>;
   defaultLocationIds: Set<string>;

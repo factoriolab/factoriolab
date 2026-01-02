@@ -123,22 +123,6 @@
           </tr>
         </table>
       }
-      @case ('wagon') {
-        <table>
-          @if (item.cargoWagon; as wagon) {
-            <tr>
-              <td>{{ 'data.storageSize' | translate }}</td>
-              <td>{{ wagon.size }}</td>
-            </tr>
-          }
-          @if (item.fluidWagon; as wagon) {
-            <tr>
-              <td>{{ 'data.fluidCapacity' | translate }}</td>
-              <td>{{ wagon.capacity }}</td>
-            </tr>
-          }
-        </table>
-      }
       @case ('fuel') {
         @if (item.fuel; as fuel) {
           <table>
@@ -151,6 +135,11 @@
               <td>{{ fuel.value | fuelValue }}</td>
             </tr>
           </table>
+        }
+      }
+      @case ('inserter') {
+        @if (item.inserter; as inserter) {
+          hello from inserter tooltip
         }
       }
       @case ('machine') {
@@ -335,6 +324,22 @@
             </tr>
           </table>
         }
+      }
+      @case ('wagon') {
+        <table>
+          @if (item.cargoWagon; as wagon) {
+            <tr>
+              <td>{{ 'data.storageSize' | translate }}</td>
+              <td>{{ wagon.size }}</td>
+            </tr>
+          }
+          @if (item.fluidWagon; as wagon) {
+            <tr>
+              <td>{{ 'data.fluidCapacity' | translate }}</td>
+              <td>{{ wagon.capacity }}</td>
+            </tr>
+          }
+        </table>
       }
       @case ('technology') {
         @if (item.technology; as technology) {
