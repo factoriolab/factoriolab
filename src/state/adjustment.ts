@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 
 import { EnergyType } from '~/data/schema/energy-type';
+import { AdjustedInserter } from '~/data/schema/inserter';
 import { Machine, PUMPJACK } from '~/data/schema/machine';
 import {
   effectPrecision,
@@ -545,25 +546,43 @@ export class Adjustment {
     settings: Settings,
     data: Dataset,
   ): AdjustedDataset {
-    const recipeIds = Array.from(settings.availableRecipeIds);
-    const adjustedRecipe = this.adjustRecipes(
-      recipeIds,
-      recipes,
-      items,
-      settings,
-      data,
+    const adjustedInserter = this.adjustInserters(settings, data);
+    const adjustedRecipe = this.adjustRecipes(recipes, items, settings, data);
+    this.adjustCosts(adjustedRecipe, recipes, settings.costs, data);
+    return this.finalizeData(adjustedInserter, adjustedRecipe, settings, data);
+  }
+
+  adjustInserters(
+    settings: Settings,
+    data: Dataset,
+  ): Record<string, AdjustedInserter> {
+    return data.inserterIds.reduce<Record<string, AdjustedInserter>>(
+      (result, id) => {
+        const inserter = data.inserterRecord[id];
+        let stack = coalesce(inserter.stack, rational.one);
+        if (!inserter.ignoresBonus) {
+          const allBonus = settings.inserterBonus[''];
+          if (allBonus) stack = stack.add(allBonus);
+          if (inserter.category) {
+            const categoryBonus = settings.inserterBonus[inserter.category];
+            if (categoryBonus) stack = stack.add(categoryBonus);
+          }
+        }
+
+        result[id] = spread(inserter as AdjustedInserter, { stack });
+        return result;
+      },
+      {},
     );
-    this.adjustCosts(recipeIds, adjustedRecipe, recipes, settings.costs, data);
-    return this.finalizeData(recipeIds, adjustedRecipe, settings, data);
   }
 
   adjustRecipes(
-    availableRecipeIds: string[],
     recipes: Record<string, RecipeSettings>,
     items: Record<string, ItemSettings>,
     settings: Settings,
     data: Dataset,
   ): Record<string, AdjustedRecipe> {
+    const availableRecipeIds = Array.from(settings.availableRecipeIds);
     return this.adjustSiloRecipes(
       availableRecipeIds.reduce((e: Record<string, AdjustedRecipe>, i) => {
         e[i] = this.adjustRecipe(i, recipes[i], items, settings, data);
@@ -575,45 +594,42 @@ export class Adjustment {
   }
 
   adjustCosts(
-    recipeIds: string[],
     adjustedRecipe: Record<string, Recipe>,
     recipes: Record<string, RecipeSettings>,
     costs: CostSettings,
     data: Dataset,
   ): void {
-    recipeIds
-      .map((i) => adjustedRecipe[i])
-      .forEach((recipe) => {
-        const settings = recipes[recipe.id];
-        if (settings.cost) {
-          recipe.cost = settings.cost;
-        } else if (recipe.cost) {
-          // Recipe has a declared cost, base this on output items not machines
-          // Calculate total output, sum, and multiply cost by output
-          const output = Object.keys(recipe.out)
-            .reduce((v, o) => v.add(recipe.out[o]), rational.zero)
-            .div(recipe.time);
-          recipe.cost = output.mul(recipe.cost).mul(costs.factor);
-        } else {
-          recipe.cost = costs.machine;
-          if (settings.machineId != null && costs.footprint.nonzero()) {
-            // Adjust based on machine size
-            const machine = data.machineRecord[settings.machineId];
-            if (machine.size != null) {
-              recipe.cost = recipe.cost.mul(
-                rational(machine.size[0] * machine.size[1]),
-              );
-            }
+    Object.values(adjustedRecipe).forEach((recipe) => {
+      const settings = recipes[recipe.id];
+      if (settings.cost) {
+        recipe.cost = settings.cost;
+      } else if (recipe.cost) {
+        // Recipe has a declared cost, base this on output items not machines
+        // Calculate total output, sum, and multiply cost by output
+        const output = Object.keys(recipe.out)
+          .reduce((v, o) => v.add(recipe.out[o]), rational.zero)
+          .div(recipe.time);
+        recipe.cost = output.mul(recipe.cost).mul(costs.factor);
+      } else {
+        recipe.cost = costs.machine;
+        if (settings.machineId != null && costs.footprint.nonzero()) {
+          // Adjust based on machine size
+          const machine = data.machineRecord[settings.machineId];
+          if (machine.size != null) {
+            recipe.cost = recipe.cost.mul(
+              rational(machine.size[0] * machine.size[1]),
+            );
           }
         }
+      }
 
-        if (recipe.flags.has('recycling'))
-          recipe.cost = recipe.cost.mul(costs.recycling);
-      });
+      if (recipe.flags.has('recycling'))
+        recipe.cost = recipe.cost.mul(costs.recycling);
+    });
   }
 
   finalizeData(
-    availableRecipeIds: string[],
+    adjustedInserter: Record<string, AdjustedInserter>,
     adjustedRecipe: Record<string, AdjustedRecipe>,
     settings: Settings,
     data: Dataset,
@@ -627,25 +643,22 @@ export class Adjustment {
       itemAvailableIoRecipeIds[i] = [];
     });
 
-    availableRecipeIds
-      .map((i) => adjustedRecipe[i])
-      .forEach((recipe) => {
-        finalizeRecipe(recipe);
-        Object.keys(recipe.out).forEach((productId) => {
-          if (itemRecipeIds[productId] == null) console.log(productId);
-          itemRecipeIds[productId].push(recipe.id);
-        });
-
-        if (!settings.excludedRecipeIds.has(recipe.id)) {
-          recipe.produces.forEach((productId) =>
-            itemAvailableRecipeIds[productId].push(recipe.id),
-          );
-
-          Object.keys(recipe.output).forEach((ioId) =>
-            itemAvailableIoRecipeIds[ioId].push(recipe.id),
-          );
-        }
+    Object.values(adjustedRecipe).forEach((recipe) => {
+      finalizeRecipe(recipe);
+      Object.keys(recipe.out).forEach((productId) => {
+        itemRecipeIds[productId].push(recipe.id);
       });
+
+      if (!settings.excludedRecipeIds.has(recipe.id)) {
+        recipe.produces.forEach((productId) =>
+          itemAvailableRecipeIds[productId].push(recipe.id),
+        );
+
+        Object.keys(recipe.output).forEach((ioId) =>
+          itemAvailableIoRecipeIds[ioId].push(recipe.id),
+        );
+      }
+    });
 
     /**
      * Check whether ingredients are safe (ingredients are net-produceable, or
@@ -729,6 +742,7 @@ export class Adjustment {
     } while (filtered);
 
     return spread(data as AdjustedDataset, {
+      adjustedInserter,
       adjustedRecipe,
       itemRecipeIds,
       itemAvailableRecipeIds,

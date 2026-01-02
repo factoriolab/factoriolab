@@ -1,5 +1,6 @@
 import { computed, inject, Injectable } from '@angular/core';
 
+import { Rational, rational } from '~/rational/rational';
 import { spread } from '~/utils/object';
 
 import { Adjustment } from '../adjustment';
@@ -30,6 +31,31 @@ export class RecipesStore extends RecordStore<RecipeState> {
       itemsState,
       settings,
       data,
+    );
+  });
+
+  readonly inserterSpeed = computed(() => {
+    const data = this.adjustedDataset();
+    const dispRateInfo = this.settingsStore.displayRateInfo();
+
+    return (
+      data.inserterIds
+        .map<[string, Rational]>((id) => {
+          // Calculate items/s for each inserter
+          const inserter = data.adjustedInserter[id];
+          const rotationsPerSec = inserter.speed.div(rational(360n));
+          const speed = rotationsPerSec
+            .mul(inserter.stack)
+            .mul(dispRateInfo.value);
+          return [id, speed];
+        })
+        // Sort inserter id/speed tuples
+        .sort(([_aKey, aSpd], [_bKey, bSpd]) => aSpd.sub(bSpd).toNumber())
+        // Map to tuples into record after sorting
+        .reduce<Record<string, Rational>>((result, [id, speed]) => {
+          result[id] = speed;
+          return result;
+        }, {})
     );
   });
 

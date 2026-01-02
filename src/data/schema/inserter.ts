@@ -16,6 +16,10 @@ export interface Inserter {
   ignoresBonus?: boolean;
 }
 
+export interface AdjustedInserter extends Inserter {
+  stack: Rational;
+}
+
 export function parseInserter(json: InserterJson): Inserter;
 export function parseInserter(
   json: InserterJson | undefined,

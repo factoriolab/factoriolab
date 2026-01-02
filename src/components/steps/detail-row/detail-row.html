@@ -85,18 +85,29 @@
 }
 
 @if (data().inserterIds.length) {
-  <td>count</td>
+  <td class="pe-0">
+    @if (inserterCount(); as count) {
+      <div class="flex items-center justify-end">
+        <span class="font-mono whitespace-pre">{{
+          count.div(factor()) | rate: cols().items.precision
+        }}</span>
+      </div>
+    }
+  </td>
   <td>
-    @if (inserterId(); as inserterId) {
+    @if (inserterId()) {
       <div class="flex items-center">
-        <lab-icon
-          class="mx-0.5"
-          [value]="inserterId"
-          type="item"
-          [labTooltip]="inserterId"
+        <lab-select
+          [iconOnly]="true"
+          [border]="false"
+          [options]="settingsStore.options()['inserters']"
+          [labTooltip]="inserterId()"
           labTooltipType="inserter"
+          labTooltipAction="steps.inserterTooltip"
           labTooltipPosition="adjacent"
-        ></lab-icon>
+          [attr.aria-label]="'steps.inserterTooltip' | translate"
+          [(ngModel)]="inserterId"
+        ></lab-select>
       </div>
     }
   </td>

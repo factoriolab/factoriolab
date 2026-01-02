@@ -8,7 +8,7 @@ import { Category } from '~/data/schema/category';
 import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
 import { IconData } from '~/data/schema/icon-data';
-import { Inserter } from '~/data/schema/inserter';
+import { AdjustedInserter, Inserter } from '~/data/schema/inserter';
 import { Item } from '~/data/schema/item';
 import { Machine } from '~/data/schema/machine';
 import { ModHash } from '~/data/schema/mod-hash';
@@ -64,6 +64,7 @@ export interface Dataset {
 }
 
 export interface AdjustedDataset extends Dataset {
+  adjustedInserter: Record<string, AdjustedInserter>;
   adjustedRecipe: Record<string, AdjustedRecipe>;
   /** For each item, all recipe ids that produce the item */
   itemRecipeIds: Record<string, string[]>;

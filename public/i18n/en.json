@@ -497,6 +497,7 @@
     "beltSelectTooltip": "Click to select belt and stack size",
     "beltTooltip": "Click to select belt",
     "beltsUndoTooltip": "Undo all belt modifications",
+    "inserterTooltip": "Click to select inserter",
     "checked": "Step checked",
     "checkedUndoTooltip": "Undo all checkmarks",
     "downloadAsCsv": "Download as CSV",

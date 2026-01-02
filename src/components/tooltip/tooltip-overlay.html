@@ -138,8 +138,24 @@
         }
       }
       @case ('inserter') {
-        @if (item.inserter; as inserter) {
-          hello from inserter tooltip
+        @if (data().adjustedInserter[item.id]; as inserter) {
+          <table>
+            <tr>
+              <td>{{ 'data.rotationSpeed' | translate }}</td>
+              <td>{{ inserter.speed.toLocaleString() }}°/s</td>
+            </tr>
+            <tr>
+              <td>{{ 'data.stackSize' | translate }}</td>
+              <td>{{ inserter.stack }}</td>
+            </tr>
+            <tr>
+              <td>{{ 'data.speed' | translate }}</td>
+              <td>
+                {{ recipesStore.inserterSpeed()[item.id].toLocaleString()
+                }}{{ settingsStore.displayRateInfo().suffix | translate }}
+              </td>
+            </tr>
+          </table>
         }
       }
       @case ('machine') {

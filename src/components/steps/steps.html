@@ -332,9 +332,7 @@
                         labTooltipType="belt"
                         labTooltipAction="steps.beltTooltip"
                         labTooltipPosition="adjacent"
-                        [attr.aria-label]="
-                          'steps.beltSelectTooltip' | translate
-                        "
+                        [attr.aria-label]="'steps.beltTooltip' | translate"
                         [ngModel]="beltId"
                         (ngModelChange)="
                           itemsStore.updateRecordField(

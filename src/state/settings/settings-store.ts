@@ -247,6 +247,7 @@ export class SettingsStore extends Store<SettingsState> {
         exclude: data.itemQIds,
         tooltipType: 'wagon',
       }),
+      inserters: itemOptions(data.inserterIds, { tooltipType: 'inserter' }),
       fuels: itemOptions(data.fuelIds, {
         exclude: data.itemQIds,
         tooltipType: 'fuel',
@@ -292,38 +293,6 @@ export class SettingsStore extends Store<SettingsState> {
       },
       {},
     );
-  });
-
-  readonly inserterSpeed = computed(() => {
-    const data = this.dataset();
-    const settings = this.settings();
-    const dispRateInfo = this.displayRateInfo();
-
-    const result = data.inserterIds.reduce<Record<string, Rational>>(
-      (result, id) => {
-        const inserter = data.inserterRecord[id];
-        const rotationsPerSec = inserter.speed.div(rational(360n));
-        let items = coalesce(settings.inserterBonus[''], rational.one);
-        if (inserter.category) {
-          const categoryBonus = settings.inserterBonus[inserter.category];
-          if (categoryBonus) items = items.add(categoryBonus);
-        }
-
-        result[id] = rotationsPerSec.mul(items).mul(dispRateInfo.value);
-        return result;
-      },
-      {},
-    );
-
-    console.log(result);
-    return result;
-  });
-
-  readonly sortedInserterIds = computed(() => {
-    const inserterSpeed = this.inserterSpeed();
-    return Object.entries(inserterSpeed)
-      .sort(([_aKey, aSpd], [_bKey, bSpd]) => aSpd.sub(bSpd).toNumber())
-      .map(([key]) => key);
   });
 
   readonly modMenuItem = computed((): LinkOption => {
