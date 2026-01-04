@@ -6,6 +6,7 @@ import { FluidWagonJson } from '~/data/schema/fluid-wagon';
 import { InserterJson } from '~/data/schema/inserter';
 import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
+import { rational } from '~/rational/rational';
 
 import * as M from '../factorio.models';
 import * as D from '../factorio-build.models';
@@ -43,9 +44,21 @@ export function getFluidWagon(proto: M.FluidWagonPrototype): FluidWagonJson {
 }
 
 export function getInserter(proto: M.InserterPrototype): InserterJson {
-  const speed = proto.rotation_speed * 360 * 60;
+  // const speed = proto.rotation_speed * 360 * 60;
+  const ticksPerRotation = rational(
+    Math.floor(1 / proto.rotation_speed / 2) * 2,
+  );
+  const rotationsPerSec = ticksPerRotation.reciprocal().mul(rational(60n));
+  const degreesPerSec = rotationsPerSec.mul(rational(360n));
+
+  console.log(
+    proto.rotation_speed,
+    ticksPerRotation.toLocaleString(),
+    rotationsPerSec.toLocaleString(),
+    degreesPerSec.toLocaleString(),
+  );
   const inserter: InserterJson = {
-    speed,
+    speed: degreesPerSec.toString(),
     stack: proto.stack_size_bonus,
   };
   if (proto.bulk) inserter.category = 'bulk';

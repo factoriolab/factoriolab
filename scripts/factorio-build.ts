@@ -648,7 +648,6 @@ async function processMod(): Promise<void> {
       if (modData.locations) modI18n.locations = entityNames(modData.locations);
       const modI18nPath = `${modPath}/i18n/${lang}.json`;
       fs.writeFileSync(modI18nPath, JSON.stringify(modI18n));
-      console.log(lang);
       return;
     }
 
@@ -821,7 +820,6 @@ async function processMod(): Promise<void> {
   }, []);
 
   const entityKeys = anyEntityKeys.reduce((result: string[], key) => {
-    if (dataRaw[key]?.['parameter-0']) console.log(key, 'here here');
     result.push(...Object.keys(dataRaw[key] ?? {}));
     return result;
   }, []);

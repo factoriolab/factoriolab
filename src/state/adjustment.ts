@@ -562,10 +562,11 @@ export class Adjustment {
         let stack = coalesce(inserter.stack, rational.one);
         if (!inserter.ignoresBonus) {
           const allBonus = settings.inserterBonus[''];
-          if (allBonus) stack = stack.add(allBonus);
           if (inserter.category) {
             const categoryBonus = settings.inserterBonus[inserter.category];
             if (categoryBonus) stack = stack.add(categoryBonus);
+          } else if (allBonus) {
+            stack = stack.add(allBonus);
           }
         }
 
