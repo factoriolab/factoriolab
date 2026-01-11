@@ -1,4 +1,5 @@
 import { getJsonData } from '../helpers/file.helpers';
+import { normalizeObjectPath } from './utils';
 
 export type BdInfo = {
   id: string;
@@ -27,7 +28,7 @@ export function parseBdFile(filePath: string): BdInfo {
     if (obj?.Type === 'CrBuildingData') {
       const props = obj?.Properties ?? {};
       const icon = props?.Icon?.ResourceObject?.ObjectPath;
-      if (icon) info.iconObjectPath = icon;
+      if (icon) info.iconObjectPath = normalizeObjectPath(icon);
 
       const bn = props?.BuildingName ?? {};
       info.nameRaw = {

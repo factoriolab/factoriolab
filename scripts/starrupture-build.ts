@@ -5,6 +5,7 @@ import { getJsonData } from './helpers/file.helpers';
 import { logTime, logWarn } from './helpers/log.helpers';
 import { listDaFiles, parseDaFile } from './starrupture/buildings';
 import { parseBdFile } from './starrupture/buildingData';
+import { listCrcFiles, parseCrcFile, parseCrFile, CrInfo, CrcInfo } from './starrupture/recipes';
 
 type CLIArgs = {
   input: string;
@@ -113,6 +114,33 @@ async function main(): Promise<void> {
   const outPath = path.join(tempOutDir, 'buildings.json');
   fs.writeFileSync(outPath, JSON.stringify(parsed, null, 2));
   logTime(`Wrote debug buildings to ${outPath}`);
+
+  // --- Recipes ---
+  logTime('Scanning CRC recipe collections');
+  const crcFiles = listCrcFiles(srData);
+  console.log(`Found ${crcFiles.length} CRC files`);
+  const crcParsed: CrcInfo[] = crcFiles.map((p: string) => parseCrcFile(p));
+
+  // Expand CRs referenced by the CRCs
+  const crObjectPaths = crcParsed.reduce((acc: string[], c: CrcInfo) => {
+    acc.push(...c.recipes);
+    return acc;
+  }, []);
+
+  const crParsed = crObjectPaths
+    .map((objPath: string) => {
+      try {
+        return parseCrFile(srData, objPath);
+      } catch (err) {
+        logWarn(`Failed to parse CR ${objPath}: ${(err as Error).message}`);
+        return null;
+      }
+    })
+    .filter((r): r is import('./starrupture/recipes').CrInfo => r != null);
+
+  const recipesOut = path.join(tempOutDir, 'recipes.json');
+  fs.writeFileSync(recipesOut, JSON.stringify({ crc: crcParsed, cr: crParsed }, null, 2));
+  logTime(`Wrote debug recipes to ${recipesOut}`);
 
   if (!args.dryRun) {
     logTime('(No further steps implemented yet)');
