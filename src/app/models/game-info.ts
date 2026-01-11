@@ -70,4 +70,10 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.outworldStation',
     modId: 'ows',
   },
+  [Game.StarRupture]: {
+    icon: 'game-starrupture',
+    route: '/str',
+    label: 'options.game.starRupture',
+    modId: 'str',
+  },
 };

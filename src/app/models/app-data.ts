@@ -130,6 +130,7 @@ export const data: AppData = {
       flags: 'dsp',
     },
     { id: 'sfy', name: 'Satisfactory', game: Game.Satisfactory, flags: 'sfy' },
+    { id: 'str', name: 'StarRupture', game: Game.StarRupture, flags: 'str' },
     {
       id: 'coi',
       name: 'Captain of Industry',
