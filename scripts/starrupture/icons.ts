@@ -1,14 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-let sharp: any = null;
-let getAverageColor: any = null;
-try {
-  // Lazy require dynamic to avoid failing on import-time if sharp not available
-  sharp = require('sharp');
-  getAverageColor = require('fast-average-color-node').getAverageColor;
-} catch (err) {
-  // Will handle missing binaries at runtime within packIcons
-}
+import { getAverageColor } from 'fast-average-color-node';
+import sharp from 'sharp';
 
 export type IconEntry = {
   id: string;
@@ -169,7 +162,7 @@ export async function packIcons(
     let hex = '#000000';
     if (avgAvailable) {
       try {
-        const avg = await getAverageColor(toPack[i].buffer);
+        const avg = await getAverageColor(toPack[i].buffer, { mode: 'precision' });
         hex = avg?.hex ?? '#000000';
       } catch (e) {
         // ignore
