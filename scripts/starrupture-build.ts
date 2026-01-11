@@ -28,6 +28,11 @@ const DEFAULT_BUILDINGS = [
   'DA_Refinery',
   'DA_Synthetizer',
   'DA_Assembler',
+  'DA_DroneRailT1',
+  'DA_DroneRailT2',
+  'DA_DroneRailT3',
+  'DA_DroneRailT4',
+  'DA_DroneRailT5',
 ];
 
 function parseArgs(argv: string[]): CLIArgs {
@@ -352,7 +357,7 @@ async function main(): Promise<void> {
     });
   }
 
-  // Add machine entries for filtered buildings (as items with a 'machine' subobject)
+  // Add building entries for filtered buildings. For logistics lines (drone rails) emit a 'belt' subobject; otherwise emit 'machine'.
   for (const p of parsed) {
     const bId = (p.bd?.uniqueName ?? p.bd?.id ?? p.da.id ?? '').replace(/^DA_/, '');
     if (!bId) continue;
@@ -361,6 +366,25 @@ async function main(): Promise<void> {
     if (itemsArr.find((x) => x.id === bSlug)) continue;
 
     const iconEntry = iconsMeta.find((ic) => ic.id === bSlug);
+    const categoryForBuilding = buildingSlugToCategory[bSlug] ?? 'other';
+
+    // If DA contains logisticsLine trait (even if MoveSpeed is missing), treat as a belt/rail
+    if (p.da.logisticsMoveSpeed !== undefined) {
+      // Use default MoveSpeed = 200 when not explicitly present, then transform value with v * 120 / 200
+      const baseMove = p.da.logisticsMoveSpeed ?? 200;
+      const speed = Number((baseMove / 100).toFixed(6));
+      itemsArr.push({
+        category: categoryForBuilding,
+        id: bSlug,
+        name: p.bd?.name ?? p.da.id,
+        row: 0,
+        belt: { speed },
+        icon: iconEntry?.id ?? bSlug,
+      });
+      continue;
+    }
+
+    // Fallback: standard machine entry
     const machine: any = {};
     // Speed: use inverse of craftingLoopDuration if available (cycles per second-ish), otherwise default to 1
     if (p.da.craftingLoopDuration != null && p.da.craftingLoopDuration > 0) machine.speed = Number((1 / p.da.craftingLoopDuration).toFixed(6));
@@ -371,8 +395,6 @@ async function main(): Promise<void> {
     if (p.da.coolingCapacity != null) machine.pollution = p.da.coolingCapacity;
     // default modules placeholder
     machine.modules = 1;
-
-    const categoryForBuilding = buildingSlugToCategory[bSlug] ?? 'other';
 
     itemsArr.push({
       category: categoryForBuilding,
@@ -464,7 +486,7 @@ async function main(): Promise<void> {
     icons: iconsArr,
     items: itemsArr,
     recipes: recipesArr,
-    defaults: { minBelt: 'rail-v1', maxBelt: 'rail-v5', excludedRecipes: [] },
+    defaults: { minBelt: 'drone-rail-t1', maxBelt: 'drone-rail-t5', excludedRecipes: [] },
   };
 
   const dataOutPath = path.join(args.output, 'data.json');
@@ -476,6 +498,40 @@ async function main(): Promise<void> {
   const dataDebugOut = path.join(tempOutDir, 'data.generated.json');
   fs.writeFileSync(dataDebugOut, JSON.stringify(outData, null, 2));
   logTime(`Wrote data.json to ${dataOutPath} and debug ${dataDebugOut}`);
+
+  // --- Hash file ---
+  // Create a compact hash.json containing sorted lists of all relevant IDs in the generated data
+  const itemIds = outData.items.map((i: any) => i.id);
+  const machineIds = outData.items.filter((i: any) => i.machine).map((i: any) => i.id);
+  const recipeIds = outData.recipes.map((r: any) => r.id);
+  const beaconIds = outData.items.filter((i: any) => i.beacon).map((i: any) => i.id);
+  const beltIds = outData.items.filter((i: any) => i.belt || i.pipe).map((i: any) => i.id);
+  const fuelIds = outData.items.filter((i: any) => i.fuel).map((i: any) => i.id);
+  const moduleIds = outData.items.filter((i: any) => i.module).map((i: any) => i.id);
+  const wagonIds = outData.items.filter((i: any) => i.cargoWagon || i.fluidWagon).map((i: any) => i.id);
+
+  function uniqSort(arr: string[]) {
+    return Array.from(new Set(arr)).sort();
+  }
+
+  const hashObj = {
+    items: uniqSort(itemIds),
+    machines: uniqSort(machineIds),
+    recipes: uniqSort(recipeIds),
+    beacons: uniqSort(beaconIds),
+    belts: uniqSort(beltIds),
+    fuels: uniqSort(fuelIds),
+    modules: uniqSort(moduleIds),
+    wagons: uniqSort(wagonIds),
+  };
+
+  const hashOutPath = path.join(args.output, 'hash.json');
+  if (!args.dryRun) {
+    fs.writeFileSync(hashOutPath, JSON.stringify(hashObj, null, 2));
+  }
+  const hashDebugOut = path.join(tempOutDir, 'hash.json');
+  fs.writeFileSync(hashDebugOut, JSON.stringify(hashObj, null, 2));
+  logTime(`Wrote hash.json to ${hashOutPath} and debug ${hashDebugOut}`);
 
   logTime('Done');
 }
