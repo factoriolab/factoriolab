@@ -12,6 +12,8 @@ export type DaInfo = {
   electricityType?: string | null;
   coolingCapacity?: number | null;
   placementDataPath?: string | null;
+  // Logistics line trait: presence indicates a rail/line; MoveSpeed may be null (trait present but no explicit speed)
+  logisticsMoveSpeed?: number | null;
 };
 
 export function listDaFiles(srDataDir: string): string[] {
@@ -20,18 +22,19 @@ export function listDaFiles(srDataDir: string): string[] {
 
   const results: string[] = [];
 
-  const subdirs = fs.readdirSync(bDir);
-  for (const sd of subdirs) {
-    const subPath = path.join(bDir, sd);
-    if (!fs.statSync(subPath).isDirectory()) continue;
-    const files = fs.readdirSync(subPath);
-    for (const f of files) {
-      if (f.startsWith('DA_') && f.endsWith('.json')) {
-        results.push(path.join(subPath, f));
+  function walk(dir: string) {
+    const entries = fs.readdirSync(dir);
+    for (const e of entries) {
+      const full = path.join(dir, e);
+      if (fs.statSync(full).isDirectory()) {
+        walk(full);
+        continue;
       }
+      if (e.startsWith('DA_') && e.endsWith('.json')) results.push(full);
     }
   }
 
+  walk(bDir);
   return results;
 }
 
@@ -72,6 +75,14 @@ export function parseDaFile(filePath: string): DaInfo {
     if (obj?.Type === 'CrMassBuildingTrait') {
       const params = obj?.Properties?.Parameters;
       if (params?.PlacementData?.ObjectPath) info.placementDataPath = normalizeObjectPath(params.PlacementData.ObjectPath);
+    }
+
+    // Logistics line trait (drone rails / rails)
+    if (obj?.Type === 'CrLogisticsLineTrait') {
+      // MoveSpeed may be missing; set to null when the trait exists but speed not provided
+      const p = obj?.Properties ?? {};
+      const move = p?.Params?.MoveSpeed;
+      info.logisticsMoveSpeed = move !== undefined ? move : null;
     }
   }
 
