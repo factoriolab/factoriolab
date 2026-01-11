@@ -266,11 +266,135 @@ async function main(): Promise<void> {
 
   const iconsToPack = [...buildingIconEntries, ...itemIconEntries];
   const iconsOutPath = path.join(args.output, 'icons.webp');
+  // pack icons (attempt to write sprite if sharp present and not dry-run)
   const iconsMeta = await packIcons(srData, iconsOutPath, iconsToPack, { iconSize: 64, padding: 0, columns: 8, dryRun: args.dryRun });
 
   const iconsDebugOut = path.join(tempOutDir, 'icons.json');
   fs.writeFileSync(iconsDebugOut, JSON.stringify(iconsMeta, null, 2));
   logTime(`Wrote icons (${iconsMeta.length}) and metadata to ${iconsDebugOut}`);
+
+  // --- Generate final data.json using the building filter ---
+  logTime('Generating data.json for filtered buildings');
+
+  // Map CRC id -> buildings (slugs)
+  const crcToBuildings: Record<string, string[]> = {};
+  for (const p of parsed) {
+    const cp = p.da.craftingRecipeCollectionPath;
+    if (!cp) continue;
+    const crcId = cp.split('/').pop() ?? '';
+    const bId = (p.bd?.uniqueName ?? p.bd?.id ?? p.da.id ?? '').replace(/^DA_/, '');
+    const bSlug = bId.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, '');
+    if (!crcToBuildings[crcId]) crcToBuildings[crcId] = [];
+    crcToBuildings[crcId].push(bSlug);
+  }
+
+  // Included CRs from included CRCs
+  const includedCrcIdsList = Array.from(includedCrcIds);
+  const includedCrObjectPathsList = Array.from(includedCrObjectPaths);
+  const includedCrInfos = crParsed.filter((r) => includedCrObjectPathsList.includes(r.objectPath));
+
+  // Determine included items from these recipes
+  const includedItemIdsFinal = new Set<string>();
+  for (const r of includedCrInfos) {
+    if (r.output) {
+      const outItem = itemMap[r.output.itemObjectPath ?? ''] ?? itemMap[(r.output.itemObjectPath ?? '').toLowerCase()];
+      if (outItem) includedItemIdsFinal.add(outItem.id);
+    }
+    for (const inp of r.inputs) {
+      const inItem = itemMap[inp.itemObjectPath ?? ''] ?? itemMap[(inp.itemObjectPath ?? '').toLowerCase()];
+      if (inItem) includedItemIdsFinal.add(inItem.id);
+    }
+  }
+
+  // Build items array
+  const itemsArr: any[] = [];
+  for (const iid of includedItemIdsFinal) {
+    const it = Object.values(itemMap).find((x) => x.id === iid);
+    if (!it) continue;
+    const iconEntry = iconsMeta.find((ic) => ic.id === it.id);
+    itemsArr.push({
+      category: it.uiItemType && String(it.uiItemType).includes('Resource') ? 'raw' : 'parts',
+      id: it.id,
+      name: it.name ?? it.fileBasename,
+      row: 0,
+      stack: it.stack ?? 100,
+      icon: iconEntry?.id ?? it.id,
+    });
+  }
+
+  // Build recipes array
+  const recipesArr: any[] = [];
+  for (const r of includedCrInfos) {
+    if (!r.output) {
+      logWarn(`Skipping recipe ${r.id} because it has no output`);
+      continue;
+    }
+
+    const outItem = itemMap[r.output.itemObjectPath ?? ''] ?? itemMap[(r.output.itemObjectPath ?? '').toLowerCase()];
+    if (!outItem) {
+      logWarn(`Skipping recipe ${r.id} because output item couldn't be resolved: ${r.output.itemObjectPath}`);
+      continue;
+    }
+
+    const inMap: Record<string, number> = {};
+    for (const inp of r.inputs) {
+      const ii = itemMap[inp.itemObjectPath ?? ''] ?? itemMap[(inp.itemObjectPath ?? '').toLowerCase()];
+      if (ii) inMap[ii.id] = (inMap[ii.id] ?? 0) + inp.count;
+      else inMap[inp.itemObjectPath ?? 'unknown'] = (inMap[inp.itemObjectPath ?? 'unknown'] ?? 0) + inp.count;
+    }
+
+    const outMap: Record<string, number> = {};
+    outMap[outItem.id] = r.output.count;
+
+    // producers: find CRC id that contains this CR
+    const crcForThis = crcParsed.find((c) => c.recipes.includes(r.objectPath));
+    const producers = crcForThis ? (crcToBuildings[crcForThis.id] ?? []) : [];
+
+    const recipeIdBase = r.id.replace(/^CR_/, '').toLowerCase();
+    const recipeId = recipeIdBase; // keep simple; collisions unlikely for filtered set
+
+    recipesArr.push({
+      id: recipeId,
+      name: r.name ?? r.id,
+      producers: producers,
+      time: r.buildTime ?? 999,
+      in: inMap,
+      out: outMap,
+      row: 0,
+      category: outItem.uiItemType && String(outItem.uiItemType).includes('Resource') ? 'raw' : 'parts',
+    });
+  }
+
+  // Build icons array: include building icons and item icons used
+  const usedIconIdsFinal = new Set<string>();
+  for (const p of parsed) {
+    if (p.bd && p.bd.iconObjectPath) {
+      const bslug = (p.bd.uniqueName ?? p.bd.id ?? p.da.id).toLowerCase();
+      usedIconIdsFinal.add(bslug.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, ''));
+    }
+  }
+  for (const it of itemsArr) usedIconIdsFinal.add(it.icon);
+
+  const iconsArr = iconsMeta.filter((ic) => usedIconIdsFinal.has(ic.id)).map((ic) => ({ id: ic.id, position: ic.position, color: ic.color }));
+
+  const outData = {
+    version: { StarRupture: 'EA' },
+    categories: [{ id: 'raw', name: 'Raw', icon: 'raw-titanium' }],
+    icons: iconsArr,
+    items: itemsArr,
+    recipes: recipesArr,
+    defaults: { minBelt: 'rail-v1', maxBelt: 'rail-v5', excludedRecipes: [] },
+  };
+
+  const dataOutPath = path.join(args.output, 'data.json');
+  if (!args.dryRun) {
+    if (!fs.existsSync(args.output)) fs.mkdirSync(args.output, { recursive: true });
+    fs.writeFileSync(dataOutPath, JSON.stringify(outData, null, 2));
+  }
+
+  const dataDebugOut = path.join(tempOutDir, 'data.generated.json');
+  fs.writeFileSync(dataDebugOut, JSON.stringify(outData, null, 2));
+  logTime(`Wrote data.json to ${dataOutPath} and debug ${dataDebugOut}`);
 
   if (!args.dryRun) {
     logTime('(No further steps implemented yet)');
