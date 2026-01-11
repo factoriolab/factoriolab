@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { getJsonData } from '../helpers/file.helpers';
+import { normalizeObjectPath } from './utils';
 
 export type DaInfo = {
   id: string;
@@ -52,7 +53,7 @@ export function parseDaFile(filePath: string): DaInfo {
     if (obj?.Type === 'CrBuildingCraftingTrait') {
       const cp = obj?.Properties?.CraftingParameters;
       if (cp?.RecipeCollection?.ObjectPath)
-        info.craftingRecipeCollectionPath = cp.RecipeCollection.ObjectPath;
+        info.craftingRecipeCollectionPath = normalizeObjectPath(cp.RecipeCollection.ObjectPath);
       if (cp?.CraftingLoopDuration != null)
         info.craftingLoopDuration = cp.CraftingLoopDuration;
     }
@@ -70,7 +71,7 @@ export function parseDaFile(filePath: string): DaInfo {
 
     if (obj?.Type === 'CrMassBuildingTrait') {
       const params = obj?.Properties?.Parameters;
-      if (params?.PlacementData?.ObjectPath) info.placementDataPath = params.PlacementData.ObjectPath;
+      if (params?.PlacementData?.ObjectPath) info.placementDataPath = normalizeObjectPath(params.PlacementData.ObjectPath);
     }
   }
 
