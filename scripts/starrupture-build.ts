@@ -278,6 +278,23 @@ async function main(): Promise<void> {
 
   // Map CRC id -> buildings (slugs)
   const crcToBuildings: Record<string, string[]> = {};
+  // Also gather building -> category mapping and category list
+  const buildingSlugToCategory: Record<string, string> = {};
+  const categoriesMap: Record<string, { id: string; name: string }> = {};
+
+  function tokenToId(token: string): string {
+    return token
+      .replace(/^ECrBuildingUISubType::|^ECrBuildingUIType::/, '')
+      .replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase())
+      .replace(/^-/, '');
+  }
+
+  function tokenToName(token: string): string {
+    const raw = token.replace(/^ECrBuildingUISubType::|^ECrBuildingUIType::/, '');
+    // Split camelcase / underscores
+    return raw.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ');
+  }
+
   for (const p of parsed) {
     const cp = p.da.craftingRecipeCollectionPath;
     if (!cp) continue;
@@ -286,6 +303,16 @@ async function main(): Promise<void> {
     const bSlug = bId.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, '');
     if (!crcToBuildings[crcId]) crcToBuildings[crcId] = [];
     crcToBuildings[crcId].push(bSlug);
+
+    // determine building category from BD (UISubType or UIType normalized into uiSubType by parser)
+    const catRaw = p.bd?.uiSubType ?? null;
+    if (catRaw) {
+      const catToken = String(catRaw).split('::').pop() ?? String(catRaw);
+      const catId = tokenToId(String(catRaw));
+      const catName = tokenToName(String(catRaw));
+      buildingSlugToCategory[bSlug] = catId;
+      if (!categoriesMap[catId]) categoriesMap[catId] = { id: catId, name: catName };
+    }
   }
 
   // Included CRs from included CRCs
@@ -350,6 +377,23 @@ async function main(): Promise<void> {
     const crcForThis = crcParsed.find((c) => c.recipes.includes(r.objectPath));
     const producers = crcForThis ? (crcToBuildings[crcForThis.id] ?? []) : [];
 
+    // Determine category: prefer producer building category when available
+    let recipeCategory = outItem.uiItemType && String(outItem.uiItemType).includes('Resource') ? 'raw' : 'parts';
+    if (producers.length > 0) {
+      const firstProducer = producers[0];
+      const bcat = buildingSlugToCategory[firstProducer];
+      if (bcat) recipeCategory = bcat;
+      else if (producers.length > 1) {
+        // try to find any producer with a category
+        for (const pSlug of producers) {
+          if (buildingSlugToCategory[pSlug]) {
+            recipeCategory = buildingSlugToCategory[pSlug];
+            break;
+          }
+        }
+      }
+    }
+
     const recipeIdBase = r.id.replace(/^CR_/, '').toLowerCase();
     const recipeId = recipeIdBase; // keep simple; collisions unlikely for filtered set
 
@@ -361,7 +405,7 @@ async function main(): Promise<void> {
       in: inMap,
       out: outMap,
       row: 0,
-      category: outItem.uiItemType && String(outItem.uiItemType).includes('Resource') ? 'raw' : 'parts',
+      category: recipeCategory,
     });
   }
 
@@ -377,9 +421,11 @@ async function main(): Promise<void> {
 
   const iconsArr = iconsMeta.filter((ic) => usedIconIdsFinal.has(ic.id)).map((ic) => ({ id: ic.id, position: ic.position, color: ic.color }));
 
+  const categoriesArr = Object.values(categoriesMap);
+
   const outData = {
     version: { StarRupture: 'EA' },
-    categories: [{ id: 'raw', name: 'Raw', icon: 'raw-titanium' }],
+    categories: categoriesArr.length > 0 ? categoriesArr : [{ id: 'raw', name: 'Raw', icon: 'raw-titanium' }],
     icons: iconsArr,
     items: itemsArr,
     recipes: recipesArr,
