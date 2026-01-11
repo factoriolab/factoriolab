@@ -235,12 +235,13 @@ async function main(): Promise<void> {
     }
   }
 
-  // Buildings' icons
+  // Buildings' icons (use same slugging as building ids so machine items match icon ids)
   const buildingIconEntries: IconEntry[] = [];
   for (const p of parsed) {
     if (p.bd && p.bd.iconObjectPath) {
-      const id = (p.bd.uniqueName ?? p.bd.id ?? p.da.id ?? '').toLowerCase();
-      buildingIconEntries.push({ id: slugify(id), objectPath: p.bd.iconObjectPath });
+      const rawId = (p.bd.uniqueName ?? p.bd.id ?? p.da.id ?? '').replace(/^DA_/, '');
+      const bSlug = rawId.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, '');
+      buildingIconEntries.push({ id: bSlug, objectPath: p.bd.iconObjectPath });
     }
   }
 
@@ -348,6 +349,38 @@ async function main(): Promise<void> {
       row: 0,
       stack: it.stack ?? 100,
       icon: iconEntry?.id ?? fallbackIconId,
+    });
+  }
+
+  // Add machine entries for filtered buildings (as items with a 'machine' subobject)
+  for (const p of parsed) {
+    const bId = (p.bd?.uniqueName ?? p.bd?.id ?? p.da.id ?? '').replace(/^DA_/, '');
+    if (!bId) continue;
+    const bSlug = bId.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, '');
+    // avoid duplicates
+    if (itemsArr.find((x) => x.id === bSlug)) continue;
+
+    const iconEntry = iconsMeta.find((ic) => ic.id === bSlug);
+    const machine: any = {};
+    // Speed: use inverse of craftingLoopDuration if available (cycles per second-ish), otherwise default to 1
+    if (p.da.craftingLoopDuration != null && p.da.craftingLoopDuration > 0) machine.speed = Number((1 / p.da.craftingLoopDuration).toFixed(6));
+    else machine.speed = 1;
+    // note: 'type' removed (invalid); keep usage only
+    if (p.da.electricityValue != null) machine.usage = p.da.electricityValue;
+    // rename coolingCapacity -> pollution to avoid adding new columns elsewhere
+    if (p.da.coolingCapacity != null) machine.pollution = p.da.coolingCapacity;
+    // default modules placeholder
+    machine.modules = 1;
+
+    const categoryForBuilding = buildingSlugToCategory[bSlug] ?? 'other';
+
+    itemsArr.push({
+      category: categoryForBuilding,
+      id: bSlug,
+      name: p.bd?.name ?? p.da.id,
+      row: 0,
+      machine,
+      icon: iconEntry?.id ?? bSlug,
     });
   }
 
