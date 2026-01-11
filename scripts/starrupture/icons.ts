@@ -33,26 +33,32 @@ function slugify(s: string): string {
 }
 
 export function indexUiIcons(srDataDir: string): Record<string, string> {
-  const uiDir = path.join(srDataDir, 'UI');
+  // Scan the whole sr-data tree for image files (not only UI) to capture textures placed under other folders (e.g., Weapons/AmmoTypes)
   const map: Record<string, string> = {};
-  if (!fs.existsSync(uiDir)) return map;
+  if (!fs.existsSync(srDataDir)) return map;
 
   function walk(dir: string) {
     const entries = fs.readdirSync(dir);
     for (const e of entries) {
       const full = path.join(dir, e);
-      if (fs.statSync(full).isDirectory()) walk(full);
-      else {
-        const ext = path.extname(full).toLowerCase();
-        if (ext === '.png' || ext === '.webp' || ext === '.jpg') {
-          const base = path.basename(full, ext).toLowerCase();
-          map[base] = full;
+      try {
+        const stat = fs.statSync(full);
+        if (stat.isDirectory()) {
+          walk(full);
+        } else if (stat.isFile()) {
+          const ext = path.extname(full).toLowerCase();
+          if (ext === '.png' || ext === '.webp' || ext === '.jpg' || ext === '.jpeg') {
+            const base = path.basename(full, ext).toLowerCase();
+            if (!map[base]) map[base] = full;
+          }
         }
+      } catch (err) {
+        // ignore permission/other errors
       }
     }
   }
 
-  walk(uiDir);
+  walk(srDataDir);
   return map;
 }
 
@@ -104,6 +110,35 @@ export async function packIcons(
 
   if (notFound.length > 0) {
     console.warn('Missing icons for:', notFound.slice(0, 20).join(', '));
+  }
+
+  // Ensure there is always a "missing-icon" placeholder as the first tile (transparent)
+  if (!toPack.some((t) => t.id === 'missing-icon')) {
+    try {
+      if (sharp) {
+        // Render a styled SVG placeholder (dark gray plate with bold red question mark), no extra deps
+        const plateColor = '#2f2f2f'; // dark gray
+        const qmColor = '#ff3b30'; // red question mark
+        const fontSize = Math.floor(iconSize * 0.65);
+        const rx = Math.floor(iconSize * 0.12);
+        const pad = Math.max(2, Math.floor(iconSize * 0.06));
+        // Centered rounded plate with transparent outer background and bold question mark with subtle outline
+        const strokeWidth = Math.max(1, Math.floor(iconSize * 0.04));
+        const svg = `<?xml version="1.0" encoding="UTF-8"?>\n` +
+          `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 ${iconSize} ${iconSize}">` +
+          `<rect x="${pad}" y="${pad}" width="${iconSize - pad * 2}" height="${iconSize - pad * 2}" rx="${rx}" fill="${plateColor}"/>` +
+          // shift the question mark down by half its font height so it doesn't touch the top
+          `<text x="50%" y="50%" dy="${Math.floor(fontSize * 0.3)}" font-family="sans-serif" font-size="${fontSize}" fill="${qmColor}" font-weight="800" text-anchor="middle" dominant-baseline="middle" stroke="rgba(0,0,0,0.5)" stroke-width="${strokeWidth}">?</text>` +
+          `</svg>`;
+        const placeholder = await sharp(Buffer.from(svg)).png().toBuffer();
+        toPack.unshift({ id: 'missing-icon', buffer: placeholder });
+      } else {
+        toPack.unshift({ id: 'missing-icon', buffer: Buffer.alloc(0) });
+      }
+    } catch (e) {
+      // ignore; we will still include a placeholder id in metadata
+      toPack.unshift({ id: 'missing-icon', buffer: Buffer.alloc(0) });
+    }
   }
 
   const count = toPack.length;
