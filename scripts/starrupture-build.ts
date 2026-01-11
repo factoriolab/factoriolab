@@ -6,6 +6,8 @@ import { logTime, logWarn } from './helpers/log.helpers';
 import { listDaFiles, parseDaFile } from './starrupture/buildings';
 import { parseBdFile } from './starrupture/buildingData';
 import { listCrcFiles, parseCrcFile, parseCrFile, CrInfo, CrcInfo } from './starrupture/recipes';
+import { buildItemMap } from './starrupture/items';
+import { packIcons, IconEntry } from './starrupture/icons';
 
 type CLIArgs = {
   input: string;
@@ -141,6 +143,134 @@ async function main(): Promise<void> {
   const recipesOut = path.join(tempOutDir, 'recipes.json');
   fs.writeFileSync(recipesOut, JSON.stringify({ crc: crcParsed, cr: crParsed }, null, 2));
   logTime(`Wrote debug recipes to ${recipesOut}`);
+
+  // --- Items ---
+  logTime('Scanning Items');
+  const itemMap = buildItemMap(srData);
+  const itemsOut = path.join(tempOutDir, 'items.json');
+  fs.writeFileSync(itemsOut, JSON.stringify(Object.values(itemMap), null, 2));
+  logTime(`Wrote debug items to ${itemsOut}`);
+
+  // Map recipe IO to item ids and filter invalid recipes
+  const mappedRecipes = crParsed.map((r) => {
+    // Map output
+    if (!r.output) {
+      logWarn(`Recipe ${r.id} has no output; skipping as fatal`);
+      return null;
+    }
+
+    const outItemPath = r.output.itemObjectPath;
+    const outItemKey = outItemPath?.startsWith('/Game/') ? outItemPath : (outItemPath?.replace(/^BlueprintGeneratedClass\'|\'$/g, '') ?? outItemPath);
+    const outItem = itemMap[outItemKey] ?? itemMap[outItemKey.toLowerCase()];
+    if (!outItem) {
+      logWarn(`Unable to resolve output item for recipe ${r.id}: ${outItemPath}`);
+      return null;
+    }
+
+    const inputs: Record<string, number> = {};
+    for (const inp of r.inputs) {
+      const ik = inp.itemObjectPath?.startsWith('/Game/') ? inp.itemObjectPath : (inp.itemObjectPath?.replace(/^BlueprintGeneratedClass\'|\'$/g, '') ?? inp.itemObjectPath);
+      const ii = itemMap[ik] ?? itemMap[ik.toLowerCase()];
+      if (!ii) {
+        logWarn(`Unable to resolve input item for recipe ${r.id}: ${inp.itemObjectPath}`);
+        // still include with original path key so it can be examined
+        inputs[inp.itemObjectPath ?? 'unknown'] = inp.count;
+      } else {
+        inputs[ii.id] = inp.count;
+      }
+    }
+
+    const out: Record<string, number> = {};
+    out[outItem.id] = r.output.count;
+
+    return {
+      id: r.id,
+      name: r.name,
+      time: r.buildTime ?? 999,
+      in: inputs,
+      out: out,
+      sourcePath: r.path,
+    };
+  }).filter((x) => x != null);
+
+  const mappedOut = path.join(tempOutDir, 'recipes.mapped.json');
+  fs.writeFileSync(mappedOut, JSON.stringify(mappedRecipes, null, 2));
+  logTime(`Wrote mapped recipes to ${mappedOut}`);
+
+  // --- Icons: select from included buildings and recipes ---
+  logTime('Selecting icons for included buildings and recipes');
+  // Determine which CRCs/CRs are referenced by our filtered DA files
+  const includedCrcIds = new Set<string>();
+  for (const p of parsed) {
+    const cp = p.da.craftingRecipeCollectionPath;
+    if (cp) {
+      const parts = cp.split('/');
+      const crcId = parts[parts.length - 1];
+      includedCrcIds.add(crcId);
+    }
+  }
+
+  // Gather objectPaths for included CRs
+  const includedCrObjectPaths = new Set<string>();
+  for (const c of crcParsed) {
+    if (includedCrcIds.has(c.id)) {
+      for (const rp of c.recipes) includedCrObjectPaths.add(rp);
+    }
+  }
+
+  const includedCrParsed = crParsed.filter((r) => includedCrObjectPaths.has(r.objectPath));
+
+  // Items referenced by included recipes
+  const includedItemIds = new Set<string>();
+  for (const r of includedCrParsed) {
+    if (r.output) {
+      const outKey = r.output.itemObjectPath ?? '';
+      const outItem = itemMap[outKey] ?? itemMap[outKey.toLowerCase()];
+      if (outItem) includedItemIds.add(outItem.id);
+    }
+    for (const inp of r.inputs) {
+      const inKey = inp.itemObjectPath ?? '';
+      const inItem = itemMap[inKey] ?? itemMap[inKey.toLowerCase()];
+      if (inItem) includedItemIds.add(inItem.id);
+    }
+  }
+
+  // Buildings' icons
+  const buildingIconEntries: IconEntry[] = [];
+  for (const p of parsed) {
+    if (p.bd && p.bd.iconObjectPath) {
+      const id = (p.bd.uniqueName ?? p.bd.id ?? p.da.id ?? '').toLowerCase();
+      buildingIconEntries.push({ id: slugify(id), objectPath: p.bd.iconObjectPath });
+    }
+  }
+
+  function slugify(s: string): string {
+    return s
+      .replace(/([A-Z])/g, (m) => '-' + m.toLowerCase())
+      .replace(/^-/, '')
+      .replace(/_+/g, '-')
+      .replace(/[^a-z0-9-]+/g, '-')
+      .replace(/-+/g, '-')
+      .toLowerCase();
+  }
+
+  // Item icon entries
+  const itemIconEntries: IconEntry[] = [];
+  for (const iid of includedItemIds) {
+    // find item by id
+    const v = Object.values(itemMap).find((it) => it.id === iid);
+    if (!v) continue;
+    if (!v.iconObjectPath) continue;
+    itemIconEntries.push({ id: v.id, objectPath: v.iconObjectPath });
+  }
+
+  const iconsToPack = [...buildingIconEntries, ...itemIconEntries];
+  const iconsOutPath = path.join(args.output, 'icons.webp');
+  const iconsMeta = await packIcons(srData, iconsOutPath, iconsToPack, { iconSize: 64, padding: 0, columns: 8, dryRun: args.dryRun });
+
+  const iconsDebugOut = path.join(tempOutDir, 'icons.json');
+  fs.writeFileSync(iconsDebugOut, JSON.stringify(iconsMeta, null, 2));
+  logTime(`Wrote icons (${iconsMeta.length}) and metadata to ${iconsDebugOut}`);
 
   if (!args.dryRun) {
     logTime('(No further steps implemented yet)');
