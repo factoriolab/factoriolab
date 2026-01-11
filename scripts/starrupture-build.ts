@@ -335,17 +335,19 @@ async function main(): Promise<void> {
 
   // Build items array
   const itemsArr: any[] = [];
+  const fallbackIconId = iconsMeta[0]?.id ?? 'missing-icon';
   for (const iid of includedItemIdsFinal) {
     const it = Object.values(itemMap).find((x) => x.id === iid);
     if (!it) continue;
     const iconEntry = iconsMeta.find((ic) => ic.id === it.id);
+    if (!iconEntry) logWarn(`No icon found for item ${it.id}; using fallback ${fallbackIconId}`);
     itemsArr.push({
       category: it.uiItemType && String(it.uiItemType).includes('Resource') ? 'raw' : 'parts',
       id: it.id,
       name: it.name ?? it.fileBasename,
       row: 0,
       stack: it.stack ?? 100,
-      icon: iconEntry?.id ?? it.id,
+      icon: iconEntry?.id ?? fallbackIconId,
     });
   }
 
@@ -441,10 +443,6 @@ async function main(): Promise<void> {
   const dataDebugOut = path.join(tempOutDir, 'data.generated.json');
   fs.writeFileSync(dataDebugOut, JSON.stringify(outData, null, 2));
   logTime(`Wrote data.json to ${dataOutPath} and debug ${dataDebugOut}`);
-
-  if (!args.dryRun) {
-    logTime('(No further steps implemented yet)');
-  }
 
   logTime('Done');
 }
