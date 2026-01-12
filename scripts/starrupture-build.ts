@@ -6,7 +6,7 @@ import { listDaFiles, parseDaFile } from './starrupture/buildings';
 import { parseBdFile } from './starrupture/buildingData';
 import { listCrcFiles, parseCrcFile, parseCrFile, CrInfo, CrcInfo } from './starrupture/recipes';
 import { buildItemMap } from './starrupture/items';
-import { packIcons, IconEntry } from './starrupture/icons';
+import { packIcons, IconEntry, indexUiIcons, generatePurityVariants } from './starrupture/icons';
 
 type CLIArgs = {
   input: string;
@@ -230,10 +230,35 @@ async function main(): Promise<void> {
 
   // Buildings' icons (use same slugging as building ids so machine items match icon ids)
   const buildingIconEntries: IconEntry[] = [];
+  // Index UI icons so we can resolve base icon files and generate variant overlays
+  const uiIndex = indexUiIcons(srData);
+
   for (const p of parsed) {
     if (p.bd && p.bd.iconObjectPath) {
       const rawId = (p.bd.uniqueName ?? p.bd.id ?? p.da.id ?? '').replace(/^DA_/, '');
       const bSlug = rawId.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, '');
+
+      // Try to resolve base icon path from BD objectPath
+      let basePath: string | undefined;
+      try {
+        const parts = p.bd.iconObjectPath.replace('/Game/Chimera/UI/', '').split('/');
+        const basename = parts.pop() ?? '';
+        basePath = uiIndex[basename.toLowerCase()] ?? uiIndex[bSlug];
+      } catch (e) {
+        basePath = undefined;
+      }
+
+      if (PURITY_BUILDINGS.includes(bSlug) && basePath && fs.existsSync(basePath)) {
+        try {
+          const variantEntries = await generatePurityVariants(basePath, bSlug);
+          for (const ve of variantEntries) buildingIconEntries.push(ve);
+          continue;
+        } catch (e) {
+          logWarn(`Failed to generate overlay icons for ${bSlug}: ${(e as Error).message}`);
+        }
+      }
+
+      // Fallback to default icon entry
       buildingIconEntries.push({ id: bSlug, objectPath: p.bd.iconObjectPath });
     }
   }
@@ -379,7 +404,7 @@ async function main(): Promise<void> {
         name: `${p.bd?.name ?? p.da.id} (Normal)`,
         row: 0,
         machine: makeMachine(1),
-        icon: iconId,
+        icon: bSlug,
       });
       // Impure variant
       itemsArr.push({
@@ -388,7 +413,7 @@ async function main(): Promise<void> {
         name: `${p.bd?.name ?? p.da.id} (Impure)`,
         row: 0,
         machine: makeMachine(0.5),
-        icon: iconId,
+        icon: `${bSlug}-impure`,
       });
       // Pure variant
       itemsArr.push({
@@ -397,7 +422,7 @@ async function main(): Promise<void> {
         name: `${p.bd?.name ?? p.da.id} (Pure)`,
         row: 0,
         machine: makeMachine(2),
-        icon: iconId,
+        icon: `${bSlug}-pure`,
       });
       continue;
     }
@@ -445,7 +470,7 @@ async function main(): Promise<void> {
     const crcForThis = crcParsed.find((c) => c.recipes.includes(r.objectPath));
     let producers = crcForThis ? (crcToBuildings[crcForThis.id] ?? []) : [];
 
-    // Expand any producer references that match buildings listed in VARIANT_BUILDINGS.
+    // Expand any producer references that match buildings listed in PURITY_BUILDINGS.
     if (producers.length > 0) {
       const variantBases = new Set(PURITY_BUILDINGS);
       const expanded: string[] = [];
