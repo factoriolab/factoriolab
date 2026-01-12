@@ -385,16 +385,16 @@ async function main(): Promise<void> {
     }
 
     // Fallback: standard machine entry
-    const machine: any = {};
-    // Speed: use inverse of craftingLoopDuration if available (cycles per second-ish), otherwise default to 1
-    if (p.da.craftingLoopDuration != null && p.da.craftingLoopDuration > 0) machine.speed = Number((1 / p.da.craftingLoopDuration).toFixed(6));
-    else machine.speed = 1;
+    const machine: any = { speed: 1 };
+    // // Speed: use inverse of craftingLoopDuration if available (cycles per second-ish), otherwise default to 1
+    // if (p.da.craftingLoopDuration != null && p.da.craftingLoopDuration > 0) machine.speed = Number((1 / p.da.craftingLoopDuration).toFixed(6));
+    // else machine.speed = 1;
     // note: 'type' removed (invalid); keep usage only
     if (p.da.electricityValue != null) machine.usage = p.da.electricityValue;
     // rename coolingCapacity -> pollution to avoid adding new columns elsewhere
     if (p.da.coolingCapacity != null) machine.pollution = p.da.coolingCapacity;
     // default modules placeholder
-    machine.modules = 1;
+    machine.modules = 0;
 
     itemsArr.push({
       category: categoryForBuilding,
