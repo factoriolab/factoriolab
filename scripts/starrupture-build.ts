@@ -7,6 +7,7 @@ import { parseBdFile } from './starrupture/buildingData';
 import { listCrcFiles, parseCrcFile, parseCrFile, CrInfo, CrcInfo } from './starrupture/recipes';
 import { buildItemMap } from './starrupture/items';
 import { packIcons, IconEntry, indexUiIcons, generatePurityVariants } from './starrupture/icons';
+import { slugify, makeMachineEntry, makeBeltEntry, expandProducersForPurity } from './starrupture/helpers';
 
 type CLIArgs = {
   input: string;
@@ -37,7 +38,7 @@ const DEFAULT_BUILDINGS = [
 // Buildings which should have Impure / Normal / Pure variants generated for them.
 // Use the generated slug (e.g., 'mechanical-drill' for `DA_MechanicalDrill`).
 const PURITY_BUILDINGS: string[] = [
-  'mechanical-drill', // Ore Extractor: Impure=0.5, Normal=1 (default), Pure=2
+  'mechanical-drill', // Ore Extractor
 ];
 
 function parseArgs(argv: string[]): CLIArgs {
@@ -51,20 +52,20 @@ function parseArgs(argv: string[]): CLIArgs {
   };
 
   for (let i = 0; i < args.length; i++) {
-    const a = args[i];
-    if (a === '--input' && args[i + 1]) {
+    const arg = args[i];
+    if (arg === '--input' && args[i + 1]) {
       out.input = args[++i];
-    } else if (a === '--output' && args[i + 1]) {
+    } else if (arg === '--output' && args[i + 1]) {
       out.output = args[++i];
-    } else if (a === '--buildings' && args[i + 1]) {
+    } else if (arg === '--buildings' && args[i + 1]) {
       const val = args[++i];
       if (val.toLowerCase() === 'all') {
         out.buildings = null;
       } else {
         out.buildings = val.split(',').map((s) => s.trim()).filter(Boolean);
       }
-    } else if (a === '--dry-run') out.dryRun = true;
-    else if (a === '--verbose') out.verbose = true;
+    } else if (arg === '--dry-run') out.dryRun = true;
+    else if (arg === '--verbose') out.verbose = true;
   }
 
   return out;
@@ -149,27 +150,27 @@ async function main(): Promise<void> {
   const itemMap = buildItemMap(srData);
 
   // Map recipe IO to item ids and filter invalid recipes
-  const mappedRecipes = crParsed.map((r) => {
+  const mappedRecipes = crParsed.map((crRaw) => {
     // Map output
-    if (!r.output) {
-      logWarn(`Recipe ${r.id} has no output; skipping as fatal`);
+    if (!crRaw.output) {
+      logWarn(`Recipe ${crRaw.id} has no output; skipping as fatal`);
       return null;
     }
 
-    const outItemPath = r.output.itemObjectPath;
+    const outItemPath = crRaw.output.itemObjectPath;
     const outItemKey = outItemPath?.startsWith('/Game/') ? outItemPath : (outItemPath?.replace(/^BlueprintGeneratedClass\'|\'$/g, '') ?? outItemPath);
     const outItem = itemMap[outItemKey] ?? itemMap[outItemKey.toLowerCase()];
     if (!outItem) {
-      logWarn(`Unable to resolve output item for recipe ${r.id}: ${outItemPath}`);
+      logWarn(`Unable to resolve output item for recipe ${crRaw.id}: ${outItemPath}`);
       return null;
     }
 
     const inputs: Record<string, number> = {};
-    for (const inp of r.inputs) {
+    for (const inp of crRaw.inputs) {
       const ik = inp.itemObjectPath?.startsWith('/Game/') ? inp.itemObjectPath : (inp.itemObjectPath?.replace(/^BlueprintGeneratedClass\'|\'$/g, '') ?? inp.itemObjectPath);
       const ii = itemMap[ik] ?? itemMap[ik.toLowerCase()];
       if (!ii) {
-        logWarn(`Unable to resolve input item for recipe ${r.id}: ${inp.itemObjectPath}`);
+        logWarn(`Unable to resolve input item for recipe ${crRaw.id}: ${inp.itemObjectPath}`);
         // still include with original path key so it can be examined
         inputs[inp.itemObjectPath ?? 'unknown'] = inp.count;
       } else {
@@ -178,15 +179,15 @@ async function main(): Promise<void> {
     }
 
     const out: Record<string, number> = {};
-    out[outItem.id] = r.output.count;
+    out[outItem.id] = crRaw.output.count;
 
     return {
-      id: r.id,
-      name: r.name,
-      time: r.buildTime ?? 999,
+      id: crRaw.id,
+      name: crRaw.name,
+      time: crRaw.buildTime ?? 999,
       in: inputs,
       out: out,
-      sourcePath: r.path,
+      sourcePath: crRaw.path,
     };
   }).filter((x) => x != null);
 
@@ -194,8 +195,8 @@ async function main(): Promise<void> {
   logTime('Selecting icons for included buildings and recipes');
   // Determine which CRCs/CRs are referenced by our filtered DA files
   const includedCrcIds = new Set<string>();
-  for (const p of parsed) {
-    const cp = p.da.craftingRecipeCollectionPath;
+  for (const parsedEntry of parsed) {
+    const cp = parsedEntry.da.craftingRecipeCollectionPath;
     if (cp) {
       const parts = cp.split('/');
       const crcId = parts[parts.length - 1];
@@ -205,9 +206,9 @@ async function main(): Promise<void> {
 
   // Gather objectPaths for included CRs
   const includedCrObjectPaths = new Set<string>();
-  for (const c of crcParsed) {
-    if (includedCrcIds.has(c.id)) {
-      for (const rp of c.recipes) includedCrObjectPaths.add(rp);
+  for (const crc of crcParsed) {
+    if (includedCrcIds.has(crc.id)) {
+      for (const rp of crc.recipes) includedCrObjectPaths.add(rp);
     }
   }
 
@@ -215,13 +216,13 @@ async function main(): Promise<void> {
 
   // Items referenced by included recipes
   const includedItemIds = new Set<string>();
-  for (const r of includedCrParsed) {
-    if (r.output) {
-      const outKey = r.output.itemObjectPath ?? '';
+  for (const includedCr of includedCrParsed) {
+    if (includedCr.output) {
+      const outKey = includedCr.output.itemObjectPath ?? '';
       const outItem = itemMap[outKey] ?? itemMap[outKey.toLowerCase()];
       if (outItem) includedItemIds.add(outItem.id);
     }
-    for (const inp of r.inputs) {
+    for (const inp of includedCr.inputs) {
       const inKey = inp.itemObjectPath ?? '';
       const inItem = itemMap[inKey] ?? itemMap[inKey.toLowerCase()];
       if (inItem) includedItemIds.add(inItem.id);
@@ -233,15 +234,15 @@ async function main(): Promise<void> {
   // Index UI icons so we can resolve base icon files and generate variant overlays
   const uiIndex = indexUiIcons(srData);
 
-  for (const p of parsed) {
-    if (p.bd && p.bd.iconObjectPath) {
-      const rawId = (p.bd.uniqueName ?? p.bd.id ?? p.da.id ?? '').replace(/^DA_/, '');
+  for (const parsedEntry of parsed) {
+    if (parsedEntry.bd && parsedEntry.bd.iconObjectPath) {
+      const rawId = (parsedEntry.bd.uniqueName ?? parsedEntry.bd.id ?? parsedEntry.da.id ?? '').replace(/^DA_/, '');
       const bSlug = rawId.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, '');
 
       // Try to resolve base icon path from BD objectPath
       let basePath: string | undefined;
       try {
-        const parts = p.bd.iconObjectPath.replace('/Game/Chimera/UI/', '').split('/');
+        const parts = parsedEntry.bd.iconObjectPath.replace('/Game/Chimera/UI/', '').split('/');
         const basename = parts.pop() ?? '';
         basePath = uiIndex[basename.toLowerCase()] ?? uiIndex[bSlug];
       } catch (e) {
@@ -259,7 +260,7 @@ async function main(): Promise<void> {
       }
 
       // Fallback to default icon entry
-      buildingIconEntries.push({ id: bSlug, objectPath: p.bd.iconObjectPath });
+      buildingIconEntries.push({ id: bSlug, objectPath: parsedEntry.bd.iconObjectPath });
     }
   }
 
@@ -301,17 +302,16 @@ async function main(): Promise<void> {
     return raw.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ');
   }
 
-  for (const p of parsed) {
-    const cp = p.da.craftingRecipeCollectionPath;
+  for (const parsedEntry of parsed) {
+    const cp = parsedEntry.da.craftingRecipeCollectionPath;
     if (!cp) continue;
     const crcId = cp.split('/').pop() ?? '';
-    const bId = (p.bd?.uniqueName ?? p.bd?.id ?? p.da.id ?? '').replace(/^DA_/, '');
-    const bSlug = bId.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, '');
+    const bSlug = slugify((parsedEntry.bd?.uniqueName ?? parsedEntry.bd?.id ?? parsedEntry.da.id ?? ''));
     if (!crcToBuildings[crcId]) crcToBuildings[crcId] = [];
     crcToBuildings[crcId].push(bSlug);
 
     // determine building category from BD (UISubType or UIType normalized into uiSubType by parser)
-    const catRaw = p.bd?.uiSubType ?? null;
+    const catRaw = parsedEntry.bd?.uiSubType ?? null;
     if (catRaw) {
       const catToken = String(catRaw).split('::').pop() ?? String(catRaw);
       const catId = tokenToId(String(catRaw));
@@ -328,12 +328,12 @@ async function main(): Promise<void> {
 
   // Determine included items from these recipes
   const includedItemIdsFinal = new Set<string>();
-  for (const r of includedCrInfos) {
-    if (r.output) {
-      const outItem = itemMap[r.output.itemObjectPath ?? ''] ?? itemMap[(r.output.itemObjectPath ?? '').toLowerCase()];
+  for (const crInfo of includedCrInfos) {
+    if (crInfo.output) {
+      const outItem = itemMap[crInfo.output.itemObjectPath ?? ''] ?? itemMap[(crInfo.output.itemObjectPath ?? '').toLowerCase()];
       if (outItem) includedItemIdsFinal.add(outItem.id);
     }
-    for (const inp of r.inputs) {
+    for (const inp of crInfo.inputs) {
       const inItem = itemMap[inp.itemObjectPath ?? ''] ?? itemMap[(inp.itemObjectPath ?? '').toLowerCase()];
       if (inItem) includedItemIdsFinal.add(inItem.id);
     }
@@ -358,8 +358,8 @@ async function main(): Promise<void> {
   }
 
   // Add building entries for filtered buildings. For logistics lines (drone rails) emit a 'belt' subobject; otherwise emit 'machine'.
-  for (const p of parsed) {
-    const bId = (p.bd?.uniqueName ?? p.bd?.id ?? p.da.id ?? '').replace(/^DA_/, '');
+  for (const parsedEntry of parsed) {
+    const bId = (parsedEntry.bd?.uniqueName ?? parsedEntry.bd?.id ?? parsedEntry.da.id ?? '').replace(/^DA_/, '');
     if (!bId) continue;
     const bSlug = bId.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, '');
     // avoid duplicates
@@ -369,124 +369,61 @@ async function main(): Promise<void> {
     const categoryForBuilding = buildingSlugToCategory[bSlug] ?? 'other';
 
     // If DA contains logisticsLine trait (even if MoveSpeed is missing), treat as a belt/rail
-    if (p.da.logisticsMoveSpeed !== undefined) {
+    if (parsedEntry.da.logisticsMoveSpeed !== undefined) {
       // Use default MoveSpeed = 200 when not explicitly present
-      const baseMove = p.da.logisticsMoveSpeed ?? 200;
+      const baseMove = parsedEntry.da.logisticsMoveSpeed ?? 200;
       // Transform from internal value to units per second
       const speed = Number((baseMove / 100).toFixed(6));
-      itemsArr.push({
-        category: categoryForBuilding,
-        id: bSlug,
-        name: p.bd?.name ?? p.da.id,
-        row: 0,
-        belt: { speed },
-        icon: iconEntry?.id ?? bSlug,
-      });
+      itemsArr.push(makeBeltEntry(parsedEntry, bSlug, parsedEntry.bd?.name ?? parsedEntry.da.id, speed, categoryForBuilding, iconEntry?.id ?? bSlug));
       continue;
     }
 
     // Fallback: standard machine entry
 
-    // Special-case variant-enabled buildings: create Impure, Normal (default), and Pure variants
+    // Variant-enabled buildings: create Impure, Normal (default), and Pure variants
     if (PURITY_BUILDINGS.includes(bSlug)) {
-      const makeMachine = (speed: number) => {
-        const m: any = { speed };
-        if (p.da.electricityValue != null) m.drain = p.da.electricityValue;
-        if (p.da.coolingCapacity != null) m.heat = p.da.coolingCapacity;
-        m.modules = 0;
-        return m;
-      };
-      const iconId = iconEntry?.id ?? bSlug;
-      // Normal variant (default)
-      itemsArr.push({
-        category: categoryForBuilding,
-        id: bSlug,
-        name: `${p.bd?.name ?? p.da.id} (Normal)`,
-        row: 0,
-        machine: makeMachine(1),
-        icon: bSlug,
-      });
-      // Impure variant
-      itemsArr.push({
-        category: categoryForBuilding,
-        id: `${bSlug}-impure`,
-        name: `${p.bd?.name ?? p.da.id} (Impure)`,
-        row: 0,
-        machine: makeMachine(0.5),
-        icon: `${bSlug}-impure`,
-      });
-      // Pure variant
-      itemsArr.push({
-        category: categoryForBuilding,
-        id: `${bSlug}-pure`,
-        name: `${p.bd?.name ?? p.da.id} (Pure)`,
-        row: 0,
-        machine: makeMachine(2),
-        icon: `${bSlug}-pure`,
-      });
+      const iconBase = iconEntry?.id ?? bSlug;
+      itemsArr.push(makeMachineEntry(parsedEntry, bSlug, `${parsedEntry.bd?.name ?? parsedEntry.da.id} (Normal)`, 1, categoryForBuilding, bSlug));
+      itemsArr.push(makeMachineEntry(parsedEntry, `${bSlug}-impure`, `${parsedEntry.bd?.name ?? parsedEntry.da.id} (Impure)`, 0.5, categoryForBuilding, `${bSlug}-impure`));
+      itemsArr.push(makeMachineEntry(parsedEntry, `${bSlug}-pure`, `${parsedEntry.bd?.name ?? parsedEntry.da.id} (Pure)`, 2, categoryForBuilding, `${bSlug}-pure`));
       continue;
     }
 
-    const machine: any = { speed: 1 };
-    if (p.da.electricityValue != null) machine.drain = p.da.electricityValue;
-    if (p.da.coolingCapacity != null) machine.heat = p.da.coolingCapacity;
-    machine.modules = 0;
-
-    itemsArr.push({
-      category: categoryForBuilding,
-      id: bSlug,
-      name: p.bd?.name ?? p.da.id,
-      row: 0,
-      machine,
-      icon: iconEntry?.id ?? bSlug,
-    });
+    itemsArr.push(makeMachineEntry(parsedEntry, bSlug, parsedEntry.bd?.name ?? parsedEntry.da.id, 1, categoryForBuilding, iconEntry?.id ?? bSlug));
   }
 
   // Build recipes array
   const recipesArr: any[] = [];
-  for (const r of includedCrInfos) {
-    if (!r.output) {
-      logWarn(`Skipping recipe ${r.id} because it has no output`);
+  for (const crInfo of includedCrInfos) {
+    if (!crInfo.output) {
+      logWarn(`Skipping recipe ${crInfo.id} because it has no output`);
       continue;
     }
 
-    const outItem = itemMap[r.output.itemObjectPath ?? ''] ?? itemMap[(r.output.itemObjectPath ?? '').toLowerCase()];
+    const outItem = itemMap[crInfo.output.itemObjectPath ?? ''] ?? itemMap[(crInfo.output.itemObjectPath ?? '').toLowerCase()];
     if (!outItem) {
-      logWarn(`Skipping recipe ${r.id} because output item couldn't be resolved: ${r.output.itemObjectPath}`);
+      logWarn(`Skipping recipe ${crInfo.id} because output item couldn't be resolved: ${crInfo.output.itemObjectPath}`);
       continue;
     }
 
     const inMap: Record<string, number> = {};
-    for (const inp of r.inputs) {
+    for (const inp of crInfo.inputs) {
       const ii = itemMap[inp.itemObjectPath ?? ''] ?? itemMap[(inp.itemObjectPath ?? '').toLowerCase()];
       if (ii) inMap[ii.id] = (inMap[ii.id] ?? 0) + inp.count;
       else inMap[inp.itemObjectPath ?? 'unknown'] = (inMap[inp.itemObjectPath ?? 'unknown'] ?? 0) + inp.count;
     }
 
     const outMap: Record<string, number> = {};
-    outMap[outItem.id] = r.output.count;
+    outMap[outItem.id] = crInfo.output.count;
 
     // producers: find CRC id that contains this CR
-    const crcForThis = crcParsed.find((c) => c.recipes.includes(r.objectPath));
+    const crcForThis = crcParsed.find((crc) => crc.recipes.includes(crInfo.objectPath));
     let producers = crcForThis ? (crcToBuildings[crcForThis.id] ?? []) : [];
 
     // Expand any producer references that match buildings listed in PURITY_BUILDINGS.
     if (producers.length > 0) {
-      const variantBases = new Set(PURITY_BUILDINGS);
-      const expanded: string[] = [];
-      for (const pSlug of producers) {
-        if (variantBases.has(pSlug) && itemsArr.find((it) => it.id === pSlug)) {
-          expanded.push(pSlug, `${pSlug}-impure`, `${pSlug}-pure`);
-        } else {
-          expanded.push(pSlug);
-        }
-      }
-      const seen = new Set<string>();
-      producers = expanded.filter((s) => {
-        if (seen.has(s)) return false;
-        seen.add(s);
-        return true;
-      });
+      const itemsPresent = new Set(itemsArr.map((it) => it.id));
+      producers = expandProducersForPurity(producers, new Set(PURITY_BUILDINGS), itemsPresent);
     }
 
     // Determine category: prefer producer building category when available
@@ -506,14 +443,14 @@ async function main(): Promise<void> {
       }
     }
 
-    const recipeIdBase = r.id.replace(/^CR_/, '').toLowerCase();
+    const recipeIdBase = crInfo.id.replace(/^CR_/, '').toLowerCase();
     const recipeId = recipeIdBase; // keep simple; collisions unlikely for filtered set
 
     recipesArr.push({
       id: recipeId,
-      name: r.name ?? r.id,
+      name: crInfo.name ?? crInfo.id,
       producers: producers,
-      time: r.buildTime ?? 999,
+      time: crInfo.buildTime ?? 999,
       in: inMap,
       out: outMap,
       row: 0,
