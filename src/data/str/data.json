@@ -1,0 +1,2151 @@
+{
+  "version": {
+    "StarRupture": "0.1.1.112941"
+  },
+  "categories": [
+    {
+      "id": "extraction",
+      "name": "Extraction"
+    },
+    {
+      "id": "crafting",
+      "name": "Crafting"
+    },
+    {
+      "id": "ore-processing",
+      "name": "Ore Processing"
+    }
+  ],
+  "icons": [
+    {
+      "id": "sulfur-extractor",
+      "position": "-64px -0px",
+      "color": "#747776"
+    },
+    {
+      "id": "assembler",
+      "position": "-128px -0px",
+      "color": "#767b78"
+    },
+    {
+      "id": "crafter",
+      "position": "-192px -0px",
+      "color": "#6f7371"
+    },
+    {
+      "id": "drone-rail-t1",
+      "position": "-256px -0px",
+      "color": "#2e3b3b"
+    },
+    {
+      "id": "drone-rail-t2",
+      "position": "-320px -0px",
+      "color": "#395353"
+    },
+    {
+      "id": "drone-rail-t3",
+      "position": "-384px -0px",
+      "color": "#395554"
+    },
+    {
+      "id": "drone-rail-t4",
+      "position": "-448px -0px",
+      "color": "#3b5756"
+    },
+    {
+      "id": "drone-rail-t5",
+      "position": "-0px -64px",
+      "color": "#3e5c5c"
+    },
+    {
+      "id": "furnace",
+      "position": "-64px -64px",
+      "color": "#8d8886"
+    },
+    {
+      "id": "gas-extractor",
+      "position": "-128px -64px",
+      "color": "#888285"
+    },
+    {
+      "id": "hammer",
+      "position": "-192px -64px",
+      "color": "#7d7c7a"
+    },
+    {
+      "id": "mechanical-drill-impure",
+      "position": "-256px -64px",
+      "color": "#85807a"
+    },
+    {
+      "id": "mechanical-drill",
+      "position": "-320px -64px",
+      "color": "#898278"
+    },
+    {
+      "id": "mechanical-drill-pure",
+      "position": "-384px -64px",
+      "color": "#8c8477"
+    },
+    {
+      "id": "refinery",
+      "position": "-448px -64px",
+      "color": "#676665"
+    },
+    {
+      "id": "smelter",
+      "position": "-0px -128px",
+      "color": "#727370"
+    },
+    {
+      "id": "synthetizer",
+      "position": "-64px -128px",
+      "color": "#8e9292"
+    },
+    {
+      "id": "accumulator",
+      "position": "-128px -128px",
+      "color": "#7d7975"
+    },
+    {
+      "id": "electronics",
+      "position": "-192px -128px",
+      "color": "#999485"
+    },
+    {
+      "id": "stator",
+      "position": "-256px -128px",
+      "color": "#716863"
+    },
+    {
+      "id": "battery",
+      "position": "-320px -128px",
+      "color": "#7b7a78"
+    },
+    {
+      "id": "generator",
+      "position": "-384px -128px",
+      "color": "#8c8b89"
+    },
+    {
+      "id": "turbine",
+      "position": "-448px -128px",
+      "color": "#585857"
+    },
+    {
+      "id": "nozzle",
+      "position": "-0px -192px",
+      "color": "#666666"
+    },
+    {
+      "id": "electromagnet",
+      "position": "-64px -192px",
+      "color": "#503e37"
+    },
+    {
+      "id": "electromagnetic-coil",
+      "position": "-128px -192px",
+      "color": "#6a6d6c"
+    },
+    {
+      "id": "synthetic-resin",
+      "position": "-192px -192px",
+      "color": "#968e92"
+    },
+    {
+      "id": "pressure-tank",
+      "position": "-256px -192px",
+      "color": "#9f9f9f"
+    },
+    {
+      "id": "heat-resistant-sheet",
+      "position": "-320px -192px",
+      "color": "#7e7e7d"
+    },
+    {
+      "id": "titanium-housing",
+      "position": "-384px -192px",
+      "color": "#53576e"
+    },
+    {
+      "id": "pump",
+      "position": "-448px -192px",
+      "color": "#868482"
+    },
+    {
+      "id": "valve",
+      "position": "-0px -256px",
+      "color": "#837875"
+    },
+    {
+      "id": "resonator",
+      "position": "-64px -256px",
+      "color": "#5b5a59"
+    },
+    {
+      "id": "liquid-helium",
+      "position": "-128px -256px",
+      "color": "#674e75"
+    },
+    {
+      "id": "condenser",
+      "position": "-192px -256px",
+      "color": "#81807e"
+    },
+    {
+      "id": "nanofibre",
+      "position": "-256px -256px",
+      "color": "#7b7e81"
+    },
+    {
+      "id": "laser-emitter",
+      "position": "-320px -256px",
+      "color": "#494645"
+    },
+    {
+      "id": "lens",
+      "position": "-384px -256px",
+      "color": "#7a7d7b"
+    },
+    {
+      "id": "scanner",
+      "position": "-448px -256px",
+      "color": "#878b8d"
+    },
+    {
+      "id": "gyroscope",
+      "position": "-0px -320px",
+      "color": "#9e9c99"
+    },
+    {
+      "id": "basic-building-material",
+      "position": "-64px -320px",
+      "color": "#979797"
+    },
+    {
+      "id": "wolfram-ore",
+      "position": "-128px -320px",
+      "color": "#7b4e40"
+    },
+    {
+      "id": "titanium-ore",
+      "position": "-192px -320px",
+      "color": "#7b7d8a"
+    },
+    {
+      "id": "pistol-ammo-item",
+      "position": "-256px -320px",
+      "color": "#96876c"
+    },
+    {
+      "id": "titanium-rod",
+      "position": "-320px -320px",
+      "color": "#5b5f71"
+    },
+    {
+      "id": "titanium-bar",
+      "position": "-384px -320px",
+      "color": "#606479"
+    },
+    {
+      "id": "wolfram-wire",
+      "position": "-448px -320px",
+      "color": "#796c67"
+    },
+    {
+      "id": "wolfram-bar",
+      "position": "-0px -384px",
+      "color": "#866052"
+    },
+    {
+      "id": "calcite-sheets",
+      "position": "-64px -384px",
+      "color": "#af9f97"
+    },
+    {
+      "id": "calcium-block",
+      "position": "-128px -384px",
+      "color": "#b19e97"
+    },
+    {
+      "id": "titanium-beam",
+      "position": "-192px -384px",
+      "color": "#696d7f"
+    },
+    {
+      "id": "titanium-sheet",
+      "position": "-256px -384px",
+      "color": "#4c556e"
+    },
+    {
+      "id": "wolfram-plate",
+      "position": "-320px -384px",
+      "color": "#7a4a39"
+    },
+    {
+      "id": "rotor",
+      "position": "-384px -384px",
+      "color": "#746661"
+    },
+    {
+      "id": "tube",
+      "position": "-448px -384px",
+      "color": "#868585"
+    },
+    {
+      "id": "syringe",
+      "position": "-0px -448px",
+      "color": "#7f807f"
+    },
+    {
+      "id": "glass",
+      "position": "-64px -448px",
+      "color": "#68706d"
+    },
+    {
+      "id": "helium-ore",
+      "position": "-128px -448px",
+      "color": "#8b7d90"
+    },
+    {
+      "id": "wolfram-powder",
+      "position": "-192px -448px",
+      "color": "#8b7d78"
+    },
+    {
+      "id": "calcium-powder",
+      "position": "-256px -448px",
+      "color": "#ada5a0"
+    },
+    {
+      "id": "ceramics",
+      "position": "-320px -448px",
+      "color": "#76766f"
+    },
+    {
+      "id": "coil",
+      "position": "-384px -448px",
+      "color": "#81584b"
+    },
+    {
+      "id": "silica-sand",
+      "position": "-448px -448px",
+      "color": "#979992"
+    },
+    {
+      "id": "explosive",
+      "position": "-0px -512px",
+      "color": "#92422c"
+    },
+    {
+      "id": "hardening-agent",
+      "position": "-64px -512px",
+      "color": "#767780"
+    },
+    {
+      "id": "sulphuric-acid",
+      "position": "-128px -512px",
+      "color": "#b67834"
+    },
+    {
+      "id": "supermagnet",
+      "position": "-192px -512px",
+      "color": "#6d6c6b"
+    },
+    {
+      "id": "intermediate-building-material",
+      "position": "-256px -512px",
+      "color": "#97704e"
+    },
+    {
+      "id": "standard-ammo-item",
+      "position": "-320px -512px",
+      "color": "#83806c"
+    },
+    {
+      "id": "shotgun-ammo-item",
+      "position": "-384px -512px",
+      "color": "#856e69"
+    },
+    {
+      "id": "heavy-ammo-item",
+      "position": "-448px -512px",
+      "color": "#8d8c89"
+    },
+    {
+      "id": "impeller",
+      "position": "-0px -576px",
+      "color": "#484848"
+    },
+    {
+      "id": "pressurized-helium",
+      "position": "-64px -576px",
+      "color": "#817886"
+    },
+    {
+      "id": "sulphur-ore",
+      "position": "-128px -576px",
+      "color": "#cba462"
+    },
+    {
+      "id": "calcium-ore",
+      "position": "-192px -576px",
+      "color": "#a29d98"
+    },
+    {
+      "id": "ion-injector",
+      "position": "-256px -576px",
+      "color": "#6d6d6e"
+    },
+    {
+      "id": "superconductor",
+      "position": "-320px -576px",
+      "color": "#57524e"
+    }
+  ],
+  "items": [
+    {
+      "category": "raw",
+      "id": "accumulator",
+      "name": "Accumulator",
+      "row": 0,
+      "stack": 100,
+      "icon": "accumulator"
+    },
+    {
+      "category": "raw",
+      "id": "electronics",
+      "name": "Electronics",
+      "row": 0,
+      "stack": 100,
+      "icon": "electronics"
+    },
+    {
+      "category": "raw",
+      "id": "stator",
+      "name": "Stator",
+      "row": 0,
+      "stack": 100,
+      "icon": "stator"
+    },
+    {
+      "category": "raw",
+      "id": "battery",
+      "name": "Battery",
+      "row": 0,
+      "stack": 100,
+      "icon": "battery"
+    },
+    {
+      "category": "raw",
+      "id": "generator",
+      "name": "Generator",
+      "row": 0,
+      "stack": 100,
+      "icon": "generator"
+    },
+    {
+      "category": "raw",
+      "id": "turbine",
+      "name": "Turbine",
+      "row": 0,
+      "stack": 100,
+      "icon": "turbine"
+    },
+    {
+      "category": "raw",
+      "id": "nozzle",
+      "name": "Nozzle",
+      "row": 0,
+      "stack": 100,
+      "icon": "nozzle"
+    },
+    {
+      "category": "raw",
+      "id": "electromagnet",
+      "name": "Electromagnet",
+      "row": 0,
+      "stack": 100,
+      "icon": "electromagnet"
+    },
+    {
+      "category": "raw",
+      "id": "electromagnetic-coil",
+      "name": "Electromagnetic Coil",
+      "row": 0,
+      "stack": 100,
+      "icon": "electromagnetic-coil"
+    },
+    {
+      "category": "raw",
+      "id": "synthetic-resin",
+      "name": "Synthetic Resin",
+      "row": 0,
+      "stack": 100,
+      "icon": "synthetic-resin"
+    },
+    {
+      "category": "raw",
+      "id": "pressure-tank",
+      "name": "Pressure Tank",
+      "row": 0,
+      "stack": 100,
+      "icon": "pressure-tank"
+    },
+    {
+      "category": "raw",
+      "id": "heat-resistant-sheet",
+      "name": "Heat Resistant Sheet",
+      "row": 0,
+      "stack": 100,
+      "icon": "heat-resistant-sheet"
+    },
+    {
+      "category": "raw",
+      "id": "titanium-housing",
+      "name": "Titanium Housing",
+      "row": 0,
+      "stack": 100,
+      "icon": "titanium-housing"
+    },
+    {
+      "category": "raw",
+      "id": "pump",
+      "name": "Pump",
+      "row": 0,
+      "stack": 100,
+      "icon": "pump"
+    },
+    {
+      "category": "raw",
+      "id": "valve",
+      "name": "Valve",
+      "row": 0,
+      "stack": 100,
+      "icon": "valve"
+    },
+    {
+      "category": "raw",
+      "id": "resonator",
+      "name": "Resonator",
+      "row": 0,
+      "stack": 100,
+      "icon": "resonator"
+    },
+    {
+      "category": "raw",
+      "id": "liquid-helium",
+      "name": "Liquid Helium",
+      "row": 0,
+      "stack": 100,
+      "icon": "liquid-helium"
+    },
+    {
+      "category": "raw",
+      "id": "condenser",
+      "name": "Condenser",
+      "row": 0,
+      "stack": 100,
+      "icon": "condenser"
+    },
+    {
+      "category": "raw",
+      "id": "nanofibre",
+      "name": "Nanofibre",
+      "row": 0,
+      "stack": 100,
+      "icon": "nanofibre"
+    },
+    {
+      "category": "raw",
+      "id": "laser-emitter",
+      "name": "Laser Emitter",
+      "row": 0,
+      "stack": 100,
+      "icon": "laser-emitter"
+    },
+    {
+      "category": "raw",
+      "id": "lens",
+      "name": "Lens",
+      "row": 0,
+      "stack": 100,
+      "icon": "lens"
+    },
+    {
+      "category": "raw",
+      "id": "scanner",
+      "name": "Scanner",
+      "row": 0,
+      "stack": 100,
+      "icon": "scanner"
+    },
+    {
+      "category": "raw",
+      "id": "gyroscope",
+      "name": "Stabilizer",
+      "row": 0,
+      "stack": 100,
+      "icon": "gyroscope"
+    },
+    {
+      "category": "raw",
+      "id": "basic-building-material",
+      "name": "Basic Building Material",
+      "row": 0,
+      "stack": 1000,
+      "icon": "basic-building-material"
+    },
+    {
+      "category": "raw",
+      "id": "wolfram-ore",
+      "name": "Wolfram Ore",
+      "row": 0,
+      "stack": 100,
+      "icon": "wolfram-ore"
+    },
+    {
+      "category": "raw",
+      "id": "titanium-ore",
+      "name": "Titanium Ore",
+      "row": 0,
+      "stack": 100,
+      "icon": "titanium-ore"
+    },
+    {
+      "category": "parts",
+      "id": "pistol-ammo-item",
+      "name": "Pistol Ammo",
+      "row": 0,
+      "stack": 300,
+      "icon": "pistol-ammo-item"
+    },
+    {
+      "category": "raw",
+      "id": "titanium-rod",
+      "name": "Titanium Rod",
+      "row": 0,
+      "stack": 100,
+      "icon": "titanium-rod"
+    },
+    {
+      "category": "raw",
+      "id": "titanium-bar",
+      "name": "Titanium Bar",
+      "row": 0,
+      "stack": 100,
+      "icon": "titanium-bar"
+    },
+    {
+      "category": "raw",
+      "id": "wolfram-wire",
+      "name": "Wolfram Wire",
+      "row": 0,
+      "stack": 100,
+      "icon": "wolfram-wire"
+    },
+    {
+      "category": "raw",
+      "id": "wolfram-bar",
+      "name": "Wolfram Bar",
+      "row": 0,
+      "stack": 100,
+      "icon": "wolfram-bar"
+    },
+    {
+      "category": "raw",
+      "id": "calcite-sheets",
+      "name": "Calcite Sheets",
+      "row": 0,
+      "stack": 100,
+      "icon": "calcite-sheets"
+    },
+    {
+      "category": "raw",
+      "id": "calcium-block",
+      "name": "Calcium Block",
+      "row": 0,
+      "stack": 100,
+      "icon": "calcium-block"
+    },
+    {
+      "category": "raw",
+      "id": "titanium-beam",
+      "name": "Titanium Beam",
+      "row": 0,
+      "stack": 100,
+      "icon": "titanium-beam"
+    },
+    {
+      "category": "raw",
+      "id": "titanium-sheet",
+      "name": "Titanium Sheet",
+      "row": 0,
+      "stack": 100,
+      "icon": "titanium-sheet"
+    },
+    {
+      "category": "raw",
+      "id": "wolfram-plate",
+      "name": "Wolfram Plate",
+      "row": 0,
+      "stack": 100,
+      "icon": "wolfram-plate"
+    },
+    {
+      "category": "raw",
+      "id": "rotor",
+      "name": "Rotor",
+      "row": 0,
+      "stack": 100,
+      "icon": "rotor"
+    },
+    {
+      "category": "raw",
+      "id": "tube",
+      "name": "Tube",
+      "row": 0,
+      "stack": 100,
+      "icon": "tube"
+    },
+    {
+      "category": "raw",
+      "id": "syringe",
+      "name": "Applicator",
+      "row": 0,
+      "stack": 100,
+      "icon": "syringe"
+    },
+    {
+      "category": "raw",
+      "id": "glass",
+      "name": "Glass",
+      "row": 0,
+      "stack": 100,
+      "icon": "glass"
+    },
+    {
+      "category": "raw",
+      "id": "helium-ore",
+      "name": "Helium-3",
+      "row": 0,
+      "stack": 100,
+      "icon": "helium-ore"
+    },
+    {
+      "category": "raw",
+      "id": "wolfram-powder",
+      "name": "Wolfram Powder",
+      "row": 0,
+      "stack": 100,
+      "icon": "wolfram-powder"
+    },
+    {
+      "category": "raw",
+      "id": "calcium-powder",
+      "name": "Calcium Powder",
+      "row": 0,
+      "stack": 100,
+      "icon": "calcium-powder"
+    },
+    {
+      "category": "raw",
+      "id": "ceramics",
+      "name": "Ceramics",
+      "row": 0,
+      "stack": 100,
+      "icon": "ceramics"
+    },
+    {
+      "category": "raw",
+      "id": "coil",
+      "name": "Inductor",
+      "row": 0,
+      "stack": 100,
+      "icon": "coil"
+    },
+    {
+      "category": "raw",
+      "id": "silica-sand",
+      "name": "Synthetic Silicon",
+      "row": 0,
+      "stack": 100,
+      "icon": "silica-sand"
+    },
+    {
+      "category": "raw",
+      "id": "explosive",
+      "name": "Chemicals",
+      "row": 0,
+      "stack": 100,
+      "icon": "explosive"
+    },
+    {
+      "category": "raw",
+      "id": "hardening-agent",
+      "name": "Hardening Agent",
+      "row": 0,
+      "stack": 100,
+      "icon": "hardening-agent"
+    },
+    {
+      "category": "raw",
+      "id": "sulphuric-acid",
+      "name": "Sulphuric Acid",
+      "row": 0,
+      "stack": 100,
+      "icon": "sulphuric-acid"
+    },
+    {
+      "category": "raw",
+      "id": "supermagnet",
+      "name": "Supermagnet",
+      "row": 0,
+      "stack": 100,
+      "icon": "supermagnet"
+    },
+    {
+      "category": "raw",
+      "id": "intermediate-building-material",
+      "name": "Intermediate Building Material",
+      "row": 0,
+      "stack": 1000,
+      "icon": "intermediate-building-material"
+    },
+    {
+      "category": "parts",
+      "id": "standard-ammo-item",
+      "name": "Standard Ammo",
+      "row": 0,
+      "stack": 300,
+      "icon": "standard-ammo-item"
+    },
+    {
+      "category": "parts",
+      "id": "shotgun-ammo-item",
+      "name": "Shotgun Ammo",
+      "row": 0,
+      "stack": 300,
+      "icon": "shotgun-ammo-item"
+    },
+    {
+      "category": "parts",
+      "id": "heavy-ammo-item",
+      "name": "Heavy Ammo",
+      "row": 0,
+      "stack": 300,
+      "icon": "heavy-ammo-item"
+    },
+    {
+      "category": "raw",
+      "id": "impeller",
+      "name": "Impeller",
+      "row": 0,
+      "stack": 100,
+      "icon": "impeller"
+    },
+    {
+      "category": "raw",
+      "id": "pressurized-helium",
+      "name": "Pressurized Helium",
+      "row": 0,
+      "stack": 100,
+      "icon": "pressurized-helium"
+    },
+    {
+      "category": "raw",
+      "id": "sulphur-ore",
+      "name": "Sulphur Ore",
+      "row": 0,
+      "stack": 100,
+      "icon": "sulphur-ore"
+    },
+    {
+      "category": "raw",
+      "id": "calcium-ore",
+      "name": "Calcium Ore",
+      "row": 0,
+      "stack": 100,
+      "icon": "calcium-ore"
+    },
+    {
+      "category": "raw",
+      "id": "ion-injector",
+      "name": "Ion Injector",
+      "row": 0,
+      "stack": 100,
+      "icon": "ion-injector"
+    },
+    {
+      "category": "raw",
+      "id": "superconductor",
+      "name": "Superconductor",
+      "row": 0,
+      "stack": 100,
+      "icon": "superconductor"
+    },
+    {
+      "category": "extraction",
+      "id": "sulfur-extractor",
+      "name": "Sulfur Extractor",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "drain": 40,
+        "heat": 60,
+        "modules": 0
+      },
+      "icon": "sulfur-extractor"
+    },
+    {
+      "category": "crafting",
+      "id": "assembler",
+      "name": "Assembler",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "drain": 60,
+        "heat": 150,
+        "modules": 0
+      },
+      "icon": "assembler"
+    },
+    {
+      "category": "crafting",
+      "id": "crafter",
+      "name": "Fabricator",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "drain": 10,
+        "heat": 5,
+        "modules": 0
+      },
+      "icon": "crafter"
+    },
+    {
+      "category": "other",
+      "id": "drone-rail-t1",
+      "name": "Rail v.1",
+      "row": 0,
+      "belt": {
+        "speed": 2
+      },
+      "icon": "drone-rail-t1"
+    },
+    {
+      "category": "other",
+      "id": "drone-rail-t2",
+      "name": "Rail v.2",
+      "row": 0,
+      "belt": {
+        "speed": 4
+      },
+      "icon": "drone-rail-t2"
+    },
+    {
+      "category": "other",
+      "id": "drone-rail-t3",
+      "name": "Rail v.3",
+      "row": 0,
+      "belt": {
+        "speed": 8
+      },
+      "icon": "drone-rail-t3"
+    },
+    {
+      "category": "other",
+      "id": "drone-rail-t4",
+      "name": "Rail v.4",
+      "row": 0,
+      "belt": {
+        "speed": 15
+      },
+      "icon": "drone-rail-t4"
+    },
+    {
+      "category": "other",
+      "id": "drone-rail-t5",
+      "name": "Rail v.5",
+      "row": 0,
+      "belt": {
+        "speed": 25
+      },
+      "icon": "drone-rail-t5"
+    },
+    {
+      "category": "crafting",
+      "id": "furnace",
+      "name": "Furnace",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "drain": 20,
+        "heat": 8,
+        "modules": 0
+      },
+      "icon": "furnace"
+    },
+    {
+      "category": "extraction",
+      "id": "gas-extractor",
+      "name": "Helium-3 Extractor",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "drain": 15,
+        "heat": 60,
+        "modules": 0
+      },
+      "icon": "gas-extractor"
+    },
+    {
+      "category": "crafting",
+      "id": "hammer",
+      "name": "Mega Press",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "drain": 30,
+        "heat": 15,
+        "modules": 0
+      },
+      "icon": "hammer"
+    },
+    {
+      "category": "extraction",
+      "id": "mechanical-drill",
+      "name": "Ore Excavator (Normal)",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "drain": 5,
+        "heat": 3,
+        "modules": 0
+      },
+      "icon": "mechanical-drill"
+    },
+    {
+      "category": "extraction",
+      "id": "mechanical-drill-impure",
+      "name": "Ore Excavator (Impure)",
+      "row": 0,
+      "machine": {
+        "speed": 0.5,
+        "drain": 5,
+        "heat": 3,
+        "modules": 0
+      },
+      "icon": "mechanical-drill-impure"
+    },
+    {
+      "category": "extraction",
+      "id": "mechanical-drill-pure",
+      "name": "Ore Excavator (Pure)",
+      "row": 0,
+      "machine": {
+        "speed": 2,
+        "drain": 5,
+        "heat": 3,
+        "modules": 0
+      },
+      "icon": "mechanical-drill-pure"
+    },
+    {
+      "category": "ore-processing",
+      "id": "refinery",
+      "name": "Refinery",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "drain": 40,
+        "heat": 60,
+        "modules": 0
+      },
+      "icon": "refinery"
+    },
+    {
+      "category": "ore-processing",
+      "id": "smelter",
+      "name": "Smelter",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "drain": 5,
+        "heat": 3,
+        "modules": 0
+      },
+      "icon": "smelter"
+    },
+    {
+      "category": "crafting",
+      "id": "synthetizer",
+      "name": "Compounder",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "drain": 60,
+        "heat": 150,
+        "modules": 0
+      },
+      "icon": "synthetizer"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "accumulator",
+      "name": "Accumulator",
+      "producers": [
+        "assembler"
+      ],
+      "time": 6,
+      "in": {
+        "electronics": 2,
+        "stator": 1,
+        "battery": 2
+      },
+      "out": {
+        "accumulator": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "generator",
+      "name": "Generator",
+      "producers": [
+        "assembler"
+      ],
+      "time": 999,
+      "in": {
+        "turbine": 1,
+        "battery": 1,
+        "nozzle": 1
+      },
+      "out": {
+        "generator": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "electromagnet",
+      "name": "Electromagnet",
+      "producers": [
+        "assembler"
+      ],
+      "time": 5,
+      "in": {
+        "electromagnetic-coil": 3,
+        "synthetic-resin": 3,
+        "accumulator": 2
+      },
+      "out": {
+        "electromagnet": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "pressuretank",
+      "name": "Pressure Tank",
+      "producers": [
+        "assembler"
+      ],
+      "time": 12,
+      "in": {
+        "heat-resistant-sheet": 5,
+        "titanium-housing": 3,
+        "pump": 3,
+        "valve": 2
+      },
+      "out": {
+        "pressure-tank": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "resonator",
+      "name": "Resonator",
+      "producers": [
+        "assembler"
+      ],
+      "time": 12,
+      "in": {
+        "accumulator": 1,
+        "generator": 2,
+        "liquid-helium": 2
+      },
+      "out": {
+        "resonator": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "condenser",
+      "name": "Condenser",
+      "producers": [
+        "assembler"
+      ],
+      "time": 15,
+      "in": {
+        "resonator": 1,
+        "synthetic-resin": 3,
+        "nanofibre": 8,
+        "pump": 3
+      },
+      "out": {
+        "condenser": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "laseremitter",
+      "name": "Laser Emitter",
+      "producers": [
+        "assembler"
+      ],
+      "time": 6,
+      "in": {
+        "lens": 2,
+        "resonator": 1,
+        "electromagnetic-coil": 6
+      },
+      "out": {
+        "laser-emitter": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "scanner",
+      "name": "Scanner",
+      "producers": [
+        "assembler"
+      ],
+      "time": 999,
+      "in": {
+        "lens": 2,
+        "generator": 2,
+        "gyroscope": 12
+      },
+      "out": {
+        "scanner": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "basicbuildingmaterial",
+      "name": "Basic Building Material",
+      "producers": [
+        "crafter"
+      ],
+      "time": 2,
+      "in": {
+        "wolfram-ore": 1,
+        "titanium-ore": 1
+      },
+      "out": {
+        "basic-building-material": 10
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "pistolammoitem",
+      "name": "Pistol Ammo",
+      "producers": [
+        "crafter"
+      ],
+      "time": 4,
+      "in": {
+        "basic-building-material": 14
+      },
+      "out": {
+        "pistol-ammo-item": 25
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "titaniumrod",
+      "name": "Titanium Rod",
+      "producers": [
+        "crafter"
+      ],
+      "time": 2,
+      "in": {
+        "titanium-bar": 1
+      },
+      "out": {
+        "titanium-rod": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "wolframwire",
+      "name": "Wolfram Wire",
+      "producers": [
+        "crafter"
+      ],
+      "time": 4,
+      "in": {
+        "wolfram-bar": 1
+      },
+      "out": {
+        "wolfram-wire": 2
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "calcitesheets",
+      "name": "Calcite Sheets",
+      "producers": [
+        "crafter"
+      ],
+      "time": 2,
+      "in": {
+        "calcium-block": 1
+      },
+      "out": {
+        "calcite-sheets": 2
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "titaniumbeam",
+      "name": "Titanium Beam",
+      "producers": [
+        "crafter"
+      ],
+      "time": 3,
+      "in": {
+        "titanium-bar": 1
+      },
+      "out": {
+        "titanium-beam": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "titaniumsheet",
+      "name": "Titanium Sheet",
+      "producers": [
+        "crafter"
+      ],
+      "time": 2,
+      "in": {
+        "titanium-bar": 1
+      },
+      "out": {
+        "titanium-sheet": 2
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "wolframplate",
+      "name": "Wolfram Plate",
+      "producers": [
+        "crafter"
+      ],
+      "time": 1,
+      "in": {
+        "wolfram-bar": 1
+      },
+      "out": {
+        "wolfram-plate": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "rotor",
+      "name": "Rotor",
+      "producers": [
+        "crafter"
+      ],
+      "time": 6,
+      "in": {
+        "titanium-rod": 2,
+        "wolfram-wire": 2
+      },
+      "out": {
+        "rotor": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "tube",
+      "name": "Tube",
+      "producers": [
+        "crafter"
+      ],
+      "time": 2,
+      "in": {
+        "titanium-rod": 1,
+        "titanium-sheet": 1
+      },
+      "out": {
+        "tube": 2
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "gyroscope",
+      "name": "Stabilizer",
+      "producers": [
+        "crafter"
+      ],
+      "time": 6,
+      "in": {
+        "rotor": 1,
+        "titanium-rod": 2
+      },
+      "out": {
+        "gyroscope": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "stator",
+      "name": "Stator",
+      "producers": [
+        "crafter"
+      ],
+      "time": 3,
+      "in": {
+        "titanium-housing": 2,
+        "wolfram-wire": 1
+      },
+      "out": {
+        "stator": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "syringe",
+      "name": "Applicator",
+      "producers": [
+        "crafter"
+      ],
+      "time": 4,
+      "in": {
+        "tube": 8,
+        "glass": 2
+      },
+      "out": {
+        "syringe": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "helium",
+      "name": "Helium-3",
+      "producers": [
+        "gas-extractor"
+      ],
+      "time": 2,
+      "in": {},
+      "out": {
+        "helium-ore": 8
+      },
+      "row": 0,
+      "category": "extraction"
+    },
+    {
+      "id": "wolframpowder",
+      "name": "Wolfram Powder",
+      "producers": [
+        "furnace"
+      ],
+      "time": 2,
+      "in": {
+        "wolfram-bar": 1
+      },
+      "out": {
+        "wolfram-powder": 3
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "calciumpowder",
+      "name": "Calcium Powder",
+      "producers": [
+        "furnace"
+      ],
+      "time": 3,
+      "in": {
+        "calcium-block": 1
+      },
+      "out": {
+        "calcium-powder": 3
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "ceramics",
+      "name": "Ceramics",
+      "producers": [
+        "furnace"
+      ],
+      "time": 2,
+      "in": {
+        "calcite-sheets": 1,
+        "wolfram-powder": 1
+      },
+      "out": {
+        "ceramics": 2
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "titaniumhousing",
+      "name": "Titanium Housing",
+      "producers": [
+        "furnace"
+      ],
+      "time": 2,
+      "in": {
+        "titanium-beam": 1,
+        "titanium-sheet": 2
+      },
+      "out": {
+        "titanium-housing": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "glass",
+      "name": "Glass",
+      "producers": [
+        "furnace"
+      ],
+      "time": 3,
+      "in": {
+        "helium-ore": 1,
+        "calcium-powder": 2
+      },
+      "out": {
+        "glass": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "coil",
+      "name": "Inductor",
+      "producers": [
+        "furnace"
+      ],
+      "time": 3,
+      "in": {
+        "tube": 2,
+        "wolfram-wire": 1,
+        "ceramics": 2
+      },
+      "out": {
+        "coil": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "heatresistantsheet",
+      "name": "Heat Resistant Sheet",
+      "producers": [
+        "furnace"
+      ],
+      "time": 4,
+      "in": {
+        "wolfram-plate": 1,
+        "titanium-sheet": 2,
+        "glass": 1
+      },
+      "out": {
+        "heat-resistant-sheet": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "silicasand",
+      "name": "Synthetic Silicon",
+      "producers": [
+        "furnace"
+      ],
+      "time": 2,
+      "in": {
+        "calcium-powder": 2,
+        "helium-ore": 1,
+        "ceramics": 2
+      },
+      "out": {
+        "silica-sand": 2
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "electronics",
+      "name": "Electronics",
+      "producers": [
+        "furnace"
+      ],
+      "time": 5,
+      "in": {
+        "silica-sand": 2,
+        "coil": 1,
+        "stator": 1
+      },
+      "out": {
+        "electronics": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "explosive",
+      "name": "Chemicals",
+      "producers": [
+        "furnace"
+      ],
+      "time": 2,
+      "in": {
+        "silica-sand": 1,
+        "wolfram-powder": 3,
+        "helium-ore": 1
+      },
+      "out": {
+        "explosive": 2
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "hardeningagent",
+      "name": "Hardening Agent",
+      "producers": [
+        "furnace"
+      ],
+      "time": 4,
+      "in": {
+        "sulphuric-acid": 5,
+        "silica-sand": 1,
+        "syringe": 1
+      },
+      "out": {
+        "hardening-agent": 2
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "supermagnet",
+      "name": "Supermagnet",
+      "producers": [
+        "furnace"
+      ],
+      "time": 3,
+      "in": {
+        "sulphuric-acid": 5,
+        "wolfram-plate": 5,
+        "explosive": 2
+      },
+      "out": {
+        "supermagnet": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "intermediatebuildingmaterial",
+      "name": "Intermediate Building Material",
+      "producers": [
+        "hammer"
+      ],
+      "time": 6,
+      "in": {
+        "basic-building-material": 40,
+        "coil": 2,
+        "glass": 2,
+        "titanium-housing": 2
+      },
+      "out": {
+        "intermediate-building-material": 25
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "standardammo",
+      "name": "Standard Ammo",
+      "producers": [
+        "hammer"
+      ],
+      "time": 6,
+      "in": {
+        "basic-building-material": 18,
+        "wolfram-powder": 4
+      },
+      "out": {
+        "standard-ammo-item": 20
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "shotgunammo",
+      "name": "Shotgun Ammo",
+      "producers": [
+        "hammer"
+      ],
+      "time": 6,
+      "in": {
+        "basic-building-material": 20,
+        "calcium-powder": 6
+      },
+      "out": {
+        "shotgun-ammo-item": 15
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "heavyammo",
+      "name": "Heavy Ammo",
+      "producers": [
+        "hammer"
+      ],
+      "time": 6,
+      "in": {
+        "basic-building-material": 24,
+        "titanium-rod": 6
+      },
+      "out": {
+        "heavy-ammo-item": 15
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "impeller",
+      "name": "Impeller",
+      "producers": [
+        "hammer"
+      ],
+      "time": 4,
+      "in": {
+        "titanium-rod": 2,
+        "heat-resistant-sheet": 2,
+        "wolfram-plate": 1,
+        "gyroscope": 1
+      },
+      "out": {
+        "impeller": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "nozzle",
+      "name": "Nozzle",
+      "producers": [
+        "hammer"
+      ],
+      "time": 5,
+      "in": {
+        "heat-resistant-sheet": 2,
+        "helium-ore": 1,
+        "gyroscope": 2
+      },
+      "out": {
+        "nozzle": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "battery",
+      "name": "Battery",
+      "producers": [
+        "hammer"
+      ],
+      "time": 4,
+      "in": {
+        "coil": 2,
+        "electronics": 2,
+        "sulphuric-acid": 1
+      },
+      "out": {
+        "battery": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "turbine",
+      "name": "Turbine",
+      "producers": [
+        "hammer"
+      ],
+      "time": 6,
+      "in": {
+        "impeller": 1,
+        "stator": 1,
+        "rotor": 2,
+        "sulphuric-acid": 2
+      },
+      "out": {
+        "turbine": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "valve",
+      "name": "Valve",
+      "producers": [
+        "hammer"
+      ],
+      "time": 999,
+      "in": {
+        "titanium-housing": 1,
+        "titanium-beam": 3,
+        "titanium-rod": 2,
+        "nozzle": 1
+      },
+      "out": {
+        "valve": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "electromagneticcoil",
+      "name": "Electromagnetic Coil",
+      "producers": [
+        "hammer"
+      ],
+      "time": 4,
+      "in": {
+        "coil": 1,
+        "pressurized-helium": 1,
+        "wolfram-plate": 6,
+        "supermagnet": 1
+      },
+      "out": {
+        "electromagnetic-coil": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "pump",
+      "name": "Pump",
+      "producers": [
+        "hammer"
+      ],
+      "time": 999,
+      "in": {
+        "valve": 1,
+        "turbine": 1,
+        "impeller": 1,
+        "sulphuric-acid": 3
+      },
+      "out": {
+        "pump": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "sulphuricacid",
+      "name": "Sulphuric Acid",
+      "producers": [
+        "refinery"
+      ],
+      "time": 0.5,
+      "in": {
+        "sulphur-ore": 2,
+        "explosive": 1
+      },
+      "out": {
+        "sulphuric-acid": 1
+      },
+      "row": 0,
+      "category": "ore-processing"
+    },
+    {
+      "id": "pressurizedhelium",
+      "name": "Pressurized Helium",
+      "producers": [
+        "refinery"
+      ],
+      "time": 2,
+      "in": {
+        "helium-ore": 1,
+        "sulphur-ore": 1
+      },
+      "out": {
+        "pressurized-helium": 1
+      },
+      "row": 0,
+      "category": "ore-processing"
+    },
+    {
+      "id": "titaniumbar",
+      "name": "Titanium Bar",
+      "producers": [
+        "smelter"
+      ],
+      "time": 2,
+      "in": {
+        "titanium-ore": 2
+      },
+      "out": {
+        "titanium-bar": 2
+      },
+      "row": 0,
+      "category": "ore-processing"
+    },
+    {
+      "id": "wolframbar",
+      "name": "Wolfram Bar",
+      "producers": [
+        "smelter"
+      ],
+      "time": 2,
+      "in": {
+        "wolfram-ore": 2
+      },
+      "out": {
+        "wolfram-bar": 2
+      },
+      "row": 0,
+      "category": "ore-processing"
+    },
+    {
+      "id": "calciumblock",
+      "name": "Calcium Block",
+      "producers": [
+        "smelter"
+      ],
+      "time": 2,
+      "in": {
+        "calcium-ore": 2
+      },
+      "out": {
+        "calcium-block": 2
+      },
+      "row": 0,
+      "category": "ore-processing"
+    },
+    {
+      "id": "sulphurore",
+      "name": "Sulphur Ore",
+      "producers": [
+        "sulfur-extractor"
+      ],
+      "time": 2,
+      "in": {},
+      "out": {
+        "sulphur-ore": 8
+      },
+      "row": 0,
+      "category": "extraction"
+    },
+    {
+      "id": "syntheticresin",
+      "name": "Synthetic Resin",
+      "producers": [
+        "synthetizer"
+      ],
+      "time": 3,
+      "in": {
+        "hardening-agent": 2,
+        "sulphuric-acid": 4,
+        "calcite-sheets": 10
+      },
+      "out": {
+        "synthetic-resin": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "liquidhelium",
+      "name": "Liquid Helium",
+      "producers": [
+        "synthetizer"
+      ],
+      "time": 3,
+      "in": {
+        "pressurized-helium": 1,
+        "hardening-agent": 1
+      },
+      "out": {
+        "liquid-helium": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "lens",
+      "name": "Lens",
+      "producers": [
+        "synthetizer"
+      ],
+      "time": 12,
+      "in": {
+        "glass": 10,
+        "hardening-agent": 8,
+        "synthetic-resin": 8
+      },
+      "out": {
+        "lens": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "nanofibre",
+      "name": "Nanofibre",
+      "producers": [
+        "synthetizer"
+      ],
+      "time": 5,
+      "in": {
+        "tube": 20,
+        "liquid-helium": 5
+      },
+      "out": {
+        "nanofibre": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "ioninjector",
+      "name": "Ion Injector",
+      "producers": [
+        "synthetizer"
+      ],
+      "time": 12,
+      "in": {
+        "syringe": 10,
+        "electromagnet": 4,
+        "pressure-tank": 2
+      },
+      "out": {
+        "ion-injector": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "superconductor",
+      "name": "Superconductor",
+      "producers": [
+        "synthetizer"
+      ],
+      "time": 5,
+      "in": {
+        "ceramics": 7,
+        "electromagnet": 2,
+        "supermagnet": 8
+      },
+      "out": {
+        "superconductor": 1
+      },
+      "row": 0,
+      "category": "crafting"
+    },
+    {
+      "id": "titaniumbar",
+      "name": "Titanium Bar",
+      "producers": [
+        "smelter"
+      ],
+      "time": 2,
+      "in": {
+        "titanium-ore": 2
+      },
+      "out": {
+        "titanium-bar": 2
+      },
+      "row": 0,
+      "category": "ore-processing"
+    },
+    {
+      "id": "wolframore_mechanicaldrill",
+      "name": "Wolfram Ore",
+      "producers": [
+        "mechanical-drill",
+        "mechanical-drill-impure",
+        "mechanical-drill-pure"
+      ],
+      "time": 2,
+      "in": {},
+      "out": {
+        "wolfram-ore": 4
+      },
+      "row": 0,
+      "category": "extraction"
+    },
+    {
+      "id": "calciumore_mechanicaldrill",
+      "name": "Calcium Ore",
+      "producers": [
+        "mechanical-drill",
+        "mechanical-drill-impure",
+        "mechanical-drill-pure"
+      ],
+      "time": 2,
+      "in": {},
+      "out": {
+        "calcium-ore": 4
+      },
+      "row": 0,
+      "category": "extraction"
+    },
+    {
+      "id": "titaniumore_mechanicaldrill",
+      "name": "Titanium Ore",
+      "producers": [
+        "mechanical-drill",
+        "mechanical-drill-impure",
+        "mechanical-drill-pure"
+      ],
+      "time": 2,
+      "in": {},
+      "out": {
+        "titanium-ore": 4
+      },
+      "row": 0,
+      "category": "extraction"
+    }
+  ],
+  "defaults": {
+    "minBelt": "drone-rail-t1",
+    "maxBelt": "drone-rail-t5",
+    "excludedRecipes": []
+  }
+}
