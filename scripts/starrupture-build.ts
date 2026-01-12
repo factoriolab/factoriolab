@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 
-import { getJsonData } from './helpers/file.helpers';
 import { logTime, logWarn } from './helpers/log.helpers';
 import { listDaFiles, parseDaFile } from './starrupture/buildings';
 import { parseBdFile } from './starrupture/buildingData';
@@ -20,13 +19,13 @@ type CLIArgs = {
 const DEFAULT_BUILDINGS = [
   'DA_AcidExtractor',
   'DA_GasExtractor',
-  'DA_MechanicalDrill',
+  'DA_MechanicalDrill', // Ore Extractor
   'DA_Smelter',
-  'DA_Crafter',
+  'DA_Crafter', // Fabricator
   'DA_Furnace',
-  'DA_Hammer',
+  'DA_Hammer', // Mega Press
   'DA_Refinery',
-  'DA_Synthetizer',
+  'DA_Synthetizer', // Compounder
   'DA_Assembler',
   'DA_DroneRailT1',
   'DA_DroneRailT2',
@@ -71,7 +70,7 @@ async function main(): Promise<void> {
 
   const srData = args.input;
   if (!fs.existsSync(srData)) {
-    logWarn(`sr-data directory not found at ${srData}`);
+    logWarn(`StarRupture data directory not found at ${srData}`);
     process.exit(1);
   }
 
@@ -116,12 +115,6 @@ async function main(): Promise<void> {
     return { da: info, bd: null };
   });
 
-  const tempOutDir = 'temp/str-data-debug';
-  if (!fs.existsSync(tempOutDir)) fs.mkdirSync(tempOutDir, { recursive: true });
-  const outPath = path.join(tempOutDir, 'buildings.json');
-  fs.writeFileSync(outPath, JSON.stringify(parsed, null, 2));
-  logTime(`Wrote debug buildings to ${outPath}`);
-
   // --- Recipes ---
   logTime('Scanning CRC recipe collections');
   const crcFiles = listCrcFiles(srData);
@@ -143,18 +136,11 @@ async function main(): Promise<void> {
         return null;
       }
     })
-    .filter((r): r is import('./starrupture/recipes').CrInfo => r != null);
-
-  const recipesOut = path.join(tempOutDir, 'recipes.json');
-  fs.writeFileSync(recipesOut, JSON.stringify({ crc: crcParsed, cr: crParsed }, null, 2));
-  logTime(`Wrote debug recipes to ${recipesOut}`);
+    .filter((r): r is CrInfo => r != null);
 
   // --- Items ---
   logTime('Scanning Items');
   const itemMap = buildItemMap(srData);
-  const itemsOut = path.join(tempOutDir, 'items.json');
-  fs.writeFileSync(itemsOut, JSON.stringify(Object.values(itemMap), null, 2));
-  logTime(`Wrote debug items to ${itemsOut}`);
 
   // Map recipe IO to item ids and filter invalid recipes
   const mappedRecipes = crParsed.map((r) => {
@@ -197,10 +183,6 @@ async function main(): Promise<void> {
       sourcePath: r.path,
     };
   }).filter((x) => x != null);
-
-  const mappedOut = path.join(tempOutDir, 'recipes.mapped.json');
-  fs.writeFileSync(mappedOut, JSON.stringify(mappedRecipes, null, 2));
-  logTime(`Wrote mapped recipes to ${mappedOut}`);
 
   // --- Icons: select from included buildings and recipes ---
   logTime('Selecting icons for included buildings and recipes');
@@ -250,16 +232,6 @@ async function main(): Promise<void> {
     }
   }
 
-  function slugify(s: string): string {
-    return s
-      .replace(/([A-Z])/g, (m) => '-' + m.toLowerCase())
-      .replace(/^-/, '')
-      .replace(/_+/g, '-')
-      .replace(/[^a-z0-9-]+/g, '-')
-      .replace(/-+/g, '-')
-      .toLowerCase();
-  }
-
   // Item icon entries
   const itemIconEntries: IconEntry[] = [];
   for (const iid of includedItemIds) {
@@ -274,10 +246,7 @@ async function main(): Promise<void> {
   const iconsOutPath = path.join(args.output, 'icons.webp');
   // pack icons (attempt to write sprite if sharp present and not dry-run)
   const iconsMeta = await packIcons(srData, iconsOutPath, iconsToPack, { iconSize: 64, padding: 0, columns: 8, dryRun: args.dryRun });
-
-  const iconsDebugOut = path.join(tempOutDir, 'icons.json');
-  fs.writeFileSync(iconsDebugOut, JSON.stringify(iconsMeta, null, 2));
-  logTime(`Wrote icons (${iconsMeta.length}) and metadata to ${iconsDebugOut}`);
+  logTime(`Packed ${iconsMeta.length} icons into ${iconsOutPath}`);
 
   // --- Generate final data.json using the building filter ---
   logTime('Generating data.json for filtered buildings');
@@ -370,8 +339,9 @@ async function main(): Promise<void> {
 
     // If DA contains logisticsLine trait (even if MoveSpeed is missing), treat as a belt/rail
     if (p.da.logisticsMoveSpeed !== undefined) {
-      // Use default MoveSpeed = 200 when not explicitly present, then transform value with v * 120 / 200
+      // Use default MoveSpeed = 200 when not explicitly present
       const baseMove = p.da.logisticsMoveSpeed ?? 200;
+      // Transform from internal value to units per second
       const speed = Number((baseMove / 100).toFixed(6));
       itemsArr.push({
         category: categoryForBuilding,
@@ -386,14 +356,8 @@ async function main(): Promise<void> {
 
     // Fallback: standard machine entry
     const machine: any = { speed: 1 };
-    // // Speed: use inverse of craftingLoopDuration if available (cycles per second-ish), otherwise default to 1
-    // if (p.da.craftingLoopDuration != null && p.da.craftingLoopDuration > 0) machine.speed = Number((1 / p.da.craftingLoopDuration).toFixed(6));
-    // else machine.speed = 1;
-    // note: 'type' removed (invalid); keep usage only
-    if (p.da.electricityValue != null) machine.usage = p.da.electricityValue;
-    // rename coolingCapacity -> pollution to avoid adding new columns elsewhere
-    if (p.da.coolingCapacity != null) machine.pollution = p.da.coolingCapacity;
-    // default modules placeholder
+    if (p.da.electricityValue != null) machine.drain = p.da.electricityValue;
+    if (p.da.coolingCapacity != null) machine.heat = p.da.coolingCapacity;
     machine.modules = 0;
 
     itemsArr.push({
@@ -481,7 +445,7 @@ async function main(): Promise<void> {
   const categoriesArr = Object.values(categoriesMap);
 
   const outData = {
-    version: { StarRupture: 'EA' },
+    version: { StarRupture: '0.1.1.112941' },
     categories: categoriesArr.length > 0 ? categoriesArr : [{ id: 'raw', name: 'Raw', icon: 'raw-titanium' }],
     icons: iconsArr,
     items: itemsArr,
@@ -494,10 +458,7 @@ async function main(): Promise<void> {
     if (!fs.existsSync(args.output)) fs.mkdirSync(args.output, { recursive: true });
     fs.writeFileSync(dataOutPath, JSON.stringify(outData, null, 2));
   }
-
-  const dataDebugOut = path.join(tempOutDir, 'data.generated.json');
-  fs.writeFileSync(dataDebugOut, JSON.stringify(outData, null, 2));
-  logTime(`Wrote data.json to ${dataOutPath} and debug ${dataDebugOut}`);
+  logTime(`Wrote data.json to ${dataOutPath}`);
 
   // --- Hash file ---
   // Create a compact hash.json containing sorted lists of all relevant IDs in the generated data
@@ -529,9 +490,15 @@ async function main(): Promise<void> {
   if (!args.dryRun) {
     fs.writeFileSync(hashOutPath, JSON.stringify(hashObj, null, 2));
   }
-  const hashDebugOut = path.join(tempOutDir, 'hash.json');
-  fs.writeFileSync(hashDebugOut, JSON.stringify(hashObj, null, 2));
-  logTime(`Wrote hash.json to ${hashOutPath} and debug ${hashDebugOut}`);
+  logTime(`Wrote hash.json to ${hashOutPath}`);
+
+  // --- Defaults File ---
+  // Write the `defaults` portion of data.json into a separate defaults.json file
+  const defaultsOutPath = path.join(args.output, 'defaults.json');
+  if (!args.dryRun) {
+    fs.writeFileSync(defaultsOutPath, JSON.stringify(outData.defaults, null, 2));
+  }
+  logTime(`Wrote defaults.json to ${defaultsOutPath}`);
 
   logTime('Done');
 }
