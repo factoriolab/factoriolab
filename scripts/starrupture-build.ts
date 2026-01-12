@@ -19,7 +19,7 @@ type CLIArgs = {
 const DEFAULT_BUILDINGS = [
   'DA_AcidExtractor',
   'DA_GasExtractor',
-  'DA_MechanicalDrill', // Ore Extractor
+  'DA_MechanicalDrill', // Ore Extractor, tiered
   'DA_Smelter',
   'DA_Crafter', // Fabricator
   'DA_Furnace',
@@ -32,6 +32,12 @@ const DEFAULT_BUILDINGS = [
   'DA_DroneRailT3',
   'DA_DroneRailT4',
   'DA_DroneRailT5',
+];
+
+// Buildings which should have Impure / Normal / Pure variants generated for them.
+// Use the generated slug (e.g., 'mechanical-drill' for `DA_MechanicalDrill`).
+const PURITY_BUILDINGS: string[] = [
+  'mechanical-drill', // Ore Extractor: Impure=0.5, Normal=1 (default), Pure=2
 ];
 
 function parseArgs(argv: string[]): CLIArgs {
@@ -355,6 +361,47 @@ async function main(): Promise<void> {
     }
 
     // Fallback: standard machine entry
+
+    // Special-case variant-enabled buildings: create Impure, Normal (default), and Pure variants
+    if (PURITY_BUILDINGS.includes(bSlug)) {
+      const makeMachine = (speed: number) => {
+        const m: any = { speed };
+        if (p.da.electricityValue != null) m.drain = p.da.electricityValue;
+        if (p.da.coolingCapacity != null) m.heat = p.da.coolingCapacity;
+        m.modules = 0;
+        return m;
+      };
+      const iconId = iconEntry?.id ?? bSlug;
+      // Normal variant (default)
+      itemsArr.push({
+        category: categoryForBuilding,
+        id: bSlug,
+        name: `${p.bd?.name ?? p.da.id} (Normal)`,
+        row: 0,
+        machine: makeMachine(1),
+        icon: iconId,
+      });
+      // Impure variant
+      itemsArr.push({
+        category: categoryForBuilding,
+        id: `${bSlug}-impure`,
+        name: `${p.bd?.name ?? p.da.id} (Impure)`,
+        row: 0,
+        machine: makeMachine(0.5),
+        icon: iconId,
+      });
+      // Pure variant
+      itemsArr.push({
+        category: categoryForBuilding,
+        id: `${bSlug}-pure`,
+        name: `${p.bd?.name ?? p.da.id} (Pure)`,
+        row: 0,
+        machine: makeMachine(2),
+        icon: iconId,
+      });
+      continue;
+    }
+
     const machine: any = { speed: 1 };
     if (p.da.electricityValue != null) machine.drain = p.da.electricityValue;
     if (p.da.coolingCapacity != null) machine.heat = p.da.coolingCapacity;
@@ -396,7 +443,26 @@ async function main(): Promise<void> {
 
     // producers: find CRC id that contains this CR
     const crcForThis = crcParsed.find((c) => c.recipes.includes(r.objectPath));
-    const producers = crcForThis ? (crcToBuildings[crcForThis.id] ?? []) : [];
+    let producers = crcForThis ? (crcToBuildings[crcForThis.id] ?? []) : [];
+
+    // Expand any producer references that match buildings listed in VARIANT_BUILDINGS.
+    if (producers.length > 0) {
+      const variantBases = new Set(PURITY_BUILDINGS);
+      const expanded: string[] = [];
+      for (const pSlug of producers) {
+        if (variantBases.has(pSlug) && itemsArr.find((it) => it.id === pSlug)) {
+          expanded.push(pSlug, `${pSlug}-impure`, `${pSlug}-pure`);
+        } else {
+          expanded.push(pSlug);
+        }
+      }
+      const seen = new Set<string>();
+      producers = expanded.filter((s) => {
+        if (seen.has(s)) return false;
+        seen.add(s);
+        return true;
+      });
+    }
 
     // Determine category: prefer producer building category when available
     let recipeCategory = outItem.uiItemType && String(outItem.uiItemType).includes('Resource') ? 'raw' : 'parts';
