@@ -29,37 +29,82 @@ try {
 
 console.log(`Validating data file: ${dataPath}`);
 
-const items = new Set((d.items || []).map((i) => i.id));
-const icons = new Set((d.icons || []).map((i) => i.id));
 let ok = true;
-let missingCount = 0;
+let issueCount = 0;
 
+// Build item set and counts for duplicate detection
+const items = new Set();
+const itemCounts = {};
+for (const it of d.items || []) {
+  if (!it || !it.id) continue;
+  items.add(it.id);
+  itemCounts[it.id] = (itemCounts[it.id] || 0) + 1;
+}
+const icons = new Set((d.icons || []).map((i) => i.id));
+
+// Duplicate item IDs
+for (const [id, count] of Object.entries(itemCounts)) {
+  if (count > 1) {
+    console.log('Duplicate item id', id, count);
+    ok = false;
+    issueCount++;
+  }
+}
+
+// Duplicate recipe IDs
+const recipeCounts = {};
+for (const r of d.recipes || []) {
+  if (!r || !r.id) continue;
+  recipeCounts[r.id] = (recipeCounts[r.id] || 0) + 1;
+}
+for (const [id, count] of Object.entries(recipeCounts)) {
+  if (count > 1) {
+    console.log('Duplicate recipe id', id, count);
+    ok = false;
+    issueCount++;
+  }
+}
+
+// Check that recipe producers reference valid item IDs
+for (const r of d.recipes || []) {
+  for (const p of r.producers || []) {
+    if (!items.has(p)) {
+      console.log('Missing producer item', r.id, p);
+      ok = false;
+      issueCount++;
+    }
+  }
+}
+
+// Check that recipe inputs and outputs reference valid item IDs
 for (const r of d.recipes || []) {
   for (const k of Object.keys(r.in || {})) {
     if (!items.has(k)) {
       console.log('Missing input item', r.id, k);
       ok = false;
-      missingCount++;
+      issueCount++;
     }
   }
   for (const k of Object.keys(r.out || {})) {
     if (!items.has(k)) {
       console.log('Missing output item', r.id, k);
       ok = false;
-      missingCount++;
+      issueCount++;
     }
   }
 }
+
+// Check that items reference valid icon IDs
 for (const it of d.items || []) {
   if (!icons.has(it.icon)) {
     console.log('Missing icon for item', it.id, it.icon);
     ok = false;
-    missingCount++;
+    issueCount++;
   }
   if (it.icon === 'missing-icon') {
     console.log('Item uses fallback missing-icon:', it.id);
     ok = false;
-    missingCount++;
+    issueCount++;
   }
 }
 
@@ -67,6 +112,6 @@ if (ok) {
   console.log('All references OK');
   process.exit(0);
 } else {
-  console.error(`Validation failed: ${missingCount} issues found`);
+  console.error(`Validation failed: ${issueCount} issues found`);
   process.exit(2);
 }
