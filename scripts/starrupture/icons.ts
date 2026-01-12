@@ -5,8 +5,9 @@ import sharp from 'sharp';
 
 export type IconEntry = {
   id: string;
-  objectPath: string | null;
+  objectPath?: string | null; // optional objectPath for resolution
   src?: string | null; // resolved filesystem path
+  srcBuffer?: Buffer | null; // optional in-memory PNG buffer to use directly
 };
 
 export type PackedIcon = {
@@ -73,30 +74,45 @@ export async function packIcons(
   const notFound: string[] = [];
 
   for (const ic of icons) {
-    let srcPath: string | undefined;
-    if (ic.objectPath) {
-      // objectPath like /Game/Chimera/UI/ItemIcons/T_SulphurOre_Icon
-      const parts = ic.objectPath.replace('/Game/Chimera/UI/', '').split('/');
-      const basename = parts.pop() ?? '';
-      const key = basename.toLowerCase();
-      srcPath = index[key];
+    let buffer: Buffer | undefined;
+
+    // If caller provided an in-memory buffer, use it directly
+    if (ic.srcBuffer) {
+      buffer = ic.srcBuffer;
+    } else {
+      let srcPath: string | undefined;
+      // Prefer an explicit src (generated file path) when provided
+      if (ic.src) {
+        srcPath = ic.src;
+      } else if (ic.objectPath) {
+        // objectPath like /Game/Chimera/UI/ItemIcons/T_SulphurOre_Icon
+        const parts = ic.objectPath.replace('/Game/Chimera/UI/', '').split('/');
+        const basename = parts.pop() ?? '';
+        const key = basename.toLowerCase();
+        srcPath = index[key];
+      }
+
+      // fallback: try id
+      if (!srcPath) {
+        const key = ic.id.toLowerCase();
+        srcPath = index[key];
+      }
+
+      if (!srcPath || !fs.existsSync(srcPath)) {
+        notFound.push(ic.id + (ic.objectPath ? `(${ic.objectPath})` : ''));
+        continue;
+      }
+
+      buffer = await sharp(srcPath)
+        .resize({ width: iconSize, height: iconSize, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .png()
+        .toBuffer();
     }
 
-    // fallback: try id
-    if (!srcPath) {
-      const key = ic.id.toLowerCase();
-      srcPath = index[key];
-    }
-
-    if (!srcPath || !fs.existsSync(srcPath)) {
+    if (!buffer) {
       notFound.push(ic.id + (ic.objectPath ? `(${ic.objectPath})` : ''));
       continue;
     }
-
-    const buffer = await sharp(srcPath)
-      .resize({ width: iconSize, height: iconSize, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
-      .png()
-      .toBuffer();
 
     toPack.push({ id: ic.id, buffer });
   }
@@ -185,4 +201,46 @@ export async function packIcons(
   }
 
   return results;
+}
+
+export async function generatePurityVariants(basePath: string, baseId: string, options?: { size?: number }) {
+  const size = options?.size ?? 64;
+  const pad = Math.max(2, Math.floor(size * 0.06));
+  const fontSize = Math.floor(size * 0.26);
+  const spacing = Math.max(1, Math.floor(fontSize * 0.08));
+  const strokeWidth = Math.max(1, Math.floor(size * 0.03));
+  const fill = '#ffd24a';
+  const stroke = 'rgba(0,0,0,0.45)';
+
+  function makeStarsSvg(starCount: number) {
+    let texts = '';
+    for (let i = 0; i < starCount; i++) {
+      const x = size - pad - i * (fontSize + spacing);
+      const y = size - pad - Math.max(0, Math.floor(fontSize * 0.05));
+      texts += `<text x="${x}" y="${y}" font-family="sans-serif" font-size="${fontSize}" fill="${fill}" font-weight="700" text-anchor="end" dominant-baseline="text-after-edge" stroke="${stroke}" stroke-width="${strokeWidth}">★</text>`;
+    }
+    const svg = `<?xml version="1.0" encoding="UTF-8"?>` +
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">` +
+      `<g>${texts}</g>` +
+      `</svg>`;
+    return Buffer.from(svg);
+  }
+
+  const variantList = [
+    { id: `${baseId}-impure`, stars: 1 },
+    { id: baseId, stars: 2 },
+    { id: `${baseId}-pure`, stars: 3 },
+  ];
+
+  const entries: IconEntry[] = [];
+  for (const v of variantList) {
+    const overlay = makeStarsSvg(v.stars);
+    const buf = await sharp(basePath)
+      .resize({ width: size, height: size, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+      .composite([{ input: overlay, left: 0, top: 0 }])
+      .png()
+      .toBuffer();
+    entries.push({ id: v.id, srcBuffer: buf });
+  }
+  return entries;
 }
