@@ -158,5 +158,5 @@ export const flags: Record<FlagSet, Set<Flag>> = {
   mds: new Set(['power', 'mods']),
   fdy: new Set(['power']),
   mtm: new Set(['power']),
-  str: new Set(['power', 'pollution']),
+  str: new Set(['power']),
 };
