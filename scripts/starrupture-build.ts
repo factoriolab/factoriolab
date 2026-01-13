@@ -6,7 +6,7 @@ import { listDaFiles, parseDaFile } from './starrupture/buildings';
 import { parseBdFile } from './starrupture/buildingData';
 import { listCrcFiles, parseCrcFile, parseCrFile, CrInfo, CrcInfo } from './starrupture/recipes';
 import { buildItemMap } from './starrupture/items';
-import { packIcons, IconEntry, indexUiIcons, generatePurityVariants } from './starrupture/icons';
+import { packIcons, IconEntry, indexUiIcons, generatePurityVariants, generateRailZoom, type ZoomOptions } from './starrupture/icons';
 import { slugify, makeMachineEntry, makeBeltEntry, expandProducersForPurity } from './starrupture/helpers';
 
 type CLIArgs = {
@@ -40,6 +40,15 @@ const DEFAULT_BUILDINGS = [
 const PURITY_BUILDINGS: string[] = [
   'mechanical-drill', // Ore Extractor
 ];
+
+// Rail image crop/zoom adjustments
+const RAIL_IMAGE_ADJUSTMENTS: Record<string, ZoomOptions> = {
+  'drone-rail-t1': { centreOffsetPctX: 0.02 },
+  'drone-rail-t2': { centreOffsetPctX: 0.04 },
+  'drone-rail-t3': { centreOffsetPctX: 0.02 },
+  'drone-rail-t4': { centreOffsetPctX: 0.00 },
+  'drone-rail-t5': { centreOffsetPctX: 0.02 },
+};
 
 function parseArgs(argv: string[]): CLIArgs {
   const args = argv.slice(2);
@@ -256,6 +265,28 @@ async function main(): Promise<void> {
           continue;
         } catch (e) {
           logWarn(`Failed to generate overlay icons for ${bSlug}: ${(e as Error).message}`);
+        }
+      }
+
+      // Special handling: rails - generate a zoomed center band to make arrow tiers legible
+      if (/rail/i.test(bSlug) && basePath && fs.existsSync(basePath)) {
+        const additionalSettings = RAIL_IMAGE_ADJUSTMENTS[bSlug] || {};
+        try {
+          const railEntry = await generateRailZoom(basePath, bSlug, {
+            size: 64,
+            capStartPct: 0.10,
+            capEndPct: 0.18,
+            centreOffsetPctX: 0.02,
+            centreSizePctX: 0.27,
+            railPctY: 3 / 8,
+            rightCapIsFlippedLeft: true,
+            // debugOutDir: path.join('temp', 'rails'),
+            ...additionalSettings,
+          });
+          buildingIconEntries.push(railEntry);
+          continue;
+        } catch (e) {
+          logWarn(`Failed to generate rail zoom for ${bSlug}: ${(e as Error).message}`);
         }
       }
 

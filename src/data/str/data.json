@@ -35,27 +35,27 @@
     {
       "id": "drone-rail-t1",
       "position": "-256px -0px",
-      "color": "#2e3b3b"
+      "color": "#314646"
     },
     {
       "id": "drone-rail-t2",
       "position": "-320px -0px",
-      "color": "#395353"
+      "color": "#3e5e5e"
     },
     {
       "id": "drone-rail-t3",
       "position": "-384px -0px",
-      "color": "#395554"
+      "color": "#406362"
     },
     {
       "id": "drone-rail-t4",
       "position": "-448px -0px",
-      "color": "#3b5756"
+      "color": "#456967"
     },
     {
       "id": "drone-rail-t5",
       "position": "-0px -64px",
-      "color": "#3e5c5c"
+      "color": "#4a7272"
     },
     {
       "id": "furnace",

@@ -16,6 +16,17 @@ export type PackedIcon = {
   color: string; // '#rrggbb'
 };
 
+export type ZoomOptions = {
+  size?: number;
+  capStartPct?: number;
+  capEndPct?: number;
+  centreSizePctX?: number;
+  centreOffsetPctX?: number;
+  railPctY?: number;
+  rightCapIsFlippedLeft?: boolean;
+  debugOutDir?: string;
+};
+
 function slugify(s: string): string {
   return s
     .replace(/([A-Z])/g, (m) => '-' + m.toLowerCase())
@@ -243,4 +254,91 @@ export async function generatePurityVariants(basePath: string, baseId: string, o
     entries.push({ id: v.id, srcBuffer: buf });
   }
   return entries;
+}
+
+/**
+ * Generate a zoomed rail icon by taking left cap, center band, right cap from a larger
+ * source image and recomposing them into a square icon for better legibility of
+ * the center arrows. Writes debug images to `debugOutDir` when provided.
+ */
+export async function generateRailZoom(
+  basePath: string,
+  baseId: string,
+  options?: ZoomOptions,
+): Promise<IconEntry> {
+  const size = options?.size ?? 64;
+  const capStartPct = options?.capStartPct ?? 0.10;
+  const capEndPct = options?.capEndPct ?? 0.18;
+  const centreSizePctX = options?.centreSizePctX ?? 0.25;
+  const centreOffsetPctX = options?.centreOffsetPctX ?? 0.0;
+  const railPctY = options?.railPctY ?? 0.5;
+  const rightCapIsFlippedLeft = options?.rightCapIsFlippedLeft ?? false;
+  const debugOutDir = options?.debugOutDir;
+
+  // Read metadata
+  const meta = await sharp(basePath).metadata();
+  const w = meta.width ?? size;
+  const h = meta.height ?? size;
+  if (w != h) {
+    console.error(`Error: rail icon source ${basePath} is not square (${w}x${h})`);
+    return { id: baseId, srcBuffer: Buffer.alloc(0) };
+  }
+
+  // Isolate the center section from the original
+  const centreW = Math.round(w * centreSizePctX);
+  const centreX = Math.round((w - centreW) / 2 + w * centreOffsetPctX);
+  const railH = Math.round(h * railPctY);
+  const railY = Math.round((h - railH) / 2);
+  const centerBuf = await sharp(basePath).extract({ left: centreX, top: railY, width: centreW, height: railH }).png().toBuffer();
+
+  // Isolate left and right end caps from the original
+  const capW = Math.round(w * (capEndPct - capStartPct));
+  const capX = Math.round(w * capStartPct);
+  const leftCapBuf = await sharp(basePath).extract({ left: capX, top: railY, width: capW, height: railH }).png().toBuffer();
+  const rightCapBuf = rightCapIsFlippedLeft // if true, flip left cap horizontally for right cap
+    ? await sharp(leftCapBuf).flop().png().toBuffer()
+    : await sharp(basePath).extract({ left: w - capX - capW, top: railY, width: capW, height: railH }).png().toBuffer();
+
+  // Calculate the output size of parts
+  const inputPctW = (capEndPct - capStartPct) * 2 + centreSizePctX;
+  const partZoom = 1 / inputPctW;
+  const outerZoom = size / w;
+  const totalZoom = partZoom * outerZoom;
+  const outCapW = Math.round(capW * totalZoom);
+  const outCenterW = Math.round(centreW * totalZoom);
+  const outRailH = Math.round(railH * totalZoom);
+  const outRailY = Math.round((size - outRailH) / 2);
+
+  // Resize caps and center to target heights/widths
+  const leftResized = await sharp(leftCapBuf).resize({ width: outCapW, height: outRailH }).png().toBuffer();
+  const centerResized = await sharp(centerBuf).resize({ width: outCenterW, height: outRailH }).png().toBuffer();
+  const rightResized = await sharp(rightCapBuf).resize({ width: outCapW, height: outRailH }).png().toBuffer();
+
+  // Composite onto transparent canvas
+  const canvas = sharp({ create: { width: size, height: size, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).png();
+  const comps = [
+    { input: leftResized, left: 0, top: outRailY },
+    { input: rightResized, left: size - outCapW, top: outRailY },
+    { input: centerResized, left: outCapW, top: outRailY },
+  ];
+
+  const outBuf = await canvas.composite(comps).png().toBuffer();
+
+  // Write debug files if requested
+  if (debugOutDir) {
+    try {
+      fs.mkdirSync(debugOutDir, { recursive: true });
+      // original resized for comparison
+      await sharp(basePath)
+        .resize({ width: size, height: size, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .png()
+        .toFile(path.join(debugOutDir, `${baseId}-orig.png`));
+      // zoomed output
+      await sharp(outBuf).png().toFile(path.join(debugOutDir, `${baseId}-zoom.png`));
+    } catch (e) {
+      // ignore debug write failures
+    }
+  }
+
+  return { id: baseId, srcBuffer: outBuf };
 }
