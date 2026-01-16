@@ -28,6 +28,12 @@ export function makeBeltEntry(p: any, id: string, name: string, speed: number, c
   };
 }
 
+export function computeCargoRate(railRate: number, delay: number, stack: number = 100) {
+  // Simulated rate (items/s) = stack / ((stack / railRate) + delay)
+  if (!railRate || railRate <= 0) return 0;
+  return Number((stack / ((stack / railRate) + delay)).toFixed(6));
+}
+
 export function expandProducersForPurity(producers: string[], purityBases: Set<string>, itemsPresent: Set<string>) {
   if (!producers || producers.length === 0) return producers;
   const expanded: string[] = [];

@@ -6,8 +6,8 @@ import { listDaFiles, parseDaFile } from './starrupture/buildings';
 import { parseBdFile } from './starrupture/buildingData';
 import { listCrcFiles, parseCrcFile, parseCrFile, CrInfo, CrcInfo } from './starrupture/recipes';
 import { buildItemMap } from './starrupture/items';
-import { packIcons, IconEntry, indexUiIcons, generatePurityVariants, generateRailZoom, type ZoomOptions } from './starrupture/icons';
-import { slugify, makeMachineEntry, makeBeltEntry, expandProducersForPurity } from './starrupture/helpers';
+import { packIcons, IconEntry, indexUiIcons, generatePurityVariants, generateRailZoom, generateCargoIcon, type ZoomOptions } from './starrupture/icons';
+import { slugify, makeMachineEntry, makeBeltEntry, expandProducersForPurity, computeCargoRate } from './starrupture/helpers';
 
 type CLIArgs = {
   input: string;
@@ -49,6 +49,25 @@ const RAIL_IMAGE_ADJUSTMENTS: Record<string, ZoomOptions> = {
   'drone-rail-t4': { centreOffsetPctX: 0.00 },
   'drone-rail-t5': { centreOffsetPctX: 0.02 },
 };
+
+// Additional rail simulation for Cargo Dispatcher/Receiver - tiered based on rail inputs
+// Transfer rate is a calculation based on the time the input rail takes to fill the stack plus the delay
+// We have to assume the most common stack size of 100, then rail rates are 2/s, 4/s, 8/s, 15/s, 25/s for T1 to T5 respectively
+// So simulated rate (items/s) = stack / ((stack / railRate) + delay)
+const CARGO_RECEIVERS = {
+  'cargo-receiver-t1': { input: 'drone-rail-t1', delay: 10 },
+  'cargo-receiver-t2': { input: 'drone-rail-t2', delay: 10 },
+  'cargo-receiver-t3': { input: 'drone-rail-t3', delay: 10 },
+  'cargo-receiver-t4': { input: 'drone-rail-t4', delay: 10 },
+  'cargo-receiver-t5': { input: 'drone-rail-t5', delay: 10 },
+};
+const CARGO_IMAGE_CROP = {
+  source: 'UI/Buildings/Icons/T_PackageSender_Icon.png',
+  leftPct: 0.25,
+  rightPct: 0.25,
+  topPct: 0.2,
+  bottomPct: 0,
+}
 
 const DEFAULT_BUILD_TIME = 10; // seconds
 
@@ -307,7 +326,30 @@ async function main(): Promise<void> {
     itemIconEntries.push({ id: v.id, objectPath: v.iconObjectPath });
   }
 
-  const iconsToPack = [...buildingIconEntries, ...itemIconEntries];
+  // --- Cargo icons: generate cropped left-aligned icons with tier labels ---
+  const cargoIconEntries: IconEntry[] = [];
+  try {
+    const cargoKey = path.basename(CARGO_IMAGE_CROP.source).replace(/\.[^/.]+$/, '').toLowerCase();
+    const cargoBasePath = uiIndex[cargoKey];
+    if (cargoBasePath && fs.existsSync(cargoBasePath)) {
+      for (const [cid, cfg] of Object.entries(CARGO_RECEIVERS)) {
+        const match = String(cfg.input ?? '').match(/t(\d+)/i);
+        const label = match ? `T${match[1]}` : '';
+        try {
+          const ce = await generateCargoIcon(cargoBasePath, cid, CARGO_IMAGE_CROP, { size: 64, label });
+          cargoIconEntries.push(ce);
+        } catch (e) {
+          logWarn(`Failed to generate cargo icon for ${cid}: ${(e as Error).message}`);
+        }
+      }
+    } else {
+      logWarn(`Cargo icon source not found in UI index: ${CARGO_IMAGE_CROP.source}`);
+    }
+  } catch (e) {
+    logWarn(`Failed to generate cargo icons: ${(e as Error).message}`);
+  }
+
+  const iconsToPack = [...buildingIconEntries, ...itemIconEntries, ...cargoIconEntries];
   const iconsOutPath = path.join(args.output, 'icons.webp');
   // pack icons (attempt to write sprite if sharp present and not dry-run)
   const iconsMeta = await packIcons(srData, iconsOutPath, iconsToPack, { iconSize: 64, padding: 0, columns: 8, dryRun: args.dryRun });
@@ -423,6 +465,29 @@ async function main(): Promise<void> {
     }
 
     itemsArr.push(makeMachineEntry(parsedEntry, bSlug, parsedEntry.bd?.name ?? parsedEntry.da.id, 1, categoryForBuilding, iconEntry?.id ?? bSlug));
+  }
+
+  // Add cargo receivers (fake machines) for each tier
+  for (const [cid, cfg] of Object.entries(CARGO_RECEIVERS)) {
+    // avoid duplicates
+    if (itemsArr.find((x) => x.id === cid)) continue;
+    const railRateMap: Record<string, number> = {
+      'drone-rail-t1': 2,
+      'drone-rail-t2': 4,
+      'drone-rail-t3': 8,
+      'drone-rail-t4': 15,
+      'drone-rail-t5': 25,
+    };
+    const railRate = railRateMap[cfg.input] ?? 2;
+    const rate = computeCargoRate(railRate, (cfg as any).delay ?? 0, 100);
+    const iconEntry = iconsMeta.find((ic) => ic.id === cid);
+    const iconId = iconEntry?.id ?? 'missing-icon';
+    const tierLabelRaw = String(cfg.input ?? '').match(/t(\d+)/i)?.[1] ?? '';
+    const niceName = `Cargo Receiver${tierLabelRaw ? ' (T' + tierLabelRaw + ')' : ''}`;
+    // Represent cargo receivers as belts since they transfer items
+    const entry = makeBeltEntry({}, cid, niceName, rate, 'logistics', iconId);
+    (entry as any).cargoReceiver = true;
+    itemsArr.push(entry);
   }
 
   // Build recipes array
