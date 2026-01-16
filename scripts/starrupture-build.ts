@@ -50,6 +50,8 @@ const RAIL_IMAGE_ADJUSTMENTS: Record<string, ZoomOptions> = {
   'drone-rail-t5': { centreOffsetPctX: 0.02 },
 };
 
+const DEFAULT_BUILD_TIME = 10; // seconds
+
 function parseArgs(argv: string[]): CLIArgs {
   const args = argv.slice(2);
   const out: CLIArgs = {
@@ -193,7 +195,7 @@ async function main(): Promise<void> {
     return {
       id: crRaw.id,
       name: crRaw.name,
-      time: crRaw.buildTime ?? 999,
+      time: crRaw.buildTime ?? DEFAULT_BUILD_TIME,
       in: inputs,
       out: out,
       sourcePath: crRaw.path,
@@ -481,7 +483,7 @@ async function main(): Promise<void> {
       id: recipeId,
       name: crInfo.name ?? crInfo.id,
       producers: producers,
-      time: crInfo.buildTime ?? 999,
+      time: crInfo.buildTime ?? DEFAULT_BUILD_TIME,
       in: inMap,
       out: outMap,
       row: 0,
