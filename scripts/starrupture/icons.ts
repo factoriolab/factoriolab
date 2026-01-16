@@ -256,6 +256,58 @@ export async function generatePurityVariants(basePath: string, baseId: string, o
   return entries;
 }
 
+export async function generateCargoIcon(
+  basePath: string,
+  id: string,
+  crop: { leftPct: number; rightPct: number; topPct: number; bottomPct: number },
+  options?: { size?: number; label?: string },
+): Promise<IconEntry> {
+  const size = options?.size ?? 64;
+  const leftPct = crop.leftPct ?? 0;
+  const rightPct = crop.rightPct ?? 0;
+  const topPct = crop.topPct ?? 0;
+  const bottomPct = crop.bottomPct ?? 0;
+
+  const meta = await sharp(basePath).metadata();
+  const w = meta.width ?? size;
+  const h = meta.height ?? size;
+
+  const left = Math.round(w * leftPct);
+  const top = Math.round(h * topPct);
+  const width = Math.max(1, Math.round(w * (1 - leftPct - rightPct)));
+  const height = Math.max(1, Math.round(h * (1 - topPct - bottomPct)));
+
+  let extractedBuf: Buffer;
+  try {
+    extractedBuf = await sharp(basePath).extract({ left: Math.max(0, left), top: Math.max(0, top), width, height }).png().toBuffer();
+  } catch (e) {
+    // fallback: resize whole image if extract failed
+    extractedBuf = await sharp(basePath).png().toBuffer();
+  }
+
+  // Resize extracted region to fit height=size and keep aspect ratio so it will align left when composited
+  const resized = await sharp(extractedBuf).resize({ height: size, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
+
+  const canvas = sharp({ create: { width: size, height: size, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).png();
+  const comps: any[] = [{ input: resized, left: 0, top: 0 }];
+
+  if (options?.label) {
+    const pad = Math.max(2, Math.floor(size * 0.06));
+    const fontSize = Math.floor(size * 0.28);
+    const strokeWidth = Math.max(1, Math.floor(size * 0.03));
+    const fill = '#ffffff';
+    const stroke = 'rgba(0,0,0,0.6)';
+    const svg = `<?xml version="1.0" encoding="UTF-8"?>` +
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">` +
+      `<text x="${size - pad}" y="${Math.floor(size / 2)}" font-family="sans-serif" font-size="${fontSize}" fill="${fill}" font-weight="700" text-anchor="end" dominant-baseline="middle" stroke="${stroke}" stroke-width="${strokeWidth}">${options.label}</text>` +
+      `</svg>`;
+    comps.push({ input: Buffer.from(svg), left: 0, top: 0 });
+  }
+
+  const outBuf = await canvas.composite(comps).png().toBuffer();
+  return { id, srcBuffer: outBuf };
+}
+
 /**
  * Generate a zoomed rail icon by taking left cap, center band, right cap from a larger
  * source image and recomposing them into a square icon for better legibility of

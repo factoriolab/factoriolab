@@ -401,6 +401,31 @@
       "id": "superconductor",
       "position": "-320px -576px",
       "color": "#57524e"
+    },
+    {
+      "id": "cargo-receiver-t1",
+      "position": "-384px -576px",
+      "color": "#777676"
+    },
+    {
+      "id": "cargo-receiver-t2",
+      "position": "-448px -576px",
+      "color": "#787777"
+    },
+    {
+      "id": "cargo-receiver-t3",
+      "position": "-0px -640px",
+      "color": "#787777"
+    },
+    {
+      "id": "cargo-receiver-t4",
+      "position": "-64px -640px",
+      "color": "#787677"
+    },
+    {
+      "id": "cargo-receiver-t5",
+      "position": "-128px -640px",
+      "color": "#787777"
     }
   ],
   "items": [
@@ -1089,6 +1114,61 @@
         "modules": 0
       },
       "icon": "synthetizer"
+    },
+    {
+      "category": "logistics",
+      "id": "cargo-receiver-t1",
+      "name": "Cargo Receiver (T1)",
+      "row": 0,
+      "belt": {
+        "speed": 1.666667
+      },
+      "icon": "cargo-receiver-t1",
+      "cargoReceiver": true
+    },
+    {
+      "category": "logistics",
+      "id": "cargo-receiver-t2",
+      "name": "Cargo Receiver (T2)",
+      "row": 0,
+      "belt": {
+        "speed": 2.857143
+      },
+      "icon": "cargo-receiver-t2",
+      "cargoReceiver": true
+    },
+    {
+      "category": "logistics",
+      "id": "cargo-receiver-t3",
+      "name": "Cargo Receiver (T3)",
+      "row": 0,
+      "belt": {
+        "speed": 4.444444
+      },
+      "icon": "cargo-receiver-t3",
+      "cargoReceiver": true
+    },
+    {
+      "category": "logistics",
+      "id": "cargo-receiver-t4",
+      "name": "Cargo Receiver (T4)",
+      "row": 0,
+      "belt": {
+        "speed": 6
+      },
+      "icon": "cargo-receiver-t4",
+      "cargoReceiver": true
+    },
+    {
+      "category": "logistics",
+      "id": "cargo-receiver-t5",
+      "name": "Cargo Receiver (T5)",
+      "row": 0,
+      "belt": {
+        "speed": 7.142857
+      },
+      "icon": "cargo-receiver-t5",
+      "cargoReceiver": true
     }
   ],
   "recipes": [
@@ -1116,7 +1196,7 @@
       "producers": [
         "assembler"
       ],
-      "time": 999,
+      "time": 10,
       "in": {
         "turbine": 1,
         "battery": 1,
@@ -1226,7 +1306,7 @@
       "producers": [
         "assembler"
       ],
-      "time": 999,
+      "time": 10,
       "in": {
         "lens": 2,
         "generator": 2,
@@ -1825,7 +1905,7 @@
       "producers": [
         "hammer"
       ],
-      "time": 999,
+      "time": 10,
       "in": {
         "titanium-housing": 1,
         "titanium-beam": 3,
@@ -1863,7 +1943,7 @@
       "producers": [
         "hammer"
       ],
-      "time": 999,
+      "time": 10,
       "in": {
         "valve": 1,
         "turbine": 1,
