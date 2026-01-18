@@ -631,6 +631,27 @@ async function main(): Promise<void> {
     if (minLevelByItem[it.id] != null) it.row = minLevelByItem[it.id];
   }
 
+  // Assign item categories from recipes when possible (prefer recipe with lowest row)
+  const recipesByRow = [...recipesArr].sort((a, b) => (a.row ?? 0) - (b.row ?? 0));
+  for (const r of recipesByRow) {
+    if (!r.out) continue;
+    for (const outId of Object.keys(r.out)) {
+      const item = itemsArr.find((x) => x.id === outId);
+      if (!item) continue;
+      if (r.category) {
+        // Prefer category derived from the earliest recipe (lowest row). Use a marker to avoid overwriting.
+        if (!(item as any)._categoryAssignedFromRecipe) {
+          item.category = r.category;
+          (item as any)._categoryAssignedFromRecipe = true;
+        }
+      }
+    }
+  }
+  // Remove internal marker before output
+  for (const it of itemsArr) {
+    if ((it as any)._categoryAssignedFromRecipe) delete (it as any)._categoryAssignedFromRecipe;
+  }
+
   // Build icons array: include building icons and item icons used
   const usedIconIdsFinal = new Set<string>();
   for (const p of parsed) {
