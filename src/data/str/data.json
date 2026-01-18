@@ -5,27 +5,33 @@
   "categories": [
     {
       "id": "extraction",
-      "name": "Extraction"
+      "name": "Extraction",
+      "icon": "mechanical-drill"
     },
     {
       "id": "crafting",
-      "name": "Crafting"
+      "name": "Crafting",
+      "icon": "crafter"
     },
     {
       "id": "personal-crafting",
-      "name": "Personal Crafting"
+      "name": "Personal Crafting",
+      "icon": "item-printer"
     },
     {
       "id": "ore-processing",
-      "name": "Ore Processing"
+      "name": "Ore Processing",
+      "icon": "smelter"
     },
     {
       "id": "raw",
-      "name": "Raw"
+      "name": "Raw",
+      "icon": "titanium-ore"
     },
     {
       "id": "parts",
-      "name": "Parts"
+      "name": "Parts",
+      "icon": "standard-ammo-item"
     }
   ],
   "icons": [
