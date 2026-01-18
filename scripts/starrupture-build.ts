@@ -72,6 +72,16 @@ const CARGO_IMAGE_CROP = {
 
 const DEFAULT_BUILD_TIME = 10; // seconds
 
+// Category icons mapping
+const CATEGORY_ICONS: Record<string, string> = {
+  raw: 'titanium-ore',
+  extraction: 'mechanical-drill',
+  crafting: 'crafter',
+  'ore-processing': 'smelter',
+  'personal-crafting': 'item-printer',
+  parts: 'standard-ammo-item',
+};
+
 function parseArgs(argv: string[]): CLIArgs {
   const args = argv.slice(2);
   const out: CLIArgs = {
@@ -382,7 +392,7 @@ async function main(): Promise<void> {
   const crcToBuildings: Record<string, string[]> = {};
   // Also gather building -> category mapping and category list
   const buildingSlugToCategory: Record<string, string> = {};
-  const categoriesMap: Record<string, { id: string; name: string }> = {};
+  const categoriesMap: Record<string, { id: string; name: string; icon?: string }> = {};
 
   function tokenToId(token: string): string {
     return token
@@ -412,7 +422,7 @@ async function main(): Promise<void> {
       const catId = tokenToId(String(catRaw));
       const catName = tokenToName(String(catRaw));
       buildingSlugToCategory[bSlug] = catId;
-      if (!categoriesMap[catId]) categoriesMap[catId] = { id: catId, name: catName };
+      if (!categoriesMap[catId]) categoriesMap[catId] = { id: catId, name: catName, icon: CATEGORY_ICONS[catId] ?? undefined };
     }
   }
 
@@ -647,14 +657,14 @@ async function main(): Promise<void> {
   }
 
   for (const cid of Array.from(usedCategoryIds)) {
-    if (!categoriesMap[cid]) categoriesMap[cid] = { id: cid, name: categoryIdToName(cid) };
+    if (!categoriesMap[cid]) categoriesMap[cid] = { id: cid, name: categoryIdToName(cid), icon: CATEGORY_ICONS[cid] ?? undefined };
   }
 
   const categoriesArr = Object.values(categoriesMap);
 
   const outData = {
     version: { StarRupture: '0.1.1.112941' },
-    categories: categoriesArr.length > 0 ? categoriesArr : [{ id: 'raw', name: 'Raw', icon: 'raw-titanium' }],
+    categories: categoriesArr.length > 0 ? categoriesArr : [{ id: 'raw', name: 'Raw', icon: CATEGORY_ICONS['raw'] ?? 'raw-titanium' }],
     icons: iconsArr,
     items: itemsArr,
     recipes: recipesArr,
