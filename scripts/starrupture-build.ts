@@ -33,6 +33,7 @@ const DEFAULT_BUILDINGS = [
   'DA_DroneRailT3',
   'DA_DroneRailT4',
   'DA_DroneRailT5',
+  'DA_ItemPrinter',
 ];
 
 // Buildings which should have Impure / Normal / Pure variants generated for them.
@@ -152,17 +153,45 @@ async function main(): Promise<void> {
     return { da: info, bd: null };
   });
 
+  // Determine which CRC ids are referenced by our filtered DA files (so we only parse CRCs we actually need)
+  const includedCrcIds = new Set<string>();
+  for (const parsedEntry of parsed) {
+    const cp = parsedEntry.da.craftingRecipeCollectionPath;
+    if (cp) {
+      const parts = cp.split('/');
+      const crcId = parts[parts.length - 1];
+      includedCrcIds.add(crcId);
+    }
+  }
+  if (includedCrcIds.size > 0) console.log(`Filtered to ${includedCrcIds.size} CRCs referenced by filtered buildings`);
+
   // --- Recipes ---
   logTime('Scanning CRC recipe collections');
   const crcFiles = listCrcFiles(srData);
   console.log(`Found ${crcFiles.length} CRC files`);
-  const crcParsed: CrcInfo[] = crcFiles.map((p: string) => parseCrcFile(p));
 
-  // Expand CRs referenced by the CRCs
-  const crObjectPaths = crcParsed.reduce((acc: string[], c: CrcInfo) => {
-    acc.push(...c.recipes);
-    return acc;
-  }, []);
+  // Only parse CRC files that are referenced by our filtered buildings (unless no filter was applied)
+  const crcFilesFiltered = crcFiles.filter((p) => includedCrcIds.size === 0 || includedCrcIds.has(path.basename(p, '.json')));
+  console.log(`Using ${crcFilesFiltered.length} CRC files relevant to filtered buildings`);
+
+  const crcParsed: CrcInfo[] = crcFilesFiltered
+    .map((p: string) => {
+      try {
+        return parseCrcFile(p);
+      } catch (err) {
+        logWarn(`Failed to parse CRC ${p}: ${(err as Error).message}`);
+        return null;
+      }
+    })
+    .filter((c): c is CrcInfo => c != null);
+
+  // Collect unique CR object paths from the selected CRCs and parse each CR once
+  const crObjectPathSet = new Set<string>();
+  for (const c of crcParsed) {
+    for (const rp of c.recipes) crObjectPathSet.add(rp);
+  }
+  const crObjectPaths = Array.from(crObjectPathSet);
+  console.log(`Found ${crObjectPaths.length} unique CR object paths referenced by selected CRCs`);
 
   const crParsed = crObjectPaths
     .map((objPath: string) => {
@@ -214,7 +243,7 @@ async function main(): Promise<void> {
     return {
       id: crRaw.id,
       name: crRaw.name,
-      time: crRaw.buildTime ?? DEFAULT_BUILD_TIME,
+      time: (crRaw.buildTime ?? DEFAULT_BUILD_TIME) || 1, // Don't allow zero build time
       in: inputs,
       out: out,
       sourcePath: crRaw.path,
@@ -223,16 +252,7 @@ async function main(): Promise<void> {
 
   // --- Icons: select from included buildings and recipes ---
   logTime('Selecting icons for included buildings and recipes');
-  // Determine which CRCs/CRs are referenced by our filtered DA files
-  const includedCrcIds = new Set<string>();
-  for (const parsedEntry of parsed) {
-    const cp = parsedEntry.da.craftingRecipeCollectionPath;
-    if (cp) {
-      const parts = cp.split('/');
-      const crcId = parts[parts.length - 1];
-      includedCrcIds.add(crcId);
-    }
-  }
+  // `includedCrcIds` was computed earlier (to limit CRC parsing to referenced collections)
 
   // Gather objectPaths for included CRs
   const includedCrObjectPaths = new Set<string>();
@@ -490,8 +510,15 @@ async function main(): Promise<void> {
     itemsArr.push(entry);
   }
 
-  // Build recipes array
+  // Build recipes array with dedup/merge logic
   const recipesArr: any[] = [];
+  const recipeKeyToIndex = new Map<string, number>();
+  const usedRecipeIds = new Set<string>();
+
+  function normalizeMapKeys(m: Record<string, number>) {
+    return Object.keys(m).sort().reduce((acc: Record<string, number>, k) => { acc[k] = m[k]; return acc; }, {} as Record<string, number>);
+  }
+
   for (const crInfo of includedCrInfos) {
     if (!crInfo.output) {
       logWarn(`Skipping recipe ${crInfo.id} because it has no output`);
@@ -541,14 +568,35 @@ async function main(): Promise<void> {
       }
     }
 
+    const time = (crInfo.buildTime ?? DEFAULT_BUILD_TIME) || 1; // Don't allow zero build time
+    const canonicalKey = JSON.stringify({ in: normalizeMapKeys(inMap), out: normalizeMapKeys(outMap), time });
+
+    // If an identical recipe already exists, merge producers
+    if (recipeKeyToIndex.has(canonicalKey)) {
+      const idx = recipeKeyToIndex.get(canonicalKey)!;
+      const existing = recipesArr[idx];
+      existing.producers = Array.from(new Set([...(existing.producers || []), ...producers]));
+      continue;
+    }
+
+    // Determine a unique recipe id. Base on CR id, and append numeric suffix if collision with different recipe
     const recipeIdBase = crInfo.id.replace(/^CR_/, '').toLowerCase();
-    const recipeId = recipeIdBase; // keep simple; collisions unlikely for filtered set
+    let recipeId = recipeIdBase;
+    if (usedRecipeIds.has(recipeId)) {
+      let suffix = 2;
+      while (usedRecipeIds.has(`${recipeIdBase}-${suffix}`)) suffix++;
+      recipeId = `${recipeIdBase}-${suffix}`;
+      logWarn(`Recipe id collision for ${recipeIdBase}; using unique id ${recipeId}`);
+    }
+
+    usedRecipeIds.add(recipeId);
+    recipeKeyToIndex.set(canonicalKey, recipesArr.length);
 
     recipesArr.push({
       id: recipeId,
       name: crInfo.name ?? crInfo.id,
       producers: producers,
-      time: crInfo.buildTime ?? DEFAULT_BUILD_TIME,
+      time: time,
       in: inMap,
       out: outMap,
       row: 0,
