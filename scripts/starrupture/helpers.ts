@@ -8,7 +8,6 @@ export function makeMachineEntry(p: any, id: string, name: string, speed: number
   if (p.da.coolingCapacity != null) machine.heat = p.da.coolingCapacity;
   machine.modules = 0;
   return {
-    category,
     id,
     name,
     row: 0,
@@ -19,7 +18,6 @@ export function makeMachineEntry(p: any, id: string, name: string, speed: number
 
 export function makeBeltEntry(p: any, id: string, name: string, speed: number, category: string, iconId: string) {
   return {
-    category,
     id,
     name,
     row: 0,

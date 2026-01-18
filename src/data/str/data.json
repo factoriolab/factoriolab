@@ -26,14 +26,6 @@
     {
       "id": "parts",
       "name": "Parts"
-    },
-    {
-      "id": "other",
-      "name": "Other"
-    },
-    {
-      "id": "logistics",
-      "name": "Logistics"
     }
   ],
   "icons": [
@@ -974,7 +966,6 @@
       "icon": "superconductor"
     },
     {
-      "category": "extraction",
       "id": "sulfur-extractor",
       "name": "Sulfur Extractor",
       "row": 0,
@@ -987,7 +978,6 @@
       "icon": "sulfur-extractor"
     },
     {
-      "category": "crafting",
       "id": "assembler",
       "name": "Assembler",
       "row": 0,
@@ -1000,7 +990,6 @@
       "icon": "assembler"
     },
     {
-      "category": "crafting",
       "id": "crafter",
       "name": "Fabricator",
       "row": 0,
@@ -1013,7 +1002,6 @@
       "icon": "crafter"
     },
     {
-      "category": "other",
       "id": "drone-rail-t1",
       "name": "Rail v.1",
       "row": 0,
@@ -1023,7 +1011,6 @@
       "icon": "drone-rail-t1"
     },
     {
-      "category": "other",
       "id": "drone-rail-t2",
       "name": "Rail v.2",
       "row": 0,
@@ -1033,7 +1020,6 @@
       "icon": "drone-rail-t2"
     },
     {
-      "category": "other",
       "id": "drone-rail-t3",
       "name": "Rail v.3",
       "row": 0,
@@ -1043,7 +1029,6 @@
       "icon": "drone-rail-t3"
     },
     {
-      "category": "other",
       "id": "drone-rail-t4",
       "name": "Rail v.4",
       "row": 0,
@@ -1053,7 +1038,6 @@
       "icon": "drone-rail-t4"
     },
     {
-      "category": "other",
       "id": "drone-rail-t5",
       "name": "Rail v.5",
       "row": 0,
@@ -1063,7 +1047,6 @@
       "icon": "drone-rail-t5"
     },
     {
-      "category": "crafting",
       "id": "furnace",
       "name": "Furnace",
       "row": 0,
@@ -1076,7 +1059,6 @@
       "icon": "furnace"
     },
     {
-      "category": "extraction",
       "id": "gas-extractor",
       "name": "Helium-3 Extractor",
       "row": 0,
@@ -1089,7 +1071,6 @@
       "icon": "gas-extractor"
     },
     {
-      "category": "crafting",
       "id": "hammer",
       "name": "Mega Press",
       "row": 0,
@@ -1102,7 +1083,6 @@
       "icon": "hammer"
     },
     {
-      "category": "personal-crafting",
       "id": "item-printer",
       "name": "Basic Item Printer",
       "row": 0,
@@ -1113,7 +1093,6 @@
       "icon": "item-printer"
     },
     {
-      "category": "extraction",
       "id": "mechanical-drill",
       "name": "Ore Excavator (Normal)",
       "row": 0,
@@ -1126,7 +1105,6 @@
       "icon": "mechanical-drill"
     },
     {
-      "category": "extraction",
       "id": "mechanical-drill-impure",
       "name": "Ore Excavator (Impure)",
       "row": 0,
@@ -1139,7 +1117,6 @@
       "icon": "mechanical-drill-impure"
     },
     {
-      "category": "extraction",
       "id": "mechanical-drill-pure",
       "name": "Ore Excavator (Pure)",
       "row": 0,
@@ -1152,7 +1129,6 @@
       "icon": "mechanical-drill-pure"
     },
     {
-      "category": "ore-processing",
       "id": "refinery",
       "name": "Refinery",
       "row": 0,
@@ -1165,7 +1141,6 @@
       "icon": "refinery"
     },
     {
-      "category": "ore-processing",
       "id": "smelter",
       "name": "Smelter",
       "row": 0,
@@ -1178,7 +1153,6 @@
       "icon": "smelter"
     },
     {
-      "category": "crafting",
       "id": "synthetizer",
       "name": "Compounder",
       "row": 0,
@@ -1191,7 +1165,6 @@
       "icon": "synthetizer"
     },
     {
-      "category": "logistics",
       "id": "cargo-receiver-t1",
       "name": "Cargo Receiver (T1)",
       "row": 0,
@@ -1202,7 +1175,6 @@
       "cargoReceiver": true
     },
     {
-      "category": "logistics",
       "id": "cargo-receiver-t2",
       "name": "Cargo Receiver (T2)",
       "row": 0,
@@ -1213,7 +1185,6 @@
       "cargoReceiver": true
     },
     {
-      "category": "logistics",
       "id": "cargo-receiver-t3",
       "name": "Cargo Receiver (T3)",
       "row": 0,
@@ -1224,7 +1195,6 @@
       "cargoReceiver": true
     },
     {
-      "category": "logistics",
       "id": "cargo-receiver-t4",
       "name": "Cargo Receiver (T4)",
       "row": 0,
@@ -1235,7 +1205,6 @@
       "cargoReceiver": true
     },
     {
-      "category": "logistics",
       "id": "cargo-receiver-t5",
       "name": "Cargo Receiver (T5)",
       "row": 0,
