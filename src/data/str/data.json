@@ -12,6 +12,10 @@
       "name": "Crafting"
     },
     {
+      "id": "personal-crafting",
+      "name": "Personal Crafting"
+    },
+    {
       "id": "ore-processing",
       "name": "Ore Processing"
     },
@@ -89,358 +93,378 @@
       "color": "#7d7c7a"
     },
     {
-      "id": "mechanical-drill-impure",
+      "id": "item-printer",
       "position": "-256px -64px",
+      "color": "#7f8786"
+    },
+    {
+      "id": "mechanical-drill-impure",
+      "position": "-320px -64px",
       "color": "#85807a"
     },
     {
       "id": "mechanical-drill",
-      "position": "-320px -64px",
+      "position": "-384px -64px",
       "color": "#898278"
     },
     {
       "id": "mechanical-drill-pure",
-      "position": "-384px -64px",
+      "position": "-448px -64px",
       "color": "#8c8477"
     },
     {
       "id": "refinery",
-      "position": "-448px -64px",
+      "position": "-0px -128px",
       "color": "#676665"
     },
     {
       "id": "smelter",
-      "position": "-0px -128px",
+      "position": "-64px -128px",
       "color": "#727370"
     },
     {
       "id": "synthetizer",
-      "position": "-64px -128px",
+      "position": "-128px -128px",
       "color": "#8e9292"
     },
     {
       "id": "accumulator",
-      "position": "-128px -128px",
+      "position": "-192px -128px",
       "color": "#7d7975"
     },
     {
       "id": "electronics",
-      "position": "-192px -128px",
+      "position": "-256px -128px",
       "color": "#999485"
     },
     {
       "id": "stator",
-      "position": "-256px -128px",
+      "position": "-320px -128px",
       "color": "#716863"
     },
     {
       "id": "battery",
-      "position": "-320px -128px",
+      "position": "-384px -128px",
       "color": "#7b7a78"
     },
     {
       "id": "generator",
-      "position": "-384px -128px",
+      "position": "-448px -128px",
       "color": "#8c8b89"
     },
     {
       "id": "turbine",
-      "position": "-448px -128px",
+      "position": "-0px -192px",
       "color": "#585857"
     },
     {
       "id": "nozzle",
-      "position": "-0px -192px",
+      "position": "-64px -192px",
       "color": "#666666"
     },
     {
       "id": "electromagnet",
-      "position": "-64px -192px",
+      "position": "-128px -192px",
       "color": "#503e37"
     },
     {
       "id": "electromagnetic-coil",
-      "position": "-128px -192px",
+      "position": "-192px -192px",
       "color": "#6a6d6c"
     },
     {
       "id": "synthetic-resin",
-      "position": "-192px -192px",
+      "position": "-256px -192px",
       "color": "#968e92"
     },
     {
       "id": "pressure-tank",
-      "position": "-256px -192px",
+      "position": "-320px -192px",
       "color": "#9f9f9f"
     },
     {
       "id": "heat-resistant-sheet",
-      "position": "-320px -192px",
+      "position": "-384px -192px",
       "color": "#7e7e7d"
     },
     {
       "id": "titanium-housing",
-      "position": "-384px -192px",
+      "position": "-448px -192px",
       "color": "#53576e"
     },
     {
       "id": "pump",
-      "position": "-448px -192px",
+      "position": "-0px -256px",
       "color": "#868482"
     },
     {
       "id": "valve",
-      "position": "-0px -256px",
+      "position": "-64px -256px",
       "color": "#837875"
     },
     {
       "id": "resonator",
-      "position": "-64px -256px",
+      "position": "-128px -256px",
       "color": "#5b5a59"
     },
     {
       "id": "liquid-helium",
-      "position": "-128px -256px",
+      "position": "-192px -256px",
       "color": "#674e75"
     },
     {
       "id": "condenser",
-      "position": "-192px -256px",
+      "position": "-256px -256px",
       "color": "#81807e"
     },
     {
       "id": "nanofibre",
-      "position": "-256px -256px",
+      "position": "-320px -256px",
       "color": "#7b7e81"
     },
     {
       "id": "laser-emitter",
-      "position": "-320px -256px",
+      "position": "-384px -256px",
       "color": "#494645"
     },
     {
       "id": "lens",
-      "position": "-384px -256px",
+      "position": "-448px -256px",
       "color": "#7a7d7b"
     },
     {
       "id": "scanner",
-      "position": "-448px -256px",
+      "position": "-0px -320px",
       "color": "#878b8d"
     },
     {
       "id": "gyroscope",
-      "position": "-0px -320px",
+      "position": "-64px -320px",
       "color": "#9e9c99"
     },
     {
       "id": "basic-building-material",
-      "position": "-64px -320px",
+      "position": "-128px -320px",
       "color": "#979797"
     },
     {
       "id": "wolfram-ore",
-      "position": "-128px -320px",
+      "position": "-192px -320px",
       "color": "#7b4e40"
     },
     {
       "id": "titanium-ore",
-      "position": "-192px -320px",
+      "position": "-256px -320px",
       "color": "#7b7d8a"
     },
     {
       "id": "pistol-ammo-item",
-      "position": "-256px -320px",
+      "position": "-320px -320px",
       "color": "#96876c"
     },
     {
       "id": "titanium-rod",
-      "position": "-320px -320px",
+      "position": "-384px -320px",
       "color": "#5b5f71"
     },
     {
       "id": "titanium-bar",
-      "position": "-384px -320px",
+      "position": "-448px -320px",
       "color": "#606479"
     },
     {
       "id": "wolfram-wire",
-      "position": "-448px -320px",
+      "position": "-0px -384px",
       "color": "#796c67"
     },
     {
       "id": "wolfram-bar",
-      "position": "-0px -384px",
+      "position": "-64px -384px",
       "color": "#866052"
     },
     {
       "id": "calcite-sheets",
-      "position": "-64px -384px",
+      "position": "-128px -384px",
       "color": "#af9f97"
     },
     {
       "id": "calcium-block",
-      "position": "-128px -384px",
+      "position": "-192px -384px",
       "color": "#b19e97"
     },
     {
       "id": "titanium-beam",
-      "position": "-192px -384px",
+      "position": "-256px -384px",
       "color": "#696d7f"
     },
     {
       "id": "titanium-sheet",
-      "position": "-256px -384px",
+      "position": "-320px -384px",
       "color": "#4c556e"
     },
     {
       "id": "wolfram-plate",
-      "position": "-320px -384px",
+      "position": "-384px -384px",
       "color": "#7a4a39"
     },
     {
       "id": "rotor",
-      "position": "-384px -384px",
+      "position": "-448px -384px",
       "color": "#746661"
     },
     {
       "id": "tube",
-      "position": "-448px -384px",
+      "position": "-0px -448px",
       "color": "#868585"
     },
     {
       "id": "syringe",
-      "position": "-0px -448px",
+      "position": "-64px -448px",
       "color": "#7f807f"
     },
     {
       "id": "glass",
-      "position": "-64px -448px",
+      "position": "-128px -448px",
       "color": "#68706d"
     },
     {
       "id": "helium-ore",
-      "position": "-128px -448px",
+      "position": "-192px -448px",
       "color": "#8b7d90"
     },
     {
       "id": "wolfram-powder",
-      "position": "-192px -448px",
+      "position": "-256px -448px",
       "color": "#8b7d78"
     },
     {
       "id": "calcium-powder",
-      "position": "-256px -448px",
+      "position": "-320px -448px",
       "color": "#ada5a0"
     },
     {
       "id": "ceramics",
-      "position": "-320px -448px",
+      "position": "-384px -448px",
       "color": "#76766f"
     },
     {
       "id": "coil",
-      "position": "-384px -448px",
+      "position": "-448px -448px",
       "color": "#81584b"
     },
     {
       "id": "silica-sand",
-      "position": "-448px -448px",
+      "position": "-0px -512px",
       "color": "#979992"
     },
     {
       "id": "explosive",
-      "position": "-0px -512px",
+      "position": "-64px -512px",
       "color": "#92422c"
     },
     {
       "id": "hardening-agent",
-      "position": "-64px -512px",
+      "position": "-128px -512px",
       "color": "#767780"
     },
     {
       "id": "sulphuric-acid",
-      "position": "-128px -512px",
+      "position": "-192px -512px",
       "color": "#b67834"
     },
     {
       "id": "supermagnet",
-      "position": "-192px -512px",
+      "position": "-256px -512px",
       "color": "#6d6c6b"
     },
     {
       "id": "intermediate-building-material",
-      "position": "-256px -512px",
+      "position": "-320px -512px",
       "color": "#97704e"
     },
     {
       "id": "standard-ammo-item",
-      "position": "-320px -512px",
+      "position": "-384px -512px",
       "color": "#83806c"
     },
     {
       "id": "shotgun-ammo-item",
-      "position": "-384px -512px",
+      "position": "-448px -512px",
       "color": "#856e69"
     },
     {
       "id": "heavy-ammo-item",
-      "position": "-448px -512px",
+      "position": "-0px -576px",
       "color": "#8d8c89"
     },
     {
       "id": "impeller",
-      "position": "-0px -576px",
+      "position": "-64px -576px",
       "color": "#484848"
     },
     {
       "id": "pressurized-helium",
-      "position": "-64px -576px",
+      "position": "-128px -576px",
       "color": "#817886"
     },
     {
+      "id": "quartz-building-material",
+      "position": "-192px -576px",
+      "color": "#51747d"
+    },
+    {
+      "id": "quartz-ore",
+      "position": "-256px -576px",
+      "color": "#7eb8b8"
+    },
+    {
+      "id": "power-cell",
+      "position": "-320px -576px",
+      "color": "#7c7f84"
+    },
+    {
       "id": "sulphur-ore",
-      "position": "-128px -576px",
+      "position": "-384px -576px",
       "color": "#cba462"
     },
     {
       "id": "calcium-ore",
-      "position": "-192px -576px",
+      "position": "-448px -576px",
       "color": "#a29d98"
     },
     {
       "id": "ion-injector",
-      "position": "-256px -576px",
+      "position": "-0px -640px",
       "color": "#6d6d6e"
     },
     {
       "id": "superconductor",
-      "position": "-320px -576px",
+      "position": "-64px -640px",
       "color": "#57524e"
     },
     {
       "id": "cargo-receiver-t1",
-      "position": "-384px -576px",
+      "position": "-128px -640px",
       "color": "#777676"
     },
     {
       "id": "cargo-receiver-t2",
-      "position": "-448px -576px",
+      "position": "-192px -640px",
       "color": "#787777"
     },
     {
       "id": "cargo-receiver-t3",
-      "position": "-0px -640px",
+      "position": "-256px -640px",
       "color": "#787777"
     },
     {
       "id": "cargo-receiver-t4",
-      "position": "-64px -640px",
+      "position": "-320px -640px",
       "color": "#787677"
     },
     {
       "id": "cargo-receiver-t5",
-      "position": "-128px -640px",
+      "position": "-384px -640px",
       "color": "#787777"
     }
   ],
@@ -895,6 +919,30 @@
     },
     {
       "category": "raw",
+      "id": "quartz-building-material",
+      "name": "Quartz Building Material",
+      "row": 0,
+      "stack": 1000,
+      "icon": "quartz-building-material"
+    },
+    {
+      "category": "parts",
+      "id": "quartz-ore",
+      "name": "Quartz Ore",
+      "row": 0,
+      "stack": 100,
+      "icon": "quartz-ore"
+    },
+    {
+      "category": "parts",
+      "id": "power-cell",
+      "name": "Power Cell",
+      "row": 0,
+      "stack": 100,
+      "icon": "power-cell"
+    },
+    {
+      "category": "raw",
       "id": "sulphur-ore",
       "name": "Sulphur Ore",
       "row": 0,
@@ -1052,6 +1100,17 @@
         "modules": 0
       },
       "icon": "hammer"
+    },
+    {
+      "category": "personal-crafting",
+      "id": "item-printer",
+      "name": "Basic Item Printer",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "modules": 0
+      },
+      "icon": "item-printer"
     },
     {
       "category": "extraction",
@@ -1973,6 +2032,143 @@
       "category": "crafting"
     },
     {
+      "id": "basicbuildingmaterial_itemprinter",
+      "name": "Basic Building Material",
+      "producers": [
+        "item-printer"
+      ],
+      "time": 1,
+      "in": {
+        "wolfram-ore": 1,
+        "titanium-ore": 1
+      },
+      "out": {
+        "basic-building-material": 10
+      },
+      "row": 0,
+      "category": "personal-crafting"
+    },
+    {
+      "id": "intermediatebuildingmaterial_itemprinter",
+      "name": "Intermediate Building Material",
+      "producers": [
+        "item-printer"
+      ],
+      "time": 1,
+      "in": {
+        "basic-building-material": 20,
+        "coil": 1,
+        "glass": 1,
+        "titanium-housing": 1
+      },
+      "out": {
+        "intermediate-building-material": 10
+      },
+      "row": 0,
+      "category": "personal-crafting"
+    },
+    {
+      "id": "quartzbuildingmaterialitemprinter",
+      "name": "Quartz Building Material",
+      "producers": [
+        "item-printer"
+      ],
+      "time": 1,
+      "in": {
+        "quartz-ore": 1,
+        "intermediate-building-material": 50
+      },
+      "out": {
+        "quartz-building-material": 20
+      },
+      "row": 0,
+      "category": "personal-crafting"
+    },
+    {
+      "id": "pistolammo_itemprinter",
+      "name": "Pistol Ammo",
+      "producers": [
+        "item-printer"
+      ],
+      "time": 1,
+      "in": {
+        "basic-building-material": 7
+      },
+      "out": {
+        "pistol-ammo-item": 10
+      },
+      "row": 0,
+      "category": "personal-crafting"
+    },
+    {
+      "id": "standardammo_itemprinter",
+      "name": "Standard Ammo",
+      "producers": [
+        "item-printer"
+      ],
+      "time": 1,
+      "in": {
+        "basic-building-material": 9,
+        "wolfram-powder": 2
+      },
+      "out": {
+        "standard-ammo-item": 8
+      },
+      "row": 0,
+      "category": "personal-crafting"
+    },
+    {
+      "id": "shotgunammo_itemprinter",
+      "name": "Shotgun Ammo",
+      "producers": [
+        "item-printer"
+      ],
+      "time": 1,
+      "in": {
+        "basic-building-material": 10,
+        "calcium-powder": 3
+      },
+      "out": {
+        "shotgun-ammo-item": 6
+      },
+      "row": 0,
+      "category": "personal-crafting"
+    },
+    {
+      "id": "heavyammo_itemprinter",
+      "name": "Heavy Ammo",
+      "producers": [
+        "item-printer"
+      ],
+      "time": 1,
+      "in": {
+        "basic-building-material": 12,
+        "titanium-rod": 3
+      },
+      "out": {
+        "heavy-ammo-item": 6
+      },
+      "row": 0,
+      "category": "personal-crafting"
+    },
+    {
+      "id": "feaccessitem_itemprinter",
+      "name": "Power Cell",
+      "producers": [
+        "item-printer"
+      ],
+      "time": 1,
+      "in": {
+        "electronics": 10,
+        "explosive": 10
+      },
+      "out": {
+        "power-cell": 1
+      },
+      "row": 0,
+      "category": "personal-crafting"
+    },
+    {
       "id": "sulphuricacid",
       "name": "Sulphuric Acid",
       "producers": [
@@ -2173,22 +2369,6 @@
       },
       "row": 0,
       "category": "crafting"
-    },
-    {
-      "id": "titaniumbar",
-      "name": "Titanium Bar",
-      "producers": [
-        "smelter"
-      ],
-      "time": 2,
-      "in": {
-        "titanium-ore": 2
-      },
-      "out": {
-        "titanium-bar": 2
-      },
-      "row": 0,
-      "category": "ore-processing"
     },
     {
       "id": "wolframore_mechanicaldrill",
