@@ -568,6 +568,23 @@ async function main(): Promise<void> {
 
   const iconsArr = iconsMeta.filter((ic) => usedIconIdsFinal.has(ic.id)).map((ic) => ({ id: ic.id, position: ic.position, color: ic.color }));
 
+  // Ensure categories referenced by items or recipes are present in categoriesMap
+  const initialCategories = Object.values(categoriesMap);
+  const usedCategoryIds = new Set<string>(initialCategories.map((c) => c.id));
+  for (const it of itemsArr) if (it.category) usedCategoryIds.add(it.category);
+  for (const r of recipesArr) if (r.category) usedCategoryIds.add(r.category);
+
+  function categoryIdToName(catId: string): string {
+    if (categoriesMap[catId]) return categoriesMap[catId].name;
+    // Tokens from BD might be like ECrBuildingUISubType::..., attempt to make a friendlier name
+    if (String(catId).includes('ECr')) return tokenToName(String(catId));
+    return String(catId).replace(/[_-]/g, ' ').replace(/\b\w/g, (ch) => ch.toUpperCase());
+  }
+
+  for (const cid of Array.from(usedCategoryIds)) {
+    if (!categoriesMap[cid]) categoriesMap[cid] = { id: cid, name: categoryIdToName(cid) };
+  }
+
   const categoriesArr = Object.values(categoriesMap);
 
   const outData = {

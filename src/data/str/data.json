@@ -14,6 +14,22 @@
     {
       "id": "ore-processing",
       "name": "Ore Processing"
+    },
+    {
+      "id": "raw",
+      "name": "Raw"
+    },
+    {
+      "id": "parts",
+      "name": "Parts"
+    },
+    {
+      "id": "other",
+      "name": "Other"
+    },
+    {
+      "id": "logistics",
+      "name": "Logistics"
     }
   ],
   "icons": [
