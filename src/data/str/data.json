@@ -473,7 +473,7 @@
       "category": "raw",
       "id": "accumulator",
       "name": "Accumulator",
-      "row": 0,
+      "row": 7,
       "stack": 100,
       "icon": "accumulator"
     },
@@ -481,7 +481,7 @@
       "category": "raw",
       "id": "electronics",
       "name": "Electronics",
-      "row": 0,
+      "row": 5,
       "stack": 100,
       "icon": "electronics"
     },
@@ -489,7 +489,7 @@
       "category": "raw",
       "id": "stator",
       "name": "Stator",
-      "row": 0,
+      "row": 4,
       "stack": 100,
       "icon": "stator"
     },
@@ -497,7 +497,7 @@
       "category": "raw",
       "id": "battery",
       "name": "Battery",
-      "row": 0,
+      "row": 6,
       "stack": 100,
       "icon": "battery"
     },
@@ -505,7 +505,7 @@
       "category": "raw",
       "id": "generator",
       "name": "Generator",
-      "row": 0,
+      "row": 7,
       "stack": 100,
       "icon": "generator"
     },
@@ -513,7 +513,7 @@
       "category": "raw",
       "id": "turbine",
       "name": "Turbine",
-      "row": 0,
+      "row": 5,
       "stack": 100,
       "icon": "turbine"
     },
@@ -521,7 +521,7 @@
       "category": "raw",
       "id": "nozzle",
       "name": "Nozzle",
-      "row": 0,
+      "row": 6,
       "stack": 100,
       "icon": "nozzle"
     },
@@ -529,7 +529,7 @@
       "category": "raw",
       "id": "electromagnet",
       "name": "Electromagnet",
-      "row": 0,
+      "row": 9,
       "stack": 100,
       "icon": "electromagnet"
     },
@@ -537,7 +537,7 @@
       "category": "raw",
       "id": "electromagnetic-coil",
       "name": "Electromagnetic Coil",
-      "row": 0,
+      "row": 7,
       "stack": 100,
       "icon": "electromagnetic-coil"
     },
@@ -545,7 +545,7 @@
       "category": "raw",
       "id": "synthetic-resin",
       "name": "Synthetic Resin",
-      "row": 0,
+      "row": 7,
       "stack": 100,
       "icon": "synthetic-resin"
     },
@@ -553,7 +553,7 @@
       "category": "raw",
       "id": "pressure-tank",
       "name": "Pressure Tank",
-      "row": 0,
+      "row": 7,
       "stack": 100,
       "icon": "pressure-tank"
     },
@@ -561,7 +561,7 @@
       "category": "raw",
       "id": "heat-resistant-sheet",
       "name": "Heat Resistant Sheet",
-      "row": 0,
+      "row": 4,
       "stack": 100,
       "icon": "heat-resistant-sheet"
     },
@@ -569,7 +569,7 @@
       "category": "raw",
       "id": "titanium-housing",
       "name": "Titanium Housing",
-      "row": 0,
+      "row": 3,
       "stack": 100,
       "icon": "titanium-housing"
     },
@@ -577,7 +577,7 @@
       "category": "raw",
       "id": "pump",
       "name": "Pump",
-      "row": 0,
+      "row": 8,
       "stack": 100,
       "icon": "pump"
     },
@@ -585,7 +585,7 @@
       "category": "raw",
       "id": "valve",
       "name": "Valve",
-      "row": 0,
+      "row": 5,
       "stack": 100,
       "icon": "valve"
     },
@@ -593,7 +593,7 @@
       "category": "raw",
       "id": "resonator",
       "name": "Resonator",
-      "row": 0,
+      "row": 8,
       "stack": 100,
       "icon": "resonator"
     },
@@ -601,7 +601,7 @@
       "category": "raw",
       "id": "liquid-helium",
       "name": "Liquid Helium",
-      "row": 0,
+      "row": 7,
       "stack": 100,
       "icon": "liquid-helium"
     },
@@ -609,7 +609,7 @@
       "category": "raw",
       "id": "condenser",
       "name": "Condenser",
-      "row": 0,
+      "row": 10,
       "stack": 100,
       "icon": "condenser"
     },
@@ -617,7 +617,7 @@
       "category": "raw",
       "id": "nanofibre",
       "name": "Nanofibre",
-      "row": 0,
+      "row": 9,
       "stack": 100,
       "icon": "nanofibre"
     },
@@ -625,7 +625,7 @@
       "category": "raw",
       "id": "laser-emitter",
       "name": "Laser Emitter",
-      "row": 0,
+      "row": 9,
       "stack": 100,
       "icon": "laser-emitter"
     },
@@ -633,7 +633,7 @@
       "category": "raw",
       "id": "lens",
       "name": "Lens",
-      "row": 0,
+      "row": 8,
       "stack": 100,
       "icon": "lens"
     },
@@ -641,7 +641,7 @@
       "category": "raw",
       "id": "scanner",
       "name": "Scanner",
-      "row": 0,
+      "row": 9,
       "stack": 100,
       "icon": "scanner"
     },
@@ -649,7 +649,7 @@
       "category": "raw",
       "id": "gyroscope",
       "name": "Stabilizer",
-      "row": 0,
+      "row": 4,
       "stack": 100,
       "icon": "gyroscope"
     },
@@ -689,7 +689,7 @@
       "category": "raw",
       "id": "titanium-rod",
       "name": "Titanium Rod",
-      "row": 0,
+      "row": 2,
       "stack": 100,
       "icon": "titanium-rod"
     },
@@ -705,7 +705,7 @@
       "category": "raw",
       "id": "wolfram-wire",
       "name": "Wolfram Wire",
-      "row": 0,
+      "row": 2,
       "stack": 100,
       "icon": "wolfram-wire"
     },
@@ -721,7 +721,7 @@
       "category": "raw",
       "id": "calcite-sheets",
       "name": "Calcite Sheets",
-      "row": 0,
+      "row": 2,
       "stack": 100,
       "icon": "calcite-sheets"
     },
@@ -737,7 +737,7 @@
       "category": "raw",
       "id": "titanium-beam",
       "name": "Titanium Beam",
-      "row": 0,
+      "row": 2,
       "stack": 100,
       "icon": "titanium-beam"
     },
@@ -745,7 +745,7 @@
       "category": "raw",
       "id": "titanium-sheet",
       "name": "Titanium Sheet",
-      "row": 0,
+      "row": 2,
       "stack": 100,
       "icon": "titanium-sheet"
     },
@@ -753,7 +753,7 @@
       "category": "raw",
       "id": "wolfram-plate",
       "name": "Wolfram Plate",
-      "row": 0,
+      "row": 3,
       "stack": 100,
       "icon": "wolfram-plate"
     },
@@ -761,7 +761,7 @@
       "category": "raw",
       "id": "rotor",
       "name": "Rotor",
-      "row": 0,
+      "row": 3,
       "stack": 100,
       "icon": "rotor"
     },
@@ -769,7 +769,7 @@
       "category": "raw",
       "id": "tube",
       "name": "Tube",
-      "row": 0,
+      "row": 3,
       "stack": 100,
       "icon": "tube"
     },
@@ -777,7 +777,7 @@
       "category": "raw",
       "id": "syringe",
       "name": "Applicator",
-      "row": 0,
+      "row": 5,
       "stack": 100,
       "icon": "syringe"
     },
@@ -785,7 +785,7 @@
       "category": "raw",
       "id": "glass",
       "name": "Glass",
-      "row": 0,
+      "row": 3,
       "stack": 100,
       "icon": "glass"
     },
@@ -793,7 +793,7 @@
       "category": "raw",
       "id": "helium-ore",
       "name": "Helium-3",
-      "row": 0,
+      "row": 3,
       "stack": 100,
       "icon": "helium-ore"
     },
@@ -801,7 +801,7 @@
       "category": "raw",
       "id": "wolfram-powder",
       "name": "Wolfram Powder",
-      "row": 0,
+      "row": 2,
       "stack": 100,
       "icon": "wolfram-powder"
     },
@@ -809,7 +809,7 @@
       "category": "raw",
       "id": "calcium-powder",
       "name": "Calcium Powder",
-      "row": 0,
+      "row": 2,
       "stack": 100,
       "icon": "calcium-powder"
     },
@@ -817,7 +817,7 @@
       "category": "raw",
       "id": "ceramics",
       "name": "Ceramics",
-      "row": 0,
+      "row": 3,
       "stack": 100,
       "icon": "ceramics"
     },
@@ -825,7 +825,7 @@
       "category": "raw",
       "id": "coil",
       "name": "Inductor",
-      "row": 0,
+      "row": 5,
       "stack": 100,
       "icon": "coil"
     },
@@ -833,7 +833,7 @@
       "category": "raw",
       "id": "silica-sand",
       "name": "Synthetic Silicon",
-      "row": 0,
+      "row": 4,
       "stack": 100,
       "icon": "silica-sand"
     },
@@ -841,7 +841,7 @@
       "category": "raw",
       "id": "explosive",
       "name": "Chemicals",
-      "row": 0,
+      "row": 4,
       "stack": 100,
       "icon": "explosive"
     },
@@ -849,7 +849,7 @@
       "category": "raw",
       "id": "hardening-agent",
       "name": "Hardening Agent",
-      "row": 0,
+      "row": 6,
       "stack": 100,
       "icon": "hardening-agent"
     },
@@ -857,7 +857,7 @@
       "category": "raw",
       "id": "sulphuric-acid",
       "name": "Sulphuric Acid",
-      "row": 0,
+      "row": 6,
       "stack": 100,
       "icon": "sulphuric-acid"
     },
@@ -865,7 +865,7 @@
       "category": "raw",
       "id": "supermagnet",
       "name": "Supermagnet",
-      "row": 0,
+      "row": 6,
       "stack": 100,
       "icon": "supermagnet"
     },
@@ -905,7 +905,7 @@
       "category": "raw",
       "id": "impeller",
       "name": "Impeller",
-      "row": 0,
+      "row": 6,
       "stack": 100,
       "icon": "impeller"
     },
@@ -913,7 +913,7 @@
       "category": "raw",
       "id": "pressurized-helium",
       "name": "Pressurized Helium",
-      "row": 0,
+      "row": 6,
       "stack": 100,
       "icon": "pressurized-helium"
     },
@@ -937,7 +937,7 @@
       "category": "parts",
       "id": "power-cell",
       "name": "Power Cell",
-      "row": 0,
+      "row": 8,
       "stack": 100,
       "icon": "power-cell"
     },
@@ -945,7 +945,7 @@
       "category": "raw",
       "id": "sulphur-ore",
       "name": "Sulphur Ore",
-      "row": 0,
+      "row": 6,
       "stack": 100,
       "icon": "sulphur-ore"
     },
@@ -961,7 +961,7 @@
       "category": "raw",
       "id": "ion-injector",
       "name": "Ion Injector",
-      "row": 0,
+      "row": 9,
       "stack": 100,
       "icon": "ion-injector"
     },
@@ -969,7 +969,7 @@
       "category": "raw",
       "id": "superconductor",
       "name": "Superconductor",
-      "row": 0,
+      "row": 8,
       "stack": 100,
       "icon": "superconductor"
     },
@@ -1262,7 +1262,7 @@
       "out": {
         "accumulator": 1
       },
-      "row": 0,
+      "row": 7,
       "category": "crafting"
     },
     {
@@ -1280,7 +1280,7 @@
       "out": {
         "generator": 1
       },
-      "row": 0,
+      "row": 7,
       "category": "crafting"
     },
     {
@@ -1298,7 +1298,7 @@
       "out": {
         "electromagnet": 1
       },
-      "row": 0,
+      "row": 9,
       "category": "crafting"
     },
     {
@@ -1317,7 +1317,7 @@
       "out": {
         "pressure-tank": 1
       },
-      "row": 0,
+      "row": 7,
       "category": "crafting"
     },
     {
@@ -1335,7 +1335,7 @@
       "out": {
         "resonator": 1
       },
-      "row": 0,
+      "row": 8,
       "category": "crafting"
     },
     {
@@ -1354,7 +1354,7 @@
       "out": {
         "condenser": 1
       },
-      "row": 0,
+      "row": 10,
       "category": "crafting"
     },
     {
@@ -1372,7 +1372,7 @@
       "out": {
         "laser-emitter": 1
       },
-      "row": 0,
+      "row": 9,
       "category": "crafting"
     },
     {
@@ -1390,7 +1390,7 @@
       "out": {
         "scanner": 1
       },
-      "row": 0,
+      "row": 9,
       "category": "crafting"
     },
     {
@@ -1439,7 +1439,7 @@
       "out": {
         "titanium-rod": 1
       },
-      "row": 0,
+      "row": 2,
       "category": "crafting"
     },
     {
@@ -1455,7 +1455,7 @@
       "out": {
         "wolfram-wire": 2
       },
-      "row": 0,
+      "row": 2,
       "category": "crafting"
     },
     {
@@ -1471,7 +1471,7 @@
       "out": {
         "calcite-sheets": 2
       },
-      "row": 0,
+      "row": 2,
       "category": "crafting"
     },
     {
@@ -1487,7 +1487,7 @@
       "out": {
         "titanium-beam": 1
       },
-      "row": 0,
+      "row": 2,
       "category": "crafting"
     },
     {
@@ -1503,7 +1503,7 @@
       "out": {
         "titanium-sheet": 2
       },
-      "row": 0,
+      "row": 2,
       "category": "crafting"
     },
     {
@@ -1519,7 +1519,7 @@
       "out": {
         "wolfram-plate": 1
       },
-      "row": 0,
+      "row": 3,
       "category": "crafting"
     },
     {
@@ -1536,7 +1536,7 @@
       "out": {
         "rotor": 1
       },
-      "row": 0,
+      "row": 3,
       "category": "crafting"
     },
     {
@@ -1553,7 +1553,7 @@
       "out": {
         "tube": 2
       },
-      "row": 0,
+      "row": 3,
       "category": "crafting"
     },
     {
@@ -1570,7 +1570,7 @@
       "out": {
         "gyroscope": 1
       },
-      "row": 0,
+      "row": 4,
       "category": "crafting"
     },
     {
@@ -1587,7 +1587,7 @@
       "out": {
         "stator": 1
       },
-      "row": 0,
+      "row": 4,
       "category": "crafting"
     },
     {
@@ -1604,7 +1604,7 @@
       "out": {
         "syringe": 1
       },
-      "row": 0,
+      "row": 5,
       "category": "crafting"
     },
     {
@@ -1618,7 +1618,7 @@
       "out": {
         "helium-ore": 8
       },
-      "row": 0,
+      "row": 3,
       "category": "extraction"
     },
     {
@@ -1634,7 +1634,7 @@
       "out": {
         "wolfram-powder": 3
       },
-      "row": 0,
+      "row": 2,
       "category": "crafting"
     },
     {
@@ -1650,7 +1650,7 @@
       "out": {
         "calcium-powder": 3
       },
-      "row": 0,
+      "row": 2,
       "category": "crafting"
     },
     {
@@ -1667,7 +1667,7 @@
       "out": {
         "ceramics": 2
       },
-      "row": 0,
+      "row": 3,
       "category": "crafting"
     },
     {
@@ -1684,7 +1684,7 @@
       "out": {
         "titanium-housing": 1
       },
-      "row": 0,
+      "row": 3,
       "category": "crafting"
     },
     {
@@ -1701,7 +1701,7 @@
       "out": {
         "glass": 1
       },
-      "row": 0,
+      "row": 3,
       "category": "crafting"
     },
     {
@@ -1719,7 +1719,7 @@
       "out": {
         "coil": 1
       },
-      "row": 0,
+      "row": 5,
       "category": "crafting"
     },
     {
@@ -1737,7 +1737,7 @@
       "out": {
         "heat-resistant-sheet": 1
       },
-      "row": 0,
+      "row": 4,
       "category": "crafting"
     },
     {
@@ -1755,7 +1755,7 @@
       "out": {
         "silica-sand": 2
       },
-      "row": 0,
+      "row": 4,
       "category": "crafting"
     },
     {
@@ -1773,7 +1773,7 @@
       "out": {
         "electronics": 1
       },
-      "row": 0,
+      "row": 5,
       "category": "crafting"
     },
     {
@@ -1791,7 +1791,7 @@
       "out": {
         "explosive": 2
       },
-      "row": 0,
+      "row": 4,
       "category": "crafting"
     },
     {
@@ -1809,7 +1809,7 @@
       "out": {
         "hardening-agent": 2
       },
-      "row": 0,
+      "row": 6,
       "category": "crafting"
     },
     {
@@ -1827,7 +1827,7 @@
       "out": {
         "supermagnet": 1
       },
-      "row": 0,
+      "row": 6,
       "category": "crafting"
     },
     {
@@ -1916,7 +1916,7 @@
       "out": {
         "impeller": 1
       },
-      "row": 0,
+      "row": 6,
       "category": "crafting"
     },
     {
@@ -1934,7 +1934,7 @@
       "out": {
         "nozzle": 1
       },
-      "row": 0,
+      "row": 6,
       "category": "crafting"
     },
     {
@@ -1952,7 +1952,7 @@
       "out": {
         "battery": 1
       },
-      "row": 0,
+      "row": 6,
       "category": "crafting"
     },
     {
@@ -1971,7 +1971,7 @@
       "out": {
         "turbine": 1
       },
-      "row": 0,
+      "row": 5,
       "category": "crafting"
     },
     {
@@ -1990,7 +1990,7 @@
       "out": {
         "valve": 1
       },
-      "row": 0,
+      "row": 5,
       "category": "crafting"
     },
     {
@@ -2009,7 +2009,7 @@
       "out": {
         "electromagnetic-coil": 1
       },
-      "row": 0,
+      "row": 7,
       "category": "crafting"
     },
     {
@@ -2028,7 +2028,7 @@
       "out": {
         "pump": 1
       },
-      "row": 0,
+      "row": 8,
       "category": "crafting"
     },
     {
@@ -2165,7 +2165,7 @@
       "out": {
         "power-cell": 1
       },
-      "row": 0,
+      "row": 8,
       "category": "personal-crafting"
     },
     {
@@ -2182,7 +2182,7 @@
       "out": {
         "sulphuric-acid": 1
       },
-      "row": 0,
+      "row": 6,
       "category": "ore-processing"
     },
     {
@@ -2199,7 +2199,7 @@
       "out": {
         "pressurized-helium": 1
       },
-      "row": 0,
+      "row": 6,
       "category": "ore-processing"
     },
     {
@@ -2261,7 +2261,7 @@
       "out": {
         "sulphur-ore": 8
       },
-      "row": 0,
+      "row": 6,
       "category": "extraction"
     },
     {
@@ -2279,7 +2279,7 @@
       "out": {
         "synthetic-resin": 1
       },
-      "row": 0,
+      "row": 7,
       "category": "crafting"
     },
     {
@@ -2296,7 +2296,7 @@
       "out": {
         "liquid-helium": 1
       },
-      "row": 0,
+      "row": 7,
       "category": "crafting"
     },
     {
@@ -2314,7 +2314,7 @@
       "out": {
         "lens": 1
       },
-      "row": 0,
+      "row": 8,
       "category": "crafting"
     },
     {
@@ -2331,7 +2331,7 @@
       "out": {
         "nanofibre": 1
       },
-      "row": 0,
+      "row": 9,
       "category": "crafting"
     },
     {
@@ -2349,7 +2349,7 @@
       "out": {
         "ion-injector": 1
       },
-      "row": 0,
+      "row": 9,
       "category": "crafting"
     },
     {
@@ -2367,7 +2367,7 @@
       "out": {
         "superconductor": 1
       },
-      "row": 0,
+      "row": 8,
       "category": "crafting"
     },
     {

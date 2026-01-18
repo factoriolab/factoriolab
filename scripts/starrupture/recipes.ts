@@ -16,6 +16,7 @@ export type CrInfo = {
   path: string;
   name: string | null;
   buildTime: number | null;
+  level?: number | null;
   inputs: Array<{ itemObjectPath: string; count: number }>;
   output: { itemObjectPath: string; count: number } | null;
   iconObjectPath?: string | null;
@@ -83,6 +84,7 @@ export function parseCrFile(srDataDir: string, objectPath: string): CrInfo {
       info.name = dt?.LocalizedString ?? dt?.SourceString ?? dt?.Key ?? null;
 
       if (props?.BuildTime != null) info.buildTime = props.BuildTime;
+      if (props?.Level != null) info.level = Number(props.Level);
 
       if (props?.NeededResources) {
         for (const n of props.NeededResources) {
