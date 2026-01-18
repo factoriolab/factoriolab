@@ -576,6 +576,10 @@ async function main(): Promise<void> {
       const idx = recipeKeyToIndex.get(canonicalKey)!;
       const existing = recipesArr[idx];
       existing.producers = Array.from(new Set([...(existing.producers || []), ...producers]));
+      // Merge level by taking the minimum (lowest) level among merged recipes
+      const existingLevel = existing.row ?? 0;
+      const thisLevel = crInfo.level ?? 0;
+      existing.row = Math.min(existingLevel, thisLevel);
       continue;
     }
 
@@ -599,9 +603,22 @@ async function main(): Promise<void> {
       time: time,
       in: inMap,
       out: outMap,
-      row: 0,
+      row: (crInfo.level != null ? crInfo.level : 0),
       category: recipeCategory,
     });
+  }
+
+  // After building recipes, prefer item rows derived from recipe levels where available
+  const minLevelByItem: Record<string, number> = {};
+  for (const r of recipesArr) {
+    if (!r.out) continue;
+    for (const outId of Object.keys(r.out)) {
+      const lvl = r.row ?? 0;
+      if (minLevelByItem[outId] == null || lvl < minLevelByItem[outId]) minLevelByItem[outId] = lvl;
+    }
+  }
+  for (const it of itemsArr) {
+    if (minLevelByItem[it.id] != null) it.row = minLevelByItem[it.id];
   }
 
   // Build icons array: include building icons and item icons used
