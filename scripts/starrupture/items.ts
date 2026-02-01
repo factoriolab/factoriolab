@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+
 import { getJsonData } from '../helpers/file.helpers';
 import { normalizeObjectPath } from './utils';
 
-export type ItemInfo = {
+export interface ItemInfo {
   id: string; // normalized id e.g. sulpur-ore
   fileBasename: string; // I_SulphurOre
   path: string;
@@ -12,7 +13,7 @@ export type ItemInfo = {
   iconObjectPath: string | null;
   uiItemType: string | null;
   objectPaths: string[]; // keys to map references: '/Game/Chimera/Items/I_SulphurOre', 'I_SulphurOre', 'I_SulphurOre_C'
-};
+}
 
 function slugifyName(s: string): string {
   return s
@@ -34,7 +35,8 @@ export function listItemFiles(srDataDir: string): string[] {
       const full = path.join(dir, e);
       const stat = fs.statSync(full);
       if (stat.isDirectory()) walk(full);
-      else if (stat.isFile() && e.startsWith('I_') && e.endsWith('.json')) results.push(full);
+      else if (stat.isFile() && e.startsWith('I_') && e.endsWith('.json'))
+        results.push(full);
     }
   }
 
@@ -59,14 +61,24 @@ export function parseItemFile(filePath: string): ItemInfo {
 
   for (const obj of raw) {
     // Look for the CDO object (Default__I_..._C)
-    if (obj?.Type && typeof obj.Name === 'string' && obj.Name.startsWith('Default__')) {
+    if (
+      obj?.Type &&
+      typeof obj.Name === 'string' &&
+      obj.Name.startsWith('Default__')
+    ) {
       const props = obj?.Properties ?? {};
       if (props?.MaxStack != null) info.stack = props.MaxStack;
       if (props?.ItemIcon?.ResourceObject?.ObjectPath)
-        info.iconObjectPath = normalizeObjectPath(props.ItemIcon.ResourceObject.ObjectPath);
+        info.iconObjectPath = normalizeObjectPath(
+          props.ItemIcon.ResourceObject.ObjectPath,
+        );
 
       const iname = props?.ItemName ?? {};
-      info.name = iname?.LocalizedString ?? iname?.SourceString ?? iname?.Key ?? info.name;
+      info.name =
+        iname?.LocalizedString ??
+        iname?.SourceString ??
+        iname?.Key ??
+        info.name;
 
       info.uiItemType = props?.UIItemType ?? null;
 
@@ -94,7 +106,10 @@ export function buildItemMap(srDataDir: string): Record<string, ItemInfo> {
     const it = parseItemFile(f);
     // compute object path derived from the file relative path
     // e.g., sr-data/Weapons/AmmoTypes/I_PistolAmmoItem.json -> /Game/Chimera/Weapons/AmmoTypes/I_PistolAmmoItem
-    const rel = path.relative(srDataDir, f).replace(/\\/g, '/').replace(/\.json$/i, '');
+    const rel = path
+      .relative(srDataDir, f)
+      .replace(/\\/g, '/')
+      .replace(/\.json$/i, '');
     const gamePath = `/Game/Chimera/${rel}`;
 
     // add entries

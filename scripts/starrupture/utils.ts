@@ -1,4 +1,6 @@
-export function normalizeObjectPath(pathStr: string | undefined | null): string | null {
+export function normalizeObjectPath(
+  pathStr: string | undefined | null,
+): string | null {
   if (pathStr == null) return null;
   // Trim whitespace
   let s = pathStr.trim();

@@ -2,20 +2,40 @@ import fs from 'fs';
 import path from 'path';
 
 import { logTime, logWarn } from './helpers/log.helpers';
-import { listDaFiles, parseDaFile } from './starrupture/buildings';
 import { parseBdFile } from './starrupture/buildingData';
-import { listCrcFiles, parseCrcFile, parseCrFile, CrInfo, CrcInfo } from './starrupture/recipes';
+import { listDaFiles, parseDaFile } from './starrupture/buildings';
+import {
+  computeCargoRate,
+  expandProducersForPurity,
+  makeBeltEntry,
+  makeMachineEntry,
+  slugify,
+} from './starrupture/helpers';
+import {
+  generateCargoIcon,
+  generatePurityVariants,
+  generateRailZoom,
+  IconEntry,
+  indexUiIcons,
+  packIcons,
+  type ZoomOptions,
+} from './starrupture/icons';
 import { buildItemMap } from './starrupture/items';
-import { packIcons, IconEntry, indexUiIcons, generatePurityVariants, generateRailZoom, generateCargoIcon, type ZoomOptions } from './starrupture/icons';
-import { slugify, makeMachineEntry, makeBeltEntry, expandProducersForPurity, computeCargoRate } from './starrupture/helpers';
+import {
+  CrcInfo,
+  CrInfo,
+  listCrcFiles,
+  parseCrcFile,
+  parseCrFile,
+} from './starrupture/recipes';
 
-type CLIArgs = {
+interface CLIArgs {
   input: string;
   output: string;
   dryRun: boolean;
   verbose: boolean;
   buildings: string[] | null; // null means no filter (all buildings)
-};
+}
 
 const DEFAULT_BUILDINGS = [
   'DA_AcidExtractor',
@@ -47,7 +67,7 @@ const RAIL_IMAGE_ADJUSTMENTS: Record<string, ZoomOptions> = {
   'drone-rail-t1': { centreOffsetPctX: 0.02 },
   'drone-rail-t2': { centreOffsetPctX: 0.04 },
   'drone-rail-t3': { centreOffsetPctX: 0.02 },
-  'drone-rail-t4': { centreOffsetPctX: 0.00 },
+  'drone-rail-t4': { centreOffsetPctX: 0.0 },
   'drone-rail-t5': { centreOffsetPctX: 0.02 },
 };
 
@@ -68,7 +88,7 @@ const CARGO_IMAGE_CROP = {
   rightPct: 0.25,
   topPct: 0.2,
   bottomPct: 0,
-}
+};
 
 const DEFAULT_BUILD_TIME = 10; // seconds
 
@@ -103,7 +123,10 @@ function parseArgs(argv: string[]): CLIArgs {
       if (val.toLowerCase() === 'all') {
         out.buildings = null;
       } else {
-        out.buildings = val.split(',').map((s) => s.trim()).filter(Boolean);
+        out.buildings = val
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean);
       }
     } else if (arg === '--dry-run') out.dryRun = true;
     else if (arg === '--verbose') out.verbose = true;
@@ -130,8 +153,12 @@ async function main(): Promise<void> {
   let daFilesFiltered: string[] = daFiles;
   if (args.buildings != null) {
     const allowed = new Set(args.buildings);
-    daFilesFiltered = daFiles.filter((fp) => allowed.has(path.basename(fp, '.json')));
-    console.log(`Filtered DA files to ${daFilesFiltered.length} entries: ${args.buildings.join(', ')}`);
+    daFilesFiltered = daFiles.filter((fp) =>
+      allowed.has(path.basename(fp, '.json')),
+    );
+    console.log(
+      `Filtered DA files to ${daFilesFiltered.length} entries: ${args.buildings.join(', ')}`,
+    );
   } else {
     console.log('No building filter applied; processing all DA files');
   }
@@ -147,7 +174,8 @@ async function main(): Promise<void> {
       const bdPath = path.join(srData, bdRelative + '.json');
 
       if (!fs.existsSync(bdPath)) {
-        if (args.verbose) logWarn(`BD file not found for ${info.id}: ${bdPath}`);
+        if (args.verbose)
+          logWarn(`BD file not found for ${info.id}: ${bdPath}`);
         return { da: info, bd: null };
       }
 
@@ -173,7 +201,10 @@ async function main(): Promise<void> {
       includedCrcIds.add(crcId);
     }
   }
-  if (includedCrcIds.size > 0) console.log(`Filtered to ${includedCrcIds.size} CRCs referenced by filtered buildings`);
+  if (includedCrcIds.size > 0)
+    console.log(
+      `Filtered to ${includedCrcIds.size} CRCs referenced by filtered buildings`,
+    );
 
   // --- Recipes ---
   logTime('Scanning CRC recipe collections');
@@ -181,8 +212,14 @@ async function main(): Promise<void> {
   console.log(`Found ${crcFiles.length} CRC files`);
 
   // Only parse CRC files that are referenced by our filtered buildings (unless no filter was applied)
-  const crcFilesFiltered = crcFiles.filter((p) => includedCrcIds.size === 0 || includedCrcIds.has(path.basename(p, '.json')));
-  console.log(`Using ${crcFilesFiltered.length} CRC files relevant to filtered buildings`);
+  const crcFilesFiltered = crcFiles.filter(
+    (p) =>
+      includedCrcIds.size === 0 ||
+      includedCrcIds.has(path.basename(p, '.json')),
+  );
+  console.log(
+    `Using ${crcFilesFiltered.length} CRC files relevant to filtered buildings`,
+  );
 
   const crcParsed: CrcInfo[] = crcFilesFiltered
     .map((p: string) => {
@@ -201,7 +238,9 @@ async function main(): Promise<void> {
     for (const rp of c.recipes) crObjectPathSet.add(rp);
   }
   const crObjectPaths = Array.from(crObjectPathSet);
-  console.log(`Found ${crObjectPaths.length} unique CR object paths referenced by selected CRCs`);
+  console.log(
+    `Found ${crObjectPaths.length} unique CR object paths referenced by selected CRCs`,
+  );
 
   const crParsed = crObjectPaths
     .map((objPath: string) => {
@@ -219,46 +258,60 @@ async function main(): Promise<void> {
   const itemMap = buildItemMap(srData);
 
   // Map recipe IO to item ids and filter invalid recipes
-  const mappedRecipes = crParsed.map((crRaw) => {
-    // Map output
-    if (!crRaw.output) {
-      logWarn(`Recipe ${crRaw.id} has no output; skipping as fatal`);
-      return null;
-    }
-
-    const outItemPath = crRaw.output.itemObjectPath;
-    const outItemKey = outItemPath?.startsWith('/Game/') ? outItemPath : (outItemPath?.replace(/^BlueprintGeneratedClass\'|\'$/g, '') ?? outItemPath);
-    const outItem = itemMap[outItemKey] ?? itemMap[outItemKey.toLowerCase()];
-    if (!outItem) {
-      logWarn(`Unable to resolve output item for recipe ${crRaw.id}: ${outItemPath}`);
-      return null;
-    }
-
-    const inputs: Record<string, number> = {};
-    for (const inp of crRaw.inputs) {
-      const ik = inp.itemObjectPath?.startsWith('/Game/') ? inp.itemObjectPath : (inp.itemObjectPath?.replace(/^BlueprintGeneratedClass\'|\'$/g, '') ?? inp.itemObjectPath);
-      const ii = itemMap[ik] ?? itemMap[ik.toLowerCase()];
-      if (!ii) {
-        logWarn(`Unable to resolve input item for recipe ${crRaw.id}: ${inp.itemObjectPath}`);
-        // still include with original path key so it can be examined
-        inputs[inp.itemObjectPath ?? 'unknown'] = inp.count;
-      } else {
-        inputs[ii.id] = inp.count;
+  const mappedRecipes = crParsed
+    .map((crRaw) => {
+      // Map output
+      if (!crRaw.output) {
+        logWarn(`Recipe ${crRaw.id} has no output; skipping as fatal`);
+        return null;
       }
-    }
 
-    const out: Record<string, number> = {};
-    out[outItem.id] = crRaw.output.count;
+      const outItemPath = crRaw.output.itemObjectPath;
+      const outItemKey = outItemPath?.startsWith('/Game/')
+        ? outItemPath
+        : (outItemPath?.replace(/^BlueprintGeneratedClass\'|\'$/g, '') ??
+          outItemPath);
+      const outItem = itemMap[outItemKey] ?? itemMap[outItemKey.toLowerCase()];
+      if (!outItem) {
+        logWarn(
+          `Unable to resolve output item for recipe ${crRaw.id}: ${outItemPath}`,
+        );
+        return null;
+      }
 
-    return {
-      id: crRaw.id,
-      name: crRaw.name,
-      time: (crRaw.buildTime ?? DEFAULT_BUILD_TIME) || 1, // Don't allow zero build time
-      in: inputs,
-      out: out,
-      sourcePath: crRaw.path,
-    };
-  }).filter((x) => x != null);
+      const inputs: Record<string, number> = {};
+      for (const inp of crRaw.inputs) {
+        const ik = inp.itemObjectPath?.startsWith('/Game/')
+          ? inp.itemObjectPath
+          : (inp.itemObjectPath?.replace(
+              /^BlueprintGeneratedClass\'|\'$/g,
+              '',
+            ) ?? inp.itemObjectPath);
+        const ii = itemMap[ik] ?? itemMap[ik.toLowerCase()];
+        if (!ii) {
+          logWarn(
+            `Unable to resolve input item for recipe ${crRaw.id}: ${inp.itemObjectPath}`,
+          );
+          // still include with original path key so it can be examined
+          inputs[inp.itemObjectPath ?? 'unknown'] = inp.count;
+        } else {
+          inputs[ii.id] = inp.count;
+        }
+      }
+
+      const out: Record<string, number> = {};
+      out[outItem.id] = crRaw.output.count;
+
+      return {
+        id: crRaw.id,
+        name: crRaw.name,
+        time: (crRaw.buildTime ?? DEFAULT_BUILD_TIME) || 1, // Don't allow zero build time
+        in: inputs,
+        out: out,
+        sourcePath: crRaw.path,
+      };
+    })
+    .filter((x) => x != null);
 
   // --- Icons: select from included buildings and recipes ---
   logTime('Selecting icons for included buildings and recipes');
@@ -272,7 +325,9 @@ async function main(): Promise<void> {
     }
   }
 
-  const includedCrParsed = crParsed.filter((r) => includedCrObjectPaths.has(r.objectPath));
+  const includedCrParsed = crParsed.filter((r) =>
+    includedCrObjectPaths.has(r.objectPath),
+  );
 
   // Items referenced by included recipes
   const includedItemIds = new Set<string>();
@@ -295,27 +350,42 @@ async function main(): Promise<void> {
   const uiIndex = indexUiIcons(srData);
 
   for (const parsedEntry of parsed) {
-    if (parsedEntry.bd && parsedEntry.bd.iconObjectPath) {
-      const rawId = (parsedEntry.bd.uniqueName ?? parsedEntry.bd.id ?? parsedEntry.da.id ?? '').replace(/^DA_/, '');
-      const bSlug = rawId.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, '');
+    if (parsedEntry.bd?.iconObjectPath) {
+      const rawId = (
+        parsedEntry.bd.uniqueName ??
+        parsedEntry.bd.id ??
+        parsedEntry.da.id ??
+        ''
+      ).replace(/^DA_/, '');
+      const bSlug = rawId
+        .replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase())
+        .replace(/^-/, '');
 
       // Try to resolve base icon path from BD objectPath
       let basePath: string | undefined;
       try {
-        const parts = parsedEntry.bd.iconObjectPath.replace('/Game/Chimera/UI/', '').split('/');
+        const parts = parsedEntry.bd.iconObjectPath
+          .replace('/Game/Chimera/UI/', '')
+          .split('/');
         const basename = parts.pop() ?? '';
         basePath = uiIndex[basename.toLowerCase()] ?? uiIndex[bSlug];
       } catch (e) {
         basePath = undefined;
       }
 
-      if (PURITY_BUILDINGS.includes(bSlug) && basePath && fs.existsSync(basePath)) {
+      if (
+        PURITY_BUILDINGS.includes(bSlug) &&
+        basePath &&
+        fs.existsSync(basePath)
+      ) {
         try {
           const variantEntries = await generatePurityVariants(basePath, bSlug);
           for (const ve of variantEntries) buildingIconEntries.push(ve);
           continue;
         } catch (e) {
-          logWarn(`Failed to generate overlay icons for ${bSlug}: ${(e as Error).message}`);
+          logWarn(
+            `Failed to generate overlay icons for ${bSlug}: ${(e as Error).message}`,
+          );
         }
       }
 
@@ -325,7 +395,7 @@ async function main(): Promise<void> {
         try {
           const railEntry = await generateRailZoom(basePath, bSlug, {
             size: 64,
-            capStartPct: 0.10,
+            capStartPct: 0.1,
             capEndPct: 0.18,
             centreOffsetPctX: 0.02,
             centreSizePctX: 0.27,
@@ -337,12 +407,17 @@ async function main(): Promise<void> {
           buildingIconEntries.push(railEntry);
           continue;
         } catch (e) {
-          logWarn(`Failed to generate rail zoom for ${bSlug}: ${(e as Error).message}`);
+          logWarn(
+            `Failed to generate rail zoom for ${bSlug}: ${(e as Error).message}`,
+          );
         }
       }
 
       // Fallback to default icon entry
-      buildingIconEntries.push({ id: bSlug, objectPath: parsedEntry.bd.iconObjectPath });
+      buildingIconEntries.push({
+        id: bSlug,
+        objectPath: parsedEntry.bd.iconObjectPath,
+      });
     }
   }
 
@@ -359,30 +434,51 @@ async function main(): Promise<void> {
   // --- Cargo icons: generate cropped left-aligned icons with tier labels ---
   const cargoIconEntries: IconEntry[] = [];
   try {
-    const cargoKey = path.basename(CARGO_IMAGE_CROP.source).replace(/\.[^/.]+$/, '').toLowerCase();
+    const cargoKey = path
+      .basename(CARGO_IMAGE_CROP.source)
+      .replace(/\.[^/.]+$/, '')
+      .toLowerCase();
     const cargoBasePath = uiIndex[cargoKey];
     if (cargoBasePath && fs.existsSync(cargoBasePath)) {
       for (const [cid, cfg] of Object.entries(CARGO_RECEIVERS)) {
-        const match = String(cfg.input ?? '').match(/t(\d+)/i);
+        const match = /t(\d+)/i.exec(String(cfg.input ?? ''));
         const label = match ? `T${match[1]}` : '';
         try {
-          const ce = await generateCargoIcon(cargoBasePath, cid, CARGO_IMAGE_CROP, { size: 64, label });
+          const ce = await generateCargoIcon(
+            cargoBasePath,
+            cid,
+            CARGO_IMAGE_CROP,
+            { size: 64, label },
+          );
           cargoIconEntries.push(ce);
         } catch (e) {
-          logWarn(`Failed to generate cargo icon for ${cid}: ${(e as Error).message}`);
+          logWarn(
+            `Failed to generate cargo icon for ${cid}: ${(e as Error).message}`,
+          );
         }
       }
     } else {
-      logWarn(`Cargo icon source not found in UI index: ${CARGO_IMAGE_CROP.source}`);
+      logWarn(
+        `Cargo icon source not found in UI index: ${CARGO_IMAGE_CROP.source}`,
+      );
     }
   } catch (e) {
     logWarn(`Failed to generate cargo icons: ${(e as Error).message}`);
   }
 
-  const iconsToPack = [...buildingIconEntries, ...itemIconEntries, ...cargoIconEntries];
+  const iconsToPack = [
+    ...buildingIconEntries,
+    ...itemIconEntries,
+    ...cargoIconEntries,
+  ];
   const iconsOutPath = path.join(args.output, 'icons.webp');
   // pack icons (attempt to write sprite if sharp present and not dry-run)
-  const iconsMeta = await packIcons(srData, iconsOutPath, iconsToPack, { iconSize: 64, padding: 0, columns: 8, dryRun: args.dryRun });
+  const iconsMeta = await packIcons(srData, iconsOutPath, iconsToPack, {
+    iconSize: 64,
+    padding: 0,
+    columns: 8,
+    dryRun: args.dryRun,
+  });
   logTime(`Packed ${iconsMeta.length} icons into ${iconsOutPath}`);
 
   // --- Generate final data.json using the building filter ---
@@ -392,7 +488,10 @@ async function main(): Promise<void> {
   const crcToBuildings: Record<string, string[]> = {};
   // Also gather building -> category mapping and category list
   const buildingSlugToCategory: Record<string, string> = {};
-  const categoriesMap: Record<string, { id: string; name: string; icon?: string }> = {};
+  const categoriesMap: Record<
+    string,
+    { id: string; name: string; icon?: string }
+  > = {};
 
   function tokenToId(token: string): string {
     return token
@@ -402,7 +501,10 @@ async function main(): Promise<void> {
   }
 
   function tokenToName(token: string): string {
-    const raw = token.replace(/^ECrBuildingUISubType::|^ECrBuildingUIType::/, '');
+    const raw = token.replace(
+      /^ECrBuildingUISubType::|^ECrBuildingUIType::/,
+      '',
+    );
     // Split camelcase / underscores
     return raw.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ');
   }
@@ -411,7 +513,12 @@ async function main(): Promise<void> {
     const cp = parsedEntry.da.craftingRecipeCollectionPath;
     if (!cp) continue;
     const crcId = cp.split('/').pop() ?? '';
-    const bSlug = slugify((parsedEntry.bd?.uniqueName ?? parsedEntry.bd?.id ?? parsedEntry.da.id ?? ''));
+    const bSlug = slugify(
+      parsedEntry.bd?.uniqueName ??
+        parsedEntry.bd?.id ??
+        parsedEntry.da.id ??
+        '',
+    );
     if (!crcToBuildings[crcId]) crcToBuildings[crcId] = [];
     crcToBuildings[crcId].push(bSlug);
 
@@ -422,24 +529,35 @@ async function main(): Promise<void> {
       const catId = tokenToId(String(catRaw));
       const catName = tokenToName(String(catRaw));
       buildingSlugToCategory[bSlug] = catId;
-      if (!categoriesMap[catId]) categoriesMap[catId] = { id: catId, name: catName, icon: CATEGORY_ICONS[catId] ?? undefined };
+      if (!categoriesMap[catId])
+        categoriesMap[catId] = {
+          id: catId,
+          name: catName,
+          icon: CATEGORY_ICONS[catId] ?? undefined,
+        };
     }
   }
 
   // Included CRs from included CRCs
   const includedCrcIdsList = Array.from(includedCrcIds);
   const includedCrObjectPathsList = Array.from(includedCrObjectPaths);
-  const includedCrInfos = crParsed.filter((r) => includedCrObjectPathsList.includes(r.objectPath));
+  const includedCrInfos = crParsed.filter((r) =>
+    includedCrObjectPathsList.includes(r.objectPath),
+  );
 
   // Determine included items from these recipes
   const includedItemIdsFinal = new Set<string>();
   for (const crInfo of includedCrInfos) {
     if (crInfo.output) {
-      const outItem = itemMap[crInfo.output.itemObjectPath ?? ''] ?? itemMap[(crInfo.output.itemObjectPath ?? '').toLowerCase()];
+      const outItem =
+        itemMap[crInfo.output.itemObjectPath ?? ''] ??
+        itemMap[(crInfo.output.itemObjectPath ?? '').toLowerCase()];
       if (outItem) includedItemIdsFinal.add(outItem.id);
     }
     for (const inp of crInfo.inputs) {
-      const inItem = itemMap[inp.itemObjectPath ?? ''] ?? itemMap[(inp.itemObjectPath ?? '').toLowerCase()];
+      const inItem =
+        itemMap[inp.itemObjectPath ?? ''] ??
+        itemMap[(inp.itemObjectPath ?? '').toLowerCase()];
       if (inItem) includedItemIdsFinal.add(inItem.id);
     }
   }
@@ -451,9 +569,15 @@ async function main(): Promise<void> {
     const it = Object.values(itemMap).find((x) => x.id === iid);
     if (!it) continue;
     const iconEntry = iconsMeta.find((ic) => ic.id === it.id);
-    if (!iconEntry) logWarn(`No icon found for item ${it.id}; using fallback ${fallbackIconId}`);
+    if (!iconEntry)
+      logWarn(
+        `No icon found for item ${it.id}; using fallback ${fallbackIconId}`,
+      );
     itemsArr.push({
-      category: it.uiItemType && String(it.uiItemType).includes('Resource') ? 'raw' : 'parts',
+      category:
+        it.uiItemType && String(it.uiItemType).includes('Resource')
+          ? 'raw'
+          : 'parts',
       id: it.id,
       name: it.name ?? it.fileBasename,
       row: 0,
@@ -464,9 +588,16 @@ async function main(): Promise<void> {
 
   // Add building entries for filtered buildings. For logistics lines (drone rails) emit a 'belt' subobject; otherwise emit 'machine'.
   for (const parsedEntry of parsed) {
-    const bId = (parsedEntry.bd?.uniqueName ?? parsedEntry.bd?.id ?? parsedEntry.da.id ?? '').replace(/^DA_/, '');
+    const bId = (
+      parsedEntry.bd?.uniqueName ??
+      parsedEntry.bd?.id ??
+      parsedEntry.da.id ??
+      ''
+    ).replace(/^DA_/, '');
     if (!bId) continue;
-    const bSlug = bId.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, '');
+    const bSlug = bId
+      .replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase())
+      .replace(/^-/, '');
     // avoid duplicates
     if (itemsArr.find((x) => x.id === bSlug)) continue;
 
@@ -479,7 +610,16 @@ async function main(): Promise<void> {
       const baseMove = parsedEntry.da.logisticsMoveSpeed ?? 200;
       // Transform from internal value to units per second
       const speed = Number((baseMove / 100).toFixed(6));
-      itemsArr.push(makeBeltEntry(parsedEntry, bSlug, parsedEntry.bd?.name ?? parsedEntry.da.id, speed, categoryForBuilding, iconEntry?.id ?? bSlug));
+      itemsArr.push(
+        makeBeltEntry(
+          parsedEntry,
+          bSlug,
+          parsedEntry.bd?.name ?? parsedEntry.da.id,
+          speed,
+          categoryForBuilding,
+          iconEntry?.id ?? bSlug,
+        ),
+      );
       continue;
     }
 
@@ -488,13 +628,49 @@ async function main(): Promise<void> {
     // Variant-enabled buildings: create Impure, Normal (default), and Pure variants
     if (PURITY_BUILDINGS.includes(bSlug)) {
       const iconBase = iconEntry?.id ?? bSlug;
-      itemsArr.push(makeMachineEntry(parsedEntry, bSlug, `${parsedEntry.bd?.name ?? parsedEntry.da.id} (Normal)`, 1, categoryForBuilding, bSlug));
-      itemsArr.push(makeMachineEntry(parsedEntry, `${bSlug}-impure`, `${parsedEntry.bd?.name ?? parsedEntry.da.id} (Impure)`, 0.5, categoryForBuilding, `${bSlug}-impure`));
-      itemsArr.push(makeMachineEntry(parsedEntry, `${bSlug}-pure`, `${parsedEntry.bd?.name ?? parsedEntry.da.id} (Pure)`, 2, categoryForBuilding, `${bSlug}-pure`));
+      itemsArr.push(
+        makeMachineEntry(
+          parsedEntry,
+          bSlug,
+          `${parsedEntry.bd?.name ?? parsedEntry.da.id} (Normal)`,
+          1,
+          categoryForBuilding,
+          bSlug,
+        ),
+      );
+      itemsArr.push(
+        makeMachineEntry(
+          parsedEntry,
+          `${bSlug}-impure`,
+          `${parsedEntry.bd?.name ?? parsedEntry.da.id} (Impure)`,
+          0.5,
+          categoryForBuilding,
+          `${bSlug}-impure`,
+        ),
+      );
+      itemsArr.push(
+        makeMachineEntry(
+          parsedEntry,
+          `${bSlug}-pure`,
+          `${parsedEntry.bd?.name ?? parsedEntry.da.id} (Pure)`,
+          2,
+          categoryForBuilding,
+          `${bSlug}-pure`,
+        ),
+      );
       continue;
     }
 
-    itemsArr.push(makeMachineEntry(parsedEntry, bSlug, parsedEntry.bd?.name ?? parsedEntry.da.id, 1, categoryForBuilding, iconEntry?.id ?? bSlug));
+    itemsArr.push(
+      makeMachineEntry(
+        parsedEntry,
+        bSlug,
+        parsedEntry.bd?.name ?? parsedEntry.da.id,
+        1,
+        categoryForBuilding,
+        iconEntry?.id ?? bSlug,
+      ),
+    );
   }
 
   // Add cargo receivers (fake machines) for each tier
@@ -512,7 +688,7 @@ async function main(): Promise<void> {
     const rate = computeCargoRate(railRate, (cfg as any).delay ?? 0, 100);
     const iconEntry = iconsMeta.find((ic) => ic.id === cid);
     const iconId = iconEntry?.id ?? 'missing-icon';
-    const tierLabelRaw = String(cfg.input ?? '').match(/t(\d+)/i)?.[1] ?? '';
+    const tierLabelRaw = /t(\d+)/i.exec(String(cfg.input ?? ''))?.[1] ?? '';
     const niceName = `Cargo Receiver${tierLabelRaw ? ' (T' + tierLabelRaw + ')' : ''}`;
     // Represent cargo receivers as belts since they transfer items
     const entry = makeBeltEntry({}, cid, niceName, rate, 'logistics', iconId);
@@ -526,7 +702,12 @@ async function main(): Promise<void> {
   const usedRecipeIds = new Set<string>();
 
   function normalizeMapKeys(m: Record<string, number>) {
-    return Object.keys(m).sort().reduce((acc: Record<string, number>, k) => { acc[k] = m[k]; return acc; }, {} as Record<string, number>);
+    return Object.keys(m)
+      .sort()
+      .reduce<Record<string, number>>((acc: Record<string, number>, k) => {
+        acc[k] = m[k];
+        return acc;
+      }, {});
   }
 
   for (const crInfo of includedCrInfos) {
@@ -535,34 +716,51 @@ async function main(): Promise<void> {
       continue;
     }
 
-    const outItem = itemMap[crInfo.output.itemObjectPath ?? ''] ?? itemMap[(crInfo.output.itemObjectPath ?? '').toLowerCase()];
+    const outItem =
+      itemMap[crInfo.output.itemObjectPath ?? ''] ??
+      itemMap[(crInfo.output.itemObjectPath ?? '').toLowerCase()];
     if (!outItem) {
-      logWarn(`Skipping recipe ${crInfo.id} because output item couldn't be resolved: ${crInfo.output.itemObjectPath}`);
+      logWarn(
+        `Skipping recipe ${crInfo.id} because output item couldn't be resolved: ${crInfo.output.itemObjectPath}`,
+      );
       continue;
     }
 
     const inMap: Record<string, number> = {};
     for (const inp of crInfo.inputs) {
-      const ii = itemMap[inp.itemObjectPath ?? ''] ?? itemMap[(inp.itemObjectPath ?? '').toLowerCase()];
+      const ii =
+        itemMap[inp.itemObjectPath ?? ''] ??
+        itemMap[(inp.itemObjectPath ?? '').toLowerCase()];
       if (ii) inMap[ii.id] = (inMap[ii.id] ?? 0) + inp.count;
-      else inMap[inp.itemObjectPath ?? 'unknown'] = (inMap[inp.itemObjectPath ?? 'unknown'] ?? 0) + inp.count;
+      else
+        inMap[inp.itemObjectPath ?? 'unknown'] =
+          (inMap[inp.itemObjectPath ?? 'unknown'] ?? 0) + inp.count;
     }
 
     const outMap: Record<string, number> = {};
     outMap[outItem.id] = crInfo.output.count;
 
     // producers: find CRC id that contains this CR
-    const crcForThis = crcParsed.find((crc) => crc.recipes.includes(crInfo.objectPath));
+    const crcForThis = crcParsed.find((crc) =>
+      crc.recipes.includes(crInfo.objectPath),
+    );
     let producers = crcForThis ? (crcToBuildings[crcForThis.id] ?? []) : [];
 
     // Expand any producer references that match buildings listed in PURITY_BUILDINGS.
     if (producers.length > 0) {
       const itemsPresent = new Set(itemsArr.map((it) => it.id));
-      producers = expandProducersForPurity(producers, new Set(PURITY_BUILDINGS), itemsPresent);
+      producers = expandProducersForPurity(
+        producers,
+        new Set(PURITY_BUILDINGS),
+        itemsPresent,
+      );
     }
 
     // Determine category: prefer producer building category when available
-    let recipeCategory = outItem.uiItemType && String(outItem.uiItemType).includes('Resource') ? 'raw' : 'parts';
+    let recipeCategory =
+      outItem.uiItemType && String(outItem.uiItemType).includes('Resource')
+        ? 'raw'
+        : 'parts';
     if (producers.length > 0) {
       const firstProducer = producers[0];
       const bcat = buildingSlugToCategory[firstProducer];
@@ -579,13 +777,19 @@ async function main(): Promise<void> {
     }
 
     const time = (crInfo.buildTime ?? DEFAULT_BUILD_TIME) || 1; // Don't allow zero build time
-    const canonicalKey = JSON.stringify({ in: normalizeMapKeys(inMap), out: normalizeMapKeys(outMap), time });
+    const canonicalKey = JSON.stringify({
+      in: normalizeMapKeys(inMap),
+      out: normalizeMapKeys(outMap),
+      time,
+    });
 
     // If an identical recipe already exists, merge producers
     if (recipeKeyToIndex.has(canonicalKey)) {
       const idx = recipeKeyToIndex.get(canonicalKey)!;
       const existing = recipesArr[idx];
-      existing.producers = Array.from(new Set([...(existing.producers || []), ...producers]));
+      existing.producers = Array.from(
+        new Set([...(existing.producers || []), ...producers]),
+      );
       // Merge level by taking the minimum (lowest) level among merged recipes
       const existingLevel = existing.row ?? 0;
       const thisLevel = crInfo.level ?? 0;
@@ -600,7 +804,9 @@ async function main(): Promise<void> {
       let suffix = 2;
       while (usedRecipeIds.has(`${recipeIdBase}-${suffix}`)) suffix++;
       recipeId = `${recipeIdBase}-${suffix}`;
-      logWarn(`Recipe id collision for ${recipeIdBase}; using unique id ${recipeId}`);
+      logWarn(
+        `Recipe id collision for ${recipeIdBase}; using unique id ${recipeId}`,
+      );
     }
 
     usedRecipeIds.add(recipeId);
@@ -613,7 +819,7 @@ async function main(): Promise<void> {
       time: time,
       in: inMap,
       out: outMap,
-      row: (crInfo.level != null ? crInfo.level : 0),
+      row: crInfo.level != null ? crInfo.level : 0,
       category: recipeCategory,
     });
   }
@@ -624,7 +830,8 @@ async function main(): Promise<void> {
     if (!r.out) continue;
     for (const outId of Object.keys(r.out)) {
       const lvl = r.row ?? 0;
-      if (minLevelByItem[outId] == null || lvl < minLevelByItem[outId]) minLevelByItem[outId] = lvl;
+      if (minLevelByItem[outId] == null || lvl < minLevelByItem[outId])
+        minLevelByItem[outId] = lvl;
     }
   }
   for (const it of itemsArr) {
@@ -632,7 +839,9 @@ async function main(): Promise<void> {
   }
 
   // Assign item categories from recipes when possible (prefer recipe with lowest row)
-  const recipesByRow = [...recipesArr].sort((a, b) => (a.row ?? 0) - (b.row ?? 0));
+  const recipesByRow = [...recipesArr].sort(
+    (a, b) => (a.row ?? 0) - (b.row ?? 0),
+  );
   for (const r of recipesByRow) {
     if (!r.out) continue;
     for (const outId of Object.keys(r.out)) {
@@ -640,29 +849,35 @@ async function main(): Promise<void> {
       if (!item) continue;
       if (r.category) {
         // Prefer category derived from the earliest recipe (lowest row). Use a marker to avoid overwriting.
-        if (!(item as any)._categoryAssignedFromRecipe) {
+        if (!item._categoryAssignedFromRecipe) {
           item.category = r.category;
-          (item as any)._categoryAssignedFromRecipe = true;
+          item._categoryAssignedFromRecipe = true;
         }
       }
     }
   }
   // Remove internal marker before output
   for (const it of itemsArr) {
-    if ((it as any)._categoryAssignedFromRecipe) delete (it as any)._categoryAssignedFromRecipe;
+    if (it._categoryAssignedFromRecipe) delete it._categoryAssignedFromRecipe;
   }
 
   // Build icons array: include building icons and item icons used
   const usedIconIdsFinal = new Set<string>();
   for (const p of parsed) {
-    if (p.bd && p.bd.iconObjectPath) {
+    if (p.bd?.iconObjectPath) {
       const bslug = (p.bd.uniqueName ?? p.bd.id ?? p.da.id).toLowerCase();
-      usedIconIdsFinal.add(bslug.replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase()).replace(/^-/, ''));
+      usedIconIdsFinal.add(
+        bslug
+          .replace(/([A-Z])/g, (m: string) => '-' + m.toLowerCase())
+          .replace(/^-/, ''),
+      );
     }
   }
   for (const it of itemsArr) usedIconIdsFinal.add(it.icon);
 
-  const iconsArr = iconsMeta.filter((ic) => usedIconIdsFinal.has(ic.id)).map((ic) => ({ id: ic.id, position: ic.position, color: ic.color }));
+  const iconsArr = iconsMeta
+    .filter((ic) => usedIconIdsFinal.has(ic.id))
+    .map((ic) => ({ id: ic.id, position: ic.position, color: ic.color }));
 
   // Ensure categories referenced by items or recipes are present in categoriesMap
   const initialCategories = Object.values(categoriesMap);
@@ -674,27 +889,48 @@ async function main(): Promise<void> {
     if (categoriesMap[catId]) return categoriesMap[catId].name;
     // Tokens from BD might be like ECrBuildingUISubType::..., attempt to make a friendlier name
     if (String(catId).includes('ECr')) return tokenToName(String(catId));
-    return String(catId).replace(/[_-]/g, ' ').replace(/\b\w/g, (ch) => ch.toUpperCase());
+    return String(catId)
+      .replace(/[_-]/g, ' ')
+      .replace(/\b\w/g, (ch) => ch.toUpperCase());
   }
 
   for (const cid of Array.from(usedCategoryIds)) {
-    if (!categoriesMap[cid]) categoriesMap[cid] = { id: cid, name: categoryIdToName(cid), icon: CATEGORY_ICONS[cid] ?? undefined };
+    if (!categoriesMap[cid])
+      categoriesMap[cid] = {
+        id: cid,
+        name: categoryIdToName(cid),
+        icon: CATEGORY_ICONS[cid] ?? undefined,
+      };
   }
 
   const categoriesArr = Object.values(categoriesMap);
 
   const outData = {
     version: { StarRupture: '0.1.1.112941' },
-    categories: categoriesArr.length > 0 ? categoriesArr : [{ id: 'raw', name: 'Raw', icon: CATEGORY_ICONS['raw'] ?? 'raw-titanium' }],
+    categories:
+      categoriesArr.length > 0
+        ? categoriesArr
+        : [
+            {
+              id: 'raw',
+              name: 'Raw',
+              icon: CATEGORY_ICONS['raw'] ?? 'raw-titanium',
+            },
+          ],
     icons: iconsArr,
     items: itemsArr,
     recipes: recipesArr,
-    defaults: { minBelt: 'drone-rail-t1', maxBelt: 'drone-rail-t5', excludedRecipes: [] },
+    defaults: {
+      minBelt: 'drone-rail-t1',
+      maxBelt: 'drone-rail-t5',
+      excludedRecipes: [],
+    },
   };
 
   const dataOutPath = path.join(args.output, 'data.json');
   if (!args.dryRun) {
-    if (!fs.existsSync(args.output)) fs.mkdirSync(args.output, { recursive: true });
+    if (!fs.existsSync(args.output))
+      fs.mkdirSync(args.output, { recursive: true });
     fs.writeFileSync(dataOutPath, JSON.stringify(outData, null, 2));
   }
   logTime(`Wrote data.json to ${dataOutPath}`);
@@ -702,13 +938,25 @@ async function main(): Promise<void> {
   // --- Hash file ---
   // Create a compact hash.json containing sorted lists of all relevant IDs in the generated data
   const itemIds = outData.items.map((i: any) => i.id);
-  const machineIds = outData.items.filter((i: any) => i.machine).map((i: any) => i.id);
+  const machineIds = outData.items
+    .filter((i: any) => i.machine)
+    .map((i: any) => i.id);
   const recipeIds = outData.recipes.map((r: any) => r.id);
-  const beaconIds = outData.items.filter((i: any) => i.beacon).map((i: any) => i.id);
-  const beltIds = outData.items.filter((i: any) => i.belt || i.pipe).map((i: any) => i.id);
-  const fuelIds = outData.items.filter((i: any) => i.fuel).map((i: any) => i.id);
-  const moduleIds = outData.items.filter((i: any) => i.module).map((i: any) => i.id);
-  const wagonIds = outData.items.filter((i: any) => i.cargoWagon || i.fluidWagon).map((i: any) => i.id);
+  const beaconIds = outData.items
+    .filter((i: any) => i.beacon)
+    .map((i: any) => i.id);
+  const beltIds = outData.items
+    .filter((i: any) => i.belt || i.pipe)
+    .map((i: any) => i.id);
+  const fuelIds = outData.items
+    .filter((i: any) => i.fuel)
+    .map((i: any) => i.id);
+  const moduleIds = outData.items
+    .filter((i: any) => i.module)
+    .map((i: any) => i.id);
+  const wagonIds = outData.items
+    .filter((i: any) => i.cargoWagon || i.fluidWagon)
+    .map((i: any) => i.id);
 
   function uniqSort(arr: string[]) {
     return Array.from(new Set(arr)).sort();
@@ -735,7 +983,10 @@ async function main(): Promise<void> {
   // Write the `defaults` portion of data.json into a separate defaults.json file
   const defaultsOutPath = path.join(args.output, 'defaults.json');
   if (!args.dryRun) {
-    fs.writeFileSync(defaultsOutPath, JSON.stringify(outData.defaults, null, 2));
+    fs.writeFileSync(
+      defaultsOutPath,
+      JSON.stringify(outData.defaults, null, 2),
+    );
   }
   logTime(`Wrote defaults.json to ${defaultsOutPath}`);
 

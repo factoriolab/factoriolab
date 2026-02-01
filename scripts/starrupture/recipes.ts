@@ -1,26 +1,27 @@
 import fs from 'fs';
 import path from 'path';
+
 import { getJsonData } from '../helpers/file.helpers';
 import { logWarn } from '../helpers/log.helpers';
 import { normalizeObjectPath } from './utils';
 
-export type CrcInfo = {
+export interface CrcInfo {
   id: string;
   path: string;
   recipes: string[]; // object paths to CR files
-};
+}
 
-export type CrInfo = {
+export interface CrInfo {
   id: string;
   objectPath: string; // the original /Game/... path used to find this file
   path: string;
   name: string | null;
   buildTime: number | null;
   level?: number | null;
-  inputs: Array<{ itemObjectPath: string; count: number }>;
+  inputs: { itemObjectPath: string; count: number }[];
   output: { itemObjectPath: string; count: number } | null;
   iconObjectPath?: string | null;
-};
+}
 
 export function listCrcFiles(srDataDir: string): string[] {
   const craftDir = path.join(srDataDir, 'Crafting');
@@ -34,7 +35,8 @@ export function listCrcFiles(srDataDir: string): string[] {
       const full = path.join(dir, e);
       const stat = fs.statSync(full);
       if (stat.isDirectory()) walk(full);
-      else if (stat.isFile() && e.startsWith('CRC_') && e.endsWith('.json')) results.push(full);
+      else if (stat.isFile() && e.startsWith('CRC_') && e.endsWith('.json'))
+        results.push(full);
     }
   }
 
@@ -52,7 +54,8 @@ export function parseCrcFile(filePath: string): CrcInfo {
       const props = obj?.Properties ?? {};
       const recs = props?.Recipes ?? [];
       for (const r of recs) {
-        if (r?.ObjectPath) info.recipes.push(normalizeObjectPath(r.ObjectPath) ?? r.ObjectPath);
+        if (r?.ObjectPath)
+          info.recipes.push(normalizeObjectPath(r.ObjectPath) ?? r.ObjectPath);
       }
       break;
     }
@@ -71,10 +74,20 @@ function objPathToFilePath(srDataDir: string, objectPath: string): string {
 
 export function parseCrFile(srDataDir: string, objectPath: string): CrInfo {
   const filePath = objPathToFilePath(srDataDir, objectPath);
-  if (!fs.existsSync(filePath)) throw new Error(`CR file not found: ${filePath}`);
+  if (!fs.existsSync(filePath))
+    throw new Error(`CR file not found: ${filePath}`);
   const raw = getJsonData(filePath) as any[];
   const id = path.basename(filePath).replace('.json', '');
-  const info: CrInfo = { id, objectPath: objectPath, path: filePath, name: null, buildTime: null, inputs: [], output: null, iconObjectPath: null };
+  const info: CrInfo = {
+    id,
+    objectPath: objectPath,
+    path: filePath,
+    name: null,
+    buildTime: null,
+    inputs: [],
+    output: null,
+    iconObjectPath: null,
+  };
 
   for (const obj of raw) {
     if (obj?.Type === 'CrItemRecipeData') {
@@ -90,8 +103,10 @@ export function parseCrFile(srDataDir: string, objectPath: string): CrInfo {
         for (const n of props.NeededResources) {
           let itemObjPath = n?.Item?.ObjectPath ?? n?.Item?.ObjectName ?? null;
           const count = n?.Count ?? 1;
-          if (itemObjPath && itemObjPath.includes('/Game/')) itemObjPath = normalizeObjectPath(itemObjPath) ?? itemObjPath;
-          if (itemObjPath) info.inputs.push({ itemObjectPath: itemObjPath, count });
+          if (itemObjPath?.includes('/Game/'))
+            itemObjPath = normalizeObjectPath(itemObjPath) ?? itemObjPath;
+          if (itemObjPath)
+            info.inputs.push({ itemObjectPath: itemObjPath, count });
         }
       }
 
@@ -99,7 +114,8 @@ export function parseCrFile(srDataDir: string, objectPath: string): CrInfo {
         const o = props.OutputItem;
         let itemObjPath = o?.Item?.ObjectPath ?? o?.Item?.ObjectName ?? null;
         const count = o?.Count ?? 1;
-        if (itemObjPath && itemObjPath.includes('/Game/')) itemObjPath = normalizeObjectPath(itemObjPath) ?? itemObjPath;
+        if (itemObjPath?.includes('/Game/'))
+          itemObjPath = normalizeObjectPath(itemObjPath) ?? itemObjPath;
         if (itemObjPath) info.output = { itemObjectPath: itemObjPath, count };
         else {
           // fatal: output missing; mark null and warn
