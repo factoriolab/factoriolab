@@ -23,7 +23,9 @@ let d;
 try {
   d = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
 } catch (err) {
-  console.error(`Error parsing JSON at ${dataPath}: ${(err && err.message) || err}`);
+  console.error(
+    `Error parsing JSON at ${dataPath}: ${(err && err.message) || err}`,
+  );
   process.exit(1);
 }
 
@@ -111,10 +113,14 @@ for (const it of d.items || []) {
 // Check categories referenced by items/recipes are present
 const presentCategories = new Set((d.categories || []).map((c) => c.id));
 const usedCategories = new Set();
-for (const it of d.items || []) if (it && it.category) usedCategories.add(it.category);
-for (const r of d.recipes || []) if (r && r.category) usedCategories.add(r.category);
+for (const it of d.items || [])
+  if (it && it.category) usedCategories.add(it.category);
+for (const r of d.recipes || [])
+  if (r && r.category) usedCategories.add(r.category);
 
-const missingCategories = Array.from(usedCategories).filter((c) => !presentCategories.has(c));
+const missingCategories = Array.from(usedCategories).filter(
+  (c) => !presentCategories.has(c),
+);
 if (missingCategories.length > 0) {
   console.log('Missing categories referenced by items/recipes:');
   for (const mc of missingCategories) console.log('  -', mc);

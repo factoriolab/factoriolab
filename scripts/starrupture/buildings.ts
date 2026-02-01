@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+
 import { getJsonData } from '../helpers/file.helpers';
 import { normalizeObjectPath } from './utils';
 
-export type DaInfo = {
+export interface DaInfo {
   id: string;
   path: string;
   craftingRecipeCollectionPath?: string | null;
@@ -14,7 +15,7 @@ export type DaInfo = {
   placementDataPath?: string | null;
   // Logistics line trait: presence indicates a rail/line; MoveSpeed may be null (trait present but no explicit speed)
   logisticsMoveSpeed?: number | null;
-};
+}
 
 export function listDaFiles(srDataDir: string): string[] {
   const bDir = path.join(srDataDir, 'Buildings');
@@ -56,25 +57,32 @@ export function parseDaFile(filePath: string): DaInfo {
     if (obj?.Type === 'CrBuildingCraftingTrait') {
       const cp = obj?.Properties?.CraftingParameters;
       if (cp?.RecipeCollection?.ObjectPath)
-        info.craftingRecipeCollectionPath = normalizeObjectPath(cp.RecipeCollection.ObjectPath);
+        info.craftingRecipeCollectionPath = normalizeObjectPath(
+          cp.RecipeCollection.ObjectPath,
+        );
       if (cp?.CraftingLoopDuration != null)
         info.craftingLoopDuration = cp.CraftingLoopDuration;
     }
 
     if (obj?.Type === 'CrElectricityTrait') {
       const p = obj?.Properties?.Parameters;
-      if (p?.ElectricityValue != null) info.electricityValue = p.ElectricityValue;
+      if (p?.ElectricityValue != null)
+        info.electricityValue = p.ElectricityValue;
       if (p?.Type != null) info.electricityType = p.Type;
     }
 
     if (obj?.Type === 'CrMassTemperatureTrait') {
       const tp = obj?.Properties?.TemperatureParameters;
-      if (tp?.CoolingCapacityUsing != null) info.coolingCapacity = tp.CoolingCapacityUsing;
+      if (tp?.CoolingCapacityUsing != null)
+        info.coolingCapacity = tp.CoolingCapacityUsing;
     }
 
     if (obj?.Type === 'CrMassBuildingTrait') {
       const params = obj?.Properties?.Parameters;
-      if (params?.PlacementData?.ObjectPath) info.placementDataPath = normalizeObjectPath(params.PlacementData.ObjectPath);
+      if (params?.PlacementData?.ObjectPath)
+        info.placementDataPath = normalizeObjectPath(
+          params.PlacementData.ObjectPath,
+        );
     }
 
     // Logistics line trait (drone rails / rails)

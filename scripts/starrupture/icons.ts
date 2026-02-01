@@ -1,22 +1,22 @@
+import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 import path from 'path';
-import { getAverageColor } from 'fast-average-color-node';
 import sharp from 'sharp';
 
-export type IconEntry = {
+export interface IconEntry {
   id: string;
   objectPath?: string | null; // optional objectPath for resolution
   src?: string | null; // resolved filesystem path
   srcBuffer?: Buffer | null; // optional in-memory PNG buffer to use directly
-};
+}
 
-export type PackedIcon = {
+export interface PackedIcon {
   id: string;
   position: string; // '-{x}px -{y}px'
   color: string; // '#rrggbb'
-};
+}
 
-export type ZoomOptions = {
+export interface ZoomOptions {
   size?: number;
   capStartPct?: number;
   capEndPct?: number;
@@ -25,7 +25,7 @@ export type ZoomOptions = {
   railPctY?: number;
   rightCapIsFlippedLeft?: boolean;
   debugOutDir?: string;
-};
+}
 
 function slugify(s: string): string {
   return s
@@ -52,7 +52,12 @@ export function indexUiIcons(srDataDir: string): Record<string, string> {
           walk(full);
         } else if (stat.isFile()) {
           const ext = path.extname(full).toLowerCase();
-          if (ext === '.png' || ext === '.webp' || ext === '.jpg' || ext === '.jpeg') {
+          if (
+            ext === '.png' ||
+            ext === '.webp' ||
+            ext === '.jpg' ||
+            ext === '.jpeg'
+          ) {
             const base = path.basename(full, ext).toLowerCase();
             if (!map[base]) map[base] = full;
           }
@@ -71,7 +76,12 @@ export async function packIcons(
   srDataDir: string,
   outImagePath: string,
   icons: IconEntry[],
-  options?: { iconSize?: number; padding?: number; columns?: number; dryRun?: boolean },
+  options?: {
+    iconSize?: number;
+    padding?: number;
+    columns?: number;
+    dryRun?: boolean;
+  },
 ): Promise<PackedIcon[]> {
   const iconSize = options?.iconSize ?? 64;
   const padding = options?.padding ?? 2;
@@ -115,7 +125,12 @@ export async function packIcons(
       }
 
       buffer = await sharp(srcPath)
-        .resize({ width: iconSize, height: iconSize, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .resize({
+          width: iconSize,
+          height: iconSize,
+          fit: 'contain',
+          background: { r: 0, g: 0, b: 0, alpha: 0 },
+        })
         .png()
         .toBuffer();
     }
@@ -144,7 +159,8 @@ export async function packIcons(
         const pad = Math.max(2, Math.floor(iconSize * 0.06));
         // Centered rounded plate with transparent outer background and bold question mark with subtle outline
         const strokeWidth = Math.max(1, Math.floor(iconSize * 0.04));
-        const svg = `<?xml version="1.0" encoding="UTF-8"?>\n` +
+        const svg =
+          `<?xml version="1.0" encoding="UTF-8"?>\n` +
           `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 ${iconSize} ${iconSize}">` +
           `<rect x="${pad}" y="${pad}" width="${iconSize - pad * 2}" height="${iconSize - pad * 2}" rx="${rx}" fill="${plateColor}"/>` +
           // shift the question mark down by half its font height so it doesn't touch the top
@@ -167,7 +183,14 @@ export async function packIcons(
   const height = rows * iconSize + (rows + 1) * padding;
 
   // Start with transparent canvas
-  const canvas = sharp({ create: { width, height, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).png();
+  const canvas = sharp({
+    create: {
+      width,
+      height,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    },
+  }).png();
 
   const composites: any[] = [];
   const results: PackedIcon[] = [];
@@ -189,7 +212,9 @@ export async function packIcons(
     let hex = '#000000';
     if (avgAvailable) {
       try {
-        const avg = await getAverageColor(toPack[i].buffer, { mode: 'precision' });
+        const avg = await getAverageColor(toPack[i].buffer, {
+          mode: 'precision',
+        });
         hex = avg?.hex ?? '#000000';
       } catch (e) {
         // ignore
@@ -203,7 +228,10 @@ export async function packIcons(
     if (!sharpAvailable) {
       console.warn('sharp not available; skipping spritesheet generation.');
     } else {
-      const outBuffer = await canvas.composite(composites).webp({ quality: 90 }).toBuffer();
+      const outBuffer = await canvas
+        .composite(composites)
+        .webp({ quality: 90 })
+        .toBuffer();
       // Ensure output dir
       const dir = path.dirname(outImagePath);
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -214,7 +242,11 @@ export async function packIcons(
   return results;
 }
 
-export async function generatePurityVariants(basePath: string, baseId: string, options?: { size?: number }) {
+export async function generatePurityVariants(
+  basePath: string,
+  baseId: string,
+  options?: { size?: number },
+) {
   const size = options?.size ?? 64;
   const pad = Math.max(2, Math.floor(size * 0.06));
   const fontSize = Math.floor(size * 0.26);
@@ -230,7 +262,8 @@ export async function generatePurityVariants(basePath: string, baseId: string, o
       const y = size - pad - Math.max(0, Math.floor(fontSize * 0.05));
       texts += `<text x="${x}" y="${y}" font-family="sans-serif" font-size="${fontSize}" fill="${fill}" font-weight="700" text-anchor="end" dominant-baseline="text-after-edge" stroke="${stroke}" stroke-width="${strokeWidth}">★</text>`;
     }
-    const svg = `<?xml version="1.0" encoding="UTF-8"?>` +
+    const svg =
+      `<?xml version="1.0" encoding="UTF-8"?>` +
       `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">` +
       `<g>${texts}</g>` +
       `</svg>`;
@@ -247,7 +280,12 @@ export async function generatePurityVariants(basePath: string, baseId: string, o
   for (const v of variantList) {
     const overlay = makeStarsSvg(v.stars);
     const buf = await sharp(basePath)
-      .resize({ width: size, height: size, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+      .resize({
+        width: size,
+        height: size,
+        fit: 'contain',
+        background: { r: 0, g: 0, b: 0, alpha: 0 },
+      })
       .composite([{ input: overlay, left: 0, top: 0 }])
       .png()
       .toBuffer();
@@ -259,7 +297,12 @@ export async function generatePurityVariants(basePath: string, baseId: string, o
 export async function generateCargoIcon(
   basePath: string,
   id: string,
-  crop: { leftPct: number; rightPct: number; topPct: number; bottomPct: number },
+  crop: {
+    leftPct: number;
+    rightPct: number;
+    topPct: number;
+    bottomPct: number;
+  },
   options?: { size?: number; label?: string },
 ): Promise<IconEntry> {
   const size = options?.size ?? 64;
@@ -279,16 +322,38 @@ export async function generateCargoIcon(
 
   let extractedBuf: Buffer;
   try {
-    extractedBuf = await sharp(basePath).extract({ left: Math.max(0, left), top: Math.max(0, top), width, height }).png().toBuffer();
+    extractedBuf = await sharp(basePath)
+      .extract({
+        left: Math.max(0, left),
+        top: Math.max(0, top),
+        width,
+        height,
+      })
+      .png()
+      .toBuffer();
   } catch (e) {
     // fallback: resize whole image if extract failed
     extractedBuf = await sharp(basePath).png().toBuffer();
   }
 
   // Resize extracted region to fit height=size and keep aspect ratio so it will align left when composited
-  const resized = await sharp(extractedBuf).resize({ height: size, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
+  const resized = await sharp(extractedBuf)
+    .resize({
+      height: size,
+      fit: 'contain',
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .png()
+    .toBuffer();
 
-  const canvas = sharp({ create: { width: size, height: size, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).png();
+  const canvas = sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    },
+  }).png();
   const comps: any[] = [{ input: resized, left: 0, top: 0 }];
 
   if (options?.label) {
@@ -297,7 +362,8 @@ export async function generateCargoIcon(
     const strokeWidth = Math.max(1, Math.floor(size * 0.03));
     const fill = '#ffffff';
     const stroke = 'rgba(0,0,0,0.6)';
-    const svg = `<?xml version="1.0" encoding="UTF-8"?>` +
+    const svg =
+      `<?xml version="1.0" encoding="UTF-8"?>` +
       `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">` +
       `<text x="${size - pad}" y="${Math.floor(size / 2)}" font-family="sans-serif" font-size="${fontSize}" fill="${fill}" font-weight="700" text-anchor="end" dominant-baseline="middle" stroke="${stroke}" stroke-width="${strokeWidth}">${options.label}</text>` +
       `</svg>`;
@@ -319,7 +385,7 @@ export async function generateRailZoom(
   options?: ZoomOptions,
 ): Promise<IconEntry> {
   const size = options?.size ?? 64;
-  const capStartPct = options?.capStartPct ?? 0.10;
+  const capStartPct = options?.capStartPct ?? 0.1;
   const capEndPct = options?.capEndPct ?? 0.18;
   const centreSizePctX = options?.centreSizePctX ?? 0.25;
   const centreOffsetPctX = options?.centreOffsetPctX ?? 0.0;
@@ -332,7 +398,9 @@ export async function generateRailZoom(
   const w = meta.width ?? size;
   const h = meta.height ?? size;
   if (w != h) {
-    console.error(`Error: rail icon source ${basePath} is not square (${w}x${h})`);
+    console.error(
+      `Error: rail icon source ${basePath} is not square (${w}x${h})`,
+    );
     return { id: baseId, srcBuffer: Buffer.alloc(0) };
   }
 
@@ -341,15 +409,29 @@ export async function generateRailZoom(
   const centreX = Math.round((w - centreW) / 2 + w * centreOffsetPctX);
   const railH = Math.round(h * railPctY);
   const railY = Math.round((h - railH) / 2);
-  const centerBuf = await sharp(basePath).extract({ left: centreX, top: railY, width: centreW, height: railH }).png().toBuffer();
+  const centerBuf = await sharp(basePath)
+    .extract({ left: centreX, top: railY, width: centreW, height: railH })
+    .png()
+    .toBuffer();
 
   // Isolate left and right end caps from the original
   const capW = Math.round(w * (capEndPct - capStartPct));
   const capX = Math.round(w * capStartPct);
-  const leftCapBuf = await sharp(basePath).extract({ left: capX, top: railY, width: capW, height: railH }).png().toBuffer();
+  const leftCapBuf = await sharp(basePath)
+    .extract({ left: capX, top: railY, width: capW, height: railH })
+    .png()
+    .toBuffer();
   const rightCapBuf = rightCapIsFlippedLeft // if true, flip left cap horizontally for right cap
     ? await sharp(leftCapBuf).flop().png().toBuffer()
-    : await sharp(basePath).extract({ left: w - capX - capW, top: railY, width: capW, height: railH }).png().toBuffer();
+    : await sharp(basePath)
+        .extract({
+          left: w - capX - capW,
+          top: railY,
+          width: capW,
+          height: railH,
+        })
+        .png()
+        .toBuffer();
 
   // Calculate the output size of parts
   const inputPctW = (capEndPct - capStartPct) * 2 + centreSizePctX;
@@ -362,12 +444,28 @@ export async function generateRailZoom(
   const outRailY = Math.round((size - outRailH) / 2);
 
   // Resize caps and center to target heights/widths
-  const leftResized = await sharp(leftCapBuf).resize({ width: outCapW, height: outRailH }).png().toBuffer();
-  const centerResized = await sharp(centerBuf).resize({ width: outCenterW, height: outRailH }).png().toBuffer();
-  const rightResized = await sharp(rightCapBuf).resize({ width: outCapW, height: outRailH }).png().toBuffer();
+  const leftResized = await sharp(leftCapBuf)
+    .resize({ width: outCapW, height: outRailH })
+    .png()
+    .toBuffer();
+  const centerResized = await sharp(centerBuf)
+    .resize({ width: outCenterW, height: outRailH })
+    .png()
+    .toBuffer();
+  const rightResized = await sharp(rightCapBuf)
+    .resize({ width: outCapW, height: outRailH })
+    .png()
+    .toBuffer();
 
   // Composite onto transparent canvas
-  const canvas = sharp({ create: { width: size, height: size, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).png();
+  const canvas = sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    },
+  }).png();
   const comps = [
     { input: leftResized, left: 0, top: outRailY },
     { input: rightResized, left: size - outCapW, top: outRailY },
@@ -382,11 +480,18 @@ export async function generateRailZoom(
       fs.mkdirSync(debugOutDir, { recursive: true });
       // original resized for comparison
       await sharp(basePath)
-        .resize({ width: size, height: size, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .resize({
+          width: size,
+          height: size,
+          fit: 'contain',
+          background: { r: 0, g: 0, b: 0, alpha: 0 },
+        })
         .png()
         .toFile(path.join(debugOutDir, `${baseId}-orig.png`));
       // zoomed output
-      await sharp(outBuf).png().toFile(path.join(debugOutDir, `${baseId}-zoom.png`));
+      await sharp(outBuf)
+        .png()
+        .toFile(path.join(debugOutDir, `${baseId}-zoom.png`));
     } catch (e) {
       // ignore debug write failures
     }
