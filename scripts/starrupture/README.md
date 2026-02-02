@@ -13,3 +13,4 @@ Steps:
    - Save Folder's Packages Properties
    - Save Folder's Packages Textures
 4. Run `npm run starrupture-build`
+5. Run `npm run minify-data str` to minify the output JSON
