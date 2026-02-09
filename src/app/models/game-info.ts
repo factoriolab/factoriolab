@@ -70,4 +70,10 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.outworldStation',
     modId: 'ows',
   },
+  [Game.ArknightsEndfield]: {
+    icon: 'game-arknights-endfield',
+    route: '/endfield',
+    label: 'options.game.arknightsEndfield',
+    modId: 'endfield',
+  },
 };

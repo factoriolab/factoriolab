@@ -1,0 +1,17 @@
+{
+  "modId": "endfield",
+  "beaconCount": 0,
+  "beaconModule": null,
+  "belt": null,
+  "pipe": null,
+  "cargoWagon": null,
+  "fluidWagon": null,
+  "fuel": null,
+  "disabledRecipes": [],
+  "displayRate": 1,
+  "inserterCapacity": 0,
+  "inserterTarget": 0,
+  "miningBonus": 0,
+  "researchSpeed": 0,
+  "costs": {}
+}

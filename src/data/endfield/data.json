@@ -1,0 +1,3803 @@
+{
+  "version": {
+    "Arknights Endfield": "1.0"
+  },
+  "categories": [
+    {
+      "id": "production",
+      "name": "Production"
+    },
+    {
+      "id": "logistics",
+      "name": "Logistics"
+    }
+  ],
+  "icons": [
+    {
+      "id": "component-glass-cmpt-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "component-glass-enr-cmpt-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "component-iron-cmpt-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "component-iron-enr-cmpt-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "conveyor-belt",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-glass-grass-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-glass-grass-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-glass-water-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-glass-xiranite-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-glassenr-grass-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-glassenr-grass-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-glassenr-water-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-glassenr-xiranite-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-iron-grass-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-iron-grass-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-iron-water-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-iron-xiranite-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-ironenr-grass-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-ironenr-grass-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-ironenr-water-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "dismantler-ironenr-xiranite-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-food-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-food-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-food-3-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-glass-grass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-glass-grass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-glass-water",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-glass-xiranite",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-glassenr-grass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-glassenr-grass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-glassenr-water",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-glassenr-xiranite",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-iron-grass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-iron-grass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-iron-water",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-iron-xiranite",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-ironenr-grass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-ironenr-grass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-ironenr-water",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-ironenr-xiranite",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-rec-hp-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-rec-hp-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "filling-bottled-rec-hp-3-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-enr-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-enr-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-enr-powder-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-material-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-material-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-material-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-material-4",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-material-5",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-material-6",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-powder-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-powder-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-powder-4",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-carbon-powder-5",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-crystal-enr-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-crystal-enr-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-crystal-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-crystal-shell-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-crystal-shell-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-iron-enr-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-iron-nugget-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-iron-nugget-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-quartz-enr-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-quartz-glass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "furnance-quartz-glass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-carbon-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-crystal-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-iron-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-originium-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-plant-bbflower-powder-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-plant-grass-powder-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-plant-grass-powder-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-plant-moss-powder-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-plant-moss-powder-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-plant-moss-powder-3-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "grinder-quartz-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-bottled-food-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-bottled-food-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-bottled-food-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-bottled-food-4",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-bottled-rec-hp-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-bottled-rec-hp-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-bottled-rec-hp-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-bottled-rec-hp-4",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-carbon-enr",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-carbon-enr-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-carbon-mtl",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-carbon-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-crystal-enr",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-crystal-enr-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-crystal-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-crystal-shell",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-equip-script-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-equip-script-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-equip-script-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-equip-script-4",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-glass-grass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-glass-grass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-glass-water",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-glass-xiranite",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-glassenr-grass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-glassenr-grass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-glassenr-water",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-glassenr-xiranite",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-iron-grass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-iron-grass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-iron-water",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-iron-xiranite",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-ironenr-grass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-ironenr-grass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-ironenr-water",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-fbottle-ironenr-xiranite",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-glass-bottle",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-glass-cmpt",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-glass-enr-bottle",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-glass-enr-cmpt",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-iron-bottle",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-iron-cmpt",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-iron-enr",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-iron-enr-bottle",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-iron-enr-cmpt",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-iron-enr-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-iron-nugget",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-iron-ore",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-iron-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-liquid-plant-grass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-liquid-plant-grass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-liquid-water",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-liquid-xiranite",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-muck-feces-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-muck-xiranite-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-originium-enr-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-originium-ore",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-originium-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-bbflower-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-bbflower-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-bbflower-seed-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-grass-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-grass-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-grass-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-grass-powder-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-grass-seed-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-grass-seed-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-enr-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-enr-powder-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-powder-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-powder-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-seed-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-seed-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-moss-seed-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-sp-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-sp-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-sp-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-sp-4",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-sp-seed-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-sp-seed-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-sp-seed-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-sp-seed-4",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-plant-tundra-wood",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-cmpt-mc-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-dismantler-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-filling-pd-mc-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-furnance-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-grinder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-mix-pool-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-planter-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-seedcol-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-shaper-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-thickener-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-tools-asm-mc-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-winder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-port-xiranite-oven-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-proc-battery-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-proc-battery-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-proc-battery-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-proc-battery-4",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-proc-bomb-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-quartz-enr",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-quartz-enr-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-quartz-glass",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-quartz-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-quartz-sand",
+      "position": "0px 0px"
+    },
+    {
+      "id": "item-xiranite-powder",
+      "position": "0px 0px"
+    },
+    {
+      "id": "logistics",
+      "position": "0px 0px"
+    },
+    {
+      "id": "planter-plant-bbflower-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "planter-plant-grass-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "planter-plant-grass-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "planter-plant-moss-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "planter-plant-moss-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "planter-plant-moss-3-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "pool-liquid-liquid-xiranite-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "pool-liquid-plant-grass-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "pool-liquid-plant-grass-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "production",
+      "position": "0px 0px"
+    },
+    {
+      "id": "seedcollector-plant-bbflower-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "seedcollector-plant-grass-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "seedcollector-plant-grass-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "seedcollector-plant-moss-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "seedcollector-plant-moss-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "seedcollector-plant-moss-3-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "seedcollector-plant-sp-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "seedcollector-plant-sp-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "seedcollector-plant-sp-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "seedcollector-plant-sp-4",
+      "position": "0px 0px"
+    },
+    {
+      "id": "shaper-glass-bottle-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "shaper-glass-enr-bottle-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "shaper-iron-bottle-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "shaper-iron-enr-bottle-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "thickener-carbon-enr-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "thickener-crystal-enr-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "thickener-iron-enr-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "thickener-originium-enr-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "thickener-plant-moss-enr-powder-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "thickener-plant-moss-enr-powder-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "thickener-quartz-enr-powder-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "tools-proc-battery-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "tools-proc-battery-2-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "tools-proc-battery-3-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "tools-proc-battery-4-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "tools-proc-bomb-1-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "tools-proc-food-4-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "tools-proc-rec-hp-4-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "winder-equip-script-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "winder-equip-script-2",
+      "position": "0px 0px"
+    },
+    {
+      "id": "winder-equip-script-3",
+      "position": "0px 0px"
+    },
+    {
+      "id": "winder-equip-script-4",
+      "position": "0px 0px"
+    },
+    {
+      "id": "xiranite-oven-muck-xiranite-1",
+      "position": "0px 0px"
+    },
+    {
+      "id": "xiranite-oven-xiranite-powder-1",
+      "position": "0px 0px"
+    }
+  ],
+  "items": [
+    {
+      "id": "item-originium-ore",
+      "name": "Originium Ore",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-quartz-sand",
+      "name": "Amethyst Ore",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-iron-ore",
+      "name": "Ferrium Ore",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-liquid-water",
+      "name": "Clean Water",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-1",
+      "name": "Buckflower",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-seed-1",
+      "name": "Buckflower Seed",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-2",
+      "name": "Citrome",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-seed-2",
+      "name": "Citrome Seed",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-3",
+      "name": "Sandleaf",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-seed-3",
+      "name": "Sandleaf Seed",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-bbflower-1",
+      "name": "Aketine",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-bbflower-seed-1",
+      "name": "Aketine Seed",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-grass-1",
+      "name": "Jincao",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-grass-seed-1",
+      "name": "Jincao Seed",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-grass-2",
+      "name": "Yazhen",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-grass-seed-2",
+      "name": "Yazhen Seed",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-sp-1",
+      "name": "Reed Rye",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-sp-2",
+      "name": "Tartpepper",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-sp-3",
+      "name": "Redjade Ginseng",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-sp-4",
+      "name": "Amber Rice",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-sp-seed-1",
+      "name": "Reed Rye Seed",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-sp-seed-2",
+      "name": "Tartpepper Seed",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-sp-seed-3",
+      "name": "Redjade Ginseng Seed",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-sp-seed-4",
+      "name": "Amber Rice Seed",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-tundra-wood",
+      "name": "Wood",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-carbon-mtl",
+      "name": "Carbon",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-crystal-shell",
+      "name": "Origocrust",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-quartz-glass",
+      "name": "Amethyst Fiber",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-iron-nugget",
+      "name": "Ferrium",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-originium-powder",
+      "name": "Originium Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-carbon-powder",
+      "name": "Carbon Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-crystal-powder",
+      "name": "Origocrust Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-quartz-powder",
+      "name": "Amethyst Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-iron-powder",
+      "name": "Ferrium Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-powder-3",
+      "name": "Sandleaf Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-bbflower-powder-1",
+      "name": "Aketine Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-originium-enr-powder",
+      "name": "Dense Originium Powder",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-carbon-enr-powder",
+      "name": "Dense Carbon Powder",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-crystal-enr-powder",
+      "name": "Dense Origocrust Powder",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-quartz-enr-powder",
+      "name": "Cryston Powder",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-iron-enr-powder",
+      "name": "Dense Ferrium Powder",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-enr-powder-1",
+      "name": "Ground Buckflower Powder",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-enr-powder-2",
+      "name": "Ground Citrome Powder",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-carbon-enr",
+      "name": "Stabilized Carbon",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-crystal-enr",
+      "name": "Packed Origocrust",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-quartz-enr",
+      "name": "Cryston Fiber",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-iron-enr",
+      "name": "Steel",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-muck-xiranite-1",
+      "name": "Bumper-Rich",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-glass-grass-1",
+      "name": "Amethyst Bottle",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-glass-grass-2",
+      "name": "Amethyst Bottle",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-glass-water",
+      "name": "Amethyst Bottle",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-glass-xiranite",
+      "name": "Amethyst Bottle",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-glass-bottle",
+      "name": "Amethyst Bottle",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-glassenr-grass-1",
+      "name": "Cryston Bottle",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-glassenr-grass-2",
+      "name": "Cryston Bottle",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-glassenr-water",
+      "name": "Cryston Bottle",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-glassenr-xiranite",
+      "name": "Cryston Bottle",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-glass-enr-bottle",
+      "name": "Cryston Bottle",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-iron-grass-1",
+      "name": "Ferrium Bottle",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-iron-grass-2",
+      "name": "Ferrium Bottle",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-iron-water",
+      "name": "Ferrium Bottle",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-iron-xiranite",
+      "name": "Ferrium Bottle",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-iron-bottle",
+      "name": "Ferrium Bottle",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-ironenr-grass-1",
+      "name": "Steel Bottle",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-ironenr-grass-2",
+      "name": "Steel Bottle",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-ironenr-water",
+      "name": "Steel Bottle",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-fbottle-ironenr-xiranite",
+      "name": "Steel Bottle",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-iron-enr-bottle",
+      "name": "Steel Bottle",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-xiranite-powder",
+      "name": "Xiranite",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-proc-battery-1",
+      "name": "LC Valley Battery",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-proc-battery-2",
+      "name": "SC Valley Battery",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-proc-battery-3",
+      "name": "HC Valley Battery",
+      "category": "production",
+      "row": 3,
+      "stack": 100
+    },
+    {
+      "id": "item-proc-battery-4",
+      "name": "LC Wuling Battery",
+      "category": "production",
+      "row": 3,
+      "stack": 100
+    },
+    {
+      "id": "item-glass-cmpt",
+      "name": "Amethyst Part",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-glass-enr-cmpt",
+      "name": "Cryston Part",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-iron-cmpt",
+      "name": "Ferrium Part",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-iron-enr-cmpt",
+      "name": "Steel Part",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-equip-script-1",
+      "name": "Amethyst Component",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-equip-script-2",
+      "name": "Ferrium Component",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-equip-script-3",
+      "name": "Cryston Component",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-equip-script-4",
+      "name": "Xiranite Component",
+      "category": "production",
+      "row": 3,
+      "stack": 100
+    },
+    {
+      "id": "item-liquid-plant-grass-1",
+      "name": "Jincao Solution",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-liquid-plant-grass-2",
+      "name": "Yazhen Solution",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-liquid-xiranite",
+      "name": "Liquid Xiranite",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-bottled-food-1",
+      "name": "Canned Citrome [C]",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-bottled-food-2",
+      "name": "Canned Citrome [B]",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-bottled-food-3",
+      "name": "Canned Citrome [A]",
+      "category": "production",
+      "row": 3,
+      "stack": 100
+    },
+    {
+      "id": "item-bottled-food-4",
+      "name": "Jincao Drink",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-bottled-rec-hp-1",
+      "name": "Buck Capsule [C]",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-bottled-rec-hp-2",
+      "name": "Buck Capsule [B]",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-bottled-rec-hp-3",
+      "name": "Buck Capsule [A]",
+      "category": "production",
+      "row": 3,
+      "stack": 100
+    },
+    {
+      "id": "item-bottled-rec-hp-4",
+      "name": "Yazhen Syringe [C]",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-powder-1",
+      "name": "Buckflower Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-moss-powder-2",
+      "name": "Citrome Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-grass-powder-1",
+      "name": "Jincao Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-plant-grass-powder-2",
+      "name": "Yazhen Powder",
+      "category": "production",
+      "row": 1,
+      "stack": 100
+    },
+    {
+      "id": "item-proc-bomb-1",
+      "name": "Industrial Explosive",
+      "category": "production",
+      "row": 2,
+      "stack": 100
+    },
+    {
+      "id": "item-muck-feces-1",
+      "name": "Burdo-Muck",
+      "category": "production",
+      "row": 0,
+      "stack": 100
+    },
+    {
+      "id": "item-port-cmpt-mc-1",
+      "name": "Fitting Unit",
+      "category": "production",
+      "row": 1,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 20
+      }
+    },
+    {
+      "id": "item-port-dismantler-1",
+      "name": "Separating Unit",
+      "category": "production",
+      "row": 3,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 20
+      }
+    },
+    {
+      "id": "item-port-filling-pd-mc-1",
+      "name": "Filling Unit",
+      "category": "production",
+      "row": 2,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 20
+      }
+    },
+    {
+      "id": "item-port-furnance-1",
+      "name": "Refining Unit",
+      "category": "production",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 5
+      }
+    },
+    {
+      "id": "item-port-grinder-1",
+      "name": "Shredding Unit",
+      "category": "production",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 5
+      }
+    },
+    {
+      "id": "item-port-mix-pool-1",
+      "name": "Reactor Crucible",
+      "category": "production",
+      "row": 2,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 50
+      }
+    },
+    {
+      "id": "item-port-planter-1",
+      "name": "Planting Unit",
+      "category": "production",
+      "row": 2,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 20
+      }
+    },
+    {
+      "id": "item-port-seedcol-1",
+      "name": "Seed-Picking Unit",
+      "category": "production",
+      "row": 2,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 10
+      }
+    },
+    {
+      "id": "item-port-shaper-1",
+      "name": "Moulding Unit",
+      "category": "production",
+      "row": 1,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 10
+      }
+    },
+    {
+      "id": "item-port-thickener-1",
+      "name": "Grinding Unit",
+      "category": "production",
+      "row": 3,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 50
+      }
+    },
+    {
+      "id": "item-port-tools-asm-mc-1",
+      "name": "Packaging Unit",
+      "category": "production",
+      "row": 2,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 20
+      }
+    },
+    {
+      "id": "item-port-winder-1",
+      "name": "Gearing Unit",
+      "category": "production",
+      "row": 0,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 10
+      }
+    },
+    {
+      "id": "item-port-xiranite-oven-1",
+      "name": "Forge of the Sky",
+      "category": "production",
+      "row": 3,
+      "machine": {
+        "speed": 1,
+        "type": "electric",
+        "usage": 50
+      }
+    },
+    {
+      "id": "conveyor-belt",
+      "name": "Conveyor Belt",
+      "category": "logistics",
+      "row": 0,
+      "belt": {
+        "speed": 0.5
+      }
+    }
+  ],
+  "recipes": [
+    {
+      "id": "component-glass-cmpt-1",
+      "name": "Component Glass Cmpt 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-cmpt-mc-1"
+      ],
+      "in": {
+        "item-quartz-glass": 1
+      },
+      "out": {
+        "item-glass-cmpt": 1
+      }
+    },
+    {
+      "id": "component-glass-enr-cmpt-1",
+      "name": "Component Glass Enr Cmpt 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-cmpt-mc-1"
+      ],
+      "in": {
+        "item-quartz-enr": 1
+      },
+      "out": {
+        "item-glass-enr-cmpt": 1
+      }
+    },
+    {
+      "id": "component-iron-cmpt-1",
+      "name": "Component Iron Cmpt 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-cmpt-mc-1"
+      ],
+      "in": {
+        "item-iron-nugget": 1
+      },
+      "out": {
+        "item-iron-cmpt": 1
+      }
+    },
+    {
+      "id": "component-iron-enr-cmpt-1",
+      "name": "Component Iron Enr Cmpt 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-cmpt-mc-1"
+      ],
+      "in": {
+        "item-iron-enr": 1
+      },
+      "out": {
+        "item-iron-enr-cmpt": 1
+      }
+    },
+    {
+      "id": "dismantler-glass-grass-1-1",
+      "name": "Dismantler Glass Grass 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-glass-grass-1": 1
+      },
+      "out": {
+        "item-glass-bottle": 1,
+        "item-liquid-plant-grass-1": 1
+      }
+    },
+    {
+      "id": "dismantler-glass-grass-2-1",
+      "name": "Dismantler Glass Grass 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-glass-grass-2": 1
+      },
+      "out": {
+        "item-glass-bottle": 1,
+        "item-liquid-plant-grass-2": 1
+      }
+    },
+    {
+      "id": "dismantler-glass-water-1",
+      "name": "Dismantler Glass Water 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-glass-water": 1
+      },
+      "out": {
+        "item-glass-bottle": 1,
+        "item-liquid-water": 1
+      }
+    },
+    {
+      "id": "dismantler-glass-xiranite-1",
+      "name": "Dismantler Glass Xiranite 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-glass-xiranite": 1
+      },
+      "out": {
+        "item-glass-bottle": 1,
+        "item-liquid-xiranite": 1
+      }
+    },
+    {
+      "id": "dismantler-glassenr-grass-1-1",
+      "name": "Dismantler Glassenr Grass 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-glassenr-grass-1": 1
+      },
+      "out": {
+        "item-glass-enr-bottle": 1,
+        "item-liquid-plant-grass-1": 1
+      }
+    },
+    {
+      "id": "dismantler-glassenr-grass-2-1",
+      "name": "Dismantler Glassenr Grass 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-glassenr-grass-2": 1
+      },
+      "out": {
+        "item-glass-enr-bottle": 1,
+        "item-liquid-plant-grass-2": 1
+      }
+    },
+    {
+      "id": "dismantler-glassenr-water-1",
+      "name": "Dismantler Glassenr Water 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-glassenr-water": 1
+      },
+      "out": {
+        "item-glass-enr-bottle": 1,
+        "item-liquid-water": 1
+      }
+    },
+    {
+      "id": "dismantler-glassenr-xiranite-1",
+      "name": "Dismantler Glassenr Xiranite 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-glassenr-xiranite": 1
+      },
+      "out": {
+        "item-glass-enr-bottle": 1,
+        "item-liquid-xiranite": 1
+      }
+    },
+    {
+      "id": "dismantler-iron-grass-1-1",
+      "name": "Dismantler Iron Grass 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-iron-grass-1": 1
+      },
+      "out": {
+        "item-iron-bottle": 1,
+        "item-liquid-plant-grass-1": 1
+      }
+    },
+    {
+      "id": "dismantler-iron-grass-2-1",
+      "name": "Dismantler Iron Grass 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-iron-grass-2": 1
+      },
+      "out": {
+        "item-iron-bottle": 1,
+        "item-liquid-plant-grass-2": 1
+      }
+    },
+    {
+      "id": "dismantler-iron-water-1",
+      "name": "Dismantler Iron Water 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-iron-water": 1
+      },
+      "out": {
+        "item-iron-bottle": 1,
+        "item-liquid-water": 1
+      }
+    },
+    {
+      "id": "dismantler-iron-xiranite-1",
+      "name": "Dismantler Iron Xiranite 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-iron-xiranite": 1
+      },
+      "out": {
+        "item-iron-bottle": 1,
+        "item-liquid-xiranite": 1
+      }
+    },
+    {
+      "id": "dismantler-ironenr-grass-1-1",
+      "name": "Dismantler Ironenr Grass 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-ironenr-grass-1": 1
+      },
+      "out": {
+        "item-iron-enr-bottle": 1,
+        "item-liquid-plant-grass-1": 1
+      }
+    },
+    {
+      "id": "dismantler-ironenr-grass-2-1",
+      "name": "Dismantler Ironenr Grass 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-ironenr-grass-2": 1
+      },
+      "out": {
+        "item-iron-enr-bottle": 1,
+        "item-liquid-plant-grass-2": 1
+      }
+    },
+    {
+      "id": "dismantler-ironenr-water-1",
+      "name": "Dismantler Ironenr Water 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-ironenr-water": 1
+      },
+      "out": {
+        "item-iron-enr-bottle": 1,
+        "item-liquid-water": 1
+      }
+    },
+    {
+      "id": "dismantler-ironenr-xiranite-1",
+      "name": "Dismantler Ironenr Xiranite 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-dismantler-1"
+      ],
+      "in": {
+        "item-fbottle-ironenr-xiranite": 1
+      },
+      "out": {
+        "item-iron-enr-bottle": 1,
+        "item-liquid-xiranite": 1
+      }
+    },
+    {
+      "id": "filling-bottled-food-1-1",
+      "name": "Filling Bottled Food 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-glass-bottle": 5,
+        "item-plant-moss-powder-2": 5
+      },
+      "out": {
+        "item-bottled-food-1": 1
+      }
+    },
+    {
+      "id": "filling-bottled-food-2-1",
+      "name": "Filling Bottled Food 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-bottle": 10,
+        "item-plant-moss-powder-2": 10
+      },
+      "out": {
+        "item-bottled-food-2": 1
+      }
+    },
+    {
+      "id": "filling-bottled-food-3-1",
+      "name": "Filling Bottled Food 3 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-enr-bottle": 10,
+        "item-plant-moss-enr-powder-2": 10
+      },
+      "out": {
+        "item-bottled-food-3": 1
+      }
+    },
+    {
+      "id": "filling-bottled-glass-grass-1",
+      "name": "Filling Bottled Glass Grass 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-glass-bottle": 1,
+        "item-liquid-plant-grass-1": 1
+      },
+      "out": {
+        "item-fbottle-glass-grass-1": 1
+      }
+    },
+    {
+      "id": "filling-bottled-glass-grass-2",
+      "name": "Filling Bottled Glass Grass 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-glass-bottle": 1,
+        "item-liquid-plant-grass-2": 1
+      },
+      "out": {
+        "item-fbottle-glass-grass-2": 1
+      }
+    },
+    {
+      "id": "filling-bottled-glass-water",
+      "name": "Filling Bottled Glass Water",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-glass-bottle": 1,
+        "item-liquid-water": 1
+      },
+      "out": {
+        "item-fbottle-glass-water": 1
+      }
+    },
+    {
+      "id": "filling-bottled-glass-xiranite",
+      "name": "Filling Bottled Glass Xiranite",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-glass-bottle": 1,
+        "item-liquid-xiranite": 1
+      },
+      "out": {
+        "item-fbottle-glass-xiranite": 1
+      }
+    },
+    {
+      "id": "filling-bottled-glassenr-grass-1",
+      "name": "Filling Bottled Glassenr Grass 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-glass-enr-bottle": 1,
+        "item-liquid-plant-grass-1": 1
+      },
+      "out": {
+        "item-fbottle-glassenr-grass-1": 1
+      }
+    },
+    {
+      "id": "filling-bottled-glassenr-grass-2",
+      "name": "Filling Bottled Glassenr Grass 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-glass-enr-bottle": 1,
+        "item-liquid-plant-grass-2": 1
+      },
+      "out": {
+        "item-fbottle-glassenr-grass-2": 1
+      }
+    },
+    {
+      "id": "filling-bottled-glassenr-water",
+      "name": "Filling Bottled Glassenr Water",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-glass-enr-bottle": 1,
+        "item-liquid-water": 1
+      },
+      "out": {
+        "item-fbottle-glassenr-water": 1
+      }
+    },
+    {
+      "id": "filling-bottled-glassenr-xiranite",
+      "name": "Filling Bottled Glassenr Xiranite",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-glass-enr-bottle": 1,
+        "item-liquid-xiranite": 1
+      },
+      "out": {
+        "item-fbottle-glassenr-xiranite": 1
+      }
+    },
+    {
+      "id": "filling-bottled-iron-grass-1",
+      "name": "Filling Bottled Iron Grass 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-bottle": 1,
+        "item-liquid-plant-grass-1": 1
+      },
+      "out": {
+        "item-fbottle-iron-grass-1": 1
+      }
+    },
+    {
+      "id": "filling-bottled-iron-grass-2",
+      "name": "Filling Bottled Iron Grass 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-bottle": 1,
+        "item-liquid-plant-grass-2": 1
+      },
+      "out": {
+        "item-fbottle-iron-grass-2": 1
+      }
+    },
+    {
+      "id": "filling-bottled-iron-water",
+      "name": "Filling Bottled Iron Water",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-bottle": 1,
+        "item-liquid-water": 1
+      },
+      "out": {
+        "item-fbottle-iron-water": 1
+      }
+    },
+    {
+      "id": "filling-bottled-iron-xiranite",
+      "name": "Filling Bottled Iron Xiranite",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-bottle": 1,
+        "item-liquid-xiranite": 1
+      },
+      "out": {
+        "item-fbottle-iron-xiranite": 1
+      }
+    },
+    {
+      "id": "filling-bottled-ironenr-grass-1",
+      "name": "Filling Bottled Ironenr Grass 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-enr-bottle": 1,
+        "item-liquid-plant-grass-1": 1
+      },
+      "out": {
+        "item-fbottle-ironenr-grass-1": 1
+      }
+    },
+    {
+      "id": "filling-bottled-ironenr-grass-2",
+      "name": "Filling Bottled Ironenr Grass 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-enr-bottle": 1,
+        "item-liquid-plant-grass-2": 1
+      },
+      "out": {
+        "item-fbottle-ironenr-grass-2": 1
+      }
+    },
+    {
+      "id": "filling-bottled-ironenr-water",
+      "name": "Filling Bottled Ironenr Water",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-enr-bottle": 1,
+        "item-liquid-water": 1
+      },
+      "out": {
+        "item-fbottle-ironenr-water": 1
+      }
+    },
+    {
+      "id": "filling-bottled-ironenr-xiranite",
+      "name": "Filling Bottled Ironenr Xiranite",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-enr-bottle": 1,
+        "item-liquid-xiranite": 1
+      },
+      "out": {
+        "item-fbottle-ironenr-xiranite": 1
+      }
+    },
+    {
+      "id": "filling-bottled-rec-hp-1-1",
+      "name": "Filling Bottled Rec Hp 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-glass-bottle": 5,
+        "item-plant-moss-powder-1": 5
+      },
+      "out": {
+        "item-bottled-rec-hp-1": 1
+      }
+    },
+    {
+      "id": "filling-bottled-rec-hp-2-1",
+      "name": "Filling Bottled Rec Hp 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-bottle": 10,
+        "item-plant-moss-powder-1": 10
+      },
+      "out": {
+        "item-bottled-rec-hp-2": 1
+      }
+    },
+    {
+      "id": "filling-bottled-rec-hp-3-1",
+      "name": "Filling Bottled Rec Hp 3 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-filling-pd-mc-1"
+      ],
+      "in": {
+        "item-iron-enr-bottle": 10,
+        "item-plant-moss-enr-powder-1": 10
+      },
+      "out": {
+        "item-bottled-rec-hp-3": 1
+      }
+    },
+    {
+      "id": "furnance-carbon-enr-1",
+      "name": "Furnance Carbon Enr 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-carbon-enr-powder": 1
+      },
+      "out": {
+        "item-carbon-enr": 1
+      }
+    },
+    {
+      "id": "furnance-carbon-enr-powder-1",
+      "name": "Furnance Carbon Enr Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-moss-enr-powder-1": 1
+      },
+      "out": {
+        "item-carbon-enr-powder": 1
+      }
+    },
+    {
+      "id": "furnance-carbon-enr-powder-2",
+      "name": "Furnance Carbon Enr Powder 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-moss-enr-powder-2": 1
+      },
+      "out": {
+        "item-carbon-enr-powder": 1
+      }
+    },
+    {
+      "id": "furnance-carbon-material-1",
+      "name": "Furnance Carbon Material 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-moss-1": 1
+      },
+      "out": {
+        "item-carbon-mtl": 1
+      }
+    },
+    {
+      "id": "furnance-carbon-material-2",
+      "name": "Furnance Carbon Material 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-moss-2": 1
+      },
+      "out": {
+        "item-carbon-mtl": 1
+      }
+    },
+    {
+      "id": "furnance-carbon-material-3",
+      "name": "Furnance Carbon Material 3",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-moss-3": 1
+      },
+      "out": {
+        "item-carbon-mtl": 1
+      }
+    },
+    {
+      "id": "furnance-carbon-material-4",
+      "name": "Furnance Carbon Material 4",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-tundra-wood": 1
+      },
+      "out": {
+        "item-carbon-mtl": 1
+      }
+    },
+    {
+      "id": "furnance-carbon-material-5",
+      "name": "Furnance Carbon Material 5",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-grass-1": 1
+      },
+      "out": {
+        "item-carbon-mtl": 2
+      }
+    },
+    {
+      "id": "furnance-carbon-material-6",
+      "name": "Furnance Carbon Material 6",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-grass-2": 1
+      },
+      "out": {
+        "item-carbon-mtl": 2
+      }
+    },
+    {
+      "id": "furnance-carbon-powder-1",
+      "name": "Furnance Carbon Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-moss-powder-1": 1
+      },
+      "out": {
+        "item-carbon-powder": 1
+      }
+    },
+    {
+      "id": "furnance-carbon-powder-2",
+      "name": "Furnance Carbon Powder 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-moss-powder-2": 1
+      },
+      "out": {
+        "item-carbon-powder": 1
+      }
+    },
+    {
+      "id": "furnance-carbon-powder-3",
+      "name": "Furnance Carbon Powder 3",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-moss-powder-3": 3
+      },
+      "out": {
+        "item-carbon-powder": 2
+      }
+    },
+    {
+      "id": "furnance-carbon-powder-4",
+      "name": "Furnance Carbon Powder 4",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-grass-powder-1": 1
+      },
+      "out": {
+        "item-carbon-powder": 2
+      }
+    },
+    {
+      "id": "furnance-carbon-powder-5",
+      "name": "Furnance Carbon Powder 5",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-plant-grass-powder-2": 1
+      },
+      "out": {
+        "item-carbon-powder": 2
+      }
+    },
+    {
+      "id": "furnance-crystal-enr-1",
+      "name": "Furnance Crystal Enr 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-crystal-enr-powder": 1
+      },
+      "out": {
+        "item-crystal-enr": 1
+      }
+    },
+    {
+      "id": "furnance-crystal-enr-powder-1",
+      "name": "Furnance Crystal Enr Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-originium-enr-powder": 1
+      },
+      "out": {
+        "item-crystal-enr-powder": 1
+      }
+    },
+    {
+      "id": "furnance-crystal-powder-1",
+      "name": "Furnance Crystal Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-originium-powder": 1
+      },
+      "out": {
+        "item-crystal-powder": 1
+      }
+    },
+    {
+      "id": "furnance-crystal-shell-1",
+      "name": "Furnance Crystal Shell 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-originium-ore": 1
+      },
+      "out": {
+        "item-crystal-shell": 1
+      }
+    },
+    {
+      "id": "furnance-crystal-shell-2",
+      "name": "Furnance Crystal Shell 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-crystal-powder": 1
+      },
+      "out": {
+        "item-crystal-shell": 1
+      }
+    },
+    {
+      "id": "furnance-iron-enr-1",
+      "name": "Furnance Iron Enr 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-iron-enr-powder": 1
+      },
+      "out": {
+        "item-iron-enr": 1
+      }
+    },
+    {
+      "id": "furnance-iron-nugget-1",
+      "name": "Furnance Iron Nugget 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-iron-ore": 1
+      },
+      "out": {
+        "item-iron-nugget": 1
+      }
+    },
+    {
+      "id": "furnance-iron-nugget-2",
+      "name": "Furnance Iron Nugget 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-iron-powder": 1
+      },
+      "out": {
+        "item-iron-nugget": 1
+      }
+    },
+    {
+      "id": "furnance-quartz-enr-1",
+      "name": "Furnance Quartz Enr 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-quartz-enr-powder": 1
+      },
+      "out": {
+        "item-quartz-enr": 1
+      }
+    },
+    {
+      "id": "furnance-quartz-glass-1",
+      "name": "Furnance Quartz Glass 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-quartz-sand": 1
+      },
+      "out": {
+        "item-quartz-glass": 1
+      }
+    },
+    {
+      "id": "furnance-quartz-glass-2",
+      "name": "Furnance Quartz Glass 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-furnance-1"
+      ],
+      "in": {
+        "item-quartz-powder": 1
+      },
+      "out": {
+        "item-quartz-glass": 1
+      }
+    },
+    {
+      "id": "grinder-carbon-powder-1",
+      "name": "Grinder Carbon Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-carbon-mtl": 1
+      },
+      "out": {
+        "item-carbon-powder": 2
+      }
+    },
+    {
+      "id": "grinder-crystal-powder-1",
+      "name": "Grinder Crystal Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-crystal-shell": 1
+      },
+      "out": {
+        "item-crystal-powder": 1
+      }
+    },
+    {
+      "id": "grinder-iron-powder-1",
+      "name": "Grinder Iron Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-iron-nugget": 1
+      },
+      "out": {
+        "item-iron-powder": 1
+      }
+    },
+    {
+      "id": "grinder-originium-powder-1",
+      "name": "Grinder Originium Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-originium-ore": 1
+      },
+      "out": {
+        "item-originium-powder": 1
+      }
+    },
+    {
+      "id": "grinder-plant-bbflower-powder-1-1",
+      "name": "Grinder Plant Bbflower Powder 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-plant-bbflower-1": 1
+      },
+      "out": {
+        "item-plant-bbflower-powder-1": 2
+      }
+    },
+    {
+      "id": "grinder-plant-grass-powder-1-1",
+      "name": "Grinder Plant Grass Powder 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-plant-grass-1": 1
+      },
+      "out": {
+        "item-plant-grass-powder-1": 2
+      }
+    },
+    {
+      "id": "grinder-plant-grass-powder-2-1",
+      "name": "Grinder Plant Grass Powder 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-plant-grass-2": 1
+      },
+      "out": {
+        "item-plant-grass-powder-2": 2
+      }
+    },
+    {
+      "id": "grinder-plant-moss-powder-1-1",
+      "name": "Grinder Plant Moss Powder 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-plant-moss-1": 1
+      },
+      "out": {
+        "item-plant-moss-powder-1": 2
+      }
+    },
+    {
+      "id": "grinder-plant-moss-powder-2-1",
+      "name": "Grinder Plant Moss Powder 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-plant-moss-2": 1
+      },
+      "out": {
+        "item-plant-moss-powder-2": 2
+      }
+    },
+    {
+      "id": "grinder-plant-moss-powder-3-1",
+      "name": "Grinder Plant Moss Powder 3 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-plant-moss-3": 1
+      },
+      "out": {
+        "item-plant-moss-powder-3": 3
+      }
+    },
+    {
+      "id": "grinder-quartz-powder-1",
+      "name": "Grinder Quartz Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-grinder-1"
+      ],
+      "in": {
+        "item-quartz-glass": 1
+      },
+      "out": {
+        "item-quartz-powder": 1
+      }
+    },
+    {
+      "id": "planter-plant-bbflower-1",
+      "name": "Planter Plant Bbflower 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-planter-1"
+      ],
+      "in": {
+        "item-plant-bbflower-seed-1": 1
+      },
+      "out": {
+        "item-plant-bbflower-1": 1
+      }
+    },
+    {
+      "id": "planter-plant-grass-1-1",
+      "name": "Planter Plant Grass 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-planter-1"
+      ],
+      "in": {
+        "item-plant-grass-seed-1": 1,
+        "item-liquid-water": 1
+      },
+      "out": {
+        "item-plant-grass-1": 2
+      }
+    },
+    {
+      "id": "planter-plant-grass-2-1",
+      "name": "Planter Plant Grass 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-planter-1"
+      ],
+      "in": {
+        "item-plant-grass-seed-2": 1,
+        "item-liquid-water": 1
+      },
+      "out": {
+        "item-plant-grass-2": 2
+      }
+    },
+    {
+      "id": "planter-plant-moss-1-1",
+      "name": "Planter Plant Moss 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-planter-1"
+      ],
+      "in": {
+        "item-plant-moss-seed-1": 1
+      },
+      "out": {
+        "item-plant-moss-1": 1
+      }
+    },
+    {
+      "id": "planter-plant-moss-2-1",
+      "name": "Planter Plant Moss 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-planter-1"
+      ],
+      "in": {
+        "item-plant-moss-seed-2": 1
+      },
+      "out": {
+        "item-plant-moss-2": 1
+      }
+    },
+    {
+      "id": "planter-plant-moss-3-1",
+      "name": "Planter Plant Moss 3 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-planter-1"
+      ],
+      "in": {
+        "item-plant-moss-seed-3": 1
+      },
+      "out": {
+        "item-plant-moss-3": 1
+      }
+    },
+    {
+      "id": "pool-liquid-liquid-xiranite-1",
+      "name": "Pool Liquid Liquid Xiranite 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-mix-pool-1"
+      ],
+      "in": {
+        "item-xiranite-powder": 1,
+        "item-liquid-water": 1
+      },
+      "out": {
+        "item-liquid-xiranite": 1
+      }
+    },
+    {
+      "id": "pool-liquid-plant-grass-1-1",
+      "name": "Pool Liquid Plant Grass 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-mix-pool-1"
+      ],
+      "in": {
+        "item-plant-grass-powder-1": 1,
+        "item-liquid-water": 1
+      },
+      "out": {
+        "item-liquid-plant-grass-1": 1
+      }
+    },
+    {
+      "id": "pool-liquid-plant-grass-2-1",
+      "name": "Pool Liquid Plant Grass 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-mix-pool-1"
+      ],
+      "in": {
+        "item-plant-grass-powder-2": 1,
+        "item-liquid-water": 1
+      },
+      "out": {
+        "item-liquid-plant-grass-2": 1
+      }
+    },
+    {
+      "id": "seedcollector-plant-bbflower-1",
+      "name": "Seedcollector Plant Bbflower 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-seedcol-1"
+      ],
+      "in": {
+        "item-plant-bbflower-1": 1
+      },
+      "out": {
+        "item-plant-bbflower-seed-1": 2
+      }
+    },
+    {
+      "id": "seedcollector-plant-grass-1-1",
+      "name": "Seedcollector Plant Grass 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-seedcol-1"
+      ],
+      "in": {
+        "item-plant-grass-1": 1
+      },
+      "out": {
+        "item-plant-grass-seed-1": 1
+      }
+    },
+    {
+      "id": "seedcollector-plant-grass-2-1",
+      "name": "Seedcollector Plant Grass 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-seedcol-1"
+      ],
+      "in": {
+        "item-plant-grass-2": 1
+      },
+      "out": {
+        "item-plant-grass-seed-2": 1
+      }
+    },
+    {
+      "id": "seedcollector-plant-moss-1-1",
+      "name": "Seedcollector Plant Moss 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-seedcol-1"
+      ],
+      "in": {
+        "item-plant-moss-1": 1
+      },
+      "out": {
+        "item-plant-moss-seed-1": 2
+      }
+    },
+    {
+      "id": "seedcollector-plant-moss-2-1",
+      "name": "Seedcollector Plant Moss 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-seedcol-1"
+      ],
+      "in": {
+        "item-plant-moss-2": 1
+      },
+      "out": {
+        "item-plant-moss-seed-2": 2
+      }
+    },
+    {
+      "id": "seedcollector-plant-moss-3-1",
+      "name": "Seedcollector Plant Moss 3 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-seedcol-1"
+      ],
+      "in": {
+        "item-plant-moss-3": 1
+      },
+      "out": {
+        "item-plant-moss-seed-3": 2
+      }
+    },
+    {
+      "id": "seedcollector-plant-sp-1",
+      "name": "Seedcollector Plant Sp 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-seedcol-1"
+      ],
+      "in": {
+        "item-plant-sp-1": 1
+      },
+      "out": {
+        "item-plant-sp-seed-1": 2
+      }
+    },
+    {
+      "id": "seedcollector-plant-sp-2",
+      "name": "Seedcollector Plant Sp 2",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-seedcol-1"
+      ],
+      "in": {
+        "item-plant-sp-2": 1
+      },
+      "out": {
+        "item-plant-sp-seed-2": 2
+      }
+    },
+    {
+      "id": "seedcollector-plant-sp-3",
+      "name": "Seedcollector Plant Sp 3",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-seedcol-1"
+      ],
+      "in": {
+        "item-plant-sp-3": 1
+      },
+      "out": {
+        "item-plant-sp-seed-3": 2
+      }
+    },
+    {
+      "id": "seedcollector-plant-sp-4",
+      "name": "Seedcollector Plant Sp 4",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-seedcol-1"
+      ],
+      "in": {
+        "item-plant-sp-4": 1
+      },
+      "out": {
+        "item-plant-sp-seed-4": 2
+      }
+    },
+    {
+      "id": "shaper-glass-bottle-1",
+      "name": "Shaper Glass Bottle 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-shaper-1"
+      ],
+      "in": {
+        "item-quartz-glass": 2
+      },
+      "out": {
+        "item-glass-bottle": 1
+      }
+    },
+    {
+      "id": "shaper-glass-enr-bottle-1",
+      "name": "Shaper Glass Enr Bottle 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-shaper-1"
+      ],
+      "in": {
+        "item-quartz-enr": 2
+      },
+      "out": {
+        "item-glass-enr-bottle": 1
+      }
+    },
+    {
+      "id": "shaper-iron-bottle-1",
+      "name": "Shaper Iron Bottle 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-shaper-1"
+      ],
+      "in": {
+        "item-iron-nugget": 2
+      },
+      "out": {
+        "item-iron-bottle": 1
+      }
+    },
+    {
+      "id": "shaper-iron-enr-bottle-1",
+      "name": "Shaper Iron Enr Bottle 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-shaper-1"
+      ],
+      "in": {
+        "item-iron-enr": 2
+      },
+      "out": {
+        "item-iron-enr-bottle": 1
+      }
+    },
+    {
+      "id": "thickener-carbon-enr-powder-1",
+      "name": "Thickener Carbon Enr Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-thickener-1"
+      ],
+      "in": {
+        "item-carbon-powder": 2,
+        "item-plant-moss-powder-3": 1
+      },
+      "out": {
+        "item-carbon-enr-powder": 1
+      }
+    },
+    {
+      "id": "thickener-crystal-enr-powder-1",
+      "name": "Thickener Crystal Enr Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-thickener-1"
+      ],
+      "in": {
+        "item-crystal-powder": 2,
+        "item-plant-moss-powder-3": 1
+      },
+      "out": {
+        "item-crystal-enr-powder": 1
+      }
+    },
+    {
+      "id": "thickener-iron-enr-powder-1",
+      "name": "Thickener Iron Enr Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-thickener-1"
+      ],
+      "in": {
+        "item-iron-powder": 2,
+        "item-plant-moss-powder-3": 1
+      },
+      "out": {
+        "item-iron-enr-powder": 1
+      }
+    },
+    {
+      "id": "thickener-originium-enr-powder-1",
+      "name": "Thickener Originium Enr Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-thickener-1"
+      ],
+      "in": {
+        "item-originium-powder": 2,
+        "item-plant-moss-powder-3": 1
+      },
+      "out": {
+        "item-originium-enr-powder": 1
+      }
+    },
+    {
+      "id": "thickener-plant-moss-enr-powder-1-1",
+      "name": "Thickener Plant Moss Enr Powder 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-thickener-1"
+      ],
+      "in": {
+        "item-plant-moss-powder-1": 2,
+        "item-plant-moss-powder-3": 1
+      },
+      "out": {
+        "item-plant-moss-enr-powder-1": 1
+      }
+    },
+    {
+      "id": "thickener-plant-moss-enr-powder-2-1",
+      "name": "Thickener Plant Moss Enr Powder 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-thickener-1"
+      ],
+      "in": {
+        "item-plant-moss-powder-2": 2,
+        "item-plant-moss-powder-3": 1
+      },
+      "out": {
+        "item-plant-moss-enr-powder-2": 1
+      }
+    },
+    {
+      "id": "thickener-quartz-enr-powder-1",
+      "name": "Thickener Quartz Enr Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-thickener-1"
+      ],
+      "in": {
+        "item-quartz-powder": 2,
+        "item-plant-moss-powder-3": 1
+      },
+      "out": {
+        "item-quartz-enr-powder": 1
+      }
+    },
+    {
+      "id": "tools-proc-battery-1-1",
+      "name": "Tools Proc Battery 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-tools-asm-mc-1"
+      ],
+      "in": {
+        "item-glass-cmpt": 5,
+        "item-originium-powder": 10
+      },
+      "out": {
+        "item-proc-battery-1": 1
+      }
+    },
+    {
+      "id": "tools-proc-battery-2-1",
+      "name": "Tools Proc Battery 2 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-tools-asm-mc-1"
+      ],
+      "in": {
+        "item-iron-cmpt": 10,
+        "item-originium-powder": 15
+      },
+      "out": {
+        "item-proc-battery-2": 1
+      }
+    },
+    {
+      "id": "tools-proc-battery-3-1",
+      "name": "Tools Proc Battery 3 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-tools-asm-mc-1"
+      ],
+      "in": {
+        "item-iron-enr-cmpt": 10,
+        "item-originium-enr-powder": 15
+      },
+      "out": {
+        "item-proc-battery-3": 1
+      }
+    },
+    {
+      "id": "tools-proc-battery-4-1",
+      "name": "Tools Proc Battery 4 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-tools-asm-mc-1"
+      ],
+      "in": {
+        "item-xiranite-powder": 5,
+        "item-originium-enr-powder": 15
+      },
+      "out": {
+        "item-proc-battery-4": 1
+      }
+    },
+    {
+      "id": "tools-proc-bomb-1-1",
+      "name": "Tools Proc Bomb 1 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-tools-asm-mc-1"
+      ],
+      "in": {
+        "item-glass-cmpt": 5,
+        "item-plant-bbflower-powder-1": 1
+      },
+      "out": {
+        "item-proc-bomb-1": 1
+      }
+    },
+    {
+      "id": "tools-proc-food-4-1",
+      "name": "Tools Proc Food 4 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-tools-asm-mc-1"
+      ],
+      "in": {
+        "item-iron-cmpt": 10,
+        "item-fbottle-iron-grass-1": 5
+      },
+      "out": {
+        "item-bottled-food-4": 1
+      }
+    },
+    {
+      "id": "tools-proc-rec-hp-4-1",
+      "name": "Tools Proc Rec Hp 4 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-tools-asm-mc-1"
+      ],
+      "in": {
+        "item-iron-cmpt": 10,
+        "item-fbottle-iron-grass-2": 5
+      },
+      "out": {
+        "item-bottled-rec-hp-4": 1
+      }
+    },
+    {
+      "id": "winder-equip-script-1",
+      "name": "Winder Equip Script 1",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-winder-1"
+      ],
+      "in": {
+        "item-crystal-shell": 5,
+        "item-quartz-glass": 5
+      },
+      "out": {
+        "item-equip-script-1": 1
+      }
+    },
+    {
+      "id": "winder-equip-script-2",
+      "name": "Winder Equip Script 2",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-winder-1"
+      ],
+      "in": {
+        "item-crystal-shell": 10,
+        "item-iron-nugget": 10
+      },
+      "out": {
+        "item-equip-script-2": 1
+      }
+    },
+    {
+      "id": "winder-equip-script-3",
+      "name": "Winder Equip Script 3",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-winder-1"
+      ],
+      "in": {
+        "item-crystal-enr": 10,
+        "item-quartz-enr": 10
+      },
+      "out": {
+        "item-equip-script-3": 1
+      }
+    },
+    {
+      "id": "winder-equip-script-4",
+      "name": "Winder Equip Script 4",
+      "category": "production",
+      "row": 0,
+      "time": 10,
+      "producers": [
+        "item-port-winder-1"
+      ],
+      "in": {
+        "item-crystal-enr": 10,
+        "item-xiranite-powder": 10
+      },
+      "out": {
+        "item-equip-script-4": 1
+      }
+    },
+    {
+      "id": "xiranite-oven-muck-xiranite-1",
+      "name": "Xiranite Oven Muck Xiranite 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-xiranite-oven-1"
+      ],
+      "in": {
+        "item-muck-feces-1": 1,
+        "item-liquid-xiranite": 1
+      },
+      "out": {
+        "item-muck-xiranite-1": 1
+      }
+    },
+    {
+      "id": "xiranite-oven-xiranite-powder-1",
+      "name": "Xiranite Oven Xiranite Powder 1",
+      "category": "production",
+      "row": 0,
+      "time": 2,
+      "producers": [
+        "item-port-xiranite-oven-1"
+      ],
+      "in": {
+        "item-carbon-enr": 2,
+        "item-liquid-water": 1
+      },
+      "out": {
+        "item-xiranite-powder": 1
+      }
+    }
+  ],
+  "defaults": {
+    "minBelt": "conveyor-belt",
+    "maxBelt": "conveyor-belt",
+    "excludedRecipes": []
+  }
+}

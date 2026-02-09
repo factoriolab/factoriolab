@@ -153,6 +153,12 @@ export const data: AppData = {
       game: Game.OutworldStation,
       flags: 'fdy',
     },
+    {
+      id: 'endfield',
+      name: 'Arknights Endfield',
+      game: Game.ArknightsEndfield,
+      flags: 'endfield',
+    },
   ],
   modHashV0: [
     '1.1',
