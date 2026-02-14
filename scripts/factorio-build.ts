@@ -52,6 +52,7 @@ import {
   isTransportBeltPrototype,
   isUnlockRecipeModifier,
   ItemGroup,
+  PlanetPrototype,
   PlantPrototype,
   ProductPrototype,
   RecipePrototype,
@@ -285,6 +286,7 @@ async function processMod(): Promise<void> {
       | AnyItemPrototype
       | AnyEntityPrototype
       | FluidPrototype
+      | PlanetPrototype
       | SpaceLocationPrototype
       | SpaceConnectionPrototype
       | PlantPrototype,
@@ -2018,7 +2020,7 @@ async function processMod(): Promise<void> {
 
   async function addAsteroidRecipe(
     key: string,
-    proto: SpaceLocationPrototype | SpaceConnectionPrototype,
+    proto: PlanetPrototype | SpaceLocationPrototype | SpaceConnectionPrototype,
   ): Promise<void> {
     if (proto.asteroid_spawn_definitions) {
       // Add asteroid mining recipe
@@ -2027,7 +2029,7 @@ async function processMod(): Promise<void> {
       const group = dataRaw['item-group'][subgroup.group];
       const fakeId = getFakeRecipeId(proto.name, `${key}-asteroid-collection`);
       const out: Entities<number> = {};
-      if (isSpaceLocationPrototype(proto)) {
+      if (isPlanetPrototype(proto) || isSpaceLocationPrototype(proto)) {
         name = getLocaleName(spaceLocationLocale, key);
         proto.asteroid_spawn_definitions.forEach((def) => {
           addAsteroidProbability(out, def.asteroid, def.probability);
@@ -2078,6 +2080,11 @@ async function processMod(): Promise<void> {
 
   for (const key of Object.keys(dataRaw['space-location'])) {
     const proto = dataRaw['space-location'][key];
+    await addAsteroidRecipe(key, proto);
+  }
+
+  for (const key of Object.keys(dataRaw['planet'])) {
+    const proto = dataRaw['planet'][key];
     await addAsteroidRecipe(key, proto);
   }
 
