@@ -15,6 +15,7 @@
     "factorio.models.ts",
     "generate-hash.ts",
     "minify-data.ts",
+    "motemancer-build.ts",
     "update-hash.ts"
   ],
   "include": ["**/*.d.ts"]

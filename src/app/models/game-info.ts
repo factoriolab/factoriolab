@@ -70,4 +70,10 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.outworldStation',
     modId: 'ows',
   },
+  [Game.MoteMancer]: {
+    icon: 'game-motemancer',
+    route: '/mtm',
+    label: 'options.game.moteMancer',
+    modId: 'mtm',
+  },
 };
