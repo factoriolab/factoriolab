@@ -6,7 +6,7 @@
  * Fetches data from https://motemancer.miraheze.org/ via the MediaWiki API,
  * parses {{StructureInfo}} and {{ItemInfo}} templates, downloads icons,
  * and outputs data.json, defaults.json, and icons.webp to src/data/mtm/.
- * 
+ *
  * For icon overrides ctrl+f ICON_OVERRIDES
  */
 
@@ -36,7 +36,7 @@ const ICON_PADDING = 2;
 const BELT_SPEEDS: Record<string, number> = {
   'shifting-slab': 4,
   'underground-slab': 4,
-  'streamway': 16,
+  streamway: 16,
   'verdant-stream': 16,
   'underground-stream': 16,
   'streamway-delta': 16,
@@ -220,9 +220,7 @@ function splitTopLevel(s: string, delimiter: string): string[] {
  * Parse all RecipeTableItem entries from a page's wikitext.
  * These appear in machine pages and list what the machine can produce.
  */
-function parseRecipeTableItems(
-  wikitext: string,
-): Array<{
+function parseRecipeTableItems(wikitext: string): Array<{
   name: string;
   ingredients: Record<string, number>;
   craftTime: number;
@@ -236,8 +234,7 @@ function parseRecipeTableItems(
   }> = [];
 
   // Match both RecipeTableItem and AltRecipeTableItem
-  const regex =
-    /\{\{(?:Alt)?RecipeTableItem\s*\n?([\s\S]*?)\}\}/g;
+  const regex = /\{\{(?:Alt)?RecipeTableItem\s*\n?([\s\S]*?)\}\}/g;
   let match;
 
   while ((match = regex.exec(wikitext)) !== null) {
@@ -281,9 +278,7 @@ function parseRecipeTableItems(
 /**
  * Parse research entries from a research page.
  */
-function parseResearchEntries(
-  wikitext: string,
-): Array<{
+function parseResearchEntries(wikitext: string): Array<{
   name: string;
   cycles: number;
   ingredients: Record<string, number>;
@@ -300,8 +295,7 @@ function parseResearchEntries(
     imageFilename: string | null;
   }> = [];
 
-  const regex =
-    /\{\{ElementalResearchTableItem\s*\n?([\s\S]*?)\}\}/g;
+  const regex = /\{\{ElementalResearchTableItem\s*\n?([\s\S]*?)\}\}/g;
   let match;
 
   while ((match = regex.exec(wikitext)) !== null) {
@@ -353,9 +347,7 @@ function parseResearchEntries(
       ingredients,
       prerequisites,
       unlocks,
-      imageFilename: fields['Img']
-        ? extractImageFilename(fields['Img'])
-        : null,
+      imageFilename: fields['Img'] ? extractImageFilename(fields['Img']) : null,
     });
   }
 
@@ -587,8 +579,7 @@ async function main(): Promise<void> {
         unlockedBy,
         craftedIn,
         ingredients: mainIngredients,
-        altIngredients:
-          orAlternatives.length > 0 ? orAlternatives : undefined,
+        altIngredients: orAlternatives.length > 0 ? orAlternatives : undefined,
         craftTime: parseFloat(info['CraftTime'] ?? '1') || 1,
         produced: parseFloat(info['Produced'] ?? '1') || 1,
         power: parseFloat(info['Power'] ?? '0') || 0,
@@ -634,7 +625,7 @@ async function main(): Promise<void> {
   // ---------------------------------------------------------------------------
 
   // Map element names to categories
-  const categoryMap: Record<string, { name: string; icon: string; }> = {
+  const categoryMap: Record<string, { name: string; icon: string }> = {
     salt: { name: 'Salt', icon: 'salt-prism' },
     water: { name: 'Water', icon: 'elemental-water' },
     life: { name: 'Life', icon: 'elemental-life' },
@@ -948,7 +939,8 @@ async function main(): Promise<void> {
         category: 'research',
         row: 0,
         technology: {
-          prerequisites: re.prerequisites.length > 0 ? re.prerequisites : undefined,
+          prerequisites:
+            re.prerequisites.length > 0 ? re.prerequisites : undefined,
           unlockedRecipes: re.unlocks
             .map((u) => `craft-${u}`)
             .filter((r) => seenRecipeIds.has(r)),
@@ -1084,15 +1076,17 @@ async function main(): Promise<void> {
 
     // Try constructing filename from name with multiple patterns
     const item = items.find((i) => i.id === iconId || i.icon === iconId);
-    const itemName = item?.name ?? iconId
-      .split('-')
-      .map((w) => w[0].toUpperCase() + w.slice(1))
-      .join(' ');
+    const itemName =
+      item?.name ??
+      iconId
+        .split('-')
+        .map((w) => w[0].toUpperCase() + w.slice(1))
+        .join(' ');
 
     filenamesToTry.push(
-      itemName.replace(/\s+/g, '') + '.png',       // "CirrusBreezeway.png"
-      itemName.replace(/\s+/g, '_') + '.png',      // "Cirrus_Breezeway.png"
-      itemName + '.png',                           // "Cirrus Breezeway.png"
+      itemName.replace(/\s+/g, '') + '.png', // "CirrusBreezeway.png"
+      itemName.replace(/\s+/g, '_') + '.png', // "Cirrus_Breezeway.png"
+      itemName + '.png', // "Cirrus Breezeway.png"
     );
 
     const localPath = path.join(iconDir, `${iconId}.png`);
@@ -1108,7 +1102,10 @@ async function main(): Promise<void> {
           const buf = await downloadImage(url);
           // Resize to 64x64
           const resized = await sharp(buf)
-            .resize(ICON_SIZE, ICON_SIZE, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+            .resize(ICON_SIZE, ICON_SIZE, {
+              fit: 'contain',
+              background: { r: 0, g: 0, b: 0, alpha: 0 },
+            })
             .png()
             .toBuffer();
           fs.writeFileSync(localPath, resized);
@@ -1224,10 +1221,7 @@ async function main(): Promise<void> {
     recipes,
   };
 
-  fs.writeFileSync(
-    path.join(OUTPUT_DIR, 'data.json'),
-    JSON.stringify(modData),
-  );
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'data.json'), JSON.stringify(modData));
 
   // Defaults - use Shifting Slab as min belt, Torrential Streamway as max
   const defaults = {
