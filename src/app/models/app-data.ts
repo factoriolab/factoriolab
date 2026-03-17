@@ -96,6 +96,12 @@ export const data: AppData = {
       game: Game.Factorio,
       flags: '1.1',
     },
+    {
+      id: 'kr2so',
+      name: 'Krastorio 2 Spaced Out',
+      game: Game.Factorio,
+      flags: '1.1',
+    },
     { id: 'lls', name: 'Lunar Landings', game: Game.Factorio, flags: '1.1' },
     { id: 'mbf', name: 'Mobile Factory', game: Game.Factorio, flags: '1.1' },
     { id: 'msc', name: 'More Science', game: Game.Factorio, flags: '1.1' },
@@ -231,5 +237,6 @@ export const data: AppData = {
     'fdy',
     'ows',
     'spa',
+    'kr2so',
   ],
 };
