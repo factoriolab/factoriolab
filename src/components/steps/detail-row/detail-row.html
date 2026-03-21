@@ -1,10 +1,10 @@
 <td [colSpan]="steps.leftSpan()"></td>
 
 <td class="w-0 px-0">
-  @if (value().items; as items) {
+  @if (items(); as items) {
     <div class="flex items-center justify-end">
       <span class="font-mono whitespace-pre">{{
-        items.div(factor()) | rate: cols().items.precision
+        items | rate: cols().items.precision
       }}</span>
     </div>
   }

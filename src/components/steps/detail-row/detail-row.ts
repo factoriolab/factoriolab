@@ -51,23 +51,26 @@ export class DetailRow {
   readonly value = input.required<StepDetailRow>();
   readonly factor = input<Rational>(rational.one);
 
+  protected readonly items = computed(() =>
+    this.value().items?.div(this.factor()),
+  );
+
   protected readonly inserterId = linkedSignal(() => {
     const data = this.data();
     const value = this.value();
+    const items = this.items();
     /**
      * Verify data includes inserters, step includes items, and item is not a
      * fluid
      */
     if (
       data.inserterIds.length === 0 ||
-      value.items == null ||
+      items == null ||
       value.itemId == null ||
       data.itemRecord[value.itemId].stack == null
     )
       return undefined;
 
-    const factor = this.factor();
-    const items = value.items.div(factor);
     const inserterSpeed = this.recipesStore.inserterSpeed();
     let inserterId: string | undefined;
     for (const [id, speed] of Object.entries(inserterSpeed)) {
@@ -81,11 +84,12 @@ export class DetailRow {
 
   protected readonly inserterCount = computed(() => {
     const inserterId = this.inserterId();
-    const value = this.value();
-    if (value.items == null || inserterId == null) return undefined;
+    const items = this.items();
+    if (items == null || inserterId == null) return undefined;
+
     const inserterSpeed = this.recipesStore.inserterSpeed();
     const speed = inserterSpeed[inserterId];
-    return value.items.div(speed);
+    return items.div(speed);
   });
 
   protected readonly cols = this.settingsStore.columnsState;
