@@ -8,9 +8,8 @@ describe('ColumnsDialog', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ColumnsDialog]
-    })
-    .compileComponents();
+      imports: [ColumnsDialog],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ColumnsDialog);
     component = fixture.componentInstance;

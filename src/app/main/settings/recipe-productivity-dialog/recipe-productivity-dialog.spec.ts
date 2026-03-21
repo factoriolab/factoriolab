@@ -8,9 +8,8 @@ describe('RecipeProductivityDialog', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RecipeProductivityDialog]
-    })
-    .compileComponents();
+      imports: [RecipeProductivityDialog],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RecipeProductivityDialog);
     component = fixture.componentInstance;

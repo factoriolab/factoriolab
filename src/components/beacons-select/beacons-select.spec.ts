@@ -8,9 +8,8 @@ describe('BeaconsSelect', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BeaconsSelect]
-    })
-    .compileComponents();
+      imports: [BeaconsSelect],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BeaconsSelect);
     component = fixture.componentInstance;

@@ -57,7 +57,7 @@ const host = cva(
       {
         color: 'gray',
         border: true,
-        class: 'hover:bg-gray-800 border-gray-600',
+        class: 'border-gray-600 hover:bg-gray-800',
       },
       {
         color: 'brand',

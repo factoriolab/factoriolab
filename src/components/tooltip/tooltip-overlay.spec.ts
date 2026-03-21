@@ -8,9 +8,8 @@ describe('TooltipOverlay', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TooltipOverlay]
-    })
-    .compileComponents();
+      imports: [TooltipOverlay],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TooltipOverlay);
     component = fixture.componentInstance;

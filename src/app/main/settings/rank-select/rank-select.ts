@@ -50,7 +50,7 @@ const host = cva(
   {
     variants: {
       opened: {
-        true: 'border-brand-600 outline z-2',
+        true: 'border-brand-600 z-2 outline',
         false: 'border-gray-600',
       },
       border: {

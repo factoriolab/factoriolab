@@ -8,9 +8,8 @@ describe('CostSettingsDialog', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CostSettingsDialog]
-    })
-    .compileComponents();
+      imports: [CostSettingsDialog],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CostSettingsDialog);
     component = fixture.componentInstance;

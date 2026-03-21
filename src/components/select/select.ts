@@ -44,13 +44,13 @@ const host = cva(
   {
     variants: {
       opened: {
-        true: 'border-brand-600 outline z-2',
+        true: 'border-brand-600 z-2 outline',
         false: 'border-gray-600',
       },
       border: { true: 'border', false: 'hover:border' },
       rounded: roundedVariants,
       iconOnly: {
-        true: 'min-w-9 justify-center outline-brand-600 grow-0',
+        true: 'outline-brand-600 min-w-9 grow-0 justify-center',
         false: 'outline-brand-600 px-1',
       },
       disabled: {

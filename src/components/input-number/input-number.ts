@@ -34,7 +34,7 @@ const control = cva(
       bonus: { true: 'ps-5' },
       percent: { true: 'pe-6' },
       border: { false: 'border-transparent' },
-      disabled: { true: 'opacity-40 pointer-events-none' },
+      disabled: { true: 'pointer-events-none opacity-40' },
     },
   },
 );

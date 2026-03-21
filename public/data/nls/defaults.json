@@ -272,9 +272,6 @@
     "nullius-chemical-plant-3",
     "nullius-lab-3"
   ],
-  "moduleRank": [
-    "nullius-productivity-module-3",
-    "nullius-speed-module-3"
-  ],
+  "moduleRank": ["nullius-productivity-module-3", "nullius-speed-module-3"],
   "beaconModule": "nullius-speed-module-3"
 }

@@ -4,8 +4,8 @@ import { CanActivateFn } from '@angular/router';
 import { landingGuard } from './landing-guard';
 
 describe('landingGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => landingGuard(...guardParameters));
+  const executeGuard: CanActivateFn = (...guardParameters) =>
+    TestBed.runInInjectionContext(() => landingGuard(...guardParameters));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

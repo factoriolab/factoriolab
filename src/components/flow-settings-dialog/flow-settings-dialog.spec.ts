@@ -8,9 +8,8 @@ describe('FlowSettingsDialog', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FlowSettingsDialog]
-    })
-    .compileComponents();
+      imports: [FlowSettingsDialog],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FlowSettingsDialog);
     component = fixture.componentInstance;

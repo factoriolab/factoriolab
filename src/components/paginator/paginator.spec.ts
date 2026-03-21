@@ -8,9 +8,8 @@ describe('Paginator', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Paginator]
-    })
-    .compileComponents();
+      imports: [Paginator],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Paginator);
     component = fixture.componentInstance;

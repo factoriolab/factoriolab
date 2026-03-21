@@ -22,7 +22,7 @@ const host = cva(
   'group outline-brand-600 hover:border-brand-600 relative inline-flex min-h-9 min-w-9 cursor-pointer items-center justify-center border hover:bg-gray-800 focus-visible:outline',
   {
     variants: {
-      opened: { true: 'border-brand-600 outline z-2' },
+      opened: { true: 'border-brand-600 z-2 outline' },
       border: { false: 'hover:border-brand-600' },
       rounded: roundedVariants,
       disabled: { true: 'pointer-events-none' },
