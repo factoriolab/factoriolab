@@ -7,15 +7,13 @@ export type CostKey =
   | 'unproduceable'
   | 'excluded'
   | 'surplus'
-  | 'maximize'
-  | 'recycling';
+  | 'maximize';
 
 export type CostSettings = Record<CostKey, Rational>;
 
 export const costKeys: CostKey[] = [
   'factor',
   'machine',
-  'recycling',
   'footprint',
   'unproduceable',
   'excluded',
