@@ -72,6 +72,7 @@ export class InputNumber extends Control<Rational> implements OnInit {
   readonly minimum = input<Rational | undefined>(rational.zero);
   readonly maximum = input<Rational | undefined>(undefined);
   readonly step = input<Rational>(rational.one);
+  readonly stepType = input<'add' | 'multiply'>('add');
   readonly integer = input(false);
   readonly rounded = input<Rounded>('all');
   readonly border = input(true);
@@ -157,8 +158,26 @@ export class InputNumber extends Control<Rational> implements OnInit {
   increment(direction: 1 | -1): void {
     let value = this.value() ?? rational.zero;
     let step = this.step();
-    if (direction === -1) step = step.inverse();
-    value = value.add(step);
+    switch (this.stepType()) {
+      case 'add': {
+        if (direction === -1) step = step.inverse();
+        value = value.add(step);
+        break;
+      }
+      case 'multiply': {
+        if (value.isZero()) {
+          if (direction === -1) value = rational(-1n).div(step);
+          else value = rational.one.div(step);
+        } else if (value.abs().lt(rational.one) && direction === -1) {
+          value = rational.zero;
+        } else {
+          if (direction === -1) step = step.reciprocal();
+          value = value.mul(step);
+        }
+        break;
+      }
+    }
+
     const min = this.minimum();
     const max = this.maximum();
     if (min?.gt(value)) value = min;
