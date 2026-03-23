@@ -7,6 +7,7 @@ import {
 
 import { TooltipType } from '~/components/tooltip/tooltip-type';
 import { IconType } from '~/data/icon-type';
+import { baseId } from '~/data/schema/quality';
 import { Option } from '~/option/option';
 import { sortedKeyValues } from '~/rational/key-value-sorted';
 import { Rational, rational } from '~/rational/rational';
@@ -393,24 +394,29 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
       if (s.recipe) {
         const recipe = s.recipe;
         if (s.outputs) {
-          const outputs = s.outputs;
           if (
             data.flags.has('miningDepletion') &&
             s.recipe.flags.has('mining')
           ) {
-            depletion = sortedKeyValues(s.outputs)
-              .map(([key]) => {
-                const step = stepByItem[key];
-                const percent = outputs[key];
-                if (step == null || percent == null) return undefined;
-                return {
-                  items: step.items
-                    ?.mul(percent)
-                    .div(recipe.effects.productivity),
-                  itemId: key,
-                };
-              })
-              .filter(notNullish);
+            const depletionMap = sortedKeyValues(s.outputs).reduce<
+              Record<string, Rational>
+            >((result, [key, value]) => {
+              const step = stepByItem[key];
+              const percent = value;
+              if (step?.items == null || percent == null) return result;
+              // Depletion only on non-quality resources
+              const itemId = baseId(key);
+              console.log(recipe.effects.productivity);
+              const items = step.items
+                .mul(percent)
+                .div(recipe.effects.productivity);
+              result[itemId] ??= rational.zero;
+              result[itemId] = result[itemId].add(items);
+              return result;
+            }, {});
+            depletion = Object.entries(depletionMap).map(
+              ([itemId, items]): StepDetailRow => ({ items, itemId }),
+            );
           }
         }
 
