@@ -109,7 +109,11 @@ const host = cva(
   imports: [FaIconComponent, Icon, TranslatePipe],
   templateUrl: './button.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class]': 'hostClass()' },
+  host: {
+    '[class]': 'hostClass()',
+    '[attr.disabled]': 'disabled() ? true : null',
+    '[attr.aria-disabled]': 'disabled() ? true : null',
+  },
   hostDirectives: [Ripple],
 })
 export class Button {
