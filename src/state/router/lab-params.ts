@@ -95,6 +95,8 @@ export interface LabParams {
   csu?: string;
   /** `Rational` Cost maximize */
   cmx?: string;
+  /** `Rational` Cost recycling */
+  cre?: string;
   /** `string` Table filter */
   tfi?: string;
   /** `string` Table sort column */

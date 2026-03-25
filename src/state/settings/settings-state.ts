@@ -63,5 +63,6 @@ export const initialSettingsState: SettingsState = {
     excluded: rational.zero,
     surplus: rational.zero,
     maximize: rational(-100000n),
+    recycling: rational(100n),
   },
 };

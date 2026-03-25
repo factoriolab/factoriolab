@@ -979,6 +979,7 @@ export class RouterSync {
     rat('cex', (s) => s.costs.excluded);
     rat('csu', (s) => s.costs.surplus);
     rat('cmx', (s) => s.costs.maximize);
+    rat('cre', (s) => s.costs.recycling);
   }
 
   unzipSettings(
@@ -1040,6 +1041,7 @@ export class RouterSync {
       excluded: rat('cex'),
       surplus: rat('csu'),
       maximize: rat('cmx'),
+      recycling: rat('cre'),
     };
 
     const mps = this.migration.parseSet.bind(this.migration);
