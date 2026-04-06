@@ -207,10 +207,14 @@ body.light .module::before {
   background-position: -192px -256px;
 }
 
-.game-starrupture::before {
+.transparent::before {
   background-position: -256px -256px;
 }
 
-.transparent::before {
-  background-position: -256px -256px;
+.game-motemancer::before {
+  background-position: 0 -320px;
+}
+
+.game-starrupture::before {
+  background-position: -64px -320px;
 }
