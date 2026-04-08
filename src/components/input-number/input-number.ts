@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 import { debounce, map, of, Subject, timer } from 'rxjs';
 
@@ -120,6 +120,7 @@ export class InputNumber extends Control<Rational> implements OnInit {
     }),
   );
 
+  protected readonly faChevronDown = faChevronDown;
   protected readonly faChevronUp = faChevronUp;
 
   ngOnInit(): void {

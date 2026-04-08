@@ -20,7 +20,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Icon } from '../icon/icon';
 
 @Component({
-  selector: 'lab-recipe',
+  selector: 'lab-recipe-process',
   imports: [FaIconComponent, KeyValuePipe, Icon, RoundPipe, TranslatePipe],
   templateUrl: './recipe-process.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

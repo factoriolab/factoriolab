@@ -1,4 +1,5 @@
 import fs from 'fs';
+
 import {
   EffectTypeLimitation,
   FluidPrototype,
@@ -6,8 +7,7 @@ import {
   PrototypeBase,
   ResearchIngredient,
   SurfaceCondition,
-} from 'scripts/factorio.models';
-
+} from '../factorio.models';
 import {
   allEffects,
   anyEntityKeys,

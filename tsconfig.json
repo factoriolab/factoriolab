@@ -15,8 +15,9 @@
     "importHelpers": true,
     "target": "ES2023",
     "module": "preserve",
-    "baseUrl": "./",
-    "paths": { "~/*": ["src/*"] }
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

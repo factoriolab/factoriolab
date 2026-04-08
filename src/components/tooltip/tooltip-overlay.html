@@ -1,7 +1,7 @@
 @if (tooltipData.type === 'recipe') {
   @if (data().recipeRecord[tooltipData.value]; as recipe) {
     <div>{{ recipe.name }}</div>
-    <lab-recipe [value]="recipe.id"></lab-recipe>
+    <lab-recipe-process [value]="recipe.id"></lab-recipe-process>
     @if (tooltipData.adjustedRecipe?.effects; as effects) {
       <table>
         <ng-template #effectRow let-label="label" let-value="value">
@@ -70,7 +70,7 @@
   @if (data().itemRecord[tooltipData.value]; as item) {
     <div>{{ item.name }}</div>
     @if (recipeId(); as recipeId) {
-      <lab-recipe [value]="recipeId"></lab-recipe>
+      <lab-recipe-process [value]="recipeId"></lab-recipe-process>
     }
 
     @switch (tooltipData.type) {

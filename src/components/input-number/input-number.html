@@ -19,6 +19,7 @@
   <div class="-ms-px flex flex-col">
     <button
       type="button"
+      class="grow"
       labButton
       size="micro"
       rounded="none"
@@ -29,11 +30,11 @@
     ></button>
     <button
       type="button"
-      class="rotate-180"
+      class="grow border-t-0"
       labButton
       size="micro"
       rounded="none"
-      [faIcon]="faChevronUp"
+      [faIcon]="faChevronDown"
       [disabled]="disabled() || !!minimum()?.gte(value)"
       [attr.aria-label]="'inputNumber.decrement' | translate"
       (click)="increment(-1)"
