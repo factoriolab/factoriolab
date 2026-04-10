@@ -238,6 +238,21 @@ export class FlowComponent implements AfterViewInit {
               layout.update(skGraph);
             }
 
+            // Recompute link directions based on current node positions
+            for (const l of skGraph.links) {
+              const source = l.source as SankeyNode<Node, Link>;
+              const target = l.target as SankeyNode<Node, Link>;
+              if (source === target) {
+                (l as SankeyLinkExtraProperties).direction = 'self';
+              } else if (
+                coalesce(source.x0, 0) < coalesce(target.x0, 0)
+              ) {
+                (l as SankeyLinkExtraProperties).direction = 'forward';
+              } else {
+                (l as SankeyLinkExtraProperties).direction = 'backward';
+              }
+            }
+
             // force an update of the path
             path.attr('d', (l) => {
               if ((l as SankeyLinkExtraProperties).direction === 'forward')
