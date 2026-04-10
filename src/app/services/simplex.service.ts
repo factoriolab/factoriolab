@@ -543,12 +543,17 @@ export class SimplexService {
 
     // Add unproduceable vars to model
     for (const itemId of state.unproduceableIds) {
+      const isFreeInput = state.data.noRecipeItemIds.has(itemId);
       const obj = this.itemCost(itemId, 'unproduceable', state);
       const config: VariableProperties = {
         obj,
         lb: 0,
         name: itemId,
       };
+      // Items that have no recipe at all are free inputs (e.g. raw resources).
+      // Items that became unproduceable due to excluded recipes cannot be
+      // sourced — cap them at zero so the solver cannot conjure them.
+      if (!isFreeInput) config.ub = 0;
       unproduceableVarEntities[itemId] = m.addVar(config);
     }
 

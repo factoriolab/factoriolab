@@ -346,19 +346,20 @@ describe('SimplexService', () => {
   describe('glpk', () => {
     it('should find a solution using glpk', () => {
       const state = getState();
-      // Coal = excluded input, Wood = normal input
-      state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.unproduceableIds = new Set([
-        ItemId.Wood,
-        ItemId.Coal,
-        ItemId.IronOre,
-      ]);
+      // Wood = free input (no recipe in dataset)
+      state.unproduceableIds = new Set([ItemId.Wood]);
       state.excludedIds = new Set([ItemId.CopperOre]);
       state.recipes[RecipeId.CopperPlate] =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperPlate];
       state.recipes[RecipeId.CopperPlate].cost = undefined;
       state.recipes[RecipeId.IronPlate] =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronPlate];
+      state.recipes[RecipeId.IronOre] =
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronOre];
+      state.recipes[RecipeId.Coal] =
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
+      state.recipes[RecipeId.CopperOre] =
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperOre];
       state.itemValues[ItemId.Wood] = {
         out: rational.one,
       };
@@ -403,18 +404,19 @@ describe('SimplexService', () => {
       const state = getState();
       state.maximizeType = MaximizeType.Ratio;
       state.requireMachinesOutput = false;
-      // Coal = excluded input, Wood = normal input
-      state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.unproduceableIds = new Set([
-        ItemId.Wood,
-        ItemId.Coal,
-        ItemId.IronOre,
-      ]);
+      // Wood = free input (no recipe in dataset)
+      state.unproduceableIds = new Set([ItemId.Wood]);
       state.excludedIds = new Set([ItemId.CopperOre]);
       state.recipes[RecipeId.CopperPlate] =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperPlate];
       state.recipes[RecipeId.IronPlate] =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronPlate];
+      state.recipes[RecipeId.IronOre] =
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronOre];
+      state.recipes[RecipeId.Coal] =
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
+      state.recipes[RecipeId.CopperOre] =
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperOre];
       state.itemValues[ItemId.Wood] = {
         out: rational.one,
       };
