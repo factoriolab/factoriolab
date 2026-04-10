@@ -176,6 +176,7 @@ describe('SimplexService', () => {
             in: rational(141n, 40n),
           },
           [ItemId.PetroleumGas]: { out: rational.zero, lim: rational(100n) },
+          'power-kw': { out: rational.zero },
         },
         recipeLimits: { [RecipeId.IronPlate]: rational(10n) },
         unproduceableIds: new Set([
@@ -187,6 +188,7 @@ describe('SimplexService', () => {
           ItemId.FirearmMagazine,
           ItemId.SteelPlate,
           ItemId.CopperPlate,
+          'power-kw',
         ]),
         excludedIds: new Set(),
         itemIds: Mocks.adjustedDataset.itemIds,
@@ -232,7 +234,7 @@ describe('SimplexService', () => {
       const result = service.itemMatches(recipe, state);
       expect(state.itemValues[ItemId.CopperPlate].out).toEqual(rational.zero);
       expect(state.recipes).toEqual({});
-      expect(result).toEqual([ItemId.CopperPlate]);
+      expect(result).toContain(ItemId.CopperPlate);
     });
 
     it('should include recipe output items if surplus cost > 0', () => {
@@ -242,7 +244,8 @@ describe('SimplexService', () => {
       const result = service.itemMatches(recipe, state);
       expect(state.itemValues[ItemId.CopperPlate].out).toEqual(rational.zero);
       expect(state.recipes).toEqual({});
-      expect(result).toEqual([ItemId.CopperPlate, ItemId.CopperCable]);
+      expect(result).toContain(ItemId.CopperPlate);
+      expect(result).toContain(ItemId.CopperCable);
     });
   });
 

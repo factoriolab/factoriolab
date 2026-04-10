@@ -873,11 +873,26 @@ export class RecipeService {
       itemAvailableIoRecipeIds[i] = [];
     });
 
+
     // Generate fuel variants for burner recipes with multiple fuel options
     this.generateFuelVariants(availableRecipeIds, adjustedRecipe, settings, data);
+
+    const powerItemId = data.itemIds.includes('power-kw') ? 'power-kw' : null;
+
     availableRecipeIds
       .map((i) => adjustedRecipe[i])
       .forEach((recipe) => {
+        // Inject power as a virtual input/output based on consumption
+        if (powerItemId && recipe.consumption?.nonzero()) {
+          if (recipe.consumption.gt(rational.zero)) {
+            // Power consumer: add power as input
+            recipe.in[powerItemId] = recipe.consumption.mul(recipe.time);
+          } else {
+            // Power producer: add power as output
+            recipe.out[powerItemId] = recipe.consumption.abs().mul(recipe.time);
+          }
+        }
+
         finalizeRecipe(recipe);
         Object.keys(recipe.out).forEach((productId) =>
           itemRecipeIds[productId].push(recipe.id),

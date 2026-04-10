@@ -110,6 +110,24 @@ describe('RateService', () => {
       ).toEqual(rational(1250n, 3n));
     });
 
+    it('should normalize power objective rate without display rate adjustment', () => {
+      expect(
+        service.objectiveNormalizedRate(
+          {
+            id: '0',
+            targetId: 'power-kw',
+            value: rational(900n),
+            unit: ObjectiveUnit.Power,
+            type: ObjectiveType.Output,
+          },
+          Mocks.itemsStateInitial,
+          Mocks.beltSpeed,
+          Mocks.drInfo,
+          Mocks.adjustedDataset,
+        ),
+      ).toEqual(rational(900n));
+    });
+
     it('should adjust technology objective rate by productivity', () => {
       expect(
         service.objectiveNormalizedRate(

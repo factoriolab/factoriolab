@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
 import { spread } from '~/helpers';
+import { Item } from '~/models/data/item';
+import { Recipe } from '~/models/data/recipe';
 import { DisplayRate, displayRateInfo } from '~/models/enum/display-rate';
 import { EnergyType } from '~/models/enum/energy-type';
 import { Game } from '~/models/enum/game';
@@ -116,9 +118,76 @@ describe('SettingsService', () => {
     });
   });
 
+  describe('generatePowerItem', () => {
+    it('should add a virtual power item', () => {
+      const items: Item[] = [];
+      const itemIds: string[] = [];
+      const iconIds = new Set(['electric-energy-accumulators']);
+      (service as any).generatePowerItem(items, itemIds, iconIds);
+      expect(items.length).toEqual(1);
+      expect(items[0].id).toEqual('power-kw');
+      expect(items[0].icon).toEqual('electric-energy-accumulators');
+      expect(itemIds).toContain('power-kw');
+    });
+
+    it('should skip if power-kw already exists', () => {
+      const items: Item[] = [];
+      const itemIds: string[] = ['power-kw'];
+      (service as any).generatePowerItem(items, itemIds, new Set());
+      expect(items.length).toEqual(0);
+    });
+  });
+
+  describe('generatePowerRecipes', () => {
+    it('should generate a steam engine power recipe', () => {
+      const items: Item[] = [
+        {
+          id: 'steam-engine',
+          name: 'Steam engine',
+          category: 'production',
+          row: 1,
+        },
+      ];
+      const recipes: Recipe[] = [];
+      const recipeIds: string[] = [];
+
+      const iconIds = new Set(['electric-energy-accumulators']);
+      (service as any).generatePowerRecipes(items, recipes, recipeIds, iconIds);
+
+      expect(items[0].machine).toBeTruthy();
+      expect(items[0].machine!.usage).toEqual(rational(-900n));
+      expect(recipes.length).toEqual(1);
+      expect(recipes[0].id).toEqual('steam-engine-power');
+      expect(recipeIds).toContain('steam-engine-power');
+    });
+
+    it('should skip if steam-engine already has a machine', () => {
+      const items: Item[] = [
+        {
+          id: 'steam-engine',
+          name: 'Steam engine',
+          category: 'production',
+          row: 1,
+          machine: { speed: rational.one },
+        },
+      ];
+      const recipes: Recipe[] = [];
+      const recipeIds: string[] = [];
+
+      (service as any).generatePowerRecipes(
+        items,
+        recipes,
+        recipeIds,
+        new Set(),
+      );
+
+      expect(recipes.length).toEqual(0);
+    });
+  });
+
   describe('objectiveUnitOptions', () => {
     it('should return the list of options', () => {
-      expect(service.objectiveUnitOptions().length).toEqual(4);
+      expect(service.objectiveUnitOptions().length).toEqual(5);
     });
   });
 

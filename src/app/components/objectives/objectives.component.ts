@@ -28,7 +28,7 @@ import {
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { MatrixResult } from '~/models/matrix-result';
-import { ObjectiveState } from '~/models/objective';
+import { isRecipeObjective, ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Settings } from '~/models/settings/settings';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
@@ -142,7 +142,7 @@ export class ObjectivesComponent {
 
       if (
         maxObjectives.some((o) =>
-          o.unit === ObjectiveUnit.Machines
+          isRecipeObjective(o)
             ? settings.excludedRecipeIds.has(o.targetId)
             : settings.excludedItemIds.has(o.targetId),
         )
@@ -205,17 +205,30 @@ export class ObjectivesComponent {
     chooseRecipePicker: PickerComponent,
   ): void {
     const data = this.data();
-    if (unit === ObjectiveUnit.Machines) {
+    if (unit === ObjectiveUnit.Power) {
+      // Switching to Power: auto-target the virtual power item
+      this.objectivesSvc.updateEntity(objective.id, {
+        targetId: 'power-kw',
+        unit,
+      });
+    } else if (unit === ObjectiveUnit.Machines) {
       if (objective.unit !== ObjectiveUnit.Machines) {
-        const recipeIds = data.itemRecipeIds[objective.targetId];
+        // Item-based -> recipe-based: need to pick a recipe
+        const targetId =
+          objective.unit === ObjectiveUnit.Power
+            ? undefined
+            : objective.targetId;
+        const recipeIds = targetId
+          ? data.itemRecipeIds[targetId]
+          : Array.from(this.settings().availableRecipeIds);
         const updateFn = (recipeId: string): void => {
           this.convertItemsToMachines(objective, recipeId, data);
         };
         if (recipeIds.length === 1) {
           updateFn(recipeIds[0]);
         } else {
-          chooseRecipePicker.selectId.pipe(first()).subscribe((targetId) => {
-            updateFn(targetId);
+          chooseRecipePicker.selectId.pipe(first()).subscribe((rid) => {
+            updateFn(rid);
           });
           chooseRecipePicker.clickOpen('recipe', recipeIds);
         }
@@ -225,6 +238,7 @@ export class ObjectivesComponent {
         objective.unit === ObjectiveUnit.Machines &&
         data.adjustedRecipe[objective.targetId]
       ) {
+        // Recipe-based -> item-based: need to pick an item
         const itemIds = Array.from(
           data.adjustedRecipe[objective.targetId].produces,
         );
@@ -240,6 +254,15 @@ export class ObjectivesComponent {
           });
           chooseItemPicker.clickOpen('item', itemIds);
         }
+      } else if (objective.unit === ObjectiveUnit.Power) {
+        // Power -> item-based: need to pick an item
+        chooseItemPicker.selectId.pipe(first()).subscribe((itemId) => {
+          this.objectivesSvc.updateEntity(objective.id, {
+            targetId: itemId,
+            unit,
+          });
+        });
+        chooseItemPicker.clickOpen('item', this.settings().availableItemIds);
       } else {
         // No target conversion required
         this.convertItemsToItems(objective, objective.targetId, unit, data);

@@ -176,6 +176,21 @@
           addRecipePicker.clickOpen('recipe', settings().availableRecipeIds)
         "
       ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="flex-grow-1 p-button-outlined"
+        icon="fa-solid fa-bolt"
+        tooltipPosition="top"
+        [label]="'objectives.addPower' | translate"
+        (click)="
+          objectivesSvc.add({
+            targetId: 'power-kw',
+            unit: ObjectiveUnit.Power,
+          })
+        "
+      ></button>
       <p-dropdown
         labDropdownTranslate
         styleClass="h-100"

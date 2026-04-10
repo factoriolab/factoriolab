@@ -72,6 +72,10 @@ export class RateService {
         }
         break;
       }
+      case ObjectiveUnit.Power: {
+        // kW is already a per-second rate, no display rate adjustment needed
+        break;
+      }
     }
 
     // Adjust based on productivity for technology objectives
