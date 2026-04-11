@@ -900,7 +900,7 @@ export class RouterService {
     if (state.pumpjackYield) {
       const parts: string[] = [];
       for (const [id, val] of Object.entries(state.pumpjackYield)) {
-        parts.push(id, val.toString());
+        if (val !== undefined) parts.push(id, val.toString());
       }
       if (parts.length) {
         const value = parts.join('~');

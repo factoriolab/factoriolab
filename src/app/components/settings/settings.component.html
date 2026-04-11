@@ -966,7 +966,7 @@
                     [pTooltip]="
                       'settings.pumpjackYieldTooltip' | translate
                     "
-                    [disabled]="pumpjackYield[recipeId] == null"
+                    [disabled]="pumpjackYield[recipeId] === undefined"
                     [value]="pumpjackYield[recipeId] ?? defaultYield"
                     (setValue)="updatePumpjackYield(recipeId, $event)"
                   ></lab-input-number>
