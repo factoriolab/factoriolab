@@ -15,7 +15,6 @@ import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
-import { FieldsetModule } from 'primeng/fieldset';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
@@ -80,7 +79,6 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     ButtonModule,
     CheckboxModule,
     DialogModule,
-    FieldsetModule,
     DropdownModule,
     InputNumberModule,
     InputTextModule,
