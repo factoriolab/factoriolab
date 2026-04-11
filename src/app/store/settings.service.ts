@@ -96,7 +96,7 @@ export interface SettingsState {
   proliferatorSprayId: string;
   inserterTarget: InserterTarget;
   miningBonus: Rational;
-  pumpjackYield?: Rational;
+  pumpjackYield?: Entities<Rational>;
   researchBonus: Rational;
   inserterCapacity: InserterCapacity;
   researchedTechnologyIds?: Set<string>;

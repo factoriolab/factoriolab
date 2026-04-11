@@ -75,7 +75,7 @@ export interface LabParams {
   mps?: string;
   /** `Rational` Mining bonus */
   bmi?: string;
-  /** `Rational` Pumpjack yield */
+  /** Pumpjack yield map (id~value~id~value pairs) */
   bpy?: string;
   /** `Rational` Research bonus */
   bre?: string;

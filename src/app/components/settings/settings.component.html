@@ -942,20 +942,30 @@
             </div>
           }
           @if (settings().pumpjackYield; as pumpjackYield) {
-            <div class="pb-3">
-              <label class="p-static-label" for="pumpjack-yield">{{
-                'settings.pumpjackYield' | translate
-              }}</label>
-              <lab-input-number
-                inputId="pumpjack-yield"
-                class="w-100"
-                [pTooltip]="
-                  'settings.pumpjackYieldTooltip' | translate
-                "
-                [value]="pumpjackYield"
-                (setValue)="settingsSvc.apply({ pumpjackYield: $event })"
-              ></lab-input-number>
-            </div>
+            @for (
+              recipeId of pumpjackRecipeIds();
+              track recipeId
+            ) {
+              @if (pumpjackYield[recipeId]; as yieldValue) {
+                <div class="pb-3">
+                  <label
+                    class="p-static-label"
+                    [for]="'pumpjack-yield-' + recipeId"
+                  >
+                    {{ data().recipeEntities[recipeId].name }}
+                  </label>
+                  <lab-input-number
+                    [inputId]="'pumpjack-yield-' + recipeId"
+                    class="w-100"
+                    [pTooltip]="
+                      'settings.pumpjackYieldTooltip' | translate
+                    "
+                    [value]="yieldValue"
+                    (setValue)="updatePumpjackYield(recipeId, $event)"
+                  ></lab-input-number>
+                </div>
+              }
+            }
           }
           @if (data().flags.has('proliferator')) {
             <div class="mt-3 pb-3">

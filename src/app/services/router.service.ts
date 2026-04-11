@@ -23,7 +23,7 @@ import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { ZipVersion } from '~/models/enum/zip-version';
 import { LabParams, Params } from '~/models/lab-params';
 import { isRecipeObjective, ObjectiveState } from '~/models/objective';
-import { rational } from '~/models/rational';
+import { Rational, rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import { CostSettings } from '~/models/settings/cost-settings';
 import { ItemState } from '~/models/settings/item-settings';
@@ -896,7 +896,18 @@ export class RouterService {
     str('mps', (s) => s.proliferatorSprayId, hash.modules);
     num('mit', (s) => s.inserterTarget);
     rat('bmi', (s) => s.miningBonus);
-    rat('bpy', (s) => s.pumpjackYield);
+    // Serialize pumpjack yield map as id~value~id~value pairs
+    if (state.pumpjackYield) {
+      const parts: string[] = [];
+      for (const [id, val] of Object.entries(state.pumpjackYield)) {
+        parts.push(id, val.toString());
+      }
+      if (parts.length) {
+        const value = parts.join('~');
+        zData.config.bare['bpy'] = value;
+        zData.config.hash['bpy'] = value;
+      }
+    }
     rat('bre', (s) => s.researchBonus);
     num('bic', (s) => s.inserterCapacity);
     sub(
@@ -962,7 +973,7 @@ export class RouterService {
       proliferatorSprayId: str('mps', hash?.modules),
       inserterTarget: num('mit'),
       miningBonus: rat('bmi'),
-      pumpjackYield: rat('bpy'),
+      pumpjackYield: this.unzipPumpjackYield(params),
       researchBonus: rat('bre'),
       inserterCapacity: num('bic'),
       researchedTechnologyIds: sub('tre', modHash.technologies),
@@ -1002,5 +1013,16 @@ export class RouterService {
     if (!Object.keys(obj).length) return;
 
     return obj;
+  }
+
+  unzipPumpjackYield(params: LabParams): Entities<Rational> | undefined {
+    if (!params.bpy) return undefined;
+    const parts = params.bpy.split('~');
+    const result: Entities<Rational> = {};
+    for (let i = 0; i + 1 < parts.length; i += 2) {
+      const parsed = this.zipSvc.parseRational(parts[i + 1]);
+      if (parsed) result[parts[i]] = parsed;
+    }
+    return Object.keys(result).length ? result : undefined;
   }
 }

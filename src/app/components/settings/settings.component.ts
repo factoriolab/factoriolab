@@ -42,7 +42,7 @@ import { qualityOptions } from '~/models/enum/quality';
 import { researchBonusOptions } from '~/models/enum/research-bonus';
 import { themeOptions } from '~/models/enum/theme';
 import { gameInfo } from '~/models/game-info';
-import { rational } from '~/models/rational';
+import { Rational, rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { Entities } from '~/models/utils';
@@ -311,8 +311,33 @@ export class SettingsComponent {
     this.settingsSvc.apply({ beaconReceivers });
   }
 
+  pumpjackRecipeIds = computed(() => {
+    const data = this.data();
+    return data.recipeIds.filter((id) =>
+      data.recipeEntities[id].producers.includes(ItemId.Pumpjack),
+    );
+  });
+
+  updatePumpjackYield(recipeId: string, value: Rational): void {
+    const current = this.settings().pumpjackYield;
+    if (!current) return;
+    this.settingsSvc.apply({
+      pumpjackYield: { ...current, [recipeId]: value },
+    });
+  }
+
   togglePumpjackYield(value: boolean): void {
-    const pumpjackYield = value ? rational(100n) : undefined;
+    if (!value) {
+      this.settingsSvc.apply({ pumpjackYield: undefined });
+      return;
+    }
+    const data = this.data();
+    const pumpjackYield: Entities<Rational> = {};
+    for (const recipe of data.recipeIds
+      .map((id) => data.recipeEntities[id])
+      .filter((r) => r.producers.includes(ItemId.Pumpjack))) {
+      pumpjackYield[recipe.id] = rational(100n);
+    }
     this.settingsSvc.apply({ pumpjackYield });
   }
 

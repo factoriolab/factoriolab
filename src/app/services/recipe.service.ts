@@ -227,7 +227,6 @@ export class RecipeService {
     } = settings;
 
     const miningFactor = miningBonus.div(rational(100n));
-    const yieldFactor = pumpjackYield?.div(rational(100n));
     const researchFactor = researchBonus
       .add(rational(100n))
       .div(rational(100n));
@@ -277,8 +276,11 @@ export class RecipeService {
         eff.productivity = eff.productivity.add(miningFactor);
 
       // Adjust for pumpjack yield (scales output by yield percentage)
-      if (recipeSettings.machineId === ItemId.Pumpjack && yieldFactor != null)
-        eff.productivity = eff.productivity.mul(yieldFactor);
+      const recipeYield = pumpjackYield?.[recipeId];
+      if (recipeSettings.machineId === ItemId.Pumpjack && recipeYield != null)
+        eff.productivity = eff.productivity.mul(
+          recipeYield.div(rational(100n)),
+        );
 
       // Adjust for base productivity
       if (machine.baseEffect) {
@@ -501,7 +503,8 @@ export class RecipeService {
       // Without yield estimation, pumpjack machine count is inaccurate,
       // so skip pollution and power to avoid misleading values
       const skipMachineEffects =
-        recipeSettings.machineId === ItemId.Pumpjack && yieldFactor == null;
+        recipeSettings.machineId === ItemId.Pumpjack &&
+        pumpjackYield?.[recipeId] == null;
 
       if (skipMachineEffects) {
         recipe.consumption = rational.zero;
@@ -800,6 +803,7 @@ export class RecipeService {
       itemAvailableIoRecipeIds[i] = [];
     });
 
+    const pumpjackRecipeIds: string[] = [];
     availableRecipeIds
       .map((i) => adjustedRecipe[i])
       .forEach((recipe) => {
@@ -816,6 +820,8 @@ export class RecipeService {
           Object.keys(recipe.output).forEach((ioId) =>
             itemAvailableIoRecipeIds[ioId].push(recipe.id),
           );
+          if (recipe.producers.includes(ItemId.Pumpjack))
+            pumpjackRecipeIds.push(recipe.id);
         }
       });
 
@@ -905,6 +911,7 @@ export class RecipeService {
       itemRecipeIds,
       itemAvailableRecipeIds,
       itemAvailableIoRecipeIds,
+      pumpjackRecipeIds,
     });
   }
 
