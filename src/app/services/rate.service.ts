@@ -6,7 +6,11 @@ import {
 } from '~/d3-sankey/models';
 import { sankey } from '~/d3-sankey/sankey';
 import { coalesce, spread, toEntities } from '~/helpers';
-import { baseRecipeId, Recipe } from '~/models/data/recipe';
+import {
+  baseRecipeId,
+  parseFuelVariant,
+  Recipe,
+} from '~/models/data/recipe';
 import { AdjustedDataset, Dataset } from '~/models/dataset';
 import { DisplayRateInfo } from '~/models/enum/display-rate';
 import { EnergyType } from '~/models/enum/energy-type';
@@ -191,6 +195,14 @@ export class RateService {
       else
         step.recipeSettings =
           recipes[step.recipeId] ?? recipes[baseRecipeId(step.recipeId)];
+
+      // For fuel variant recipes, override fuelId with the solver-selected fuel
+      const variant = parseFuelVariant(step.recipeId);
+      if (variant && step.recipeSettings) {
+        step.recipeSettings = spread(step.recipeSettings, {
+          fuelId: variant.fuelId,
+        });
+      }
     }
   }
 
