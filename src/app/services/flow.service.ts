@@ -85,6 +85,16 @@ export class FlowService {
       return e;
     }, {});
 
+    // Count how many recipe steps produce each output item
+    const outputProducerCount: Entities<number> = {};
+    for (const step of steps) {
+      if (step.outputs) {
+        for (const itemId of Object.keys(step.outputs)) {
+          outputProducerCount[itemId] = (outputProducerCount[itemId] ?? 0) + 1;
+        }
+      }
+    }
+
     for (const step of steps) {
       if (
         step.itemId &&
@@ -215,11 +225,15 @@ export class FlowService {
         const machine = data.itemEntities[step.recipeSettings?.machineId];
         const icon = data.iconEntities[recipe.icon ?? recipe.id];
         const id = `${this.recipeStepNodeType(step)}|${step.recipeId}`;
-        // Anchor recipe near end if it produces an objective output item
+        // Anchor recipe near end if it's the sole producer of an objective output.
+        // When multiple recipes produce the same output, they merge into the
+        // item node (which is already anchored), so don't pin recipe nodes.
         const producesOutput =
           step.outputs &&
           Object.keys(step.outputs).some(
-            (itemId) => stepItemMap[itemId]?.output != null,
+            (itemId) =>
+              stepItemMap[itemId]?.output != null &&
+              outputProducerCount[itemId] <= 1,
           );
         flow.nodes.push({
           id,
