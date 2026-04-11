@@ -498,14 +498,23 @@ export class RecipeService {
         delete recipe.consumption;
       }
 
-      // Pollution
-      recipe.pollution =
-        machine.pollution && recipeSettings.machineId !== ItemId.Pumpjack
+      // Without yield estimation, pumpjack machine count is inaccurate,
+      // so skip pollution and power to avoid misleading values
+      const skipMachineEffects =
+        recipeSettings.machineId === ItemId.Pumpjack && yieldFactor == null;
+
+      if (skipMachineEffects) {
+        recipe.consumption = rational.zero;
+        recipe.pollution = rational.zero;
+      } else {
+        // Pollution
+        recipe.pollution = machine.pollution
           ? machine.pollution
               .div(this.pollutionFactor)
               .mul(eff.pollution)
               .mul(eff.consumption)
           : rational.zero;
+      }
 
       // Adjust for ingredient usage (Space Age: Biolab)
       if (machine.ingredientUsage) {

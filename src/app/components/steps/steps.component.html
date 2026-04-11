@@ -579,7 +579,10 @@
             ) {
               <span class="monospace">{{
                 step.machines
-                  | machineRate: columnsState().machines.precision : machineId
+                  | machineRate
+                    : columnsState().machines.precision
+                    : machineId
+                    : settings().pumpjackYield != null
               }}</span>
             }
           </td>
@@ -1669,7 +1672,10 @@
           ) {
             <span class="monospace">{{
               machines
-                | machineRate: columnsState().machines.precision : machineId
+                | machineRate
+                  : columnsState().machines.precision
+                  : machineId
+                  : settings().pumpjackYield != null
             }}</span>
           }
         </td>

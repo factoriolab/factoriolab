@@ -11,8 +11,9 @@ export class MachineRatePipe implements PipeTransform {
     value: Rational,
     precision: number | null,
     machineId: string,
+    hasYield = false,
   ): string {
-    if (machineId === ItemId.Pumpjack) {
+    if (machineId === ItemId.Pumpjack && !hasYield) {
       return `${RatePipe.transform(
         value.mul(rational(100n)),
         precision != null ? Math.max(precision - 2, 0) : precision,
