@@ -57,6 +57,21 @@ const NODE_WIDTH = 32;
 cytoscape.use(elk as cytoscape.Ext);
 cytoscape.warnings(environment.debug);
 
+const recomputeDirections = (skGraph: SankeyGraph<Node, Link>) => {
+  // Recompute link directions based on current node positions
+  for (const l of skGraph.links) {
+    const source = l.source as SankeyNode<Node, Link>;
+    const target = l.target as SankeyNode<Node, Link>;
+    if (source === target) {
+      (l as SankeyLinkExtraProperties).direction = 'self';
+    } else if (coalesce(source.x0, 0) < coalesce(target.x0, 0)) {
+      (l as SankeyLinkExtraProperties).direction = 'forward';
+    } else {
+      (l as SankeyLinkExtraProperties).direction = 'backward';
+    }
+  }
+};
+
 @Component({
   selector: 'lab-flow',
   standalone: true,
@@ -237,21 +252,7 @@ export class FlowComponent implements AfterViewInit {
             if (layout) {
               layout.update(skGraph);
             }
-
-            // Recompute link directions based on current node positions
-            for (const l of skGraph.links) {
-              const source = l.source as SankeyNode<Node, Link>;
-              const target = l.target as SankeyNode<Node, Link>;
-              if (source === target) {
-                (l as SankeyLinkExtraProperties).direction = 'self';
-              } else if (
-                coalesce(source.x0, 0) < coalesce(target.x0, 0)
-              ) {
-                (l as SankeyLinkExtraProperties).direction = 'forward';
-              } else {
-                (l as SankeyLinkExtraProperties).direction = 'backward';
-              }
-            }
+            recomputeDirections(skGraph);
 
             // force an update of the path
             path.attr('d', (l) => {

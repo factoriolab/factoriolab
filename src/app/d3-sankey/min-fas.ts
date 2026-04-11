@@ -58,6 +58,23 @@ export function minFAS<
     }
   }
 
+  // Remove anchored nodes first so they don't interfere with the ordering
+  const startNodes: SankeyNode<N, L>[] = [];
+  const endNodes: SankeyNode<N, L>[] = [];
+  const sinkNodes: SankeyNode<N, L>[] = [];
+  for (const node of [...nodes]) {
+    if (node['anchor'] === 'start') {
+      startNodes.push(node);
+      remove(node);
+    } else if (node['anchor'] === 'end') {
+      endNodes.push(node);
+      remove(node);
+    } else if (node['anchor'] === 'sink') {
+      sinkNodes.push(node);
+      remove(node);
+    }
+  }
+
   const s1 = [];
   const s2 = [];
   while (nodes.size > 0) {
@@ -112,7 +129,8 @@ export function minFAS<
   }
 
   s2.reverse();
-  const order = s1.concat(s2);
+  // Pin anchored nodes: start at beginning, end/sink at end of ordering
+  const order = [...startNodes, ...s1, ...s2, ...endNodes, ...sinkNodes];
   const orderMap = new Map<SankeyNode<N, L>, number>();
   for (const [i, node] of order.entries()) {
     orderMap.set(node, i);
