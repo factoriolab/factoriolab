@@ -22,11 +22,21 @@ export function isRecipeObjective(obj: ObjectiveState): obj is RecipeObjective {
   );
 }
 
+export type GlobalObjectiveKind = 'power' | 'pollution';
+
+export function globalObjectiveKind(
+  obj: ObjectiveBase,
+): GlobalObjectiveKind | undefined {
+  if (!isGlobalObjective(obj)) return undefined;
+  return obj.targetId.slice(GLOBAL_PREFIX.length) as GlobalObjectiveKind;
+}
+
 export function isGlobalPowerObjective(obj: ObjectiveBase): boolean {
-  return (
-    obj.unit === ObjectiveUnit.Power &&
-    obj.targetId === globalTargetId('power')
-  );
+  return obj.targetId === globalTargetId('power');
+}
+
+export function isGlobalPollutionObjective(obj: ObjectiveBase): boolean {
+  return obj.targetId === globalTargetId('pollution');
 }
 
 export interface ObjectiveBase {

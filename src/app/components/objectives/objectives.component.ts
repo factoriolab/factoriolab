@@ -6,12 +6,13 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Message } from 'primeng/api';
+import { MenuItem, Message } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
 import { OrderListModule } from 'primeng/orderlist';
+import { MenuModule } from 'primeng/menu';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { combineLatest, EMPTY, first, map, Observable } from 'rxjs';
@@ -29,6 +30,8 @@ import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { MatrixResult } from '~/models/matrix-result';
 import {
+  GlobalObjectiveKind,
+  globalObjectiveKind,
   globalTargetId,
   isGlobalObjective,
   isRecipeObjective,
@@ -64,6 +67,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     DropdownModule,
     MessagesModule,
     OrderListModule,
+    MenuModule,
     ToggleButtonModule,
     TooltipModule,
     DropdownTranslateDirective,
@@ -208,9 +212,88 @@ export class ObjectivesComponent {
     return isGlobalObjective(obj);
   }
 
-  addGlobalPower(): void {
+  globalKind(obj: ObjectiveBase): GlobalObjectiveKind | undefined {
+    return globalObjectiveKind(obj);
+  }
+
+  globalUnit(obj: ObjectiveBase): string {
+    switch (globalObjectiveKind(obj)) {
+      case 'power':
+        return 'kW';
+      case 'pollution':
+        return '/m';
+      default:
+        return '';
+    }
+  }
+
+  globalKindIcon(obj: ObjectiveBase): string {
+    switch (globalObjectiveKind(obj)) {
+      case 'power':
+        return 'fa-solid fa-bolt';
+      case 'pollution':
+        return 'fa-solid fa-smog';
+      default:
+        return 'fa-solid fa-globe';
+    }
+  }
+
+  globalKindLabel(obj: ObjectiveBase): string {
+    switch (globalObjectiveKind(obj)) {
+      case 'power':
+        return 'objectives.power';
+      case 'pollution':
+        return 'objectives.pollution';
+      default:
+        return '';
+    }
+  }
+
+  editGlobalKindItems(objective: ObjectiveState): MenuItem[] {
+    return [
+      {
+        label: 'Power',
+        icon: 'fa-solid fa-bolt',
+        command: () => this.changeGlobalKind(objective, 'power'),
+      },
+      {
+        label: 'Pollution',
+        icon: 'fa-solid fa-smog',
+        command: () => this.changeGlobalKind(objective, 'pollution'),
+      },
+    ];
+  }
+
+  addGlobalMenuItems = computed((): MenuItem[] => {
+    const flags = this.data().flags;
+    const items: MenuItem[] = [];
+    if (flags.has('power'))
+      items.push({
+        label: 'Power',
+        icon: 'fa-solid fa-bolt',
+        command: () => this.addGlobal('power'),
+      });
+    if (flags.has('pollution'))
+      items.push({
+        label: 'Pollution',
+        icon: 'fa-solid fa-smog',
+        command: () => this.addGlobal('pollution'),
+      });
+    return items;
+  });
+
+  changeGlobalKind(
+    objective: ObjectiveState,
+    kind: GlobalObjectiveKind,
+  ): void {
+    this.objectivesSvc.updateEntity(objective.id, {
+      targetId: globalTargetId(kind),
+    });
+  }
+
+  addGlobal(kind: GlobalObjectiveKind): void {
     this.objectivesSvc.add({
-      targetId: globalTargetId('power'),
+      targetId: globalTargetId(kind),
       unit: ObjectiveUnit.Power,
     });
   }

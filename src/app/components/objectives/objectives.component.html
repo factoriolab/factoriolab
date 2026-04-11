@@ -22,9 +22,18 @@
               labNoDrag
               type="button"
               class="p-button-outlined text-truncate"
-              icon="fa-solid fa-bolt"
-              [label]="contentSvc.isMobile() ? '' : ('objectives.power' | translate)"
+              [icon]="globalKindIcon(objective)"
+              [label]="contentSvc.isMobile() ? '' : (globalKindLabel(objective) | translate)"
+              [pTooltip]="'objectives.selectGlobalKind' | translate"
+              tooltipPosition="top"
+              (click)="editGlobalKindMenu.toggle($event)"
             ></button>
+            <p-menu
+              #editGlobalKindMenu
+              [popup]="true"
+              [appendTo]="'body'"
+              [model]="editGlobalKindItems(objective)"
+            ></p-menu>
           } @else if (objective.unit === ObjectiveUnit.Machines || objective.unit === ObjectiveUnit.Power) {
             <button
               pButton
@@ -121,7 +130,7 @@
             "
           ></lab-input-number>
           @if (isGlobal(objective)) {
-            <span class="p-inputgroup-addon">kW</span>
+            <span class="p-inputgroup-addon">{{ globalUnit(objective) }}</span>
           } @else if (objective.type !== ObjectiveType.Maximize) {
             <p-dropdown
               labDropdownTranslate
@@ -193,11 +202,16 @@
         pRipple
         type="button"
         class="flex-grow-1 p-button-outlined"
-        icon="fa-solid fa-bolt"
+        icon="fa-solid fa-globe"
         tooltipPosition="top"
-        [label]="'objectives.addPower' | translate"
-        (click)="addGlobalPower()"
+        [label]="'objectives.addGlobal' | translate"
+        (click)="addGlobalMenu.toggle($event)"
       ></button>
+      <p-menu
+        #addGlobalMenu
+        [popup]="true"
+        [model]="addGlobalMenuItems()"
+      ></p-menu>
       <p-dropdown
         labDropdownTranslate
         styleClass="h-100"
