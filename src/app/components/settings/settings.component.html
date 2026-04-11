@@ -928,52 +928,47 @@
             </div>
           }
           @if (data().flags.has('yield')) {
-            <div class="pb-3">
-              <p-checkbox
-                [ngModel]="settings().pumpjackYield != null"
-                [binary]="true"
-                [label]="'settings.estimatePumpjackYield' | translate"
-                [pTooltip]="
-                  'settings.estimatePumpjackYieldTooltip' | translate
-                "
-                tooltipPosition="bottom"
-                (onChange)="togglePumpjackYield($event.checked)"
-              ></p-checkbox>
-            </div>
-          }
-          @if (settings().pumpjackYield; as pumpjackYield) {
-            <div class="yield-section pb-3">
-              <div class="yield-section-items ps-3">
-              @for (
-                recipeId of pumpjackRecipeIds();
-                track recipeId
-              ) {
-                <div class="d-flex align-items-center" [class.pb-2]="!$last">
-                  <p-checkbox
-                    [ngModel]="pumpjackYield[recipeId] != null"
-                    [binary]="true"
-                    (onChange)="togglePumpjackRecipeYield(recipeId, $event.checked)"
-                  ></p-checkbox>
-                  <i
-                    [class]="recipeId | iconSmClass: 'recipe'"
-                    [pTooltip]="data().recipeEntities[recipeId].name"
-                    tooltipPosition="top"
-                    class="mx-2"
-                  ></i>
-                  <lab-input-number
-                    [inputId]="'pumpjack-yield-' + recipeId"
-                    class="flex-grow-1"
-                    [pTooltip]="
-                      'settings.pumpjackYieldTooltip' | translate
-                    "
-                    [disabled]="pumpjackYield[recipeId] == null"
-                    [value]="pumpjackYield[recipeId] ?? defaultYield"
-                    (setValue)="updatePumpjackYield(recipeId, $event)"
-                  ></lab-input-number>
-                </div>
+            <p-fieldset
+              [legend]="'settings.estimatePumpjackYield' | translate"
+              [toggleable]="true"
+              [collapsed]="settings().pumpjackYield == null"
+              [pTooltip]="
+                'settings.estimatePumpjackYieldTooltip' | translate
+              "
+              tooltipPosition="bottom"
+              (onBeforeToggle)="togglePumpjackYield(!$event.collapsed)"
+            >
+              @if (settings().pumpjackYield; as pumpjackYield) {
+                @for (
+                  recipeId of pumpjackRecipeIds();
+                  track recipeId
+                ) {
+                  <div class="d-flex align-items-center" [class.pb-2]="!$last">
+                    <p-checkbox
+                      [ngModel]="pumpjackYield[recipeId] != null"
+                      [binary]="true"
+                      (onChange)="togglePumpjackRecipeYield(recipeId, $event.checked)"
+                    ></p-checkbox>
+                    <i
+                      [class]="recipeId | iconSmClass: 'recipe'"
+                      [pTooltip]="data().recipeEntities[recipeId].name"
+                      tooltipPosition="top"
+                      class="mx-2"
+                    ></i>
+                    <lab-input-number
+                      [inputId]="'pumpjack-yield-' + recipeId"
+                      class="flex-grow-1"
+                      [pTooltip]="
+                        'settings.pumpjackYieldTooltip' | translate
+                      "
+                      [disabled]="pumpjackYield[recipeId] == null"
+                      [value]="pumpjackYield[recipeId] ?? defaultYield"
+                      (setValue)="updatePumpjackYield(recipeId, $event)"
+                    ></lab-input-number>
+                  </div>
+                }
               }
-              </div>
-            </div>
+            </p-fieldset>
           }
           @if (data().flags.has('proliferator')) {
             <div class="mt-3 pb-3">
