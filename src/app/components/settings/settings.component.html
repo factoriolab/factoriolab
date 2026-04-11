@@ -947,16 +947,16 @@
               track recipeId
             ) {
               @if (pumpjackYield[recipeId]; as yieldValue) {
-                <div class="pb-3">
-                  <label
-                    class="p-static-label"
-                    [for]="'pumpjack-yield-' + recipeId"
-                  >
-                    {{ data().recipeEntities[recipeId].name }}
-                  </label>
+                <div class="d-flex align-items-center pb-3">
+                  <i
+                    [class]="recipeId | iconSmClass: 'recipe'"
+                    [pTooltip]="data().recipeEntities[recipeId].name"
+                    tooltipPosition="top"
+                    class="me-2"
+                  ></i>
                   <lab-input-number
                     [inputId]="'pumpjack-yield-' + recipeId"
-                    class="w-100"
+                    class="flex-grow-1"
                     [pTooltip]="
                       'settings.pumpjackYieldTooltip' | translate
                     "
