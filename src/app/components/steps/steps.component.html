@@ -582,7 +582,7 @@
                   | machineRate
                     : columnsState().machines.precision
                     : machineId
-                    : settings().pumpjackYield != null
+                    : step.recipeId != null && settings().pumpjackYield?.[step.recipeId] != null
               }}</span>
             }
           </td>
@@ -1675,7 +1675,7 @@
                 | machineRate
                   : columnsState().machines.precision
                   : machineId
-                  : settings().pumpjackYield != null
+                  : settings().pumpjackYield?.[recipeId] != null
             }}</span>
           }
         </td>

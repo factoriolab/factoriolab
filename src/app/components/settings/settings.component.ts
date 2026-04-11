@@ -191,6 +191,7 @@ export class SettingsComponent {
 
   ItemId = ItemId;
   rational = rational;
+  defaultYield = rational(100n);
   isStandalone = window.matchMedia('(display-mode: standalone)').matches;
 
   get search(): string {
@@ -324,6 +325,18 @@ export class SettingsComponent {
     this.settingsSvc.apply({
       pumpjackYield: { ...current, [recipeId]: value },
     });
+  }
+
+  togglePumpjackRecipeYield(recipeId: string, enabled: boolean): void {
+    const current = this.settings().pumpjackYield;
+    if (!current) return;
+    const next = { ...current };
+    if (enabled) {
+      next[recipeId] = rational(100n);
+    } else {
+      delete next[recipeId];
+    }
+    this.settingsSvc.apply({ pumpjackYield: next });
   }
 
   togglePumpjackYield(value: boolean): void {
