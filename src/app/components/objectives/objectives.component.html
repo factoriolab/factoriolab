@@ -15,7 +15,17 @@
             class="p-button-outlined border-end-0 cursor-grab"
             icon="fa-solid fa-grip-lines"
           ></button>
-          @if (objective.unit === ObjectiveUnit.Machines) {
+          @if (isGlobal(objective)) {
+            <button
+              pButton
+              pRipple
+              labNoDrag
+              type="button"
+              class="p-button-outlined text-truncate"
+              icon="fa-solid fa-bolt"
+              [label]="contentSvc.isMobile() ? '' : ('objectives.power' | translate)"
+            ></button>
+          } @else if (objective.unit === ObjectiveUnit.Machines || objective.unit === ObjectiveUnit.Power) {
             <button
               pButton
               pRipple
@@ -110,7 +120,9 @@
               objectivesSvc.updateEntity(objective.id, { value: $event })
             "
           ></lab-input-number>
-          @if (objective.type !== ObjectiveType.Maximize) {
+          @if (isGlobal(objective)) {
+            <span class="p-inputgroup-addon">kW</span>
+          } @else if (objective.type !== ObjectiveType.Maximize) {
             <p-dropdown
               labDropdownTranslate
               labNoDrag
@@ -184,12 +196,7 @@
         icon="fa-solid fa-bolt"
         tooltipPosition="top"
         [label]="'objectives.addPower' | translate"
-        (click)="
-          objectivesSvc.add({
-            targetId: 'power-kw',
-            unit: ObjectiveUnit.Power,
-          })
-        "
+        (click)="addGlobalPower()"
       ></button>
       <p-dropdown
         labDropdownTranslate

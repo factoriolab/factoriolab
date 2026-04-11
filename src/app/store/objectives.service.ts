@@ -17,6 +17,7 @@ import { PowerUnit } from '~/models/enum/power-unit';
 import { StepDetailTab } from '~/models/enum/step-detail-tab';
 import { baseRecipeId } from '~/models/data/recipe';
 import {
+  isGlobalObjective,
   isRecipeObjective,
   ObjectiveBase,
   ObjectiveState,
@@ -58,9 +59,11 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
     return Object.keys(state)
       .map((i) => state[i])
       .filter((o) =>
-        isRecipeObjective(o)
-          ? data.recipeEntities[o.targetId] != null
-          : data.itemEntities[o.targetId] != null,
+        isGlobalObjective(o)
+          ? true
+          : isRecipeObjective(o)
+            ? data.recipeEntities[o.targetId] != null
+            : data.itemEntities[o.targetId] != null,
       );
   });
 

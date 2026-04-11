@@ -35,9 +35,10 @@ export class RateService {
     displayRateInfo: DisplayRateInfo,
     data: AdjustedDataset,
   ): Rational {
-    // Ignore unit entirely when maximizing, do not adjust if unit is Machines
+    // Global objectives (Power), Machines, and Maximize don't need rate adjustment
     if (
       objective.unit === ObjectiveUnit.Machines ||
+      objective.unit === ObjectiveUnit.Power ||
       objective.type === ObjectiveType.Maximize
     )
       return objective.value;
@@ -70,10 +71,6 @@ export class RateService {
             factor = wagon.fluidWagon.capacity.div(displayRateInfo.value);
           }
         }
-        break;
-      }
-      case ObjectiveUnit.Power: {
-        // kW is already a per-second rate, no display rate adjustment needed
         break;
       }
     }

@@ -118,26 +118,6 @@ describe('SettingsService', () => {
     });
   });
 
-  describe('generatePowerItem', () => {
-    it('should add a virtual power item', () => {
-      const items: Item[] = [];
-      const itemIds: string[] = [];
-      const iconIds = new Set(['electric-energy-accumulators']);
-      (service as any).generatePowerItem(items, itemIds, iconIds);
-      expect(items.length).toEqual(1);
-      expect(items[0].id).toEqual('power-kw');
-      expect(items[0].icon).toEqual('electric-energy-accumulators');
-      expect(itemIds).toContain('power-kw');
-    });
-
-    it('should skip if power-kw already exists', () => {
-      const items: Item[] = [];
-      const itemIds: string[] = ['power-kw'];
-      (service as any).generatePowerItem(items, itemIds, new Set());
-      expect(items.length).toEqual(0);
-    });
-  });
-
   describe('generatePowerRecipes', () => {
     it('should generate a steam engine power recipe', () => {
       const items: Item[] = [

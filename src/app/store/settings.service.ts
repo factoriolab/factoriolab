@@ -533,10 +533,9 @@ export class SettingsService extends Store<SettingsState> {
     const recipeQIds = new Set<string>();
     const _flags = flags[coalesce(mod?.flags, DEFAULT_MOD)];
 
-    // Generate virtual power item and production recipes
+    // Generate virtual power production recipes
     if (_flags.has('power')) {
       const iconIdSet = new Set(Object.keys(iconEntities));
-      this.generatePowerItem(items, itemIds, iconIdSet);
       this.generatePowerRecipes(items, recipes, recipeIds, iconIdSet);
     }
 
@@ -1042,30 +1041,6 @@ export class SettingsService extends Store<SettingsState> {
     }, {});
   }
 
-  static readonly POWER_ITEM_ID = 'power-kw';
-
-  /** Add a virtual power item to the dataset. */
-  private generatePowerItem(
-    items: Item[],
-    itemIds: string[],
-    iconIds: Set<string>,
-  ): void {
-    if (itemIds.includes(SettingsService.POWER_ITEM_ID)) return;
-
-    const powerIcon = 'electric-energy-accumulators';
-    const item: Item = {
-      id: SettingsService.POWER_ITEM_ID,
-      name: 'Power',
-      category: 'intermediate-products',
-      row: 0,
-    };
-    // Only set icon if it exists in the sprite sheet
-    if (iconIds.has(powerIcon)) item.icon = powerIcon;
-
-    items.push(item);
-    itemIds.push(SettingsService.POWER_ITEM_ID);
-  }
-
   /**
    * Generate virtual power production recipes for items that produce power
    * but have no corresponding recipe in the data (e.g., steam engines).
@@ -1095,7 +1070,7 @@ export class SettingsService extends Store<SettingsState> {
         time: rational.one,
         producers: ['steam-engine'],
         in: { steam: rational(30n) },
-        out: { [SettingsService.POWER_ITEM_ID]: rational(900n) },
+        out: {},
         icon: iconIds.has('electric-energy-accumulators')
           ? 'electric-energy-accumulators'
           : 'steam-engine',

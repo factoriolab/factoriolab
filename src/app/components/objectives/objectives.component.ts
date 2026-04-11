@@ -28,7 +28,13 @@ import {
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { MatrixResult } from '~/models/matrix-result';
-import { isRecipeObjective, ObjectiveState } from '~/models/objective';
+import {
+  globalTargetId,
+  isGlobalObjective,
+  isRecipeObjective,
+  ObjectiveBase,
+  ObjectiveState,
+} from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Settings } from '~/models/settings/settings';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
@@ -198,6 +204,17 @@ export class ObjectivesComponent {
     );
   }
 
+  isGlobal(obj: ObjectiveBase): boolean {
+    return isGlobalObjective(obj);
+  }
+
+  addGlobalPower(): void {
+    this.objectivesSvc.add({
+      targetId: globalTargetId('power'),
+      unit: ObjectiveUnit.Power,
+    });
+  }
+
   changeUnit(
     objective: ObjectiveState,
     unit: ObjectiveUnit,
@@ -205,24 +222,27 @@ export class ObjectivesComponent {
     chooseRecipePicker: PickerComponent,
   ): void {
     const data = this.data();
-    if (unit === ObjectiveUnit.Power) {
-      // Switching to Power: auto-target the virtual power item
-      this.objectivesSvc.updateEntity(objective.id, {
-        targetId: 'power-kw',
-        unit,
-      });
-    } else if (unit === ObjectiveUnit.Machines) {
-      if (objective.unit !== ObjectiveUnit.Machines) {
-        // Item-based -> recipe-based: need to pick a recipe
-        const targetId =
-          objective.unit === ObjectiveUnit.Power
-            ? undefined
-            : objective.targetId;
-        const recipeIds = targetId
-          ? data.itemRecipeIds[targetId]
+    const isRecipeUnit =
+      unit === ObjectiveUnit.Machines || unit === ObjectiveUnit.Power;
+    const wasRecipeUnit =
+      objective.unit === ObjectiveUnit.Machines ||
+      (objective.unit === ObjectiveUnit.Power && !isGlobalObjective(objective));
+
+    if (isRecipeUnit) {
+      if (wasRecipeUnit) {
+        // Recipe -> recipe: same target, just change unit
+        this.objectivesSvc.updateEntity(objective.id, { unit });
+      } else {
+        // Item -> recipe: need to pick a recipe
+        const recipeIds = objective.targetId
+          ? data.itemRecipeIds[objective.targetId]
           : Array.from(this.settings().availableRecipeIds);
         const updateFn = (recipeId: string): void => {
           this.convertItemsToMachines(objective, recipeId, data);
+          // If switching to Power, update unit after conversion
+          if (unit === ObjectiveUnit.Power) {
+            this.objectivesSvc.updateEntity(objective.id, { unit });
+          }
         };
         if (recipeIds.length === 1) {
           updateFn(recipeIds[0]);
@@ -234,11 +254,8 @@ export class ObjectivesComponent {
         }
       }
     } else {
-      if (
-        objective.unit === ObjectiveUnit.Machines &&
-        data.adjustedRecipe[objective.targetId]
-      ) {
-        // Recipe-based -> item-based: need to pick an item
+      if (wasRecipeUnit && data.adjustedRecipe[objective.targetId]) {
+        // Recipe -> item: need to pick an item
         const itemIds = Array.from(
           data.adjustedRecipe[objective.targetId].produces,
         );
@@ -254,8 +271,11 @@ export class ObjectivesComponent {
           });
           chooseItemPicker.clickOpen('item', itemIds);
         }
-      } else if (objective.unit === ObjectiveUnit.Power) {
-        // Power -> item-based: need to pick an item
+      } else if (!wasRecipeUnit && !isGlobalObjective(objective)) {
+        // Item -> item: no target conversion required
+        this.convertItemsToItems(objective, objective.targetId, unit, data);
+      } else {
+        // Global power -> item: need to pick an item
         chooseItemPicker.selectId.pipe(first()).subscribe((itemId) => {
           this.objectivesSvc.updateEntity(objective.id, {
             targetId: itemId,
@@ -263,9 +283,6 @@ export class ObjectivesComponent {
           });
         });
         chooseItemPicker.clickOpen('item', this.settings().availableItemIds);
-      } else {
-        // No target conversion required
-        this.convertItemsToItems(objective, objective.targetId, unit, data);
       }
     }
   }

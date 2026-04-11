@@ -216,14 +216,14 @@ describe('ObjectivesComponent', () => {
     it('should auto-set target to power-kw when switching to Power', () => {
       spyOn(component.objectivesSvc, 'updateEntity');
       component.changeUnit(
-        Mocks.objective1,
+        Mocks.objective5,
         ObjectiveUnit.Power,
         {} as any,
         {} as any,
       );
       expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith(
-        Mocks.objective1.id,
-        { targetId: 'power-kw', unit: ObjectiveUnit.Power },
+        Mocks.objective5.id,
+        { unit: ObjectiveUnit.Power },
       );
     });
 
@@ -235,7 +235,10 @@ describe('ObjectivesComponent', () => {
         {} as any,
         {} as any,
       );
-      expect(component.objectivesSvc.updateEntity).not.toHaveBeenCalled();
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith(
+        Mocks.objective5.id,
+        { unit: ObjectiveUnit.Machines },
+      );
     });
 
     it('should auto-switch from item to recipe', () => {
@@ -330,11 +333,11 @@ describe('ObjectivesComponent', () => {
       );
     });
 
-    it('should prompt user to switch from Power to Machines', () => {
+    it('should switch from Power to Machines when objective has targetId', () => {
       spyOn(component.objectivesSvc, 'updateEntity');
       const objective: ObjectiveState = {
         id: '0',
-        targetId: 'power-kw',
+        targetId: RecipeId.AdvancedCircuit,
         value: rational.one,
         unit: ObjectiveUnit.Power,
         type: ObjectiveType.Output,
@@ -343,10 +346,9 @@ describe('ObjectivesComponent', () => {
         objective,
         ObjectiveUnit.Machines,
         {} as any,
-        mockPicker(RecipeId.AdvancedCircuit),
+        {} as any,
       );
       expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('0', {
-        targetId: RecipeId.AdvancedCircuit,
         unit: ObjectiveUnit.Machines,
       });
     });
