@@ -31,6 +31,12 @@ describe('MachineRatePipe', () => {
       );
     });
 
+    it('should show machine count for pumpjack when yield is set', () => {
+      spyOn(RatePipe, 'transform');
+      pipe.transform(rational.one, null, ItemId.Pumpjack, true);
+      expect(RatePipe.transform).toHaveBeenCalledWith(rational.one, null);
+    });
+
     it('should transform values using rate pipe', () => {
       spyOn(RatePipe, 'transform');
       pipe.transform(rational.one, null, ItemId.AssemblingMachine1);

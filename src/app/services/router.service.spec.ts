@@ -1013,4 +1013,24 @@ describe('RouterService', () => {
       });
     });
   });
+
+  describe('unzipPumpjackYield', () => {
+    it('should return undefined when no bpy param', () => {
+      expect(service.unzipPumpjackYield({})).toBeUndefined();
+    });
+
+    it('should parse yield map from bpy param', () => {
+      const result = service.unzipPumpjackYield({
+        bpy: 'crude-oil~50~lithium-brine~75',
+      });
+      expect(result).toEqual({
+        'crude-oil': rational(50n),
+        'lithium-brine': rational(75n),
+      });
+    });
+
+    it('should return undefined for empty yield map', () => {
+      expect(service.unzipPumpjackYield({ bpy: '' })).toBeUndefined();
+    });
+  });
 });
