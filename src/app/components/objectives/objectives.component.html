@@ -129,9 +129,9 @@
               objectivesSvc.updateEntity(objective.id, { value: $event })
             "
           ></lab-input-number>
-          @if (isGlobal(objective)) {
-            <span class="p-inputgroup-addon">{{ globalUnit(objective) }}</span>
-          } @else if (objective.type !== ObjectiveType.Maximize) {
+          @if (isGlobal(objective) && objective.type !== ObjectiveType.Maximize) {
+            <span class="p-inputgroup-addon">{{ globalUnit(objective) | translate }}</span>
+          } @else if (!isGlobal(objective) && objective.type !== ObjectiveType.Maximize) {
             <p-dropdown
               labDropdownTranslate
               labNoDrag

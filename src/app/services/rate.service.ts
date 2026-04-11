@@ -16,7 +16,10 @@ import { DisplayRateInfo } from '~/models/enum/display-rate';
 import { EnergyType } from '~/models/enum/energy-type';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
-import { ObjectiveSettings } from '~/models/objective';
+import {
+  isGlobalPollutionObjective,
+  ObjectiveSettings,
+} from '~/models/objective';
 import { Rational, rational } from '~/models/rational';
 import { Settings } from '~/models/settings/settings';
 import { Step } from '~/models/step';
@@ -35,7 +38,11 @@ export class RateService {
     displayRateInfo: DisplayRateInfo,
     data: AdjustedDataset,
   ): Rational {
-    // Global objectives (Power), Machines, and Maximize don't need rate adjustment
+    // Global pollution: apply display rate conversion (like items)
+    if (isGlobalPollutionObjective(objective))
+      return objective.value.mul(displayRateInfo.value.reciprocal());
+
+    // Machines, Power (per-recipe and global), and Maximize don't need rate adjustment
     if (
       objective.unit === ObjectiveUnit.Machines ||
       objective.unit === ObjectiveUnit.Power ||

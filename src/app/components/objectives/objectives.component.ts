@@ -221,7 +221,7 @@ export class ObjectivesComponent {
       case 'power':
         return 'kW';
       case 'pollution':
-        return '/m';
+        return this.dispRateInfo().suffix;
       default:
         return '';
     }
@@ -288,13 +288,14 @@ export class ObjectivesComponent {
   ): void {
     this.objectivesSvc.updateEntity(objective.id, {
       targetId: globalTargetId(kind),
+      unit: kind === 'power' ? ObjectiveUnit.Power : ObjectiveUnit.Items,
     });
   }
 
   addGlobal(kind: GlobalObjectiveKind): void {
     this.objectivesSvc.add({
       targetId: globalTargetId(kind),
-      unit: ObjectiveUnit.Power,
+      unit: kind === 'power' ? ObjectiveUnit.Power : ObjectiveUnit.Items,
     });
   }
 
