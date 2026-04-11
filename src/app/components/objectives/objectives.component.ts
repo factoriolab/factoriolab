@@ -135,7 +135,8 @@ export class ObjectivesComponent {
 
     if (matrixResult.simplexStatus === 'unbounded') {
       const maxObjectives = objectives.filter(
-        (o) => o.type === ObjectiveType.Maximize,
+        (o) =>
+          o.type === ObjectiveType.Maximize && o.value.gt(rational.zero),
       );
 
       if (

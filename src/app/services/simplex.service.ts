@@ -357,6 +357,72 @@ export class SimplexService {
     }
   }
 
+  /**
+   * Add surplus and/or maximize variables for a global constraint.
+   * - No maximize: surplus with zero cost (excess is free)
+   * - Positive maximize weight: surplus (free) + maximize var (negative obj = maximize)
+   * - Negative maximize weight: surplus with positive obj (penalizes excess = minimize)
+   */
+  addGlobalMaxSurplus(
+    m: Model,
+    coeffs: [Variable, number][],
+    values: GlobalConstraintValues | undefined,
+    name: string,
+    state: MatrixState,
+    maximizeVar: Variable,
+  ): void {
+    const isMinimize = values?.max?.lt(rational.zero);
+
+    // Surplus variable: absorbs excess production
+    const surplusObj = isMinimize
+      ? values!.max!.abs().mul(state.costs.maximize.abs()).toNumber()
+      : 0;
+    const surplusVar = m.addVar({
+      obj: surplusObj,
+      lb: 0,
+      name: `${name}-surplus`,
+    });
+    coeffs.push([surplusVar, -1]);
+
+    // Maximize variable: only for positive weights
+    if (values?.max != null && !isMinimize) {
+      switch (state.maximizeType) {
+        case MaximizeType.Weight: {
+          const maxVar = m.addVar({
+            obj: values.max.mul(state.costs.maximize).toNumber(),
+            lb: 0,
+            name: `${name}-maximize`,
+          });
+          coeffs.push([maxVar, -1]);
+          break;
+        }
+        case MaximizeType.Ratio: {
+          coeffs.push([
+            maximizeVar,
+            values.max.inverse().toNumber(),
+          ]);
+          break;
+        }
+      }
+    }
+  }
+
+  /** Update maximizeFactor for ratio mode (must be called after addGlobalMaxSurplus) */
+  updateMaximizeFactor(
+    values: GlobalConstraintValues | undefined,
+    state: MatrixState,
+    maximizeFactor: Rational,
+  ): Rational {
+    if (
+      values?.max != null &&
+      !values.max.lt(rational.zero) &&
+      state.maximizeType === MaximizeType.Ratio
+    ) {
+      return maximizeFactor.add(values.max);
+    }
+    return maximizeFactor;
+  }
+
   /** If any included recipe consumes power, include power producer recipes */
   parsePowerProducers(state: MatrixState): void {
     // Check if any recipe in the model consumes power
@@ -811,40 +877,19 @@ export class SimplexService {
         }
       }
 
-      // Add surplus variable for excess power
-      const powerSurplusConfig: VariableProperties = {
-        obj: 0,
-        lb: 0,
-        name: 'power-surplus',
-      };
-      const powerSurplusVar = m.addVar(powerSurplusConfig);
-      powerCoeffs.push([powerSurplusVar, -1]);
-
-      // Add maximize variable for power if requested
-      if (state.powerValues?.max != null) {
-        switch (state.maximizeType) {
-          case MaximizeType.Weight: {
-            const config: VariableProperties = {
-              obj: state.powerValues.max
-                .mul(state.costs.maximize)
-                .toNumber(),
-              lb: 0,
-              name: 'power-maximize',
-            };
-            const powerMaxVar = m.addVar(config);
-            powerCoeffs.push([powerMaxVar, -1]);
-            break;
-          }
-          case MaximizeType.Ratio: {
-            maximizeFactor = maximizeFactor.add(state.powerValues.max);
-            powerCoeffs.push([
-              maximizeVar,
-              state.powerValues.max.inverse().toNumber(),
-            ]);
-            break;
-          }
-        }
-      }
+      this.addGlobalMaxSurplus(
+        m,
+        powerCoeffs,
+        state.powerValues,
+        'power',
+        state,
+        maximizeVar,
+      );
+      maximizeFactor = this.updateMaximizeFactor(
+        state.powerValues,
+        state,
+        maximizeFactor,
+      );
 
       const powerOut = state.powerValues?.out ?? rational.zero;
       const powerConstrConfig: ConstraintProperties = {
@@ -909,40 +954,19 @@ export class SimplexService {
         }
       }
 
-      // Add surplus variable for pollution
-      const pollutionSurplusConfig: VariableProperties = {
-        obj: 0,
-        lb: 0,
-        name: 'pollution-surplus',
-      };
-      const pollutionSurplusVar = m.addVar(pollutionSurplusConfig);
-      pollutionCoeffs.push([pollutionSurplusVar, -1]);
-
-      // Add maximize variable for pollution if requested
-      if (state.pollutionValues.max != null) {
-        switch (state.maximizeType) {
-          case MaximizeType.Weight: {
-            const config: VariableProperties = {
-              obj: state.pollutionValues.max
-                .mul(state.costs.maximize)
-                .toNumber(),
-              lb: 0,
-              name: 'pollution-maximize',
-            };
-            const pollutionMaxVar = m.addVar(config);
-            pollutionCoeffs.push([pollutionMaxVar, -1]);
-            break;
-          }
-          case MaximizeType.Ratio: {
-            maximizeFactor = maximizeFactor.add(state.pollutionValues.max);
-            pollutionCoeffs.push([
-              maximizeVar,
-              state.pollutionValues.max.inverse().toNumber(),
-            ]);
-            break;
-          }
-        }
-      }
+      this.addGlobalMaxSurplus(
+        m,
+        pollutionCoeffs,
+        state.pollutionValues,
+        'pollution',
+        state,
+        maximizeVar,
+      );
+      maximizeFactor = this.updateMaximizeFactor(
+        state.pollutionValues,
+        state,
+        maximizeFactor,
+      );
 
       const pollutionOut = state.pollutionValues.out;
       const pollutionConstrConfig: ConstraintProperties = {

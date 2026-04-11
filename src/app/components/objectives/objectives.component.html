@@ -124,6 +124,7 @@
             "
             tooltipPosition="top"
             [hideButtons]="contentSvc.isMobile()"
+            [minimum]="objective.type === ObjectiveType.Maximize ? null : undefined"
             [value]="objective.value"
             (setValue)="
               objectivesSvc.updateEntity(objective.id, { value: $event })

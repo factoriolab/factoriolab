@@ -43,8 +43,8 @@ interface Event {
 })
 export class InputNumberComponent implements OnInit, OnChanges {
   value = input(rational.zero);
-  minimum = input<Optional<Rational>>(rational.zero);
-  maximum = input<Optional<Rational>>(undefined);
+  minimum = input<Rational | null | undefined>(rational.zero);
+  maximum = input<Rational | null | undefined>(undefined);
   width = input('');
   inputId = input('inputnumber');
   integer = input(false);
