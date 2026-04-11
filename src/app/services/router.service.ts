@@ -896,6 +896,7 @@ export class RouterService {
     str('mps', (s) => s.proliferatorSprayId, hash.modules);
     num('mit', (s) => s.inserterTarget);
     rat('bmi', (s) => s.miningBonus);
+    rat('bpy', (s) => s.pumpjackYield);
     rat('bre', (s) => s.researchBonus);
     num('bic', (s) => s.inserterCapacity);
     sub(
@@ -961,6 +962,7 @@ export class RouterService {
       proliferatorSprayId: str('mps', hash?.modules),
       inserterTarget: num('mit'),
       miningBonus: rat('bmi'),
+      pumpjackYield: rat('bpy'),
       researchBonus: rat('bre'),
       inserterCapacity: num('bic'),
       researchedTechnologyIds: sub('tre', modHash.technologies),

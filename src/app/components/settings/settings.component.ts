@@ -311,6 +311,11 @@ export class SettingsComponent {
     this.settingsSvc.apply({ beaconReceivers });
   }
 
+  togglePumpjackYield(value: boolean): void {
+    const pumpjackYield = value ? rational(100n) : undefined;
+    this.settingsSvc.apply({ pumpjackYield });
+  }
+
   addMachine(id: string): void {
     const ids = [...this.settings().machineRankIds, id];
     this.settingsSvc.updateField(

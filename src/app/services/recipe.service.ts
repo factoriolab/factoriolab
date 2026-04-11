@@ -221,11 +221,13 @@ export class RecipeService {
     const {
       proliferatorSprayId,
       miningBonus,
+      pumpjackYield,
       researchBonus,
       netProductionOnly,
     } = settings;
 
     const miningFactor = miningBonus.div(rational(100n));
+    const yieldFactor = pumpjackYield?.div(rational(100n));
     const researchFactor = researchBonus
       .add(rational(100n))
       .div(rational(100n));
@@ -273,6 +275,10 @@ export class RecipeService {
       // Adjust for mining bonus
       if (recipe.flags.has('mining'))
         eff.productivity = eff.productivity.add(miningFactor);
+
+      // Adjust for pumpjack yield (scales output by yield percentage)
+      if (recipeSettings.machineId === ItemId.Pumpjack && yieldFactor != null)
+        eff.productivity = eff.productivity.mul(yieldFactor);
 
       // Adjust for base productivity
       if (machine.baseEffect) {

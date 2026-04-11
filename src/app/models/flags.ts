@@ -28,7 +28,8 @@ export type Flag =
   | 'resourcePurity'
   | 'rockets'
   | 'somersloop'
-  | 'wagons';
+  | 'wagons'
+  | 'yield' ;
 
 export type FlagSet =
   | 'spa'
@@ -59,6 +60,7 @@ const factorioCommon: Flag[] = [
   'power',
   'researchSpeed',
   'wagons',
+  'yield',
 ];
 
 export const flags: Record<FlagSet, Set<Flag>> = {

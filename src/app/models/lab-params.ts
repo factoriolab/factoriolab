@@ -75,6 +75,8 @@ export interface LabParams {
   mps?: string;
   /** `Rational` Mining bonus */
   bmi?: string;
+  /** `Rational` Pumpjack yield */
+  bpy?: string;
   /** `Rational` Research bonus */
   bre?: string;
   /** `number` Inserter capacity */
