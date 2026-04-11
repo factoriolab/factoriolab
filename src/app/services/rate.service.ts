@@ -6,7 +6,7 @@ import {
 } from '~/d3-sankey/models';
 import { sankey } from '~/d3-sankey/sankey';
 import { coalesce, spread, toEntities } from '~/helpers';
-import { Recipe } from '~/models/data/recipe';
+import { baseRecipeId, Recipe } from '~/models/data/recipe';
 import { AdjustedDataset, Dataset } from '~/models/dataset';
 import { DisplayRateInfo } from '~/models/enum/display-rate';
 import { EnergyType } from '~/models/enum/energy-type';
@@ -188,7 +188,9 @@ export class RateService {
     if (step.recipeId) {
       if (step.recipeObjectiveId)
         step.recipeSettings = objectiveEntities[step.recipeObjectiveId];
-      else step.recipeSettings = recipes[step.recipeId];
+      else
+        step.recipeSettings =
+          recipes[step.recipeId] ?? recipes[baseRecipeId(step.recipeId)];
     }
   }
 
@@ -203,7 +205,10 @@ export class RateService {
       const machineId = step.recipeSettings.machineId;
       if (machineId != null) {
         const machine = data.machineEntities[machineId];
-        const recipe = data.recipeEntities[step.recipeId];
+        const recipe =
+          data.recipeEntities[step.recipeId] ??
+          data.recipeEntities[baseRecipeId(step.recipeId)];
+        if (!recipe) return;
         // No belts/wagons on research rows or rocket part rows
         noItems = !!(
           recipe.flags.has('technology') ||
@@ -253,7 +258,8 @@ export class RateService {
       !beaconReceivers?.nonzero() ||
       step.recipeId == null ||
       !step.machines?.nonzero() ||
-      data.recipeEntities[step.recipeId].part ||
+      (data.recipeEntities[step.recipeId] ??
+        data.recipeEntities[baseRecipeId(step.recipeId)])?.part ||
       step.recipeSettings == null
     )
       return;
@@ -316,7 +322,9 @@ export class RateService {
     } else if (step.recipeObjectiveId != null) {
       step.checked = settings.checkedObjectiveIds.has(step.recipeObjectiveId);
     } else if (step.recipeId != null) {
-      step.checked = settings.checkedRecipeIds.has(step.recipeId);
+      step.checked =
+        settings.checkedRecipeIds.has(step.recipeId) ||
+        settings.checkedRecipeIds.has(baseRecipeId(step.recipeId));
     }
   }
 

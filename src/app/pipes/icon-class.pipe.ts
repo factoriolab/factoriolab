@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+import { baseRecipeId } from '~/models/data/recipe';
 import { IdType } from '~/models/enum/id-type';
 import { QUALITY_REGEX } from '~/models/enum/quality';
 import { Optional } from '~/models/utils';
@@ -8,6 +9,8 @@ import { Optional } from '~/models/utils';
 export class IconClassPipe implements PipeTransform {
   static transform(value: Optional<string>, type: IdType = 'item'): string {
     if (value == null) return '';
+    // Strip fuel variant suffix for recipe icons (e.g. iron-plate|f:coal → iron-plate)
+    if (type === 'recipe') value = baseRecipeId(value);
     const q = QUALITY_REGEX.exec(value);
     if (q) return `lab-icon ${type} ${q[1]} q${q[2]}`;
     return `lab-icon ${type} ${value}`;

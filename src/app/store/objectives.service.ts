@@ -15,6 +15,7 @@ import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { PowerUnit } from '~/models/enum/power-unit';
 import { StepDetailTab } from '~/models/enum/step-detail-tab';
+import { baseRecipeId } from '~/models/data/recipe';
 import {
   isRecipeObjective,
   ObjectiveBase,
@@ -337,15 +338,21 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
         recipeOptions = recipeIds.map(
           (r): SelectItem<string> => ({
             value: r,
-            label: data.recipeEntities[r].name,
+            label: (
+              data.recipeEntities[r] ??
+              data.recipeEntities[baseRecipeId(r)]
+            ).name,
           }),
         );
       } else if (s.recipeId != null) {
         recipeIds = [s.recipeId];
         recipesEnabled = [s.recipeId];
-        recipeOptions = [
-          { label: data.recipeEntities[s.recipeId].name, value: s.recipeId },
-        ];
+        const recipeEntity =
+          data.recipeEntities[s.recipeId] ??
+          data.recipeEntities[baseRecipeId(s.recipeId)];
+        recipeOptions = recipeEntity
+          ? [{ label: recipeEntity.name, value: s.recipeId }]
+          : [];
       }
 
       e[s.id] = {
