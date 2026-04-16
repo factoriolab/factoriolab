@@ -38,9 +38,10 @@ interface CLIArgs {
 }
 
 const DEFAULT_BUILDINGS = [
-  'DA_AcidExtractor',
-  'DA_GasExtractor',
-  'DA_MechanicalDrill', // Ore Extractor, tiered
+  // Early access
+  'DA_AcidExtractor', // Sulfur Extractor
+  'DA_GasExtractor', // Helium-3 Extractor
+  'DA_MechanicalDrill', // Ore Extractor, tiered by ore quality
   'DA_Smelter',
   'DA_Crafter', // Fabricator
   'DA_Furnace',
@@ -54,12 +55,29 @@ const DEFAULT_BUILDINGS = [
   'DA_DroneRailT4',
   'DA_DroneRailT5',
   'DA_ItemPrinter',
+
+  // Update 1
+  'DA_LiquidExtractor', // Oil Extractor
+  'DA_LaserDrill',
+  'DA_Pressurizer',
+  'DA_Forge', // Pyro Forge
+  'DA_Factory', // Constructorizer
+  'DA_MilitaryAssembler', // Facturer
+  'DA_CombustionPowerGenerator', // Chemical generator
+  // 'BD_DroneRoundabout', // not useful in the planner
+  // 'DA_Recycler', // not useful in the planner
+
+  'DA_SynthetizerTier2', // Compounder Tier 2
+  'DA_CrafterTier2', // Fabricator Tier 2
+  'DA_FurnaceTier2',
+  // 'BD_ExporterTier2', // not useful in the planner
+  'DA_FactoryTier2', // Constructorizer Tier 2
 ];
 
 // Buildings which should have Impure / Normal / Pure variants generated for them.
 // Use the generated slug (e.g., 'mechanical-drill' for `DA_MechanicalDrill`).
 const PURITY_BUILDINGS: string[] = [
-  'mechanical-drill', // Ore Extractor
+  'mechanical-drill', // Ore Extractor v1
 ];
 
 // Rail image crop/zoom adjustments
@@ -576,7 +594,7 @@ async function main(): Promise<void> {
     itemsArr.push({
       category:
         it.uiItemType && String(it.uiItemType).includes('Resource')
-          ? 'raw'
+          ? 'extraction'
           : 'parts',
       id: it.id,
       name: it.name ?? it.fileBasename,
@@ -759,7 +777,7 @@ async function main(): Promise<void> {
     // Determine category: prefer producer building category when available
     let recipeCategory =
       outItem.uiItemType && String(outItem.uiItemType).includes('Resource')
-        ? 'raw'
+        ? 'extraction'
         : 'parts';
     if (producers.length > 0) {
       const firstProducer = producers[0];
@@ -906,7 +924,7 @@ async function main(): Promise<void> {
   const categoriesArr = Object.values(categoriesMap);
 
   const outData = {
-    version: { StarRupture: '0.1.1.112941' },
+    version: { StarRupture: '0.2.1.118629' },
     categories:
       categoriesArr.length > 0
         ? categoriesArr
