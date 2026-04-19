@@ -374,7 +374,6 @@ export function sankey<
         node.depth = maxDepth + (hasEnd ? 2 : 1);
       }
     }
-
   }
 
   function computeNodeHeights({ nodes }: SankeyGraph<N, L>): void {
