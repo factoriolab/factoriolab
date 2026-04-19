@@ -29,7 +29,7 @@ export type Flag =
   | 'rockets'
   | 'somersloop'
   | 'wagons'
-  | 'yield' ;
+  | 'yield';
 
 export type FlagSet =
   | 'spa'
@@ -72,11 +72,7 @@ export const flags: Record<FlagSet, Set<Flag>> = {
     'quality',
     'rockets',
   ]),
-  '2.0': new Set([
-    ...factorioCommon,
-    'diminishingBeacons',
-    'maximumFactor',
-  ]),
+  '2.0': new Set([...factorioCommon, 'diminishingBeacons', 'maximumFactor']),
   '2.0q': new Set([
     ...factorioCommon,
     'diminishingBeacons',

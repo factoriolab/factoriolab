@@ -509,8 +509,10 @@ async function processMod(): Promise<void> {
   ): [
     // Products
     Record<string, number>,
-    // Catalysts, if defined
-    Record<string, number> | undefined,
+    (
+      // Catalysts, if defined
+      Record<string, number> | undefined
+    ),
     // Total number of outputs
     number,
     // Temperatures of fluid outputs, if any

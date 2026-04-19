@@ -289,8 +289,9 @@ describe('SettingsComponent', () => {
     it('should turn on pumpjack yield estimation with all pumpjack recipes', () => {
       spyOn(component.settingsSvc, 'apply');
       component.togglePumpjackYield(true);
-      const call = (component.settingsSvc.apply as jasmine.Spy).calls
-        .mostRecent().args[0];
+      const call = (
+        component.settingsSvc.apply as jasmine.Spy
+      ).calls.mostRecent().args[0];
       expect(call.pumpjackYield).toBeDefined();
       expect(call.pumpjackYield[RecipeId.CrudeOil]).toEqual(rational(100n));
     });
