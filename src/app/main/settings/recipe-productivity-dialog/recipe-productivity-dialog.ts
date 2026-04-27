@@ -62,6 +62,7 @@ export class RecipeProductivityDialog {
   save(): void {
     const data = this.data();
     const editValue = this.editValue();
+    const settings = this.settingsStore.settings();
     data.prodUpgradeTechIds.forEach((techId) => {
       const tech = data.technologyRecord[techId];
       tech.recipeProductivity?.forEach((e) => {
@@ -69,7 +70,7 @@ export class RecipeProductivityDialog {
           e.id,
           'productivity',
           editValue[techId],
-          rational.zero,
+          settings.recipeBonus[e.id],
         );
       });
     });

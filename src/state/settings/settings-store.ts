@@ -1011,7 +1011,6 @@ export class SettingsStore extends Store<SettingsState> {
       );
 
     // Recipe productivity bonuses unlocked by technology
-
     const recipeBonus = Array.from(researchedTechnologyIds).reduce<
       Partial<Record<string, Rational>>
     >((result, b) => {
