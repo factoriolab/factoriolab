@@ -6,13 +6,15 @@
   - Include quality entities directly in data file?
   - Remove quality flag, use technologies?
   - Support for modded quality?
+- Removal of machine hideRate, totalRecipe - just don't include producers for these, right?
+- Likewise, removal of RecipeFlag 'hideProducer'
+- Do we _really_ need recycling cost and the recycling flag?
 - Tests, tests, tests
 
 ## DATA CHANGES
 
 - Icons (complete?)
 - Quality calculations
-- hideProducer => no producers on recipe?
 
 ## LATER
 
@@ -30,3 +32,6 @@
   - Mining machine resource drain percent
 - Burn recipes should be superseded by allowing specifying ACTUAL machines with no recipe as an objective, recipes with zero input/output are silly
 - Bitwise flags?
+- Item durability... quality science should consume less
+- Quality supported properties
+  - next_probability, next?

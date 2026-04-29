@@ -13,9 +13,7 @@ export class BonusPercentPipe implements PipeTransform {
     value = toNumber(value);
     if (value === 0) return '';
 
-    const pct = Math.round(value * 100).toLocaleString(undefined, {
-      maximumFractionDigits: 2,
-    });
+    const pct = (value * 100).toLocaleString();
     if (value > 0 && !excludePlus) return `+${pct}%`;
     else return `${pct}%`;
   }

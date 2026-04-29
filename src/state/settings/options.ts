@@ -13,4 +13,5 @@ export interface Options {
   proliferatorModules: Option[];
   machines: Option[];
   locations: Option[];
+  qualities: Option[];
 }

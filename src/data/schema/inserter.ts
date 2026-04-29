@@ -6,6 +6,7 @@ export interface InserterJson {
   stack?: number | string;
   category?: string;
   ignoresBonus?: boolean;
+  qualityRecord?: Record<string, Partial<InserterJson>>;
 }
 
 export interface Inserter {

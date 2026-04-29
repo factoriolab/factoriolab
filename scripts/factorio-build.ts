@@ -10,7 +10,12 @@ import { MachineJson } from '~/data/schema/machine';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import { ModI18n } from '~/data/schema/mod-i18n';
-import { Quality } from '~/data/schema/quality';
+import {
+  effectPrecision,
+  goodNegativeEffects,
+  ModuleEffect,
+} from '~/data/schema/module';
+import { QualityJson } from '~/data/schema/quality';
 import { RecipeFlag, RecipeJson } from '~/data/schema/recipe';
 import { TechnologyJson } from '~/data/schema/technology';
 import { updateHash } from '~/utils/hash';
@@ -21,9 +26,7 @@ import {
   AsteroidPrototype,
   FluidBox,
   FluidPrototype,
-  isAgriculturalTowerPrototype,
   isAssemblingMachinePrototype,
-  isAsteroidCollectorPrototype,
   isBeaconPrototype,
   isBeltStackSizeBonusModifier,
   isBoilerPrototype,
@@ -38,6 +41,7 @@ import {
   isInserterPrototype,
   isInserterStackSizeBonusModifier,
   isItemGroup,
+  isItemProductPrototype,
   isLaboratoryProductivityModifier,
   isLaboratorySpeedModifier,
   isLabPrototype,
@@ -47,6 +51,7 @@ import {
   isOffshorePumpPrototype,
   isPlanetPrototype,
   isPumpPrototype,
+  isQualityPrototype,
   isReactorPrototype,
   isRecipePrototype,
   isRocketSiloPrototype,
@@ -60,6 +65,7 @@ import {
   ItemGroup,
   PlantPrototype,
   ProductPrototype,
+  QualityPrototype,
   RecipePrototype,
   SpaceConnectionPrototype,
   SpaceLocationPrototype,
@@ -105,13 +111,13 @@ import {
   getBeacon,
   getBelt,
   getCargoWagon,
+  getDefaultMultiplier,
   getEntitySize,
   getFluidWagon,
   getInserter,
   getMachineBaseEffect,
   getMachineDisallowedEffects,
   getMachineDrain,
-  getMachineHideRate,
   getMachineIngredientUsage,
   getMachineModules,
   getMachinePollution,
@@ -177,6 +183,7 @@ async function processMod(): Promise<void> {
   // Not generated when the `space-age` mod is disabled:
   const spaceConnectionLocale = tryGetLocale('space-connection-locale.json');
   const surfaceLocale = tryGetLocale('surface-locale.json');
+  const qualityLocale = tryGetLocale('quality-locale.json');
 
   // Read main data JSON
   const dataRaw = getJsonData(dataRawPath) as DataRawDump;
@@ -304,6 +311,25 @@ async function processMod(): Promise<void> {
   // Record of file path : icon id
   const iconFiles: Record<string, string> = {};
 
+  async function resizeQualityIcon(
+    path: string,
+    iconId: string,
+  ): Promise<void> {
+    const outPath = `${tempIconsPath}/${iconId}.png`;
+    await sharp(path)
+      .resize(32, 32)
+      .extend({
+        top: 16,
+        right: 16,
+        bottom: 16,
+        left: 16,
+        background: { r: 0, g: 0, b: 0, alpha: 0 },
+      })
+      .png()
+      .toFile(outPath);
+    iconFiles[outPath] = iconId;
+  }
+
   async function resizeIcon(path: string, iconId: string): Promise<void> {
     const outPath = `${tempIconsPath}/${iconId}.png`;
     await sharp(path).resize(64, 64).png().toFile(outPath);
@@ -321,7 +347,8 @@ async function processMod(): Promise<void> {
       | TechnologyPrototype
       | SpaceConnectionPrototype
       | SpaceLocationPrototype
-      | PlantPrototype,
+      | PlantPrototype
+      | QualityPrototype,
   ): Promise<string | undefined> {
     const id = isTechnologyPrototype(spec) ? techId[spec.name] : spec.name;
 
@@ -362,20 +389,25 @@ async function processMod(): Promise<void> {
       iconHash[hash] = iconId;
       iconSet.add(iconId);
 
-      let folder = 'item';
-      if (isRecipePrototype(spec)) folder = 'recipe';
-      else if (isFluidPrototype(spec)) folder = 'fluid';
-      else if (isTechnologyPrototype(spec)) folder = 'technology';
-      else if (isItemGroup(spec)) folder = 'item-group';
-      else if (isAnyItemPrototype(spec)) folder = 'item';
-      else if (isSurfacePrototype(spec)) folder = 'surface';
-      else if (isSpaceConnectionPrototype(spec)) folder = 'space-connection';
-      else if (isSpaceLocationPrototype(spec) || isPlanetPrototype(spec))
-        folder = 'space-location';
-      else folder = 'entity';
+      if (isQualityPrototype(spec)) {
+        const path = `${scriptOutputPath}/quality/${spec.name}.png`;
+        await resizeQualityIcon(path, iconId);
+      } else {
+        let folder = 'item';
+        if (isRecipePrototype(spec)) folder = 'recipe';
+        else if (isFluidPrototype(spec)) folder = 'fluid';
+        else if (isTechnologyPrototype(spec)) folder = 'technology';
+        else if (isItemGroup(spec)) folder = 'item-group';
+        else if (isAnyItemPrototype(spec)) folder = 'item';
+        else if (isSurfacePrototype(spec)) folder = 'surface';
+        else if (isSpaceConnectionPrototype(spec)) folder = 'space-connection';
+        else if (isSpaceLocationPrototype(spec) || isPlanetPrototype(spec))
+          folder = 'space-location';
+        else folder = 'entity';
 
-      const path = `${scriptOutputPath}/${folder}/${spec.name}.png`;
-      await resizeIcon(path, iconId);
+        const path = `${scriptOutputPath}/${folder}/${spec.name}.png`;
+        await resizeIcon(path, iconId);
+      }
     }
 
     return iconId === id ? undefined : iconId;
@@ -399,20 +431,11 @@ async function processMod(): Promise<void> {
   }
 
   // Records of producer categories to producers
-  type ProducerType =
-    | 'burner'
-    | 'crafting'
-    | 'resource'
-    | 'asteroid'
-    | 'spoil'
-    | 'agriculture';
+  type ProducerType = 'burner' | 'crafting' | 'resource';
   const producersMap: Record<ProducerType, Record<string, string[]>> = {
     burner: {},
     crafting: {},
     resource: {},
-    asteroid: {},
-    spoil: { ['']: ['spoilage'] },
-    agriculture: {},
   };
   function addProducers(
     id: string,
@@ -463,12 +486,6 @@ async function processMod(): Promise<void> {
     } else if (isOffshorePumpPrototype(proto)) {
       machines.offshorePump[name] = proto.name;
     }
-
-    if (isAsteroidCollectorPrototype(proto))
-      addProducers(name, [''], 'asteroid');
-
-    if (isAgriculturalTowerPrototype(proto))
-      addProducers(name, [''], 'agriculture');
   }
 
   const ANY_FLUID_BURN = 'fluid';
@@ -525,18 +542,23 @@ async function processMod(): Promise<void> {
         }
 
         // TODO: Handle research progress products
-        let amount = product.amount;
+        let amount = product.amount && Math.floor(product.amount);
         if (
           amount == null &&
           product.amount_max != null &&
           product.amount_min != null
         ) {
-          amount = (product.amount_max + product.amount_min) / 2;
+          amount =
+            (Math.floor(product.amount_max) + Math.floor(product.amount_min)) /
+            2;
         }
 
         if (amount == null) continue;
 
         if (product.probability) amount = amount * product.probability;
+
+        if (isItemProductPrototype(product) && product.extra_count_fraction)
+          amount += product.extra_count_fraction;
 
         addEntityValue(record, product.name, amount);
 
@@ -546,7 +568,7 @@ async function processMod(): Promise<void> {
           addEntityValue(
             catalyst,
             product.name,
-            product.ignored_by_productivity,
+            Math.floor(product.ignored_by_productivity),
           );
         }
 
@@ -576,8 +598,6 @@ async function processMod(): Promise<void> {
       silo: getMachineSilo(proto),
       size: getEntitySize(proto),
       baseEffect: getMachineBaseEffect(proto),
-      entityType: proto.type,
-      hideRate: getMachineHideRate(proto),
       locations: getDataAllowedLocations(proto.surface_conditions)?.map(
         (l) => l.name,
       ),
@@ -590,6 +610,31 @@ async function processMod(): Promise<void> {
     }
 
     processProducers(proto, name);
+
+    if (abnormalQualities.length) {
+      const qualityRecord: Record<string, Partial<MachineJson>> = {};
+
+      for (const quality of abnormalQualities) {
+        const variant: Partial<MachineJson> = {};
+
+        const speed = getMachineSpeed(proto, quality);
+        if (speed !== machine.speed) variant.speed = speed;
+
+        const modules = getMachineModules(proto, quality);
+        if (modules !== machine.modules) variant.modules = modules;
+
+        const usage = getMachineUsage(proto, quality);
+        if (usage !== machine.usage) variant.usage = usage;
+
+        const pollution = getMachinePollution(proto, quality);
+        if (pollution !== machine.pollution) variant.pollution = pollution;
+
+        if (Object.keys(variant).length) qualityRecord[quality.name] = variant;
+      }
+
+      if (Object.keys(qualityRecord).length)
+        machine.qualityRecord = qualityRecord;
+    }
 
     return machine;
   }
@@ -614,13 +659,11 @@ async function processMod(): Promise<void> {
   };
 
   modData.version = getVersion(modsPath, factorioPath);
-  if (modData.version['quality']) modData.flags.push('quality');
   if (modData.version['space-age'])
     modData.flags.push('beltStack', 'rockets', 'researchProductivity');
 
   const modDataReport: ModDataReport = {
     machineSpeedZero: [],
-    noProducers: [],
     resourceNoMinableProducts: [],
     resourceDuplicate: [],
     disabledRecipeDoesntExist: [],
@@ -979,6 +1022,26 @@ async function processMod(): Promise<void> {
 
   const groupsUsed = new Set<string>();
 
+  const qualities: QualityJson[] = [];
+  const abnormalQualities: QualityPrototype[] = [];
+  if (dataRaw.quality) {
+    for (const name of Object.keys(dataRaw.quality)) {
+      const proto = dataRaw.quality[name];
+      if (proto.hidden) continue;
+
+      const quality: QualityJson = {
+        id: name,
+        name: qualityLocale.names[name],
+        icon: await getIcon(proto),
+        level: proto.level,
+      };
+      qualities.push(quality);
+      if (proto.level) abnormalQualities.push(proto);
+    }
+  }
+
+  if (qualities.length) modData.qualities = qualities;
+
   // Process item protos
   for (const proto of protosSorted) {
     // Skip recipes until producers are processed
@@ -1072,7 +1135,7 @@ async function processMod(): Promise<void> {
         category: group.name,
         row: getItemRow(proto),
         icon: await getIcon(proto),
-        beacon: getBeacon(proto),
+        beacon: getBeacon(proto, abnormalQualities),
       });
     } else if (
       isAssemblingMachinePrototype(proto) ||
@@ -1082,9 +1145,7 @@ async function processMod(): Promise<void> {
       isMiningDrillPrototype(proto) ||
       isOffshorePumpPrototype(proto) ||
       isReactorPrototype(proto) ||
-      isRocketSiloPrototype(proto) ||
-      isAsteroidCollectorPrototype(proto) ||
-      isAgriculturalTowerPrototype(proto)
+      isRocketSiloPrototype(proto)
     ) {
       modData.items.push({
         id: proto.name,
@@ -1110,7 +1171,7 @@ async function processMod(): Promise<void> {
         category: group.name,
         row: getItemRow(proto),
         icon: await getIcon(proto),
-        pipe: getPipe(proto),
+        pipe: getPipe(proto, abnormalQualities),
       });
     } else if (isCargoWagonPrototype(proto)) {
       modData.items.push({
@@ -1137,7 +1198,7 @@ async function processMod(): Promise<void> {
         category: group.name,
         row: getItemRow(proto),
         icon: await getIcon(proto),
-        inserter: getInserter(proto),
+        inserter: getInserter(proto, abnormalQualities),
       });
     } else {
       if (proto.weight != null) {
@@ -1172,7 +1233,7 @@ async function processMod(): Promise<void> {
         // Parse beacon
         if (dataRaw.beacon[result]) {
           const entity = dataRaw.beacon[result];
-          item.beacon = getBeacon(entity);
+          item.beacon = getBeacon(entity, abnormalQualities);
         }
 
         // Parse machine
@@ -1200,12 +1261,6 @@ async function processMod(): Promise<void> {
         } else if (dataRaw.reactor[result]) {
           const entity = dataRaw.reactor[result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['asteroid-collector']?.[result]) {
-          const entity = dataRaw['asteroid-collector'][result];
-          item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['agricultural-tower']?.[result]) {
-          const entity = dataRaw['agricultural-tower'][result];
-          item.machine = getMachine(entity, proto.name);
         }
 
         // Parse transport belt
@@ -1217,7 +1272,7 @@ async function processMod(): Promise<void> {
         // Parse pipe
         if (dataRaw.pump[result]) {
           const entity = dataRaw.pump[result];
-          item.pipe = getPipe(entity);
+          item.pipe = getPipe(entity, abnormalQualities);
         }
 
         // Parse cargo wagon
@@ -1235,14 +1290,15 @@ async function processMod(): Promise<void> {
         // Parse inserter
         if (dataRaw.inserter[result]) {
           const entity = dataRaw.inserter[result];
-          item.inserter = getInserter(entity);
+          item.inserter = getInserter(entity, abnormalQualities);
         }
-      } else if (proto.name === 'spoilage') {
-        item.machine = {
-          speed: 1,
-          hideRate: true,
-          entityType: 'spoilage',
-        };
+      }
+
+      function filterEffect(effect: ModuleEffect, value: number): boolean {
+        return (
+          value == null ||
+          (goodNegativeEffects.has(effect) ? value >= 0 : value <= 0)
+        );
       }
 
       // Parse module
@@ -1256,6 +1312,24 @@ async function processMod(): Promise<void> {
           quality,
           speed: proto.effect.speed || undefined,
         };
+
+        for (const quality of abnormalQualities) {
+          const multiplier = getDefaultMultiplier(quality);
+          for (const eff of Object.keys(effectPrecision) as ModuleEffect[]) {
+            let value = item.module[eff] as number;
+            const precision = 10 ** effectPrecision[eff];
+            if (value && !filterEffect(eff, value)) {
+              value = value * multiplier;
+              value = Math.floor(value * precision) / precision;
+              if (value !== item.module[eff]) {
+                const qualityRecord = item.module.qualityRecord ?? {};
+                const qualityModule = qualityRecord[quality.name] ?? {};
+                qualityModule[eff] = value;
+                item.module.qualityRecord = qualityRecord;
+              }
+            }
+          }
+        }
       }
 
       // Parse fuel
@@ -1440,55 +1514,53 @@ async function processMod(): Promise<void> {
             return true;
           });
         }
+      }
 
-        const recipeInOptions = getRecipeInOptions(recipeIn, recipeInTemp);
-        const locations = getDataAllowedLocations(
-          proto.surface_conditions,
-        )?.map((l) => l.name);
-        // For each set of valid fluid temperature inputs, generate a recipe
-        const icon = await getIcon(proto);
-        for (let i = 0; i < recipeInOptions.length; i++) {
-          // For first option, use proto name, for others append index
-          const [recipeIn, ids] = recipeInOptions[i];
-          const id = i === 0 ? proto.name : `${proto.name}-${ids.join('-')}`;
+      const recipeInOptions = getRecipeInOptions(recipeIn, recipeInTemp);
+      const locations = getDataAllowedLocations(proto.surface_conditions)?.map(
+        (l) => l.name,
+      );
+      // For each set of valid fluid temperature inputs, generate a recipe
+      const icon = await getIcon(proto);
+      for (let i = 0; i < recipeInOptions.length; i++) {
+        // For first option, use proto name, for others append index
+        const [recipeIn, ids] = recipeInOptions[i];
+        const id = i === 0 ? proto.name : `${proto.name}-${ids.join('-')}`;
 
-          const recipe: RecipeJson = {
-            id,
-            name: recipeLocale.names[proto.name],
-            category: subgroup.group,
-            row: getRecipeRow(proto),
-            time: proto.energy_required ?? 0.5,
-            producers,
-            in: recipeIn,
-            /**
-             * Already calculated when determining included recipes.
-             * Note: Output temperatures do not vary
-             */
-            out: recipeOut,
-            catalyst: recipeCatalyst,
-            icon,
-            locations,
-          };
+        const recipe: RecipeJson = {
+          id,
+          name: recipeLocale.names[proto.name],
+          category: subgroup.group,
+          row: getRecipeRow(proto),
+          time: proto.energy_required ?? 0.5,
+          producers,
+          in: recipeIn,
+          /**
+           * Already calculated when determining included recipes.
+           * Note: Output temperatures do not vary
+           */
+          out: recipeOut,
+          catalyst: recipeCatalyst,
+          icon,
+          locations,
+        };
 
-          const flags: RecipeFlag[] = [];
+        const flags: RecipeFlag[] = [];
 
-          if (recipesLocked.has(proto.name)) flags.push('locked');
-          if (proto.category === 'recycling') flags.push('recycling');
+        if (recipesLocked.has(proto.name)) flags.push('locked');
+        if (proto.category === 'recycling') flags.push('recycling');
 
-          if (flags.length) recipe.flags = flags;
+        if (flags.length) recipe.flags = flags;
 
-          if (i > 0) recipe.icon = recipe.icon ?? proto.name;
-          if (disallowedEffects) recipe.disallowedEffects = disallowedEffects;
+        if (i > 0) recipe.icon = recipe.icon ?? proto.name;
+        if (disallowedEffects) recipe.disallowedEffects = disallowedEffects;
 
-          if (id !== proto.name) {
-            recipeAliases[id] ??= [];
-            recipeAliases[id].push(id);
-          }
-
-          modData.recipes.push(recipe);
+        if (id !== proto.name) {
+          recipeAliases[id] ??= [];
+          recipeAliases[id].push(id);
         }
-      } else {
-        modDataReport.noProducers.push(proto.name);
+
+        modData.recipes.push(recipe);
       }
     } else if (isFluidPrototype(proto)) {
       // Check for offshore pump recipes
@@ -1698,7 +1770,6 @@ async function processMod(): Promise<void> {
           time: 1,
           in: { [proto.name]: 1 },
           out: { [proto.spoil_result]: 1 },
-          producers: producersMap.spoil[''],
           flags: ['hideProducer'],
         };
         modData.recipes.push(recipe);
@@ -1711,7 +1782,6 @@ async function processMod(): Promise<void> {
         if (minable != null) {
           const icon = await getIcon(plantProto);
           const name = entityLocale.names[plantProto.name];
-          const producers = producersMap.agriculture[''];
           const time = plantProto.growth_ticks / 60;
           const [recipeOut, recipeCatalyst] = getProducts(
             minable.results,
@@ -1744,14 +1814,12 @@ async function processMod(): Promise<void> {
             category: group.name,
             row: getRecipeRow(plantProto),
             time,
-            producers,
             in: { [proto.name]: 1 },
             out: recipeOut,
             catalyst: recipeCatalyst,
             cost: 100,
             icon,
             locations,
-            flags: ['hideProducer'],
           };
 
           modData.recipes.push(recipe);
@@ -2065,7 +2133,6 @@ async function processMod(): Promise<void> {
         time: 1,
         in: {},
         out,
-        producers: producersMap.asteroid[''],
       };
       modData.recipes.push(recipe);
     }
@@ -2121,12 +2188,6 @@ async function processMod(): Promise<void> {
         .map((p) => techId[p]);
     }
 
-    const qualityMap: Partial<Record<string, Quality>> = {
-      uncommon: Quality.Uncommon,
-      rare: Quality.Rare,
-      epic: Quality.Epic,
-      legendary: Quality.Legendary,
-    };
     for (const effect of coerceArray(tech.effects)) {
       if (isBeltStackSizeBonusModifier(effect)) {
         technology.beltStack ??= 0;
@@ -2144,10 +2205,8 @@ async function processMod(): Promise<void> {
         technology.miningProductivity ??= 0;
         technology.miningProductivity += effect.modifier;
       } else if (isUnlockQualityModifier(effect)) {
-        const quality = qualityMap[effect.quality];
-        if (quality == null) continue;
         technology.qualityUnlock ??= [];
-        technology.qualityUnlock.push(quality);
+        technology.qualityUnlock.push(effect.quality);
       } else if (isChangeRecipeProductivityModifier(effect)) {
         technology.recipeProductivity ??= [];
         technology.recipeProductivity.push({
@@ -2263,16 +2322,6 @@ async function processMod(): Promise<void> {
     icon,
   });
 
-  // Filter out recipes with no producers
-  modData.recipes = modData.recipes.filter((r) => {
-    if (!r.producers?.length) {
-      modDataReport.noProducers.push(r.id);
-      return false;
-    }
-
-    return true;
-  });
-
   // Sprite sheet
   logTime('Generating sprite sheet');
 
@@ -2297,13 +2346,6 @@ async function processMod(): Promise<void> {
         `Machines with zero crafting speed: ${modDataReport.machineSpeedZero.length.toString()}`,
       );
       console.log('These machines have been removed.');
-    }
-
-    if (modDataReport.noProducers.length) {
-      logWarn(
-        `Recipes with no producers: ${modDataReport.noProducers.length.toString()}`,
-      );
-      console.log('These recipes have been removed.');
     }
 
     if (modDataReport.resourceNoMinableProducts.length) {

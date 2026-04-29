@@ -9,7 +9,12 @@
   </span>
 
   @if (icon.quality; as q) {
-    <lab-icon type="system" [value]="'q' + q" [full]="full()"></lab-icon>
+    <lab-icon
+      class="top-2 right-2"
+      type="quality"
+      [value]="q.id"
+      [full]="full()"
+    ></lab-icon>
   }
 
   @if (icon.text; as text) {

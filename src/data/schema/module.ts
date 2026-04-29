@@ -48,6 +48,7 @@ export interface ModuleJson {
   limitation?: string;
   sprays?: number;
   proliferator?: string;
+  qualityRecord?: Record<string, Partial<ModuleJson>>;
 }
 
 export interface Module {

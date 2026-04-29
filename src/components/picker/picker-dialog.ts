@@ -18,7 +18,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { Quality, qualityOptions } from '~/data/schema/quality';
+import { Dataset } from '~/state/settings/dataset';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areSetsEqual } from '~/utils/equality';
@@ -32,6 +32,7 @@ import { Tooltip } from '../tooltip/tooltip';
 import { PickerData } from './picker-data';
 
 let lastCategory: string | null = null;
+let lastQuality: string | null = null;
 
 @Component({
   selector: 'lab-picker-dialog',
@@ -53,7 +54,7 @@ let lastCategory: string | null = null;
   },
 })
 export class PickerDialog {
-  private readonly settingsStore = inject(SettingsStore);
+  protected readonly settingsStore = inject(SettingsStore);
   protected readonly dialogData = inject<PickerData>(DIALOG_DATA);
   protected readonly dialogRef = inject(DialogRef);
 
@@ -97,21 +98,21 @@ export class PickerDialog {
     areSetsEqual(this.selection(), new Set(this.dialogData.default)),
   );
 
-  protected readonly quality = signal(Quality.Normal);
   protected readonly rowsKey = `${this.dialogData.type}CategoryRows` as const;
   protected readonly recordKey = `${this.dialogData.type}Record` as const;
   private readonly allCategoryRows: Record<string, string[][]> = {};
 
   protected readonly categoryRows = computed(() => {
     const filter = this.filter();
-    const quality = this.quality();
+    const qualityId = this.selectedQuality();
 
-    if (!filter && quality === Quality.Any) return this.allCategoryRows;
+    if (!filter && !qualityId) return this.allCategoryRows;
 
     let allIds = Array.from(this.dialogData.allIds);
 
-    if (quality !== Quality.Any) {
-      const check = quality === Quality.Normal ? undefined : quality;
+    if (qualityId) {
+      const quality = this.data().qualityRecord[qualityId];
+      const check = quality.level === 0 ? undefined : quality;
       allIds = allIds.filter(
         (i) => this.data()[this.recordKey][i].quality === check,
       );
@@ -145,6 +146,16 @@ export class PickerDialog {
     ),
   );
 
+  readonly selectedQuality = linkedSignal<Dataset, string>({
+    source: this.data,
+    computation: (value, previous) => {
+      const keys = value.qualityIds;
+      if (previous && keys.includes(previous.value)) return previous.value;
+      if (lastQuality && keys.includes(lastQuality)) return lastQuality;
+      return keys[0];
+    },
+  });
+
   readonly selectedCategory = linkedSignal<Record<string, string[][]>, string>({
     source: this.categoryRows,
     computation: (value, previous) => {
@@ -160,7 +171,6 @@ export class PickerDialog {
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faXmark = faXmark;
-  protected readonly qualityOptions = qualityOptions;
 
   constructor() {
     const { selection } = { ...this.dialogData };
@@ -175,13 +185,23 @@ export class PickerDialog {
       }
     });
 
-    if (selection instanceof Set) this.selection.set(selection);
-    else if (selection != null) {
+    if (selection instanceof Set) {
+      const firstId = Array.from(selection)[0];
+      if (firstId != null) {
+        const obj = data[this.recordKey][firstId];
+        this.selectedCategory.set(obj.category);
+        if (obj.quality) this.selectedQuality.set(obj.quality.id);
+      }
+      this.selection.set(selection);
+    } else if (selection != null) {
       this.selectedId = selection;
-      this.selectedCategory.set(data[this.recordKey][selection].category);
+      const obj = data[this.recordKey][selection];
+      this.selectedCategory.set(obj.category);
+      if (obj.quality) this.selectedQuality.set(obj.quality.id);
     }
 
     effect(() => (lastCategory = this.selectedCategory()));
+    effect(() => (lastQuality = this.selectedQuality()));
   }
 
   selectAll(value: boolean): void {

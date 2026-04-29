@@ -1,7 +1,5 @@
 import { Rational, rational } from '~/rational/rational';
 
-import { Quality } from './quality';
-
 export interface TechnologyJson {
   prerequisites?: string[];
 
@@ -12,7 +10,7 @@ export interface TechnologyJson {
   /** Mining productivity bonus (%) */
   miningProductivity?: number;
   /** Qualities unlocked */
-  qualityUnlock?: Quality[];
+  qualityUnlock?: string[];
   /** Recipe productivity bonuses (%) */
   recipeProductivity?: { id: string; value: number }[];
   /** Recipes unlocked */
@@ -33,7 +31,7 @@ export interface Technology {
   /** Mining productivity bonus (%) */
   miningProductivity?: Rational;
   /** Qualities unlocked */
-  qualityUnlock?: Quality[];
+  qualityUnlock?: string[];
   /** Recipe productivity bonuses (%) */
   recipeProductivity?: { id: string; value: Rational }[];
   /** Recipes unlocked */

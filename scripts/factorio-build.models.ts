@@ -41,13 +41,11 @@ export function isFluidProduct(
 }
 
 export interface DataRawDump {
-  'agricultural-tower'?: Record<string, M.AgriculturalTowerPrototype>;
   ammo: Record<string, M.AmmoItemPrototype>;
   armor: Record<string, M.ArmorPrototype>;
   'assembling-machine': Record<string, M.AssemblingMachinePrototype>;
   asteroid?: Record<string, M.AsteroidPrototype>;
   'asteroid-chunk': Record<string, M.AsteroidChunkPrototype>;
-  'asteroid-collector'?: Record<string, M.AsteroidCollectorPrototype>;
   beacon: Record<string, M.BeaconPrototype>;
   boiler: Record<string, M.BoilerPrototype>;
   capsule: Record<string, M.CapsulePrototype>;
@@ -68,6 +66,7 @@ export interface DataRawDump {
   planet: Record<string, M.PlanetPrototype>;
   plant: Record<string, M.PlantPrototype>;
   pump: Record<string, M.PumpPrototype>;
+  quality?: Record<string, M.QualityPrototype>;
   'rail-planner': Record<string, M.RailPlannerPrototype>;
   reactor: Record<string, M.ReactorPrototype>;
   recipe: Record<string, M.RecipePrototype>;
@@ -146,15 +145,12 @@ export type AnyEntityPrototype =
   | M.CargoWagonPrototype
   | M.FluidWagonPrototype
   | M.PumpPrototype
-  | M.AsteroidCollectorPrototype
-  | M.AgriculturalTowerPrototype
   | M.InserterPrototype;
 
 export type AnyLocationPrototype = M.PlanetPrototype | M.SurfacePrototype;
 
 export interface ModDataReport {
   machineSpeedZero: string[];
-  noProducers: string[];
   resourceNoMinableProducts: string[];
   resourceDuplicate: string[];
   disabledRecipeDoesntExist: string[];
@@ -168,9 +164,7 @@ export type MachineProto =
   | M.LabPrototype
   | M.MiningDrillPrototype
   | M.OffshorePumpPrototype
-  | M.ReactorPrototype
-  | M.AsteroidCollectorPrototype
-  | M.AgriculturalTowerPrototype;
+  | M.ReactorPrototype;
 
 export const anyEntityKeys = [
   'beacon',
@@ -186,8 +180,6 @@ export const anyEntityKeys = [
   'cargo-wagon',
   'fluid-wagon',
   'pump',
-  'asteroid-collector',
-  'agricultural-tower',
   'inserter',
 ] as const;
 

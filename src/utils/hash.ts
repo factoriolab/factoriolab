@@ -3,17 +3,9 @@ import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import {
   itemHasQuality,
-  Quality,
   qualityId,
   recipeHasQuality,
 } from '~/data/schema/quality';
-
-const QUALITIES = [
-  Quality.Uncommon,
-  Quality.Rare,
-  Quality.Epic,
-  Quality.Legendary,
-];
 
 type ModHashSet = Record<keyof ModHash, Set<string>>;
 
@@ -81,14 +73,17 @@ export function updateHashItem(
 
 export function updateHash(data: ModData, hash: ModHash): void {
   const hashSet = emptyModHashSet();
-  const flags = new Set(data.flags);
+
+  const abnormalQualities = data.qualities?.filter((q) => q.level);
 
   data.items.forEach((i) => {
     updateHashItem(hash, hashSet, i, i.id);
-    if (flags.has('quality') && itemHasQuality(i)) {
-      QUALITIES.forEach((q) => {
-        updateHashItem(hash, hashSet, i, qualityId(i.id, q));
-      });
+    if (abnormalQualities?.length && itemHasQuality(i)) {
+      abnormalQualities
+        .filter((q) => q.level)
+        .forEach((q) => {
+          updateHashItem(hash, hashSet, i, qualityId(i.id, q));
+        });
     }
   });
 
@@ -99,8 +94,8 @@ export function updateHash(data: ModData, hash: ModHash): void {
 
   data.recipes.forEach((r) => {
     addIfMissing(hash, hashSet, 'recipes', r.id);
-    if (flags.has('quality') && recipeHasQuality(r, itemData)) {
-      QUALITIES.forEach((q) => {
+    if (abnormalQualities?.length && recipeHasQuality(r, itemData)) {
+      abnormalQualities.forEach((q) => {
         addIfMissing(hash, hashSet, 'recipes', qualityId(r.id, q));
       });
     }

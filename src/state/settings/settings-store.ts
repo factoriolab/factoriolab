@@ -10,8 +10,8 @@ import { CUSTOM_MOD, Game } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
 import { IconType } from '~/data/icon-type';
 import { ModInfo } from '~/data/mod';
-import { Beacon } from '~/data/schema/beacon';
-import { Belt, PIPE } from '~/data/schema/belt';
+import { Beacon, parseBeacon } from '~/data/schema/beacon';
+import { Belt, parseBelt, PIPE } from '~/data/schema/belt';
 import { CargoWagon } from '~/data/schema/cargo-wagon';
 import { Category } from '~/data/schema/category';
 import { FluidWagon } from '~/data/schema/fluid-wagon';
@@ -22,18 +22,13 @@ import {
   parseIcon,
   parseIconData,
 } from '~/data/schema/icon-data';
-import { Inserter } from '~/data/schema/inserter';
+import { Inserter, parseInserter } from '~/data/schema/inserter';
 import { Item, ItemJson, parseItem } from '~/data/schema/item';
-import { Machine, typeHasCraftingSpeed } from '~/data/schema/machine';
+import { Machine, parseMachine } from '~/data/schema/machine';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import { ModI18n } from '~/data/schema/mod-i18n';
-import {
-  effectPrecision,
-  filterEffect,
-  Module,
-  ModuleEffect,
-} from '~/data/schema/module';
+import { Module, parseModule } from '~/data/schema/module';
 import {
   baseId,
   itemHasQuality,
@@ -281,18 +276,21 @@ export class SettingsStore extends Store<SettingsState> {
       belts: itemOptions(data.beltIds, {
         exclude: data.itemQIds,
         tooltipType: 'belt',
-        empty: true,
+        firstAsEmpty: true,
       }),
-      pipes: itemOptions(data.pipeIds, { tooltipType: 'pipe', empty: true }),
+      pipes: itemOptions(data.pipeIds, {
+        tooltipType: 'pipe',
+        firstAsEmpty: true,
+      }),
       cargoWagons: itemOptions(data.cargoWagonIds, {
         exclude: data.itemQIds,
         tooltipType: 'wagon',
-        empty: true,
+        firstAsEmpty: true,
       }),
       fluidWagons: itemOptions(data.fluidWagonIds, {
         exclude: data.itemQIds,
         tooltipType: 'wagon',
-        empty: true,
+        firstAsEmpty: true,
       }),
       inserters: itemOptions(data.inserterIds, { tooltipType: 'inserter' }),
       fuels: itemOptions(data.fuelIds, {
@@ -301,13 +299,26 @@ export class SettingsStore extends Store<SettingsState> {
       }),
       modules: itemOptions(data.moduleIds, { tooltipType: 'module' }),
       proliferatorModules: itemOptions(data.proliferatorModuleIds, {
-        emptyModule: true,
+        emptyOption: {
+          label: 'none',
+          value: '',
+          icon: 'module',
+        },
         include: itemSet,
         tooltipType: 'module',
       }),
       machines: itemOptions(data.machineIds, { tooltipType: 'machine' }),
       locations: getIdOptions(data.locationIds, data.locationRecord, {
         iconType: 'location',
+      }),
+      qualities: getIdOptions(data.qualityIds, data.qualityRecord, {
+        iconType: 'quality',
+        emptyOption: {
+          label: 'any',
+          value: '',
+          icon: 'q-any',
+          iconType: 'system',
+        },
       }),
     };
   });
@@ -507,6 +518,7 @@ export class SettingsStore extends Store<SettingsState> {
     const recipeData = toRecord(coalesce(data?.recipes, []));
     const limitations = reduceRecord(coalesce(data?.limitations, {}));
     const locationRecord = toRecord(coalesce(data?.locations, []));
+    const qualityRecord = toRecord(coalesce(data?.qualities, []));
 
     // Apply localization
     if (i18n) {
@@ -533,6 +545,16 @@ export class SettingsStore extends Store<SettingsState> {
           });
         }
       }
+
+      if (i18n.qualities) {
+        for (const i of Object.keys(i18n.qualities).filter(
+          (i) => qualityRecord[i],
+        )) {
+          qualityRecord[i] = spread(qualityRecord[i], {
+            name: i18n.qualities[i],
+          });
+        }
+      }
     }
 
     // Convert to id arrays
@@ -541,6 +563,9 @@ export class SettingsStore extends Store<SettingsState> {
     const itemIds = Object.keys(itemData);
     const recipeIds = Object.keys(recipeData);
     const locationIds = Object.keys(locationRecord);
+    const qualityIds = Object.keys(qualityRecord).sort(
+      (a, b) => qualityRecord[a].level - qualityRecord[b].level,
+    );
 
     // Generate temporary object arrays
     const items = itemIds.map((i) => parseItem(itemData[i]));
@@ -558,30 +583,26 @@ export class SettingsStore extends Store<SettingsState> {
 
     const itemQIds = new Set<string>();
     const recipeQIds = new Set<string>();
-    const flags = new Set(data?.flags);
-    if (flags.has('quality')) {
-      const qualities = [
-        Quality.Uncommon,
-        Quality.Rare,
-        Quality.Epic,
-        Quality.Legendary,
-      ];
+    const abnormalQualities = data?.qualities?.filter((q) => q.level) ?? [];
+    if (abnormalQualities.length) {
       recipes.forEach((r) => {
         const producers = r.producers;
         if (producers == null) return;
         r.producers = [
           ...producers,
-          ...qualities.flatMap((q) => producers.map((p) => qualityId(p, q))),
+          ...abnormalQualities.flatMap((q) =>
+            producers.map((p) => qualityId(p, q)),
+          ),
         ];
       });
       const itemsLen = items.length;
       const recipesLen = recipes.length;
-      qualities.forEach((quality) => {
-        const eff = rational(quality);
+      abnormalQualities.forEach((quality) => {
         for (let i = 0; i < itemsLen; i++) {
           const item = items[i];
           if (!itemHasQuality(item)) continue;
 
+          const itemJson = itemData[item.id];
           const id = qualityId(item.id, quality);
           itemQIds.add(id);
           itemIds.push(id);
@@ -591,56 +612,45 @@ export class SettingsStore extends Store<SettingsState> {
             icon: coalesce(item.icon, item.id),
           });
 
-          if (
-            qItem.machine?.speed &&
-            qItem.machine.entityType &&
-            typeHasCraftingSpeed.has(qItem.machine.entityType)
-          ) {
-            const speed = eff
-              .mul(rational(3n, 10n))
-              .add(rational.one)
-              .mul(qItem.machine.speed);
-            qItem.machine = spread(qItem.machine, { speed });
+          if (itemJson.beacon?.qualityRecord) {
+            const qBeaconJson = itemJson.beacon.qualityRecord[quality.id];
+            if (qBeaconJson)
+              qItem.beacon = parseBeacon(spread(itemJson.beacon, qBeaconJson));
           }
 
-          if (qItem.module) {
-            const factor = eff.mul(rational(3n, 10n)).add(rational.one);
-
-            for (const eff of Object.keys(effectPrecision) as ModuleEffect[]) {
-              if (qItem.module[eff] && !filterEffect(qItem.module, eff)) {
-                let value = qItem.module[eff].mul(factor);
-                value = value.trunc(effectPrecision[eff]);
-                qItem.module = spread(qItem.module, { [eff]: value });
-              }
-            }
+          /** Unused in Space Age data, quality does not affect belt speed */
+          if (itemJson.belt?.qualityRecord) {
+            const qBeltJson = itemJson.belt.qualityRecord[quality.id];
+            if (qBeltJson)
+              qItem.belt = parseBelt(spread(itemJson.belt, qBeltJson));
           }
 
-          if (qItem.beacon) {
-            const effectivity = rational(quality)
-              .mul(rational(2n, 15n))
-              .add(rational.one)
-              .mul(qItem.beacon.effectivity);
-
-            qItem.beacon = spread(qItem.beacon, { effectivity });
-
-            if (qItem.beacon.usage) {
-              const usage = rational.one
-                .sub(rational(quality).mul(rational(1n, 6n)))
-                .mul(qItem.beacon.usage);
-              qItem.beacon = spread(qItem.beacon, { usage });
-            }
+          if (itemJson.inserter?.qualityRecord) {
+            const qInserterJson = itemJson.inserter.qualityRecord[quality.id];
+            if (qInserterJson)
+              qItem.inserter = parseInserter(
+                spread(itemJson.inserter, qInserterJson),
+              );
           }
 
-          if (qItem.pipe) {
-            const factor = eff.mul(rational(3n, 10n)).add(rational.one);
-            const speed = qItem.pipe.speed.mul(factor);
-            qItem.pipe = spread(qItem.pipe, { speed });
+          if (itemJson.machine?.qualityRecord) {
+            const qMachineJson = itemJson.machine.qualityRecord[quality.id];
+            if (qMachineJson)
+              qItem.machine = parseMachine(
+                spread(itemJson.machine, qMachineJson),
+              );
           }
 
-          if (qItem.inserter) {
-            const factor = eff.mul(rational(3n, 10n)).add(rational.one);
-            const speed = qItem.inserter.speed.mul(factor);
-            qItem.inserter = spread(qItem.inserter, { speed });
+          if (itemJson.module?.qualityRecord) {
+            const qModuleJson = itemJson.module.qualityRecord[quality.id];
+            if (qModuleJson)
+              qItem.module = parseModule(spread(itemJson.module, qModuleJson));
+          }
+
+          if (itemJson.pipe?.qualityRecord) {
+            const qPipeJson = itemJson.pipe.qualityRecord[quality.id];
+            if (qPipeJson)
+              qItem.pipe = parseBelt(spread(itemJson.pipe, qPipeJson));
           }
 
           items.push(qItem);
@@ -686,7 +696,7 @@ export class SettingsStore extends Store<SettingsState> {
       .filter(fnPropsNotNullish('beacon'))
       .sort(
         (a, b) =>
-          (a.quality ?? 0) - (b.quality ?? 0) ||
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
           a.beacon.modules.sub(b.beacon.modules).toNumber(),
       )
       .map((i) => i.id);
@@ -694,7 +704,7 @@ export class SettingsStore extends Store<SettingsState> {
       .filter(fnPropsNotNullish('belt'))
       .sort(
         (a, b) =>
-          (a.quality ?? 0) - (b.quality ?? 0) ||
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
           a.belt.speed.sub(b.belt.speed).toNumber(),
       )
       .map((i) => i.id);
@@ -702,7 +712,7 @@ export class SettingsStore extends Store<SettingsState> {
       .filter(fnPropsNotNullish('pipe'))
       .sort(
         (a, b) =>
-          (a.quality ?? 0) - (b.quality ?? 0) ||
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
           a.pipe.speed.sub(b.pipe.speed).toNumber(),
       )
       .map((i) => i.id);
@@ -710,7 +720,7 @@ export class SettingsStore extends Store<SettingsState> {
       .filter(fnPropsNotNullish('cargoWagon'))
       .sort(
         (a, b) =>
-          (a.quality ?? 0) - (b.quality ?? 0) ||
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
           a.cargoWagon.size.sub(b.cargoWagon.size).toNumber(),
       )
       .map((i) => i.id);
@@ -718,7 +728,7 @@ export class SettingsStore extends Store<SettingsState> {
       .filter(fnPropsNotNullish('fluidWagon'))
       .sort(
         (a, b) =>
-          (a.quality ?? 0) - (b.quality ?? 0) ||
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
           a.fluidWagon.capacity.sub(b.fluidWagon.capacity).toNumber(),
       )
       .map((i) => i.id);
@@ -726,7 +736,8 @@ export class SettingsStore extends Store<SettingsState> {
       .filter(fnPropsNotNullish('machine'))
       .sort(
         (a, b) =>
-          (a.quality ?? 0) - (b.quality ?? 0) || a.name.localeCompare(b.name),
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
+          a.name.localeCompare(b.name),
       )
       .map((i) => i.id);
     const modules = items.filter(fnPropsNotNullish('module'));
@@ -738,7 +749,7 @@ export class SettingsStore extends Store<SettingsState> {
       .filter(fnPropsNotNullish('fuel'))
       .sort(
         (a, b) =>
-          (a.quality ?? 0) - (b.quality ?? 0) ||
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
           a.fuel.value.sub(b.fuel.value).toNumber(),
       );
     const fuelIds = fuels.map((i) => i.id);
@@ -830,14 +841,8 @@ export class SettingsStore extends Store<SettingsState> {
       return e;
     }, {});
 
-    if (flags.has('quality')) {
-      const qualities = [
-        Quality.Uncommon,
-        Quality.Rare,
-        Quality.Epic,
-        Quality.Legendary,
-      ];
-      for (const quality of qualities) {
+    if (abnormalQualities.length) {
+      for (const quality of abnormalQualities) {
         for (const techId in technologyRecord) {
           const tech = technologyRecord[techId];
           if (tech.recipeProductivity) {
@@ -882,13 +887,14 @@ export class SettingsStore extends Store<SettingsState> {
       item: toIconRecord(itemIds, itemRecord),
       recipe: toIconRecord(recipeIds, recipeRecord),
       location: toIconRecord(locationIds, locationRecord),
+      quality: toIconRecord(qualityIds, qualityRecord),
     };
 
     return {
       game,
       modId: modId,
       info: gameInfo[game],
-      flags,
+      flags: new Set(data?.flags),
       version: coalesce(data?.version, {}),
       categoryIds,
       categoryRecord,
@@ -926,6 +932,9 @@ export class SettingsStore extends Store<SettingsState> {
       inserterRecord,
       locationIds,
       locationRecord,
+      qualityIds,
+      qualityRecord,
+      abnormalQualities,
       limitations,
       hash,
     };
@@ -953,7 +962,7 @@ export class SettingsStore extends Store<SettingsState> {
     let locationIds = new Set(defaultLocationIds);
     if (locIds != null && defaultLocationIds.length > 0) locationIds = locIds;
 
-    let quality = Quality.Normal;
+    let quality: Quality | undefined;
     let stack = rational.one;
     const inserterBonus: Partial<Record<string, Rational>> = {};
     let miningBonus = rational.zero;
@@ -979,7 +988,8 @@ export class SettingsStore extends Store<SettingsState> {
 
       if (tech.qualityUnlock) {
         tech.qualityUnlock.forEach((q) => {
-          if (q > quality) quality = q;
+          const unlock = data.qualityRecord[q];
+          if (quality == null || unlock.level > quality.level) quality = unlock;
         });
       }
 
@@ -1007,7 +1017,7 @@ export class SettingsStore extends Store<SettingsState> {
       .filter(
         (r) =>
           (!r.flags.has('locked') || researchedRecipeIds.has(baseId(r.id))) &&
-          (r.quality == null || r.quality <= quality),
+          (r.quality == null || r.quality.level <= coalesce(quality?.level, 0)),
       );
 
     // Recipe productivity bonuses unlocked by technology
@@ -1025,7 +1035,10 @@ export class SettingsStore extends Store<SettingsState> {
     // Initialize list of items with those that have no recipe
     const noRecipeQualItemIds = Array.from(data.noRecipeItemIds)
       .map((i) => data.itemRecord[i])
-      .filter((i) => i.quality == null || i.quality < quality)
+      .filter(
+        (i) =>
+          i.quality == null || i.quality.level < coalesce(quality?.level, 0),
+      )
       .map((i) => i.id);
     const availableItemIds = new Set(noRecipeQualItemIds);
     // Add all items that are consumed or produced by unlocked recipes
@@ -1159,7 +1172,7 @@ export class SettingsStore extends Store<SettingsState> {
     qualityDurability = false,
   ): Record<string, Rational> {
     const factor = qualityDurability
-      ? rational.one.add(rational(quality))
+      ? rational.one.add(rational(quality.level))
       : rational.one;
     return Object.keys(record).reduce((e: Record<string, Rational>, k) => {
       if (itemData[k].stack) {

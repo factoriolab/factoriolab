@@ -7,32 +7,99 @@ import { InserterJson } from '~/data/schema/inserter';
 import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
 import { rational } from '~/rational/rational';
+import { clamp } from '~/utils/number';
 
 import * as M from '../factorio.models';
 import * as D from '../factorio-build.models';
 import { getDisallowedEffects } from './data';
 import { getPowerInKw } from './power';
 
-export function getBeacon(proto: M.BeaconPrototype): BeaconJson {
-  return {
+export function getBeacon(
+  proto: M.BeaconPrototype,
+  abnormalQualities: M.QualityPrototype[],
+): BeaconJson {
+  const usage = getPowerInKw(proto.energy_usage);
+  const beacon: BeaconJson = {
     effectivity: proto.distribution_effectivity,
     modules: proto.module_slots,
     range: proto.supply_area_distance,
     type:
       proto.energy_source.type === 'electric' ? EnergyType.Electric : undefined,
-    usage: getPowerInKw(proto.energy_usage),
+    usage,
     disallowedEffects: getDisallowedEffects(proto.allowed_effects, true),
     size: getEntitySize(proto),
     profile: proto.profile,
   };
+
+  if (abnormalQualities.length) {
+    const qualityRecord: Record<string, Partial<BeaconJson>> = {};
+    for (const quality of abnormalQualities) {
+      const variant: Partial<BeaconJson> = {};
+
+      if (proto.distribution_effectivity_bonus_per_quality_level) {
+        const qEffectivity =
+          proto.distribution_effectivity +
+          quality.level *
+            proto.distribution_effectivity_bonus_per_quality_level;
+        if (qEffectivity !== beacon.effectivity)
+          variant.effectivity = qEffectivity;
+      }
+
+      if (proto.quality_affects_module_slots) {
+        const multiplier = quality.beacon_module_slots_bonus ?? quality.level;
+        const qModules = proto.module_slots + multiplier;
+        if (qModules !== beacon.modules) variant.modules = qModules;
+      }
+
+      if (proto.quality_affects_supply_area_distance) {
+        const multiplier =
+          quality.beacon_supply_area_distance_bonus ??
+          clamp(quality.level, 0, 64);
+        const qRange = proto.supply_area_distance + multiplier;
+        if (qRange !== beacon.range) variant.range = qRange;
+      }
+
+      if (quality.beacon_power_usage_multiplier && usage) {
+        const qUsage = usage * quality.beacon_power_usage_multiplier;
+        if (qUsage !== beacon.usage) variant.usage = qUsage;
+      }
+
+      if (Object.keys(variant).length) qualityRecord[quality.name] = variant;
+    }
+
+    if (Object.keys(qualityRecord).length) beacon.qualityRecord = qualityRecord;
+  }
+
+  return beacon;
 }
 
 export function getBelt(proto: M.TransportBeltPrototype): BeltJson {
   return { speed: proto.speed * 480 };
 }
 
-export function getPipe(proto: M.PumpPrototype): BeltJson {
-  return { speed: proto.pumping_speed * 60 };
+export function getPipe(
+  proto: M.PumpPrototype,
+  abnormalQualities: M.QualityPrototype[],
+): BeltJson {
+  const speed = proto.pumping_speed * 60;
+  const belt: BeltJson = { speed };
+
+  if (abnormalQualities.length) {
+    const qualityRecord: Record<string, Partial<BeltJson>> = {};
+
+    for (const quality of abnormalQualities) {
+      const variant: Partial<BeltJson> = {};
+
+      const qSpeed = speed * getDefaultMultiplier(quality);
+      if (qSpeed !== belt.speed) variant.speed = qSpeed;
+
+      if (Object.keys(variant).length) qualityRecord[quality.name] = variant;
+    }
+
+    if (Object.keys(qualityRecord).length) belt.qualityRecord = qualityRecord;
+  }
+
+  return belt;
 }
 
 export function getCargoWagon(proto: M.CargoWagonPrototype): CargoWagonJson {
@@ -43,7 +110,10 @@ export function getFluidWagon(proto: M.FluidWagonPrototype): FluidWagonJson {
   return { capacity: proto.capacity };
 }
 
-export function getInserter(proto: M.InserterPrototype): InserterJson {
+export function getInserter(
+  proto: M.InserterPrototype,
+  abnormalQualities: M.QualityPrototype[],
+): InserterJson {
   // const speed = proto.rotation_speed * 360 * 60;
   const ticksPerRotation = rational(
     Math.floor(1 / proto.rotation_speed / 2) * 2,
@@ -57,6 +127,27 @@ export function getInserter(proto: M.InserterPrototype): InserterJson {
   if (proto.bulk) inserter.category = 'bulk';
   if (proto.uses_inserter_stack_size_bonus === false)
     inserter.ignoresBonus = true;
+
+  if (abnormalQualities.length) {
+    const qualityRecord: Record<string, Partial<InserterJson>> = {};
+
+    for (const quality of abnormalQualities) {
+      const variant: Partial<InserterJson> = {};
+
+      const qSpeed = degreesPerSec.mul(
+        rational(
+          quality.inserter_speed_multiplier ?? getDefaultMultiplier(quality),
+        ),
+      );
+      if (!qSpeed.eq(degreesPerSec)) variant.speed = qSpeed.toString();
+
+      if (Object.keys(variant).length) qualityRecord[quality.name] = variant;
+    }
+
+    if (Object.keys(qualityRecord).length)
+      inserter.qualityRecord = qualityRecord;
+  }
+
   return inserter;
 }
 
@@ -66,10 +157,7 @@ export function getMachineDisallowedEffects(
   if (
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
-    M.isReactorPrototype(proto) ||
-    M.isAsteroidCollectorPrototype(proto) ||
-    M.isContainerPrototype(proto) ||
-    M.isAgriculturalTowerPrototype(proto)
+    M.isReactorPrototype(proto)
   )
     return undefined;
 
@@ -79,7 +167,6 @@ export function getMachineDisallowedEffects(
 export function getMachineDrain(proto: D.MachineProto): number | undefined {
   if (
     M.isOffshorePumpPrototype(proto) ||
-    M.isContainerPrototype(proto) ||
     proto.energy_source.type !== 'electric'
   )
     return undefined;
@@ -99,25 +186,61 @@ export function getMachineDrain(proto: D.MachineProto): number | undefined {
   return undefined;
 }
 
-export function getMachineModules(proto: D.MachineProto): number | undefined {
+export function getMachineModules(
+  proto: D.MachineProto,
+  quality?: M.QualityPrototype,
+): number | undefined {
   if (
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
-    M.isAsteroidCollectorPrototype(proto) ||
-    M.isAgriculturalTowerPrototype(proto)
+    proto.module_slots == null
   )
     return undefined;
 
-  return proto.module_slots || undefined;
+  let modules = proto.module_slots;
+
+  if (quality) {
+    if (quality && proto.quality_affects_module_slots) {
+      if (M.isLabPrototype(proto)) {
+        if (quality.lab_module_slots_bonus)
+          modules += quality.lab_module_slots_bonus;
+      } else if (M.isMiningDrillPrototype(proto)) {
+        if (quality.mining_drill_module_slots_bonus)
+          modules += quality.mining_drill_module_slots_bonus;
+      } else {
+        const module_slots_quality_bonus =
+          proto.module_slots_quality_bonus?.[quality.name];
+        if (module_slots_quality_bonus) {
+          modules += module_slots_quality_bonus;
+        } else {
+          modules +=
+            quality.crafting_machine_module_slots_bonus ?? quality.level;
+        }
+      }
+    }
+  }
+
+  return modules;
 }
 
-export function getMachinePollution(proto: D.MachineProto): number | undefined {
-  if (M.isOffshorePumpPrototype(proto) || M.isContainerPrototype(proto))
-    return undefined;
+export function getMachinePollution(
+  proto: D.MachineProto,
+  quality?: M.QualityPrototype,
+): number | undefined {
+  if (M.isOffshorePumpPrototype(proto)) return undefined;
 
   // TODO: Support multiple pollutants
-  return proto.energy_source.emissions_per_minute?.['pollution'];
+  let pollution = proto.energy_source.emissions_per_minute?.['pollution'];
+
+  if (
+    pollution &&
+    quality &&
+    (M.isBoilerPrototype(proto) || M.isReactorPrototype(proto))
+  )
+    pollution *= getDefaultMultiplier(quality);
+
+  return pollution;
 }
 
 export function getMachineSilo(proto: D.MachineProto): SiloJson | undefined {
@@ -179,29 +302,48 @@ export function getEntitySize(
   return [tileWidth, tileHeight];
 }
 
-export function getMachineSpeed(proto: D.MachineProto): number {
-  if (
-    M.isReactorPrototype(proto) ||
-    M.isAsteroidCollectorPrototype(proto) ||
-    M.isAgriculturalTowerPrototype(proto)
-  )
-    return 1;
-
+export function getMachineSpeed(
+  proto: D.MachineProto,
+  quality?: M.QualityPrototype,
+): number {
   let speed: number;
-  if (M.isBoilerPrototype(proto))
+  if (M.isReactorPrototype(proto) || M.isOffshorePumpPrototype(proto)) {
+    speed = 1;
+
+    if (quality) speed *= getDefaultMultiplier(quality);
+  } else if (M.isBoilerPrototype(proto)) {
     speed = getPowerInKw(proto.energy_consumption) ?? 1;
-  else if (M.isLabPrototype(proto)) speed = proto.researching_speed ?? 1;
-  else if (M.isMiningDrillPrototype(proto)) speed = proto.mining_speed;
-  else if (M.isOffshorePumpPrototype(proto))
-    speed = 1; // Speed is set on recipe instead of pump
-  else speed = proto.crafting_speed;
+
+    if (quality) speed *= getDefaultMultiplier(quality);
+  } else if (M.isLabPrototype(proto)) {
+    speed = proto.researching_speed ?? 1;
+
+    if (quality) {
+      const multiplier =
+        quality.lab_research_speed_multiplier ?? getDefaultMultiplier(quality);
+      speed *= multiplier;
+    }
+  } else if (M.isMiningDrillPrototype(proto)) speed = proto.mining_speed;
+  else {
+    speed = proto.crafting_speed;
+
+    if (quality) {
+      const crafting_speed_quality_multiplier =
+        proto.crafting_speed_quality_multiplier?.[quality.name];
+      if (crafting_speed_quality_multiplier)
+        speed *= crafting_speed_quality_multiplier;
+      else
+        speed *=
+          quality.crafting_machine_speed_multiplier ??
+          getDefaultMultiplier(quality);
+    }
+  }
 
   return speed;
 }
 
 export function getMachineType(proto: D.MachineProto): EnergyType | undefined {
-  if (M.isOffshorePumpPrototype(proto) || M.isContainerPrototype(proto))
-    return undefined;
+  if (M.isOffshorePumpPrototype(proto)) return undefined;
 
   switch (proto.energy_source.type) {
     case 'burner':
@@ -214,18 +356,21 @@ export function getMachineType(proto: D.MachineProto): EnergyType | undefined {
   }
 }
 
-export function getMachineUsage(proto: D.MachineProto): number | undefined {
-  if (
-    M.isOffshorePumpPrototype(proto) ||
-    M.isAsteroidCollectorPrototype(proto) ||
-    M.isContainerPrototype(proto)
-  )
-    return undefined;
-  else if (M.isBoilerPrototype(proto))
-    return getPowerInKw(proto.energy_consumption);
-  else if (M.isReactorPrototype(proto)) return getPowerInKw(proto.consumption);
+export function getMachineUsage(
+  proto: D.MachineProto,
+  quality?: M.QualityPrototype,
+): number | undefined {
+  let usage: number | undefined;
+  if (M.isOffshorePumpPrototype(proto)) usage = undefined;
+  else if (M.isBoilerPrototype(proto)) {
+    usage = getPowerInKw(proto.energy_consumption);
+    if (usage && quality) usage *= getDefaultMultiplier(quality);
+  } else if (M.isReactorPrototype(proto)) {
+    usage = getPowerInKw(proto.consumption);
+    if (usage && quality) usage *= getDefaultMultiplier(quality);
+  } else usage = getPowerInKw(proto.energy_usage);
 
-  return getPowerInKw(proto.energy_usage);
+  return usage;
 }
 
 export function getMachineBaseEffect(
@@ -235,8 +380,6 @@ export function getMachineBaseEffect(
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
-    M.isAsteroidCollectorPrototype(proto) ||
-    M.isAgriculturalTowerPrototype(proto) ||
     proto.effect_receiver?.base_effect == null
   )
     return undefined;
@@ -249,11 +392,6 @@ export function getMachineBaseEffect(
   if (eff.quality) result.quality = eff.quality;
   if (eff.speed) result.speed = eff.speed;
   return result;
-}
-
-export function getMachineHideRate(proto: D.MachineProto): boolean | undefined {
-  if (M.isAsteroidCollectorPrototype(proto)) return true;
-  return undefined;
 }
 
 export function getMachineIngredientUsage(
@@ -283,4 +421,8 @@ export function getRecipeDisallowedEffects(
 
   if (disallowedEffects.length) return disallowedEffects;
   return undefined;
+}
+
+export function getDefaultMultiplier(proto: M.QualityPrototype): number {
+  return proto.default_multiplier ?? 1 + 0.3 * proto.level;
 }

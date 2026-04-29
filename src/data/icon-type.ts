@@ -4,4 +4,5 @@ export type IconType =
   | 'category'
   | 'item'
   | 'recipe'
-  | 'location';
+  | 'location'
+  | 'quality';

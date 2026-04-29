@@ -5,6 +5,7 @@ export const PIPE = 'pipe';
 export interface BeltJson {
   /** Items/s */
   speed: number | string;
+  qualityRecord?: Record<string, Partial<BeltJson>>;
 }
 
 export interface Belt {

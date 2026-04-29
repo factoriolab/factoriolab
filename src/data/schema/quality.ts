@@ -1,55 +1,11 @@
-import { Option } from '~/option/option';
-
+import { BaseJson } from './base';
 import { Item, ItemJson } from './item';
 import { Recipe, RecipeJson } from './recipe';
 
-export enum Quality {
-  Any = -1,
-  Normal = 0,
-  Uncommon = 1,
-  Rare = 2,
-  Epic = 3,
-  Legendary = 5,
+export interface QualityJson extends BaseJson {
+  level: number;
 }
-
-export const qualityOptions: Option<Quality>[] = [
-  {
-    value: Quality.Any,
-    label: 'options.quality.any',
-    icon: 'q-1',
-    iconType: 'system',
-  },
-  {
-    value: Quality.Normal,
-    label: 'options.quality.normal',
-    icon: 'q0',
-    iconType: 'system',
-  },
-  {
-    value: Quality.Uncommon,
-    label: 'options.quality.uncommon',
-    icon: 'q1',
-    iconType: 'system',
-  },
-  {
-    value: Quality.Rare,
-    label: 'options.quality.rare',
-    icon: 'q2',
-    iconType: 'system',
-  },
-  {
-    value: Quality.Epic,
-    label: 'options.quality.epic',
-    icon: 'q3',
-    iconType: 'system',
-  },
-  {
-    value: Quality.Legendary,
-    label: 'options.quality.legendary',
-    icon: 'q5',
-    iconType: 'system',
-  },
-];
+export type Quality = QualityJson;
 
 export const QUALITY_REGEX = /^(.*)\((\d)\)$/;
 
@@ -59,9 +15,9 @@ export function baseId(id: string): string {
   return id;
 }
 
-export function qualityId(id: string, quality: Quality): string {
-  if (quality < Quality.Uncommon) return id;
-  return `${id}(${quality.toString()})`;
+export function qualityId(id: string, quality: QualityJson): string {
+  if (quality.level <= 0) return id;
+  return `${id}(${quality.level.toString()})`;
 }
 
 export function itemHasQuality(item: Item | ItemJson): boolean {

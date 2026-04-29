@@ -15,6 +15,7 @@ export interface BeaconJson {
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
   profile?: number[];
+  qualityRecord?: Record<string, Partial<BeaconJson>>;
 }
 
 export interface Beacon {

@@ -41,11 +41,10 @@ export interface MachineJson {
   hideRate?: boolean;
   /** If true, tally totals by recipe instead of machine */
   totalRecipe?: boolean;
-  /** Type of machine. (e.g. mining drill, assembling machine, etc) */
-  entityType?: string;
   locations?: string[];
   /** Percent of ingredients used (Space Age: Biolab) */
   ingredientUsage?: number;
+  qualityRecord?: Record<string, Partial<MachineJson>>;
 }
 
 export interface Machine {
@@ -72,8 +71,6 @@ export interface Machine {
   hideRate?: boolean;
   /** If true, tally totals by recipe instead of machine */
   totalRecipe?: boolean;
-  /** Type of machine. (e.g. mining drill, assembling machine, etc) */
-  entityType?: string;
   locations?: string[];
   /** Percent of ingredients used (Space Age: Biolab) */
   ingredientUsage?: Rational;
@@ -108,7 +105,6 @@ export function parseMachine(
     baseEffect: json.baseEffect ? parseBaseEffect(json.baseEffect) : undefined,
     hideRate: json.hideRate,
     totalRecipe: json.totalRecipe,
-    entityType: json.entityType,
     locations: json.locations,
     ingredientUsage: rational(json.ingredientUsage),
   };

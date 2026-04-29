@@ -1,10 +1,4 @@
-export interface CategoryJson {
-  id: string;
-  name: string;
-  /** Used to link the category to an alternate icon id */
-  icon?: string;
-  /** Used to add extra text to an already defined icon */
-  iconText?: string;
-}
+import { BaseJson } from './base';
 
+export type CategoryJson = BaseJson;
 export type Category = CategoryJson;

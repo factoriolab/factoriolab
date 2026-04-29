@@ -13,6 +13,7 @@ import { Item } from '~/data/schema/item';
 import { Machine } from '~/data/schema/machine';
 import { ModHash } from '~/data/schema/mod-hash';
 import { Module } from '~/data/schema/module';
+import { Quality } from '~/data/schema/quality';
 import { AdjustedRecipe, Recipe } from '~/data/schema/recipe';
 import { Technology } from '~/data/schema/technology';
 import { Flag } from '~/state/flags';
@@ -59,6 +60,9 @@ export interface Dataset {
   proliferatorModuleIds: string[];
   locationIds: string[];
   locationRecord: Record<string, Category>;
+  qualityIds: string[];
+  qualityRecord: Record<string, Quality>;
+  abnormalQualities: Quality[];
   limitations: Record<string, Record<string, boolean>>;
   hash?: ModHash;
 }

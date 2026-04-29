@@ -18,7 +18,6 @@ export type Flag =
   | 'pollution'
   | 'power'
   | 'proliferator'
-  | 'quality'
   | 'researchProductivity'
   | 'researchSpeed'
   | 'resourcePurity'

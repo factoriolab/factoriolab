@@ -9,12 +9,7 @@ import {
   ModuleEffect,
   SOMERSLOOP,
 } from '~/data/schema/module';
-import {
-  baseId,
-  itemHasQuality,
-  Quality,
-  qualityId,
-} from '~/data/schema/quality';
+import { baseId, itemHasQuality, qualityId } from '~/data/schema/quality';
 import {
   AdjustedRecipe,
   cloneRecipe,
@@ -356,7 +351,7 @@ export class Adjustment {
       }
 
       // Adjust for quality
-      if (data.flags.has('quality') && eff.quality.gt(rational.zero)) {
+      if (eff.quality.gt(rational.zero)) {
         for (const outId of Object.keys(recipe.out)) {
           // Adjust by factor
           const item = data.itemRecord[outId];
@@ -365,13 +360,12 @@ export class Adjustment {
           let amount = original;
           const id = baseId(outId);
           let lastId: string | undefined;
-          for (
-            let i = recipe.quality ?? Quality.Normal;
-            i <= settings.quality;
-            i++
-          ) {
-            if (i === (4 as unknown as Quality)) continue;
-            const qId = qualityId(id, i);
+          const recipeLevel = coalesce(recipe.quality?.level, 0);
+          for (const quality of data.qualityIds.map(
+            (q) => data.qualityRecord[q],
+          )) {
+            if (quality.level < recipeLevel) continue;
+            const qId = qualityId(id, quality);
             if (lastId == null) {
               amount = amount.mul(eff.quality);
               lastId = qId;
@@ -381,6 +375,9 @@ export class Adjustment {
               amount = amount.mul(rational(1n, 10n));
               lastId = qId;
             }
+
+            // Don't go past unlocked quality level
+            if (settings.quality === quality) break;
           }
         }
       }

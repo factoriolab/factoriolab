@@ -13,3 +13,7 @@ export function inRange(
 ): boolean {
   return (min == null || value.gte(min)) && (max == null || value.lte(max));
 }
+
+export function clamp(value: number, min: number, max: number): number {
+  return Math.max(Math.min(value, max), min);
+}

@@ -1,5 +1,6 @@
 import { Rational, rational } from '~/rational/rational';
 
+import { BaseJson } from './base';
 import { Beacon, BeaconJson, parseBeacon } from './beacon';
 import { Belt, BeltJson, parseBelt } from './belt';
 import { CargoWagon, CargoWagonJson, parseCargoWagon } from './cargo-wagon';
@@ -11,9 +12,7 @@ import { Module, ModuleJson, parseModule } from './module';
 import { Quality } from './quality';
 import { parseTechnology, Technology, TechnologyJson } from './technology';
 
-export interface ItemJson {
-  id: string;
-  name: string;
+export interface ItemJson extends BaseJson {
   category: string;
   row: number;
   stack?: number;
@@ -28,15 +27,9 @@ export interface ItemJson {
   fluidWagon?: FluidWagonJson;
   technology?: TechnologyJson;
   inserter?: InserterJson;
-  /** Used to link the item to an alternate icon id */
-  icon?: string;
-  /** Used to add extra text to an already defined icon */
-  iconText?: string;
 }
 
-export interface Item {
-  id: string;
-  name: string;
+export interface Item extends BaseJson {
   category: string;
   row: number;
   stack?: Rational;
@@ -51,10 +44,6 @@ export interface Item {
   fluidWagon?: FluidWagon;
   technology?: Technology;
   inserter?: Inserter;
-  /** Used to link the item to an alternate icon id */
-  icon?: string;
-  /** Used to add extra text to an already defined icon */
-  iconText?: string;
   quality?: Quality;
 }
 
