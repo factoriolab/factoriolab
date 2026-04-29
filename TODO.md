@@ -2,19 +2,10 @@
 
 ## NOW
 
-- Data builder mod
-  - Include quality entities directly in data file?
-  - Remove quality flag, use technologies?
-  - Support for modded quality?
 - Removal of machine hideRate, totalRecipe - just don't include producers for these, right?
 - Likewise, removal of RecipeFlag 'hideProducer'
 - Do we _really_ need recycling cost and the recycling flag?
 - Tests, tests, tests
-
-## DATA CHANGES
-
-- Icons (complete?)
-- Quality calculations
 
 ## LATER
 
@@ -35,3 +26,4 @@
 - Item durability... quality science should consume less
 - Quality supported properties
   - next_probability, next?
+- Export researched techs
