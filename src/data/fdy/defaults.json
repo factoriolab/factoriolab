@@ -1,10 +1,20 @@
 {
+  "beacon": "robot-workstation-3",
   "minBelt": "conveyor-1",
   "maxBelt": "conveyor-4",
+  "pipe": [
+    "pump",
+    "pumpline"
+  ],
   "minMachineRank": [
     "assembling-machine-1"
   ],
   "maxMachineRank": [
     "assembling-machine-3"
+  ],
+  "cargoWagon": "train-cargo-wagon",
+  "fluidWagon": "train-tanker-wagon",
+  "fuelRank": [
+    "ignium-ore"
   ]
 }
