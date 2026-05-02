@@ -3,8 +3,8 @@
   "minBelt": "conveyor-1",
   "maxBelt": "conveyor-4",
   "pipe": [
-    "pump",
-    "pumpline"
+    "pipe",
+    "pipeline"
   ],
   "minMachineRank": [
     "assembling-machine-1"

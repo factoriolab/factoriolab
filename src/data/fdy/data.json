@@ -804,11 +804,6 @@
             "color": "#687c8b"
         },
         {
-            "id": "explosives-primitive",
-            "position": "-132px -528px",
-            "color": "#687c8b"
-        },
-        {
             "id": "explosives",
             "position": "-198px -528px",
             "color": "#687c8b"
@@ -891,16 +886,6 @@
         {
             "id": "steam",
             "position": "-0px -594px",
-            "color": "#687c8b"
-        },
-        {
-            "id": "liquid-firmalite",
-            "position": "-66px -594px",
-            "color": "#687c8b"
-        },
-        {
-            "id": "limestone-reprocessed",
-            "position": "-132px -594px",
             "color": "#687c8b"
         },
         {
@@ -1729,74 +1714,149 @@
             "color": "#687c8b"
         },
         {
+            "id": "mining-drill",
+            "position": "-264px -1188px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "mining-laser",
+            "position": "-330px -1188px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "excavation-drone-controller",
+            "position": "-396px -1188px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "ore-scanner",
+            "position": "-462px -1188px",
+            "color": "#687c8b"
+        },
+        {
             "id": "power-line",
-            "position": "-2046px -0px",
-            "color": "#617480"
+            "position": "-528px -1188px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "orbital-uplink",
+            "position": "-594px -1188px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "plumber-tool",
+            "position": "-660px -1188px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "modular-building-planner",
+            "position": "-726px -1188px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "paint-roller",
+            "position": "-792px -1188px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "irrigation-tool",
+            "position": "-858px -1188px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "explosives-detonator",
+            "position": "-924px -1188px",
+            "color": "#687c8b"
         },
         {
             "id": "explosive-charge",
-            "position": "-2112px -0px",
-            "color": "#60717b"
+            "position": "-990px -1188px",
+            "color": "#687c8b"
         },
         {
-            "id": "mining-drill",
-            "position": "-2244px -0px",
-            "color": "#717f87"
+            "id": "heavy-explosive-charge",
+            "position": "-1056px -1188px",
+            "color": "#687c8b"
         },
         {
-            "id": "research-server",
-            "position": "-4026px -0px",
-            "color": "#6a7684"
+            "id": "shaped-explosive-charge",
+            "position": "-1122px -1188px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "heavy-shaped-explosive-charge",
+            "position": "-1188px -1188px",
+            "color": "#687c8b"
         },
         {
             "id": "long-range-scanner-base",
-            "position": "-4686px -0px",
-            "color": "#687480"
+            "position": "-1254px -0px",
+            "color": "#687c8b"
         },
         {
             "id": "radio-tower-base",
-            "position": "-4752px -0px",
-            "color": "#6c7d8b"
+            "position": "-1254px -66px",
+            "color": "#687c8b"
         },
         {
             "id": "modular-storage-tank-base",
-            "position": "-4818px -0px",
-            "color": "#727b8c"
+            "position": "-1254px -132px",
+            "color": "#687c8b"
         },
         {
             "id": "fracking-tower-base",
-            "position": "-4884px -0px",
-            "color": "#687682"
+            "position": "-1254px -198px",
+            "color": "#687c8b"
         },
         {
             "id": "air-intake-base",
-            "position": "-4950px -0px",
-            "color": "#5d6a7c"
+            "position": "-1254px -264px",
+            "color": "#687c8b"
         },
         {
             "id": "hot-air-stove-base",
-            "position": "-5016px -0px",
-            "color": "#6c7b87"
+            "position": "-1254px -330px",
+            "color": "#687c8b"
         },
         {
             "id": "blast-furnace-base",
-            "position": "-5082px -0px",
-            "color": "#627583"
+            "position": "-1254px -396px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "heavy-caster-base",
+            "position": "-1254px -462px",
+            "color": "#687c8b"
         },
         {
             "id": "monument-base",
-            "position": "-5148px -0px",
-            "color": "#76818a"
+            "position": "-1254px -528px",
+            "color": "#687c8b"
         },
         {
-            "id": "xenoferrite-furnace",
-            "position": "-2970px -0px",
-            "color": "#6b6c75"
+            "id": "reactor-fuel-mixer-base",
+            "position": "-1254px -594px",
+            "color": "#687c8b"
         },
         {
-            "id": "technum-furnace",
-            "position": "-2970px -66px",
-            "color": "#597080"
+            "id": "xeno-reactor-base",
+            "position": "-1254px -660px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "steam-generator-base",
+            "position": "-1254px -726px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "high-pressure-turbine-base",
+            "position": "-1254px -792px",
+            "color": "#687c8b"
+        },
+        {
+            "id": "cooling-tower-base",
+            "position": "-1254px -858px",
+            "color": "#687c8b"
         }
     ],
     "items": [
@@ -1805,56 +1865,56 @@
             "name": "Building Block",
             "category": "structures",
             "row": 0,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "emergency-beacon",
             "name": "Emergency Beacon",
             "category": "structures",
             "row": 0,
-            "stack": 200
+            "stack": 20
         },
         {
             "id": "space-station-terminal",
             "name": "Space Station Terminal",
             "category": "structures",
             "row": 0,
-            "stack": 200
+            "stack": 20
         },
         {
             "id": "research-server",
             "name": "Research Server",
             "category": "structures",
             "row": 0,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "omni-analyzer",
             "name": "Omni-Analyzer",
             "category": "structures",
             "row": 0,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "robot-workstation-1",
             "name": "Robot Workstation I",
             "category": "structures",
             "row": 0,
-            "stack": 200
+            "stack": 20
         },
         {
             "id": "robot-workstation-2",
             "name": "Robot Workstation II",
             "category": "structures",
             "row": 0,
-            "stack": 200
+            "stack": 20
         },
         {
             "id": "robot-workstation-3",
             "name": "Robot Workstation III",
             "category": "structures",
             "row": 0,
-            "stack": 200
+            "stack": 20
         },
         {
             "id": "conveyor-1",
@@ -1864,7 +1924,7 @@
             "belt": {
                 "speed": 2.6666666666666665
             },
-            "stack": 200
+            "stack": 500
         },
         {
             "id": "conveyor-2",
@@ -1874,7 +1934,7 @@
             "belt": {
                 "speed": 5.333333333333333
             },
-            "stack": 200
+            "stack": 500
         },
         {
             "id": "conveyor-3",
@@ -1884,7 +1944,7 @@
             "belt": {
                 "speed": 10.666666666666666
             },
-            "stack": 200
+            "stack": 500
         },
         {
             "id": "conveyor-4",
@@ -1894,151 +1954,156 @@
             "belt": {
                 "speed": 21.333333333333332
             },
-            "stack": 200
+            "stack": 500
         },
         {
             "id": "conveyor-slope-1",
             "name": "Conveyor Slope I",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "conveyor-slope-2",
             "name": "Conveyor Slope II",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "conveyor-slope-3",
             "name": "Conveyor Slope III",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "conveyor-slope-4",
             "name": "Conveyor Slope IV",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "conveyor-balancer-1",
             "name": "Conveyor Balancer I",
             "category": "structures",
             "row": 1,
-            "stack": 10
+            "stack": 50
         },
         {
             "id": "conveyor-balancer-2",
             "name": "Conveyor Balancer II",
             "category": "structures",
             "row": 1,
-            "stack": 10
+            "stack": 50
         },
         {
             "id": "conveyor-balancer-3",
             "name": "Conveyor Balancer III",
             "category": "structures",
             "row": 1,
-            "stack": 10
+            "stack": 50
         },
         {
             "id": "conveyor-balancer-4",
             "name": "Conveyor Balancer IV",
             "category": "structures",
             "row": 1,
-            "stack": 10
+            "stack": 50
         },
         {
             "id": "freight-elevator-1",
             "name": "Freight Elevator I",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "freight-elevator-2",
             "name": "Freight Elevator II",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "freight-elevator-3",
             "name": "Freight Elevator III",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "freight-elevator-4",
             "name": "Freight Elevator IV",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "shipping-pad-small",
             "name": "Shipping Pad (Small)",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "shipping-pad-medium-assembly",
             "name": "Shipping Pad (Medium, Assembly Line)",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "shipping-pad-medium",
             "name": "Shipping Pad (Medium)",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "cargo-shuttle-start-pad",
             "name": "Cargo Shuttle Start Pad",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "cargo-shuttle-target-pad",
             "name": "Cargo Shuttle Target Pad",
             "category": "structures",
             "row": 1,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "pipe",
             "name": "Pipe",
             "category": "structures",
             "row": 2,
-            "stack": 200
+            "stack": 500,
+            "pipe": {
+                "speed": 617
+            }
         },
         {
             "id": "pipeline",
             "name": "Pipeline",
             "category": "structures",
             "row": 2,
-            "stack": 200
+            "stack": 250,
+            "pipe": {
+                "speed": 6170
+            }
         },
         {
             "id": "liquid-intake",
             "name": "Liquid Intake",
             "category": "structures",
             "row": 2,
-            "stack": 200,
+            "stack": 50,
             "machine": {
                 "speed": 1,
-                "type": "electric",
-                "usage": 0,
+                "entityType": "offshore-pump",
                 "size": [
                     1,
                     1
@@ -2050,11 +2115,10 @@
             "name": "Liquid Intake (Pipeline)",
             "category": "structures",
             "row": 2,
-            "stack": 200,
+            "stack": 50,
             "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 0,
+                "speed": 6,
+                "entityType": "offshore-pump",
                 "size": [
                     3,
                     3
@@ -2066,175 +2130,277 @@
             "name": "Pump",
             "category": "structures",
             "row": 2,
-            "stack": 200
+            "stack": 50,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 200,
+                "size": [
+                    2,
+                    1
+                ]
+            }
         },
         {
             "id": "pump-pipeline",
             "name": "Pump (Pipeline)",
             "category": "structures",
             "row": 2,
-            "stack": 200
+            "stack": 50,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 1000,
+                "size": [
+                    5,
+                    3
+                ]
+            }
         },
         {
             "id": "pipe-to-pipeline-pump",
             "name": "Pipe-to-Pipeline Pump",
             "category": "structures",
             "row": 2,
-            "stack": 200
+            "stack": 50,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 1000,
+                "size": [
+                    5,
+                    3
+                ]
+            }
         },
         {
             "id": "pipeline-to-pipe-pump",
             "name": "Pipeline-to-Pipe Pump",
             "category": "structures",
             "row": 2,
-            "stack": 200
+            "stack": 50,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 1000,
+                "size": [
+                    5,
+                    3
+                ]
+            }
         },
         {
             "id": "cargo-shuttle-start-pad-liquids",
             "name": "Cargo Shuttle Start Pad (Liquids)",
             "category": "structures",
             "row": 2,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "cargo-shuttle-target-pad-liquids",
             "name": "Cargo Shuttle Target Pad (Liquids)",
             "category": "structures",
             "row": 2,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "loader-1",
             "name": "Loader",
             "category": "structures",
             "row": 5,
-            "stack": 10
+            "stack": 100
         },
         {
             "id": "filter-loader",
             "name": "Filter Loader",
             "category": "structures",
             "row": 5,
-            "stack": 10
+            "stack": 100
         },
         {
             "id": "loader-2",
             "name": "Loader (2nd Lane)",
             "category": "structures",
             "row": 5,
-            "stack": 10
+            "stack": 100
         },
         {
             "id": "loader-3",
             "name": "Loader (3rd Lane)",
             "category": "structures",
             "row": 5,
-            "stack": 10
+            "stack": 100
         },
         {
             "id": "biomass-burner",
             "name": "Biomass Burner",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 50,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    1,
+                    1
+                ]
+            }
         },
         {
             "id": "burner-generator",
             "name": "Burner Generator",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 25,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    4,
+                    4
+                ]
+            }
         },
         {
             "id": "boiler",
             "name": "Boiler",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 25,
+            "machine": {
+                "speed": 1,
+                "type": "burner",
+                "fuelCategories": [
+                    "chemical"
+                ],
+                "usage": 3600,
+                "size": [
+                    5,
+                    3
+                ]
+            }
         },
         {
             "id": "geothermal-boiler",
             "name": "Geothermal Boiler",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 25,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    7,
+                    7
+                ]
+            }
         },
         {
             "id": "steam-turbine",
             "name": "Steam Turbine",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 25,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    12,
+                    5
+                ]
+            }
         },
         {
             "id": "solar-panel-small",
             "name": "Solar Panel (Small)",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 50,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    3,
+                    3
+                ]
+            }
         },
         {
             "id": "solar-panel-large",
             "name": "Solar Panel (Large)",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 25,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    5,
+                    5
+                ]
+            }
         },
         {
             "id": "battery-small",
             "name": "Battery (Small)",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "battery-large",
             "name": "Battery (Large)",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "power-pole-small",
             "name": "Power Pole (Small)",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "power-pole-large",
             "name": "Power Pole (Large)",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "power-pole-wall",
             "name": "Power Pole (Wall-Mounted)",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "transformer-small",
             "name": "Transformer (Small)",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "transformer-large",
             "name": "Transformer (Large)",
             "category": "structures",
             "row": 6,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "drone-miner-1",
             "name": "Drone Miner I",
             "category": "structures",
             "row": 7,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2250,9 +2416,9 @@
             "name": "Drone Miner II",
             "category": "structures",
             "row": 7,
-            "stack": 200,
+            "stack": 25,
             "machine": {
-                "speed": 2,
+                "speed": 1.5,
                 "type": "electric",
                 "usage": 400,
                 "size": [
@@ -2266,14 +2432,14 @@
             "name": "Pumpjack I",
             "category": "structures",
             "row": 7,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 1,
                 "type": "electric",
                 "usage": 200,
                 "size": [
-                    2,
-                    2
+                    3,
+                    3
                 ]
             }
         },
@@ -2282,32 +2448,59 @@
             "name": "Ore Vein Miner",
             "category": "structures",
             "row": 7,
-            "stack": 200
+            "stack": 10,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 500,
+                "size": [
+                    10,
+                    5
+                ]
+            }
         },
         {
             "id": "xeno-scrap-extractor",
             "name": "Xeno-Scrap Extractor",
             "category": "structures",
             "row": 7,
-            "stack": 200
+            "stack": 25,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 500,
+                "size": [
+                    7,
+                    7
+                ]
+            }
         },
         {
             "id": "xeno-crystal-extractor",
             "name": "Xeno-Crystal Extractor",
             "category": "structures",
             "row": 7,
-            "stack": 200
+            "stack": 25,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 500,
+                "size": [
+                    7,
+                    7
+                ]
+            }
         },
         {
             "id": "assembler-1",
             "name": "Assembler I",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 50,
             "machine": {
-                "speed": 2,
+                "speed": 1,
                 "type": "electric",
-                "usage": 250,
+                "usage": 50,
                 "size": [
                     3,
                     3
@@ -2319,11 +2512,11 @@
             "name": "Assembler II",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 50,
             "machine": {
-                "speed": 2,
+                "speed": 1.5,
                 "type": "electric",
-                "usage": 250,
+                "usage": 125,
                 "size": [
                     3,
                     3
@@ -2335,7 +2528,7 @@
             "name": "Assembler III",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 50,
             "machine": {
                 "speed": 2,
                 "type": "electric",
@@ -2351,7 +2544,7 @@
             "name": "Fluid Assembler I",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 50,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2367,7 +2560,7 @@
             "name": "Barrel Filler I",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 50,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2383,7 +2576,7 @@
             "name": "Smelter (Small)",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 50,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2399,7 +2592,7 @@
             "name": "Advanced Smelter",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 1.5,
                 "type": "electric",
@@ -2415,7 +2608,7 @@
             "name": "Electric Arc Furnace",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 10,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2431,7 +2624,7 @@
             "name": "Lava-Smelter I",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2447,7 +2640,7 @@
             "name": "Lava-Smelter II",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 2,
                 "type": "electric",
@@ -2463,7 +2656,7 @@
             "name": "Crusher I",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 50,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2479,7 +2672,7 @@
             "name": "Crusher II",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 50,
             "machine": {
                 "speed": 2,
                 "type": "electric",
@@ -2495,7 +2688,7 @@
             "name": "Distillation Column",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2511,7 +2704,7 @@
             "name": "Chemical Processor",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2527,7 +2720,7 @@
             "name": "Casting Machine",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2543,28 +2736,55 @@
             "name": "Crystal Refiner",
             "category": "structures",
             "row": 8,
-            "stack": 200
+            "stack": 25,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 500,
+                "size": [
+                    4,
+                    4
+                ]
+            }
         },
         {
             "id": "incinerator",
             "name": "Incinerator",
             "category": "structures",
             "row": 8,
-            "stack": 200
+            "stack": 50,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 1000,
+                "size": [
+                    4,
+                    3
+                ]
+            }
         },
         {
             "id": "flare-stack",
             "name": "Flare Stack",
             "category": "structures",
             "row": 8,
-            "stack": 200
+            "stack": 50,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 200,
+                "size": [
+                    3,
+                    3
+                ]
+            }
         },
         {
             "id": "greenhouse",
             "name": "Greenhouse",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 50,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2580,14 +2800,14 @@
             "name": "Resource Separator",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 20,
             "machine": {
                 "speed": 1,
                 "type": "electric",
-                "usage": 100,
+                "usage": 250,
                 "size": [
-                    5,
-                    7
+                    9,
+                    5
                 ]
             }
         },
@@ -2596,14 +2816,14 @@
             "name": "Scrap Recycler",
             "category": "structures",
             "row": 8,
-            "stack": 200,
+            "stack": 20,
             "machine": {
                 "speed": 1,
                 "type": "electric",
-                "usage": 100,
+                "usage": 250,
                 "size": [
-                    5,
-                    7
+                    9,
+                    5
                 ]
             }
         },
@@ -2612,55 +2832,28 @@
             "name": "Assembly Line Rail",
             "category": "structures",
             "row": 9,
-            "stack": 200,
-            "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 100,
-                "size": [
-                    5,
-                    7
-                ]
-            }
+            "stack": 200
         },
         {
             "id": "assembly-line-splitter",
             "name": "Assembly Line Splitter",
             "category": "structures",
             "row": 9,
-            "stack": 200,
-            "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 100,
-                "size": [
-                    5,
-                    7
-                ]
-            }
+            "stack": 25
         },
         {
             "id": "assembly-line-merger",
             "name": "Assembly Line Merger",
             "category": "structures",
             "row": 9,
-            "stack": 200,
-            "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 100,
-                "size": [
-                    5,
-                    7
-                ]
-            }
+            "stack": 25
         },
         {
             "id": "assembly-line-start",
             "name": "Assembly Line Start",
             "category": "structures",
             "row": 9,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 1,
                 "type": "electric",
@@ -2676,14 +2869,14 @@
             "name": "Assembly Line Producer",
             "category": "structures",
             "row": 9,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 1,
                 "type": "electric",
                 "usage": 100,
                 "size": [
-                    5,
-                    7
+                    7,
+                    15
                 ]
             }
         },
@@ -2692,14 +2885,14 @@
             "name": "Assembly Line Painter",
             "category": "structures",
             "row": 9,
-            "stack": 200,
+            "stack": 25,
             "machine": {
                 "speed": 1,
                 "type": "electric",
                 "usage": 100,
                 "size": [
-                    5,
-                    7
+                    7,
+                    15
                 ]
             }
         },
@@ -2708,107 +2901,98 @@
             "name": "Assembly Line Logistics Container",
             "category": "structures",
             "row": 9,
-            "stack": 200,
-            "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 100,
-                "size": [
-                    5,
-                    7
-                ]
-            }
+            "stack": 10
         },
         {
             "id": "crate",
             "name": "Crate",
             "category": "structures",
             "row": 10,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "container",
             "name": "Container",
             "category": "structures",
             "row": 10,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "logistic-container-1",
             "name": "Logistic Container I",
             "category": "structures",
             "row": 10,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "logistic-container-2",
             "name": "Logistic Container II",
             "category": "structures",
             "row": 10,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "logistic-container-3",
             "name": "Logistic Container III",
             "category": "structures",
             "row": 10,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "tank",
             "name": "Tank",
             "category": "structures",
             "row": 10,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "xeno-logistics-container",
             "name": "Xeno-Logistics Container",
             "category": "structures",
             "row": 10,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "xeno-logistics-tower",
             "name": "Xeno-Logistics Tower",
             "category": "structures",
             "row": 10,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "elevator",
             "name": "Elevator",
             "category": "structures",
             "row": 11,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "walkway",
             "name": "Walkway",
             "category": "structures",
             "row": 11,
-            "stack": 200
+            "stack": 500
         },
         {
             "id": "escalator-1",
             "name": "Escalator I",
             "category": "structures",
             "row": 11,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "escalator-2",
             "name": "Escalator II",
             "category": "structures",
             "row": 11,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "escalator-3",
             "name": "Escalator III",
             "category": "structures",
             "row": 11,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "ladder",
@@ -2829,35 +3013,35 @@
             "name": "Transport Ship Port",
             "category": "structures",
             "row": 12,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "construction-ship-port",
             "name": "Construction Ship Port",
             "category": "structures",
             "row": 12,
-            "stack": 200
+            "stack": 5
         },
         {
             "id": "construction-warehouse",
             "name": "Construction Warehouse",
             "category": "structures",
             "row": 12,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "quarry",
             "name": "Quarry",
             "category": "structures",
             "row": 12,
-            "stack": 200
+            "stack": 20
         },
         {
             "id": "drill-ship",
             "name": "Drill Ship",
             "category": "structures",
             "row": 12,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "train-tracks",
@@ -2871,42 +3055,42 @@
             "name": "Train Signal",
             "category": "structures",
             "row": 13,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "train-engine",
             "name": "Train Engine",
             "category": "structures",
             "row": 13,
-            "stack": 200
+            "stack": 20
         },
         {
             "id": "train-cargo-wagon",
             "name": "Train Cargo Wagon",
             "category": "structures",
             "row": 13,
-            "stack": 200
+            "stack": 20
         },
         {
             "id": "train-tanker-wagon",
             "name": "Train Tanker Wagon",
             "category": "structures",
             "row": 13,
-            "stack": 200
+            "stack": 20
         },
         {
             "id": "train-station",
             "name": "Train Station",
             "category": "structures",
             "row": 13,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "train-loading-station",
             "name": "Train Loading Station",
             "category": "structures",
             "row": 13,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "data-cable",
@@ -3004,21 +3188,21 @@
             "name": "Construction Material",
             "category": "components",
             "row": 0,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "high-tech-construction-material",
             "name": "High-Tech Construction Material",
             "category": "components",
             "row": 0,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "hover-engine",
             "name": "Hover Engine",
             "category": "components",
             "row": 0,
-            "stack": 200
+            "stack": 25
         },
         {
             "id": "nautical-chassis",
@@ -3032,7 +3216,7 @@
             "name": "Weapon Components",
             "category": "components",
             "row": 0,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "wire-coil",
@@ -3099,31 +3283,24 @@
         },
         {
             "id": "xeno-power-core-damaged",
-            "name": "Charged Xeno-Power Core (Damaged)",
+            "name": "Xeno-Power Core (Damaged)",
             "category": "components",
             "row": 1,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "xeno-power-core",
-            "name": "Charged Xeno-Power Core",
+            "name": "Xeno-Power Core",
             "category": "components",
             "row": 1,
-            "stack": 200
-        },
-        {
-            "id": "explosives-primitive",
-            "name": "Explosives (Primitive)",
-            "category": "components",
-            "row": 2,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "explosives",
             "name": "Explosives",
             "category": "components",
             "row": 2,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "glass",
@@ -3136,22 +3313,19 @@
             "id": "low-density-olumite",
             "name": "Low-Density Olumite",
             "category": "components",
-            "row": 2,
-            "stack": 200
+            "row": 2
         },
         {
             "id": "olumite-gas",
             "name": "Olumite Gas",
             "category": "components",
-            "row": 2,
-            "stack": 200
+            "row": 2
         },
         {
             "id": "liquid-polymer",
             "name": "Liquid Polymer",
             "category": "components",
-            "row": 2,
-            "stack": 200
+            "row": 2
         },
         {
             "id": "polymer-board",
@@ -3164,22 +3338,19 @@
             "id": "olumic-acid",
             "name": "Olumic Acid",
             "category": "components",
-            "row": 2,
-            "stack": 200
+            "row": 2
         },
         {
             "id": "impure-high-density-olumite",
             "name": "Impure High-Density Olumite",
             "category": "components",
-            "row": 2,
-            "stack": 200
+            "row": 2
         },
         {
             "id": "high-density-olumite",
             "name": "High-Density Olumite",
             "category": "components",
-            "row": 2,
-            "stack": 200
+            "row": 2
         },
         {
             "id": "rubber",
@@ -3192,77 +3363,61 @@
             "id": "ignium-enriched-water",
             "name": "Ignium-Enriched Water",
             "category": "components",
-            "row": 2,
-            "stack": 200
+            "row": 2
         },
         {
             "id": "paint",
             "name": "Paint",
             "category": "components",
-            "row": 2,
-            "stack": 200
+            "row": 2
         },
         {
             "id": "fracking-liquid",
             "name": "Fracking Liquid",
             "category": "components",
-            "row": 2,
-            "stack": 200
+            "row": 2
         },
         {
             "id": "olumite",
             "name": "Olumite",
             "category": "components",
-            "row": 3,
-            "stack": 200
+            "row": 3
         },
         {
             "id": "water",
             "name": "Water",
             "category": "components",
-            "row": 3,
-            "stack": 200
+            "row": 3
         },
         {
             "id": "waste-gas",
             "name": "Waste Gas",
             "category": "components",
-            "row": 3,
-            "stack": 200
+            "row": 3
         },
         {
             "id": "steam",
             "name": "Steam",
             "category": "components",
-            "row": 3,
-            "stack": 200
-        },
-        {
-            "id": "liquid-firmalite",
-            "name": "Liquid Firmalite",
-            "category": "components",
-            "row": 3,
-            "stack": 200
-        },
-        {
-            "id": "limestone-reprocessed",
-            "name": "Limestone (Reprocessed)",
-            "category": "components",
-            "row": 3,
-            "stack": 200
+            "row": 3
         },
         {
             "id": "air",
             "name": "Air",
             "category": "components",
-            "row": 3,
-            "stack": 200
+            "row": 3
         },
         {
             "id": "air-hot",
             "name": "Air (Hot)",
             "category": "components",
-            "row": 3,
+            "row": 3
+        },
+        {
+            "id": "mineral-rocks",
+            "name": "Mineral Rocks",
+            "category": "components",
+            "row": 4,
             "stack": 200
         },
         {
@@ -3291,21 +3446,21 @@
             "name": "Concrete",
             "category": "components",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "hazard-concrete",
             "name": "Hazard Concrete",
             "category": "components",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "ignium-powder",
             "name": "Ignium Powder",
             "category": "components",
             "row": 5,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "fuel-rod-casing",
@@ -3319,28 +3474,35 @@
             "name": "Ignium Fuel Rod",
             "category": "components",
             "row": 5,
-            "stack": 200
+            "stack": 200,
+            "fuel": {
+                "category": "chemical",
+                "value": 400
+            }
         },
         {
             "id": "liquid-fuel",
             "name": "Liquid Fuel",
             "category": "components",
-            "row": 5,
-            "stack": 200
+            "row": 5
         },
         {
             "id": "space-ship-fuel",
             "name": "Space Ship Fuel",
             "category": "components",
             "row": 5,
-            "stack": 200
+            "stack": 20
         },
         {
             "id": "portable-fuel",
             "name": "Portable Fuel",
             "category": "components",
             "row": 5,
-            "stack": 200
+            "stack": 200,
+            "fuel": {
+                "category": "chemical",
+                "value": 16
+            }
         },
         {
             "id": "jetpack-fuel",
@@ -3353,8 +3515,7 @@
             "id": "xeno-crystal-sludge",
             "name": "Xeno-Crystal Sludge",
             "category": "components",
-            "row": 5,
-            "stack": 200
+            "row": 5
         },
         {
             "id": "reactive-briquette",
@@ -3367,36 +3528,31 @@
             "id": "reactor-fuel-mix",
             "name": "Reactor Fuel Mix",
             "category": "components",
-            "row": 5,
-            "stack": 200
+            "row": 5
         },
         {
             "id": "reactor-compound-energized",
             "name": "Reactor Compound (Energized)",
             "category": "components",
-            "row": 5,
-            "stack": 200
+            "row": 5
         },
         {
             "id": "reactor-compund-depleted",
             "name": "Reactor Compound (Depleted)",
             "category": "components",
-            "row": 5,
-            "stack": 200
+            "row": 5
         },
         {
             "id": "steam-high-pressure",
             "name": "Steam (High Pressure)",
             "category": "components",
-            "row": 5,
-            "stack": 200
+            "row": 5
         },
         {
             "id": "steam-exhaust",
             "name": "Steam (Exhaust)",
             "category": "components",
-            "row": 5,
-            "stack": 200
+            "row": 5
         },
         {
             "id": "barrel-empty",
@@ -3417,504 +3573,508 @@
             "name": "Empty Barreled Olumite",
             "category": "components",
             "row": 6,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "xenoferrite-plates-barrel-recycle",
             "name": "Xenoferrite Plates (Barrel Recycle)",
             "category": "components",
             "row": 6,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "science-pack-1",
             "name": "Science Pack I",
             "category": "components",
             "row": 7,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "science-pack-2",
             "name": "Science Pack II",
             "category": "components",
             "row": 7,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "science-pack-3",
             "name": "Science Pack III",
             "category": "components",
             "row": 7,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "science-pack-4",
             "name": "Science Pack IV",
             "category": "components",
             "row": 7,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "science-pack-5",
             "name": "Science Pack V",
             "category": "components",
             "row": 7,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "biomass",
             "name": "Biomass",
             "category": "components",
             "row": 8,
-            "stack": 200
+            "stack": 100,
+            "fuel": {
+                "category": "chemical",
+                "value": 5
+            }
         },
         {
             "id": "coked-ignium",
             "name": "Coked Ignium",
             "category": "components",
             "row": 8,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "transport-bot",
             "name": "Transport Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "heavy-duty-transport-bot",
             "name": "Heavy-Duty Transport Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "transport-drone",
             "name": "Transport Drone",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "vacuum-bot",
             "name": "Vaccum Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "cleaning-bot",
             "name": "Cleaning Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "snack-bot",
             "name": "Snack Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "light-bot",
             "name": "Light Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "screen-bot",
             "name": "Screen Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "science-assistant-drone",
             "name": "Science Assistant Drone",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "operations-bot",
             "name": "Operations Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "planter-drone",
             "name": "Planter Drone",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "mining-drone",
             "name": "Mining Drone",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "maintenance-drone",
             "name": "Maintenance Drone",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "combat-drone",
             "name": "Combat Drone",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "aquatic-hauling-bot",
             "name": "Aquatic Hauling Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "marine-exploration-bot",
             "name": "Marine Exploration Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "hydro-mining-bot",
             "name": "Hydro-Mining Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "hydro-farming-bot",
             "name": "Hydro-Farming Bot",
             "category": "robots",
             "row": 0,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "personal-assistant-robot-torso",
             "name": "Personal Assistant Robot Torso",
             "category": "robots",
             "row": 1,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "personal-assistant-robot-head",
             "name": "Personal Assistant Robot Head",
             "category": "robots",
             "row": 1,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "personal-assistant-robot-arm",
             "name": "Personal Assistant Robot Arm",
             "category": "robots",
             "row": 1,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "personal-assistant-robot-leg",
             "name": "Personal Assistant Robot Leg",
             "category": "robots",
             "row": 1,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "personal-assistant-robot",
             "name": "Personal Assistant Robot",
             "category": "robots",
             "row": 1,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "operator-robot-torso",
             "name": "Operator Robot Torso",
             "category": "robots",
             "row": 2,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "operator-robot-head",
             "name": "Operator Robot Head",
             "category": "robots",
             "row": 2,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "operator-robot-arm",
             "name": "Operator Robot Arm",
             "category": "robots",
             "row": 2,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "operator-robot-leg",
             "name": "Operator Robot Leg",
             "category": "robots",
             "row": 2,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "operator-robot",
             "name": "Operator Robot",
             "category": "robots",
             "row": 2,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "farmer-robot-torso",
             "name": "Farmer Robot Torso",
             "category": "robots",
             "row": 3,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "farmer-robot-head",
             "name": "Farmer Robot Head",
             "category": "robots",
             "row": 3,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "farmer-robot-arm",
             "name": "Farmer Robot Arm",
             "category": "robots",
             "row": 3,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "farmer-robot-leg",
             "name": "Farmer Robot Leg",
             "category": "robots",
             "row": 3,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "farmer-robot",
             "name": "Farmer Robot",
             "category": "robots",
             "row": 3,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "hazard-robot-torso",
             "name": "Hazard Robot Torso",
             "category": "robots",
             "row": 4,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "hazard-robot-head",
             "name": "Hazard Robot Head",
             "category": "robots",
             "row": 4,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "hazard-robot-arm",
             "name": "Hazard Robot Arm",
             "category": "robots",
             "row": 4,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "hazard-robot-leg",
             "name": "Hazard Robot Leg",
             "category": "robots",
             "row": 4,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "hazard-robot",
             "name": "Hazard Robot",
             "category": "robots",
             "row": 4,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "combat-robot-torso",
             "name": "Combat Robot Torso",
             "category": "robots",
             "row": 5,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "combat-robot-head",
             "name": "Combat Robot Head",
             "category": "robots",
             "row": 5,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "combat-robot-arm",
             "name": "Combat Robot Arm",
             "category": "robots",
             "row": 5,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "combat-robot-leg",
             "name": "Combat Robot Leg",
             "category": "robots",
             "row": 5,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "combat-robot",
             "name": "Combat Robot",
             "category": "robots",
             "row": 5,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "assault-robot-torso",
             "name": "Assault Robot Torso",
             "category": "robots",
             "row": 6,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "assault-robot-head",
             "name": "Assault Robot Head",
             "category": "robots",
             "row": 6,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "assault-robot-arm",
             "name": "Assault Robot Arm",
             "category": "robots",
             "row": 6,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "assault-robot-leg",
             "name": "Assault Robot Leg",
             "category": "robots",
             "row": 6,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "assault-robot",
             "name": "Assault Robot",
             "category": "robots",
             "row": 6,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "mining-robot-torso",
             "name": "Mining Robot Torso",
             "category": "robots",
             "row": 7,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "mining-robot-head",
             "name": "Mining Robot Head",
             "category": "robots",
             "row": 7,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "mining-robot-arm",
             "name": "Mining Robot Arm",
             "category": "robots",
             "row": 7,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "mining-robot-leg",
             "name": "Mining Robot Leg",
             "category": "robots",
             "row": 7,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "mining-robot",
             "name": "Mining Robot",
             "category": "robots",
             "row": 7,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "science-robot-torso",
             "name": "Science Robot Torso",
             "category": "robots",
             "row": 8,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "science-robot-head",
             "name": "Science Robot Head",
             "category": "robots",
             "row": 8,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "science-robot-arm",
             "name": "Science Robot Arm",
             "category": "robots",
             "row": 8,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "science-robot-leg",
             "name": "Science Robot Leg",
             "category": "robots",
             "row": 8,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "science-robot",
             "name": "Science Robot",
             "category": "robots",
             "row": 8,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "scout-robot-torso",
             "name": "Scout Robot Torso",
             "category": "robots",
             "row": 9,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "scout-robot-head",
             "name": "Scout Robot Head",
             "category": "robots",
             "row": 9,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "scout-robot-arm",
             "name": "Scout Robot Arm",
             "category": "robots",
             "row": 9,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "scout-robot-leg",
             "name": "Scout Robot Leg",
             "category": "robots",
             "row": 9,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "scout-robot",
             "name": "Scout Robot",
             "category": "robots",
             "row": 9,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "xenoferrite-ore-rubble",
@@ -3941,29 +4101,20 @@
             "id": "molten-xenoferrite",
             "name": "Molten Xenoferrite",
             "category": "metallurgy",
-            "row": 0,
-            "stack": 200
+            "row": 0
         },
         {
             "id": "slag",
             "name": "Slag",
             "category": "metallurgy",
-            "row": 0,
-            "stack": 200
+            "row": 0
         },
         {
             "id": "slag-reprocessing",
             "name": "Slag (Reprocessing)",
             "category": "metallurgy",
             "row": 0,
-            "stack": 200
-        },
-        {
-            "id": "mineral-rocks",
-            "name": "Mineral Rocks",
-            "category": "metallurgy",
-            "row": 0,
-            "stack": 200
+            "stack": 1
         },
         {
             "id": "technum-ore-rubble",
@@ -3990,22 +4141,29 @@
             "id": "molten-technum",
             "name": "Molten Technum",
             "category": "metallurgy",
-            "row": 1,
-            "stack": 200
+            "row": 1
         },
         {
             "id": "ignium-ore-rubble",
             "name": "Ignium Ore Rubble",
             "category": "metallurgy",
             "row": 2,
-            "stack": 200
+            "stack": 200,
+            "fuel": {
+                "category": "chemical",
+                "value": 10
+            }
         },
         {
             "id": "ignium-ore",
             "name": "Ignium Ore",
             "category": "metallurgy",
             "row": 2,
-            "stack": 200
+            "stack": 200,
+            "fuel": {
+                "category": "chemical",
+                "value": 12.5
+            }
         },
         {
             "id": "xenoferrite-ignium-ore-blend",
@@ -4053,8 +4211,7 @@
             "id": "liquid-telluxite",
             "name": "Liquid Telluxite",
             "category": "metallurgy",
-            "row": 3,
-            "stack": 200
+            "row": 3
         },
         {
             "id": "firmarlite-bar",
@@ -4074,8 +4231,7 @@
             "id": "molten-superalloy",
             "name": "Molten Superalloy",
             "category": "metallurgy",
-            "row": 5,
-            "stack": 200
+            "row": 5
         },
         {
             "id": "superalloy",
@@ -4089,252 +4245,252 @@
             "name": "Sign",
             "category": "decor",
             "row": 0,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "railings",
             "name": "Railings",
             "category": "decor",
             "row": 0,
-            "stack": 200
+            "stack": 500
         },
         {
             "id": "construction-site-decor",
             "name": "Construction Site Decor",
             "category": "decor",
             "row": 0,
-            "stack": 200
+            "stack": 500
         },
         {
             "id": "ceiling-light",
             "name": "Ceiling Light",
             "category": "decor",
             "row": 1,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "ceiling-light-large",
             "name": "Ceiling Light (Large)",
             "category": "decor",
             "row": 1,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "wall-light",
             "name": "Wall Light",
             "category": "decor",
             "row": 1,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "portable-light",
             "name": "Portable Light",
             "category": "decor",
             "row": 1,
-            "stack": 200
+            "stack": 100
         },
         {
             "id": "light-pole-1",
             "name": "Light Pole I",
             "category": "decor",
             "row": 1,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "light-pole-2",
             "name": "Light Pole II",
             "category": "decor",
             "row": 1,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "door-single",
             "name": "Door (Single)",
             "category": "decor",
             "row": 2,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "door-double",
             "name": "Door (Double)",
             "category": "decor",
             "row": 2,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "hangar-gate",
             "name": "Hangar Gate",
             "category": "decor",
             "row": 2,
-            "stack": 200
+            "stack": 10
         },
         {
             "id": "decor-basic",
             "name": "Decor (Basic Shapes)",
             "category": "decor",
             "row": 3,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "wooden-blocks",
             "name": "Wooden Blocks",
             "category": "decor",
             "row": 3,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "decor-misc",
             "name": "Decor (Misc)",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "decor-struts",
             "name": "Decor (Struts)",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "decor-support-truss",
             "name": "Decor (Support Truss)",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "decor-support",
             "name": "Decor (Support)",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "decor-walls",
             "name": "Decor (Walls)",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "decor-modular-windows-slope-edge",
             "name": "Decor (Modular Windows Slope Edge)",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "decor-modular-windows-slope",
             "name": "Decor (Modular Windows Slope)",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "decor-modular-windows-wedge",
             "name": "Decor (Modular Windows Wedge)",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "decor-modular-windows",
             "name": "Decor (Modular Windows)",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "decor-windows",
             "name": "Decor (Windows)",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "neon-decor",
             "name": "Neon Decor",
             "category": "decor",
             "row": 4,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "neon-decor-slopes",
             "name": "Neon Decor (Slopes)",
             "category": "decor",
             "row": 5,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "neon-decor-slope-junctions",
             "name": "Neon Decor (Slope Junctions)",
             "category": "decor",
             "row": 5,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "neon-decor-large",
             "name": "Neon Decor (Large)",
             "category": "decor",
             "row": 5,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "neon-decor-large-slopes",
             "name": "Neon Decor (Large Slopes)",
             "category": "decor",
             "row": 5,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "neon-decor-large-slope-junctions",
             "name": "Neon Decor (Large Slope Junctions)",
             "category": "decor",
             "row": 5,
-            "stack": 200
+            "stack": 1000
         },
         {
             "id": "office-chair",
             "name": "Office Chair",
             "category": "decor",
             "row": 6,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "office-couch",
             "name": "Office Couch",
             "category": "decor",
             "row": 6,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "office-desk",
             "name": "Office Desk",
             "category": "decor",
             "row": 6,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "office-file-cabinet",
             "name": "Office File Cabinet",
             "category": "decor",
             "row": 6,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "office-plant",
             "name": "Office Plant",
             "category": "decor",
             "row": 6,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "office-table",
             "name": "Office Table",
             "category": "decor",
             "row": 6,
-            "stack": 200
+            "stack": 50
         },
         {
             "id": "forrest-seed-plants",
@@ -4407,46 +4563,142 @@
             "stack": 200
         },
         {
+            "id": "mining-drill",
+            "name": "Mining Drill",
+            "category": "handhelds",
+            "row": 0,
+            "stack": 1,
+            "machine": {}
+        },
+        {
+            "id": "mining-laser",
+            "name": "Mining Laser",
+            "category": "handhelds",
+            "row": 0,
+            "stack": 1
+        },
+        {
+            "id": "excavation-drone-controller",
+            "name": "Excavation Drone Controller",
+            "category": "handhelds",
+            "row": 0,
+            "stack": 1
+        },
+        {
+            "id": "ore-scanner",
+            "name": "Ore Scanner",
+            "category": "handhelds",
+            "row": 0,
+            "stack": 1
+        },
+        {
             "id": "power-line",
             "name": "Power Line",
             "category": "handhelds",
             "row": 0,
-            "stack": 50
+            "stack": 200
+        },
+        {
+            "id": "orbital-uplink",
+            "name": "Orbital Uplink",
+            "category": "handhelds",
+            "row": 0,
+            "stack": 1
+        },
+        {
+            "id": "plumber-tool",
+            "name": "Plumber Tool",
+            "category": "handhelds",
+            "row": 0,
+            "stack": 1
+        },
+        {
+            "id": "modular-building-planner",
+            "name": "Modular Building Planner",
+            "category": "handhelds",
+            "row": 0,
+            "stack": 1
+        },
+        {
+            "id": "paint-roller",
+            "name": "Paint Roller",
+            "category": "handhelds",
+            "row": 0,
+            "stack": 1
+        },
+        {
+            "id": "irrigation-tool",
+            "name": "Irrigation Tool",
+            "category": "handhelds",
+            "row": 0,
+            "stack": 1
+        },
+        {
+            "id": "explosives-detonator",
+            "name": "Explosives Detonator",
+            "category": "handhelds",
+            "row": 1,
+            "stack": 1
         },
         {
             "id": "explosive-charge",
             "name": "Explosive Charge",
             "category": "handhelds",
-            "row": 0,
+            "row": 1,
             "stack": 50
         },
         {
-            "id": "mining-drill",
-            "name": "Mining Drill",
+            "id": "heavy-explosive-charge",
+            "name": "Heavy Explosive Charge",
             "category": "handhelds",
-            "row": 0,
-            "stack": 10
+            "row": 1,
+            "stack": 50
         },
         {
-            "id": "research-server",
-            "name": "Research Server",
-            "category": "science",
-            "row": 0,
-            "stack": 10
+            "id": "shaped-explosive-charge",
+            "name": "Shaped Explosive Charge",
+            "category": "handhelds",
+            "row": 1,
+            "stack": 50
+        },
+        {
+            "id": "heavy-shaped-explosive-charge",
+            "name": "Shaped Explosive Charge (Heavy)",
+            "category": "handhelds",
+            "row": 1,
+            "stack": 50
         },
         {
             "id": "long-range-scanner-base",
             "name": "Long Range Scanner Base",
             "category": "buildings",
             "row": 0,
-            "stack": 1
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 500,
+                "size": [
+                    10,
+                    27
+                ]
+            }
         },
         {
             "id": "radio-tower-base",
             "name": "Radio Tower Base",
             "category": "buildings",
             "row": 0,
-            "stack": 1
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 10000,
+                "size": [
+                    11,
+                    11
+                ]
+            }
         },
         {
             "id": "modular-storage-tank-base",
@@ -4460,7 +4712,16 @@
             "name": "Fracking Tower Base",
             "category": "buildings",
             "row": 0,
-            "stack": 1
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 500,
+                "size": [
+                    21,
+                    21
+                ]
+            }
         },
         {
             "id": "air-intake-base",
@@ -4473,8 +4734,8 @@
                 "type": "electric",
                 "usage": 8400,
                 "size": [
-                    7,
-                    7
+                    5,
+                    5
                 ]
             }
         },
@@ -4487,7 +4748,7 @@
             "machine": {
                 "speed": 1,
                 "type": "electric",
-                "usage": 6000,
+                "usage": 5000,
                 "size": [
                     11,
                     17
@@ -4505,6 +4766,22 @@
                 "type": "electric",
                 "usage": 0,
                 "size": [
+                    26,
+                    26
+                ]
+            }
+        },
+        {
+            "id": "heavy-caster-base",
+            "name": "Heavy Caster Base",
+            "category": "buildings",
+            "row": 0,
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 2000,
+                "size": [
                     25,
                     25
                 ]
@@ -4518,14 +4795,342 @@
             "stack": 1
         },
         {
-            "id": "steel-beams",
-            "name": "Steel Beams",
-            "category": "metallurgy",
-            "row": 2,
-            "stack": 200
+            "id": "reactor-fuel-mixer-base",
+            "name": "Reactor Fuel Mixer Base",
+            "category": "buildings",
+            "row": 1,
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 2000,
+                "size": [
+                    11,
+                    11
+                ]
+            }
+        },
+        {
+            "id": "xeno-reactor-base",
+            "name": "Xeno Reactor Base",
+            "category": "buildings",
+            "row": 1,
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    31,
+                    31
+                ]
+            }
+        },
+        {
+            "id": "steam-generator-base",
+            "name": "Steam Generator Base",
+            "category": "buildings",
+            "row": 1,
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    17,
+                    17
+                ]
+            }
+        },
+        {
+            "id": "high-pressure-turbine-base",
+            "name": "High-Pressure Turbine Base",
+            "category": "buildings",
+            "row": 1,
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    17,
+                    31
+                ]
+            }
+        },
+        {
+            "id": "cooling-tower-base",
+            "name": "Cooling Tower Base",
+            "category": "buildings",
+            "row": 1,
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    31,
+                    31
+                ]
+            }
         }
     ],
     "recipes": [
+        {
+            "id": "xenoferrite-ore-rubble-mining",
+            "name": "Xenoferrite Ore Rubble (Mining)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {},
+            "out": {
+                "xenoferrite-ore-rubble": 60
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "drone-miner-1",
+                "drone-miner-2"
+            ]
+        },
+        {
+            "id": "xenoferrite-ore-rubble-fracking",
+            "name": "Xenoferrite Ore Rubble (Fracking)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {
+                "fracking-liquid": 100
+            },
+            "out": {
+                "xenoferrite-ore-rubble": 160
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "ore-vein-miner"
+            ]
+        },
+        {
+            "id": "technum-ore-rubble-mining",
+            "name": "Technum Ore Rubble (Mining)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {},
+            "out": {
+                "technum-ore-rubble": 60
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "drone-miner-1",
+                "drone-miner-2"
+            ]
+        },
+        {
+            "id": "technum-ore-rubble-fracking",
+            "name": "Technum Ore Rubble (Fracking)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {
+                "fracking-liquid": 100
+            },
+            "out": {
+                "technum-ore-rubble": 160
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "ore-vein-miner"
+            ]
+        },
+        {
+            "id": "ignium-ore-rubble-mining",
+            "name": "Ignium Ore Rubble (Mining)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {},
+            "out": {
+                "ignium-ore-rubble": 60
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "drone-miner-1",
+                "drone-miner-2"
+            ]
+        },
+        {
+            "id": "ignium-ore-rubble-fracking",
+            "name": "Ignium Ore Rubble (Fracking)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {
+                "fracking-liquid": 100
+            },
+            "out": {
+                "ignium-ore-rubble": 160
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "ore-vein-miner"
+            ]
+        },
+        {
+            "id": "mineral-rocks-mining",
+            "name": "Mineral Rocks (Mining)",
+            "category": "components",
+            "time": 60,
+            "in": {},
+            "out": {
+                "mineral-rocks": 60
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "drone-miner-1",
+                "drone-miner-2"
+            ]
+        },
+        {
+            "id": "mineral-rocks-fracking",
+            "name": "Mineral Rocks (Fracking)",
+            "category": "components",
+            "time": 60,
+            "in": {
+                "fracking-liquid": 100
+            },
+            "out": {
+                "mineral-rocks": 160
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "ore-vein-miner"
+            ]
+        },
+        {
+            "id": "telluxite-ore-rubble-fracking",
+            "name": "Telluxite Ore Rubble (Fracking)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {
+                "fracking-liquid": 100
+            },
+            "out": {
+                "telluxite-ore-rubble": 160
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "ore-vein-miner"
+            ]
+        },
+        {
+            "id": "water",
+            "name": "Water",
+            "category": "components",
+            "producers": [
+                "liquid-intake",
+                "liquid-intake-pipeline"
+            ],
+            "time": 60,
+            "out": {
+                "water": 30000
+            },
+            "in": {},
+            "flags": [
+                "mining"
+            ]
+        },
+        {
+            "id": "olumite",
+            "name": "Olumite",
+            "category": "components",
+            "producers": [
+                "pumpjack-1"
+            ],
+            "time": 60,
+            "out": {
+                "olumite": 1800
+            },
+            "in": {},
+            "flags": [
+                "mining"
+            ]
+        },
+        {
+            "id": "air",
+            "name": "Air",
+            "category": "components",
+            "producers": [
+                "air-intake-base"
+            ],
+            "time": 60,
+            "out": {
+                "air": 162000
+            },
+            "in": {},
+            "flags": [
+                "mining"
+            ]
+        },
+        {
+            "id": "xeno-scrap-mining",
+            "name": "Xeno-Scrap (Mining)",
+            "category": "components",
+            "time": 60,
+            "in": {},
+            "out": {
+                "xeno-scrap": 5
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "xeno-scrap-extractor"
+            ]
+        },
+        {
+            "id": "xeno-crystal-mining",
+            "name": "Xeno-Crystal (Mining)",
+            "category": "components",
+            "time": 60,
+            "in": {},
+            "out": {
+                "xeno-crystal": 10
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "xeno-crystal-extractor"
+            ]
+        },
+        {
+            "id": "xeno-power-core-damaged",
+            "name": "Xeno-Power Core (Damaged) - Manual Mining",
+            "category": "components",
+            "time": 60,
+            "in": {},
+            "out": {
+                "xeno-power-core-damaged": 1
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "mining-drill"
+            ]
+        },
         {
             "id": "building-block",
             "name": "Building Block",
@@ -4545,25 +5150,142 @@
             }
         },
         {
-            "id": "stairs",
-            "name": "Stairs",
+            "id": "emergency-beacon",
+            "name": "Emergency Beacon",
             "category": "structures",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 1.5,
+            "time": 3,
             "out": {
-                "stairs": 1
+                "emergency-beacon": 1
             },
             "in": {
-                "xenoferrite-plates": 2
+                "xenoferrite-plates": 2,
+                "electronic-components": 5
+            }
+        },
+        {
+            "id": "space-station-terminal",
+            "name": "Space Station Terminal",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "space-station-terminal": 1
+            },
+            "in": {
+                "xenoferrite-plates": 4,
+                "electronic-components": 2,
+                "emergency-beacon": 2
+            }
+        },
+        {
+            "id": "research-server",
+            "name": "Research Server",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 4,
+            "out": {
+                "research-server": 1
+            },
+            "in": {
+                "xenoferrite-plates": 20,
+                "electronic-components": 10,
+                "technum-rod": 20
+            }
+        },
+        {
+            "id": "omni-analyzer",
+            "name": "Omni-Analyzer",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "omni-analyzer": 1
+            },
+            "in": {
+                "xenoferrite-plates": 15,
+                "electronic-components": 10,
+                "machinery-parts": 10
+            }
+        },
+        {
+            "id": "robot-workstation-1",
+            "name": "Robot Workstation I",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "robot-workstation-1": 1
+            },
+            "in": {
+                "xenoferrite-plates": 10,
+                "electronic-components": 10,
+                "glass": 2
+            }
+        },
+        {
+            "id": "robot-workstation-2",
+            "name": "Robot Workstation II",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "robot-workstation-2": 1
+            },
+            "in": {
+                "xenoferrite-plates": 25,
+                "electronic-components": 20,
+                "glass": 4,
+                "circuit-board": 10
+            }
+        },
+        {
+            "id": "robot-workstation-3",
+            "name": "Robot Workstation III",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 8,
+            "out": {
+                "robot-workstation-3": 1
+            },
+            "in": {
+                "xenoferrite-plates": 50,
+                "circuit-board": 15,
+                "cpu": 3,
+                "glass": 6
             }
         },
         {
             "id": "conveyor-1",
-            "name": "Conveyor 1",
+            "name": "Conveyor I",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4581,7 +5303,7 @@
         },
         {
             "id": "conveyor-2",
-            "name": "Conveyor 2",
+            "name": "Conveyor II",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4600,7 +5322,7 @@
         },
         {
             "id": "conveyor-3",
-            "name": "Conveyor 3",
+            "name": "Conveyor III",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4619,7 +5341,7 @@
         },
         {
             "id": "conveyor-4",
-            "name": "Conveyor 4",
+            "name": "Conveyor IV",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4633,12 +5355,13 @@
             "in": {
                 "conveyor-3": 2,
                 "firmarlite-sheet": 2,
-                "hydraulic-piston": 1
+                "hydraulic-piston": 1,
+                "rubber": 2
             }
         },
         {
             "id": "conveyor-slope-1",
-            "name": "Conveyor Slope 1",
+            "name": "Conveyor Slope I",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4656,7 +5379,7 @@
         },
         {
             "id": "conveyor-slope-2",
-            "name": "Conveyor Slope 2",
+            "name": "Conveyor Slope II",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4675,7 +5398,7 @@
         },
         {
             "id": "conveyor-slope-3",
-            "name": "Conveyor Slope 3",
+            "name": "Conveyor Slope III",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4694,7 +5417,7 @@
         },
         {
             "id": "conveyor-slope-4",
-            "name": "Conveyor Slope 4",
+            "name": "Conveyor Slope IV",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4708,12 +5431,13 @@
             "in": {
                 "conveyor-slope-3": 1,
                 "firmarlite-sheet": 2,
-                "hydraulic-piston": 1
+                "hydraulic-piston": 1,
+                "rubber": 2
             }
         },
         {
             "id": "conveyor-balancer-1",
-            "name": "Conveyor Balancer 1",
+            "name": "Conveyor Balancer I",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4732,7 +5456,7 @@
         },
         {
             "id": "conveyor-balancer-2",
-            "name": "Conveyor Balancer 2",
+            "name": "Conveyor Balancer II",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4751,7 +5475,7 @@
         },
         {
             "id": "conveyor-balancer-3",
-            "name": "Conveyor Balancer 3",
+            "name": "Conveyor Balancer III",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4770,7 +5494,7 @@
         },
         {
             "id": "conveyor-balancer-4",
-            "name": "Conveyor Balancer 4",
+            "name": "Conveyor Balancer IV",
             "category": "structures",
             "producers": [
                 "assembler-1",
@@ -4784,7 +5508,183 @@
             "in": {
                 "conveyor-balancer-3": 1,
                 "firmarlite-sheet": 4,
-                "hydraulic-piston": 2
+                "hydraulic-piston": 2,
+                "rubber": 4
+            }
+        },
+        {
+            "id": "freight-elevator-1",
+            "name": "Freight Elevator I",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 7.5,
+            "out": {
+                "freight-elevator-1": 1
+            },
+            "in": {
+                "xenoferrite-plates": 15,
+                "steel-beams": 15,
+                "advanced-machinery-parts": 5
+            }
+        },
+        {
+            "id": "freight-elevator-2",
+            "name": "Freight Elevator II",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 7.5,
+            "out": {
+                "freight-elevator-2": 1
+            },
+            "in": {
+                "freight-elevator-1": 1,
+                "advanced-machinery-parts": 5,
+                "circuit-board": 5
+            }
+        },
+        {
+            "id": "freight-elevator-3",
+            "name": "Freight Elevator III",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 7.5,
+            "out": {
+                "freight-elevator-3": 1
+            },
+            "in": {
+                "freight-elevator-2": 1,
+                "hydraulic-piston": 15
+            }
+        },
+        {
+            "id": "freight-elevator-4",
+            "name": "Freight Elevator IV",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 7.5,
+            "out": {
+                "freight-elevator-4": 1
+            },
+            "in": {
+                "freight-elevator-3": 1,
+                "cpu": 2,
+                "rubber": 10
+            }
+        },
+        {
+            "id": "shipping-pad-small",
+            "name": "Shipping Pad (Small)",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "shipping-pad-small": 1
+            },
+            "in": {
+                "freight-elevator-3": 1,
+                "cpu": 2,
+                "rubber": 10
+            }
+        },
+        {
+            "id": "shipping-pad-medium-assembly",
+            "name": "Shipping Pad (Medium, Assembly Line)",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "shipping-pad-medium-assembly": 1
+            },
+            "in": {
+                "steel-beams": 100,
+                "concrete": 100,
+                "advanced-machinery-parts": 50,
+                "electronic-components": 50,
+                "emergency-beacon": 2
+            }
+        },
+        {
+            "id": "shipping-pad-medium",
+            "name": "Shipping Pad (Medium)",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "shipping-pad-medium": 1
+            },
+            "in": {
+                "steel-beams": 100,
+                "concrete": 100,
+                "advanced-machinery-parts": 50,
+                "electronic-components": 50,
+                "emergency-beacon": 2
+            }
+        },
+        {
+            "id": "cargo-shuttle-start-pad",
+            "name": "Cargo Shuttle Start Pad",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "cargo-shuttle-start-pad": 1
+            },
+            "in": {
+                "steel-beams": 200,
+                "advanced-machinery-parts": 100,
+                "circuit-board": 50,
+                "glass": 20
+            }
+        },
+        {
+            "id": "cargo-shuttle-target-pad",
+            "name": "Cargo Shuttle Target Pad",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 12,
+            "out": {
+                "cargo-shuttle-target-pad": 1
+            },
+            "in": {
+                "steel-beams": 100,
+                "advanced-machinery-parts": 10,
+                "circuit-board": 10
             }
         },
         {
@@ -4819,6 +5719,157 @@
             },
             "in": {
                 "steel-beams": 8
+            }
+        },
+        {
+            "id": "liquid-intake",
+            "name": "Pipeline",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "liquid-intake": 1
+            },
+            "in": {
+                "pipe": 1,
+                "machinery-parts": 5
+            }
+        },
+        {
+            "id": "liquid-intake-pipeline",
+            "name": "Liquid Intake (Pipeline)",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "liquid-intake-pipeline": 1
+            },
+            "in": {
+                "pipeline": 1,
+                "advanced-machinery-parts": 5
+            }
+        },
+        {
+            "id": "pump",
+            "name": "Pump",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "pump": 1
+            },
+            "in": {
+                "xenoferrite-plates": 6,
+                "machinery-parts": 5,
+                "electronic-components": 2
+            }
+        },
+        {
+            "id": "pump-pipeline",
+            "name": "Pump (Pipeline)",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "pump-pipeline": 1
+            },
+            "in": {
+                "xenoferrite-plates": 6,
+                "machinery-parts": 5,
+                "electronic-components": 2
+            }
+        },
+        {
+            "id": "pipe-to-pipeline-pump",
+            "name": "Pipe-to-Pipeline Pump",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "pipe-to-pipeline-pump": 1
+            },
+            "in": {
+                "xenoferrite-plates": 6,
+                "machinery-parts": 5,
+                "electronic-components": 2
+            }
+        },
+        {
+            "id": "pipeline-to-pipe-pump",
+            "name": "Pipeline-to-Pipe Pump",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "pipeline-to-pipe-pump": 1
+            },
+            "in": {
+                "xenoferrite-plates": 6,
+                "machinery-parts": 5,
+                "electronic-components": 2
+            }
+        },
+        {
+            "id": "cargo-shuttle-start-pad-liquids",
+            "name": "Cargo Shuttle Start Pad (Liquids)",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "cargo-shuttle-start-pad-liquids": 1
+            },
+            "in": {
+                "steel-beams": 200,
+                "advanced-machinery-parts": 100,
+                "circuit-board": 50,
+                "glass": 20
+            }
+        },
+        {
+            "id": "cargo-shuttle-target-pad-liquids",
+            "name": "Cargo Shuttle Target Pad (Liquids)",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 12,
+            "out": {
+                "cargo-shuttle-target-pad-liquids": 1
+            },
+            "in": {
+                "steel-beams": 100,
+                "advanced-machinery-parts": 10,
+                "circuit-board": 10
             }
         },
         {
@@ -4952,6 +6003,26 @@
                 "pipe": 5,
                 "machinery-parts": 10,
                 "steel-beams": 10
+            }
+        },
+        {
+            "id": "geothermal-boiler",
+            "name": "Geothermal Boiler",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "geothermal-boiler": 1
+            },
+            "in": {
+                "firmarlite-sheet": 50,
+                "steel-beams": 25,
+                "advanced-machinery-parts": 25,
+                "circuit-board": 5
             }
         },
         {
@@ -5225,6 +6296,44 @@
             }
         },
         {
+            "id": "xeno-scrap-extractor",
+            "name": "Xeno-Scrap Extractor",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "xeno-scrap-extractor": 1
+            },
+            "in": {
+                "steel-beams": 25,
+                "advanced-machinery-parts": 25,
+                "circuit-board": 5
+            }
+        },
+        {
+            "id": "xeno-crystal-extractor",
+            "name": "Xeno-Crystal Extractor",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "xeno-crystal-extractor": 1
+            },
+            "in": {
+                "steel-beams": 25,
+                "advanced-machinery-parts": 25,
+                "circuit-board": 5
+            }
+        },
+        {
             "id": "assembler-1",
             "name": "Assembler I",
             "category": "structures",
@@ -5321,6 +6430,25 @@
             }
         },
         {
+            "id": "smelter",
+            "name": "Smelter (Small)",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "smelter": 1
+            },
+            "in": {
+                "xenoferrite-plates": 10,
+                "machinery-parts": 4,
+                "electronic-components": 4
+            }
+        },
+        {
             "id": "advanced-smelter",
             "name": "Advanced Smelter",
             "category": "structures",
@@ -5357,25 +6485,6 @@
                 "advanced-machinery-parts": 25,
                 "electronic-components": 50,
                 "circuit-board": 5
-            }
-        },
-        {
-            "id": "smelter",
-            "name": "Smelter (Small)",
-            "category": "structures",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 10,
-            "out": {
-                "smelter": 1
-            },
-            "in": {
-                "xenoferrite-plates": 10,
-                "machinery-parts": 4,
-                "electronic-components": 4
             }
         },
         {
@@ -5457,26 +6566,6 @@
             }
         },
         {
-            "id": "chemical-processor",
-            "name": "Chemical Processor",
-            "category": "structures",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 8,
-            "out": {
-                "chemical-processor": 1
-            },
-            "in": {
-                "steel-beams": 20,
-                "polymer-board": 10,
-                "advanced-machinery-parts": 5,
-                "circuit-board": 5
-            }
-        },
-        {
             "id": "distillation-column",
             "name": "Distillation Column",
             "category": "structures",
@@ -5497,6 +6586,26 @@
             }
         },
         {
+            "id": "chemical-processor",
+            "name": "Chemical Processor",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 8,
+            "out": {
+                "chemical-processor": 1
+            },
+            "in": {
+                "steel-beams": 20,
+                "polymer-board": 10,
+                "advanced-machinery-parts": 5,
+                "circuit-board": 5
+            }
+        },
+        {
             "id": "casting-machine",
             "name": "Casting Machine",
             "category": "structures",
@@ -5513,6 +6622,25 @@
                 "steel-beams": 15,
                 "advanced-machinery-parts": 20,
                 "electronic-components": 5
+            }
+        },
+        {
+            "id": "crystal-refiner",
+            "name": "Crystal Refiner",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 8,
+            "out": {
+                "crystal-refiner": 1
+            },
+            "in": {
+                "xenoferrite-plates": 50,
+                "advanced-machinery-parts": 20,
+                "circuit-board": 10
             }
         },
         {
@@ -5575,177 +6703,41 @@
             }
         },
         {
-            "id": "crate",
-            "name": "Crate",
+            "id": "resource-separator",
+            "name": "Resource Separator",
             "category": "structures",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 2,
+            "time": 8,
             "out": {
-                "crate": 1
+                "resource-separator": 1
             },
             "in": {
-                "xenoferrite-plates": 6
-            }
-        },
-        {
-            "id": "container",
-            "name": "Container",
-            "category": "structures",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 5,
-            "out": {
-                "container": 1
-            },
-            "in": {
-                "xenoferrite-plates": 30
-            }
-        },
-        {
-            "id": "logistic-container-1",
-            "name": "Logistic Container I",
-            "category": "structures",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 5,
-            "out": {
-                "logistic-container-1": 1
-            },
-            "in": {
-                "xenoferrite-plates": 15,
-                "machinery-parts": 4,
-                "electronic-components": 1
-            }
-        },
-        {
-            "id": "logistic-container-2",
-            "name": "Logistic Container II",
-            "category": "structures",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 7.5,
-            "out": {
-                "logistic-container-2": 1
-            },
-            "in": {
-                "xenoferrite-plates": 15,
-                "steel-beams": 10,
-                "advanced-machinery-parts": 4,
-                "electronic-components": 1
-            }
-        },
-        {
-            "id": "logistic-container-3",
-            "name": "Logistic Container III",
-            "category": "structures",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 10,
-            "out": {
-                "logistic-container-3": 1
-            },
-            "in": {
-                "steel-beams": 25,
-                "advanced-machinery-parts": 4,
-                "circuit-board": 1
-            }
-        },
-        {
-            "id": "tank",
-            "name": "Tank",
-            "category": "structures",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 5,
-            "out": {
-                "tank": 1
-            },
-            "in": {
-                "xenoferrite-plates": 10,
                 "steel-beams": 20,
-                "advanced-machinery-parts": 5
+                "advanced-machinery-parts": 10,
+                "electronic-components": 5
             }
         },
         {
-            "id": "transport-ship-port",
-            "name": "Transport Ship Port",
+            "id": "scrap-recycler",
+            "name": "Scrap Recycler",
             "category": "structures",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 12,
+            "time": 8,
             "out": {
-                "transport-ship-port": 1
+                "scrap-recycler": 1
             },
             "in": {
-                "steel-beams": 400,
-                "advanced-machinery-parts": 200,
-                "circuit-board": 100,
-                "energy-cell": 40,
-                "polymer-board": 200
-            }
-        },
-        {
-            "id": "construction-ship-port",
-            "name": "Construction Ship Port",
-            "category": "structures",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 10,
-            "out": {
-                "construction-ship-port": 1
-            },
-            "in": {
-                "steel-beams": 100,
-                "advanced-machinery-parts": 100,
-                "circuit-board": 25,
-                "energy-cell": 10,
-                "polymer-board": 50,
-                "maintenance-drone": 8
-            }
-        },
-        {
-            "id": "construction-warehouse",
-            "name": "Construction Warehouse",
-            "category": "structures",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 10,
-            "out": {
-                "construction-warehouse": 1
-            },
-            "in": {
-                "steel-beams": 200,
-                "advanced-machinery-parts": 50,
-                "circuit-board": 50,
-                "polymer-board": 100
+                "steel-beams": 20,
+                "advanced-machinery-parts": 10,
+                "electronic-components": 5
             }
         },
         {
@@ -5862,6 +6854,532 @@
                 "advanced-machinery-parts": 10,
                 "circuit-board": 10,
                 "hydraulic-piston": 10
+            }
+        },
+        {
+            "id": "assembly-line-logistics-container",
+            "name": "Assembly Line Logistics Container",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 8,
+            "out": {
+                "assembly-line-logistics-container": 1
+            },
+            "in": {
+                "steel-beams": 30,
+                "advanced-machinery-parts": 10,
+                "circuit-board": 10,
+                "polymer-board": 10
+            }
+        },
+        {
+            "id": "crate",
+            "name": "Crate",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "crate": 1
+            },
+            "in": {
+                "xenoferrite-plates": 6
+            }
+        },
+        {
+            "id": "container",
+            "name": "Container",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "container": 1
+            },
+            "in": {
+                "xenoferrite-plates": 30
+            }
+        },
+        {
+            "id": "logistic-container-1",
+            "name": "Logistic Container I",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "logistic-container-1": 1
+            },
+            "in": {
+                "xenoferrite-plates": 15,
+                "machinery-parts": 4,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "logistic-container-2",
+            "name": "Logistic Container II",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 7.5,
+            "out": {
+                "logistic-container-2": 1
+            },
+            "in": {
+                "xenoferrite-plates": 15,
+                "steel-beams": 10,
+                "advanced-machinery-parts": 4,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "logistic-container-3",
+            "name": "Logistic Container III",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "logistic-container-3": 1
+            },
+            "in": {
+                "steel-beams": 25,
+                "advanced-machinery-parts": 4,
+                "circuit-board": 1
+            }
+        },
+        {
+            "id": "tank",
+            "name": "Tank",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "tank": 1
+            },
+            "in": {
+                "xenoferrite-plates": 10,
+                "steel-beams": 20,
+                "advanced-machinery-parts": 5
+            }
+        },
+        {
+            "id": "xeno-logistics-container",
+            "name": "Xeno-Logistics Container",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 6,
+            "out": {
+                "xeno-logistics-container": 1
+            },
+            "in": {
+                "machinery-parts": 10,
+                "electronic-components": 10,
+                "xeno-scrap": 5,
+                "xeno-crystal": 1
+            }
+        },
+        {
+            "id": "xeno-logistics-tower",
+            "name": "Xeno-Logistics Tower",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 6,
+            "out": {
+                "xeno-logistics-tower": 1
+            },
+            "in": {
+                "machinery-parts": 10,
+                "electronic-components": 10,
+                "xeno-scrap": 5,
+                "xeno-crystal": 2
+            }
+        },
+        {
+            "id": "elevator",
+            "name": "Elevator",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "elevator": 1
+            },
+            "in": {
+                "xenoferrite-plates": 50,
+                "steel-beams": 50,
+                "advanced-machinery-parts": 20,
+                "electronic-components": 15
+            }
+        },
+        {
+            "id": "walkway",
+            "name": "Walkway",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1.5,
+            "out": {
+                "walkway": 1
+            },
+            "in": {
+                "xenoferrite-plates": 3
+            }
+        },
+        {
+            "id": "escalator-1",
+            "name": "Escalator I",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1.5,
+            "out": {
+                "escalator-1": 1
+            },
+            "in": {
+                "xenoferrite-plates": 3
+            }
+        },
+        {
+            "id": "escalator-2",
+            "name": "Escalator II",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1.5,
+            "out": {
+                "escalator-2": 1
+            },
+            "in": {
+                "escalator-1": 1,
+                "machinery-parts": 1
+            }
+        },
+        {
+            "id": "escalator-3",
+            "name": "Escalator III",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1.5,
+            "out": {
+                "escalator-3": 1
+            },
+            "in": {
+                "escalator-2": 1,
+                "advanced-machinery-parts": 1
+            }
+        },
+        {
+            "id": "ladder",
+            "name": "Ladder",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1.5,
+            "out": {
+                "ladder": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2
+            }
+        },
+        {
+            "id": "stairs",
+            "name": "Stairs",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1.5,
+            "out": {
+                "stairs": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2
+            }
+        },
+        {
+            "id": "transport-ship-port",
+            "name": "Transport Ship Port",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 12,
+            "out": {
+                "transport-ship-port": 1
+            },
+            "in": {
+                "steel-beams": 400,
+                "advanced-machinery-parts": 200,
+                "circuit-board": 100,
+                "energy-cell": 40,
+                "polymer-board": 200
+            }
+        },
+        {
+            "id": "construction-ship-port",
+            "name": "Construction Ship Port",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "construction-ship-port": 1
+            },
+            "in": {
+                "steel-beams": 100,
+                "advanced-machinery-parts": 100,
+                "circuit-board": 25,
+                "energy-cell": 10,
+                "polymer-board": 50,
+                "maintenance-drone": 8
+            }
+        },
+        {
+            "id": "construction-warehouse",
+            "name": "Construction Warehouse",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "construction-warehouse": 1
+            },
+            "in": {
+                "steel-beams": 200,
+                "advanced-machinery-parts": 50,
+                "circuit-board": 50,
+                "polymer-board": 100
+            }
+        },
+        {
+            "id": "quarry",
+            "name": "Quarry",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "quarry": 1
+            },
+            "in": {
+                "steel-beams": 30,
+                "machinery-parts": 20,
+                "advanced-machinery-parts": 20,
+                "electronic-components": 10
+            }
+        },
+        {
+            "id": "drill-ship",
+            "name": "Drill Ship",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "drill-ship": 1
+            },
+            "in": {
+                "steel-beams": 200,
+                "advanced-machinery-parts": 100,
+                "circuit-board": 100,
+                "hover-engine": 20
+            }
+        },
+        {
+            "id": "train-tracks",
+            "name": "Train Tracks",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1.5,
+            "out": {
+                "train-tracks": 1
+            },
+            "in": {
+                "steel-beams": 1
+            }
+        },
+        {
+            "id": "train-signal",
+            "name": "Train Signal",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "train-signal": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "train-engine",
+            "name": "Train Engine",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "train-engine": 1
+            },
+            "in": {
+                "steel-beams": 15,
+                "advanced-machinery-parts": 25,
+                "electronic-components": 25
+            }
+        },
+        {
+            "id": "train-cargo-wagon",
+            "name": "Train Cargo Wagon",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "train-cargo-wagon": 1
+            },
+            "in": {
+                "steel-beams": 15,
+                "advanced-machinery-parts": 5
+            }
+        },
+        {
+            "id": "train-tanker-wagon",
+            "name": "Train Tanker Wagon",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "train-tanker-wagon": 1
+            },
+            "in": {
+                "steel-beams": 15,
+                "advanced-machinery-parts": 5
+            }
+        },
+        {
+            "id": "train-station",
+            "name": "Train Station",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "train-station": 1
+            },
+            "in": {
+                "xenoferrite-plates": 30,
+                "advanced-machinery-parts": 5,
+                "electronic-components": 10
+            }
+        },
+        {
+            "id": "train-loading-station",
+            "name": "Train Loading Station",
+            "category": "structures",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "train-loading-station": 1
+            },
+            "in": {
+                "xenoferrite-plates": 30,
+                "advanced-machinery-parts": 15,
+                "electronic-components": 10
             }
         },
         {
@@ -6022,13 +7540,30 @@
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 4.5,
+            "time": 4,
             "out": {
                 "advanced-machinery-parts": 2
             },
             "in": {
                 "machinery-parts": 2,
                 "steel-beams": 1
+            }
+        },
+        {
+            "id": "high-tech-machinery-parts",
+            "name": "High-Tech Machinery Parts",
+            "category": "components",
+            "producers": [
+                "fluid-assembler-1"
+            ],
+            "time": 6,
+            "out": {
+                "high-tech-machinery-parts": 2
+            },
+            "in": {
+                "superalloy": 1,
+                "rubber": 2,
+                "low-density-olumite": 5
             }
         },
         {
@@ -6065,6 +7600,124 @@
                 "advanced-machinery-parts": 1,
                 "electronic-components": 4,
                 "polymer-board": 2
+            }
+        },
+        {
+            "id": "high-tech-robot-parts",
+            "name": "High-Tech Robot Parts",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "high-tech-robot-parts": 2
+            },
+            "in": {
+                "robot-parts": 2,
+                "high-tech-machinery-parts": 1,
+                "rubber": 1
+            }
+        },
+        {
+            "id": "construction-material",
+            "name": "Construction Material",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 90,
+            "out": {
+                "construction-material": 150
+            },
+            "in": {
+                "firmarlite-sheet": 90,
+                "steel-beams": 15,
+                "advanced-machinery-parts": 15,
+                "concrete": 30,
+                "electronic-components": 15
+            }
+        },
+        {
+            "id": "high-tech-construction-material",
+            "name": "High-Tech Construction Material",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 90,
+            "out": {
+                "high-tech-construction-material": 100
+            },
+            "in": {
+                "superalloy": 50,
+                "high-tech-machinery-parts": 20,
+                "rubber": 20,
+                "circuit-board": 10
+            }
+        },
+        {
+            "id": "hover-engine",
+            "name": "Hover Engine",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 6,
+            "out": {
+                "hover-engine": 1
+            },
+            "in": {
+                "technum-rod": 1,
+                "advanced-machinery-parts": 1,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "nautical-chassis",
+            "name": "Nautical Chassis",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1.5,
+            "out": {
+                "nautical-chassis": 1
+            },
+            "in": {
+                "superalloy": 1,
+                "rubber": 1,
+                "glass": 1,
+                "high-tech-machinery-parts": 1
+            }
+        },
+        {
+            "id": "weapon-components",
+            "name": "Weapon Components",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 6,
+            "out": {
+                "weapon-components": 1
+            },
+            "in": {
+                "firmarlite-sheet": 1,
+                "machinery-parts": 1,
+                "explosives": 1
             }
         },
         {
@@ -6121,6 +7774,21 @@
             }
         },
         {
+            "id": "telluxite-wafer",
+            "name": "Telluxite Wafer",
+            "category": "components",
+            "producers": [
+                "casting-machine"
+            ],
+            "time": 24,
+            "out": {
+                "telluxite-wafer": 1
+            },
+            "in": {
+                "liquid-telluxite": 400
+            }
+        },
+        {
             "id": "cpu",
             "name": "CPU",
             "category": "components",
@@ -6156,6 +7824,92 @@
             }
         },
         {
+            "id": "charged-xeno-crystal",
+            "name": "Charged Xeno-Crystal",
+            "category": "components",
+            "producers": [
+                "crystal-refiner"
+            ],
+            "time": 30,
+            "out": {
+                "charged-xeno-crystal": 10
+            },
+            "in": {
+                "xeno-crystal": 10,
+                "energy-cell": 1,
+                "ignium-enriched-water": 2000
+            }
+        },
+        {
+            "id": "xeno-power-core",
+            "name": "Xeno-Power Core",
+            "category": "components",
+            "producers": [
+                "crystal-refiner"
+            ],
+            "time": 1.5,
+            "out": {
+                "xeno-power-core": 1
+            },
+            "in": {
+                "superalloy": 1,
+                "xeno-scrap": 1,
+                "charged-xeno-crystal": 1,
+                "rubber": 1
+            }
+        },
+        {
+            "id": "explosives-primitive",
+            "name": "Explosives (Primitive)",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "explosives": 1
+            },
+            "in": {
+                "ignium-ore-rubble": 2,
+                "technum-ore-rubble": 2,
+                "biomass": 1
+            }
+        },
+        {
+            "id": "explosives",
+            "name": "Explosives",
+            "category": "components",
+            "producers": [
+                "fluid-assembler-1"
+            ],
+            "time": 8,
+            "out": {
+                "explosives": 1
+            },
+            "in": {
+                "ignium-powder": 4,
+                "low-density-olumite": 50
+            }
+        },
+        {
+            "id": "glass",
+            "name": "Glass",
+            "category": "components",
+            "producers": [
+                "smelter",
+                "advanced-smelter"
+            ],
+            "time": 5,
+            "out": {
+                "glass": 1
+            },
+            "in": {
+                "gravel": 5
+            }
+        },
+        {
             "id": "low-density-olumite",
             "name": "Low Density Olumite",
             "category": "components",
@@ -6166,22 +7920,6 @@
             "out": {
                 "low-density-olumite": 100,
                 "waste-gas": 25
-            },
-            "in": {
-                "olumite": 100
-            }
-        },
-        {
-            "id": "liquid-polymer",
-            "name": "Olumite Refining: Liquid Polymer",
-            "category": "components",
-            "producers": [
-                "distillation-column"
-            ],
-            "time": 4,
-            "out": {
-                "liquid-polymer": 75,
-                "waste-gas": 50
             },
             "in": {
                 "olumite": 100
@@ -6204,18 +7942,34 @@
             }
         },
         {
-            "id": "liquid-fuel",
-            "name": "Liquid Fuel",
+            "id": "liquid-polymer",
+            "name": "Olumite Refining: Liquid Polymer",
             "category": "components",
             "producers": [
-                "chemical-processor"
+                "distillation-column"
             ],
-            "time": 8,
+            "time": 4,
             "out": {
-                "liquid-fuel": 150
+                "liquid-polymer": 75,
+                "waste-gas": 50
             },
             "in": {
-                "low-density-olumite": 50
+                "olumite": 100
+            }
+        },
+        {
+            "id": "polymer-board",
+            "name": "Polymer Board",
+            "category": "components",
+            "producers": [
+                "casting-machine"
+            ],
+            "time": 2,
+            "out": {
+                "polymer-board": 1
+            },
+            "in": {
+                "liquid-polymer": 5
             }
         },
         {
@@ -6233,6 +7987,71 @@
                 "ignium-powder": 16,
                 "olumite-gas": 75,
                 "water": 25
+            }
+        },
+        {
+            "id": "impure-high-density-olumite",
+            "name": "Impure High-Density Olumite",
+            "category": "components",
+            "producers": [
+                "distillation-column"
+            ],
+            "time": 6,
+            "out": {
+                "impure-high-density-olumite": 50,
+                "waste-gas": 50
+            },
+            "in": {
+                "olumite": 100,
+                "steam": 60
+            }
+        },
+        {
+            "id": "high-density-olumite",
+            "name": "High-Density Olumite",
+            "category": "components",
+            "producers": [
+                "distillation-column"
+            ],
+            "time": 6,
+            "out": {
+                "high-density-olumite": 40,
+                "waste-gas": 10
+            },
+            "in": {
+                "impure-high-density-olumite": 50
+            }
+        },
+        {
+            "id": "rubber",
+            "name": "Rubber",
+            "category": "components",
+            "producers": [
+                "casting-machine"
+            ],
+            "time": 2,
+            "out": {
+                "rubber": 1
+            },
+            "in": {
+                "liquid-polymer": 5,
+                "high-density-olumite": 10
+            }
+        },
+        {
+            "id": "ignium-enriched-water",
+            "name": "Ignium-Enriched Water",
+            "category": "components",
+            "producers": [
+                "chemical-processor"
+            ],
+            "time": 2.5,
+            "out": {
+                "ignium-enriched-water": 270
+            },
+            "in": {
+                "ignium-powder": 2,
+                "water": 270
             }
         },
         {
@@ -6267,6 +8086,51 @@
                 "air": 30,
                 "olumite-gas": 10,
                 "water": 60
+            }
+        },
+        {
+            "id": "steam",
+            "name": "Steam",
+            "category": "components",
+            "producers": [
+                "boiler"
+            ],
+            "time": 60,
+            "out": {
+                "steam": 3600
+            },
+            "in": {
+                "water": 1200
+            }
+        },
+        {
+            "id": "air-hot",
+            "name": "Air (Hot)",
+            "category": "components",
+            "producers": [
+                "hot-air-stove-base"
+            ],
+            "time": 60,
+            "out": {
+                "air-hot": 108000
+            },
+            "in": {
+                "air": 108000
+            }
+        },
+        {
+            "id": "liquid-fuel",
+            "name": "Liquid Fuel",
+            "category": "components",
+            "producers": [
+                "chemical-processor"
+            ],
+            "time": 8,
+            "out": {
+                "liquid-fuel": 150
+            },
+            "in": {
+                "low-density-olumite": 50
             }
         },
         {
@@ -6387,25 +8251,6 @@
             }
         },
         {
-            "id": "explosives-primitive",
-            "name": "Explosives (Primitive)",
-            "category": "components",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 5,
-            "out": {
-                "explosives": 1
-            },
-            "in": {
-                "ignium-ore-rubble": 2,
-                "technum-ore-rubble": 2,
-                "biomass": 1
-            }
-        },
-        {
             "id": "biomass",
             "name": "Biomass",
             "category": "components",
@@ -6420,41 +8265,6 @@
                 "biomass": 1,
                 "mineral-rocks": 1,
                 "water": 250
-            }
-        },
-        {
-            "id": "explosives",
-            "name": "Explosives",
-            "category": "components",
-            "producers": [
-                "fluid-assembler-1"
-            ],
-            "time": 5,
-            "out": {
-                "explosives": 1
-            },
-            "in": {
-                "ignium-powder": 4,
-                "low-density-olumite": 50
-            }
-        },
-        {
-            "id": "hover-engine",
-            "name": "Hover Engine",
-            "category": "components",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 6,
-            "out": {
-                "hover-engine": 1
-            },
-            "in": {
-                "technum-rod": 1,
-                "advanced-machinery-parts": 1,
-                "electronic-components": 1
             }
         },
         {
@@ -6506,52 +8316,6 @@
             "in": {
                 "barrel-empty": 1,
                 "liquid-fuel": 30
-            }
-        },
-        {
-            "id": "telluxite-wafer",
-            "name": "Telluxite Wafer",
-            "category": "components",
-            "producers": [
-                "casting-machine"
-            ],
-            "time": 24,
-            "out": {
-                "telluxite-wafer": 1
-            },
-            "in": {
-                "liquid-telluxite": 400
-            }
-        },
-        {
-            "id": "glass",
-            "name": "Glass",
-            "category": "components",
-            "producers": [
-                "smelter",
-                "advanced-smelter"
-            ],
-            "time": 5,
-            "out": {
-                "glass": 1
-            },
-            "in": {
-                "gravel": 5
-            }
-        },
-        {
-            "id": "polymer-board",
-            "name": "Polymer Board",
-            "category": "components",
-            "producers": [
-                "casting-machine"
-            ],
-            "time": 2,
-            "out": {
-                "polymer-board": 1
-            },
-            "in": {
-                "liquid-polymer": 5
             }
         },
         {
@@ -6633,46 +8397,6 @@
             },
             "in": {
                 "xenoferrite-plates": 1
-            }
-        },
-        {
-            "id": "construction-material",
-            "name": "Construction Material",
-            "category": "components",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 90,
-            "out": {
-                "construction-material": 150
-            },
-            "in": {
-                "firmarlite-sheet": 90,
-                "steel-beams": 15,
-                "advanced-machinery-parts": 15,
-                "concrete": 30,
-                "electronic-components": 15
-            }
-        },
-        {
-            "id": "weapon-components",
-            "name": "Weapon Components",
-            "category": "components",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 6,
-            "out": {
-                "weapon-components": 1
-            },
-            "in": {
-                "firmarlite-sheet": 1,
-                "machinery-parts": 1,
-                "explosives": 1
             }
         },
         {
@@ -7359,25 +9083,6 @@
             }
         },
         {
-            "id": "research-server",
-            "name": "Research Server",
-            "category": "science",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 4,
-            "out": {
-                "research-server": 1
-            },
-            "in": {
-                "xenoferrite-plates": 20,
-                "electronic-components": 10,
-                "technum-rod": 20
-            }
-        },
-        {
             "id": "science-pack-1",
             "name": "Science Pack I",
             "category": "science",
@@ -7664,69 +9369,6 @@
                 "mineral-rocks": 256,
                 "air-hot": 216000
             }
-        },
-        {
-            "id": "air-hot",
-            "name": "Air (Hot)",
-            "category": "metallurgy",
-            "producers": [
-                "hot-air-stove-base"
-            ],
-            "time": 60,
-            "out": {
-                "air-hot": 54000
-            },
-            "in": {
-                "air": 54000
-            }
-        },
-        {
-            "id": "olumite",
-            "name": "Olumite",
-            "category": "raw-resources",
-            "producers": [
-                "pumpjack-1"
-            ],
-            "time": 60,
-            "out": {
-                "olumite": 1800
-            },
-            "in": {},
-            "flags": [
-                "mining"
-            ]
-        },
-        {
-            "id": "air",
-            "name": "Air",
-            "category": "raw-resources",
-            "producers": [
-                "air-intake-base"
-            ],
-            "time": 60,
-            "out": {
-                "air": 162000
-            },
-            "in": {},
-            "flags": [
-                "mining"
-            ]
-        },
-        {
-            "id": "water",
-            "name": "Water",
-            "category": "components",
-            "producers": [
-                "liquid-intake"
-            ],
-            "time": 60,
-            "out": {
-                "water": 3000
-            },
-            "in": {},
-            "flags": [
-                "mining"
-            ]
         }
     ],
     "defaults": {
