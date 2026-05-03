@@ -1094,7 +1094,7 @@
             "color": "#687c8b"
         },
         {
-            "id": "operations-bot",
+            "id": "operator-bot",
             "position": "-396px -726px",
             "color": "#687c8b"
         },
@@ -2045,7 +2045,16 @@
             "name": "Shipping Pad (Small)",
             "category": "structures",
             "row": 1,
-            "stack": 1
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    20,
+                    10
+                ]
+            }
         },
         {
             "id": "shipping-pad-medium-assembly",
@@ -2059,7 +2068,16 @@
             "name": "Shipping Pad (Medium)",
             "category": "structures",
             "row": 1,
-            "stack": 1
+            "stack": 1,
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0,
+                "size": [
+                    31,
+                    27
+                ]
+            }
         },
         {
             "id": "cargo-shuttle-start-pad",
@@ -3435,13 +3453,6 @@
             "stack": 200
         },
         {
-            "id": "cement-slag-reprocessing",
-            "name": "Cement (Slag Reprocessing)",
-            "category": "components",
-            "row": 4,
-            "stack": 200
-        },
-        {
             "id": "concrete",
             "name": "Concrete",
             "category": "components",
@@ -3576,13 +3587,6 @@
             "stack": 1
         },
         {
-            "id": "xenoferrite-plates-barrel-recycle",
-            "name": "Xenoferrite Plates (Barrel Recycle)",
-            "category": "components",
-            "row": 6,
-            "stack": 1
-        },
-        {
             "id": "science-pack-1",
             "name": "Science Pack I",
             "category": "components",
@@ -3633,7 +3637,11 @@
             "name": "Coked Ignium",
             "category": "components",
             "row": 8,
-            "stack": 100
+            "stack": 100,
+            "fuel": {
+                "category": "chemical",
+                "value": 5.5
+            }
         },
         {
             "id": "transport-bot",
@@ -3699,8 +3707,8 @@
             "stack": 10
         },
         {
-            "id": "operations-bot",
-            "name": "Operations Bot",
+            "id": "operator-bot",
+            "name": "Operator Bot",
             "category": "robots",
             "row": 0,
             "stack": 10
@@ -4110,13 +4118,6 @@
             "row": 0
         },
         {
-            "id": "slag-reprocessing",
-            "name": "Slag (Reprocessing)",
-            "category": "metallurgy",
-            "row": 0,
-            "stack": 1
-        },
-        {
             "id": "technum-ore-rubble",
             "name": "Technum Ore Rubble",
             "category": "metallurgy",
@@ -4173,15 +4174,15 @@
             "stack": 200
         },
         {
-            "id": "steel-beams",
-            "name": "Steel Beams",
+            "id": "advanced-xenoferrite-ignium-ore-blend",
+            "name": "Advanced Xenoferrite-Ignium Ore Blend",
             "category": "metallurgy",
             "row": 2,
             "stack": 200
         },
         {
-            "id": "advanced-xenoferrite-ignium-ore-blend",
-            "name": "Advanced Xenoferrite-Ignium Ore Blend",
+            "id": "steel-beams",
+            "name": "Steel Beams",
             "category": "metallurgy",
             "row": 2,
             "stack": 200
@@ -8119,73 +8120,6 @@
             }
         },
         {
-            "id": "liquid-fuel",
-            "name": "Liquid Fuel",
-            "category": "components",
-            "producers": [
-                "chemical-processor"
-            ],
-            "time": 8,
-            "out": {
-                "liquid-fuel": 150
-            },
-            "in": {
-                "low-density-olumite": 50
-            }
-        },
-        {
-            "id": "ignium-powder",
-            "name": "Ignium Powder",
-            "category": "components",
-            "producers": [
-                "crusher-1",
-                "crusher-2"
-            ],
-            "time": 5,
-            "out": {
-                "ignium-powder": 5
-            },
-            "in": {
-                "ignium-ore-rubble": 1
-            }
-        },
-        {
-            "id": "fuel-rod-casing",
-            "name": "Fuel Rod Casing",
-            "category": "components",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 15,
-            "out": {
-                "fuel-rod-casing": 2
-            },
-            "in": {
-                "advanced-machinery-parts": 1,
-                "steel-beams": 1
-            }
-        },
-        {
-            "id": "ignium-fuel-rod",
-            "name": "Ignium Fuel Rod",
-            "category": "components",
-            "producers": [
-                "fluid-assembler-1"
-            ],
-            "time": 15,
-            "out": {
-                "ignium-fuel-rod": 1
-            },
-            "in": {
-                "fuel-rod-casing": 1,
-                "wire-coil": 10,
-                "ignium-powder": 20,
-                "liquid-fuel": 400
-            }
-        },
-        {
             "id": "gravel",
             "name": "Gravel",
             "category": "components",
@@ -8251,20 +8185,87 @@
             }
         },
         {
-            "id": "biomass",
-            "name": "Biomass",
+            "id": "hazard-concrete",
+            "name": "Hazard Concrete",
             "category": "components",
             "producers": [
-                "greenhouse"
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
             ],
-            "time": 2,
+            "time": 1,
             "out": {
-                "biomass": 60
+                "hazard-concrete": 1
             },
             "in": {
-                "biomass": 1,
-                "mineral-rocks": 1,
-                "water": 250
+                "concrete": 1
+            }
+        },
+        {
+            "id": "ignium-powder",
+            "name": "Ignium Powder",
+            "category": "components",
+            "producers": [
+                "crusher-1",
+                "crusher-2"
+            ],
+            "time": 5,
+            "out": {
+                "ignium-powder": 5
+            },
+            "in": {
+                "ignium-ore-rubble": 1
+            }
+        },
+        {
+            "id": "fuel-rod-casing",
+            "name": "Fuel Rod Casing",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "fuel-rod-casing": 2
+            },
+            "in": {
+                "advanced-machinery-parts": 1,
+                "steel-beams": 1
+            }
+        },
+        {
+            "id": "ignium-fuel-rod",
+            "name": "Ignium Fuel Rod",
+            "category": "components",
+            "producers": [
+                "fluid-assembler-1"
+            ],
+            "time": 15,
+            "out": {
+                "ignium-fuel-rod": 1
+            },
+            "in": {
+                "fuel-rod-casing": 1,
+                "wire-coil": 10,
+                "ignium-powder": 20,
+                "liquid-fuel": 400
+            }
+        },
+        {
+            "id": "liquid-fuel",
+            "name": "Liquid Fuel",
+            "category": "components",
+            "producers": [
+                "chemical-processor"
+            ],
+            "time": 8,
+            "out": {
+                "liquid-fuel": 150
+            },
+            "in": {
+                "low-density-olumite": 50
             }
         },
         {
@@ -8314,23 +8315,91 @@
                 "jetpack-fuel": 1
             },
             "in": {
-                "barrel-empty": 1,
+                "xenoferrite-plates": 1,
                 "liquid-fuel": 30
             }
         },
         {
-            "id": "coked-ignium",
-            "name": "Coked Ignium",
+            "id": "xeno-crystal-sludge",
+            "name": "Xeno-Crystal Sludge",
             "category": "components",
             "producers": [
-                "advanced-smelter"
+                "distillation-column"
             ],
-            "time": 11.25,
+            "time": 7.5,
             "out": {
-                "coked-ignium": 5
+                "xeno-crystal-sludge": 750
             },
             "in": {
-                "ignium-ore": 2
+                "xeno-crystal": 3,
+                "charged-xeno-crystal": 3,
+                "olumic-acid": 10
+            }
+        },
+        {
+            "id": "reactive-briquette",
+            "name": "Reactive Briquette",
+            "category": "components",
+            "producers": [
+                "casting-machine"
+            ],
+            "time": 15,
+            "out": {
+                "reactive-briquette": 32,
+                "xeno-crystal": 0.05,
+                "charged-xeno-crystal": 0.01
+            },
+            "in": {
+                "xeno-crystal-sludge": 750
+            }
+        },
+        {
+            "id": "reactor-fuel-mix",
+            "name": "Reactor Fuel Mix",
+            "category": "components",
+            "producers": [
+                "reactor-fuel-mixer-base"
+            ],
+            "time": 6,
+            "out": {
+                "reactor-fuel-mix": 4320
+            },
+            "in": {
+                "reactive-briquette": 128,
+                "ignium-enriched-water": 2592
+            }
+        },
+        {
+            "id": "barrel-empty",
+            "name": "Barrel (Empty)",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "barrel-empty": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1
+            }
+        },
+        {
+            "id": "barrel-olumite",
+            "name": "Barrel (Olumite)",
+            "category": "components",
+            "producers": [
+                "barrel-filler-1"
+            ],
+            "time": 2,
+            "out": {
+                "barrel-olumite": 1
+            },
+            "in": {
+                "barrel-empty": 1,
+                "olumite": 250
             }
         },
         {
@@ -8342,7 +8411,7 @@
             ],
             "time": 2,
             "out": {
-                "empty-barreled-olumite": 1,
+                "barrel-empty": 1,
                 "olumite": 250
             },
             "in": {
@@ -8367,367 +8436,9 @@
             }
         },
         {
-            "id": "barrel-olumite",
-            "name": "Barrel (Olumite)",
+            "id": "science-pack-1",
+            "name": "Science Pack I",
             "category": "components",
-            "producers": [
-                "barrel-filler-1"
-            ],
-            "time": 2,
-            "out": {
-                "barrel-olumite": 1
-            },
-            "in": {
-                "barrel-empty": 1,
-                "olumite": 250
-            }
-        },
-        {
-            "id": "barrel-empty",
-            "name": "Barrel (Empty)",
-            "category": "components",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 3,
-            "out": {
-                "barrel-empty": 1
-            },
-            "in": {
-                "xenoferrite-plates": 1
-            }
-        },
-        {
-            "id": "power-line",
-            "name": "Power Line",
-            "category": "handhelds",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 4,
-            "out": {
-                "power-line": 2
-            },
-            "in": {
-                "wire-coil": 2
-            }
-        },
-        {
-            "id": "explosive-charge",
-            "name": "Explosive Charge",
-            "category": "handhelds",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 5,
-            "out": {
-                "explosive-charge": 1
-            },
-            "in": {
-                "xenoferrite-plates": 1,
-                "explosives": 1,
-                "wire-coil": 3,
-                "electronic-components": 3
-            }
-        },
-        {
-            "id": "mining-drill",
-            "name": "Mining Drill",
-            "category": "handhelds",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 8,
-            "out": {
-                "mining-drill": 1
-            },
-            "in": {
-                "xenoferrite-plates": 2,
-                "machinery-parts": 1,
-                "electronic-components": 1
-            }
-        },
-        {
-            "id": "xenoferrite-ore",
-            "name": "Xenoferrite Ore",
-            "category": "metallurgy",
-            "producers": [
-                "crusher-1",
-                "crusher-2"
-            ],
-            "time": 1.5,
-            "out": {
-                "xenoferrite-ore": 1
-            },
-            "in": {
-                "xenoferrite-ore-rubble": 1
-            }
-        },
-        {
-            "id": "xenoferrite-plates-1",
-            "name": "Xenoferrite Plates 1",
-            "category": "metallurgy",
-            "producers": [
-                "smelter",
-                "advanced-smelter"
-            ],
-            "time": 3,
-            "out": {
-                "xenoferrite-plates": 1
-            },
-            "in": {
-                "xenoferrite-ore-rubble": 1
-            }
-        },
-        {
-            "id": "xenoferrite-plates-2",
-            "name": "Xenoferrite Plates 2",
-            "category": "metallurgy",
-            "producers": [
-                "smelter",
-                "advanced-smelter"
-            ],
-            "time": 6,
-            "out": {
-                "xenoferrite-plates": 3
-            },
-            "in": {
-                "xenoferrite-ore": 2
-            }
-        },
-        {
-            "id": "xenoferrite-plates-3",
-            "name": "Xenoferrite Plates 3",
-            "category": "metallurgy",
-            "producers": [
-                "casting-machine"
-            ],
-            "time": 7.5,
-            "out": {
-                "xenoferrite-plates": 5
-            },
-            "in": {
-                "molten-xenoferrite": 15
-            }
-        },
-        {
-            "id": "technum-ore",
-            "name": "Technum Ore",
-            "category": "metallurgy",
-            "producers": [
-                "crusher-1",
-                "crusher-2"
-            ],
-            "time": 1.5,
-            "out": {
-                "technum-ore": 1
-            },
-            "in": {
-                "technum-ore-rubble": 1
-            }
-        },
-        {
-            "id": "technum-rod-1",
-            "name": "Technum Rod 1",
-            "category": "metallurgy",
-            "producers": [
-                "smelter",
-                "advanced-smelter"
-            ],
-            "time": 3,
-            "out": {
-                "technum-rod": 1
-            },
-            "in": {
-                "technum-ore-rubble": 1
-            }
-        },
-        {
-            "id": "technum-rod-2",
-            "name": "Technum Rod 2",
-            "category": "metallurgy",
-            "producers": [
-                "smelter",
-                "advanced-smelter"
-            ],
-            "time": 6,
-            "out": {
-                "technum-rod": 3
-            },
-            "in": {
-                "technum-ore": 2
-            }
-        },
-        {
-            "id": "technum-rod-3",
-            "name": "Technum Rod 3",
-            "category": "metallurgy",
-            "producers": [
-                "casting-machine"
-            ],
-            "time": 7.5,
-            "out": {
-                "technum-rod": 5
-            },
-            "in": {
-                "molten-technum": 15
-            }
-        },
-        {
-            "id": "ignium-ore",
-            "name": "Ignium Ore",
-            "category": "metallurgy",
-            "producers": [
-                "crusher-1",
-                "crusher-2"
-            ],
-            "time": 1.5,
-            "out": {
-                "ignium-ore": 1
-            },
-            "in": {
-                "ignium-ore-rubble": 1
-            }
-        },
-        {
-            "id": "xenoferrite-ignium-ore-blend",
-            "name": "Xenoferrite-Ignium Ore Blend",
-            "category": "metallurgy",
-            "producers": [
-                "crusher-1",
-                "crusher-2"
-            ],
-            "time": 3,
-            "out": {
-                "xenoferrite-ignium-ore-blend": 1
-            },
-            "in": {
-                "xenoferrite-ore-rubble": 4,
-                "ignium-ore-rubble": 2
-            }
-        },
-        {
-            "id": "steel-beams-1",
-            "name": "Steel Beams 1",
-            "category": "metallurgy",
-            "producers": [
-                "smelter",
-                "advanced-smelter"
-            ],
-            "time": 6,
-            "out": {
-                "steel-beams": 1
-            },
-            "in": {
-                "xenoferrite-ignium-ore-blend": 1
-            }
-        },
-        {
-            "id": "advanced-xenoferrite-ignium-ore-blend",
-            "name": "Advanced Xenoferrite-Ignium Ore Blend",
-            "category": "metallurgy",
-            "producers": [
-                "crusher-1",
-                "crusher-2"
-            ],
-            "time": 3,
-            "out": {
-                "advanced-xenoferrite-ignium-ore-blend": 1
-            },
-            "in": {
-                "xenoferrite-ore": 4,
-                "ignium-ore": 2
-            }
-        },
-        {
-            "id": "steel-beams-2",
-            "name": "Steel Beams 2",
-            "category": "metallurgy",
-            "producers": [
-                "advanced-smelter"
-            ],
-            "time": 6,
-            "out": {
-                "steel-beams": 2
-            },
-            "in": {
-                "advanced-xenoferrite-ignium-ore-blend": 1
-            }
-        },
-        {
-            "id": "telluxite-ore",
-            "name": "Telluxite Ore",
-            "category": "metallurgy",
-            "producers": [
-                "crusher-1",
-                "crusher-2"
-            ],
-            "time": 1.5,
-            "out": {
-                "telluxite-ore": 1
-            },
-            "in": {
-                "telluxite-ore-rubble": 4
-            }
-        },
-        {
-            "id": "telluxite-ingot",
-            "name": "Telluxite Ingot",
-            "category": "metallurgy",
-            "producers": [
-                "advanced-smelter"
-            ],
-            "time": 6,
-            "out": {
-                "telluxite-ingot": 1
-            },
-            "in": {
-                "telluxite-ore": 4
-            }
-        },
-        {
-            "id": "liquid-telluxite",
-            "name": "Liquid Telluxite",
-            "category": "metallurgy",
-            "producers": [
-                "electric-arc-furnace"
-            ],
-            "time": 60,
-            "out": {
-                "liquid-telluxite": 2000
-            },
-            "in": {
-                "telluxite-ingot": 40
-            }
-        },
-        {
-            "id": "firmarlite-sheet",
-            "name": "Firmarlite Sheet",
-            "category": "metallurgy",
-            "producers": [
-                "lava-smelter-1",
-                "lava-smelter-2"
-            ],
-            "time": 6,
-            "out": {
-                "firmarlite-sheet": 1
-            },
-            "in": {
-                "firmarlite-bar": 1
-            }
-        },
-        {
-            "id": "maintenance-drone",
-            "name": "Maintenance Drone",
-            "category": "robots",
             "producers": [
                 "assembler-1",
                 "assembler-2",
@@ -8735,48 +8446,132 @@
             ],
             "time": 30,
             "out": {
-                "maintenance-drone": 1
+                "science-pack-1": 1
             },
             "in": {
-                "firmarlite-sheet": 1,
-                "advanced-machinery-parts": 1,
-                "circuit-board": 1,
-                "hover-engine": 1,
-                "energy-cell": 1
+                "machinery-parts": 5,
+                "technum-rod": 4
             }
         },
         {
-            "id": "planter-drone",
-            "name": "Planter Drone",
+            "id": "science-pack-2",
+            "name": "Science Pack II",
+            "category": "scomponents",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "science-pack-2": 1
+            },
+            "in": {
+                "conveyor-1": 3,
+                "building-block": 6
+            }
+        },
+        {
+            "id": "science-pack-3",
+            "name": "Science Pack III",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 60,
+            "out": {
+                "science-pack-3": 1
+            },
+            "in": {
+                "advanced-machinery-parts": 2,
+                "concrete": 12,
+                "firmarlite-bar": 2
+            }
+        },
+        {
+            "id": "science-pack-4",
+            "name": "Science Pack IV",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 60,
+            "out": {
+                "science-pack-4": 1
+            },
+            "in": {
+                "circuit-board": 4,
+                "energy-cell": 4,
+                "firmarlite-sheet": 4
+            }
+        },
+        {
+            "id": "science-pack-5",
+            "name": "Science Pack V",
+            "category": "components",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 240,
+            "out": {
+                "science-pack-5": 4
+            },
+            "in": {
+                "robot-parts": 4,
+                "hydraulic-piston": 12,
+                "cpu": 1
+            }
+        },
+        {
+            "id": "biomass",
+            "name": "Biomass",
+            "category": "components",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 60,
+            "out": {
+                "biomass": 2
+            },
+            "in": {
+                "biomass": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
+            "id": "coked-ignium",
+            "name": "Coked Ignium",
+            "category": "components",
+            "producers": [
+                "advanced-smelter"
+            ],
+            "time": 11.25,
+            "out": {
+                "coked-ignium": 5
+            },
+            "in": {
+                "ignium-ore": 2
+            }
+        },
+        {
+            "id": "transport-bot",
+            "name": "Transport Bot",
             "category": "robots",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 8,
+            "time": 10,
             "out": {
-                "planter-drone": 1
-            },
-            "in": {
-                "firmarlite-sheet": 1,
-                "machinery-parts": 2,
-                "electronic-components": 2,
-                "hover-engine": 1
-            }
-        },
-        {
-            "id": "vacuum-bot",
-            "name": "Vacuum Bot",
-            "category": "robots",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 12,
-            "out": {
-                "vacuum-bot": 1
+                "transport-bot": 1
             },
             "in": {
                 "xenoferrite-plates": 1,
@@ -8805,6 +8600,86 @@
             }
         },
         {
+            "id": "transport-drone",
+            "name": "Transport Drone",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 12,
+            "out": {
+                "transport-drone": 1
+            },
+            "in": {
+                "firmarlite-sheet": 2,
+                "polymer-board": 1,
+                "circuit-board": 1,
+                "hover-engine": 2
+            }
+        },
+        {
+            "id": "vacuum-bot",
+            "name": "Vacuum Bot",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 12,
+            "out": {
+                "vacuum-bot": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "machinery-parts": 1,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "cleaning-bot",
+            "name": "Cleaning Bot",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "cleaning-bot": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "polymer-board": 1,
+                "machinery-parts": 1,
+                "circuit-board": 1,
+                "energy-cell": 1
+            }
+        },
+        {
+            "id": "snack-bot",
+            "name": "Snack Bot",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 12,
+            "out": {
+                "snack-bot": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "machinery-parts": 1,
+                "electronic-components": 1,
+                "glass": 1
+            }
+        },
+        {
             "id": "light-bot",
             "name": "Light Bot",
             "category": "robots",
@@ -8825,44 +8700,23 @@
             }
         },
         {
-            "id": "combat-drone",
-            "name": "Combat Drone",
+            "id": "screen-bot",
+            "name": "Screen Bot",
             "category": "robots",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 15,
+            "time": 8,
             "out": {
-                "combat-drone": 1
+                "screen-bot": 1
             },
             "in": {
-                "firmarlite-sheet": 1,
-                "advanced-machinery-parts": 1,
+                "xenoferrite-plates": 1,
+                "polymer-board": 1,
                 "circuit-board": 1,
-                "hover-engine": 1,
-                "weapon-components": 1
-            }
-        },
-        {
-            "id": "mining-drone",
-            "name": "Mining Drone",
-            "category": "robots",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 20,
-            "out": {
-                "mining-drone": 1
-            },
-            "in": {
-                "steel-beams": 1,
-                "advanced-machinery-parts": 1,
-                "circuit-board": 1,
-                "hover-engine": 1
+                "glass": 1
             }
         },
         {
@@ -8887,8 +8741,28 @@
             }
         },
         {
-            "id": "screen-bot",
-            "name": "Screen Bot",
+            "id": "operator-bot",
+            "name": "Operator Bot",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 20,
+            "out": {
+                "operator-bot": 1
+            },
+            "in": {
+                "polymer-board": 1,
+                "machinery-parts": 1,
+                "electronic-components": 1,
+                "circuit-board": 1
+            }
+        },
+        {
+            "id": "planter-drone",
+            "name": "Planter Drone",
             "category": "robots",
             "producers": [
                 "assembler-1",
@@ -8897,77 +8771,59 @@
             ],
             "time": 8,
             "out": {
-                "screen-bot": 1
+                "planter-drone": 1
             },
             "in": {
-                "xenoferrite-plates": 1,
-                "polymer-board": 1,
+                "firmarlite-sheet": 1,
+                "machinery-parts": 2,
+                "electronic-components": 2,
+                "hover-engine": 1
+            }
+        },
+        {
+            "id": "mining-drone",
+            "name": "Mining Drone",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 20,
+            "out": {
+                "mining-drone": 1
+            },
+            "in": {
+                "steel-beams": 1,
+                "advanced-machinery-parts": 1,
                 "circuit-board": 1,
-                "glass": 1
+                "hover-engine": 1
             }
         },
         {
-            "id": "snack-bot",
-            "name": "Snack Bot",
+            "id": "maintenance-drone",
+            "name": "Maintenance Drone",
             "category": "robots",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 12,
+            "time": 30,
             "out": {
-                "snack-bot": 1
+                "maintenance-drone": 1
             },
             "in": {
-                "xenoferrite-plates": 1,
-                "machinery-parts": 1,
-                "electronic-components": 1,
-                "glass": 1
-            }
-        },
-        {
-            "id": "transport-bot",
-            "name": "Transport Bot",
-            "category": "robots",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 10,
-            "out": {
-                "transport-bot": 1
-            },
-            "in": {
-                "xenoferrite-plates": 1,
-                "machinery-parts": 1,
-                "electronic-components": 1
-            }
-        },
-        {
-            "id": "transport-drone",
-            "name": "Transport Drone",
-            "category": "robots",
-            "producers": [
-                "assembler-1",
-                "assembler-2",
-                "assembler-3"
-            ],
-            "time": 12,
-            "out": {
-                "transport-drone": 1
-            },
-            "in": {
-                "firmarlite-sheet": 2,
-                "polymer-board": 1,
+                "firmarlite-sheet": 1,
+                "advanced-machinery-parts": 1,
                 "circuit-board": 1,
-                "hover-engine": 2
+                "hover-engine": 1,
+                "energy-cell": 1
             }
         },
         {
-            "id": "cleaning-bot",
-            "name": "Cleaning Bot",
+            "id": "combat-drone",
+            "name": "Combat Drone",
             "category": "robots",
             "producers": [
                 "assembler-1",
@@ -8976,14 +8832,94 @@
             ],
             "time": 15,
             "out": {
-                "cleaning-bot": 1
+                "combat-drone": 1
             },
             "in": {
-                "xenoferrite-plates": 1,
-                "polymer-board": 1,
-                "machinery-parts": 1,
+                "firmarlite-sheet": 1,
+                "advanced-machinery-parts": 1,
                 "circuit-board": 1,
-                "energy-cell": 1
+                "hover-engine": 1,
+                "weapon-components": 1
+            }
+        },
+        {
+            "id": "aquatic-hauling-bot",
+            "name": "Aquatic Hauling Bot",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "aquatic-hauling-bot": 1
+            },
+            "in": {
+                "nautical-chassis": 1,
+                "cpu": 1,
+                "hydraulic-piston": 1,
+                "ignium-fuel-rod": 1
+            }
+        },
+        {
+            "id": "marine-exploration-bot",
+            "name": "Marine Exploration Bot",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "marine-exploration-bot": 1
+            },
+            "in": {
+                "nautical-chassis": 1,
+                "cpu": 1,
+                "portable-light": 1,
+                "ignium-fuel-rod": 1
+            }
+        },
+        {
+            "id": "hydro-mining-bot",
+            "name": "Hydro-Mining Bot",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "hydro-mining-bot": 1
+            },
+            "in": {
+                "nautical-chassis": 1,
+                "cpu": 1,
+                "mining-drill": 1,
+                "ignium-fuel-rod": 1
+            }
+        },
+        {
+            "id": "hydro-farming-bot",
+            "name": "Hydro-Farming Bot",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "hydro-farming-bot": 1
+            },
+            "in": {
+                "nautical-chassis": 1,
+                "cpu": 1,
+                "barrel-empty": 2,
+                "ignium-fuel-rod": 1
             }
         },
         {
@@ -9078,101 +9014,1233 @@
                 "personal-assistant-robot-torso": 1,
                 "personal-assistant-robot-head": 1,
                 "personal-assistant-robot-arm": 2,
-                "personal-assistant-robot-leg": 2,
-                "paint": 100
+                "personal-assistant-robot-leg": 2
             }
         },
         {
-            "id": "science-pack-1",
-            "name": "Science Pack I",
-            "category": "science",
+            "id": "operator-robot-torso",
+            "name": "Operator Robot Torso",
+            "category": "robots",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 30,
+            "time": 15,
             "out": {
-                "science-pack-1": 1
+                "operator-robot-torso": 1
             },
             "in": {
-                "machinery-parts": 5,
-                "technum-rod": 4
+                "robot-parts": 1,
+                "xenoferrite-plates": 2,
+                "circuit-board": 1,
+                "energy-cell": 1
             }
         },
         {
-            "id": "science-pack-2",
-            "name": "Science Pack II",
-            "category": "science",
+            "id": "operator-robot-head",
+            "name": "Operator Robot Head",
+            "category": "robots",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 30,
+            "time": 15,
             "out": {
-                "science-pack-2": 1
+                "operator-robot-head": 1
             },
             "in": {
-                "conveyor-1": 3,
-                "building-block": 6
+                "robot-parts": 1,
+                "xenoferrite-plates": 1,
+                "cpu": 4,
+                "circuit-board": 1
             }
         },
         {
-            "id": "science-pack-3",
-            "name": "Science Pack III",
-            "category": "science",
+            "id": "operator-robot-arm",
+            "name": "Operator Robot Arm",
+            "category": "robots",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 60,
+            "time": 15,
             "out": {
-                "science-pack-3": 1
+                "operator-robot-arm": 1
             },
             "in": {
-                "advanced-machinery-parts": 2,
-                "concrete": 12,
-                "firmarlite-bar": 2
+                "robot-parts": 1,
+                "hydraulic-piston": 1,
+                "rubber": 2,
+                "modular-building-planner": 1
             }
         },
         {
-            "id": "science-pack-4",
-            "name": "Science Pack IV",
-            "category": "science",
+            "id": "operator-robot-leg",
+            "name": "Operator Robot Leg",
+            "category": "robots",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 60,
+            "time": 15,
             "out": {
-                "science-pack-4": 1
+                "operator-robot-leg": 1
             },
             "in": {
-                "circuit-board": 4,
-                "energy-cell": 4,
-                "firmarlite-sheet": 4
+                "robot-parts": 1,
+                "hydraulic-piston": 1,
+                "xenoferrite-plates": 1,
+                "rubber": 2
             }
         },
         {
-            "id": "science-pack-5",
-            "name": "Science Pack V",
-            "category": "science",
+            "id": "operator-robot",
+            "name": "Operator Robot",
+            "category": "robots",
+            "producers": [
+                "assembly-line-producer"
+            ],
+            "time": 1.875,
+            "out": {
+                "operator-robot": 1
+            },
+            "in": {
+                "operator-robot-torso": 1,
+                "operator-robot-head": 1,
+                "operator-robot-arm": 2,
+                "operator-robot-leg": 2
+            }
+        },
+        {
+            "id": "farmer-robot-torso",
+            "name": "Farmer Robot Torso",
+            "category": "robots",
             "producers": [
                 "assembler-1",
                 "assembler-2",
                 "assembler-3"
             ],
-            "time": 240,
+            "time": 15,
             "out": {
-                "science-pack-5": 4
+                "farmer-robot-torso": 1
             },
             "in": {
-                "robot-parts": 4,
-                "hydraulic-piston": 12,
+                "robot-parts": 1,
+                "xenoferrite-plates": 2,
+                "barrel-empty": 1,
+                "energy-cell": 1
+            }
+        },
+        {
+            "id": "farmer-robot-head",
+            "name": "Farmer Robot Head",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "farmer-robot-head": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "cpu": 1,
+                "polymer-board": 1
+            }
+        },
+        {
+            "id": "farmer-robot-arm",
+            "name": "Farmer Robot Arm",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "farmer-robot-arm": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "hydraulic-piston": 1,
+                "xenoferrite-plates": 1
+            }
+        },
+        {
+            "id": "farmer-robot-leg",
+            "name": "Farmer Robot Leg",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "farmer-robot-leg": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "hydraulic-piston": 1,
+                "xenoferrite-plates": 1
+            }
+        },
+        {
+            "id": "farmer-robot",
+            "name": "Farmer Robot",
+            "category": "robots",
+            "producers": [
+                "assembly-line-producer"
+            ],
+            "time": 1.875,
+            "out": {
+                "farmer-robot": 1
+            },
+            "in": {
+                "farmer-robot-torso": 1,
+                "farmer-robot-head": 1,
+                "farmer-robot-arm": 2,
+                "farmer-robot-leg": 2
+            }
+        },
+        {
+            "id": "hazard-robot-torso",
+            "name": "Hazard Robot Torso",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "hazard-robot-torso": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 1,
+                "superalloy": 3,
+                "circuit-board": 1,
+                "energy-cell": 2
+            }
+        },
+        {
+            "id": "hazard-robot-head",
+            "name": "Hazard Robot Head",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "hazard-robot-head": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 1,
+                "superalloy": 1,
+                "cpu": 2
+            }
+        },
+        {
+            "id": "hazard-robot-arm",
+            "name": "Hazard Robot Arm",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "hazard-robot-arm": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 1,
+                "hydraulic-piston": 1,
+                "superalloy": 1
+            }
+        },
+        {
+            "id": "hazard-robot-leg",
+            "name": "Hazard Robot Leg",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "hazard-robot-leg": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 1,
+                "hydraulic-piston": 1,
+                "superalloy": 1
+            }
+        },
+        {
+            "id": "hazard-robot",
+            "name": "Hazard Robot",
+            "category": "robots",
+            "producers": [
+                "assembly-line-producer"
+            ],
+            "time": 1.875,
+            "out": {
+                "hazard-robot": 1
+            },
+            "in": {
+                "hazard-robot-torso": 1,
+                "hazard-robot-head": 1,
+                "hazard-robot-arm": 2,
+                "hazard-robot-leg": 2
+            }
+        },
+        {
+            "id": "combat-robot-torso",
+            "name": "Combat Robot Torso",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "combat-robot-torso": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "cpu": 1,
+                "steel-beams": 1,
+                "energy-cell": 1
+            }
+        },
+        {
+            "id": "combat-robot-head",
+            "name": "Combat Robot Head",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "combat-robot-head": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "firmarlite-sheet": 1,
+                "weapon-components": 2
+            }
+        },
+        {
+            "id": "combat-robot-arm",
+            "name": "Combat Robot Arm",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "combat-robot-arm": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "hydraulic-piston": 1,
+                "steel-beams": 1,
+                "weapon-components": 1
+            }
+        },
+        {
+            "id": "combat-robot-leg",
+            "name": "Combat Robot Leg",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "combat-robot-leg": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "hydraulic-piston": 1,
+                "steel-beams": 1
+            }
+        },
+        {
+            "id": "combat-robot",
+            "name": "Combat Robot",
+            "category": "robots",
+            "producers": [
+                "assembly-line-producer"
+            ],
+            "time": 1.875,
+            "out": {
+                "combat-robot": 1
+            },
+            "in": {
+                "combat-robot-torso": 1,
+                "combat-robot-head": 1,
+                "combat-robot-arm": 2,
+                "combat-robot-leg": 2
+            }
+        },
+        {
+            "id": "assault-robot-torso",
+            "name": "Assault Robot Torso",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "assault-robot-torso": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 1,
+                "cpu": 1,
+                "superalloy": 2,
+                "energy-cell": 1
+            }
+        },
+        {
+            "id": "assault-robot-head",
+            "name": "Assault Robot Head",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "assault-robot-head": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 1,
+                "superalloy": 1,
                 "cpu": 1
+            }
+        },
+        {
+            "id": "assault-robot-arm",
+            "name": "Assault Robot Arm",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "assault-robot-arm": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 1,
+                "hydraulic-piston": 1,
+                "superalloy": 1,
+                "weapon-components": 4
+            }
+        },
+        {
+            "id": "assault-robot-leg",
+            "name": "Assault Robot Leg",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "assault-robot-leg": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 1,
+                "hydraulic-piston": 1,
+                "superalloy": 1,
+                "rubber": 2
+            }
+        },
+        {
+            "id": "assault-robot",
+            "name": "Assault Robot",
+            "category": "robots",
+            "producers": [
+                "assembly-line-producer"
+            ],
+            "time": 1.875,
+            "out": {
+                "assault-robot": 1
+            },
+            "in": {
+                "assault-robot-torso": 1,
+                "assault-robot-head": 1,
+                "assault-robot-arm": 2,
+                "assault-robot-leg": 2
+            }
+        },
+        {
+            "id": "mining-robot-torso",
+            "name": "Mining Robot Torso",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "mining-robot-torso": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "firmarlite-sheet": 2,
+                "circuit-board": 1,
+                "energy-cell": 2
+            }
+        },
+        {
+            "id": "mining-robot-head",
+            "name": "Mining Robot Head",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "mining-robot-head": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "cpu": 1,
+                "xenoferrite-plates": 1
+            }
+        },
+        {
+            "id": "mining-robot-arm",
+            "name": "Mining Robot Arm",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "mining-robot-arm": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "hydraulic-piston": 1,
+                "steel-beams": 1,
+                "mining-drill": 1
+            }
+        },
+        {
+            "id": "mining-robot-leg",
+            "name": "Mining Robot Leg",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "mining-robot-leg": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "hydraulic-piston": 1,
+                "steel-beams": 1
+            }
+        },
+        {
+            "id": "mining-robot",
+            "name": "Mining Robot",
+            "category": "robots",
+            "producers": [
+                "assembly-line-producer"
+            ],
+            "time": 1.875,
+            "out": {
+                "mining-robot": 1
+            },
+            "in": {
+                "mining-robot-torso": 1,
+                "mining-robot-head": 1,
+                "mining-robot-arm": 2,
+                "mining-robot-leg": 2
+            }
+        },
+        {
+            "id": "science-robot-torso",
+            "name": "Science Robot Torso",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "science-robot-torso": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "polymer-board": 2,
+                "circuit-board": 1,
+                "energy-cell": 1
+            }
+        },
+        {
+            "id": "science-robot-head",
+            "name": "Science Robot Head",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "science-robot-head": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "polymer-board": 1,
+                "cpu": 2,
+                "glass": 2
+            }
+        },
+        {
+            "id": "science-robot-arm",
+            "name": "Science Robot Arm",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "science-robot-arm": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "hydraulic-piston": 1,
+                "polymer-board": 1
+            }
+        },
+        {
+            "id": "science-robot-leg",
+            "name": "Science Robot Leg",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "science-robot-leg": 1
+            },
+            "in": {
+                "robot-parts": 1,
+                "hydraulic-piston": 1,
+                "firmarlite-sheet": 1,
+                "polymer-board": 1
+            }
+        },
+        {
+            "id": "science-robot",
+            "name": "Science Robot",
+            "category": "robots",
+            "producers": [
+                "assembly-line-producer"
+            ],
+            "time": 1.875,
+            "out": {
+                "science-robot": 1
+            },
+            "in": {
+                "science-robot-torso": 1,
+                "science-robot-head": 1,
+                "science-robot-arm": 2,
+                "science-robot-leg": 2
+            }
+        },
+        {
+            "id": "scout-robot-torso",
+            "name": "Scout Robot Torso",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "scout-robot-torso": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 2,
+                "polymer-board": 2,
+                "superalloy": 1,
+                "energy-cell": 1
+            }
+        },
+        {
+            "id": "scout-robot-head",
+            "name": "Scout Robot Head",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "scout-robot-head": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 1,
+                "firmarlite-sheet": 2,
+                "cpu": 1,
+                "glass": 2
+            }
+        },
+        {
+            "id": "scout-robot-arm",
+            "name": "Scout Robot Arm",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "scout-robot-arm": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 1,
+                "hydraulic-piston": 1,
+                "firmarlite-sheet": 2
+            }
+        },
+        {
+            "id": "scout-robot-leg",
+            "name": "Scout Robot Leg",
+            "category": "robots",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 15,
+            "out": {
+                "scout-robot-leg": 1
+            },
+            "in": {
+                "high-tech-robot-parts": 2,
+                "hydraulic-piston": 3,
+                "firmarlite-sheet": 3,
+                "rubber": 3
+            }
+        },
+        {
+            "id": "scout-robot",
+            "name": "Scout Robot",
+            "category": "robots",
+            "producers": [
+                "assembly-line-producer"
+            ],
+            "time": 1.875,
+            "out": {
+                "scout-robot": 1
+            },
+            "in": {
+                "scout-robot-torso": 1,
+                "scout-robot-head": 1,
+                "scout-robot-arm": 2,
+                "scout-robot-leg": 2
+            }
+        },
+        {
+            "id": "xenoferrite-ore",
+            "name": "Xenoferrite Ore",
+            "category": "metallurgy",
+            "producers": [
+                "crusher-1",
+                "crusher-2"
+            ],
+            "time": 1.5,
+            "out": {
+                "xenoferrite-ore": 1
+            },
+            "in": {
+                "xenoferrite-ore-rubble": 1
+            }
+        },
+        {
+            "id": "xenoferrite-ore-alternative",
+            "name": "Xenoferrite Ore (Alternative)",
+            "category": "metallurgy",
+            "producers": [
+                "crusher-1",
+                "crusher-2"
+            ],
+            "time": 4.5,
+            "out": {
+                "xenoferrite-ore": 3
+            },
+            "in": {
+                "xenoferrite-ore-rubble": 2,
+                "xeno-crystal": 1
+            }
+        },
+        {
+            "id": "xenoferrite-plates-1",
+            "name": "Xenoferrite Plates (Tier 1)",
+            "category": "metallurgy",
+            "producers": [
+                "smelter",
+                "advanced-smelter"
+            ],
+            "time": 3,
+            "out": {
+                "xenoferrite-plates": 1
+            },
+            "in": {
+                "xenoferrite-ore-rubble": 1
+            }
+        },
+        {
+            "id": "xenoferrite-plates-2",
+            "name": "Xenoferrite Plates (Tier 2)",
+            "category": "metallurgy",
+            "producers": [
+                "smelter",
+                "advanced-smelter"
+            ],
+            "time": 6,
+            "out": {
+                "xenoferrite-plates": 3
+            },
+            "in": {
+                "xenoferrite-ore": 2
+            }
+        },
+        {
+            "id": "xenoferrite-plates-3",
+            "name": "Xenoferrite Plates (Tier 3)",
+            "category": "metallurgy",
+            "producers": [
+                "casting-machine"
+            ],
+            "time": 7.5,
+            "out": {
+                "xenoferrite-plates": 5
+            },
+            "in": {
+                "molten-xenoferrite": 15
+            }
+        },
+        {
+            "id": "technum-ore",
+            "name": "Technum Ore",
+            "category": "metallurgy",
+            "producers": [
+                "crusher-1",
+                "crusher-2"
+            ],
+            "time": 1.5,
+            "out": {
+                "technum-ore": 1
+            },
+            "in": {
+                "technum-ore-rubble": 1
+            }
+        },
+        {
+            "id": "technum-ore-alternative",
+            "name": "Technum Ore (Alternative)",
+            "category": "metallurgy",
+            "producers": [
+                "crusher-1",
+                "crusher-2"
+            ],
+            "time": 4.5,
+            "out": {
+                "technum-ore": 3
+            },
+            "in": {
+                "technum-ore-rubble": 2,
+                "xeno-crystal": 1
+            }
+        },
+        {
+            "id": "technum-rod-1",
+            "name": "Technum Rod (Tier 1)",
+            "category": "metallurgy",
+            "producers": [
+                "smelter",
+                "advanced-smelter"
+            ],
+            "time": 3,
+            "out": {
+                "technum-rod": 1
+            },
+            "in": {
+                "technum-ore-rubble": 1
+            }
+        },
+        {
+            "id": "technum-rod-2",
+            "name": "Technum Rod (Tier 2)",
+            "category": "metallurgy",
+            "producers": [
+                "smelter",
+                "advanced-smelter"
+            ],
+            "time": 6,
+            "out": {
+                "technum-rod": 3
+            },
+            "in": {
+                "technum-ore": 2
+            }
+        },
+        {
+            "id": "technum-rod-3",
+            "name": "Technum Rod (Tier 3)",
+            "category": "metallurgy",
+            "producers": [
+                "casting-machine"
+            ],
+            "time": 7.5,
+            "out": {
+                "technum-rod": 5
+            },
+            "in": {
+                "molten-technum": 15
+            }
+        },
+        {
+            "id": "ignium-ore",
+            "name": "Ignium Ore",
+            "category": "metallurgy",
+            "producers": [
+                "crusher-1",
+                "crusher-2"
+            ],
+            "time": 1.5,
+            "out": {
+                "ignium-ore": 1
+            },
+            "in": {
+                "ignium-ore-rubble": 1
+            }
+        },
+        {
+            "id": "xenoferrite-ignium-ore-blend",
+            "name": "Xenoferrite-Ignium Ore Blend",
+            "category": "metallurgy",
+            "producers": [
+                "crusher-1",
+                "crusher-2"
+            ],
+            "time": 3,
+            "out": {
+                "xenoferrite-ignium-ore-blend": 1
+            },
+            "in": {
+                "xenoferrite-ore-rubble": 4,
+                "ignium-ore-rubble": 2
+            }
+        },
+        {
+            "id": "advanced-xenoferrite-ignium-ore-blend",
+            "name": "Advanced Xenoferrite-Ignium Ore Blend",
+            "category": "metallurgy",
+            "producers": [
+                "crusher-1",
+                "crusher-2"
+            ],
+            "time": 3,
+            "out": {
+                "advanced-xenoferrite-ignium-ore-blend": 1
+            },
+            "in": {
+                "xenoferrite-ore": 4,
+                "ignium-ore": 2
+            }
+        },
+        {
+            "id": "steel-beams-1",
+            "name": "Steel Beams (Tier 1)",
+            "category": "metallurgy",
+            "producers": [
+                "smelter",
+                "advanced-smelter"
+            ],
+            "time": 6,
+            "out": {
+                "steel-beams": 1
+            },
+            "in": {
+                "xenoferrite-ignium-ore-blend": 1
+            }
+        },
+        {
+            "id": "steel-beams-2",
+            "name": "Steel Beams (Tier 2)",
+            "category": "metallurgy",
+            "producers": [
+                "advanced-smelter"
+            ],
+            "time": 6,
+            "out": {
+                "steel-beams": 2
+            },
+            "in": {
+                "advanced-xenoferrite-ignium-ore-blend": 1
+            }
+        },
+        {
+            "id": "telluxite-ore",
+            "name": "Telluxite Ore",
+            "category": "metallurgy",
+            "producers": [
+                "crusher-1",
+                "crusher-2"
+            ],
+            "time": 1.5,
+            "out": {
+                "telluxite-ore": 1
+            },
+            "in": {
+                "telluxite-ore-rubble": 4
+            }
+        },
+        {
+            "id": "telluxite-ingot",
+            "name": "Telluxite Ingot",
+            "category": "metallurgy",
+            "producers": [
+                "advanced-smelter"
+            ],
+            "time": 6,
+            "out": {
+                "telluxite-ingot": 1
+            },
+            "in": {
+                "telluxite-ore": 4
+            }
+        },
+        {
+            "id": "liquid-telluxite",
+            "name": "Liquid Telluxite",
+            "category": "metallurgy",
+            "producers": [
+                "electric-arc-furnace"
+            ],
+            "time": 60,
+            "out": {
+                "liquid-telluxite": 2000
+            },
+            "in": {
+                "telluxite-ingot": 40
+            }
+        },
+        {
+            "id": "firmarlite-bar-small-pad-1",
+            "name": "Firmarlite Bar (Small Shipping Pad, Ship Tier 1)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {},
+            "out": {
+                "firmarlite-bar": 100
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "shipping-pad-small"
+            ]
+        },
+        {
+            "id": "firmarlite-bar-small-pad-2",
+            "name": "Firmarlite Bar (Small Shipping Pad, Ship Tier 2)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {},
+            "out": {
+                "firmarlite-bar": 200
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "shipping-pad-small"
+            ]
+        },
+        {
+            "id": "firmarlite-bar-medium-pad-1",
+            "name": "Firmarlite Bar (Medium Shipping Pad, Ship Tier 1)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {},
+            "out": {
+                "firmarlite-bar": 500
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "shipping-pad-medium"
+            ]
+        },
+        {
+            "id": "firmarlite-bar-medium-pad-2",
+            "name": "Firmarlite Bar (Medium Shipping Pad, Ship Tier 2)",
+            "category": "metallurgy",
+            "time": 60,
+            "in": {},
+            "out": {
+                "firmarlite-bar": 1000
+            },
+            "flags": [
+                "mining"
+            ],
+            "producers": [
+                "shipping-pad-medium"
+            ]
+        },
+        {
+            "id": "firmarlite-sheet",
+            "name": "Firmarlite Sheet",
+            "category": "metallurgy",
+            "producers": [
+                "lava-smelter-1",
+                "lava-smelter-2"
+            ],
+            "time": 6,
+            "out": {
+                "firmarlite-sheet": 1
+            },
+            "in": {
+                "firmarlite-bar": 1
+            }
+        },
+        {
+            "id": "molten-superalloy",
+            "name": "Molten Superalloy",
+            "category": "metallurgy",
+            "producers": [
+                "electric-arc-furnace"
+            ],
+            "time": 60,
+            "out": {
+                "molten-superalloy": 1
+            },
+            "in": {
+                "firmarlite-sheet": 160,
+                "telluxite-ingot": 40,
+                "coked-ignium": 40
+            }
+        },
+        {
+            "id": "superalloy",
+            "name": "Superalloy",
+            "category": "metallurgy",
+            "producers": [
+                "casting-machine"
+            ],
+            "time": 3,
+            "out": {
+                "superalloy": 1
+            },
+            "in": {
+                "molten-superalloy": 50
+            }
+        },
+        {
+            "id": "power-line",
+            "name": "Power Line",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 4,
+            "out": {
+                "power-line": 2
+            },
+            "in": {
+                "wire-coil": 2
+            }
+        },
+        {
+            "id": "explosive-charge",
+            "name": "Explosive Charge",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "explosive-charge": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "explosives": 1,
+                "wire-coil": 3,
+                "electronic-components": 3
+            }
+        },
+        {
+            "id": "mining-drill",
+            "name": "Mining Drill",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 8,
+            "out": {
+                "mining-drill": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2,
+                "machinery-parts": 1,
+                "electronic-components": 1
             }
         },
         {
