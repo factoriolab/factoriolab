@@ -507,6 +507,21 @@ export class SettingsService extends Store<SettingsState> {
       }
     }
 
+    // Determine game flags early (needed for pseudo-item injection)
+    const _flags = flags[coalesce(mod?.flags, DEFAULT_MOD)];
+
+    // Inject electricity pseudo-item for games that track power formally
+    if (_flags.has('electricity')) {
+      itemData['electricity'] = {
+        id: 'electricity',
+        name: 'Electricity',
+        category: 'buildings',
+        row: 0,
+        icon: 'tesla-tower',
+        stack: 1,
+      };
+    }
+
     // Convert to id arrays
     const categoryIds = Object.keys(categoryEntities);
     const iconIds = Object.keys(iconEntities);
@@ -524,13 +539,13 @@ export class SettingsService extends Store<SettingsState> {
       .filter((r) => !iconEntities[r.id] && !r.icon)
       .forEach((r) => {
         const firstOutId = Object.keys(r.out)[0];
+        if (!firstOutId) return;
         const firstOutItem = itemData[firstOutId];
         r.icon = firstOutItem.icon ?? firstOutId;
       });
 
     const itemQIds = new Set<string>();
     const recipeQIds = new Set<string>();
-    const _flags = flags[coalesce(mod?.flags, DEFAULT_MOD)];
     if (_flags.has('quality')) {
       const qualities = [
         Quality.Uncommon,

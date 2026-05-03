@@ -34,6 +34,8 @@
     "proliferator-3-products"
   ],
   "fuelRank": [
-    "coal"
+    "coal",
+    "deuteron-fuel-rod",
+    "antimatter-fuel-rod"
   ]
 }

@@ -88,6 +88,11 @@ export class ThemeService {
         .filter(fnPropsNotNullish('icon'))
         .filter((item) => !data.itemQIds.has(item.id))
         .forEach((item) => {
+          if (item.id === 'electricity') {
+            const selector = this.escapeSelector(item.id);
+            css += `.${selector}.item::before { background-image: url("electricity.png"); background-size: contain; background-position: center; background-repeat: no-repeat; } `;
+            return;
+          }
           const icon = data.iconEntities[item.icon];
           const selector = this.escapeSelector(item.id);
           css += `.${selector}.item::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
