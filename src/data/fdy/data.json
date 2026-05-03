@@ -3587,6 +3587,13 @@
             "stack": 1
         },
         {
+            "id": "xenoferrite-plates-barrel-recycle",
+            "name": "Xenoferrite Plates (Barrel Recycle)",
+            "category": "components",
+            "row": 6,
+            "stack": 1
+        },
+        {
             "id": "science-pack-1",
             "name": "Science Pack I",
             "category": "components",
@@ -4587,7 +4594,7 @@
         },
         {
             "id": "ore-scanner",
-            "name": "Ore Scanner",
+            "name": "Ore Scanner (Handheld)",
             "category": "handhelds",
             "row": 0,
             "stack": 1
@@ -10188,6 +10195,336 @@
             }
         },
         {
+            "id": "sign",
+            "name": "Sign",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1.5,
+            "out": {
+                "sign": 1
+            },
+            "in": {
+                "xenoferrite-plates": 4
+            }
+        },
+        {
+            "id": "railings",
+            "name": "Railings",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1.5,
+            "out": {
+                "railings": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1
+            }
+        },
+        {
+            "id": "construction-site-decor",
+            "name": "Construction Site Decor",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "construction-site-decor": 1
+            },
+            "in": {
+                "polymer-board": 2
+            }
+        },
+        {
+            "id": "ceiling-light",
+            "name": "Ceiling Light",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "ceiling-light": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "ceiling-light-large",
+            "name": "Ceiling Light (Large)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "ceiling-light-large": 1
+            },
+            "in": {
+                "steel-beams": 5,
+                "electronic-components": 5
+            }
+        },
+        {
+            "id": "wall-light",
+            "name": "Wall Light",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "wall-light": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "portable-light",
+            "name": "Portable Light",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "portable-light": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "electronic-components": 1,
+                "energy-cell": 1
+            }
+        },
+        {
+            "id": "light-pole-1",
+            "name": "Light Pole I",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "light-pole-1": 1
+            },
+            "in": {
+                "xenoferrite-plates": 5,
+                "electronic-components": 1,
+                "technum-rod": 1
+            }
+        },
+        {
+            "id": "light-pole-2",
+            "name": "Light Pole II",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "light-pole-2": 1
+            },
+            "in": {
+                "xenoferrite-plates": 3,
+                "electronic-components": 1,
+                "technum-rod": 1
+            }
+        },
+        {
+            "id": "door-single",
+            "name": "Door (Single)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "door-single": 1
+            },
+            "in": {
+                "xenoferrite-plates": 10,
+                "machinery-parts": 2,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "door-double",
+            "name": "Door (Double)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "door-double": 1
+            },
+            "in": {
+                "xenoferrite-plates": 20,
+                "machinery-parts": 5,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "hangar-gate",
+            "name": "Hangar Gate",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "hangar-gate": 1
+            },
+            "in": {
+                "steel-beams": 25,
+                "advanced-machinery-parts": 10,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "decor-basic",
+            "name": "Decor (Basic Shapes)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-basic": 4
+            },
+            "in": {
+                "xenoferrite-plates": 1
+            }
+        },
+        {
+            "id": "wooden-blocks",
+            "name": "Wooden Blocks",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 5,
+            "out": {
+                "wooden-blocks": 5
+            },
+            "in": {
+                "biomass": 1
+            }
+        },
+        {
+            "id": "mining-drill",
+            "name": "Mining Drill",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 8,
+            "out": {
+                "mining-drill": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2,
+                "machinery-parts": 1,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "mining-laser",
+            "name": "Mining Laser (Manual Crafting)",
+            "category": "handhelds",
+            "producers": [
+                "mining-drill"
+            ],
+            "time": 1,
+            "out": {
+                "mining-laser": 1
+            },
+            "in": {
+                "steel-beams": 2,
+                "advanced-machinery-parts": 15,
+                "energy-cell": 15,
+                "electronic-components": 15
+            },
+            "flags": [
+                "mining"
+            ]
+        },
+        {
+            "id": "excavation-drone-controller",
+            "name": "Excavation Drone Controller",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "excavation-drone-controller": 1
+            },
+            "in": {
+                "xenoferrite-plates": 5,
+                "machinery-parts": 5,
+                "electronic-components": 25
+            }
+        },
+        {
+            "id": "ore-scanner",
+            "name": "Ore Scanner (Handheld)",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "ore-scanner": 1
+            },
+            "in": {
+                "xenoferrite-plates": 4,
+                "electronic-components": 20
+            }
+        },
+        {
             "id": "power-line",
             "name": "Power Line",
             "category": "handhelds",
@@ -10202,6 +10539,119 @@
             },
             "in": {
                 "wire-coil": 2
+            }
+        },
+        {
+            "id": "orbital-uplink",
+            "name": "Orbital Uplink",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "orbital-uplink": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "machinery-parts": 5,
+                "electronic-components": 20,
+                "circuit-board": 10
+            }
+        },
+        {
+            "id": "plumber-tool",
+            "name": "Plumber Tool (Manual Crafting)",
+            "category": "handhelds",
+            "producers": [
+                "mining-drill"
+            ],
+            "time": 0.6,
+            "out": {
+                "plumber-tool": 1
+            },
+            "in": {
+                "biomass": 5
+            },
+            "flags": [
+                "mining"
+            ]
+        },
+        {
+            "id": "modular-building-planner",
+            "name": "Modular Building Planner",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 4,
+            "out": {
+                "modular-building-planner": 1
+            },
+            "in": {
+                "polymer-board": 1,
+                "machinery-parts": 1
+            }
+        },
+        {
+            "id": "paint-roller",
+            "name": "Paint Roller",
+            "category": "handhelds",
+            "producers": [
+                "mining-drill"
+            ],
+            "time": 0.6,
+            "out": {
+                "paint-roller": 1
+            },
+            "in": {
+                "biomass": 10,
+                "technum-rod": 1,
+                "machinery-parts": 1
+            },
+            "flags": [
+                "mining"
+            ]
+        },
+        {
+            "id": "irrigation-tool",
+            "name": "Irrigation Tool",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 30,
+            "out": {
+                "irrigation-tool": 1
+            },
+            "in": {
+                "xenoferrite-plates": 5,
+                "machinery-parts": 5,
+                "pipe": 5
+            }
+        },
+        {
+            "id": "explosives-detonator",
+            "name": "Explosives Detonator",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 8,
+            "out": {
+                "explosives-detonator": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2,
+                "electronic-components": 40
             }
         },
         {
@@ -10225,8 +10675,25 @@
             }
         },
         {
-            "id": "mining-drill",
-            "name": "Mining Drill",
+            "id": "heavy-explosive-charge",
+            "name": "Heavy Explosive Charge",
+            "category": "handhelds",
+            "producers": [
+                "chemical-processor"
+            ],
+            "time": 8,
+            "out": {
+                "heavy-explosive-charge": 1
+            },
+            "in": {
+                "explosive-charge": 1,
+                "explosives": 1,
+                "liquid-fuel": 3
+            }
+        },
+        {
+            "id": "shaped-explosive-charge",
+            "name": "Shaped Explosive Charge",
             "category": "handhelds",
             "producers": [
                 "assembler-1",
@@ -10235,12 +10702,32 @@
             ],
             "time": 8,
             "out": {
-                "mining-drill": 1
+                "shaped-explosive-charge": 1
             },
             "in": {
-                "xenoferrite-plates": 2,
-                "machinery-parts": 1,
-                "electronic-components": 1
+                "steel-beams": 1,
+                "explosives": 1,
+                "circuit-board": 1
+            }
+        },
+        {
+            "id": "heavy-shaped-explosive-charge",
+            "name": "Shaped Explosive Charge (Heavy)",
+            "category": "handhelds",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 8,
+            "out": {
+                "heavy-shaped-explosive-charge": 1
+            },
+            "in": {
+                "steel-beams": 2,
+                "explosives": 2,
+                "circuit-board": 1,
+                "rubber": 2
             }
         },
         {
@@ -10384,6 +10871,25 @@
             }
         },
         {
+            "id": "heavy-caster-base",
+            "name": "Heavy Caster Base",
+            "category": "buildings",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 10,
+            "out": {
+                "heavy-caster-base": 1
+            },
+            "in": {
+                "concrete": 200,
+                "steel-beams": 200,
+                "advanced-machinery-parts": 50
+            }
+        },
+        {
             "id": "monument-base",
             "name": "Monument Base",
             "category": "buildings",
@@ -10398,6 +10904,96 @@
             },
             "in": {
                 "concrete": 50
+            }
+        },
+        {
+            "id": "reactor-fuel-mixer-base",
+            "name": "Reactor Fuel Mixer Base",
+            "category": "buildings",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 20,
+            "out": {
+                "reactor-fuel-mixer-base": 1
+            },
+            "in": {
+                "concrete": 250,
+                "steel-beams": 100
+            }
+        },
+        {
+            "id": "xeno-reactor-base",
+            "name": "Xeno Reactor Base",
+            "category": "buildings",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 20,
+            "out": {
+                "xeno-reactor-base": 1
+            },
+            "in": {
+                "concrete": 1000,
+                "steel-beams": 400
+            }
+        },
+        {
+            "id": "steam-generator-base",
+            "name": "Steam Generator Base",
+            "category": "buildings",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 20,
+            "out": {
+                "steam-generator-base": 1
+            },
+            "in": {
+                "concrete": 250,
+                "steel-beams": 100
+            }
+        },
+        {
+            "id": "high-pressure-turbine-base",
+            "name": "High-Pressure Turbine Base",
+            "category": "buildings",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 20,
+            "out": {
+                "high-pressure-turbine-base": 1
+            },
+            "in": {
+                "concrete": 500,
+                "steel-beams": 200
+            }
+        },
+        {
+            "id": "cooling-tower-base",
+            "name": "Cooling Tower Base",
+            "category": "buildings",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 20,
+            "out": {
+                "cooling-tower-base": 1
+            },
+            "in": {
+                "concrete": 1000,
+                "steel-beams": 400
             }
         },
         {
