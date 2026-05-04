@@ -2100,7 +2100,7 @@
             "row": 2,
             "stack": 500,
             "pipe": {
-                "speed": 617
+                "speed": 600
             }
         },
         {
@@ -2110,7 +2110,7 @@
             "row": 2,
             "stack": 250,
             "pipe": {
-                "speed": 6170
+                "speed": 6000
             }
         },
         {
@@ -2148,64 +2148,28 @@
             "name": "Pump",
             "category": "structures",
             "row": 2,
-            "stack": 50,
-            "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 200,
-                "size": [
-                    2,
-                    1
-                ]
-            }
+            "stack": 50
         },
         {
             "id": "pump-pipeline",
             "name": "Pump (Pipeline)",
             "category": "structures",
             "row": 2,
-            "stack": 50,
-            "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 1000,
-                "size": [
-                    5,
-                    3
-                ]
-            }
+            "stack": 50
         },
         {
             "id": "pipe-to-pipeline-pump",
             "name": "Pipe-to-Pipeline Pump",
             "category": "structures",
             "row": 2,
-            "stack": 50,
-            "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 1000,
-                "size": [
-                    5,
-                    3
-                ]
-            }
+            "stack": 50
         },
         {
             "id": "pipeline-to-pipe-pump",
             "name": "Pipeline-to-Pipe Pump",
             "category": "structures",
             "row": 2,
-            "stack": 50,
-            "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 1000,
-                "size": [
-                    5,
-                    3
-                ]
-            }
+            "stack": 50
         },
         {
             "id": "cargo-shuttle-start-pad-liquids",
@@ -4420,7 +4384,7 @@
             "id": "neon-decor",
             "name": "Neon Decor",
             "category": "decor",
-            "row": 4,
+            "row": 5,
             "stack": 1000
         },
         {
@@ -4678,46 +4642,28 @@
         },
         {
             "id": "long-range-scanner-base",
-            "name": "Long Range Scanner Base",
+            "name": "Long Range Scanner Base (with all modules)",
             "category": "buildings",
             "row": 0,
-            "stack": 1,
-            "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 500,
-                "size": [
-                    10,
-                    27
-                ]
-            }
+            "stack": 1
         },
         {
             "id": "radio-tower-base",
-            "name": "Radio Tower Base",
+            "name": "Radio Tower Base (with all modules)",
             "category": "buildings",
             "row": 0,
-            "stack": 1,
-            "machine": {
-                "speed": 1,
-                "type": "electric",
-                "usage": 10000,
-                "size": [
-                    11,
-                    11
-                ]
-            }
+            "stack": 1
         },
         {
             "id": "modular-storage-tank-base",
-            "name": "Modular Storage Tank Base",
+            "name": "Modular Storage Tank Base (with all modules)",
             "category": "buildings",
             "row": 0,
             "stack": 1
         },
         {
             "id": "fracking-tower-base",
-            "name": "Fracking Tower Base",
+            "name": "Fracking Tower Base (with all modules)",
             "category": "buildings",
             "row": 0,
             "stack": 1,
@@ -4733,7 +4679,7 @@
         },
         {
             "id": "air-intake-base",
-            "name": "Air Intake Base",
+            "name": "Air Intake Base (with all modules)",
             "category": "buildings",
             "row": 0,
             "stack": 1,
@@ -4749,7 +4695,7 @@
         },
         {
             "id": "hot-air-stove-base",
-            "name": "Hot Air Stove Base",
+            "name": "Hot Air Stove Base (with all modules)",
             "category": "buildings",
             "row": 0,
             "stack": 1,
@@ -4765,7 +4711,7 @@
         },
         {
             "id": "blast-furnace-base",
-            "name": "Blast Furnace Base",
+            "name": "Blast Furnace Base (with all modules)",
             "category": "buildings",
             "row": 0,
             "stack": 1,
@@ -4781,7 +4727,7 @@
         },
         {
             "id": "heavy-caster-base",
-            "name": "Heavy Caster Base",
+            "name": "Heavy Caster Base (with all modules)",
             "category": "buildings",
             "row": 0,
             "stack": 1,
@@ -4797,14 +4743,14 @@
         },
         {
             "id": "monument-base",
-            "name": "Monument Base",
+            "name": "Monument Base (with all modules)",
             "category": "buildings",
             "row": 0,
             "stack": 1
         },
         {
             "id": "reactor-fuel-mixer-base",
-            "name": "Reactor Fuel Mixer Base",
+            "name": "Reactor Fuel Mixer Base (with all modules)",
             "category": "buildings",
             "row": 1,
             "stack": 1,
@@ -4820,7 +4766,7 @@
         },
         {
             "id": "xeno-reactor-base",
-            "name": "Xeno Reactor Base",
+            "name": "Xeno Reactor Base (with all modules)",
             "category": "buildings",
             "row": 1,
             "stack": 1,
@@ -4836,7 +4782,7 @@
         },
         {
             "id": "steam-generator-base",
-            "name": "Steam Generator Base",
+            "name": "Steam Generator Base (with all modules)",
             "category": "buildings",
             "row": 1,
             "stack": 1,
@@ -4852,7 +4798,7 @@
         },
         {
             "id": "high-pressure-turbine-base",
-            "name": "High-Pressure Turbine Base",
+            "name": "High-Pressure Turbine Base (with all modules)",
             "category": "buildings",
             "row": 1,
             "stack": 1,
@@ -4868,7 +4814,7 @@
         },
         {
             "id": "cooling-tower-base",
-            "name": "Cooling Tower Base",
+            "name": "Cooling Tower Base (with all modules)",
             "category": "buildings",
             "row": 1,
             "stack": 1,
@@ -10448,6 +10394,559 @@
             }
         },
         {
+            "id": "decor-misc",
+            "name": "Decor (Misc)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-misc": 1
+            },
+            "in": {
+                "xenoferrite-plates": 10
+            }
+        },
+        {
+            "id": "decor-struts",
+            "name": "Decor (Struts)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-struts": 2
+            },
+            "in": {
+                "steel-beams": 1
+            }
+        },
+        {
+            "id": "decor-support-truss",
+            "name": "Decor (Support Truss)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-support-truss": 2
+            },
+            "in": {
+                "steel-beams": 1
+            }
+        },
+        {
+            "id": "decor-support",
+            "name": "Decor (Support)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-support": 2
+            },
+            "in": {
+                "steel-beams": 1
+            }
+        },
+        {
+            "id": "decor-walls",
+            "name": "Decor (Walls)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-walls": 1
+            },
+            "in": {
+                "xenoferrite-plates": 5
+            }
+        },
+        {
+            "id": "decor-modular-windows-slope-edge",
+            "name": "Decor (Modular Windows Slope Edge)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-modular-windows-slope-edge": 1
+            },
+            "in": {
+                "glass": 1
+            }
+        },
+        {
+            "id": "decor-modular-windows-slope",
+            "name": "Decor (Modular Windows Slope)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-modular-windows-slope": 1
+            },
+            "in": {
+                "glass": 1
+            }
+        },
+        {
+            "id": "decor-modular-windows-wedge",
+            "name": "Decor (Modular Windows Wedge)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-modular-windows-wedge": 1
+            },
+            "in": {
+                "glass": 1
+            }
+        },
+        {
+            "id": "decor-modular-windows",
+            "name": "Decor (Modular Windows)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-modular-windows": 1
+            },
+            "in": {
+                "glass": 1
+            }
+        },
+        {
+            "id": "decor-windows",
+            "name": "Decor (Windows)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 1,
+            "out": {
+                "decor-windows": 1
+            },
+            "in": {
+                "steel-beams": 1,
+                "glass": 1
+            }
+        },
+        {
+            "id": "neon-decor",
+            "name": "Neon Decor",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "neon-decor": 4
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "polymer-board": 1
+            }
+        },
+        {
+            "id": "neon-decor-slopes",
+            "name": "Neon Decor (Slopes)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "neon-decor-slopes": 4
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "polymer-board": 1
+            }
+        },
+        {
+            "id": "neon-decor-slope-junctions",
+            "name": "Neon Decor (Slope Junctions)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "neon-decor-slope-junctions": 4
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "polymer-board": 1
+            }
+        },
+        {
+            "id": "neon-decor-large",
+            "name": "Neon Decor (Large)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "neon-decor-large": 2
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "polymer-board": 1
+            }
+        },
+        {
+            "id": "neon-decor-large-slopes",
+            "name": "Neon Decor (Large Slopes)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "neon-decor-large-slopes": 2
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "polymer-board": 1
+            }
+        },
+        {
+            "id": "neon-decor-large-slope-junctions",
+            "name": "Neon Decor (Large Slope Junctions)",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 2,
+            "out": {
+                "neon-decor-large-slope-junctions": 2
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "polymer-board": 1
+            }
+        },
+        {
+            "id": "office-chair",
+            "name": "Office Chair",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "office-chair": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1
+            }
+        },
+        {
+            "id": "office-couch",
+            "name": "Office Couch",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "office-couch": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2
+            }
+        },
+        {
+            "id": "office-desk",
+            "name": "Office Desk",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "office-desk": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2,
+                "electronic-components": 1
+            }
+        },
+        {
+            "id": "office-file-cabinet",
+            "name": "Office File Cabinet",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "office-file-cabinet": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2
+            }
+        },
+        {
+            "id": "office-plant",
+            "name": "Office Plant",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "office-plant": 1
+            },
+            "in": {
+                "xenoferrite-plates": 1,
+                "biomass": 1
+            }
+        },
+        {
+            "id": "office-table",
+            "name": "Office Table",
+            "category": "decor",
+            "producers": [
+                "assembler-1",
+                "assembler-2",
+                "assembler-3"
+            ],
+            "time": 3,
+            "out": {
+                "office-table": 1
+            },
+            "in": {
+                "xenoferrite-plates": 2
+            }
+        },
+        {
+            "id": "forrest-seed-plants",
+            "name": "Forrest Seed (Plants)",
+            "category": "decor",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 300,
+            "out": {
+                "forrest-seed-plants": 1.5
+            },
+            "in": {
+                "forrest-seed-plants": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
+            "id": "forrest-seed-trees",
+            "name": "Forrest Seed (Trees)",
+            "category": "decor",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 300,
+            "out": {
+                "forrest-seed-trees": 1.5
+            },
+            "in": {
+                "forrest-seed-trees": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
+            "id": "rocky-desert-seed-plants",
+            "name": "Rocky Desert Seed (Plants)",
+            "category": "decor",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 300,
+            "out": {
+                "rocky-desert-seed-plants": 1.5
+            },
+            "in": {
+                "rocky-desert-seed-plants": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
+            "id": "rocky-desert-seed-trees",
+            "name": "Rocky Desert Seed (Trees)",
+            "category": "decor",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 300,
+            "out": {
+                "rocky-desert-seed-trees": 1.5
+            },
+            "in": {
+                "rocky-desert-seed-trees": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
+            "id": "sandy-desert-seed-plants",
+            "name": "Sandy Desert Seed (Plants)",
+            "category": "decor",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 300,
+            "out": {
+                "sandy-desert-seed-plants": 1.5
+            },
+            "in": {
+                "sandy-desert-seed-plants": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
+            "id": "sandy-desert-seed-trees",
+            "name": "Sandy Desert Seed (Trees)",
+            "category": "decor",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 300,
+            "out": {
+                "sandy-desert-seed-trees": 1.5
+            },
+            "in": {
+                "sandy-desert-seed-trees": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
+            "id": "tropical-rainforest-seed-plants",
+            "name": "Tropical Rainforest Seed (Plants)",
+            "category": "decor",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 300,
+            "out": {
+                "tropical-rainforest-seed-plants": 1.5
+            },
+            "in": {
+                "tropical-rainforest-seed-plants": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
+            "id": "tropical-rainforest-seed-trees",
+            "name": "Tropical Rainforest Seed (Trees)",
+            "category": "decor",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 300,
+            "out": {
+                "tropical-rainforest-seed-trees": 1.5
+            },
+            "in": {
+                "tropical-rainforest-seed-trees": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
+            "id": "tundra-seed-plants",
+            "name": "Tundra Seed (Plants)",
+            "category": "decor",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 300,
+            "out": {
+                "tundra-seed-plants": 1.5
+            },
+            "in": {
+                "tundra-seed-plants": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
+            "id": "tundra-seed-trees",
+            "name": "Tundra Seed (Trees)",
+            "category": "decor",
+            "producers": [
+                "greenhouse"
+            ],
+            "time": 300,
+            "out": {
+                "tundra-seed-trees": 1.5
+            },
+            "in": {
+                "tundra-seed-trees": 1,
+                "mineral-rocks": 1,
+                "water": 250
+            }
+        },
+        {
             "id": "mining-drill",
             "name": "Mining Drill",
             "category": "handhelds",
@@ -10998,46 +11497,78 @@
         },
         {
             "id": "xenoferrite-furnace",
-            "name": "Xenoferrite Furnace",
+            "name": "Molten Xenoferrite (Blast Furnace)",
             "category": "metallurgy",
             "producers": [
                 "blast-furnace-base"
             ],
             "time": 60,
             "out": {
-                "molten-xenoferrite": 5760,
-                "slag": 640
+                "molten-xenoferrite": 11520,
+                "slag": 1280
             },
             "in": {
-                "xenoferrite-ore": 640,
-                "coked-ignium": 320,
+                "xenoferrite-ore": 1280,
+                "coked-ignium": 640,
                 "mineral-rocks": 256,
-                "air-hot": 216000
+                "air-hot": 324000
             }
         },
         {
             "id": "technum-furnace",
-            "name": "Technum Furnace",
+            "name": "Molten Technum (Blast Furnace)",
             "category": "metallurgy",
             "producers": [
                 "blast-furnace-base"
             ],
             "time": 60,
             "out": {
-                "molten-technum": 5760,
-                "slag": 640
+                "molten-technum": 11520,
+                "slag": 1280
             },
             "in": {
-                "technum-ore": 640,
-                "coked-ignium": 320,
+                "technum-ore": 1280,
+                "coked-ignium": 640,
                 "mineral-rocks": 256,
-                "air-hot": 216000
+                "air-hot": 324000
+            }
+        },
+        {
+            "id": "xenoferrite-plates-3-2",
+            "name": "Xenoferrite Plates (Tier 3, Heavy Caster)",
+            "category": "metallurgy",
+            "producers": [
+                "heavy-caster-base"
+            ],
+            "time": 60,
+            "out": {
+                "xenoferrite-plates": 1280
+            },
+            "in": {
+                "molten-xenoferrite": 3840
+            }
+        },
+        {
+            "id": "technum-rod-3-2",
+            "name": "Technum Rod (Tier 3, Heavy Caster)",
+            "category": "metallurgy",
+            "producers": [
+                "heavy-caster-base"
+            ],
+            "time": 60,
+            "out": {
+                "technum-rod": 1280
+            },
+            "in": {
+                "molten-technum": 3840
             }
         }
     ],
     "defaults": {
         "minBelt": "conveyor-1",
         "maxBelt": "conveyor-4",
+        "minPipe": "pipe",
+        "maxPipe": "pipeline",
         "minMachineRank": [
             "assembler-1"
         ],
