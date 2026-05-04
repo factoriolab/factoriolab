@@ -503,6 +503,15 @@ export class RecipeService {
             recipe.in['electricity'] || rational.zero
           ).add(elecIn);
         } else if (
+          machine.type === EnergyType.Electric &&
+          usage.lt(rational.zero)
+        ) {
+          // Free power generator (wind turbine, solar panel): produces electricity
+          const elecOut = recipe.time.mul(usage.abs()).div(elecScale);
+          recipe.out['electricity'] = (
+            recipe.out['electricity'] || rational.zero
+          ).add(elecOut);
+        } else if (
           machine.type === EnergyType.Burner &&
           usage.gt(rational.zero)
         ) {
