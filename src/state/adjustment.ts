@@ -648,7 +648,6 @@ export class Adjustment {
     Object.values(adjustedRecipe).forEach((recipe) => {
       finalizeRecipe(recipe);
       Object.keys(recipe.out).forEach((productId) => {
-        if (itemRecipeIds[productId] == null) console.log(productId);
         itemRecipeIds[productId].push(recipe.id);
       });
 
