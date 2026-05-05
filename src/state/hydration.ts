@@ -122,7 +122,8 @@ export class Hydration {
     value: BeaconSettings[] | undefined,
     def: BeaconSettings[] | undefined,
   ): BeaconSettings[] | undefined {
-    if (value == null || def == null || def.length === 0) return def;
+    if (value == null) return def;
+    if (def == null || def.length === 0) return value;
 
     const beaconSettings = def[0];
     const moduleSettings = beaconSettings.modules?.[0];
