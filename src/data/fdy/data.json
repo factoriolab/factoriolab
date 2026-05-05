@@ -10117,7 +10117,7 @@
             ],
             "time": 60,
             "out": {
-                "molten-superalloy": 1
+                "molten-superalloy": 4000
             },
             "in": {
                 "firmarlite-sheet": 160,
