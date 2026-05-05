@@ -44,7 +44,8 @@ export type FlagSet =
   | 'fay'
   | 'mds'
   | 'fdy'
-  | 'mtm';
+  | 'mtm'
+  | 'str';
 
 export const flags: Record<FlagSet, Set<Flag>> = {
   spa: new Set([
@@ -157,4 +158,5 @@ export const flags: Record<FlagSet, Set<Flag>> = {
   mds: new Set(['power', 'mods']),
   fdy: new Set(['power']),
   mtm: new Set(['power']),
+  str: new Set(['power']),
 };
