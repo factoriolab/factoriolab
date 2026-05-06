@@ -46,7 +46,6 @@ import { FlowDiagram } from '~/state/preferences/flow-diagram';
 import { FlowSettings } from '~/state/preferences/flow-settings';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { SankeyAlign } from '~/state/preferences/sankey-align';
-import { systemIconsRecord } from '~/state/settings/system-icons';
 import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 
@@ -243,9 +242,9 @@ export class Flow {
       .attr('class', 'pointer-events-none');
 
     imageNode
-      .filter((d) => d.icon.quality != null)
+      .filter((d) => d.qualityIcon != null)
       .append('svg')
-      .attr('viewBox', (d) => systemIconsRecord[`q${d.icon.quality}`].viewBox)
+      .attr('viewBox', (d) => coalesce(d.qualityIcon?.viewBox, ''))
       .attr('width', 32)
       .attr('height', 32)
       .attr('x', 4)
@@ -288,12 +287,9 @@ export class Flow {
 
     // Add recipe quality image
     recipeIcon
-      .filter((d) => d.recipeIcon.quality != null)
+      .filter((d) => d.recipeQualityIcon != null)
       .append('svg')
-      .attr(
-        'viewBox',
-        (d) => systemIconsRecord[`q${d.recipeIcon.quality}`].viewBox,
-      )
+      .attr('viewBox', (d) => coalesce(d.recipeQualityIcon?.viewBox, ''))
       .attr('width', 16)
       .attr('height', 16)
       .attr('x', 12)
@@ -490,9 +486,9 @@ export class Flow {
 
     // Node quality image
     node
-      .filter((d) => d.icon.quality != null)
+      .filter((d) => d.qualityIcon != null)
       .append('svg')
-      .attr('viewBox', (d) => systemIconsRecord[`q${d.icon.quality}`].viewBox)
+      .attr('viewBox', (d) => coalesce(d.qualityIcon?.viewBox, ''))
       .attr('width', 32)
       .attr('height', 32)
       .attr('x', 3)
@@ -534,12 +530,9 @@ export class Flow {
 
     // Add recipe quality image
     recipeIcon
-      .filter((d) => d.recipeIcon.quality != null)
+      .filter((d) => d.recipeQualityIcon != null)
       .append('svg')
-      .attr(
-        'viewBox',
-        (d) => systemIconsRecord[`q${d.recipeIcon.quality}`].viewBox,
-      )
+      .attr('viewBox', (d) => coalesce(d.recipeQualityIcon?.viewBox, ''))
       .attr('width', 16)
       .attr('height', 16)
       .attr('x', 11)

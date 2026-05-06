@@ -13,6 +13,7 @@ import { displayRateInfo } from '~/state/settings/display-rate';
 import { Settings } from '~/state/settings/settings';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { Translate } from '~/translate/translate';
+import { coalesce } from '~/utils/nullish';
 
 import { FlowData } from './flow-data';
 
@@ -89,6 +90,9 @@ export class FlowBuilder {
       ) {
         const item = data.itemRecord[step.itemId];
         const icon = data.iconRecord.item[item.id];
+        const qualityIcon = icon.quality
+          ? data.iconRecord.quality[icon.quality.id]
+          : undefined;
         const id = `i|${step.itemId}`;
         flow.nodes.push({
           id,
@@ -97,6 +101,7 @@ export class FlowBuilder {
           color: iconColor[icon.id],
           stepId: step.id,
           icon,
+          qualityIcon,
         });
 
         if (step.parents) {
@@ -137,6 +142,7 @@ export class FlowBuilder {
             color: 'var(--color-complement-500)',
             stepId: step.id,
             icon,
+            qualityIcon,
           });
           flow.links.push({
             source: id,
@@ -168,6 +174,7 @@ export class FlowBuilder {
             color: 'var(--color-brand-500)',
             stepId: step.id,
             icon,
+            qualityIcon,
           });
           flow.links.push({
             source: id,
@@ -190,21 +197,33 @@ export class FlowBuilder {
         }
       }
 
-      if (step.recipeId && step.machines && step.recipeSettings?.machineId) {
+      if (step.recipeId) {
         const recipe = data.recipeRecord[step.recipeId];
-        const machine = data.itemRecord[step.recipeSettings?.machineId];
-        const machineIcon = data.iconRecord.item[machine.id];
+        const machine = step.recipeSettings?.machineId
+          ? data.itemRecord[step.recipeSettings.machineId]
+          : undefined;
+        const icon = machine
+          ? data.iconRecord.item[machine.id]
+          : data.iconRecord.recipe[step.recipeId];
+        const qualityIcon = icon?.quality
+          ? data.iconRecord.quality[icon.quality.id]
+          : undefined;
         const recipeIcon = data.iconRecord.recipe[recipe.id];
+        const recipeQualityIcon = recipeIcon.quality
+          ? data.iconRecord.quality[recipeIcon.quality.id]
+          : undefined;
         const id = `${this.recipeStepNodeType(step)}|${step.recipeId}`;
         flow.nodes.push({
           id,
           name: recipe.name,
-          text: step.machines.toLocaleString(machinePrec),
+          text: coalesce(step.machines?.toLocaleString(machinePrec), ''),
           color: iconColor[recipeIcon.id],
           stepId: step.id,
           recipe,
-          icon: machineIcon,
-          recipeIcon: recipeIcon,
+          icon,
+          qualityIcon,
+          recipeIcon,
+          recipeQualityIcon,
           recipeObjectiveId: step.recipeObjectiveId,
         });
 
@@ -266,6 +285,7 @@ export class FlowBuilder {
         l.bidi = true;
     });
 
+    console.log(flow);
     return flow;
   }
 

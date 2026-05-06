@@ -12,6 +12,8 @@ export interface Node extends BaseData {
 
   stepId: string;
   icon: IconData;
+  qualityIcon?: IconData;
   recipeIcon?: IconData;
+  recipeQualityIcon?: IconData;
   recipeObjectiveId?: string;
 }
