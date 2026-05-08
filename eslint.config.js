@@ -68,7 +68,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['**/*.spec.ts'],
+    files: ['**/*.spec.ts', 'src/tests/**/*.ts'],
     rules: {
       '@typescript-eslint/dot-notation': [
         'error',

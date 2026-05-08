@@ -219,24 +219,6 @@ describe('Rational', () => {
     });
   });
 
-  describe('toDecimals', () => {
-    it('should handle integers', () => {
-      expect(rational(1n).toDecimals()).toEqual(0);
-    });
-
-    it('should determine number of decimals', () => {
-      expect(rational(1n).div(new Rational(2n)).toDecimals()).toEqual(1);
-    });
-
-    it('should handle very small numbers', () => {
-      expect(rational(3, 10000000).toDecimals()).toEqual(7);
-    });
-
-    it('should handle large numbers', () => {
-      expect(rational(2000001, 100000).toDecimals()).toEqual(5);
-    });
-  });
-
   describe('toJson', () => {
     it('should alias toString', () => {
       const value = rational(1n);

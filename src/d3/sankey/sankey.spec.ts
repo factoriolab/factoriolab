@@ -1,4 +1,5 @@
-import { Link, Node } from '~/models/flow';
+import { Link } from '~/flow/link';
+import { Node } from '~/flow/node';
 import { Mocks } from '~/tests';
 
 import { sankeyJustify } from './align';

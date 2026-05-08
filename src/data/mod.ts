@@ -1,5 +1,4 @@
 import { Game } from './game';
-// import { ModData } from './schema/mod-data';
 
 export interface ModInfo {
   /**
@@ -10,5 +9,3 @@ export interface ModInfo {
   name: string;
   game: Game;
 }
-
-// export interface Mod extends ModData, ModInfo {}

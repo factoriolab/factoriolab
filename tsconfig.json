@@ -16,7 +16,8 @@
     "target": "ES2023",
     "module": "preserve",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "/*": ["./*"]
     }
   },
   "angularCompilerOptions": {
