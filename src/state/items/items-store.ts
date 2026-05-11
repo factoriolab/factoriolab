@@ -5,6 +5,7 @@ import { Item } from '~/data/schema/item';
 import { Rational, rational } from '~/rational/rational';
 import { coalesce } from '~/utils/nullish';
 
+import { Dataset } from '../settings/dataset';
 import { Settings } from '../settings/settings';
 import { SettingsStore } from '../settings/settings-store';
 import { RecordStore } from '../store';
@@ -15,7 +16,13 @@ import { ItemState } from './item-state';
 export class ItemsStore extends RecordStore<ItemState> {
   private readonly settingsStore = inject(SettingsStore);
 
-  readonly settings = computed(() => this.computeItemsSettings(this.state()));
+  readonly settings = computed(() =>
+    this.computeItemsSettings(
+      this.state(),
+      this.settingsStore.settings(),
+      this.settingsStore.dataset(),
+    ),
+  );
 
   readonly itemsModified = computed(() => {
     const state = this.state();
@@ -31,9 +38,9 @@ export class ItemsStore extends RecordStore<ItemState> {
 
   computeItemsSettings(
     state: Record<string, ItemState>,
+    settings: Settings,
+    data: Dataset,
   ): Record<string, ItemSettings> {
-    const settings = this.settingsStore.settings();
-    const data = this.settingsStore.dataset();
     const value: Record<string, ItemSettings> = {};
     for (const item of data.itemIds.map((i) => data.itemRecord[i])) {
       const s = state[item.id];

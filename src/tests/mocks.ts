@@ -60,6 +60,7 @@ export const modInfo = datasets.mods.find((m) => m.id === modId)!;
 export const modData = modJson as unknown as ModData;
 modData.defaults!.excludedRecipes = [RecipeId.NuclearFuelReprocessing];
 modData.locations = [{ id: 'id', name: 'Location' }];
+modData.icons.push({ id: 'id', x: 0, y: 0 });
 export const modHash: ModHash = hashJson;
 export const modI18n: ModI18n = i18nJson;
 modI18n.locations = { ['id']: 'Translated' };
@@ -359,14 +360,23 @@ beforeAll(() => {
     defaults,
     dataset,
   );
-  itemsStateInitial = itemsStore.computeItemsSettings({});
+  itemsStateInitial = itemsStore.computeItemsSettings(
+    {},
+    settingsStateInitial,
+    dataset,
+  );
   machinesStateInitial = machinesStore.computeMachinesSettings(
     {},
     settingsStateInitial,
     dataset,
   );
   getRecipesState = (): Record<string, RecipeState> => {
-    return recipesStore.computeRecipesSettings({});
+    return recipesStore.computeRecipesSettings(
+      {},
+      machinesStateInitial,
+      settingsStateInitial,
+      dataset,
+    );
   };
   recipesStateInitial = getRecipesState();
   getAdjustedDataset = (): AdjustedDataset => {

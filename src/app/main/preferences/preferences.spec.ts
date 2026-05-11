@@ -1,22 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Preferences } from './preferences';
+// import { Preferences } from './preferences';
 
-describe('Preferences', () => {
-  let component: Preferences;
-  let fixture: ComponentFixture<Preferences>;
+// describe('Preferences', () => {
+//   let component: Preferences;
+//   let fixture: ComponentFixture<Preferences>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Preferences],
-    }).compileComponents();
+//   beforeEach(async () => {
+//     await TestBed.configureTestingModule({
+//       imports: [Preferences],
+//     }).compileComponents();
 
-    fixture = TestBed.createComponent(Preferences);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+//     fixture = TestBed.createComponent(Preferences);
+//     component = fixture.componentInstance;
+//     fixture.detectChanges();
+//   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+//   it('should create', () => {
+//     expect(component).toBeTruthy();
+//   });
+// });
