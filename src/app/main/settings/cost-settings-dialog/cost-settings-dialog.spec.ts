@@ -1,22 +1,24 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { CostSettingsDialog } from './cost-settings-dialog';
+import { TestModule } from '~/tests';
 
-// describe('CostSettingsDialog', () => {
-//   let component: CostSettingsDialog;
-//   let fixture: ComponentFixture<CostSettingsDialog>;
+import { CostSettingsDialog } from './cost-settings-dialog';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [CostSettingsDialog],
-//     }).compileComponents();
+describe('CostSettingsDialog', () => {
+  let component: CostSettingsDialog;
+  let fixture: ComponentFixture<CostSettingsDialog>;
 
-//     fixture = TestBed.createComponent(CostSettingsDialog);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestModule, CostSettingsDialog],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(CostSettingsDialog);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

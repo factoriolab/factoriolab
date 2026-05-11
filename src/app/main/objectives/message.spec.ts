@@ -1,22 +1,22 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { Message } from './message';
+import { Message } from './message';
 
-// describe('Message', () => {
-//   let component: Message;
-//   let fixture: ComponentFixture<Message>;
+describe('Message', () => {
+  let component: Message;
+  let fixture: ComponentFixture<Message>;
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [Message],
-//     }).compileComponents();
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Message],
+    }).compileComponents();
 
-//     fixture = TestBed.createComponent(Message);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+    fixture = TestBed.createComponent(Message);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

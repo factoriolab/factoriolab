@@ -120,7 +120,7 @@ export class Tooltip implements OnDestroy {
 
   private touchTimer: number | undefined;
   touch(): void {
-    this.touchTimer = setTimeout(() => {
+    this.touchTimer = window.setTimeout(() => {
       this.show();
       delete this.touchTimer;
     }, 500);

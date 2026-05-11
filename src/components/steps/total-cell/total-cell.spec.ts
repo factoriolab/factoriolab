@@ -1,22 +1,25 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { TotalCell } from './total-cell';
+import { setInputs } from '~/tests';
 
-// describe('TotalCell', () => {
-//   let component: TotalCell;
-//   let fixture: ComponentFixture<TotalCell>;
+import { TotalCell } from './total-cell';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [TotalCell],
-//     }).compileComponents();
+describe('TotalCell', () => {
+  let component: TotalCell;
+  let fixture: ComponentFixture<TotalCell>;
 
-//     fixture = TestBed.createComponent(TotalCell);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TotalCell],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(TotalCell);
+    setInputs(fixture, { value: {} });
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

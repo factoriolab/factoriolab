@@ -5,10 +5,10 @@ import {
   combineLatest,
   combineLatestWith,
   filter,
-  first,
   map,
   Subject,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
 
@@ -163,8 +163,8 @@ export class RouterSync {
           ),
         ),
         combineLatestWith(
-          this.modData.pipe(first()),
-          this.modHash.pipe(first()),
+          this.modData.pipe(take(1)),
+          this.modHash.pipe(take(1)),
         ),
         tap(([{ modId, params, isBare }, modData, modHash]) => {
           this.updateState(modId, params, isBare, modData, modHash);

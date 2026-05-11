@@ -1,22 +1,29 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { Collection } from './collection';
+import { setInputs, TestModule } from '~/tests';
 
-// describe('Collection', () => {
-//   let component: Collection;
-//   let fixture: ComponentFixture<Collection>;
+import { Collection } from './collection';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [Collection],
-//     }).compileComponents();
+describe('Collection', () => {
+  let component: Collection;
+  let fixture: ComponentFixture<Collection>;
 
-//     fixture = TestBed.createComponent(Collection);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestModule, Collection],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(Collection);
+    setInputs(fixture, {
+      label: 'label',
+      key: 'categoryIds',
+      iconType: 'system',
+    });
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

@@ -1,22 +1,24 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { Header } from './header';
+import { TestModule } from '~/tests';
 
-// describe('Header', () => {
-//   let component: Header;
-//   let fixture: ComponentFixture<Header>;
+import { Header } from './header';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [Header],
-//     }).compileComponents();
+describe.skip('Header', () => {
+  let component: Header;
+  let fixture: ComponentFixture<Header>;
 
-//     fixture = TestBed.createComponent(Header);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestModule, Header],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(Header);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

@@ -1,22 +1,25 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { LocationDetail } from './location-detail';
+import { setInputs, TestModule } from '~/tests';
 
-// describe('LocationDetail', () => {
-//   let component: LocationDetail;
-//   let fixture: ComponentFixture<LocationDetail>;
+import { LocationDetail } from './location-detail';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [LocationDetail],
-//     }).compileComponents();
+describe('LocationDetail', () => {
+  let component: LocationDetail;
+  let fixture: ComponentFixture<LocationDetail>;
 
-//     fixture = TestBed.createComponent(LocationDetail);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestModule, LocationDetail],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(LocationDetail);
+    setInputs(fixture, { id: 'id', collectionLabel: 'collectionLabel' });
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

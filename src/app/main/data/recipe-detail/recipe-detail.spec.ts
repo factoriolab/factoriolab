@@ -1,22 +1,25 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { RecipeDetail } from './recipe-detail';
+import { setInputs } from '~/tests';
 
-// describe('RecipeDetail', () => {
-//   let component: RecipeDetail;
-//   let fixture: ComponentFixture<RecipeDetail>;
+import { RecipeDetail } from './recipe-detail';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [RecipeDetail],
-//     }).compileComponents();
+describe('RecipeDetail', () => {
+  let component: RecipeDetail;
+  let fixture: ComponentFixture<RecipeDetail>;
 
-//     fixture = TestBed.createComponent(RecipeDetail);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RecipeDetail],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(RecipeDetail);
+    setInputs(fixture, { id: 'id' });
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

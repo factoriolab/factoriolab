@@ -1,22 +1,27 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { DetailRow } from './detail-row';
+import { setInputs, TestModule } from '~/tests';
 
-// describe('DetailRow', () => {
-//   let component: DetailRow;
-//   let fixture: ComponentFixture<DetailRow>;
+import { Steps } from '../steps';
+import { DetailRow } from './detail-row';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [DetailRow],
-//     }).compileComponents();
+describe('DetailRow', () => {
+  let component: DetailRow;
+  let fixture: ComponentFixture<DetailRow>;
 
-//     fixture = TestBed.createComponent(DetailRow);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestModule, DetailRow],
+      providers: [{ provide: Steps, provideValue: {} }],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(DetailRow);
+    setInputs(fixture, { value: {} });
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

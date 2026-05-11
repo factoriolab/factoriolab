@@ -23,22 +23,22 @@ describe('abs', () => {
 describe('Rational', () => {
   describe('isZero', () => {
     it('should determine whether Rational is zero', () => {
-      expect(rational(0n).isZero()).toBeTrue();
-      expect(rational(1n).isZero()).toBeFalse();
+      expect(rational(0n).isZero()).toEqual(true);
+      expect(rational(1n).isZero()).toEqual(false);
     });
   });
 
   describe('nonzero', () => {
     it('should determine whether Rational is nonzero', () => {
-      expect(rational(0n).nonzero()).toBeFalse();
-      expect(rational(1n).nonzero()).toBeTrue();
+      expect(rational(0n).nonzero()).toEqual(false);
+      expect(rational(1n).nonzero()).toEqual(true);
     });
   });
 
   describe('isInteger', () => {
     it('should deterine whether Rational is an integer', () => {
-      expect(rational(1n).isInteger()).toBeTrue();
-      expect(rational(1n).div(new Rational(2n)).isInteger()).toBeFalse();
+      expect(rational(1n).isInteger()).toEqual(true);
+      expect(rational(1n).div(new Rational(2n)).isInteger()).toEqual(false);
     });
   });
 
@@ -58,32 +58,32 @@ describe('Rational', () => {
 
   describe('lt', () => {
     it('should determine whether Rational is less than another', () => {
-      expect(rational(0n).lt(rational(1n))).toBeTrue();
-      expect(rational(1n).lt(rational(0n))).toBeFalse();
-      expect(new Rational(1n, 3n).lt(new Rational(3n, 4n))).toBeTrue();
+      expect(rational(0n).lt(rational(1n))).toEqual(true);
+      expect(rational(1n).lt(rational(0n))).toEqual(false);
+      expect(new Rational(1n, 3n).lt(new Rational(3n, 4n))).toEqual(true);
     });
   });
 
   describe('lte', () => {
     it('should determine whether Rational is less than or equal to another', () => {
-      expect(rational(0n).lte(rational(1n))).toBeTrue();
-      expect(rational(0n).lte(rational(0n))).toBeTrue();
-      expect(rational(1n).lte(rational(0n))).toBeFalse();
+      expect(rational(0n).lte(rational(1n))).toEqual(true);
+      expect(rational(0n).lte(rational(0n))).toEqual(true);
+      expect(rational(1n).lte(rational(0n))).toEqual(false);
     });
   });
 
   describe('gt', () => {
     it('should determine whether Rational is less than another', () => {
-      expect(rational(0n).gt(rational(1n))).toBeFalse();
-      expect(rational(1n).gt(rational(0n))).toBeTrue();
+      expect(rational(0n).gt(rational(1n))).toEqual(false);
+      expect(rational(1n).gt(rational(0n))).toEqual(true);
     });
   });
 
   describe('gte', () => {
     it('should determine whether Rational is less than or equal to another', () => {
-      expect(rational(0n).gte(rational(1n))).toBeFalse();
-      expect(rational(0n).gte(rational(0n))).toBeTrue();
-      expect(rational(1n).gte(rational(0n))).toBeTrue();
+      expect(rational(0n).gte(rational(1n))).toEqual(false);
+      expect(rational(0n).gte(rational(0n))).toEqual(true);
+      expect(rational(1n).gte(rational(0n))).toEqual(true);
     });
   });
 
@@ -222,7 +222,7 @@ describe('Rational', () => {
   describe('toJson', () => {
     it('should alias toString', () => {
       const value = rational(1n);
-      spyOn(value, 'toString');
+      vi.spyOn(value, 'toString');
       value.toJSON();
       expect(value.toString).toHaveBeenCalled();
     });

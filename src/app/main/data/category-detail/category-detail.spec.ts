@@ -1,22 +1,25 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { CategoryDetail } from './category-detail';
+import { setInputs, TestModule } from '~/tests';
 
-// describe('CategoryDetail', () => {
-//   let component: CategoryDetail;
-//   let fixture: ComponentFixture<CategoryDetail>;
+import { CategoryDetail } from './category-detail';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [CategoryDetail],
-//     }).compileComponents();
+describe('CategoryDetail', () => {
+  let component: CategoryDetail;
+  let fixture: ComponentFixture<CategoryDetail>;
 
-//     fixture = TestBed.createComponent(CategoryDetail);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestModule, CategoryDetail],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(CategoryDetail);
+    setInputs(fixture, { id: 'id', collectionLabel: 'collectionLabel' });
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
