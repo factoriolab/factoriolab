@@ -1,14 +1,21 @@
 import fs from 'fs';
 
 import { datasets } from '~/data/datasets';
-import { CUSTOM_MOD } from '~/data/game';
 import { ModData } from '~/data/schema/mod-data';
 
 import { getJsonData } from './utils/file';
 import { logTime } from './utils/log';
 
+// TODO: Clean this up before merging
+
+const modId = process.argv[2];
+if (!modId)
+  throw new Error(
+    'Please specify a mod to process by the folder name, e.g. "1.1" for public/data/1.1',
+  );
+
 // Load mods from arguments
-const mods = datasets.mods.map((m) => m.id).filter((id) => id !== CUSTOM_MOD);
+const mods = datasets.mods.map((m) => m.id).filter((id) => id === modId);
 
 /** Run all scripts required to update an array of Factorio mod sets */
 function updateMods(mods: string[]): void {

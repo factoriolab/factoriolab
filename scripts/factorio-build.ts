@@ -63,6 +63,7 @@ import {
   isUnlockQualityModifier,
   isUnlockRecipeModifier,
   ItemGroup,
+  PlanetPrototype,
   PlantPrototype,
   ProductPrototype,
   QualityPrototype,
@@ -290,6 +291,7 @@ async function processMod(): Promise<void> {
       | AnyItemPrototype
       | AnyEntityPrototype
       | FluidPrototype
+      | PlanetPrototype
       | SpaceLocationPrototype
       | SpaceConnectionPrototype
       | PlantPrototype,
@@ -956,14 +958,14 @@ async function processMod(): Promise<void> {
     recipeResultsMap[recipe.name] = products;
   }
 
-  const itemsUsedProtos = Array.from(itemsUsed.values()).map(
-    (key) => itemMap[key],
-  );
+  const itemsUsedProtos = Array.from(itemsUsed.values())
+    .map((key) => itemMap[key])
+    .filter((k) => k !== undefined);
 
   // Exclude any entities that are placed by the added items
   const placedEntities = new Set<string>();
   for (const proto of itemsUsedProtos) {
-    if (!isFluidPrototype(proto) && proto.place_result != null)
+    if (!isFluidPrototype(proto) && proto?.place_result != null)
       placedEntities.add(proto.place_result);
   }
 
@@ -2088,7 +2090,7 @@ async function processMod(): Promise<void> {
 
   async function addAsteroidRecipe(
     key: string,
-    proto: SpaceLocationPrototype | SpaceConnectionPrototype,
+    proto: PlanetPrototype | SpaceLocationPrototype | SpaceConnectionPrototype,
   ): Promise<void> {
     if (proto.asteroid_spawn_definitions) {
       // Add asteroid mining recipe
@@ -2147,6 +2149,11 @@ async function processMod(): Promise<void> {
 
   for (const key of Object.keys(dataRaw['space-location'])) {
     const proto = dataRaw['space-location'][key];
+    await addAsteroidRecipe(key, proto);
+  }
+
+  for (const key of Object.keys(dataRaw.planet)) {
+    const proto = dataRaw.planet[key];
     await addAsteroidRecipe(key, proto);
   }
 

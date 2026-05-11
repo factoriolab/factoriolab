@@ -24,6 +24,8 @@ export const systemIcons: IconJson[] = [
   { id: 'skyformer', x: 0, y: 198 },
   { id: 'custom', x: 66, y: 198 },
   { id: 'rocket-pod', x: 132, y: 198 },
+  { id: 'mote-mancer', x: 198, y: 198 },
+  { id: 'star-rupture', x: 264, y: 198 },
 ];
 
 export const systemIconsRecord = toRecord(

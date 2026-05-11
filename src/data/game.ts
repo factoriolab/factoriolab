@@ -8,9 +8,11 @@ export type Game =
   | 'final-factory'
   | 'foundry'
   | 'mindustry'
+  | 'mote-mancer'
   | 'outworld-station'
   | 'satisfactory'
   | 'skyformer'
+  | 'star-rupture'
   | 'techtonica'
   | 'custom';
 
@@ -60,6 +62,12 @@ export const gameOptions: Option<Game>[] = [
     iconType: 'system',
   },
   {
+    value: 'mote-mancer',
+    label: 'options.game.moteMancer',
+    icon: 'mote-mancer',
+    iconType: 'system',
+  },
+  {
     value: 'outworld-station',
     label: 'options.game.outworldStation',
     icon: 'outworld-station',
@@ -75,6 +83,12 @@ export const gameOptions: Option<Game>[] = [
     value: 'skyformer',
     label: 'options.game.skyformer',
     icon: 'skyformer',
+    iconType: 'system',
+  },
+  {
+    value: 'star-rupture',
+    label: 'options.game.starRupture',
+    icon: 'star-rupture',
     iconType: 'system',
   },
   {

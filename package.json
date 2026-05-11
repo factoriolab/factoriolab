@@ -28,6 +28,7 @@
     "factorio-dump:flatpak": "scripts/factorio-dump-flatpak.sh",
     "factorio-api": "bun scripts/factorio-api.ts",
     "factorio-build": "bun scripts/factorio-build.ts",
+    "starrupture-build": "bun scripts/starrupture-build.ts",
     "minify-data": "bun scripts/minify-data.ts",
     "sync-i18n": "bun scripts/sync-i18n.ts",
     "update-hash": "bun scripts/update-hash.ts",

@@ -22,8 +22,10 @@ export const gameInfo: Record<Game, GameInfo> = {
   techtonica: { label: 'options.game.techtonica', modId: 'tta' },
   'factor-y': { label: 'options.game.factorY', modId: 'fay' },
   mindustry: { label: 'options.game.mindustry', modId: 'mds' },
+  'mote-mancer': { label: 'options.game.moteMancer', modId: 'mtm' },
   foundry: { label: 'options.game.foundry', modId: 'fdy' },
   'outworld-station': { label: 'options.game.outworldStation', modId: 'ows' },
   skyformer: { label: 'options.game.skyformer', modId: 'sky' },
+  'star-rupture': { label: 'options.game.starRupture', modId: 'str' },
   custom: { label: 'options.game.custom', modId: CUSTOM_MOD },
 };
