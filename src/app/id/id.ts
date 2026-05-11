@@ -15,6 +15,10 @@ export class Id {
   private readonly settingsStore = inject(SettingsStore);
 
   constructor() {
+    this.setup();
+  }
+
+  private setup(): void {
     const modId = this.route.snapshot.paramMap.get('id');
     if (modId) this.settingsStore.apply({ modId });
     this.routerSvc.route.next(this.route);

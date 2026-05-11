@@ -8,7 +8,7 @@ import { filter, merge, switchMap } from 'rxjs';
 import { Confirm } from '~/components/confirm/confirm';
 import { Release } from '~/data/release';
 import { Analytics } from '~/utils/analytics';
-import { WindowClient } from '~/window/window-client';
+import { WindowClient } from '~/utils/window-client';
 
 @Component({
   selector: 'lab-root',

@@ -64,7 +64,7 @@ import { maximizeTypeOptions } from '~/state/settings/maximize-type';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
-import { WindowClient } from '~/window/window-client';
+import { WindowClient } from '~/utils/window-client';
 
 import { CostSettingsDialog } from './cost-settings-dialog/cost-settings-dialog';
 import { RankSelect } from './rank-select/rank-select';

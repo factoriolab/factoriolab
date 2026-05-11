@@ -50,7 +50,7 @@ import { RouterSync } from '~/state/router/router-sync';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { languageOptions } from '~/translate/language';
 import { TranslatePipe } from '~/translate/translate-pipe';
-import { WindowClient } from '~/window/window-client';
+import { WindowClient } from '~/utils/window-client';
 
 import { Hue } from './hue/hue';
 

@@ -1,6 +1,8 @@
 // import { Component } from '@angular/core';
 // import { TestBed } from '@angular/core/testing';
 
+import { Component } from '@angular/core';
+
 // import modJson from '/public/data/1.1/data.json';
 // import hashJson from '/public/data/1.1/hash.json';
 // import i18nJson from '/public/data/1.1/i18n/zh.json';
@@ -298,8 +300,8 @@
 //   },
 // ];
 
-// @Component({ standalone: true, template: '' })
-// export class MockComponent {}
+@Component({ standalone: true, template: '' })
+export class MockComponent {}
 
 // beforeAll(() => {
 //   TestBed.configureTestingModule({ imports: [TestModule] });

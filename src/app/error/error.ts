@@ -12,7 +12,7 @@ import { DEFAULT_MOD } from '~/data/datasets';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
-import { WindowClient } from '~/window/window-client';
+import { WindowClient } from '~/utils/window-client';
 
 import { getErrorInfo } from './error-info';
 

@@ -17,7 +17,7 @@ import { Button } from '~/components/button/button';
 import { DialogData } from '~/components/dialog/dialog';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
-import { WindowClient } from '~/window/window-client';
+import { WindowClient } from '~/utils/window-client';
 
 @Component({
   selector: 'lab-technologies-import-dialog',
