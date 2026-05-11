@@ -363,7 +363,7 @@ export class RouterSync {
         queryParams['z'] = zip;
       } catch (err) {
         console.error(err);
-        throw new Error('RouterService failed to parse url');
+        throw new Error('RouterService failed to parse url', { cause: err });
       }
     }
     return queryParams;
@@ -553,7 +553,7 @@ export class RouterSync {
       let i = 0;
       const obj: ModuleSettings = {
         count: this.zip.parseRational(s[i++]),
-        id: this.zip.parseString(s[i++], hash?.modules),
+        id: this.zip.parseString(s[i], hash?.modules),
       };
 
       prune(obj);
@@ -608,7 +608,7 @@ export class RouterSync {
         count: this.zip.parseRational(s[i++]),
         modules: this.zip.parseIndices(s[i++], moduleSettings),
         id: this.zip.parseString(s[i++], hash?.beacons),
-        total: this.zip.parseRational(s[i++]),
+        total: this.zip.parseRational(s[i]),
       };
 
       prune(obj);
@@ -695,7 +695,7 @@ export class RouterSync {
         modules: this.zip.parseIndices(s[i++], moduleSettings),
         beacons: this.zip.parseIndices(s[i++], beaconSettings),
         overclock: this.zip.parseRational(s[i++]),
-        fuelId: this.zip.parseString(s[i++], hash?.fuels),
+        fuelId: this.zip.parseString(s[i], hash?.fuels),
       };
 
       if (hash) {
@@ -764,7 +764,7 @@ export class RouterSync {
         beltId: this.zip.parseString(s[i++], hash?.belts),
         wagonId: this.zip.parseString(s[i++], hash?.wagons),
         stack: this.zip.parseRational(s[i++]),
-        excludeRockets: this.zip.parseBool(s[i++]),
+        excludeRockets: this.zip.parseBool(s[i]),
       };
 
       prune(obj);
@@ -842,7 +842,7 @@ export class RouterSync {
         overclock: this.zip.parseRational(s[i++]),
         cost: this.zip.parseRational(s[i++]),
         fuelId: this.zip.parseString(s[i++], hash?.fuels),
-        productivity: this.zip.parseRational(s[i++]),
+        productivity: this.zip.parseRational(s[i]),
       };
 
       prune(obj);
@@ -909,7 +909,7 @@ export class RouterSync {
           .parseArray(s[i++])
           ?.map((i) => beaconSettings[Number(i)] ?? {}),
         fuelId: this.zip.parseString(s[i++], hash?.fuels),
-        overclock: this.zip.parseRational(s[i++]),
+        overclock: this.zip.parseRational(s[i]),
       };
 
       prune(obj);

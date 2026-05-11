@@ -671,7 +671,7 @@ export class Adjustment {
      * production solutions.
      */
     const removals: Record<string, [string, string][]> = {};
-    let filtered = false;
+    let filtered;
     do {
       filtered = false;
       data.itemIds.forEach((itemId) => {

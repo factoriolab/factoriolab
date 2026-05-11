@@ -96,7 +96,7 @@ export class Migration {
 
     return {
       modId: result.modId,
-      params: result.params as LabParams,
+      params: result.params,
       isBare: result.isBare,
     };
   }

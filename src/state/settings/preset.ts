@@ -12,7 +12,7 @@ export enum Preset {
 
 export function presetOptions(
   data: Dataset,
-  defaults: DefaultsJson | undefined = undefined,
+  defaults?: DefaultsJson,
 ): Option<Preset>[] {
   if (defaults && 'presets' in defaults) {
     return defaults.presets.map((preset) => ({

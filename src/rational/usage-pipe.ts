@@ -9,8 +9,7 @@ export class UsagePipe implements PipeTransform {
     if (value == null) return '';
     value = toNumber(value);
 
-    let suffix = '';
-
+    let suffix;
     if (value >= 1000000) {
       value /= 1000000;
       suffix = ' GW';

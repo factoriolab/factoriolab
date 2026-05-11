@@ -9,8 +9,7 @@ export class FuelValuePipe implements PipeTransform {
     if (value == null) return '';
     value = toNumber(value);
 
-    let suffix = '';
-
+    let suffix;
     if (value >= 1000) {
       value /= 1000;
       suffix = ' GJ';

@@ -249,7 +249,7 @@ export function fromFloat(startx: number): Rational {
   const cached = fromFloatCache.get(startx);
   if (cached != null) return cached;
 
-  let ai = startx,
+  let ai,
     x = startx;
 
   /** initialize matrix */

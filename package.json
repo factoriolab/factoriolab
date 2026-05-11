@@ -64,6 +64,7 @@
     "@angular/build": "^21.2.10",
     "@angular/cli": "^21.2.10",
     "@angular/compiler-cli": "^21.2.12",
+    "@eslint/js": "^10.0.1",
     "@semantic-release/exec": "^7.1.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/d3": "^7.4.3",

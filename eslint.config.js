@@ -15,15 +15,8 @@ export default defineConfig(
       ...angular.configs.tsRecommended,
     ],
     processor: angular.processInlineTemplates,
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-    plugins: {
-      'simple-import-sort': simpleImportSort,
-    },
+    languageOptions: { parserOptions: { projectService: true } },
+    plugins: { 'simple-import-sort': simpleImportSort },
     rules: {
       '@angular-eslint/directive-selector': [
         'error',

@@ -90,9 +90,9 @@ export class Paginator {
       case 'first':
         return 0;
       case 'previous':
-        return --page;
+        return page - 1;
       case 'next':
-        return ++page;
+        return page + 1;
       case 'last':
         return Math.floor(total / rows);
     }

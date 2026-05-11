@@ -276,15 +276,15 @@ describe('fromString', () => {
   });
 
   it('should throw on empty string', () => {
-    expect(() => fromString('')).toThrowError('Empty string');
+    expect(() => fromString('')).toThrow('Empty string');
   });
 
   it('should throw on too many /', () => {
-    expect(() => fromString('1/1/1')).toThrowError('Too many /');
+    expect(() => fromString('1/1/1')).toThrow('Too many /');
   });
 
   it('should throw on too many spaces', () => {
-    expect(() => fromString('1  1/2')).toThrowError('Too many spaces');
+    expect(() => fromString('1  1/2')).toThrow('Too many spaces');
   });
 
   it('should evaluate an equation', () => {
@@ -298,6 +298,6 @@ describe('rational', () => {
   });
 
   it('should throw a divide by zero error', () => {
-    expect(() => rational(1, 0)).toThrowError('Cannot divide by zero');
+    expect(() => rational(1, 0)).toThrow('Cannot divide by zero');
   });
 });
