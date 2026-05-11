@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
@@ -6,6 +6,8 @@ import { faCheck, faRotate, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { filter, merge, switchMap } from 'rxjs';
 
 import { Confirm } from '~/components/confirm/confirm';
+import { Release } from '~/data/release';
+import { Analytics } from '~/utils/analytics';
 import { WindowClient } from '~/window/window-client';
 
 @Component({
@@ -16,10 +18,17 @@ import { WindowClient } from '~/window/window-client';
 })
 export class App {
   private readonly swUpdate = inject(SwUpdate);
+  private readonly analytics = inject(Analytics);
+  private readonly release = inject(Release);
   private readonly confirm = inject(Confirm);
   private readonly windowClient = inject(WindowClient);
 
   constructor() {
+    effect(() => {
+      const config = this.release.config.value();
+      if (config?.version) this.analytics.event('version', config.version);
+    });
+
     merge(
       this.swUpdate.unrecoverable.pipe(
         switchMap(() =>
