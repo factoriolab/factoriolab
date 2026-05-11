@@ -6,7 +6,7 @@ import { ErrorInfo } from './error-info';
 
 @Injectable({ providedIn: 'root' })
 export class LabErrorHandler implements ErrorHandler {
-  private router = inject(Router);
+  private readonly router = inject(Router);
 
   handleError(error: unknown): void {
     console.error(error);
