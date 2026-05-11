@@ -285,7 +285,6 @@ export class FlowBuilder {
         l.bidi = true;
     });
 
-    console.log(flow);
     return flow;
   }
 

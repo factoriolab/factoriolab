@@ -406,7 +406,6 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
               if (step?.items == null || percent == null) return result;
               // Depletion only on non-quality resources
               const itemId = baseId(key);
-              console.log(recipe.effects.productivity);
               const items = step.items
                 .mul(percent)
                 .div(recipe.effects.productivity);
