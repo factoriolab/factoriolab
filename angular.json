@@ -85,6 +85,7 @@
           "options": {
             "coverage": true,
             "coverageReporters": ["html", "cobertura"],
+            "outputFile": "coverage/factoriolab/test-results.xml",
             "runnerConfig": "vitest.config.ts"
           }
         },

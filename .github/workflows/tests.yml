@@ -40,7 +40,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         with:
-          files: coverage/factoriolab/TESTS-*.xml
+          files: coverage/factoriolab/test-results.xml
           check_name: publish test results
 
       - name: Code Coverage Summary Report
