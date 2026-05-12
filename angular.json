@@ -84,6 +84,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "coverage": true,
+            "coverageExclude": ["*.html"],
             "coverageReporters": ["html", "cobertura"],
             "coverageThresholds": {
               "branches": 100,

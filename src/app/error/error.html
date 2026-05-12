@@ -2,9 +2,7 @@
   <fa-icon [icon]="faExclamationCircle"></fa-icon>
   {{ 'error.header' | translate }}
 </div>
-<div data-test="message" class="font-mono text-sm text-gray-200">
-  {{ info?.message }}
-</div>
+<div class="font-mono text-sm text-gray-200">{{ info?.message }}</div>
 
 <div class="flex flex-col items-center gap-2">
   @if (settingsStore.customData.value()) {

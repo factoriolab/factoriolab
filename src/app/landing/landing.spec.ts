@@ -1,9 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
-import { Control } from '~/components/control';
-import { Select } from '~/components/select/select';
-import { TestModule } from '~/tests';
+import { Mocks, TestModule } from '~/tests';
 
 import { Landing } from './landing';
 
@@ -25,12 +22,50 @@ describe('Landing', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('template', () => {
-    it('should set the game', () => {
-      vi.spyOn(component, 'setGame').mockImplementation(() => {});
-      const debugEl = fixture.debugElement.query(By.directive(Select));
-      (debugEl.componentInstance as Control).setValue('satisfactory');
-      expect(component.setGame).toHaveBeenCalledWith('satisfactory');
+  describe('addObjective', () => {
+    it('should navigate and then create an objective', async () => {
+      vi.spyOn(component['router'], 'navigate').mockReturnValue(
+        Promise.resolve(true),
+      );
+      vi.spyOn(component['objectivesStore'], 'create');
+      await component.addObjective(Mocks.objectiveBase);
+      expect(component['router'].navigate).toHaveBeenCalled();
+      expect(component['objectivesStore'].create).toHaveBeenCalledWith(
+        Mocks.objectiveBase,
+      );
+    });
+  });
+
+  describe('setState', () => {
+    it('should return if query is falsy', () => {
+      vi.spyOn(component['router'], 'navigate');
+      component.setState('');
+      expect(component['router'].navigate).not.toHaveBeenCalled();
+    });
+
+    it('should call the router to navigate', () => {
+      vi.spyOn(component['router'], 'navigate');
+      component.setState('z=zip');
+      expect(component['router'].navigate).toHaveBeenCalledWith(['list'], {
+        queryParams: { z: 'zip' },
+        relativeTo: component['route'],
+      });
+    });
+  });
+
+  describe('setGame', () => {
+    it('should map a game to its default mod id', () => {
+      vi.spyOn(component, 'setMod').mockImplementation(() => {});
+      component.setGame('factorio');
+      expect(component.setMod).toHaveBeenCalledWith('spa');
+    });
+  });
+
+  describe('setMod', () => {
+    it('should navigate using the router', () => {
+      vi.spyOn(component['router'], 'navigate');
+      component.setMod('id');
+      expect(component['router'].navigate).toHaveBeenCalledWith(['id']);
     });
   });
 });

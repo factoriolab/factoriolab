@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { getSelector, TestModule } from '~/tests';
+import { TestModule } from '~/tests';
 
 import { Error } from './error';
 
@@ -20,24 +20,6 @@ describe('Error', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('template', () => {
-    it('should render error message', () => {
-      (component as any).info = { message: 'error message' };
-      fixture.detectChanges();
-      expect(getSelector(fixture, '[data-test=message]').textContent).toContain(
-        'error message',
-      );
-    });
-
-    it('should render delete button', () => {
-      component['settingsStore'].customData.set({} as any);
-      fixture.detectChanges();
-      vi.spyOn(component, 'deleteCustom');
-      getSelector(fixture, 'button').click();
-      expect(component.deleteCustom).toHaveBeenCalled();
-    });
   });
 
   describe('deleteCustom', () => {

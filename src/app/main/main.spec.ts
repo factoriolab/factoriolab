@@ -4,7 +4,7 @@ import { TestModule } from '~/tests';
 
 import { Main } from './main';
 
-describe.skip('Main', () => {
+describe('Main', () => {
   let component: Main;
   let fixture: ComponentFixture<Main>;
 
