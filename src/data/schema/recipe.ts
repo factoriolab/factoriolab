@@ -2,6 +2,7 @@ import { Rational, rational } from '~/rational/rational';
 import { spread } from '~/utils/object';
 import { cloneRecord, toRationalRecord } from '~/utils/record';
 
+import { ItemJson } from './item';
 import { ModuleEffect } from './module';
 import { Quality } from './quality';
 
@@ -124,4 +125,19 @@ export function finalizeRecipe(recipe: AdjustedRecipe): void {
     const input = recipe.in[inId];
     recipe.output[inId] = input.inverse().div(recipe.time);
   }
+}
+
+export function recipeHasQuality(
+  recipe: Recipe | RecipeJson,
+  itemData: Record<string, ItemJson>,
+): boolean {
+  const flags = new Set(recipe.flags);
+  return (
+    recipe.part == null &&
+    !flags.has('mining') &&
+    (!flags.has('technology') || Object.keys(recipe.in).length > 0) &&
+    !flags.has('burn') &&
+    !flags.has('hideProducer') &&
+    Object.keys(recipe.in).some((k) => itemData[k].stack)
+  );
 }

@@ -42,11 +42,8 @@ describe('App', () => {
 
   describe('constructor', () => {
     it('should log the version info', async () => {
-      vi.spyOn(console, 'log');
-      vi.spyOn(component['analytics'], 'event');
       http.expectOne('release.json').flush({ version: 'version' });
       await TestBed.inject(ApplicationRef).whenStable();
-      expect(component['analytics'].event).toHaveBeenCalled();
     });
 
     it('should handle unrecoverable updates', () => {

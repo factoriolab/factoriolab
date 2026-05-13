@@ -4,7 +4,11 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NgModule } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
+import { Preset } from '~/state/settings/preset';
+import { SettingsStore } from '~/state/settings/settings-store';
 import { WindowClient } from '~/utils/window-client';
+
+import { Mocks } from '.';
 
 @NgModule({
   providers: [
@@ -18,6 +22,16 @@ import { WindowClient } from '~/utils/window-client';
         reload: (): void => {},
         clearLocalStorage: (): void => {},
         copyToClipboard: (_: string): Promise<void> => Promise.resolve(),
+      },
+    },
+    {
+      provide: SettingsStore,
+      useFactory: (): SettingsStore => {
+        const settingsStore = new SettingsStore();
+        settingsStore.apply({ modId: '1.1', preset: Preset.Beacon8 });
+        settingsStore['modDataResource'].set(Mocks.modData);
+        settingsStore['modHashResource'].set(Mocks.modHash);
+        return settingsStore;
       },
     },
   ],

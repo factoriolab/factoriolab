@@ -23,7 +23,6 @@ import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { RatePipe } from '../pipes/rate-pipe';
-import { Steps } from '../steps';
 import { PercentPadPipe } from './percent-pad-pipe';
 
 @Component({
@@ -46,9 +45,9 @@ import { PercentPadPipe } from './percent-pad-pipe';
 export class DetailRow {
   private readonly recipesStore = inject(RecipesStore);
   protected readonly settingsStore = inject(SettingsStore);
-  protected readonly steps = inject(Steps);
 
   readonly value = input.required<StepDetailRow>();
+  readonly leftSpan = input.required<number>();
   readonly factor = input<Rational>(rational.one);
 
   protected readonly items = computed(() =>

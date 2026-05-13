@@ -295,7 +295,10 @@
             }
           </td>
           <td>
-            @if (step.itemId && items()[step.itemId]; as itemSettings) {
+            @if (
+              step.belts && step.itemId && items()[step.itemId];
+              as itemSettings
+            ) {
               @let beltId = itemSettings.beltId;
               @if (beltId != null) {
                 <div class="flex items-center">
@@ -374,7 +377,10 @@
             }
           </td>
           <td>
-            @if (step.itemId && items()[step.itemId]; as itemSettings) {
+            @if (
+              step.wagons && step.itemId && items()[step.itemId];
+              as itemSettings
+            ) {
               @let wagonId = itemSettings.wagonId;
               @if (wagonId != null) {
                 <div class="flex items-center">
@@ -422,7 +428,7 @@
             }
           </td>
           <td>
-            @if (step.itemId && data().itemRecord[step.itemId].rocketCapacity) {
+            @if (step.rockets && step.itemId) {
               <div class="flex items-center">
                 @let excluded =
                   itemsStore.settings()[step.itemId].excludeRockets;
@@ -728,6 +734,7 @@
                 <tr
                   labDetailRow
                   [value]="value"
+                  [leftSpan]="leftSpan()"
                   [factor]="
                     (section === 'inputs' || section === 'outputs') &&
                     step.recipeId &&

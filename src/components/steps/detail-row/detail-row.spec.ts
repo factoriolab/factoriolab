@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { setInputs, TestModule } from '~/tests';
 
-import { Steps } from '../steps';
 import { DetailRow } from './detail-row';
 
 describe('DetailRow', () => {
@@ -12,11 +11,10 @@ describe('DetailRow', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TestModule, DetailRow],
-      providers: [{ provide: Steps, provideValue: {} }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailRow);
-    setInputs(fixture, { value: {} });
+    setInputs(fixture, { value: {}, leftSpan: 0 });
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

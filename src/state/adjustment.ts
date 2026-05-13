@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { EnergyType } from '~/data/schema/energy-type';
 import { AdjustedInserter } from '~/data/schema/inserter';
+import { itemHasQuality } from '~/data/schema/item';
 import { DEFAULT_MACHINE, Machine } from '~/data/schema/machine';
 import {
   effectPrecision,
@@ -9,7 +10,7 @@ import {
   ModuleEffect,
   SOMERSLOOP,
 } from '~/data/schema/module';
-import { baseId, itemHasQuality, qualityId } from '~/data/schema/quality';
+import { baseId, qualityId } from '~/data/schema/quality';
 import {
   AdjustedRecipe,
   cloneRecipe,

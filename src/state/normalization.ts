@@ -82,7 +82,7 @@ export class Normalization {
 
     for (const step of _steps) {
       this.calculateSettings(step, objectiveRecord);
-      this.calculateBelts(step);
+      this.calculateLogistics(step);
       this.calculateBeacons(step);
       this.calculateDisplayRate(step);
       this.calculateChecked(step);
@@ -137,25 +137,32 @@ export class Normalization {
     }
   }
 
-  private calculateBelts(step: Step): void {
+  private calculateLogistics(step: Step): void {
     const data = this.settingsStore.dataset();
     const itemsState = this.itemsStore.settings();
     const beltSpeed = this.settingsStore.beltSpeed();
 
-    let noItems = false;
-    if (step.recipeId != null && step.recipeSettings != null) {
+    let includeLogistics = true;
+    if (step.itemId != null) {
+      const item = data.itemRecord[step.itemId];
+      if (item.technology) includeLogistics = false;
+    }
+
+    if (
+      includeLogistics &&
+      step.recipeId != null &&
+      step.recipeSettings != null
+    ) {
       const machineId = step.recipeSettings.machineId;
       if (machineId != null) {
         const machine = data.machineRecord[machineId];
         const recipe = data.recipeRecord[step.recipeId];
-        // No belts/wagons on research rows or rocket part rows
-        noItems = !!(
-          recipe.flags.has('technology') ||
-          (machine.silo && !recipe.part)
-        );
+        if (machine.silo && !recipe.part) includeLogistics = false;
+        if (machine.silo) console.log(machine, recipe, includeLogistics);
       }
     }
-    if (noItems) {
+
+    if (!includeLogistics) {
       delete step.belts;
       delete step.wagons;
       delete step.rockets;

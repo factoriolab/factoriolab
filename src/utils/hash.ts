@@ -1,11 +1,8 @@
-import { ItemJson } from '~/data/schema/item';
+import { itemHasQuality, ItemJson } from '~/data/schema/item';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
-import {
-  itemHasQuality,
-  qualityId,
-  recipeHasQuality,
-} from '~/data/schema/quality';
+import { qualityId } from '~/data/schema/quality';
+import { recipeHasQuality } from '~/data/schema/recipe';
 
 type ModHashSet = Record<keyof ModHash, Set<string>>;
 

@@ -1,10 +1,8 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { httpResource } from '@angular/common/http';
 import { computed, effect, inject, Injectable, resource } from '@angular/core';
 import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { FastAverageColor } from 'fast-average-color';
 
-import { CustomDataDialog } from '~/components/custom-data-dialog/custom-data-dialog';
 import { DEFAULT_MOD, modOptions, modRecord } from '~/data/datasets';
 import { CUSTOM_MOD, Game } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
@@ -23,20 +21,14 @@ import {
   parseIconData,
 } from '~/data/schema/icon-data';
 import { Inserter, parseInserter } from '~/data/schema/inserter';
-import { Item, ItemJson, parseItem } from '~/data/schema/item';
+import { Item, itemHasQuality, ItemJson, parseItem } from '~/data/schema/item';
 import { Machine, parseMachine } from '~/data/schema/machine';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import { ModI18n } from '~/data/schema/mod-i18n';
 import { Module, parseModule } from '~/data/schema/module';
-import {
-  baseId,
-  itemHasQuality,
-  Quality,
-  qualityId,
-  recipeHasQuality,
-} from '~/data/schema/quality';
-import { parseRecipe, Recipe } from '~/data/schema/recipe';
+import { baseId, Quality, qualityId } from '~/data/schema/quality';
+import { parseRecipe, Recipe, recipeHasQuality } from '~/data/schema/recipe';
 import { Technology } from '~/data/schema/technology';
 import { LinkOption } from '~/option/link-option';
 import { getIdOptions, Option, OptionParams } from '~/option/option';
@@ -67,7 +59,6 @@ import { systemIconsRecord } from './system-icons';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsStore extends Store<SettingsState> {
-  private readonly dialog = inject(Dialog);
   private readonly hydration = inject(Hydration);
   private readonly preferencesStore = inject(PreferencesStore);
 
@@ -369,9 +360,6 @@ export class SettingsStore extends Store<SettingsState> {
     effect(() => {
       const modId = this.modId();
       if (modId) log('set_mod_id', modId);
-
-      if (modId === CUSTOM_MOD && this.customData.value() == null)
-        this.dialog.open(CustomDataDialog);
     });
 
     effect(() => {

@@ -69,3 +69,7 @@ export function parseItem(json: ItemJson): Item {
     iconText: json.iconText,
   };
 }
+
+export function itemHasQuality(item: Item | ItemJson): boolean {
+  return item.technology == null && item.stack != null;
+}
