@@ -17,7 +17,7 @@ describe('Collection', () => {
     setInputs(fixture, {
       label: 'label',
       key: 'categoryIds',
-      iconType: 'system',
+      iconType: 'category',
     });
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NgModule } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { FastAverageColorResult } from 'fast-average-color';
 
 import { Preset } from '~/state/settings/preset';
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -31,6 +32,9 @@ import { Mocks } from '.';
         settingsStore.apply({ modId: '1.1', preset: Preset.Beacon8 });
         settingsStore['modDataResource'].set(Mocks.modData);
         settingsStore['modHashResource'].set(Mocks.modHash);
+        settingsStore['fac'].getColorAsync =
+          (): Promise<FastAverageColorResult> =>
+            Promise.resolve({ hex: '#000000' } as FastAverageColorResult);
         return settingsStore;
       },
     },

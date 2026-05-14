@@ -28,10 +28,13 @@ export class App {
   private readonly windowClient = inject(WindowClient);
   private readonly settingsStore = inject(SettingsStore);
 
+  // Stored on component to enable spyOn in tests
+  private readonly log = log;
+
   constructor() {
     effect(() => {
       const config = this.release.config.value();
-      if (config?.version) log('version', config.version);
+      if (config?.version) this.log('version', config.version);
     });
 
     effect(() => {
