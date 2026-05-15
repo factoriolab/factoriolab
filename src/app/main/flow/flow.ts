@@ -71,9 +71,10 @@ export class Flow {
   protected readonly flowBuilder = inject(FlowBuilder);
   private readonly preferencesStore = inject(PreferencesStore);
 
-  private readonly svgElement =
-    viewChild.required<ElementRef<HTMLElement>>('svg');
+  private readonly svgElement = viewChild<ElementRef<HTMLElement>>('svg');
   private readonly height = window.innerHeight * 0.75;
+  /** Cached mainly for testing */
+  private svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
 
   protected readonly selectedId = signal<string | undefined>(undefined);
 
@@ -112,19 +113,12 @@ export class Flow {
     layout = this.getLayout(flowSettings.sankeyAlign, width, height);
     skGraph = this.getGraph(layout, flowData);
 
-    const svg = select(this.svgElement().nativeElement)
+    const svg = select(this.svgElement()!.nativeElement)
       .append('svg')
       .attr('viewBox', `0 0 ${width.toString()} ${height.toString()}`)
       .attr('class', 'min-h-[75dvh]');
 
-    svg.call(
-      zoom<SVGSVGElement, unknown>().on(
-        'zoom',
-        (e: { transform: string }): void => {
-          svg.selectAll('svg > g').attr('transform', e.transform);
-        },
-      ),
-    );
+    svg.call(zoom<SVGSVGElement, unknown>().on('zoom', this.zoomHandler(svg)));
 
     // Draw links (draw first so nodes are drawn over them)
     const link = svg
@@ -178,6 +172,7 @@ export class Flow {
       .attr('x', (d) => coalesce(d.x0, 0))
       .attr('y', (d) => coalesce(d.y0, 0))
       .on('click', (e: Event, d) => {
+        console.log(e);
         if (e.defaultPrevented) return;
         this.selectedId.set(d.stepId);
       })
@@ -321,6 +316,8 @@ export class Flow {
       .attr('x', 20)
       .attr('y', (d) => this.imageOffset(d) + 32)
       .text((d) => d.text);
+
+    this.svg = svg;
   }
 
   async rebuildBoxLine(
@@ -360,7 +357,7 @@ export class Flow {
         }),
     );
 
-    const svg = select(this.svgElement().nativeElement)
+    const svg = select(this.svgElement()!.nativeElement)
       .append('svg')
       .attr(
         'viewBox',
@@ -368,14 +365,7 @@ export class Flow {
       )
       .attr('class', 'min-h-[75dvh]');
 
-    svg.call(
-      zoom<SVGSVGElement, unknown>().on(
-        'zoom',
-        (e: { transform: string }): void => {
-          svg.selectAll('svg > g').attr('transform', e.transform);
-        },
-      ),
-    );
+    svg.call(zoom<SVGSVGElement, unknown>().on('zoom', this.zoomHandler(svg)));
 
     // Draw edges (draw first so nodes are drawn over them)
     const edge = svg
@@ -616,5 +606,13 @@ export class Flow {
 
   private imageOffset(d: SankeyNode<Node, Link>): number {
     return (num(d.y1) - num(d.y0)) / 2 - 32 / 2;
+  }
+
+  private zoomHandler(
+    svg: Selection<SVGSVGElement, unknown, null, undefined>,
+  ): (e: { transform: string }) => void {
+    return (e: { transform: string }) => {
+      svg.selectAll('svg > g').attr('transform', e.transform);
+    };
   }
 }

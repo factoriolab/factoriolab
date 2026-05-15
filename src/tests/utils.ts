@@ -34,7 +34,6 @@ export function mouseEvent(
   clientY: number,
 ): void {
   const event = new MouseEvent(type, {
-    view: window,
     clientX,
     clientY,
   });
@@ -47,7 +46,6 @@ export function wheelEvent(
   deltaY: number,
 ): void {
   const event = new WheelEvent(type, {
-    view: window,
     deltaY,
   });
   element.dispatchEvent(event);
