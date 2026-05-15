@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestModule } from '~/tests';
+import { TestModule } from '~/tests/test-module';
 
 import { Id } from './id';
 

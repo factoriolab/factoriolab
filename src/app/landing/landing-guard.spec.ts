@@ -4,7 +4,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
-import { Mocks } from '~/tests';
+import { MockComponent } from '~/tests/mocks/component';
 
 import { landingGuard } from './landing-guard';
 
@@ -19,20 +19,20 @@ describe('landingGuard', () => {
         provideRouter([
           {
             path: 'urltree',
-            component: Mocks.MockComponent,
+            component: MockComponent,
           },
           {
             path: ':id',
             children: [
               {
                 path: 'list',
-                component: Mocks.MockComponent,
+                component: MockComponent,
               },
               {
                 path: '',
                 pathMatch: 'full',
                 canActivate: [landingGuard],
-                component: Mocks.MockComponent,
+                component: MockComponent,
               },
             ],
           },
@@ -40,7 +40,7 @@ describe('landingGuard', () => {
             path: '',
             pathMatch: 'full',
             canActivate: [landingGuard],
-            component: Mocks.MockComponent,
+            component: MockComponent,
           },
         ]),
       ],

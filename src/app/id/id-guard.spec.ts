@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
-import { Mocks } from '~/tests';
+import { MockComponent } from '~/tests/mocks/component';
 
 import { idGuard } from './id-guard';
 
@@ -19,7 +19,7 @@ describe('idGuard', () => {
             children: [
               {
                 path: 'list',
-                component: Mocks.MockComponent,
+                component: MockComponent,
               },
             ],
           },

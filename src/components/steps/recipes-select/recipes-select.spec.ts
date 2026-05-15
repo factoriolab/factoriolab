@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { setInputs } from '~/tests';
+import { setInputs } from '~/tests/utils';
 
 import { RecipesSelect } from './recipes-select';
 

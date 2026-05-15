@@ -1,14 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TestModule } from '~/tests/test-module';
+
 import { Flow } from './flow';
 
-describe.skip('Flow', () => {
+describe('Flow', () => {
   let component: Flow;
   let fixture: ComponentFixture<Flow>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Flow],
+      imports: [TestModule, Flow],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Flow);

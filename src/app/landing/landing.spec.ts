@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestModule } from '~/tests';
+import { mockObjectiveBase } from '~/tests/mocks/objective';
+import { TestModule } from '~/tests/test-module';
 
 import { Landing } from './landing';
 
@@ -28,10 +29,10 @@ describe('Landing', () => {
         Promise.resolve(true),
       );
       vi.spyOn(component['objectivesStore'], 'create');
-      await component.addObjective(Mocks.objectiveBase);
+      await component.addObjective(mockObjectiveBase);
       expect(component['router'].navigate).toHaveBeenCalled();
       expect(component['objectivesStore'].create).toHaveBeenCalledWith(
-        Mocks.objectiveBase,
+        mockObjectiveBase,
       );
     });
   });

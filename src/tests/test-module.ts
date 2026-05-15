@@ -9,7 +9,7 @@ import { Preset } from '~/state/settings/preset';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { WindowClient } from '~/utils/window-client';
 
-import { Mocks } from '.';
+import { mockModData, mockModHash } from './mocks/data';
 
 @NgModule({
   providers: [
@@ -30,8 +30,8 @@ import { Mocks } from '.';
       useFactory: (): SettingsStore => {
         const settingsStore = new SettingsStore();
         settingsStore.apply({ modId: '1.1', preset: Preset.Beacon8 });
-        settingsStore['modDataResource'].set(Mocks.modData);
-        settingsStore['modHashResource'].set(Mocks.modHash);
+        settingsStore['modDataResource'].set(mockModData);
+        settingsStore['modHashResource'].set(mockModHash);
         settingsStore['fac'].getColorAsync =
           (): Promise<FastAverageColorResult> =>
             Promise.resolve({ hex: '#000000' } as FastAverageColorResult);

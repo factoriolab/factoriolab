@@ -10,7 +10,7 @@ import { of, Subject } from 'rxjs';
 
 import { CustomDataDialog } from '~/components/custom-data-dialog/custom-data-dialog';
 import { CUSTOM_MOD } from '~/data/game';
-import { TestModule } from '~/tests';
+import { TestModule } from '~/tests/test-module';
 
 import { App } from './app';
 
