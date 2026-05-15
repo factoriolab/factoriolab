@@ -1,22 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Steps } from './steps';
+// import { Steps } from './steps';
 
-describe.skip('Steps', () => {
-  let component: Steps;
-  let fixture: ComponentFixture<Steps>;
+// describe('Steps', () => {
+//   let component: Steps;
+//   let fixture: ComponentFixture<Steps>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Steps],
-    }).compileComponents();
+//   beforeEach(async () => {
+//     await TestBed.configureTestingModule({
+//       imports: [Steps],
+//     }).compileComponents();
 
-    fixture = TestBed.createComponent(Steps);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+//     fixture = TestBed.createComponent(Steps);
+//     component = fixture.componentInstance;
+//     fixture.detectChanges();
+//   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+//   it('should create', () => {
+//     expect(component).toBeTruthy();
+//   });
+// });

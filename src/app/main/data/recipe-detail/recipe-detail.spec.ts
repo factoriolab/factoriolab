@@ -47,7 +47,7 @@ describe('RecipeDetail', () => {
 
   describe('changeExcluded', () => {
     it('should update the set and pass with defaults to the store dispatcher', () => {
-      vi.spyOn(component['settingsStore'], 'updateField');
+      spyOn(component['settingsStore'], 'updateField');
       component.changeExcluded(false);
       expect(component['settingsStore'].updateField).toHaveBeenCalledWith(
         'excludedRecipeIds',
@@ -59,7 +59,7 @@ describe('RecipeDetail', () => {
 
   describe('changeChecked', () => {
     it('should update the set and pass with defaults to the store dispatcher', () => {
-      vi.spyOn(component['settingsStore'], 'apply');
+      spyOn(component['settingsStore'], 'apply');
       component.changeChecked(true);
       expect(component['settingsStore'].apply).toHaveBeenCalledWith({
         checkedRecipeIds: new Set([RecipeId.NuclearFuelReprocessing]),

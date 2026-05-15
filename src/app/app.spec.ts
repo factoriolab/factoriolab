@@ -6,7 +6,7 @@ import {
   UnrecoverableStateEvent,
   VersionEvent,
 } from '@angular/service-worker';
-import { of, Subject } from 'rxjs';
+import { EMPTY, of, Subject } from 'rxjs';
 
 import { CustomDataDialog } from '~/components/custom-data-dialog/custom-data-dialog';
 import { CUSTOM_MOD } from '~/data/game';
@@ -44,28 +44,28 @@ describe('App', () => {
 
   describe('constructor', () => {
     it('should log the version info', async () => {
-      vi.spyOn<any, any>(component, 'log');
+      spyOn<any, any>(component, 'log');
       http.expectOne('release.json').flush({ version: 'version' });
       await TestBed.inject(ApplicationRef).whenStable();
       expect(component['log']).toHaveBeenCalled();
     });
 
     it('should handle unrecoverable updates', () => {
-      vi.spyOn(component['confirm'], 'open');
+      spyOn(component['confirm'], 'open').and.returnValue(EMPTY);
       swUpdate.unrecoverable.next({} as any);
       expect(component['confirm'].open).toHaveBeenCalled();
     });
 
     it('should handle version updates', () => {
-      vi.spyOn(component['windowClient'], 'reload');
-      vi.spyOn(component['confirm'], 'open').mockReturnValue(of(true));
+      spyOn(component['windowClient'], 'reload');
+      spyOn(component['confirm'], 'open').and.returnValue(of(true));
       swUpdate.versionUpdates.next({ type: 'VERSION_READY' } as any);
       expect(component['confirm'].open).toHaveBeenCalled();
       expect(component['windowClient'].reload).toHaveBeenCalled();
     });
 
     it('should open the custom data dialog if selected', () => {
-      vi.spyOn(component['dialog'], 'open');
+      spyOn(component['dialog'], 'open');
       component['settingsStore'].apply({ modId: CUSTOM_MOD });
       TestBed.tick();
       expect(component['dialog'].open).toHaveBeenCalledWith(CustomDataDialog);

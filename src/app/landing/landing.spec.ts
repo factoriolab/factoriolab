@@ -25,10 +25,10 @@ describe('Landing', () => {
 
   describe('addObjective', () => {
     it('should navigate and then create an objective', async () => {
-      vi.spyOn(component['router'], 'navigate').mockReturnValue(
+      spyOn(component['router'], 'navigate').and.returnValue(
         Promise.resolve(true),
       );
-      vi.spyOn(component['objectivesStore'], 'create');
+      spyOn(component['objectivesStore'], 'create');
       await component.addObjective(mockObjectiveBase);
       expect(component['router'].navigate).toHaveBeenCalled();
       expect(component['objectivesStore'].create).toHaveBeenCalledWith(
@@ -39,13 +39,13 @@ describe('Landing', () => {
 
   describe('setState', () => {
     it('should return if query is falsy', () => {
-      vi.spyOn(component['router'], 'navigate');
+      spyOn(component['router'], 'navigate');
       component.setState('');
       expect(component['router'].navigate).not.toHaveBeenCalled();
     });
 
     it('should call the router to navigate', () => {
-      vi.spyOn(component['router'], 'navigate');
+      spyOn(component['router'], 'navigate');
       component.setState('z=zip');
       expect(component['router'].navigate).toHaveBeenCalledWith(['list'], {
         queryParams: { z: 'zip' },
@@ -56,7 +56,7 @@ describe('Landing', () => {
 
   describe('setGame', () => {
     it('should map a game to its default mod id', () => {
-      vi.spyOn(component, 'setMod').mockImplementation(() => {});
+      spyOn(component, 'setMod');
       component.setGame('factorio');
       expect(component.setMod).toHaveBeenCalledWith('spa');
     });
@@ -64,7 +64,7 @@ describe('Landing', () => {
 
   describe('setMod', () => {
     it('should navigate using the router', () => {
-      vi.spyOn(component['router'], 'navigate');
+      spyOn(component['router'], 'navigate');
       component.setMod('id');
       expect(component['router'].navigate).toHaveBeenCalledWith(['id']);
     });

@@ -17,8 +17,8 @@ describe('LabErrorHandler', () => {
 
   describe('handleError', () => {
     it('should log the error and navigate', () => {
-      vi.spyOn(console, 'error').mockImplementation(() => {});
-      vi.spyOn(service['router'], 'navigate');
+      spyOn(console, 'error');
+      spyOn(service['router'], 'navigate');
       service.handleError('error');
       expect(console.error).toHaveBeenCalled();
       expect(service['router'].navigate).toHaveBeenCalled();

@@ -7,7 +7,6 @@ import { LinkOption } from '~/option/link-option';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { SettingsStore } from '~/state/settings/settings-store';
 
-/* v8 ignore next -- @preserve v8 reports missing branch coverage on abstract Directives */
 @Directive()
 export abstract class DetailBase<T extends Category | Item | Recipe> {
   protected readonly settingsStore = inject(SettingsStore);

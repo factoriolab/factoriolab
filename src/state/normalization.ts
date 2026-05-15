@@ -158,7 +158,6 @@ export class Normalization {
         const machine = data.machineRecord[machineId];
         const recipe = data.recipeRecord[step.recipeId];
         if (machine.silo && !recipe.part) includeLogistics = false;
-        if (machine.silo) console.log(machine, recipe, includeLogistics);
       }
     }
 

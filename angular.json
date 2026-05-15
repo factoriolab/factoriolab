@@ -81,19 +81,13 @@
           "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular/build:unit-test",
+          "builder": "@angular/build:karma",
           "options": {
-            "coverage": true,
-            "coverageExclude": ["*.html"],
-            "coverageReporters": ["html", "cobertura"],
-            "coverageThresholds": {
-              "branches": 100,
-              "functions": 100,
-              "lines": 100,
-              "statements": 100
-            },
-            "outputFile": "coverage/factoriolab/test-results.xml",
-            "runnerConfig": "vitest.config.ts"
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "codeCoverage": true,
+            "assets": [{ "glob": "**/*", "input": "public" }],
+            "styles": ["src/styles.css"]
           }
         },
         "lint": {

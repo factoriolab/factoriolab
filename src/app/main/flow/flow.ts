@@ -71,7 +71,8 @@ export class Flow {
   protected readonly flowBuilder = inject(FlowBuilder);
   private readonly preferencesStore = inject(PreferencesStore);
 
-  private readonly svgElement = viewChild<ElementRef<HTMLElement>>('svg');
+  private readonly svgElement =
+    viewChild.required<ElementRef<HTMLElement>>('svg');
   private readonly height = window.innerHeight * 0.75;
   /** Cached mainly for testing */
   private svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
@@ -113,7 +114,7 @@ export class Flow {
     layout = this.getLayout(flowSettings.sankeyAlign, width, height);
     skGraph = this.getGraph(layout, flowData);
 
-    const svg = select(this.svgElement()!.nativeElement)
+    const svg = select(this.svgElement().nativeElement)
       .append('svg')
       .attr('viewBox', `0 0 ${width.toString()} ${height.toString()}`)
       .attr('class', 'min-h-[75dvh]');
@@ -357,7 +358,7 @@ export class Flow {
         }),
     );
 
-    const svg = select(this.svgElement()!.nativeElement)
+    const svg = select(this.svgElement().nativeElement)
       .append('svg')
       .attr(
         'viewBox',

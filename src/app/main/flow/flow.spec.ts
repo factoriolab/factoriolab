@@ -31,7 +31,7 @@ describe('Flow', () => {
 
   describe('rebuildChart', () => {
     it('should call to rebuild the sankey', async () => {
-      vi.spyOn(component, 'rebuildSankey');
+      spyOn(component, 'rebuildSankey');
       await component.rebuildChart(mocks.flow(), mockFlowSettings);
       expect(component.rebuildSankey).toHaveBeenCalledWith(
         mocks.flow(),
@@ -40,7 +40,7 @@ describe('Flow', () => {
     });
 
     it('should call to rebuild the box-line', async () => {
-      vi.spyOn(component, 'rebuildBoxLine');
+      spyOn(component, 'rebuildBoxLine');
       const flow = mocks.flow();
       const flowSettings = spread(mockFlowSettings, {
         diagram: FlowDiagram.BoxLine,
@@ -59,38 +59,6 @@ describe('Flow', () => {
       component.rebuildSankey(mocks.flow(), mockFlowSettings);
       const gElements = document.getElementsByTagName('g');
       expect(gElements.length).toEqual(8);
-      console.log(component['svgElement']());
     });
-
-    // it('should handle drag and drop', () => {
-    //   component.rebuildSankey(mocks.flow(), mockFlowSettings);
-    // dragAndDropSelector(fixture, 'rect', 100, 200);
-    // assert(component['svg'] != null);
-    // console.log(component['svg'].selectAll('rect'));
-    // expect(component['svg'].select('rect').attr('transform')).toBeTruthy();
-    // expect(
-    //   component['svg'].select('#image-r\\|0').attr('transform'),
-    // ).toBeTruthy();
-    // });
-
-    // it('should handle zoom', () => {
-    //   component.rebuildSankey(mocks.flow(), mockFlowSettings);
-    //   zoomSelector(fixture, '#lab-flow-svg > svg', 500);
-    //   assert(component['svg'] != null);
-    //   expect(component['svg'].select('g').attr('transform')).toBeTruthy();
-    // });
-
-    // it('should set selectedId when a rect is clicked', () => {
-    //   component.rebuildSankey(mocks.flow(), mockFlowSettings);
-    //   altClickSelector(fixture, 'rect', 1);
-    //   expect(component['selectedId']()).toEqual(mocks.flow().nodes[0].stepId);
-    // });
-
-    // it('should set selectedId emit when default is prevented', () => {
-    //   component.rebuildSankey(mocks.flow(), mockFlowSettings);
-    //   vi.spyOn(component['selectedId'], 'set');
-    //   altClickSelector(fixture, 'rect', 0, true);
-    //   expect(component['selectedId'].set).not.toHaveBeenCalled();
-    // });
   });
 });

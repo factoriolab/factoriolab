@@ -24,10 +24,10 @@ describe('Id', () => {
 
   describe('setup', () => {
     it('should apply the mod id from the route', () => {
-      vi.spyOn(component['route'].snapshot.paramMap, 'get').mockReturnValue(
+      spyOn(component['route'].snapshot.paramMap, 'get').and.returnValue(
         'modId',
       );
-      vi.spyOn(component['settingsStore'], 'apply');
+      spyOn(component['settingsStore'], 'apply');
       component['setup']();
       expect(component['settingsStore'].apply).toHaveBeenCalledWith({
         modId: 'modId',

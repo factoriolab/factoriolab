@@ -7,9 +7,10 @@ import { FastAverageColorResult } from 'fast-average-color';
 
 import { Preset } from '~/state/settings/preset';
 import { SettingsStore } from '~/state/settings/settings-store';
+import { Translate } from '~/translate/translate';
 import { WindowClient } from '~/utils/window-client';
 
-import { mockModData, mockModHash } from './mocks/data';
+import { mockLangData, mockModData, mockModHash } from './mocks/data';
 
 @NgModule({
   providers: [
@@ -36,6 +37,14 @@ import { mockModData, mockModHash } from './mocks/data';
           (): Promise<FastAverageColorResult> =>
             Promise.resolve({ hex: '#000000' } as FastAverageColorResult);
         return settingsStore;
+      },
+    },
+    {
+      provide: Translate,
+      useFactory: (): Translate => {
+        const translate = new Translate();
+        translate['httpData'].set(mockLangData);
+        return translate;
       },
     },
   ],

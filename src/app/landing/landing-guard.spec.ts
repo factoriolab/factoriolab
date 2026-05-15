@@ -52,14 +52,14 @@ describe('landingGuard', () => {
   });
 
   it('should load the last saved state', async () => {
-    vi.spyOn(preferencesStore, 'bypassLanding').mockReturnValue(true);
-    vi.spyOn(routerSync, 'stored').mockReturnValue('/urltree');
+    spyOn(preferencesStore, 'bypassLanding').and.returnValue(true);
+    spyOn(routerSync, 'stored').and.returnValue('/urltree');
     await RouterTestingHarness.create('/');
     expect(router.url).toEqual('/urltree');
   });
 
   it('should navigate to the list', async () => {
-    vi.spyOn(preferencesStore, 'bypassLanding').mockReturnValue(true);
+    spyOn(preferencesStore, 'bypassLanding').and.returnValue(true);
     await RouterTestingHarness.create('/?v=6');
     expect(router.url).toEqual('/spa/list?v=6');
   });

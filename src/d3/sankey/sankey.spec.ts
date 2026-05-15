@@ -42,7 +42,7 @@ describe('find', () => {
   it('should throw on failing to find a node', () => {
     expect(() =>
       find(new Map<string, SankeyNode<object, object>>(), 'id'),
-    ).toThrow('missing: id');
+    ).toThrow(new Error('missing: id'));
   });
 });
 

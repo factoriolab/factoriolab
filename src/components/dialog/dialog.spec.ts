@@ -1,22 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Dialog } from './dialog';
+// import { Dialog } from './dialog';
 
-describe.skip('Dialog', () => {
-  let component: Dialog;
-  let fixture: ComponentFixture<Dialog>;
+// describe('Dialog', () => {
+//   let component: Dialog;
+//   let fixture: ComponentFixture<Dialog>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Dialog],
-    }).compileComponents();
+//   beforeEach(async () => {
+//     await TestBed.configureTestingModule({
+//       imports: [Dialog],
+//     }).compileComponents();
 
-    fixture = TestBed.createComponent(Dialog);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+//     fixture = TestBed.createComponent(Dialog);
+//     component = fixture.componentInstance;
+//     fixture.detectChanges();
+//   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+//   it('should create', () => {
+//     expect(component).toBeTruthy();
+//   });
+// });

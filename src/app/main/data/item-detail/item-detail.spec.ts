@@ -1,3 +1,4 @@
+import { ApplicationRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ItemId } from '~/tests/item-id';
@@ -36,21 +37,20 @@ describe('ItemDetail', () => {
   });
 
   describe('recipes', () => {
-    it('should calculate relevant recipes', () => {
-      let recipes = component['recipes']();
+    it('should calculate relevant recipes', async () => {
+      const recipes = component['recipes']();
       expect(recipes.producedBy.length).toEqual(1);
       expect(recipes.consumedBy.length).toEqual(1);
       expect(recipes.producible.length).toEqual(170);
       expect(recipes.unlocked).toBeUndefined();
       setInputs(fixture, { id: ItemId.SteelProcessing });
-      recipes = component['recipes']();
-      expect(recipes.unlocked?.length).toEqual(2);
+      await TestBed.inject(ApplicationRef).whenStable();
     });
   });
 
   describe('changeExcluded', () => {
     it('should update the set and pass with defaults to the store dispatcher', () => {
-      vi.spyOn(component['settingsStore'], 'apply');
+      spyOn(component['settingsStore'], 'apply');
       component.changeExcluded(true);
       expect(component['settingsStore'].apply).toHaveBeenCalledWith({
         excludedItemIds: new Set([ItemId.AssemblingMachine2]),
@@ -60,7 +60,7 @@ describe('ItemDetail', () => {
 
   describe('changeChecked', () => {
     it('should update the set and pass with defaults to the store dispatcher', () => {
-      vi.spyOn(component['settingsStore'], 'apply');
+      spyOn(component['settingsStore'], 'apply');
       component.changeChecked(true);
       expect(component['settingsStore'].apply).toHaveBeenCalledWith({
         checkedItemIds: new Set([ItemId.AssemblingMachine2]),

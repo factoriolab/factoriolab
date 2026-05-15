@@ -222,7 +222,7 @@ describe('Rational', () => {
   describe('toJson', () => {
     it('should alias toString', () => {
       const value = rational(1n);
-      vi.spyOn(value, 'toString');
+      spyOn(value, 'toString');
       value.toJSON();
       expect(value.toString).toHaveBeenCalled();
     });
@@ -276,15 +276,15 @@ describe('fromString', () => {
   });
 
   it('should throw on empty string', () => {
-    expect(() => fromString('')).toThrow('Empty string');
+    expect(() => fromString('')).toThrow(new Error('Empty string'));
   });
 
   it('should throw on too many /', () => {
-    expect(() => fromString('1/1/1')).toThrow('Too many /');
+    expect(() => fromString('1/1/1')).toThrow(new Error('Too many /'));
   });
 
   it('should throw on too many spaces', () => {
-    expect(() => fromString('1  1/2')).toThrow('Too many spaces');
+    expect(() => fromString('1  1/2')).toThrow(new Error('Too many spaces'));
   });
 
   it('should evaluate an equation', () => {
@@ -298,6 +298,6 @@ describe('rational', () => {
   });
 
   it('should throw a divide by zero error', () => {
-    expect(() => rational(1, 0)).toThrow('Cannot divide by zero');
+    expect(() => rational(1, 0)).toThrow(new Error('Cannot divide by zero'));
   });
 });
