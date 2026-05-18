@@ -3,16 +3,24 @@ import { computed, inject, Injectable } from '@angular/core';
 import { FlowData } from '~/flow/flow-data';
 import { Link } from '~/flow/link';
 import { Node } from '~/flow/node';
+import { isRecipeObjective } from '~/state/objectives/objective';
+import { RecipesStore } from '~/state/recipes/recipes-store';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { spread } from '~/utils/object';
+
+import { mockObjectivesList } from './objective';
 
 @Injectable({ providedIn: 'root' })
 export class Mocks {
   private readonly settingsStore = inject(SettingsStore);
+  private readonly recipesStore = inject(RecipesStore);
 
   readonly flow = computed<FlowData>(() => {
     const data = this.settingsStore.dataset();
-    const icon = data.iconRecord.system['custom'];
+    const icon = data.iconRecord.item[data.itemIds[0]];
+    const qualityIcon = data.iconRecord.system['custom'];
+    const recipeIcon = data.iconRecord.recipe[data.recipeIds[0]];
+    const recipeQualityIcon = qualityIcon;
 
     function node(id: string, override?: Partial<Node>): Node {
       const result: Node = {
@@ -22,6 +30,10 @@ export class Mocks {
         id,
         stepId: id,
         icon,
+        qualityIcon,
+        recipeIcon,
+        recipeQualityIcon,
+        recipeObjectiveId: id,
       };
 
       if (override) return spread(result, override);
@@ -58,5 +70,16 @@ export class Mocks {
         link('r|2', 's|4'),
       ],
     };
+  });
+
+  readonly objectives = computed(() => {
+    const data = this.recipesStore.adjustedDataset();
+    return mockObjectivesList.map((o) =>
+      spread(o, {
+        recipe: isRecipeObjective(o)
+          ? data.adjustedRecipe[o.targetId]
+          : undefined,
+      }),
+    );
   });
 }

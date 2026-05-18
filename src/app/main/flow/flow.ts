@@ -172,11 +172,7 @@ export class Flow {
       .attr('class', 'overflow-visible')
       .attr('x', (d) => coalesce(d.x0, 0))
       .attr('y', (d) => coalesce(d.y0, 0))
-      .on('click', (e: Event, d) => {
-        console.log(e);
-        if (e.defaultPrevented) return;
-        this.selectedId.set(d.stepId);
-      })
+      .on('click', this.clickHandler())
       .call(
         drag<SVGSVGElement, SankeyNode<Node, Link>>()
           .subject((d) => d as SankeyNode<Node, Link>)
@@ -433,10 +429,7 @@ export class Flow {
       .attr('class', 'overflow-visible')
       .attr('x', (d) => coalesce(d.x, 0))
       .attr('y', (d) => coalesce(d.y, 0))
-      .on('click', (e: Event, d) => {
-        if (e.defaultPrevented) return;
-        this.selectedId.set(d.stepId);
-      })
+      .on('click', this.clickHandler())
       .call(
         drag<SVGSVGElement, Node & ElkNode>()
           .subject((d) => d as Node & ElkNode)
@@ -555,6 +548,8 @@ export class Flow {
       .attr('y', 35)
       .attr('x', 19)
       .text((d) => d.text);
+
+    this.svg = svg;
   }
 
   private getLayout(
@@ -565,7 +560,7 @@ export class Flow {
     return sankey<Node, Link>()
       .nodeId((d) => d.id)
       .nodeWidth(NODE_WIDTH)
-      .nodeAlign(this.getAlign(align))
+      .nodeAlign(this._alignMap[align])
       .extent([
         [1, 5],
         [width - 1, height - 5],
@@ -586,20 +581,15 @@ export class Flow {
     });
   }
 
-  private getAlign(
-    align: SankeyAlign | undefined,
-  ): (node: SankeyNode<Node, Link>, n: number) => number {
-    switch (align) {
-      case SankeyAlign.Left:
-        return sankeyLeft;
-      case SankeyAlign.Right:
-        return sankeyRight;
-      case SankeyAlign.Center:
-        return sankeyCenter;
-      default:
-        return sankeyJustify;
-    }
-  }
+  private readonly _alignMap: Record<
+    SankeyAlign,
+    (node: SankeyNode<Node, Link>, n: number) => number
+  > = {
+    [SankeyAlign.Left]: sankeyLeft,
+    [SankeyAlign.Right]: sankeyRight,
+    [SankeyAlign.Center]: sankeyCenter,
+    [SankeyAlign.Justify]: sankeyJustify,
+  };
 
   private nodeHeight(d: SankeyNode<Node, Link>): number {
     return coalesce(d.y1, 0) - coalesce(d.y0, 0);
@@ -614,6 +604,13 @@ export class Flow {
   ): (e: { transform: string }) => void {
     return (e: { transform: string }) => {
       svg.selectAll('svg > g').attr('transform', e.transform);
+    };
+  }
+
+  private clickHandler(): (e: Event, d: { stepId: string }) => void {
+    return (e: Event, d: { stepId: string }) => {
+      if (e.defaultPrevented) return;
+      this.selectedId.set(d.stepId);
     };
   }
 }

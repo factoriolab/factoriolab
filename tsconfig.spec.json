@@ -6,10 +6,5 @@
     "outDir": "./out-tsc/spec",
     "types": ["jasmine"]
   },
-  "include": [
-    "src/**/*.d.ts",
-    "src/**/*.spec.ts",
-    "src/tests/**/*.ts",
-    "vitest.config.ts"
-  ]
+  "include": ["src/**/*.d.ts", "src/**/*.spec.ts", "src/tests/**/*.ts"]
 }
