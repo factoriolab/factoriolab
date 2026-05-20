@@ -129,8 +129,16 @@
     "caterium-ingot-leached",
     "power-shard-synthetic"
   ],
-  "minMachineRank": ["miner-mk1"],
-  "maxMachineRank": ["miner-mk3"],
-  "moduleRank": ["purity-1"],
-  "fuelRank": ["coal"]
+  "minMachineRank": [
+    "miner-mk1"
+  ],
+  "maxMachineRank": [
+    "miner-mk3"
+  ],
+  "moduleRank": [
+    "purity-1"
+  ],
+  "fuelRank": [
+    "coal"
+  ]
 }
