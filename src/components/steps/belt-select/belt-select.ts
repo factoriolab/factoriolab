@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { Control, LAB_CONTROL } from '~/components/control';
+import { Control } from '~/components/control';
 import { Dropdown } from '~/components/dropdown/dropdown';
 import { Icon } from '~/components/icon/icon';
 import { InputNumber } from '~/components/input-number/input-number';
@@ -33,7 +33,7 @@ let nextUniqueId = 0;
       multi: true,
       useExisting: BeltSelect,
     },
-    { provide: LAB_CONTROL, useExisting: BeltSelect },
+    { provide: Control, useExisting: BeltSelect },
   ],
 })
 export class BeltSelect extends Control<ItemSettings> {

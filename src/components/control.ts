@@ -1,12 +1,5 @@
-import {
-  InjectionToken,
-  InputSignal,
-  ModelSignal,
-  signal,
-} from '@angular/core';
+import { InputSignal, ModelSignal, signal } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-
-export const LAB_CONTROL = new InjectionToken<Control>('LAB_CONTROL');
 
 export abstract class Control<T = unknown> implements ControlValueAccessor {
   abstract readonly controlId: InputSignal<string>;

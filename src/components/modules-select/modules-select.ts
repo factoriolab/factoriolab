@@ -11,7 +11,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Machine } from '~/data/schema/machine';
 import { ModuleSettings } from '~/state/module-settings';
 
-import { Control, LAB_CONTROL } from '../control';
+import { Control } from '../control';
 import { Dropdown } from '../dropdown/dropdown';
 import { Icon } from '../icon/icon';
 import { Modules } from '../modules/modules';
@@ -33,7 +33,7 @@ let nextUniqueId = 0;
       multi: true,
       useExisting: ModulesSelect,
     },
-    { provide: LAB_CONTROL, useExisting: ModulesSelect },
+    { provide: Control, useExisting: ModulesSelect },
   ],
 })
 export class ModulesSelect extends Control<ModuleSettings[]> {

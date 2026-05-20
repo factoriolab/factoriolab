@@ -20,7 +20,7 @@ import { filterNullish } from '~/utils/nullish';
 import { inRange } from '~/utils/number';
 
 import { Button } from '../button/button';
-import { Control, LAB_CONTROL } from '../control';
+import { Control } from '../control';
 import { Rounded, roundedVariants } from '../rounding';
 import { ValidateRational } from './validate-rational';
 
@@ -57,7 +57,7 @@ interface ChangeEvent {
       useExisting: InputNumber,
       multi: true,
     },
-    { provide: LAB_CONTROL, useExisting: InputNumber },
+    { provide: Control, useExisting: InputNumber },
   ],
   host: { class: 'group relative inline-flex' },
 })

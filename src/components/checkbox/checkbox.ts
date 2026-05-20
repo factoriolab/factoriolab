@@ -17,7 +17,7 @@ import { cva } from 'class-variance-authority';
 import { TranslateParams } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
-import { Control, LAB_CONTROL } from '../control';
+import { Control } from '../control';
 
 const check = cva(
   'outline-brand-600 relative inline-flex items-center justify-center rounded-xs transition-all hover:bg-gray-900 has-focus-visible:outline',
@@ -48,7 +48,7 @@ let nextUniqueId = 0;
       useExisting: Checkbox,
       multi: true,
     },
-    { provide: LAB_CONTROL, useExisting: Checkbox },
+    { provide: Control, useExisting: Checkbox },
   ],
   host: { class: 'inline-flex items-center' },
 })

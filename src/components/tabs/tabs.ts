@@ -22,7 +22,7 @@ import { resetTableParams } from '~/state/table/table-state';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Button } from '../button/button';
-import { Control, LAB_CONTROL } from '../control';
+import { Control } from '../control';
 import { Icon } from '../icon/icon';
 import { Ripple } from '../ripple/ripple';
 import { TabData } from './tab-data';
@@ -57,7 +57,7 @@ let nextUniqueId = 0;
       multi: true,
       useExisting: Tabs,
     },
-    { provide: LAB_CONTROL, useExisting: Tabs },
+    { provide: Control, useExisting: Tabs },
   ],
 })
 export class Tabs<T extends string = string>

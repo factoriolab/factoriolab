@@ -7,7 +7,7 @@ import {
 
 import { TranslatePipe } from '~/translate/translate-pipe';
 
-import { LAB_CONTROL } from '../control';
+import { Control } from '../control';
 
 let nextUniqueId = 0;
 
@@ -19,7 +19,7 @@ let nextUniqueId = 0;
   host: { '[attr.id]': 'id()', class: 'inline-flex flex-col' },
 })
 export class FormField {
-  protected readonly control = contentChild.required(LAB_CONTROL);
+  protected readonly control = contentChild.required(Control);
 
   private uniqueId = (nextUniqueId++).toString();
   readonly labelId = `lab-form-field-label-${this.uniqueId}`;

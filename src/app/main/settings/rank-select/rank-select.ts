@@ -32,7 +32,7 @@ import { cva } from 'class-variance-authority';
 
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
-import { Control, LAB_CONTROL } from '~/components/control';
+import { Control } from '~/components/control';
 import { FormField } from '~/components/form-field/form-field';
 import { Icon } from '~/components/icon/icon';
 import { Ripple } from '~/components/ripple/ripple';
@@ -106,7 +106,7 @@ const host = cva(
       multi: true,
       useExisting: RankSelect,
     },
-    { provide: LAB_CONTROL, useExisting: RankSelect },
+    { provide: Control, useExisting: RankSelect },
   ],
 })
 export class RankSelect extends Control<string[]> {

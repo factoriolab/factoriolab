@@ -29,7 +29,7 @@ import { areSetsEqual } from '~/utils/equality';
 
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
-import { Control, LAB_CONTROL } from '../control';
+import { Control } from '../control';
 import { FormField } from '../form-field/form-field';
 import { Icon } from '../icon/icon';
 import { Ripple } from '../ripple/ripple';
@@ -101,7 +101,7 @@ const host = cva(
       multi: true,
       useExisting: Select,
     },
-    { provide: LAB_CONTROL, useExisting: Select },
+    { provide: Control, useExisting: Select },
   ],
 })
 export class Select<T = unknown> extends Control<T> {

@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { Control, LAB_CONTROL } from '~/components/control';
+import { Control } from '~/components/control';
 import { FormField } from '~/components/form-field/form-field';
 
 let nextUniqueId = 0;
@@ -23,7 +23,7 @@ let nextUniqueId = 0;
       useExisting: Hue,
       multi: true,
     },
-    { provide: LAB_CONTROL, useExisting: Hue },
+    { provide: Control, useExisting: Hue },
   ],
   host: {
     class: 'flex items-center gap-2',

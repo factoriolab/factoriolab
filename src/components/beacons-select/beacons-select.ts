@@ -17,7 +17,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { spread } from '~/utils/object';
 
 import { Button } from '../button/button';
-import { Control, LAB_CONTROL } from '../control';
+import { Control } from '../control';
 import { Dropdown } from '../dropdown/dropdown';
 import { Icon } from '../icon/icon';
 import { InputNumber } from '../input-number/input-number';
@@ -49,7 +49,7 @@ let nextUniqueId = 0;
       multi: true,
       useExisting: BeaconsSelect,
     },
-    { provide: LAB_CONTROL, useExisting: BeaconsSelect },
+    { provide: Control, useExisting: BeaconsSelect },
   ],
   host: { class: 'flex' },
 })
