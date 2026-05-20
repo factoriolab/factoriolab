@@ -35,14 +35,14 @@ jobs:
 
       - name: Run tests
         run: npm run test:ci
-        continue-on-error: true
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         with:
           files: coverage/TESTS-*.xml
           check_name: publish test results
+        if: always()
+        continue-on-error: true
 
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.3.0
@@ -56,9 +56,12 @@ jobs:
           indicators: true
           output: both
           thresholds: '80 90'
+        if: always()
+        continue-on-error: true
 
       - name: Add Coverage PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         with:
           path: code-coverage-results.md
+        if: always()
+        continue-on-error: true
