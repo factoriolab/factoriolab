@@ -22,7 +22,11 @@ import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { ZipVersion } from '~/models/enum/zip-version';
 import { LabParams, Params } from '~/models/lab-params';
-import { isRecipeObjective, ObjectiveState } from '~/models/objective';
+import {
+  isGlobalObjective,
+  isRecipeObjective,
+  ObjectiveState,
+} from '~/models/objective';
 import { rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import { CostSettings } from '~/models/settings/cost-settings';
@@ -607,10 +611,12 @@ export class RouterService {
       );
       data.objectives.hash.o.push(
         this.zipSvc.zipFields([
-          this.zipSvc.zipNString(
-            obj.targetId,
-            isRecipeObjective(obj) ? hash.recipes : hash.items,
-          ),
+          isGlobalObjective(obj)
+            ? obj.targetId
+            : this.zipSvc.zipNString(
+                obj.targetId,
+                isRecipeObjective(obj) ? hash.recipes : hash.items,
+              ),
           value,
           unit,
           type,
@@ -651,7 +657,7 @@ export class RouterService {
         fuelId: this.zipSvc.parseString(s[i++], hash?.fuels),
       };
 
-      if (hash) {
+      if (hash && !isGlobalObjective(obj)) {
         obj.targetId = coalesce(
           this.zipSvc.parseNString(
             obj.targetId,

@@ -341,7 +341,7 @@ export class FlowComponent implements AfterViewInit {
             'text-valign': 'bottom',
             'text-margin-y': 6,
           },
-        } as unknown as cytoscape.Stylesheet,
+        } as unknown as cytoscape.StylesheetCSS,
         {
           selector: 'edge',
           style: {

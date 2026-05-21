@@ -101,6 +101,32 @@ export interface AdjustedRecipe extends Recipe {
   effects: Record<ModuleEffect, Rational>;
   produces: Set<string>;
   output: Entities<Rational>;
+  /** Set when this burner recipe needs fuel variants generated */
+  needsFuelVariants?: boolean;
+  /** Machine usage in kW, needed for fuel variant generation */
+  fuelUsage?: Rational;
+}
+
+export const FUEL_VARIANT_SEP = '|f:';
+
+export function fuelVariantId(recipeId: string, fuelId: string): string {
+  return `${recipeId}${FUEL_VARIANT_SEP}${fuelId}`;
+}
+
+export function parseFuelVariant(
+  id: string,
+): { recipeId: string; fuelId: string } | null {
+  const idx = id.indexOf(FUEL_VARIANT_SEP);
+  if (idx === -1) return null;
+  return {
+    recipeId: id.substring(0, idx),
+    fuelId: id.substring(idx + FUEL_VARIANT_SEP.length),
+  };
+}
+
+export function baseRecipeId(id: string): string {
+  const idx = id.indexOf(FUEL_VARIANT_SEP);
+  return idx === -1 ? id : id.substring(0, idx);
 }
 
 export function finalizeRecipe(recipe: AdjustedRecipe): void {

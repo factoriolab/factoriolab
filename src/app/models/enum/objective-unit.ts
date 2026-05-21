@@ -8,6 +8,7 @@ export enum ObjectiveUnit {
   Belts = 1,
   Wagons = 2,
   Machines = 3,
+  Power = 4,
 }
 
 export function objectiveUnitOptions(
@@ -19,10 +20,12 @@ export function objectiveUnitOptions(
     { value: ObjectiveUnit.Belts, label: 'options.objectiveUnit.belts' },
     { value: ObjectiveUnit.Wagons, label: dispRateInfo.wagonsLabel },
     { value: ObjectiveUnit.Machines, label: 'options.objectiveUnit.machines' },
+    { value: ObjectiveUnit.Power, label: 'options.objectiveUnit.power' },
   ];
 
-  if (!flags.has('wagons'))
-    return result.filter((i) => i.value !== ObjectiveUnit.Wagons);
-
-  return result;
+  return result.filter((i) => {
+    if (i.value === ObjectiveUnit.Wagons && !flags.has('wagons')) return false;
+    if (i.value === ObjectiveUnit.Power && !flags.has('power')) return false;
+    return true;
+  });
 }

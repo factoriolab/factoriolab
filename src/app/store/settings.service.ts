@@ -26,7 +26,8 @@ import {
   Module,
   ModuleEffect,
 } from '~/models/data/module';
-import { parseRecipe, Recipe } from '~/models/data/recipe';
+import { parseRecipe, Recipe, RecipeFlag } from '~/models/data/recipe';
+import { EnergyType } from '~/models/enum/energy-type';
 import { Technology } from '~/models/data/technology';
 import { Dataset } from '~/models/dataset';
 import { Defaults } from '~/models/defaults';
@@ -525,12 +526,19 @@ export class SettingsService extends Store<SettingsState> {
       .forEach((r) => {
         const firstOutId = Object.keys(r.out)[0];
         const firstOutItem = itemData[firstOutId];
-        r.icon = firstOutItem.icon ?? firstOutId;
+        r.icon = firstOutItem?.icon ?? firstOutId;
       });
 
     const itemQIds = new Set<string>();
     const recipeQIds = new Set<string>();
     const _flags = flags[coalesce(mod?.flags, DEFAULT_MOD)];
+
+    // Generate virtual power production recipes
+    if (_flags.has('power')) {
+      const iconIdSet = new Set(Object.keys(iconEntities));
+      this.generatePowerRecipes(items, recipes, recipeIds, iconIdSet);
+    }
+
     if (_flags.has('quality')) {
       const qualities = [
         Quality.Uncommon,
@@ -1031,5 +1039,46 @@ export class SettingsService extends Store<SettingsState> {
       } else e[k] = entities[k];
       return e;
     }, {});
+  }
+
+  /**
+   * Generate virtual power production recipes for items that produce power
+   * but have no corresponding recipe in the data (e.g., steam engines).
+   */
+  private generatePowerRecipes(
+    items: Item[],
+    recipes: Recipe[],
+    recipeIds: string[],
+    iconIds: Set<string>,
+  ): void {
+    // Steam engine: consumes 30 steam/s, produces 900 kW
+    const steamEngine = items.find((i) => i.id === 'steam-engine');
+    if (steamEngine && !steamEngine.machine) {
+      steamEngine.machine = {
+        speed: rational.one,
+        type: EnergyType.Electric,
+        usage: rational(-900n),
+        size: [3, 5],
+      };
+
+      const recipeId = 'steam-engine-power';
+      const recipe: Recipe = {
+        id: recipeId,
+        name: 'Steam engine : Power',
+        category: 'intermediate-products',
+        row: 0,
+        time: rational.one,
+        producers: ['steam-engine'],
+        in: { steam: rational(30n) },
+        out: {},
+        icon: iconIds.has('electric-energy-accumulators')
+          ? 'electric-energy-accumulators'
+          : 'steam-engine',
+        flags: new Set<RecipeFlag>(),
+      };
+
+      recipes.push(recipe);
+      recipeIds.push(recipeId);
+    }
   }
 }

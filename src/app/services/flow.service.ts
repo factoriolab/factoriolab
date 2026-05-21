@@ -4,6 +4,7 @@ import { combineLatest, map, switchMap } from 'rxjs';
 
 import { MIN_LINK_VALUE } from '~/models/constants';
 import { Icon } from '~/models/data/icon';
+import { baseRecipeId } from '~/models/data/recipe';
 import { AdjustedDataset } from '~/models/dataset';
 import { LinkValue } from '~/models/enum/link-value';
 import { FlowData } from '~/models/flow';
@@ -202,7 +203,9 @@ export class FlowService {
       }
 
       if (step.recipeId && step.machines && step.recipeSettings?.machineId) {
-        const recipe = data.recipeEntities[step.recipeId];
+        const recipe =
+          data.recipeEntities[step.recipeId] ??
+          data.recipeEntities[baseRecipeId(step.recipeId)];
         const machine = data.itemEntities[step.recipeSettings?.machineId];
         const icon = data.iconEntities[recipe.icon ?? recipe.id];
         const id = `${this.recipeStepNodeType(step)}|${step.recipeId}`;

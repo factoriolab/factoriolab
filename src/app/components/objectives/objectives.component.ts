@@ -6,12 +6,13 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Message } from 'primeng/api';
+import { MenuItem, Message } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
 import { OrderListModule } from 'primeng/orderlist';
+import { MenuModule } from 'primeng/menu';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { combineLatest, EMPTY, first, map, Observable } from 'rxjs';
@@ -28,7 +29,15 @@ import {
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { MatrixResult } from '~/models/matrix-result';
-import { ObjectiveState } from '~/models/objective';
+import {
+  GlobalObjectiveKind,
+  globalObjectiveKind,
+  globalTargetId,
+  isGlobalObjective,
+  isRecipeObjective,
+  ObjectiveBase,
+  ObjectiveState,
+} from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Settings } from '~/models/settings/settings';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
@@ -58,6 +67,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     DropdownModule,
     MessagesModule,
     OrderListModule,
+    MenuModule,
     ToggleButtonModule,
     TooltipModule,
     DropdownTranslateDirective,
@@ -125,7 +135,8 @@ export class ObjectivesComponent {
 
     if (matrixResult.simplexStatus === 'unbounded') {
       const maxObjectives = objectives.filter(
-        (o) => o.type === ObjectiveType.Maximize,
+        (o) =>
+          o.type === ObjectiveType.Maximize && o.value.gt(rational.zero),
       );
 
       if (
@@ -142,7 +153,7 @@ export class ObjectivesComponent {
 
       if (
         maxObjectives.some((o) =>
-          o.unit === ObjectiveUnit.Machines
+          isRecipeObjective(o)
             ? settings.excludedRecipeIds.has(o.targetId)
             : settings.excludedItemIds.has(o.targetId),
         )
@@ -198,6 +209,97 @@ export class ObjectivesComponent {
     );
   }
 
+  isGlobal(obj: ObjectiveBase): boolean {
+    return isGlobalObjective(obj);
+  }
+
+  globalKind(obj: ObjectiveBase): GlobalObjectiveKind | undefined {
+    return globalObjectiveKind(obj);
+  }
+
+  globalUnit(obj: ObjectiveBase): string {
+    switch (globalObjectiveKind(obj)) {
+      case 'power':
+        return 'kW';
+      case 'pollution':
+        return this.dispRateInfo().suffix;
+      default:
+        return '';
+    }
+  }
+
+  globalKindIcon(obj: ObjectiveBase): string {
+    switch (globalObjectiveKind(obj)) {
+      case 'power':
+        return 'fa-solid fa-bolt';
+      case 'pollution':
+        return 'fa-solid fa-smog';
+      default:
+        return 'fa-solid fa-globe';
+    }
+  }
+
+  globalKindLabel(obj: ObjectiveBase): string {
+    switch (globalObjectiveKind(obj)) {
+      case 'power':
+        return 'objectives.power';
+      case 'pollution':
+        return 'objectives.pollution';
+      default:
+        return '';
+    }
+  }
+
+  editGlobalKindItems(objective: ObjectiveState): MenuItem[] {
+    return [
+      {
+        label: 'Power',
+        icon: 'fa-solid fa-bolt',
+        command: () => this.changeGlobalKind(objective, 'power'),
+      },
+      {
+        label: 'Pollution',
+        icon: 'fa-solid fa-smog',
+        command: () => this.changeGlobalKind(objective, 'pollution'),
+      },
+    ];
+  }
+
+  addGlobalMenuItems = computed((): MenuItem[] => {
+    const flags = this.data().flags;
+    const items: MenuItem[] = [];
+    if (flags.has('power'))
+      items.push({
+        label: 'Power',
+        icon: 'fa-solid fa-bolt',
+        command: () => this.addGlobal('power'),
+      });
+    if (flags.has('pollution'))
+      items.push({
+        label: 'Pollution',
+        icon: 'fa-solid fa-smog',
+        command: () => this.addGlobal('pollution'),
+      });
+    return items;
+  });
+
+  changeGlobalKind(
+    objective: ObjectiveState,
+    kind: GlobalObjectiveKind,
+  ): void {
+    this.objectivesSvc.updateEntity(objective.id, {
+      targetId: globalTargetId(kind),
+      unit: kind === 'power' ? ObjectiveUnit.Power : ObjectiveUnit.Items,
+    });
+  }
+
+  addGlobal(kind: GlobalObjectiveKind): void {
+    this.objectivesSvc.add({
+      targetId: globalTargetId(kind),
+      unit: kind === 'power' ? ObjectiveUnit.Power : ObjectiveUnit.Items,
+    });
+  }
+
   changeUnit(
     objective: ObjectiveState,
     unit: ObjectiveUnit,
@@ -205,26 +307,40 @@ export class ObjectivesComponent {
     chooseRecipePicker: PickerComponent,
   ): void {
     const data = this.data();
-    if (unit === ObjectiveUnit.Machines) {
-      if (objective.unit !== ObjectiveUnit.Machines) {
-        const recipeIds = data.itemRecipeIds[objective.targetId];
+    const isRecipeUnit =
+      unit === ObjectiveUnit.Machines || unit === ObjectiveUnit.Power;
+    const wasRecipeUnit =
+      objective.unit === ObjectiveUnit.Machines ||
+      (objective.unit === ObjectiveUnit.Power && !isGlobalObjective(objective));
+
+    if (isRecipeUnit) {
+      if (wasRecipeUnit) {
+        // Recipe -> recipe: same target, just change unit
+        this.objectivesSvc.updateEntity(objective.id, { unit });
+      } else {
+        // Item -> recipe: need to pick a recipe
+        const recipeIds = objective.targetId
+          ? data.itemRecipeIds[objective.targetId]
+          : Array.from(this.settings().availableRecipeIds);
         const updateFn = (recipeId: string): void => {
           this.convertItemsToMachines(objective, recipeId, data);
+          // If switching to Power, update unit after conversion
+          if (unit === ObjectiveUnit.Power) {
+            this.objectivesSvc.updateEntity(objective.id, { unit });
+          }
         };
         if (recipeIds.length === 1) {
           updateFn(recipeIds[0]);
         } else {
-          chooseRecipePicker.selectId.pipe(first()).subscribe((targetId) => {
-            updateFn(targetId);
+          chooseRecipePicker.selectId.pipe(first()).subscribe((rid) => {
+            updateFn(rid);
           });
           chooseRecipePicker.clickOpen('recipe', recipeIds);
         }
       }
     } else {
-      if (
-        objective.unit === ObjectiveUnit.Machines &&
-        data.adjustedRecipe[objective.targetId]
-      ) {
+      if (wasRecipeUnit && data.adjustedRecipe[objective.targetId]) {
+        // Recipe -> item: need to pick an item
         const itemIds = Array.from(
           data.adjustedRecipe[objective.targetId].produces,
         );
@@ -240,9 +356,18 @@ export class ObjectivesComponent {
           });
           chooseItemPicker.clickOpen('item', itemIds);
         }
-      } else {
-        // No target conversion required
+      } else if (!wasRecipeUnit && !isGlobalObjective(objective)) {
+        // Item -> item: no target conversion required
         this.convertItemsToItems(objective, objective.targetId, unit, data);
+      } else {
+        // Global power -> item: need to pick an item
+        chooseItemPicker.selectId.pipe(first()).subscribe((itemId) => {
+          this.objectivesSvc.updateEntity(objective.id, {
+            targetId: itemId,
+            unit,
+          });
+        });
+        chooseItemPicker.clickOpen('item', this.settings().availableItemIds);
       }
     }
   }

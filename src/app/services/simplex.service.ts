@@ -19,10 +19,13 @@ import { ObjectiveType } from '~/models/enum/objective-type';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { MatrixResult } from '~/models/matrix-result';
 import {
+  isGlobalPollutionObjective,
+  isGlobalPowerObjective,
   isRecipeObjective,
   ObjectiveState,
   RecipeObjective,
 } from '~/models/objective';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { Rational, rational } from '~/models/rational';
 import {
   CostKey,
@@ -51,6 +54,15 @@ export interface ItemValues {
   lim?: Rational;
 }
 
+export interface GlobalConstraintValues {
+  /** Target output (from Output objectives) */
+  out: Rational;
+  /** Smallest value from Limit objectives */
+  lim?: Rational;
+  /** Sum of values from Maximize objectives */
+  max?: Rational;
+}
+
 export interface MatrixState {
   objectives: ObjectiveState[];
   /**
@@ -77,6 +89,12 @@ export interface MatrixState {
   requireMachinesOutput: boolean;
   costs: CostSettings;
   hasSurplusCost: boolean;
+  /** Power constraint values from Power objectives */
+  powerValues?: GlobalConstraintValues;
+  /** Pollution constraint values from Pollution objectives */
+  pollutionValues?: GlobalConstraintValues;
+  /** Whether any recipe in the model has positive consumption */
+  hasPowerConsumers: boolean;
 }
 
 export interface MatrixSolution {
@@ -181,11 +199,24 @@ export class SimplexService {
     // Set up state object
     const state: MatrixState = {
       objectives,
-      recipeObjectives: objectives.filter(
-        (o): o is RecipeObjective =>
-          isRecipeObjective(o) &&
-          [ObjectiveType.Output, ObjectiveType.Maximize].includes(o.type),
-      ),
+      recipeObjectives: objectives
+        .filter(
+          (o): o is RecipeObjective =>
+            isRecipeObjective(o) &&
+            [ObjectiveType.Output, ObjectiveType.Maximize].includes(o.type),
+        )
+        .map((o) => {
+          // Convert Power unit kW to machine count
+          if (
+            o.unit === ObjectiveUnit.Power &&
+            o.recipe.consumption?.nonzero()
+          ) {
+            return spread(o, {
+              value: o.value.div(o.recipe.consumption.abs()),
+            });
+          }
+          return o;
+        }),
       steps: [],
       recipes: {},
       itemValues: {},
@@ -198,11 +229,26 @@ export class SimplexService {
       costs: settings.costs,
       data,
       hasSurplusCost: settings.costs.surplus.gt(rational.zero),
+      hasPowerConsumers: false,
     };
 
     // Add item objectives to matrix state
     for (const obj of objectives) {
-      if (isRecipeObjective(obj)) {
+      if (isGlobalPowerObjective(obj)) {
+        if (!state.powerValues)
+          state.powerValues = { out: rational.zero };
+        this.addGlobalConstraintValue(state.powerValues, obj);
+      } else if (isGlobalPollutionObjective(obj)) {
+        if (!state.pollutionValues)
+          state.pollutionValues = { out: rational.zero };
+        this.addGlobalConstraintValue(state.pollutionValues, obj);
+      } else if (isRecipeObjective(obj)) {
+        // For Power unit, convert kW to machine count
+        const value =
+          obj.unit === ObjectiveUnit.Power && obj.recipe.consumption?.nonzero()
+            ? obj.value.div(obj.recipe.consumption.abs())
+            : obj.value;
+
         switch (obj.type) {
           case ObjectiveType.Output:
           case ObjectiveType.Maximize: {
@@ -220,7 +266,7 @@ export class SimplexService {
             for (const itemId of Object.keys(obj.recipe.out).filter((i) =>
               obj.recipe.produces.has(i),
             )) {
-              const rate = obj.value.mul(obj.recipe.output[itemId]);
+              const rate = value.mul(obj.recipe.output[itemId]);
               this.addItemValue(state.itemValues, itemId, rate, 'in');
             }
             break;
@@ -231,8 +277,8 @@ export class SimplexService {
              * null or greater than this objective's value
              */
             const current = state.recipeLimits[obj.targetId];
-            if (current == null || current.gt(obj.value)) {
-              state.recipeLimits[obj.targetId] = obj.value;
+            if (current == null || current.gt(value)) {
+              state.recipeLimits[obj.targetId] = value;
             }
             break;
           }
@@ -287,7 +333,119 @@ export class SimplexService {
     // Parse items that are unproduceable (no recipe available)
     this.parseUnproduceable(state);
 
+    // Discover power producers if any recipe has positive consumption
+    this.parsePowerProducers(state);
+
     return state;
+  }
+
+  addGlobalConstraintValue(
+    values: GlobalConstraintValues,
+    obj: ObjectiveState,
+  ): void {
+    switch (obj.type) {
+      case ObjectiveType.Output:
+        values.out = values.out.add(obj.value);
+        break;
+      case ObjectiveType.Limit:
+        if (values.lim == null || values.lim.gt(obj.value))
+          values.lim = obj.value;
+        break;
+      case ObjectiveType.Maximize:
+        values.max = (values.max ?? rational.zero).add(obj.value);
+        break;
+    }
+  }
+
+  /**
+   * Add surplus and/or maximize variables for a global constraint.
+   * - No maximize: surplus with zero cost (excess is free)
+   * - Positive maximize weight: surplus (free) + maximize var (negative obj = maximize)
+   * - Negative maximize weight: surplus with positive obj (penalizes excess = minimize)
+   */
+  addGlobalMaxSurplus(
+    m: Model,
+    coeffs: [Variable, number][],
+    values: GlobalConstraintValues | undefined,
+    name: string,
+    state: MatrixState,
+    maximizeVar: Variable,
+  ): void {
+    const isMinimize = values?.max?.lt(rational.zero);
+
+    // Surplus variable: absorbs excess production
+    const surplusObj = isMinimize
+      ? values!.max!.abs().mul(state.costs.maximize.abs()).toNumber()
+      : 0;
+    const surplusVar = m.addVar({
+      obj: surplusObj,
+      lb: 0,
+      name: `${name}-surplus`,
+    });
+    coeffs.push([surplusVar, -1]);
+
+    // Maximize variable: only for positive weights
+    if (values?.max != null && !isMinimize) {
+      switch (state.maximizeType) {
+        case MaximizeType.Weight: {
+          const maxVar = m.addVar({
+            obj: values.max.mul(state.costs.maximize).toNumber(),
+            lb: 0,
+            name: `${name}-maximize`,
+          });
+          coeffs.push([maxVar, -1]);
+          break;
+        }
+        case MaximizeType.Ratio: {
+          coeffs.push([
+            maximizeVar,
+            values.max.inverse().toNumber(),
+          ]);
+          break;
+        }
+      }
+    }
+  }
+
+  /** Update maximizeFactor for ratio mode (must be called after addGlobalMaxSurplus) */
+  updateMaximizeFactor(
+    values: GlobalConstraintValues | undefined,
+    state: MatrixState,
+    maximizeFactor: Rational,
+  ): Rational {
+    if (
+      values?.max != null &&
+      !values.max.lt(rational.zero) &&
+      state.maximizeType === MaximizeType.Ratio
+    ) {
+      return maximizeFactor.add(values.max);
+    }
+    return maximizeFactor;
+  }
+
+  /** If any included recipe consumes power, include power producer recipes */
+  parsePowerProducers(state: MatrixState): void {
+    // Check if any recipe in the model consumes power
+    const hasConsumers = Object.keys(state.recipes).some((r) =>
+      state.recipes[r].consumption?.gt(rational.zero),
+    );
+    // Also check recipe objectives
+    const objHasConsumers = state.recipeObjectives.some((o) =>
+      o.recipe.consumption?.gt(rational.zero),
+    );
+
+    if (!hasConsumers && !objHasConsumers && !state.powerValues) return;
+
+    state.hasPowerConsumers = hasConsumers || objHasConsumers;
+
+    // Include all available power producer recipes and parse their inputs
+    for (const recipeId of state.data.powerProducerRecipeIds) {
+      if (state.recipes[recipeId]) continue;
+      const recipe = state.data.adjustedRecipe[recipeId];
+      if (!recipe) continue;
+      state.recipes[recipeId] = recipe;
+      this.parseRecipeRecursively(recipe, state);
+    }
   }
 
   /** Find matching recipes for an item that have not yet been parsed */
@@ -543,12 +701,17 @@ export class SimplexService {
 
     // Add unproduceable vars to model
     for (const itemId of state.unproduceableIds) {
+      const isFreeInput = state.data.noRecipeItemIds.has(itemId);
       const obj = this.itemCost(itemId, 'unproduceable', state);
       const config: VariableProperties = {
         obj,
         lb: 0,
         name: itemId,
       };
+      // Items that have no recipe at all are free inputs (e.g. raw resources).
+      // Items that became unproduceable due to excluded recipes cannot be
+      // sourced — cap them at zero so the solver cannot conjure them.
+      if (!isFreeInput) config.ub = 0;
       unproduceableVarEntities[itemId] = m.addVar(config);
     }
 
@@ -685,6 +848,164 @@ export class SimplexService {
           name: itemId,
         };
         inputLimitConstrEntities[itemId] = m.addConstr(inputConfig);
+      }
+    }
+
+    // Add power balance constraint if any recipe has consumption
+    if (state.hasPowerConsumers || state.powerValues) {
+      const powerCoeffs: [Variable, number][] = [];
+
+      // Add consumption coefficients for all recipes
+      // -consumption: positive for producers (neg consumption), negative for consumers
+      for (const recipeId of recipeIds) {
+        const recipe = state.recipes[recipeId];
+        if (recipe?.consumption?.nonzero() && recipeVarEntities[recipeId]) {
+          powerCoeffs.push([
+            recipeVarEntities[recipeId],
+            recipe.consumption.inverse().toNumber(),
+          ]);
+        }
+      }
+
+      // Add consumption coefficients for recipe objectives
+      for (const obj of state.recipeObjectives) {
+        if (obj.recipe.consumption?.nonzero()) {
+          powerCoeffs.push([
+            recipeObjectiveVarEntities[obj.id],
+            obj.recipe.consumption.inverse().toNumber(),
+          ]);
+        }
+      }
+
+      this.addGlobalMaxSurplus(
+        m,
+        powerCoeffs,
+        state.powerValues,
+        'power',
+        state,
+        maximizeVar,
+      );
+      maximizeFactor = this.updateMaximizeFactor(
+        state.powerValues,
+        state,
+        maximizeFactor,
+      );
+
+      const powerOut = state.powerValues?.out ?? rational.zero;
+      const powerConstrConfig: ConstraintProperties = {
+        coeffs: powerCoeffs,
+        lb: powerOut.toNumber(),
+        ub: powerOut.toNumber(),
+        name: 'power-balance',
+      };
+      m.addConstr(powerConstrConfig);
+
+      // Add power limit constraint if requested
+      if (state.powerValues?.lim != null) {
+        // Limit total consumption: sum of positive consumption * recipe_var <= lim
+        const limitCoeffs: [Variable, number][] = [];
+        for (const recipeId of recipeIds) {
+          const recipe = state.recipes[recipeId];
+          if (recipe?.consumption?.gt(rational.zero) && recipeVarEntities[recipeId]) {
+            limitCoeffs.push([
+              recipeVarEntities[recipeId],
+              recipe.consumption.toNumber(),
+            ]);
+          }
+        }
+        for (const obj of state.recipeObjectives) {
+          if (obj.recipe.consumption?.gt(rational.zero)) {
+            limitCoeffs.push([
+              recipeObjectiveVarEntities[obj.id],
+              obj.recipe.consumption.toNumber(),
+            ]);
+          }
+        }
+        const limitConfig: ConstraintProperties = {
+          coeffs: limitCoeffs,
+          ub: state.powerValues.lim.toNumber(),
+          name: 'power-limit',
+        };
+        m.addConstr(limitConfig);
+      }
+    }
+
+    // Add pollution constraint if any recipe has pollution or pollution objectives exist
+    if (state.pollutionValues) {
+      const pollutionCoeffs: [Variable, number][] = [];
+
+      // Each recipe contributes its pollution rate
+      for (const recipeId of recipeIds) {
+        const recipe = state.recipes[recipeId];
+        if (recipe?.pollution?.nonzero() && recipeVarEntities[recipeId]) {
+          pollutionCoeffs.push([
+            recipeVarEntities[recipeId],
+            recipe.pollution.toNumber(),
+          ]);
+        }
+      }
+
+      for (const obj of state.recipeObjectives) {
+        if (obj.recipe.pollution?.nonzero()) {
+          pollutionCoeffs.push([
+            recipeObjectiveVarEntities[obj.id],
+            obj.recipe.pollution.toNumber(),
+          ]);
+        }
+      }
+
+      this.addGlobalMaxSurplus(
+        m,
+        pollutionCoeffs,
+        state.pollutionValues,
+        'pollution',
+        state,
+        maximizeVar,
+      );
+      maximizeFactor = this.updateMaximizeFactor(
+        state.pollutionValues,
+        state,
+        maximizeFactor,
+      );
+
+      const pollutionOut = state.pollutionValues.out;
+      const pollutionConstrConfig: ConstraintProperties = {
+        coeffs: pollutionCoeffs,
+        lb: pollutionOut.toNumber(),
+        ub: pollutionOut.toNumber(),
+        name: 'pollution-balance',
+      };
+      m.addConstr(pollutionConstrConfig);
+
+      // Add pollution limit constraint if requested
+      if (state.pollutionValues.lim != null) {
+        const limitCoeffs: [Variable, number][] = [];
+        for (const recipeId of recipeIds) {
+          const recipe = state.recipes[recipeId];
+          if (
+            recipe?.pollution?.gt(rational.zero) &&
+            recipeVarEntities[recipeId]
+          ) {
+            limitCoeffs.push([
+              recipeVarEntities[recipeId],
+              recipe.pollution.toNumber(),
+            ]);
+          }
+        }
+        for (const obj of state.recipeObjectives) {
+          if (obj.recipe.pollution?.gt(rational.zero)) {
+            limitCoeffs.push([
+              recipeObjectiveVarEntities[obj.id],
+              obj.recipe.pollution.toNumber(),
+            ]);
+          }
+        }
+        const limitConfig: ConstraintProperties = {
+          coeffs: limitCoeffs,
+          ub: state.pollutionValues.lim.toNumber(),
+          name: 'pollution-limit',
+        };
+        m.addConstr(limitConfig);
       }
     }
 

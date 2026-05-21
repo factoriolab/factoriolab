@@ -8,7 +8,7 @@ describe('ObjectiveUnit', () => {
 
     it('should return the correct options for Factorio', () => {
       expect(objectiveUnitOptions(dispRateInfo, flags['1.1']).length).toEqual(
-        4,
+        5,
       );
     });
 
@@ -17,7 +17,7 @@ describe('ObjectiveUnit', () => {
     });
 
     it('should return the correct options for Dyson Sphere Program', () => {
-      expect(objectiveUnitOptions(dispRateInfo, flags.dsp).length).toEqual(3);
+      expect(objectiveUnitOptions(dispRateInfo, flags.dsp).length).toEqual(4);
     });
   });
 });

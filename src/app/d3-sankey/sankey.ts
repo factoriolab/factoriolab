@@ -395,11 +395,12 @@ export function sankey<
 
     if (_nodeSort) {
       for (const column of columns) {
-        column.sort(_nodeSort);
+        column?.sort(_nodeSort);
       }
     }
 
-    return columns;
+    // Filter out empty layers to avoid gaps from disconnected nodes
+    return columns.filter((c) => c != null);
   }
 
   function initializeNodeBreadths(columns: SankeyNode<N, L>[][]): number {

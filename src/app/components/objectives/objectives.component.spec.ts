@@ -213,15 +213,18 @@ describe('ObjectivesComponent', () => {
       return picker;
     };
 
-    it('should do nothing if it cannot find a matching objective rational', () => {
+    it('should auto-set target to power-kw when switching to Power', () => {
       spyOn(component.objectivesSvc, 'updateEntity');
       component.changeUnit(
         Mocks.objective5,
-        ObjectiveUnit.Machines,
+        ObjectiveUnit.Power,
         {} as any,
         {} as any,
       );
-      expect(component.objectivesSvc.updateEntity).not.toHaveBeenCalled();
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith(
+        Mocks.objective5.id,
+        { unit: ObjectiveUnit.Power },
+      );
     });
 
     it('should do nothing if switching to and from machines', () => {
@@ -232,7 +235,10 @@ describe('ObjectivesComponent', () => {
         {} as any,
         {} as any,
       );
-      expect(component.objectivesSvc.updateEntity).not.toHaveBeenCalled();
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith(
+        Mocks.objective5.id,
+        { unit: ObjectiveUnit.Machines },
+      );
     });
 
     it('should auto-switch from item to recipe', () => {
@@ -325,6 +331,47 @@ describe('ObjectivesComponent', () => {
           unit: ObjectiveUnit.Belts,
         },
       );
+    });
+
+    it('should switch from Power to Machines when objective has targetId', () => {
+      spyOn(component.objectivesSvc, 'updateEntity');
+      const objective: ObjectiveState = {
+        id: '0',
+        targetId: RecipeId.AdvancedCircuit,
+        value: rational.one,
+        unit: ObjectiveUnit.Power,
+        type: ObjectiveType.Output,
+      };
+      component.changeUnit(
+        objective,
+        ObjectiveUnit.Machines,
+        {} as any,
+        {} as any,
+      );
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('0', {
+        unit: ObjectiveUnit.Machines,
+      });
+    });
+
+    it('should prompt user to switch from Power to Items', () => {
+      spyOn(component.objectivesSvc, 'updateEntity');
+      const objective: ObjectiveState = {
+        id: '0',
+        targetId: 'power-kw',
+        value: rational.one,
+        unit: ObjectiveUnit.Power,
+        type: ObjectiveType.Output,
+      };
+      component.changeUnit(
+        objective,
+        ObjectiveUnit.Items,
+        mockPicker(ItemId.Coal),
+        {} as any,
+      );
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('0', {
+        targetId: ItemId.Coal,
+        unit: ObjectiveUnit.Items,
+      });
     });
   });
 

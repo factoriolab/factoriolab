@@ -100,7 +100,8 @@
       "machines": "Machines",
       "pollutionPerSecond": "Pollution/s",
       "pollutionPerMinute": "Pollution/m",
-      "pollutionPerHour": "Pollution/h"
+      "pollutionPerHour": "Pollution/h",
+      "power": "Power (kW)"
     },
     "researchBonus": {
       "speed0": "No research bonus",
@@ -219,6 +220,10 @@
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work.",
     "addItems": "Add items",
     "addMachines": "Add machines",
+    "addGlobal": "Add global",
+    "power": "Power",
+    "pollution": "Pollution",
+    "selectGlobalKind": "Select global objective type",
     "selectAnItem": "Select an item",
     "selectARecipe": "Select a recipe",
     "loadSavedState": "Load a saved state",
@@ -359,6 +364,10 @@
     "unitTooltip": "Select units",
     "addItems": "Add items",
     "addMachines": "Add machines",
+    "addGlobal": "Add global",
+    "power": "Power",
+    "pollution": "Pollution",
+    "selectGlobalKind": "Select global objective type",
     "selectDisplayRate": "Select display rate",
     "pauseTooltip": "Pause/resume calculations",
     "pausedMessage": "Calculations are paused. Use play button above to resume.",

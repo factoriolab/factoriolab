@@ -21,13 +21,16 @@ import { Optional } from '~/models/utils';
   ],
 })
 export class ValidateNumberDirective implements Validator {
-  minimum = input<Optional<Rational>>(rational.zero);
-  maximum = input<Optional<Rational>>(undefined);
+  minimum = input<Rational | null | undefined>(rational.zero);
+  maximum = input<Rational | null | undefined>(undefined);
 
   validate(
     control: AbstractControl<string | null | undefined>,
   ): ValidationErrors | null {
     if (control.value == null) return null;
+
+    // Allow '-' as intermediate state while user is typing a negative number
+    if (control.value === '-') return null;
 
     try {
       const value = rational(control.value);

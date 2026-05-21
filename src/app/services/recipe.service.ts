@@ -9,6 +9,7 @@ import {
   spread,
 } from '~/helpers';
 import { Beacon } from '~/models/data/beacon';
+import { Fuel } from '~/models/data/fuel';
 import { Machine, MachineJson } from '~/models/data/machine';
 import {
   effectPrecision,
@@ -20,6 +21,7 @@ import {
   AdjustedRecipe,
   cloneRecipe,
   finalizeRecipe,
+  fuelVariantId,
   Recipe,
   RecipeJson,
 } from '~/models/data/recipe';
@@ -549,22 +551,19 @@ export class RecipeService {
 
       // Calculate burner fuel inputs
       if (recipeSettings.fuelId) {
-        const fuel = data.fuelEntities[recipeSettings.fuelId];
-
-        if (fuel) {
-          const fuelIn = recipe.time
-            .mul(usage)
-            .div(fuel.value)
-            .div(rational(1000n));
-
-          recipe.in[recipeSettings.fuelId] = (
-            recipe.in[recipeSettings.fuelId] || rational.zero
-          ).add(fuelIn);
-
-          if (fuel.result) {
-            recipe.out[fuel.result] = (
-              recipe.out[fuel.result] || rational.zero
-            ).add(fuelIn);
+        // Multi-fuel burner machines (not burn recipes, not fixed-fuel): defer
+        // to fuel variant generation so the solver can pick the optimal fuel.
+        if (
+          !recipe.flags.has('burn') &&
+          !machine.fuel &&
+          machine.fuelCategories?.length
+        ) {
+          recipe.needsFuelVariants = true;
+          recipe.fuelUsage = usage;
+        } else {
+          const fuel = data.fuelEntities[recipeSettings.fuelId];
+          if (fuel) {
+            this.injectFuel(recipe, recipeSettings.fuelId, fuel, usage);
           }
         }
       }
@@ -693,6 +692,26 @@ export class RecipeService {
     return adjustedRecipe;
   }
 
+  injectFuel(
+    recipe: Recipe,
+    fuelId: string,
+    fuel: Fuel,
+    usage: Rational,
+  ): void {
+    const fuelIn = recipe.time
+      .mul(usage)
+      .div(fuel.value)
+      .div(rational(1000n));
+
+    recipe.in[fuelId] = (recipe.in[fuelId] || rational.zero).add(fuelIn);
+
+    if (fuel.result) {
+      recipe.out[fuel.result] = (
+        recipe.out[fuel.result] || rational.zero
+      ).add(fuelIn);
+    }
+  }
+
   allowsModules(recipe: RecipeJson | Recipe, machine: Machine): boolean {
     return (!machine.silo || !recipe.part) && !!machine.modules;
   }
@@ -770,6 +789,75 @@ export class RecipeService {
       });
   }
 
+  /**
+   * For burner recipes with multiple fuel options, generate a variant per
+   * available fuel so the solver can pick the optimal one.
+   */
+  generateFuelVariants(
+    availableRecipeIds: string[],
+    adjustedRecipe: Entities<AdjustedRecipe>,
+    settings: Settings,
+    data: Dataset,
+  ): void {
+    const toRemove: string[] = [];
+    const toAdd: string[] = [];
+
+    for (const id of [...availableRecipeIds]) {
+      const recipe = adjustedRecipe[id];
+      if (!recipe?.needsFuelVariants || !recipe.fuelUsage) continue;
+
+      // Find available fuels for this recipe's machine
+      const machineId = Object.keys(data.machineEntities).find((mId) => {
+        const m = data.machineEntities[mId];
+        return m.fuelCategories?.length && recipe.producers.includes(mId);
+      });
+      if (!machineId) continue;
+
+      const machine = data.machineEntities[machineId];
+      if (!machine.fuelCategories) continue;
+
+      const fuelRankSet = new Set(settings.fuelRankIds);
+      const fuels = data.fuelIds
+        .map((fId) => data.itemEntities[fId])
+        .filter(
+          (item) =>
+            item.fuel &&
+            machine.fuelCategories!.includes(item.fuel.category) &&
+            settings.availableItemIds.has(item.id) &&
+            fuelRankSet.has(item.id),
+        );
+
+      if (!fuels.length) continue;
+
+      for (const fuelItem of fuels) {
+        const varId = fuelVariantId(id, fuelItem.id);
+        const variant = cloneRecipe(recipe) as AdjustedRecipe;
+        variant.id = varId;
+        variant.produces = new Set(recipe.produces);
+        variant.output = {};
+        variant.effects = { ...recipe.effects };
+        delete variant.needsFuelVariants;
+        delete variant.fuelUsage;
+
+        this.injectFuel(variant, fuelItem.id, fuelItem.fuel!, recipe.fuelUsage);
+
+        adjustedRecipe[varId] = variant;
+        toAdd.push(varId);
+      }
+
+      // Remove the unfueled base recipe
+      delete adjustedRecipe[id];
+      toRemove.push(id);
+    }
+
+    // Update availableRecipeIds in place
+    for (const id of toRemove) {
+      const idx = availableRecipeIds.indexOf(id);
+      if (idx !== -1) availableRecipeIds.splice(idx, 1);
+    }
+    availableRecipeIds.push(...toAdd);
+  }
+
   finalizeData(
     availableRecipeIds: string[],
     adjustedRecipe: Entities<AdjustedRecipe>,
@@ -784,6 +872,13 @@ export class RecipeService {
       itemAvailableRecipeIds[i] = [];
       itemAvailableIoRecipeIds[i] = [];
     });
+
+
+
+    // Generate fuel variants for burner recipes with multiple fuel options
+    this.generateFuelVariants(availableRecipeIds, adjustedRecipe, settings, data);
+
+    const powerProducerRecipeIds: string[] = [];
 
     availableRecipeIds
       .map((i) => adjustedRecipe[i])
@@ -801,6 +896,9 @@ export class RecipeService {
           Object.keys(recipe.output).forEach((ioId) =>
             itemAvailableIoRecipeIds[ioId].push(recipe.id),
           );
+
+          if (recipe.consumption?.lt(rational.zero))
+            powerProducerRecipeIds.push(recipe.id);
         }
       });
 
@@ -890,6 +988,7 @@ export class RecipeService {
       itemRecipeIds,
       itemAvailableRecipeIds,
       itemAvailableIoRecipeIds,
+      powerProducerRecipeIds,
     });
   }
 
