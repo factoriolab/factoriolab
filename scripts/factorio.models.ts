@@ -2,7 +2,7 @@
 
 /**
  * Application: factorio
- * Version: 2.0.72
+ * Version: 2.0.77
  * API Version: 6
  */
 
@@ -249,10 +249,11 @@ export function isAmmoItemPrototype(
 /** A turret that consumes [ammo items](prototype:AmmoItemPrototype). */
 interface _AmmoTurretPrototype {
   type: 'ammo-turret';
-  /** Shift of the "alt-mode icon" relative to the turret's position. */
+  /** The amount of ammo that inserters automatically insert into this turret. */
   automated_ammo_count: ItemCountType;
   energy_per_shot?: Energy;
   energy_source?: ElectricEnergySource;
+  /** Size of the ammo inventory. */
   inventory_size: ItemStackIndex;
   prepare_with_no_ammo?: boolean;
 }
@@ -485,6 +486,10 @@ interface _ArrowPrototype {
   arrow_picture: Sprite;
   blinking?: boolean;
   circle_picture?: Sprite;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
 }
 
 export type ArrowPrototype = _ArrowPrototype &
@@ -550,6 +555,10 @@ interface _ArtilleryProjectilePrototype {
   reveal_map: boolean;
   /** Whether the picture of the projectile is rotated to match the direction of travel. */
   rotatable?: boolean;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   shadow?: Sprite;
 }
 
@@ -568,7 +577,7 @@ interface _ArtilleryTurretPrototype {
   alert_when_attacking?: boolean;
   /** Must be > 0. */
   ammo_stack_limit: ItemCountType;
-  /** Must be > 0. */
+  /** Must be > 0. The amount of ammo that inserters automatically insert into this artillery turret. */
   automated_ammo_count?: ItemCountType;
   base_picture?: Animation4Way;
   base_picture_render_layer?: RenderLayer;
@@ -617,7 +626,7 @@ interface _ArtilleryWagonPrototype {
   type: 'artillery-wagon';
   /** Must be > 0. */
   ammo_stack_limit: ItemCountType;
-  /** Must be > 0. */
+  /** Must be > 0. The amount of ammo that inserters automatically insert into this artillery wagon. */
   automated_ammo_count?: ItemCountType;
   /** Only loaded if `cannon_barrel_recoil_shiftings` is loaded. */
   cannon_barrel_light_direction?: Vector3D;
@@ -684,7 +693,7 @@ interface _AssemblingMachinePrototype {
   fluid_boxes_off_when_no_fluid_recipe?: boolean;
   /** The locale key of the title of the GUI that is shown when the player opens the assembling machine. May not be longer than 200 characters. */
   gui_title_key?: string;
-  /** Sets the maximum number of ingredients this machine can craft with. Any recipe with more ingredients than this will be unavailable in this machine.
+  /** Sets the maximum number of item ingredients this machine can craft with. Any recipe with more item ingredients than this will be unavailable in this machine.
 
 This only counts item ingredients, not fluid ingredients! This means if ingredient count is 2, and the recipe has 2 item ingredients and 1 fluid ingredient, it can still be crafted in the machine. */
   ingredient_count?: number;
@@ -902,6 +911,10 @@ interface _BeamPrototype {
   damage_interval: number;
   graphics_set: BeamGraphicsSet;
   random_target_offset?: boolean;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   target_offset?: Vector;
   width: number;
 }
@@ -1235,6 +1248,10 @@ interface _CargoPodPrototype {
   inventory_size: ItemStackIndex;
   procession_audio_catalogue?: ProcessionAudioCatalogue;
   procession_graphic_catalogue?: ProcessionGraphicCatalogue;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   shadow_slave_entity?: EntityID;
   spawned_container: EntityID;
 }
@@ -1318,14 +1335,16 @@ export function isChangedSurfaceAchievementPrototype(
 /** The corpse of a [CharacterPrototype](prototype:CharacterPrototype). */
 interface _CharacterCorpsePrototype {
   type: 'character-corpse';
-  /** Table of key value pairs, the keys are armor names and the values are numbers. The number is the Animation that is associated with the armor, e.g. using `1` will associate the armor with the first Animation in the pictures table. */
+  /** A mapping of [ArmorPrototype](prototype:ArmorPrototype) name to a number. The number is the Animation that is associated with the armor, e.g. using `1` will associate the armor with the first Animation in the `pictures` table.
+
+This mapping can be empty to have no sprite changes based on armor. */
   armor_picture_mapping?: Record<ItemID, number>;
-  /** Mandatory if `pictures` is not defined. */
+  /** Only loaded, and mandatory if `pictures` is not defined. */
   picture?: Animation;
   /** Mandatory if `picture` is not defined. */
   pictures?: AnimationVariations;
   render_layer?: RenderLayer;
-  /** 0 for infinite. */
+  /** In ticks. 0 for infinite. */
   time_to_live: number;
 }
 
@@ -1387,6 +1406,7 @@ Defaults to the mask from [UtilityConstants::default_collision_masks](prototype:
   mining_speed: number;
   /** List of positions in the mining with tool animation when the mining sound and mining particles are created. */
   mining_with_tool_particles_animation_positions: number[];
+  /** List of positions in the running animation when the moving sound is played. */
   moving_sound_animation_positions: number[];
   reach_distance: number;
   reach_resource_distance: number;
@@ -1723,6 +1743,10 @@ Controls the speed of the animation: `1 ÷ dying_speed = duration of the animati
   protected_from_tile_building?: boolean;
   remove_on_entity_placement?: boolean;
   remove_on_tile_placement?: boolean;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   /** Defines after which frame in the `animation` the `direction_shuffle` should be applied. Can be set to `0`, frames are 1-indexed. */
   shuffle_directions_at_frame?: number;
   splash?: AnimationVariations;
@@ -2429,7 +2453,7 @@ Max value is 64. */
 
 Max value is 64. */
   supply_area_distance: number;
-  track_coverage_during_build_by_moving?: boolean;
+  track_coverage_during_drag_building?: boolean;
 }
 
 export type ElectricPolePrototype = _ElectricPolePrototype &
@@ -2463,6 +2487,10 @@ interface _ElevatedCurvedRailAPrototype {
 
 Requires Space Age to create prototypes with name not starting with `dummy-`. Dummy prototypes cannot be built. */
   name: string;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
 }
 
 export type ElevatedCurvedRailAPrototype = _ElevatedCurvedRailAPrototype &
@@ -2481,6 +2509,10 @@ interface _ElevatedCurvedRailBPrototype {
 
 Requires Space Age to create prototypes with name not starting with `dummy-`. Dummy prototypes cannot be built. */
   name: string;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
 }
 
 export type ElevatedCurvedRailBPrototype = _ElevatedCurvedRailBPrototype &
@@ -2499,6 +2531,10 @@ interface _ElevatedHalfDiagonalRailPrototype {
 
 Requires Space Age to create prototypes with name not starting with `dummy-`. Dummy prototypes cannot be built. */
   name: string;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
 }
 
 export type ElevatedHalfDiagonalRailPrototype =
@@ -2518,6 +2554,10 @@ interface _ElevatedStraightRailPrototype {
 
 Requires Space Age to create prototypes with name not starting with `dummy-`. Dummy prototypes cannot be built. */
   name: string;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
 }
 
 export type ElevatedStraightRailPrototype = _ElevatedStraightRailPrototype &
@@ -2550,7 +2590,7 @@ interface _EnemySpawnerPrototype {
   max_defensive_friends_around_to_spawn?: number;
   /** How many friendly units are required within the [EnemySpawnerPrototype::spawning_radius](prototype:EnemySpawnerPrototype::spawning_radius) of this spawner for it to stop producing more units. */
   max_friends_around_to_spawn: number;
-  /** Max richness to determine spawn shift. Spawn shift is linear interpolation between 0 and max_spawn_shift. */
+  /** Max richness to determine spawn shift. Spawn shift is a linear interpolation between 0 and max_spawn_shift. */
   max_richness_for_spawn_shift: number;
   /** Caps how much richness can be added on top of evolution when spawning units. [See also](https://www.reddit.com/r/factorio/comments/8pjscm/friday_facts_246_the_gui_update_part_3/e0bttnp/) */
   max_spawn_shift: number;
@@ -2561,7 +2601,9 @@ interface _EnemySpawnerPrototype {
   spawn_decoration?: CreateDecorativesTriggerEffectItem[];
   /** Whether `spawn_decoration` should be spawned when enemies [expand](https://wiki.factorio.com/Enemies#Expansions). */
   spawn_decorations_on_expansion?: boolean;
-  /** Ticks for cooldown after unit is spawned. The first member of the tuple is min, the second member of the tuple is max. */
+  /** Ticks for cooldown after unit is spawned. The first member of the tuple is min, the second member of the tuple is max.
+
+The resulting spawning cooldown is a linear interpolation between min and max based on the current evolution factor. */
   spawning_cooldown: [number, number];
   /** How far from the spawner can the units be spawned. */
   spawning_radius: number;
@@ -2663,7 +2705,9 @@ Note, that for buildings, it is customary to leave 0.1 wide border between the e
   enemy_map_color?: Color;
   /** This allows you to replace an entity that's already placed, with a different one in your inventory. For example, replacing a burner inserter with a fast inserter. The replacement entity can be a different rotation to the replaced entity and you can replace an entity with the same type.
 
-This is simply a string, so any string can be used here. The entity that should be replaced simply has to use the same string here. */
+This is simply a string, so any string can be used here. The entity that should be replaced simply has to use the same string here.
+
+Entities with the same fast replaceable group can be configured as upgrades for each other in the upgrade planner. Refer to the [upgrade planner prototype's page](prototype:UpgradeItemPrototype) the full requirements for entities to be shown in the upgrade planner. */
   fast_replaceable_group?: string;
   flags?: EntityPrototypeFlags;
   friendly_map_color?: Color;
@@ -2697,7 +2741,7 @@ Either this or `icon` is mandatory for entities that have at least one of these 
   minable?: MinableProperties;
   mined_sound?: Sound;
   mining_sound?: Sound;
-  /** Name of the entity that will be automatically selected as the upgrade of this entity when using the [upgrade planner](https://wiki.factorio.com/Upgrade_planner) without configuration.
+  /** Name of the entity that will be automatically selected as the upgrade of this entity when using the [upgrade planner](prototype:UpgradeItemPrototype) without configuration.
 
 This entity may not have "not-upgradable" flag set and must be minable. This entity mining result must not contain item product with [hidden](prototype:ItemPrototype::hidden) set to `true`. Mining results with no item products are allowed. This entity may not be a [RollingStockPrototype](prototype:RollingStockPrototype).
 
@@ -2733,7 +2777,7 @@ The value `0` will be treated the same as `nil`. */
   /** The cursor size used when shooting at this entity. */
   shooting_cursor_size?: number;
   stateless_visualisation?: StatelessVisualisation | StatelessVisualisation[];
-  /** Used to set the area of the entity that can have stickers on it, currently only used for units to specify the area where the green slow down stickers can appear. */
+  /** Used to specify the area where the [sticker](prototype:StickerPrototype) animation can appear for entities that can have stickers on them. */
   sticker_box?: BoundingBox;
   surface_conditions?: SurfaceCondition[];
   tile_buildability_rules?: TileBuildabilityRule[];
@@ -2946,6 +2990,10 @@ interface _ExplosionPrototype {
   scale_initial?: number;
   scale_initial_deviation?: number;
   scale_out_duration?: number;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   /** Mandatory if `smoke_count` > 0. */
   smoke?: TrivialSmokeID;
   smoke_count?: number;
@@ -3008,6 +3056,10 @@ For example, spitters use this to make several smaller splashes around the main 
   secondary_picture_fade_out_start?: number;
   secondary_pictures?: AnimationVariations;
   secondary_render_layer?: RenderLayer;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   small_tree_fire_pictures?: AnimationVariations;
   smoke?: SmokeSource[];
   smoke_fade_in_duration?: number;
@@ -3032,7 +3084,7 @@ export function isFireFlamePrototype(
   return (value as { type: string }).type === 'fire';
 }
 
-/** Entity that spawns in water tiles, which can be mined. Moves around unless deactivated with [LuaEntity::active](runtime:LuaEntity::active) = false. */
+/** Entity that spawns in water tiles, which can be mined. Moves around unless it is [LuaEntity::disabled_by_script](runtime:LuaEntity::disabled_by_script) or marked for deconstruction. */
 interface _FishPrototype {
   type: 'fish';
   pictures?: SpriteVariations;
@@ -3088,7 +3140,7 @@ export type FluidPrototype = _FluidPrototype &
   Omit<Prototype, keyof _FluidPrototype>;
 
 export function isFluidPrototype(value: unknown): value is FluidPrototype {
-  return value !== undefined && (value as { type: string }).type === 'fluid';
+  return (value as { type: string }).type === 'fluid';
 }
 
 /** Used for example for the handheld flamethrower. */
@@ -3125,6 +3177,10 @@ interface _FluidStreamPrototype {
   particle_vertical_acceleration: number;
   /** The point in the particles projectile arc to start spawning smoke. 0.5 (the default) starts spawning smoke at the halfway point between the source and target. */
   progress_to_create_smoke?: number;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   shadow?: Animation;
   shadow_scale_enabled?: boolean;
   /** Smoke spawning is controlled by `progress_to_create_smoke`. */
@@ -3232,6 +3288,10 @@ Used only by [robots with logistic interface](prototype:RobotWithLogisticInterfa
 
 Used only by [robots with logistic interface](prototype:RobotWithLogisticInterfacePrototype). */
   min_to_charge?: number;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   /** The flying speed of the robot, in tiles/tick. */
   speed: number;
   /** Some robots simply crash, some slowdown but keep going. 0 means crash.
@@ -3602,6 +3662,10 @@ interface _HeatPipePrototype {
   heat_glow_sprites?: ConnectableEntityGraphics;
   /** Must be >= 0. */
   heating_radius?: number;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
 }
 
 export type HeatPipePrototype = _HeatPipePrototype &
@@ -3616,9 +3680,12 @@ export function isHeatPipePrototype(
 /** Used to attach graphics for [cursor boxes](prototype:CursorBoxType) to entities during runtime. HighlightBoxEntity can also be independent from entities so it is simply drawn somewhere in the world. See [LuaSurface::create_entity](runtime:LuaSurface::create_entity) for the available options for type "highlight-box".
 
 The [collision_box](prototype:EntityPrototype::collision_box) of the highlight box prototype is ignored during runtime, instead the "bounding_box" given in create_entity() or the selection box of the target entity is used. */
-
 interface _HighlightBoxEntityPrototype {
   type: 'highlight-box';
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
 }
 
 export type HighlightBoxEntityPrototype = _HighlightBoxEntityPrototype &
@@ -4212,6 +4279,10 @@ interface _LandMinePrototype {
   picture_set?: Sprite;
   /** The sprite of the landmine of an enemy force when it is armed. */
   picture_set_enemy?: Sprite;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   /** Time between placing and the landmine being armed, in ticks. */
   timeout?: number;
   /** Collision mask that another entity must collide with to make this landmine blow up. */
@@ -4677,7 +4748,9 @@ export function isMiningDrillPrototype(
   return (value as { type: string }).type === 'mining-drill';
 }
 
-/** Block of arbitrary data set by mods in data stage. */
+/** Block of arbitrary data set by mods in prototype stage.
+
+During runtime stage, this arbitrary data can be accessed through [LuaPrototypes::mod_data](runtime:LuaPrototypes::mod_data). */
 interface _ModData {
   type: 'mod-data';
   data: Record<string, AnyBasic>;
@@ -4961,6 +5034,10 @@ interface _ParticleSourcePrototype {
   horizontal_speed_deviation?: number;
   /** Mandatory if `smoke` is not defined. */
   particle?: ParticleID;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   /** Mandatory if `particle` is not defined. */
   smoke?: SmokeSource[];
   time_before_start: number;
@@ -5098,9 +5175,12 @@ export function isPlayerDamagedAchievementPrototype(
 }
 
 /** Deprecated in 2.0. */
-
 interface _PlayerPortPrototype {
   type: 'player-port';
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
 }
 
 export type PlayerPortPrototype = _PlayerPortPrototype &
@@ -5280,6 +5360,10 @@ interface _ProjectilePrototype {
   piercing_damage?: number;
   /** Whether the animation of the projectile is rotated to match the direction of travel. */
   rotatable?: boolean;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   shadow?: RotatedAnimationVariations;
   smoke?: SmokeSource[];
   speed_modifier?: Vector;
@@ -5409,7 +5493,7 @@ Performance warning: the navigation has to pre-calculate ranges for the highest 
   beacon_module_slots_bonus?: ItemStackIndex;
   /** Must be >= 0. */
   beacon_power_usage_multiplier?: number;
-  /** Only affects beacons with [BeaconPrototype::quality_affects_supply_area](prototype:BeaconPrototype::quality_affects_supply_area) set.
+  /** Only affects beacons with [BeaconPrototype::quality_affects_supply_area_distance](prototype:BeaconPrototype::quality_affects_supply_area_distance) set.
 
 Must be >= 0 and <= 64. */
   beacon_supply_area_distance_bonus?: number;
@@ -5465,6 +5549,9 @@ Only loaded if `icons` is not defined. */
   level: number;
   /** Must be >= 0.01. */
   logistic_cell_charging_energy_multiplier?: number;
+  /** Only affects roboports with [RoboportPrototype::charging_station_count_affected_by_quality](prototype:RoboportPrototype::charging_station_count_affected_by_quality) set.
+
+Only affects roboport equipment with [RoboportEquipmentPrototype::charging_station_count_affected_by_quality](prototype:RoboportEquipmentPrototype::charging_station_count_affected_by_quality) set. */
   logistic_cell_charging_station_count_bonus?: number;
   /** Only affects mining drills with [MiningDrillPrototype::quality_affects_mining_radius](prototype:MiningDrillPrototype::quality_affects_mining_radius) set.
 
@@ -5567,7 +5654,7 @@ export function isRailChainSignalPrototype(
 interface _RailPlannerPrototype {
   type: 'rail-planner';
   manual_length_limit?: number;
-  /** May not be an empty array. Entities must be rails and their first item-to-place must be this item. */
+  /** May not be an empty array. Entities must be rails. */
   rails: EntityID[];
   /** Name of a rail support. */
   support?: EntityID;
@@ -5597,6 +5684,10 @@ interface _RailPrototype {
   removes_soft_decoratives?: boolean;
   /** The rail [selection_boxes](prototype:EntityPrototype::selection_box) are automatically calculated from the collision boxes, which are hardcoded. So effectively the selection boxes also hardcoded. */
   selection_box?: BoundingBox;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   /** Sound played when a character walks over this rail. */
   walking_sound?: Sound;
 }
@@ -5667,6 +5758,10 @@ interface _RailSignalBasePrototype {
   /** The "placeable-off-grid" flag will be ignored for rail signals. */
   flags?: EntityPrototypeFlags;
   ground_picture_set: RailSignalPictureSet;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
 }
 
 export type RailSignalBasePrototype = _RailSignalBasePrototype &
@@ -5849,7 +5944,7 @@ Only loaded if `icons` is not defined. */
   icons?: IconData[];
   /** A table containing ingredient names and amounts. Can also contain information about fluid temperature and whether some of the amount is ignored by production statistics.
 
-The maximum ingredient amount is 65 535. Can be set to an empty table to create a recipe that needs no ingredients.
+Can be set to an empty table to create a recipe that needs no ingredients. [Assembling machines](prototype:AssemblingMachinePrototype::ingredient_count) do not support recipes with more than 65 535 different item ingredients.
 
 Duplicate ingredients, e.g. two entries with the same name, are *not* allowed. In-game, the item ingredients are ordered by [ItemGroup::order_in_recipe](prototype:ItemGroup::order_in_recipe). */
   ingredients?: IngredientPrototype[];
@@ -5871,7 +5966,9 @@ If set to `0`, it instead uses the following formula: `1.166 / (energy_required 
   result_is_always_fresh?: boolean;
   /** A table containing result names and amounts. Products also contain information such as fluid temperature, probability of results and whether some of the amount is ignored by productivity.
 
-Can be set to an empty table to create a recipe that produces nothing. Duplicate results, e.g. two entries with the same name, are allowed. */
+Can be set to an empty table to create a recipe that produces nothing. [Assembling machines](prototype:AssemblingMachinePrototype::max_item_product_count) do not support recipes with more than 65 535 different item products.
+
+Duplicate results, e.g. two entries with the same name, are allowed. */
   results?: ProductPrototype[];
   /** Whether the recipe name should have the product amount in front of it. E.g. "2x Transport belt". */
   show_amount_in_title?: boolean;
@@ -5997,7 +6094,7 @@ interface _ResourceEntityPrototype {
   highlight?: boolean;
   /** If the ore is infinitely minable, or if it will eventually run out of resource. */
   infinite?: boolean;
-  /** Every time an infinite-type resource "ticks" lower it's lowered by that amount. */
+  /** Every time an infinite-type resource is decreased by mining, its current resource amount is lowered by this number. */
   infinite_depletion_amount?: number;
   /** Whether the resource should have a grid pattern on the map instead of a solid map color. */
   map_grid?: boolean;
@@ -6015,6 +6112,10 @@ interface _ResourceEntityPrototype {
   randomize_visual_position?: boolean;
   /** When hovering over this resource in the map view: How far to search for other resource patches of this type to display as one (summing amount, white outline). */
   resource_patch_search_radius?: number;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   /** Number of stages the animation has. */
   stage_counts: number[];
   /** Entity's graphics, using a graphic sheet, with variation and depletion. At least one stage must be defined.
@@ -6348,6 +6449,10 @@ interface _RocketSiloRocketPrototype {
   rocket_smoke_top3_animation?: Animation;
   rocket_sprite?: Sprite;
   rocket_visible_distance_from_center: number;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   shadow_fade_out_end_ratio: number;
   shadow_fade_out_start_ratio: number;
   shadow_slave_entity?: EntityID;
@@ -6363,9 +6468,12 @@ export function isRocketSiloRocketPrototype(
 }
 
 /** The shadow of the rocket inside the rocket silo. */
-
 interface _RocketSiloRocketShadowPrototype {
   type: 'rocket-silo-rocket-shadow';
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
 }
 
 export type RocketSiloRocketShadowPrototype = _RocketSiloRocketShadowPrototype &
@@ -6748,6 +6856,10 @@ interface _SmokePrototype {
   /** Value between 0 and 1, with 0 being no movement. */
   movement_slow_down_factor?: number;
   render_layer?: RenderLayer;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   show_when_smoke_off?: boolean;
   spread_duration?: number;
   start_scale?: number;
@@ -7084,6 +7196,10 @@ export function isSpectatorControllerPrototype(
 interface _SpeechBubblePrototype {
   type: 'speech-bubble';
   fade_in_out_ticks?: number;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   /** Needs a style of the type "speech_bubble_style", defined inside the gui styles. */
   style: string;
   /** Needs a style of the type "flow_style", defined inside the gui styles. */
@@ -7118,6 +7234,10 @@ interface _SpiderLegPrototype {
   minimal_step_size: number;
   movement_acceleration: number;
   movement_based_position_selection_distance: number;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   /** A scalar that controls the amount of influence this leg has over the position of the torso. Must be greater than 0. */
   stretch_force_scalar?: number;
   target_position_randomisation_distance: number;
@@ -7403,6 +7523,10 @@ interface _StickerPrototype {
   render_layer?: RenderLayer;
   /** Using this property marks the sticker as a "selection sticker", meaning that the selection box will be rendered around the entity when the sticker is on it. */
   selection_box_type?: CursorBoxType;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   single_particle?: boolean;
   /** If this is given, this sticker is considered a "fire sticker" for some functions, such as [BaseAttackParameters::fire_penalty](prototype:BaseAttackParameters::fire_penalty) and [EntityPrototypeFlags::not-flammable](prototype:EntityPrototypeFlags::not_flammable). */
   spread_fire_entity?: EntityID;
@@ -7557,6 +7681,9 @@ interface _TechnologyPrototype {
   allows_productivity?: boolean;
   /** List of effects of the technology (applied when the technology is researched). */
   effects?: Modifier[];
+  /** This can be `false` to disable the technology at the start of the game, or `true` to leave it enabled.
+
+Changes to this property do not affect existing save files, as the enabled state is saved in the save file and not reloaded from the prototype. */
   enabled?: boolean;
   /** Whether the technology should be shown in the technology tree GUI when "Show only essential technologies" is enabled. */
   essential?: boolean;
@@ -7594,7 +7721,9 @@ Mandatory if `research_trigger` is not defined. */
   unit?: TechnologyUnit;
   /** When set to true, and the technology contains several levels, only the relevant one is displayed in the technology screen. */
   upgrade?: boolean;
-  /** Controls whether the technology is shown in the tech GUI when it is not `enabled`. */
+  /** Controls whether the technology is shown in the tech GUI when it is not `enabled`.
+
+Changes to this property do not affect existing save files, as the visible_when_disabled state is saved in the save file and not reloaded from the prototype. */
   visible_when_disabled?: boolean;
 }
 
@@ -7607,10 +7736,14 @@ export function isTechnologyPrototype(
   return (value as { type: string }).type === 'technology';
 }
 
+/** A container that can automatically destroy itself when it is emptied or after it has existed for a certain time. */
 interface _TemporaryContainerPrototype {
   type: 'temporary-container';
+  /** If the container has existed for this long, [an alert](prototype:UtilitySprites::unclaimed_cargo_icon) is show on it. In ticks, 0 for no alert. */
   alert_after_time?: number;
+  /** Whether the container is automatically destroyed when it is emptied. */
   destroy_on_empty?: boolean;
+  /** Duration after which the container and its contents are automatically destroyed. In ticks, 0 for infinite. */
   time_to_live?: number;
 }
 
@@ -7737,8 +7870,9 @@ Only loaded if `icons` is not defined. */
   icons?: IconData[];
   is_foundation?: boolean;
   landing_steps_sound?: Sound;
-  /** Specifies transition drawing priority. */
+  /** Specifies transition drawing priority. This represents the positive offset from this tile's `layer_group`. Internally, the final layer is computed as `layer_group + layer` (a [uint16](prototype:uint16)), wrapping back to `"zero"` after the `"top"` layer. */
   layer: number;
+  /** The base group of render layers this tile belongs to. It can be moved up inside this group using the `layer` property. See the [TileRenderLayer](prototype:TileRenderLayer) page to see the sizes of all layer groups. */
   layer_group?: TileRenderLayer;
   /** For surfaces that use [fog effect](prototype:SurfaceRenderParameters::fog) of type `gleba`, this property determines whether given tile should contribute to fog intensity on a chunk or not. */
   lowland_fog?: boolean;
@@ -7938,6 +8072,10 @@ interface _TransportBeltConnectablePrototype {
   collision_box?: BoundingBox;
   /** Transport belt connectable entities cannot have the `"building-direction-8-way"` flag. */
   flags?: EntityPrototypeFlags;
+  /** The entity with the higher number is selectable before the entity with the lower number.
+
+The value `0` will be treated the same as `nil`. */
+  selection_priority?: number;
   /** The speed of the belt: `speed × 480 = x Items/second`.
 
 The raw value is expressed as the number of tiles traveled by each item on the belt per tick, relative to the belt's maximum density - e.g. `x items/second ÷ (4 items/lane × 2 lanes/belt × 60 ticks/second) = <speed> belts/tick` where a "belt" is the size of one tile. See [Transport_belts/Physics](https://wiki.factorio.com/Transport_belts/Physics) for more details.
@@ -8218,13 +8356,15 @@ export function isUndergroundBeltPrototype(
 /** Entity that moves around and attacks players, for example [biters and spitters](https://wiki.factorio.com/Enemies#Creatures). */
 interface _UnitPrototype {
   type: 'unit';
+  /** The pollution amount that has to be absorbed by the unit's [spawner](prototype:EnemySpawnerPrototype) before the unit will leave the spawner and attack the source of the pollution. */
   absorptions_to_join_attack?: Record<AirbornePollutantID, number>;
+  /** Whether this unit is affected by tile [walking speed modifiers](prototype:TilePrototype::walking_speed_modifier). */
   affected_by_tiles?: boolean;
   ai_settings?: UnitAISettings;
   /** If this is true, this entities `is_military_target property` can be changed runtime (on the entity, not on the prototype itself). */
   allow_run_time_change_of_is_military_target?: false;
   alternative_attacking_frame_sequence?: UnitAlternativeFrameSequence;
-  /** Requires animation in attack_parameters. Requires ammo_type in attack_parameters. */
+  /** Requires `animation` in attack_parameters. Requires `ammo_type` in attack_parameters. */
   attack_parameters: AttackParameters;
   can_open_gates?: boolean;
   /** How fast the `run_animation` frames are advanced. The animations are advanced animation_speed frames per `distance_per_frame` that the unit moves.
@@ -8232,9 +8372,9 @@ interface _UnitPrototype {
 `frames_advanced = (distance_moved ÷ distance_per_frame) * animation_speed` */
   distance_per_frame: number;
   distraction_cooldown: number;
-  /** The sound file to play when entity dies. */
+  /** The sound file to play this unit dies. */
   dying_sound?: Sound;
-  /** If the unit is immune to movement by belts. */
+  /** If this unit is immune to movement by belts. */
   has_belt_immunity?: boolean;
   /** Whether this prototype should be a high priority target for enemy forces. See [Military units and structures](https://wiki.factorio.com/Military_units_and_structures). */
   is_military_target?: true;
@@ -8243,22 +8383,25 @@ interface _UnitPrototype {
   /** In ticks. */
   min_pursue_time?: number;
   move_while_shooting?: boolean;
-  /** Movement speed of the unit in the world, in tiles per tick. Must be equal to or greater than 0. */
+  /** Movement speed of this unit in the world, in tiles per tick. Must be equal to or greater than 0. */
   movement_speed: number;
   /** In chunks. The radius of how many chunks this unit charts around itself. */
   radar_range?: number;
   render_layer?: RenderLayer;
   rotation_speed?: number;
   run_animation: RotatedAnimation;
-  /** Only loaded if `walking_sound` is defined. */
+  /** List of positions in the `run_animation` when the `walking_sound` is played.
+
+Only loaded if `walking_sound` is defined. */
   running_sound_animation_positions?: number[];
+  /** Multiplier for the [EnemySpawnerPrototype::spawning_cooldown](prototype:EnemySpawnerPrototype::spawning_cooldown) after it spawns this unit. */
   spawning_time_modifier?: number;
   /** Max is 100.
 
 Note: Setting to 50 or above can lead to undocumented behavior of individual units creating groups on their own when attacking or being attacked. */
   vision_distance: number;
   walking_sound?: Sound;
-  /** A sound the unit makes when it sets out to attack. */
+  /** A sound this unit makes when it sets out to attack. */
   warcry?: Sound;
 }
 
@@ -8269,7 +8412,15 @@ export function isUnitPrototype(value: unknown): value is UnitPrototype {
   return (value as { type: string }).type === 'unit';
 }
 
-/** An [upgrade planner](https://wiki.factorio.com/Upgrade_planner). */
+/** An [upgrade planner](https://wiki.factorio.com/Upgrade_planner).
+
+For an entity to be allowed as an upgrade source, it must be minable, may not have "not-upgradable" flag set and may not be [hidden](prototype:PrototypeBase::hidden). Additionally, the source entity's mining result must not be an item product that is [hidden](prototype:ItemPrototype::hidden). Mining results with no item products are allowed.
+
+For an entity to be allowed as an upgrade target, it must have least 1 item that builds it that isn't hidden.
+
+For two entities to be upgrades of each other, the two entities must have the same [fast replaceable group](prototype:EntityPrototype::fast_replaceable_group), the same [collision box](prototype:EntityPrototype::collision_box) and the same [collision mask](prototype:EntityPrototype::collision_mask). Additionally, [underground belts](prototype:UndergroundBeltPrototype) cannot be upgraded to [transport belts](prototype:TransportBeltPrototype) and vice versa.
+
+For an entity to be automatically upgraded to another entity without configuring the upgrade planner, the [next upgrade](prototype:EntityPrototype::next_upgrade) of the upgrade source entity must be set. */
 interface _UpgradeItemPrototype {
   type: 'upgrade-item';
   /** The [SelectionModeData::mode](prototype:SelectionModeData::mode) is hardcoded to `"cancel-upgrade"`.
@@ -8637,6 +8788,7 @@ interface _UtilitySounds {
   game_lost: Sound;
   game_won: Sound;
   gui_click: Sound;
+  gui_switch: Sound;
   inventory_click: Sound;
   inventory_move: Sound;
   item_deleted: Sound;
@@ -9423,6 +9575,7 @@ interface _ActivityBarStyleSpecification {
   bar?: ElementImageSet;
   bar_background?: ElementImageSet;
   bar_size_ratio?: number;
+  /** The thickness of the bar, not the horizontal size. */
   bar_width?: number;
   color?: Color;
   speed?: number;
@@ -10537,7 +10690,7 @@ export interface CharacterArmorAnimation {
   mining_with_tool: RotatedAnimation;
   /** List of positions in the mining with tool animation when the mining sound and mining particles are created.
 
-Overrides [CharacterPrototype::mining_with_tool_particles_animation_positions](prototype:CharacterPrototype::mining_with_tool_particles_animation_positions) if defined */
+Overrides [CharacterPrototype::mining_with_tool_particles_animation_positions](prototype:CharacterPrototype::mining_with_tool_particles_animation_positions) if defined. */
   mining_with_tool_particles_animation_positions?: number[];
   running?: RotatedAnimation;
   /** Must contain exactly 18 or 40 directions, so all of the combination of gun direction and moving direction can be covered. Some of these variations are used in reverse to save space. You can use the character animation in the base game for reference. */
@@ -11456,7 +11609,7 @@ export function isCreateGhostOnEntityDeathModifier(
 }
 
 interface _CreateParticleTriggerEffectItem {
-  apply_tile_tint?: 'primary' | 'secondary';
+  apply_tile_tint?: ApplyTileTint;
   frame_speed?: number;
   frame_speed_deviation?: number;
   initial_height: number;
@@ -11863,7 +12016,7 @@ export type EffectTexture = _EffectTexture &
 interface _ElectricEnergySource {
   /** How much energy this entity can hold. */
   buffer_capacity?: Energy;
-  /** How much energy (per second) will be continuously removed from the energy buffer. In-game, this is shown in the tooltip as "Min. [Minimum] Consumption". Applied as a constant consumption-per-tick, even when the entity has the property [active](runtime:LuaEntity::active) set to `false`. */
+  /** How much energy (per second) will be continuously removed from the energy buffer. In-game, this is shown in the tooltip as "Min. [Minimum] Consumption". Applied as a constant consumption-per-tick, even when the entity is not [active](runtime:LuaEntity::active). */
   drain?: Energy;
   /** The rate at which energy can be taken, from the network, to refill the energy buffer. `0` means no transfer. */
   input_flow_limit?: Energy;
@@ -12004,6 +12157,7 @@ export interface EnemyExpansionSettings {
   friendly_base_influence_radius: number;
   /** A chunk has to have at most this much percent unbuildable tiles for it to be considered a candidate. This is to avoid chunks full of water to be marked as candidates. */
   max_colliding_tiles_coefficient: number;
+  /** In ticks. */
   max_expansion_cooldown: number;
   /** Distance in chunks from the furthest base around. This prevents expansions from reaching too far into the player's territory. */
   max_expansion_distance: number;
@@ -12571,6 +12725,7 @@ export interface GigaCargoHatchDefinition {
 }
 /** Note that when any technology prototype changes (regardless of which mod it belongs to), the game re-applies all researched technology effects, including `"give-item"` modifiers. This means that players will receive the item again, even if they already received it previously. This can be undesirable. */
 interface _GiveItemModifier {
+  /** Must be >= `1`. */
   count?: ItemCountType;
   item: ItemID;
   quality?: QualityID;
@@ -12705,7 +12860,7 @@ export interface HeatBuffer {
 /** Defines the connections for [HeatEnergySource](prototype:HeatEnergySource) and [HeatBuffer](prototype:HeatBuffer). */
 export interface HeatConnection {
   /** The "outward" direction of this heat connection. For a connection to succeed, the other heat connection must face the opposite direction (a south-facing connection needs a north-facing connection to succeed). A connection rotates with the entity. */
-  direction: Direction;
+  // direction: defines.direction;
   /** The location of the heat pipe connection, relative to the center of the entity in the north-facing direction. */
   position: MapPosition;
 }
@@ -12827,6 +12982,7 @@ export interface IconDrawSpecification {
 }
 /** Specification of where and how should be the icons of individual inventories be drawn. */
 export interface IconSequencePositioning {
+  // inventory_index: defines.inventory;
   max_icon_rows?: number;
   max_icons_per_row?: number;
   multi_row_initial_height_modifier?: number;
@@ -13458,7 +13614,7 @@ export interface MapGenSettings {
 }
 export interface MapLocation {
   /** Direction this connection point will be facing to. */
-  direction: Direction;
+  // direction: defines.direction;
   /** Position relative to entity's position where the connection point will be located at. */
   position: MapPosition;
 }
@@ -13927,7 +14083,7 @@ Only loaded if `connection_type` is `"normal"` or `"underground"`. */
   /** Primary direction this connection points to when entity direction is north and the entity is not mirrored. When entity is rotated or mirrored, effective direction will be computed based on this value.
 
 Only loaded, and mandatory if `connection_type` is `"normal"` or `"underground"`. */
-  direction?: Direction;
+  // direction?: defines.direction;
   /** Array of the [WorkingVisualisation::name](prototype:WorkingVisualisation::name) of working visualisations to enable when this pipe connection is present.
 
 If the owning fluidbox has [draw_only_when_connected](prototype:FluidBox::draw_only_when_connected) set to `true`, then the working visualisation is only enabled if this pipe connection is *connected*. */
@@ -14368,6 +14524,7 @@ One of `sound` or `cyclic_sound` must be defined. Both cannot be defined togethe
 interface _ProgressBarStyleSpecification {
   bar?: ElementImageSet;
   bar_background?: ElementImageSet;
+  /** The thickness of the bar, not the horizontal size. */
   bar_width?: number;
   color?: Color;
   embed_text_in_bar?: boolean;
@@ -14522,11 +14679,19 @@ export function isRadioButtonStyleSpecification(
 
 /** Sprite to be shown around the entity when it is selected/held in the cursor. */
 export interface RadiusVisualisationSpecification {
-  /** Must be greater than or equal to 0. */
+  /** Must be greater than or equal to 0.
+
+This distance is silently overwritten by prototypes with a custom distance: [AgriculturalTowerPrototype::radius](prototype:AgriculturalTowerPrototype::radius), [AsteroidCollectorPrototype::collection_radius](prototype:AsteroidCollectorPrototype::collection_radius), [BeaconPrototype::supply_area_distance](prototype:BeaconPrototype::supply_area_distance), [ElectricPolePrototype::supply_area_distance](prototype:ElectricPolePrototype::supply_area_distance), [MiningDrillPrototype::resource_searching_radius](prototype:MiningDrillPrototype::resource_searching_radius). */
   distance?: number;
   draw_in_cursor?: boolean;
   draw_on_selection?: boolean;
+  /** Offset of the sprite from the position of the entity. The offset is rotated by the entity's current direction.
+
+This offset is silently overwritten by prototypes with a custom offset: [MiningDrillPrototype::resource_searching_offset](prototype:MiningDrillPrototype::resource_searching_offset). */
   offset?: Vector;
+  /** The sprite to show.
+
+This sprite is silently overwritten by prototypes with a custom radius picture: [AgriculturalTowerPrototype::radius_visualisation_picture](prototype:AgriculturalTowerPrototype::radius_visualisation_picture), [AsteroidCollectorPrototype::radius_visualisation_picture](prototype:AsteroidCollectorPrototype::radius_visualisation_picture), [BeaconPrototype::radius_visualisation_picture](prototype:BeaconPrototype::radius_visualisation_picture), [ElectricPolePrototype::radius_visualisation_picture](prototype:ElectricPolePrototype::radius_visualisation_picture), [MiningDrillPrototype::radius_visualisation_picture](prototype:MiningDrillPrototype::radius_visualisation_picture). */
   sprite?: Sprite;
 }
 export interface RailFenceDirectionSet {
@@ -14741,7 +14906,7 @@ export function isResearchWithSciencePackTipTrigger(
 export interface Resistance {
   /** The [flat resistance](https://wiki.factorio.com/Damage#Decrease.2C_or_.22flat.22_resistance) to the given damage type. (Higher is better) */
   decrease?: number;
-  /** The [percentage resistance](https://wiki.factorio.com/Damage#Percentage_resistance) to the given damage type. (Higher is better) */
+  /** The [percentage resistance](https://wiki.factorio.com/Damage#Percentage_resistance) to the given damage type. Expected range is from 0 to 100, e.g. 50 is 50%. (Higher is better.) */
   percent?: number;
   type: DamageTypeID;
 }
@@ -14775,7 +14940,7 @@ Only loaded if `layers` is not defined. */
 
 The sequential animation instance is loaded equal to the entities direction within the `direction_count` setting.
 
-Direction count to [Direction](prototype:Direction) (animation sequence number):
+Direction count to [defines.direction](runtime:defines.direction) (animation sequence number):
 
 - `1`: North (1)
 
@@ -15183,6 +15348,7 @@ export type SimpleModifier = _SimpleModifier &
 export interface SimulationDefinition {
   /** If this is true, the map of the simulation is set to be a lab-tile checkerboard in the area of `{{-20, -15},{20, 15}}` when the scenario is first initialized (before init/init_file run). */
   checkboard?: boolean;
+  /** Only applied to the simulation if a test player is created through [LuaSimulation::create_test_player](runtime:LuaSimulation::create_test_player). */
   game_view_settings?: GameViewSettings;
   /** If `save` is not given and this is true, a map gets generated by the game for use in the simulation. */
   generate_map?: boolean;
@@ -15790,7 +15956,7 @@ export interface SpriteSource {
   filename: FileName;
   /** Mandatory if `size` is not defined.
 
-Height of the picture in pixels, from 0-4096. */
+Height of the sprite in pixels, from 0-4096. */
   height?: SpriteSizeType;
   /** Minimal mode is entered when mod loading fails. You are in it when you see the gray box after (part of) the loading screen that tells you a mod error. Modders can ignore this property. */
   load_in_minimal_mode?: boolean;
@@ -15802,7 +15968,7 @@ Height of the picture in pixels, from 0-4096. */
   size?: SpriteSizeType | [SpriteSizeType, SpriteSizeType];
   /** Mandatory if `size` is not defined.
 
-Width of the picture in pixels, from 0-4096. */
+Width of the sprite in pixels, from 0-4096. */
   width?: SpriteSizeType;
   /** Horizontal position of the sprite in the source file in pixels. */
   x?: SpriteSizeType;
@@ -16263,6 +16429,9 @@ export interface TileBuildSound {
   medium?: Sound;
   small?: Sound;
 }
+/** Defines restrictions on what tiles an entity can or must be built on.
+
+Note that once the entity has been placed, placing new tiles is not always restricted by these rules for performance reasons. In particular, for most entities these rules are only checked when placing tiles within the collision box of the entity. The exception to this are thrusters and asteroid collectors, for which the rules are always checked. */
 export interface TileBuildabilityRule {
   area: SimpleBoundingBox;
   colliding_tiles?: CollisionMaskConnector;
@@ -16310,7 +16479,7 @@ export interface TileSpriteLayoutVariant {
   line_length?: number;
   scale?: number;
   spritesheet?: FileName;
-  /** Height of the transition sprite in tiles. May be 1 or 2. It is forced to 1 for mask layers and for o_transition. A tile is considered 32px with scale 1 (so 64px with scale 0.5). Shift of the sprite will be adjusted such that the top 1x1 tile is centered on a tile being drawn (so it will be 
+  /** Height of the transition sprite in tiles. May be 1 or 2. It is forced to 1 for mask layers and for o_transition. A tile is considered 32px with scale 1 (so 64px with scale 0.5). Shift of the sprite will be adjusted such that the top 1x1 tile is centered on a tile being drawn (so it will be
 ```
 {0, 0.5*(tile_height - 1)}
 ```
@@ -16837,7 +17006,7 @@ export interface TreeVariation {
 }
 /** The abstract base of all [TriggerDeliveries](prototype:TriggerDelivery). */
 export interface TriggerDeliveryItem {
-  /** Provides the source of the TriggerDelivery as as both the source and target of the effect. */
+  /** Provides the source of the TriggerDelivery as both the source and target of the effect. */
   source_effects?: TriggerEffect;
   target_effects?: TriggerEffect;
 }
@@ -17981,6 +18150,9 @@ export type AnyPrototype =
   | VirtualSignalPrototype
   | WallPrototype;
 
+/** Refers to tints defined in [TilePrototype::particle_tints](prototype:TilePrototype::particle_tints). */
+export type ApplyTileTint = 'primary' | 'secondary';
+
 /** The name of an [AsteroidChunkPrototype](prototype:AsteroidChunkPrototype). */
 export type AsteroidChunkID = string;
 
@@ -18117,25 +18289,6 @@ export type DaytimeColorLookupTable = [number, ColorLookupTable][];
 
 /** The name of a [DecorativePrototype](prototype:DecorativePrototype). */
 export type DecorativeID = string;
-
-/** Usually specified by using [defines.direction](runtime:defines.direction). */
-export type Direction =
-  | 0
-  | 1
-  | 2
-  | 3
-  | 4
-  | 5
-  | 6
-  | 7
-  | 8
-  | 9
-  | 10
-  | 11
-  | 12
-  | 13
-  | 14
-  | 15;
 
 /** One of the 16 directions, specified with a string. */
 export type DirectionString =
@@ -18629,7 +18782,7 @@ The template can contain placeholders such as `__1__` or `__2__`. These will be 
 
 There are two special flags for the localised string, indicated by the key being a particular string. First, if the key is the empty string (`""`), then all parameters will be concatenated (after processing, if any are localised strings themselves). Second, if the key is a question mark (`"?"`), then the first valid parameter will be used. A parameter can be invalid if its name doesn't match any string template. If no parameters are valid, the last one is returned. This is useful to implement a fallback for missing locale templates.
 
-Furthermore, when an API function expects a localised string, it will also accept a regular string (i.e. not a table) which will not be translated, as well as a number or boolean, which will be converted to their textual representation.
+Furthermore, when an API function expects a localised string, it will also accept a regular string (i.e. not a table) which will not be translated. In the settings and prototype stages, this string cannot be longer than 200 characters.
 
 See [Tutorial:Localisation](https://wiki.factorio.com/Tutorial:Localisation) for more information. */
 export type LocalisedString = string | LocalisedString[];
@@ -18790,6 +18943,8 @@ Identifiers are used to name functions and variables. The built-in functions and
 
 All functions accept both named and positional arguments. To differentiate between these function calls, positional arguments start/end with `(`/`)` and named arguments with `{`/`}`, e.g. `clamp(x, -1, 1)` and `clamp{min = -1, max = 1, value = x}` are the same function call. Because of this, positional arguments can't be mixed with named arguments. A function can't have more than 255 parameters.
 
+Recursion is not supported.
+
 The following operators are available, ordered by precedence:
 
 - `x^y`: Exponentiation (fast, inaccurate), equivalent to the built-in `pow(x, y)` noise function
@@ -18821,7 +18976,45 @@ export type NoiseExpression = string | boolean | number;
 
 /** The order property is a simple `string`. When the game needs to sort prototypes (of the same type), it looks at their order properties and sorts those alphabetically. A prototype with an order string of `"a"` will be listed before other prototypes with order string `"b"` or `"c"`. The `"-"` or `"[]"` structures that can be found in vanilla order strings do *not* have any special meaning.
 
-The alphabetical sorting uses [lexicographical comparison](https://en.wikipedia.org/wiki/Lexicographic_order) to determine if a given prototype is shown before or after another. If the order strings are equal then the game falls back to comparing the prototype names to determine order. */
+The alphabetical sorting uses [lexicographical comparison](https://en.wikipedia.org/wiki/Lexicographic_order) to determine if a given prototype is shown before or after another. If the order strings are equal then the game falls back to comparing the prototype names to determine order.
+
+The order of special characters can be identified by looking at a UTF-8 character list. This is the order some common characters are sorted in:
+
+- "-"
+
+- "0"
+
+- "9"
+
+- "A"
+
+- "Z"
+
+- "["
+
+- "]"
+
+- "a"
+
+- "z"
+
+The following order strings would be ordered thusly then:
+
+- "-"
+
+- "a"
+
+- "ab"
+
+- "azaaa" (`b` is sorted before `z`, so "ab" comes before "az", regardless of the letters following it)
+
+- "b"
+
+- "b-zzz"
+
+- "b[aaa]" (`[` is sorted after `-` in UTF-8)
+
+- "bb" (`b` is sorted after `[` in UTF-8) */
 export type Order = string;
 
 /** The name of a [ParticlePrototype](prototype:ParticlePrototype). */

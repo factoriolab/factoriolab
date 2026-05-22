@@ -395,7 +395,7 @@ async function processMod(): Promise<void> {
         const path = `${scriptOutputPath}/quality/${spec.name}.png`;
         await resizeQualityIcon(path, iconId);
       } else {
-        let folder = 'item';
+        let folder: string;
         if (isRecipePrototype(spec)) folder = 'recipe';
         else if (isFluidPrototype(spec)) folder = 'fluid';
         else if (isTechnologyPrototype(spec)) folder = 'technology';
@@ -761,8 +761,8 @@ async function processMod(): Promise<void> {
     if (!tech.hidden && tech.enabled !== false) {
       technologySet.add(tech);
 
-      tech.effects
-        ?.filter((e) => isUnlockRecipeModifier(e))
+      coerceArray(tech.effects)
+        .filter((e) => isUnlockRecipeModifier(e))
         .forEach((e) => {
           recipesLocked.add(e.recipe);
         });
@@ -1316,6 +1316,7 @@ async function processMod(): Promise<void> {
         };
 
         for (const quality of abnormalQualities) {
+          // console.log(proto.name, quality);
           const multiplier = getDefaultMultiplier(quality);
           for (const eff of Object.keys(effectPrecision) as ModuleEffect[]) {
             let value = item.module[eff] as number;
@@ -1323,11 +1324,23 @@ async function processMod(): Promise<void> {
             if (value && !filterEffect(eff, value)) {
               value = value * multiplier;
               value = Math.floor(value * precision) / precision;
+              // console.log(proto.name, eff, value, value === item.module[eff]);
               if (value !== item.module[eff]) {
-                const qualityRecord = item.module.qualityRecord ?? {};
-                const qualityModule = qualityRecord[quality.name] ?? {};
+                let qualityRecord = item.module.qualityRecord;
+                if (qualityRecord == null) {
+                  qualityRecord = {};
+                  item.module.qualityRecord = qualityRecord;
+                }
+
+                let qualityModule = qualityRecord[quality.name];
+                if (qualityModule == null) {
+                  qualityModule = {};
+                  qualityRecord[quality.name] = qualityModule;
+                }
+
                 qualityModule[eff] = value;
                 item.module.qualityRecord = qualityRecord;
+                console.log(qualityRecord);
               }
             }
           }
@@ -2094,12 +2107,12 @@ async function processMod(): Promise<void> {
   ): Promise<void> {
     if (proto.asteroid_spawn_definitions) {
       // Add asteroid mining recipe
-      let name = '';
+      let name: string;
       const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
       const group = dataRaw['item-group'][subgroup.group];
       const fakeId = getFakeRecipeId(proto.name, `${key}-asteroid-collection`);
       const out: Record<string, number> = {};
-      if (isSpaceLocationPrototype(proto)) {
+      if (isSpaceLocationPrototype(proto) || isPlanetPrototype(proto)) {
         name = getLocaleName(spaceLocationLocale, key);
         proto.asteroid_spawn_definitions.forEach((def) => {
           addAsteroidProbability(out, def.asteroid, def.probability);
@@ -2120,7 +2133,7 @@ async function processMod(): Promise<void> {
         });
       }
 
-      const total = Object.keys(out).reduce((n, k) => (n += out[k]), 0);
+      const total = Object.keys(out).reduce((n, k) => n + out[k], 0);
       Object.keys(out).forEach((k) => {
         out[k] /= total;
       });
