@@ -86,6 +86,7 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "codeCoverage": true,
+            "codeCoverageExclude": ["src/tests/**/*"],
             "assets": [{ "glob": "**/*", "input": "public" }],
             "styles": ["src/styles.css"]
           }
