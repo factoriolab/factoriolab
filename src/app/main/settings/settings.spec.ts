@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { rational } from '~/rational/rational';
+import { ItemId } from '~/tests/item-id';
 import { TestModule } from '~/tests/test-module';
 
 import { Settings } from './settings';
@@ -20,5 +22,124 @@ describe('Settings', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('miningSpeed', () => {
+    it('should return the mining bonus plus 100', () => {
+      expect(component['miningSpeed']().eq(rational(100n))).toBeTrue();
+    });
+  });
+
+  describe('setParams', () => {
+    it('should call the router to navigate', () => {
+      spyOn(component['router'], 'navigateByUrl');
+      component.setParams('v=9');
+      expect(component['router'].navigateByUrl).toHaveBeenCalled();
+    });
+  });
+
+  describe('addMachine', () => {
+    it('should update the set and pass to the store action', () => {
+      spyOn(component['settingsStore'], 'updateField');
+      component.addMachine(ItemId.AssemblingMachine2);
+      expect(component['settingsStore'].updateField).toHaveBeenCalledWith(
+        'machineRankIds',
+        [
+          ItemId.AssemblingMachine3,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+          ItemId.AssemblingMachine2,
+        ],
+        [
+          ItemId.AssemblingMachine3,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+        ],
+      );
+    });
+  });
+
+  describe('setMachine', () => {
+    it('should update the set and pass to the store action', () => {
+      spyOn(component['settingsStore'], 'updateField');
+      component.changeMachine(0, ItemId.AssemblingMachine2);
+      expect(component['settingsStore'].updateField).toHaveBeenCalledWith(
+        'machineRankIds',
+        [
+          ItemId.AssemblingMachine2,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+        ],
+        [
+          ItemId.AssemblingMachine3,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+        ],
+      );
+    });
+  });
+
+  describe('dropMachine', () => {
+    it('should reorder machines and pass to the store', () => {
+      spyOn(component['settingsStore'], 'updateField');
+      component.dropMachine({ previousIndex: 0, currentIndex: 1 } as any);
+      expect(component['settingsStore'].updateField).toHaveBeenCalledWith(
+        'machineRankIds',
+        [
+          ItemId.ElectricFurnace,
+          ItemId.AssemblingMachine3,
+          ItemId.ElectricMiningDrill,
+        ],
+        [
+          ItemId.AssemblingMachine3,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+        ],
+      );
+    });
+  });
+
+  describe('changeModules', () => {
+    it('should dehydrate the modules', () => {
+      spyOn(component['hydration'], 'dehydrateModules');
+      spyOn(component['machinesStore'], 'updateRecord');
+      component.changeModules(ItemId.AssemblingMachine2, []);
+      expect(component['hydration'].dehydrateModules).toHaveBeenCalled();
+      expect(component['machinesStore'].updateRecord).toHaveBeenCalled();
+    });
+  });
+
+  describe('changeBeacons', () => {
+    it('should dehydrate the beacons', () => {
+      spyOn(component['hydration'], 'dehydrateBeacons');
+      spyOn(component['machinesStore'], 'updateRecord');
+      component.changeBeacons(ItemId.AssemblingMachine2, []);
+      expect(component['hydration'].dehydrateBeacons).toHaveBeenCalled();
+      expect(component['machinesStore'].updateRecord).toHaveBeenCalled();
+    });
+  });
+
+  describe('removeMachine', () => {
+    it('should update the set and pass to the store action', () => {
+      spyOn(component['settingsStore'], 'updateField');
+      component.removeMachine(ItemId.AssemblingMachine3);
+      expect(component['settingsStore'].updateField).toHaveBeenCalledWith(
+        'machineRankIds',
+        [ItemId.ElectricFurnace, ItemId.ElectricMiningDrill],
+        [
+          ItemId.AssemblingMachine3,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+        ],
+      );
+    });
+  });
+
+  describe('openRecipeProductivity', () => {
+    it('should open the RecipeProductivityDialog', () => {
+      spyOn(component['dialog'], 'open');
+      component.openRecipeProductivity();
+      expect(component['dialog'].open).toHaveBeenCalled();
+    });
   });
 });

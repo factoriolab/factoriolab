@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +13,8 @@ import {
   tap,
 } from 'rxjs';
 
+import { Game } from '~/data/game';
+import { gameInfo } from '~/data/game-info';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import { rational } from '~/rational/rational';
@@ -96,6 +99,7 @@ interface PartialState {
 @Injectable({ providedIn: 'root' })
 export class RouterSync {
   private readonly router = inject(Router);
+  private readonly dialog = inject(Dialog);
   private readonly compression = inject(Compression);
   private readonly itemsStore = inject(ItemsStore);
   private readonly machinesStore = inject(MachinesStore);
@@ -205,6 +209,14 @@ export class RouterSync {
         switchMap((z) => this.updateUrl(z)),
       )
       .subscribe();
+  }
+
+  setGame(game: Game): Promise<boolean> {
+    return this.setMod(gameInfo[game].modId);
+  }
+
+  setMod(modId: string): Promise<boolean> {
+    return this.router.navigate([modId, 'list']);
   }
 
   async updateUrl(zState: ZipState): Promise<void> {

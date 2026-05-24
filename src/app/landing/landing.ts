@@ -17,8 +17,7 @@ import { FormField } from '~/components/form-field/form-field';
 import { InputNumber } from '~/components/input-number/input-number';
 import { ObjectiveForm } from '~/components/objective-form';
 import { Select } from '~/components/select/select';
-import { Game, gameOptions } from '~/data/game';
-import { gameInfo } from '~/data/game-info';
+import { gameOptions } from '~/data/game';
 import { Release } from '~/data/release';
 import { ObjectiveBase } from '~/state/objectives/objective';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
@@ -76,13 +75,5 @@ export class Landing extends ObjectiveForm {
       queryParams: this.routerSync.toParams(query),
       relativeTo: this.route,
     });
-  }
-
-  setGame(game: Game): void {
-    this.setMod(gameInfo[game].modId);
-  }
-
-  setMod(modId: string): void {
-    void this.router.navigate([modId]);
   }
 }

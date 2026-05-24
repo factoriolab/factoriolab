@@ -53,20 +53,4 @@ describe('Landing', () => {
       });
     });
   });
-
-  describe('setGame', () => {
-    it('should map a game to its default mod id', () => {
-      spyOn(component, 'setMod');
-      component.setGame('factorio');
-      expect(component.setMod).toHaveBeenCalledWith('spa');
-    });
-  });
-
-  describe('setMod', () => {
-    it('should navigate using the router', () => {
-      spyOn(component['router'], 'navigate');
-      component.setMod('id');
-      expect(component['router'].navigate).toHaveBeenCalledWith(['id']);
-    });
-  });
 });

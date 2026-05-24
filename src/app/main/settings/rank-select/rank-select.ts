@@ -17,7 +17,6 @@ import {
   linkedSignal,
   model,
   signal,
-  viewChild,
   viewChildren,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -115,10 +114,10 @@ export class RankSelect extends Control<string[]> {
   protected readonly formField = inject(FormField, { optional: true });
   private readonly injector = inject(Injector);
 
-  readonly overlay = viewChild.required<ElementRef<HTMLDivElement>>('overlay');
-  readonly listItems = viewChildren<ElementRef<HTMLLIElement>>('option');
+  protected readonly listItems =
+    viewChildren<ElementRef<HTMLLIElement>>('option');
 
-  private uniqueId = (nextUniqueId++).toString();
+  private readonly uniqueId = (nextUniqueId++).toString();
 
   readonly controlId = input(`lab-select-${this.uniqueId}`);
   readonly value = model<string[]>();
@@ -131,7 +130,7 @@ export class RankSelect extends Control<string[]> {
 
   protected readonly filterText = signal('');
   protected readonly dragging = signal(false);
-  readonly opened = signal(false);
+  protected readonly opened = signal(false);
   protected readonly editValue = linkedSignal(() => this.value() ?? []);
   protected readonly hostClass = computed(() =>
     host({
@@ -172,7 +171,7 @@ export class RankSelect extends Control<string[]> {
       this.opened.set(true);
       this.filterText.set('');
       this.editValue.set(this.value() ?? []);
-      this.focusAfterOpen(event);
+      this.focusAfterOpen();
     }
 
     event?.preventDefault();
@@ -201,6 +200,7 @@ export class RankSelect extends Control<string[]> {
   focusFirst(event: Event): void {
     const el = this.listItems()[0]?.nativeElement;
     if (el == null) return;
+    el.focus();
     event.preventDefault();
   }
 
@@ -220,37 +220,15 @@ export class RankSelect extends Control<string[]> {
     event.preventDefault();
   }
 
-  private focusAfterOpen(event?: Event): void {
-    // Determine which element to focus
-    // Don't need to worry about filter, none can be applied yet
-    const options = this.options();
-    let index = 0;
-    if (event instanceof KeyboardEvent) {
-      switch (event.key) {
-        case 'ArrowUp':
-          if (index > 0) index--;
-          break;
-        case 'ArrowDown':
-          if (index !== -1 && index < options.length - 1) index++;
-          break;
-        case 'Home':
-          index = 0;
-          break;
-        case 'End':
-          index = options.length - 1;
-          break;
-      }
-    }
-
-    if (index !== -1)
-      afterNextRender(
-        () => {
-          const el = this.listItems().at(index)?.nativeElement;
-          if (el == null) return;
-          el.scrollIntoView();
-          el.focus();
-        },
-        { injector: this.injector },
-      );
+  private focusAfterOpen(): void {
+    afterNextRender(
+      () => {
+        const el = this.listItems()[0]?.nativeElement;
+        if (el == null) return;
+        el.scrollIntoView();
+        el.focus();
+      },
+      { injector: this.injector },
+    );
   }
 }

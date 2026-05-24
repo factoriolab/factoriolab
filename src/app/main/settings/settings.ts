@@ -35,7 +35,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
-import { filter, map } from 'rxjs';
+import { map } from 'rxjs';
 
 import { AccordionModule } from '~/components/accordion/accordion-module';
 import { BeaconsSelect } from '~/components/beacons-select/beacons-select';
@@ -49,8 +49,7 @@ import { ModulesSelect } from '~/components/modules-select/modules-select';
 import { Picker } from '~/components/picker/picker';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
-import { CUSTOM_MOD, Game, gameOptions } from '~/data/game';
-import { gameInfo } from '~/data/game-info';
+import { CUSTOM_MOD, gameOptions } from '~/data/game';
 import { FilterOptionsPipe } from '~/option/filter-options-pipe';
 import { OptionPipe } from '~/option/option-pipe';
 import { rational } from '~/rational/rational';
@@ -170,21 +169,6 @@ export class Settings {
     void this.router.navigateByUrl(tree);
   }
 
-  setGame(game: Game): void {
-    if (game === 'custom' && !this.settingsStore.customData.value()) {
-      this.dialog
-        .open<boolean>(CustomDataDialog)
-        .closed.pipe(filter((value) => value === true))
-        .subscribe(() => {
-          this.setMod(gameInfo[game].modId);
-        });
-    } else this.setMod(gameInfo[game].modId);
-  }
-
-  setMod(modId: string): void {
-    void this.router.navigate([modId, 'list']);
-  }
-
   addMachine(machineId: string): void {
     const settings = this.settings();
     const ids = [...settings.machineRankIds, machineId];
@@ -195,7 +179,7 @@ export class Settings {
     );
 
     // Reset control value
-    setTimeout(() => {
+    queueMicrotask(() => {
       this.addMachineValue.set(null);
     });
   }

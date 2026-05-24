@@ -16,7 +16,7 @@
     <lab-select
       [options]="gameOptions"
       [ngModel]="data().game"
-      (ngModelChange)="setGame($event)"
+      (ngModelChange)="routerSync.setGame($event)"
     ></lab-select>
   </lab-form-field>
   @if (settingsStore.modInfo()) {
@@ -25,7 +25,7 @@
         <lab-select
           [options]="settingsStore.modOptions()"
           [ngModel]="modId"
-          (ngModelChange)="setMod($event)"
+          (ngModelChange)="routerSync.setMod($event)"
         ></lab-select>
       </lab-form-field>
     }
