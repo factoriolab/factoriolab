@@ -6,7 +6,10 @@ import {
   model,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import {
+  FaIconComponent,
+  IconDefinition,
+} from '@fortawesome/angular-fontawesome';
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
 import {
   faSquareCheck,
@@ -36,6 +39,13 @@ const check = cva(
 );
 
 let nextUniqueId = 0;
+
+const iconMap = new Map<boolean | null | undefined, IconDefinition>([
+  [true, faSquareCheck],
+  [false, faSquare],
+  [undefined, faSquareMinus],
+  [null, faSquareMinus],
+]);
 
 @Component({
   selector: 'lab-checkbox',
@@ -67,10 +77,5 @@ export class Checkbox extends Control<boolean | undefined> {
     check({ value: this.value() ?? 'null', disabled: this.disabled() }),
   );
 
-  readonly icon = computed(() => {
-    const value = this.value();
-    if (value === true) return faSquareCheck;
-    if (value === false) return faSquare;
-    return faSquareMinus;
-  });
+  readonly icon = computed(() => iconMap.get(this.value()));
 }

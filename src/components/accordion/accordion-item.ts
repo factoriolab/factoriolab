@@ -22,7 +22,8 @@ let nextUniqueId = 0;
   host: { class: 'flex flex-col' },
 })
 export class AccordionItem extends CdkAccordionItem {
-  private uniqueId = (nextUniqueId++).toString();
+  private readonly uniqueId = (nextUniqueId++).toString();
+
   protected readonly content = contentChild.required(TemplateRef);
 
   readonly controlId = input(`lab-accordion-item-${this.uniqueId}`);

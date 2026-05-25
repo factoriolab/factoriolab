@@ -87,7 +87,7 @@ export class CollectionTable {
     return type === 'item' || type === 'recipe';
   });
 
-  protected readonly items = computed(() => {
+  protected readonly entries = computed(() => {
     const data = this.settingsStore.dataset();
     const key = coalesce(recordKey[this.iconType()], 'itemRecord');
     const record = data[key];

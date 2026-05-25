@@ -9,11 +9,11 @@ import {
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-import { Rational, rational } from '~/rational/rational';
+import { rational } from '~/rational/rational';
 import { BeaconSettings } from '~/state/beacon-settings';
-import { ModuleSettings } from '~/state/module-settings';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 
 import { Button } from '../button/button';
@@ -65,40 +65,26 @@ export class BeaconsSelect extends Control<BeaconSettings[]> {
   readonly border = input(true);
   readonly rounded = input<Rounded>('all');
 
-  protected readonly editValue = linkedSignal(() => this.value() ?? []);
+  protected readonly editValue = linkedSignal(() => coalesce(this.value(), []));
 
   protected readonly faPlus = faPlus;
   protected readonly faXmark = faXmark;
 
   open(): void {
-    this.editValue.set(this.value() ?? []);
+    this.editValue.set(coalesce(this.value(), []));
   }
 
   save(): void {
     this.writeValue(this.editValue());
   }
 
-  setCount(i: number, count: Rational): void {
+  setField<F extends keyof BeaconSettings>(
+    i: number,
+    field: F,
+    value: BeaconSettings[F],
+  ): void {
     this.editValue.update((values) =>
-      values.map((v, j) => (j === i ? spread(v, { count }) : v)),
-    );
-  }
-
-  setTotal(i: number, total: Rational): void {
-    this.editValue.update((values) =>
-      values.map((v, j) => (j === i ? spread(v, { total }) : v)),
-    );
-  }
-
-  setId(i: number, id: string): void {
-    this.editValue.update((values) =>
-      values.map((v, j) => (j === i ? spread(v, { id }) : v)),
-    );
-  }
-
-  setModules(i: number, modules: ModuleSettings[]): void {
-    this.editValue.update((values) =>
-      values.map((v, j) => (i === j ? spread(v, { modules }) : v)),
+      values.map((v, j) => (j === i ? spread(v, { [field]: value }) : v)),
     );
   }
 

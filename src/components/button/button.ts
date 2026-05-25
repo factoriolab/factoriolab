@@ -103,6 +103,12 @@ const host = cva(
   },
 );
 
+const alignClassMap: Record<'left' | 'center' | 'right', string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-end',
+};
+
 @Component({
   selector: '[lab-button], [labButton]',
   exportAs: 'labButton',
@@ -133,7 +139,15 @@ export class Button {
   readonly textAlign = input<'left' | 'center' | 'right'>('center');
   readonly textParams = input<TranslateParams>();
 
-  readonly hostClass = computed(() =>
+  protected readonly alignClassMap: Record<
+    'left' | 'center' | 'right',
+    string
+  > = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-end',
+  };
+  protected readonly hostClass = computed(() =>
     host({
       color: this.color(),
       size: this.size(),
@@ -146,14 +160,5 @@ export class Button {
     }),
   );
 
-  readonly alignClass = computed(() => {
-    switch (this.textAlign()) {
-      case 'left':
-        return 'text-left';
-      case 'center':
-        return 'text-center';
-      case 'right':
-        return 'text-end';
-    }
-  });
+  readonly alignClass = computed(() => alignClassMap[this.textAlign()]);
 }

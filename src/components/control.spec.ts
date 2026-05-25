@@ -13,6 +13,7 @@ class TestControl extends Control<number> {
 
 describe('Control', () => {
   let control: TestControl;
+
   beforeEach(() => {
     TestBed.runInInjectionContext(() => {
       control = new TestControl();

@@ -20,7 +20,7 @@
         ></th>
       }
     </tr>
-    @if (items().length > 10 || state().filter) {
+    @if (entries().length > 10 || state().filter) {
       <tr>
         <th>
           <div class="relative flex font-medium">
@@ -43,7 +43,7 @@
     }
   </thead>
   <tbody>
-    @for (item of items() | paginator: state(); track item.id) {
+    @for (entry of entries() | paginator: state(); track entry.id) {
       <tr>
         <td>
           <a
@@ -52,33 +52,36 @@
               settingsStore.modId(),
               'data',
               collectionPath[key()],
-              item.id,
+              entry.id,
             ]"
             [queryParams]="resetTableParams"
             queryParamsHandling="merge"
             class="link flex items-center gap-1"
           >
-            <lab-icon [value]="item.id" [type]="iconType()"></lab-icon>
-            {{ item.name }}
+            <lab-icon [value]="entry.id" [type]="iconType()"></lab-icon>
+            {{ entry.name }}
           </a>
         </td>
         @if (hasCategory()) {
           <td>
-            @if (item.category) {
+            @if (entry.category) {
               <a
                 [routerLink]="[
                   '/',
                   settingsStore.modId(),
                   'data',
                   'categories',
-                  item.category.id,
+                  entry.category.id,
                 ]"
                 [queryParams]="resetTableParams"
                 queryParamsHandling="merge"
                 class="link flex items-center gap-1"
               >
-                <lab-icon [value]="item.category.id" type="category"></lab-icon>
-                {{ item.category.name }}
+                <lab-icon
+                  [value]="entry.category.id"
+                  type="category"
+                ></lab-icon>
+                {{ entry.category.name }}
               </a>
             }
           </td>
@@ -91,7 +94,7 @@
       <td colspan="2">
         <lab-paginator
           [(state)]="state"
-          [total]="items().length"
+          [total]="entries().length"
         ></lab-paginator>
       </td>
     </tr>

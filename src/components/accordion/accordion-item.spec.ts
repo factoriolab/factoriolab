@@ -1,19 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestModule } from '~/tests/test-module';
+import { setInputs } from '~/tests/utils';
 
-import { Breadcrumb } from './breadcrumb';
+import { AccordionItem } from './accordion-item';
 
-describe('Breadcrumb', () => {
-  let component: Breadcrumb;
-  let fixture: ComponentFixture<Breadcrumb>;
+describe('AccordionItem', () => {
+  let component: AccordionItem;
+  let fixture: ComponentFixture<AccordionItem>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestModule, Breadcrumb],
+      imports: [TestModule, AccordionItem],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Breadcrumb);
+    fixture = TestBed.createComponent(AccordionItem);
+    setInputs(fixture, { text: '' });
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

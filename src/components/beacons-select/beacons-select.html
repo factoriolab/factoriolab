@@ -62,7 +62,7 @@
                 labTooltip="beaconsSelect.eachTooltip"
                 ariaLabel="beaconsSelect.eachTooltip"
                 [ngModel]="beacon.count"
-                (ngModelChange)="setCount($index, $event)"
+                (ngModelChange)="setField($index, 'count', $event)"
               ></lab-input-number>
               @if (beacon.total) {
                 <lab-input-number
@@ -72,7 +72,7 @@
                   labTooltip="beaconsSelect.totalTooltip"
                   ariaLabel="beaconsSelect.totalTooltip"
                   [ngModel]="beacon.total"
-                  (ngModelChange)="setTotal($index, $event)"
+                  (ngModelChange)="setField($index, 'total', $event)"
                 ></lab-input-number>
               }
               <lab-select
@@ -85,7 +85,7 @@
                 labTooltipAction="beaconsSelect.beaconTooltip"
                 [attr.aria-label]="'beaconsSelect.beaconTooltip' | translate"
                 [ngModel]="beacon.id"
-                (ngModelChange)="setId($index, $event)"
+                (ngModelChange)="setField($index, 'id', $event)"
               >
               </lab-select>
               <button
@@ -104,7 +104,7 @@
                 class="-mt-px"
                 [entity]="settingsStore.dataset().beaconRecord[beacon.id]"
                 [value]="beacon.modules"
-                (valueChange)="setModules($index, $event)"
+                (valueChange)="setField($index, 'modules', $event)"
               ></lab-modules>
             }
           </div>
