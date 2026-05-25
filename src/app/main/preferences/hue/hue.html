@@ -7,7 +7,7 @@
     [disabled]="disabled()"
     [attr.aria-labelledby]="labelledBy() ?? formField?.labelId ?? null"
     [ngModel]="value()"
-    (ngModelChange)="setValue($event)"
+    (ngModelChange)="writeValue($event)"
   />
 </div>
 <div>
@@ -20,6 +20,6 @@
     [disabled]="disabled()"
     [attr.aria-labelledby]="labelledBy() ?? formField?.labelId ?? null"
     [ngModel]="value()"
-    (ngModelChange)="setValue($event)"
+    (ngModelChange)="writeValue($event)"
   />
 </div>

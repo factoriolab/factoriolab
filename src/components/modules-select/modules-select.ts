@@ -58,6 +58,6 @@ export class ModulesSelect extends Control<ModuleSettings[]> {
     let value = this.editValue();
     if (this.machine().modules !== true)
       value = value.filter((e) => e.count?.nonzero());
-    this.setValue(value);
+    this.writeValue(value);
   }
 }

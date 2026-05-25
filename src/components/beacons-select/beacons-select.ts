@@ -75,7 +75,7 @@ export class BeaconsSelect extends Control<BeaconSettings[]> {
   }
 
   save(): void {
-    this.setValue(this.editValue());
+    this.writeValue(this.editValue());
   }
 
   setCount(i: number, count: Rational): void {

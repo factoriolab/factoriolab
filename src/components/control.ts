@@ -1,4 +1,4 @@
-import { InputSignal, ModelSignal, signal } from '@angular/core';
+import { InputSignal, ModelSignal } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
 export abstract class Control<T = unknown> implements ControlValueAccessor {
@@ -7,35 +7,23 @@ export abstract class Control<T = unknown> implements ControlValueAccessor {
   abstract readonly disabled: ModelSignal<boolean>;
   abstract readonly labelledBy: InputSignal<string | undefined>;
 
-  readonly touched = signal(false);
   onFormChange?: (value: T) => void;
   onFormTouched?: () => void;
 
   /**
    * Override this function to provide a custom equality function for the
-   * control. Calls to `setValue` with a value equal to the current control
+   * control. Calls to `writeValue` with a value equal to the current control
    * value will be skipped.
    */
   valuesEqual(a: T, b: T | undefined): boolean {
     return a === b;
   }
 
-  setValue(value: T): void {
-    this.markAsTouched();
+  writeValue(value: T): void {
     if (this.valuesEqual(value, this.value())) return;
 
-    this.writeValue(value);
-    this.onFormChange?.(value);
-  }
-
-  markAsTouched(): void {
-    if (this.touched()) return;
-    this.touched.set(true);
-    this.onFormTouched?.();
-  }
-
-  writeValue(value: T): void {
     this.value.set(value);
+    this.onFormChange?.(value);
   }
 
   registerOnChange(fn: (value: T) => void): void {

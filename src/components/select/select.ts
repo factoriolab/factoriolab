@@ -179,7 +179,7 @@ export class Select<T = unknown> extends Control<T> {
         const newValue = Array.isArray(value)
           ? Array.from(selection)
           : selection;
-        this.setValue(newValue as unknown as T);
+        this.writeValue(newValue as unknown as T);
       }
     } else {
       this.opened.set(true);
@@ -201,7 +201,7 @@ export class Select<T = unknown> extends Control<T> {
       });
     } else {
       this.toggle();
-      this.setValue(value);
+      this.writeValue(value);
     }
   }
 

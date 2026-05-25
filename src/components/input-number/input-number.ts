@@ -125,7 +125,7 @@ export class InputNumber extends Control<Rational> implements OnInit {
 
   ngOnInit(): void {
     this.emit.subscribe((v) => {
-      this.setValue(v);
+      this.writeValue(v);
     });
   }
 
