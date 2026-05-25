@@ -24,7 +24,6 @@ describe('RecipeProductivityDialog', () => {
   });
 
   it('should create', () => {
-    expect({}).toBeTruthy();
     expect(component).toBeTruthy();
   });
 
