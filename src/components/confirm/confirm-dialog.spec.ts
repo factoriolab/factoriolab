@@ -1,22 +1,26 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DIALOG_DATA } from '@angular/cdk/dialog';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { ConfirmDialog } from './confirm-dialog';
+import { TestModule } from '~/tests/test-module';
 
-// describe('ConfirmDialog', () => {
-//   let component: ConfirmDialog;
-//   let fixture: ComponentFixture<ConfirmDialog>;
+import { ConfirmDialog } from './confirm-dialog';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [ConfirmDialog],
-//     }).compileComponents();
+describe('ConfirmDialog', () => {
+  let component: ConfirmDialog;
+  let fixture: ComponentFixture<ConfirmDialog>;
 
-//     fixture = TestBed.createComponent(ConfirmDialog);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestModule, ConfirmDialog],
+      providers: [{ provide: DIALOG_DATA, useValue: {} }],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(ConfirmDialog);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

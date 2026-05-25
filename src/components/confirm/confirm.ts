@@ -10,6 +10,9 @@ export class Confirm {
   private readonly dialog = inject(Dialog);
 
   open<T>(data: ConfirmData<T>): Observable<T | undefined> {
-    return this.dialog.open<T, ConfirmData<T>>(ConfirmDialog, { data }).closed;
+    return this.dialog.open<T, ConfirmData<T>, ConfirmDialog<T>>(
+      ConfirmDialog,
+      { data },
+    ).closed;
   }
 }
