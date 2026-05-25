@@ -26,8 +26,8 @@ export class CustomDataDialog implements DialogData {
   protected readonly faCheck = faCheck;
   protected readonly faXmark = faXmark;
 
-  dataFile: File | undefined;
-  iconsFile: File | undefined;
+  protected dataFile: File | undefined;
+  protected iconsFile: File | undefined;
 
   selectFile(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
