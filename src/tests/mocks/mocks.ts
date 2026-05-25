@@ -5,9 +5,11 @@ import { Link } from '~/flow/link';
 import { Node } from '~/flow/node';
 import { isRecipeObjective } from '~/state/objectives/objective';
 import { RecipesStore } from '~/state/recipes/recipes-store';
+import { Dataset } from '~/state/settings/dataset';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { spread } from '~/utils/object';
 
+import { mockModData, mockModHash, mockModInfo } from './data';
 import { mockObjectivesList } from './objective';
 
 @Injectable({ providedIn: 'root' })
@@ -82,4 +84,14 @@ export class Mocks {
       }),
     );
   });
+
+  getDataset(): Dataset {
+    return this.settingsStore.computeDataset(
+      mockModInfo,
+      mockModData,
+      mockModHash,
+      undefined,
+      'factorio',
+    );
+  }
 }
