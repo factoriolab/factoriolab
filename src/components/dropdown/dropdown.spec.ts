@@ -1,22 +1,48 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { Dropdown } from './dropdown';
+import { setInputs } from '~/tests/utils';
 
-// describe('Dropdown', () => {
-//   let component: Dropdown;
-//   let fixture: ComponentFixture<Dropdown>;
+import { Dropdown } from './dropdown';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [Dropdown],
-//     }).compileComponents();
+describe('Dropdown', () => {
+  let component: Dropdown;
+  let fixture: ComponentFixture<Dropdown>;
 
-//     fixture = TestBed.createComponent(Dropdown);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Dropdown],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(Dropdown);
+    setInputs(fixture, { controlId: 'id' });
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('toggle', () => {
+    it('should open the dropdown', () => {
+      spyOn(component.open, 'emit');
+      component.toggle();
+      expect(component['opened']()).toBeTrue();
+      expect(component.open.emit).toHaveBeenCalled();
+    });
+
+    it('should close the dropdown', () => {
+      component['opened'].set(true);
+      spyOn(component.save, 'emit');
+      component.toggle();
+      expect(component['opened']()).toBeFalse();
+      expect(component.save.emit).toHaveBeenCalled();
+    });
+
+    it('should return if disabled', () => {
+      setInputs(fixture, { disabled: true });
+      component.toggle();
+      expect(component['opened']()).toBeFalse();
+    });
+  });
+});

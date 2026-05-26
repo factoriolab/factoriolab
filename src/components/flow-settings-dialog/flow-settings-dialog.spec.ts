@@ -1,22 +1,45 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { FlowSettingsDialog } from './flow-settings-dialog';
+import { initialPreferencesState } from '~/state/preferences/preferences-state';
+import { TestModule } from '~/tests/test-module';
 
-// describe('FlowSettingsDialog', () => {
-//   let component: FlowSettingsDialog;
-//   let fixture: ComponentFixture<FlowSettingsDialog>;
+import { FlowSettingsDialog } from './flow-settings-dialog';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [FlowSettingsDialog],
-//     }).compileComponents();
+describe('FlowSettingsDialog', () => {
+  let component: FlowSettingsDialog;
+  let fixture: ComponentFixture<FlowSettingsDialog>;
 
-//     fixture = TestBed.createComponent(FlowSettingsDialog);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestModule, FlowSettingsDialog],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(FlowSettingsDialog);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('reset', () => {
+    it('should reset the editValue', () => {
+      spyOn(component['editValue'], 'set');
+      component.reset();
+      expect(component['editValue'].set).toHaveBeenCalledWith(
+        initialPreferencesState.flowSettings,
+      );
+    });
+  });
+
+  describe('save', () => {
+    it('should apply the editValue and close the dialog', () => {
+      spyOn(component['preferencesStore'], 'apply');
+      spyOn(component['dialogRef'], 'close');
+      component.save();
+      expect(component['preferencesStore'].apply).toHaveBeenCalled();
+      expect(component['dialogRef'].close).toHaveBeenCalled();
+    });
+  });
+});

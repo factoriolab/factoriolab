@@ -5,7 +5,6 @@ import {
   input,
   linkedSignal,
   model,
-  OnInit,
   output,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -61,7 +60,7 @@ interface ChangeEvent {
   ],
   host: { class: 'group relative inline-flex' },
 })
-export class InputNumber extends Control<Rational> implements OnInit {
+export class InputNumber extends Control<Rational> {
   private uniqueId = (nextUniqueId++).toString();
 
   readonly controlId = input(`lab-input-number-${this.uniqueId}`);
@@ -91,7 +90,7 @@ export class InputNumber extends Control<Rational> implements OnInit {
     map((v) => (this.integer() ? v.round() : v)),
   );
 
-  readonly text = linkedSignal<Rational | undefined, string>({
+  protected readonly text = linkedSignal<Rational | undefined, string>({
     source: this.value,
     computation: (val, previous) => {
       if (val == null) return '0';
@@ -123,8 +122,9 @@ export class InputNumber extends Control<Rational> implements OnInit {
   protected readonly faChevronDown = faChevronDown;
   protected readonly faChevronUp = faChevronUp;
 
-  ngOnInit(): void {
-    this.emit.subscribe((v) => {
+  constructor() {
+    super();
+    this.emit.pipe(takeUntilDestroyed()).subscribe((v) => {
       this.writeValue(v);
     });
   }

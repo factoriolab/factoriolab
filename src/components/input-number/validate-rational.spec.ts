@@ -1,8 +1,17 @@
-// import { ValidateRational } from './validate-rational';
+import { TestBed } from '@angular/core/testing';
 
-// describe('ValidateRational', () => {
-//   it('should create an instance', () => {
-//     const directive = new ValidateRational();
-//     expect(directive).toBeTruthy();
-//   });
-// });
+import { ValidateRational } from './validate-rational';
+
+describe('ValidateRational', () => {
+  let directive: ValidateRational;
+
+  beforeEach(() => {
+    TestBed.runInInjectionContext(() => {
+      directive = new ValidateRational();
+    });
+  });
+
+  it('should create', () => {
+    expect(directive).toBeTruthy();
+  });
+});

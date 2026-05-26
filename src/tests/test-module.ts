@@ -17,7 +17,7 @@ import { mockLangData, mockModData, mockModHash } from './mocks/data';
     provideHttpClient(),
     provideHttpClientTesting(),
     provideRouter([]),
-    { provide: DialogRef, useValue: { close: (): void => {} } },
+    { provide: DialogRef, useValue: { close: (): void => {}, config: {} } },
     {
       provide: WindowClient,
       useValue: {
