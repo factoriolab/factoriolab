@@ -12,7 +12,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Beacon } from '~/data/schema/beacon';
 import { Machine } from '~/data/schema/machine';
 import { FilterOptionsPipe } from '~/option/filter-options-pipe';
-import { Rational, rational } from '~/rational/rational';
+import { rational } from '~/rational/rational';
 import { ModuleSettings } from '~/state/module-settings';
 import { Options } from '~/state/options';
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -80,18 +80,18 @@ export class Modules {
 
   protected readonly faXmark = faXmark;
 
-  protected setCount(i: number, count: Rational): void {
+  protected setField<K extends keyof ModuleSettings>(
+    i: number,
+    field: K,
+    value: ModuleSettings[K],
+  ): void {
     this.value.update((v) => {
-      const modules = v.map((m, j) => (i === j ? spread(m, { count }) : m));
+      const modules = v.map((m, j) =>
+        i === j ? spread(m, { [field]: value }) : m,
+      );
       this.updateEmpty(modules);
       return modules;
     });
-  }
-
-  protected setId(i: number, id: string): void {
-    this.value.update((v) =>
-      v.map((m, j) => (i === j ? spread(m, { id }) : m)),
-    );
   }
 
   protected removeEntry(i: number): void {

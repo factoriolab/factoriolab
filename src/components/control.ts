@@ -7,7 +7,7 @@ export abstract class Control<T = unknown> implements ControlValueAccessor {
   abstract readonly disabled: ModelSignal<boolean>;
   abstract readonly labelledBy: InputSignal<string | undefined>;
 
-  onFormChange?: (value: T) => void;
+  onFormChange?: (value: T | undefined) => void;
   onFormTouched?: () => void;
 
   /**
@@ -15,18 +15,19 @@ export abstract class Control<T = unknown> implements ControlValueAccessor {
    * control. Calls to `writeValue` with a value equal to the current control
    * value will be skipped.
    */
-  valuesEqual(a: T, b: T | undefined): boolean {
+  valuesEqual(a: T | undefined, b: T | undefined): boolean {
     return a === b;
   }
 
-  writeValue(value: T): void {
+  writeValue(value: T | null | undefined): void {
+    value = value ?? undefined;
     if (this.valuesEqual(value, this.value())) return;
 
     this.value.set(value);
     this.onFormChange?.(value);
   }
 
-  registerOnChange(fn: (value: T) => void): void {
+  registerOnChange(fn: (value: T | undefined) => void): void {
     this.onFormChange = fn;
   }
 

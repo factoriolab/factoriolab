@@ -129,8 +129,13 @@ export class InputNumber extends Control<Rational> {
     });
   }
 
-  override valuesEqual(a: Rational, b: Rational | undefined): boolean {
-    return b != null && a.eq(b);
+  override valuesEqual(
+    a: Rational | undefined,
+    b: Rational | undefined,
+  ): boolean {
+    if (a == null) return b == null;
+    if (b == null) return false;
+    return a.eq(b);
   }
 
   onChange(event: Event): void {

@@ -2,6 +2,7 @@ import { CdkOverlayOrigin, OverlayModule } from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   input,
   linkedSignal,
   model,
@@ -10,6 +11,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { Machine } from '~/data/schema/machine';
 import { ModuleSettings } from '~/state/module-settings';
+import { coalesce } from '~/utils/nullish';
 
 import { Control } from '../control';
 import { Dropdown } from '../dropdown/dropdown';
@@ -48,10 +50,11 @@ export class ModulesSelect extends Control<ModuleSettings[]> {
   readonly machine = input.required<Machine>();
   readonly recipeId = input<string>();
 
-  readonly editValue = linkedSignal(() => this.value() ?? []);
+  private readonly safeValue = computed(() => coalesce(this.value(), []));
+  protected readonly editValue = linkedSignal(() => this.safeValue());
 
   open(): void {
-    this.editValue.set(this.value() ?? []);
+    this.editValue.set(this.safeValue());
   }
 
   save(): void {

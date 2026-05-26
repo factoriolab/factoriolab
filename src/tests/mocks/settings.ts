@@ -1,7 +1,19 @@
 import { rational } from '~/rational/rational';
 import { BeaconSettings } from '~/state/beacon-settings';
+import { ModuleSettings } from '~/state/module-settings';
 
 import { ItemId } from '../item-id';
+
+export const mockModuleSettings: ModuleSettings[] = [
+  {
+    id: ItemId.ProductivityModule3,
+    count: rational(3n),
+  },
+  {
+    id: '',
+    count: rational.one,
+  },
+];
 
 export const mockBeaconSettings: BeaconSettings[] = [
   {

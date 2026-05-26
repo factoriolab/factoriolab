@@ -14,4 +14,14 @@ describe('ValidateRational', () => {
   it('should create', () => {
     expect(directive).toBeTruthy();
   });
+
+  describe('validate', () => {
+    it('should check whether a number is within the specified range', () => {
+      expect(directive.validate({} as any)).toBeNull();
+      expect(directive.validate({ value: '1' } as any)).toBeNull();
+      expect(directive.validate({ value: '-1' } as any)).toEqual({
+        validateNumber: { valid: false },
+      });
+    });
+  });
 });

@@ -9,7 +9,7 @@
       labTooltip="modules.eachTooltip"
       ariaLabel="modules.eachTooltip"
       [ngModel]="entry.count"
-      (ngModelChange)="setCount($index, $event)"
+      (ngModelChange)="setField($index, 'count', $event)"
     ></lab-input-number>
     <lab-select
       class="-ms-px"
@@ -21,7 +21,7 @@
       [labTooltipAction]="entry.id ? 'modules.moduleTooltip' : ''"
       [attr.aria-label]="'modules.moduleTooltip' | translate"
       [ngModel]="entry.id"
-      (ngModelChange)="setId($index, $event)"
+      (ngModelChange)="setField($index, 'id', $event)"
     ></lab-select>
     @if (entity().modules !== true) {
       <button
