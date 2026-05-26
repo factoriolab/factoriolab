@@ -40,7 +40,7 @@ describe('CustomDataDialog', () => {
   });
 
   describe('save', () => {
-    it('should sve the data and icons file to the settingsStore', async () => {
+    it('should save the data and icons file to the settingsStore', async () => {
       component['dataFile'] = new Blob(['text'], { type: 'text/plain' }) as any;
       component['iconsFile'] = 'iconsFile' as any;
       spyOn(component['settingsStore'], 'setCustomData');
