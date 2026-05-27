@@ -3,6 +3,8 @@ import { computed, inject, Injectable } from '@angular/core';
 import { FlowData } from '~/flow/flow-data';
 import { Link } from '~/flow/link';
 import { Node } from '~/flow/node';
+import { rational } from '~/rational/rational';
+import { Step } from '~/solver/step';
 import { isRecipeObjective } from '~/state/objectives/objective';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { Dataset } from '~/state/settings/dataset';
@@ -10,7 +12,11 @@ import { SettingsStore } from '~/state/settings/settings-store';
 import { spread } from '~/utils/object';
 
 import { mockModData, mockModHash, mockModInfo } from './data';
-import { mockObjectivesList } from './objective';
+import {
+  mockObjective1,
+  mockObjective2,
+  mockObjectivesList,
+} from './objective';
 
 @Injectable({ providedIn: 'root' })
 export class Mocks {
@@ -73,7 +79,6 @@ export class Mocks {
       ],
     };
   });
-
   readonly objectives = computed(() => {
     const data = this.recipesStore.adjustedDataset();
     return mockObjectivesList.map((o) =>
@@ -84,6 +89,43 @@ export class Mocks {
       }),
     );
   });
+  readonly item1 = computed(() => {
+    const data = this.settingsStore.dataset();
+    return data.itemRecord[data.itemIds[0]];
+  });
+  readonly item2 = computed(() => {
+    const data = this.settingsStore.dataset();
+    return data.itemRecord[data.itemIds[1]];
+  });
+  readonly step1 = computed((): Step => {
+    const item = this.item1();
+    return {
+      id: item.id,
+      itemId: item.id,
+      recipeId: item.id,
+      items: mockObjective1.value,
+      belts: rational(1n, 2n),
+      wagons: rational(2n),
+      machines: rational.one,
+      power: rational.one,
+      pollution: rational.one,
+    };
+  });
+  readonly step2 = computed((): Step => {
+    const item = this.item2();
+    return {
+      id: item.id,
+      itemId: item.id,
+      recipeId: item.id,
+      items: mockObjective2.value,
+      belts: rational.one,
+      wagons: rational.one,
+      machines: rational(2n),
+      power: rational.one,
+      pollution: rational.one,
+    };
+  });
+  readonly steps = computed(() => [this.step1(), this.step2()]);
 
   getDataset(): Dataset {
     return this.settingsStore.computeDataset(

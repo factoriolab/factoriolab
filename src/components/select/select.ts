@@ -11,7 +11,6 @@ import {
   linkedSignal,
   model,
   signal,
-  viewChild,
   viewChildren,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -110,10 +109,10 @@ export class Select<T = unknown> extends Control<T> {
   protected readonly formField = inject(FormField, { optional: true });
   private readonly injector = inject(Injector);
 
-  readonly overlay = viewChild.required<ElementRef<HTMLDivElement>>('overlay');
-  readonly listItems = viewChildren<ElementRef<HTMLLIElement>>('option');
+  protected readonly listItems =
+    viewChildren<ElementRef<HTMLLIElement>>('option');
 
-  private uniqueId = (nextUniqueId++).toString();
+  private readonly uniqueId = (nextUniqueId++).toString();
 
   readonly controlId = input(`lab-select-${this.uniqueId}`);
   readonly value = model<T>();
@@ -126,7 +125,7 @@ export class Select<T = unknown> extends Control<T> {
   readonly iconOnly = input<boolean>(false);
 
   protected readonly filterText = signal('');
-  readonly opened = signal(false);
+  protected readonly opened = signal(false);
 
   protected readonly selection = linkedSignal(() =>
     this.selectionValue(this.value()),
@@ -140,7 +139,7 @@ export class Select<T = unknown> extends Control<T> {
       disabled: this.disabled(),
     }),
   );
-  readonly filter = computed(() => this.options().length > 10);
+  protected readonly filter = computed(() => this.options().length > 10);
   protected readonly multi = computed(() => {
     const value = this.value();
     return Array.isArray(value) || value instanceof Set;

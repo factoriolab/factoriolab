@@ -161,7 +161,7 @@ export class Steps {
     return steps;
   });
 
-  readonly leftSpan = computed(() => {
+  protected readonly leftSpan = computed(() => {
     const cols = this.cols();
     let colspan = 2;
     if (cols.checkbox.show) colspan++;
@@ -169,12 +169,14 @@ export class Steps {
     return colspan;
   });
 
-  private readonly expandSelected = effect(() => {
-    const selectedId = this.selectedId();
-    if (selectedId == null) return;
-    if (this.expandedSteps().has(selectedId)) return;
-    this.toggleStep(selectedId);
-  });
+  constructor() {
+    effect(() => {
+      const selectedId = this.selectedId();
+      if (selectedId == null) return;
+      if (this.expandedSteps().has(selectedId)) return;
+      this.toggleStep(selectedId);
+    });
+  }
 
   // Store per-recipe preferences in component memory
   perMachine: Record<string, boolean | undefined> = {};
