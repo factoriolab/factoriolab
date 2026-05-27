@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { FlowDiagram } from '~/state/preferences/flow-diagram';
 import { initialPreferencesState } from '~/state/preferences/preferences-state';
 import { TestModule } from '~/tests/test-module';
 
@@ -21,6 +22,13 @@ describe('FlowSettingsDialog', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('apply', () => {
+    it('should update the editValue', () => {
+      component.apply({ diagram: FlowDiagram.BoxLine });
+      expect(component['editValue']().diagram).toEqual(FlowDiagram.BoxLine);
+    });
   });
 
   describe('reset', () => {

@@ -68,6 +68,11 @@ describe('InputNumber', () => {
     it('should compare rational values', () => {
       expect(component.valuesEqual(rational(2n), rational(2n))).toBeTrue();
     });
+
+    it('should handle nullish values', () => {
+      expect(component.valuesEqual(undefined, undefined)).toBeTrue();
+      expect(component.valuesEqual(rational.one, undefined)).toBeFalse();
+    });
   });
 
   describe('onChange', () => {

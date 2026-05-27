@@ -27,6 +27,28 @@ describe('Control', () => {
     });
   });
 
+  describe('setValue', () => {
+    it('should call to writeValue', () => {
+      spyOn(control, 'writeValue');
+      control.setValue(1);
+      expect(control.writeValue).toHaveBeenCalledWith(1);
+    });
+
+    it('should fall back to undefined', () => {
+      control.setValue(1);
+      spyOn(control, 'writeValue');
+      control.setValue(null);
+      expect(control.writeValue).toHaveBeenCalledWith(undefined);
+    });
+
+    it('should skip repeat values', () => {
+      control.setValue(1);
+      spyOn(control, 'writeValue');
+      control.setValue(1);
+      expect(control.writeValue).not.toHaveBeenCalled();
+    });
+  });
+
   describe('writeValue', () => {
     it('should set the form value', () => {
       control.writeValue(1);

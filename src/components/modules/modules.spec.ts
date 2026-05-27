@@ -51,6 +51,13 @@ describe('Modules', () => {
     });
   });
 
+  describe('setField', () => {
+    it('should update the value of a specific field', () => {
+      component['setField'](0, 'count', rational(3n));
+      expect(component.value()[0].count).toEqual(rational(3n));
+    });
+  });
+
   describe('removeEntry', () => {
     it('should remove the entry at an index', async () => {
       component['removeEntry'](0);
