@@ -31,9 +31,6 @@ import { Tabs } from '../tabs/tabs';
 import { Tooltip } from '../tooltip/tooltip';
 import { PickerData } from './picker-data';
 
-let lastCategory: string | null = null;
-let lastQuality: string | null = null;
-
 @Component({
   selector: 'lab-picker-dialog',
   imports: [
@@ -54,6 +51,9 @@ let lastQuality: string | null = null;
   },
 })
 export class PickerDialog {
+  private static lastCategory: string | null = null;
+  private static lastQuality: string | null = null;
+
   protected readonly settingsStore = inject(SettingsStore);
   protected readonly dialogData = inject<PickerData>(DIALOG_DATA);
   protected readonly dialogRef = inject(DialogRef);
@@ -63,6 +63,10 @@ export class PickerDialog {
   protected readonly allIds = new Set(this.dialogData.allIds);
   protected readonly multi = this.dialogData.selection instanceof Set;
   protected readonly selectedId?: string;
+  /**
+   * Note: Selected items are in the excluded set, so selection is inverted in
+   * the UI so that selected ids appear as deselected.
+   */
   protected readonly selection = signal(new Set<string>());
   protected readonly filter = signal('');
 
@@ -140,28 +144,33 @@ export class PickerDialog {
     return result;
   });
 
-  readonly categoryTabs = computed(() =>
+  protected readonly categoryTabs = computed(() =>
     Object.keys(this.categoryRows()).map(
       (k): TabData => ({ label: this.data().categoryRecord[k].name, value: k }),
     ),
   );
 
-  readonly selectedQuality = linkedSignal<Dataset, string>({
+  protected readonly selectedQuality = linkedSignal<Dataset, string>({
     source: this.data,
     computation: (value, previous) => {
       const keys = value.qualityIds;
       if (previous && keys.includes(previous.value)) return previous.value;
-      if (lastQuality && keys.includes(lastQuality)) return lastQuality;
+      if (PickerDialog.lastQuality && keys.includes(PickerDialog.lastQuality))
+        return PickerDialog.lastQuality;
       return keys[0];
     },
   });
 
-  readonly selectedCategory = linkedSignal<Record<string, string[][]>, string>({
+  protected readonly selectedCategory = linkedSignal<
+    Record<string, string[][]>,
+    string
+  >({
     source: this.categoryRows,
     computation: (value, previous) => {
       const keys = Object.keys(value);
       if (previous && keys.includes(previous.value)) return previous.value;
-      if (lastCategory && keys.includes(lastCategory)) return lastCategory;
+      if (PickerDialog.lastCategory && keys.includes(PickerDialog.lastCategory))
+        return PickerDialog.lastCategory;
       return keys[0];
     },
   });
@@ -185,23 +194,23 @@ export class PickerDialog {
       }
     });
 
+    let selectedId: string | undefined;
     if (selection instanceof Set) {
-      const firstId = Array.from(selection)[0];
-      if (firstId != null) {
-        const obj = data[this.recordKey][firstId];
-        this.selectedCategory.set(obj.category);
-        if (obj.quality) this.selectedQuality.set(obj.quality.id);
-      }
+      selectedId = Array.from(selection)[0];
       this.selection.set(selection);
     } else if (selection != null) {
+      selectedId = selection;
       this.selectedId = selection;
-      const obj = data[this.recordKey][selection];
+    }
+
+    if (selectedId != null) {
+      const obj = data[this.recordKey][selectedId];
       this.selectedCategory.set(obj.category);
       if (obj.quality) this.selectedQuality.set(obj.quality.id);
     }
 
-    effect(() => (lastCategory = this.selectedCategory()));
-    effect(() => (lastQuality = this.selectedQuality()));
+    effect(() => (PickerDialog.lastCategory = this.selectedCategory()));
+    effect(() => (PickerDialog.lastQuality = this.selectedQuality()));
   }
 
   selectAll(value: boolean): void {

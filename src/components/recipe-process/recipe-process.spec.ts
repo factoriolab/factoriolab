@@ -1,22 +1,27 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { RecipeProcess } from './recipe-process';
+import { RecipeId } from '~/tests/recipe-id';
+import { TestModule } from '~/tests/test-module';
+import { setInputs } from '~/tests/utils';
 
-// describe('RecipeProcess', () => {
-//   let component: RecipeProcess;
-//   let fixture: ComponentFixture<RecipeProcess>;
+import { RecipeProcess } from './recipe-process';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [RecipeProcess],
-//     }).compileComponents();
+describe('RecipeProcess', () => {
+  let component: RecipeProcess;
+  let fixture: ComponentFixture<RecipeProcess>;
 
-//     fixture = TestBed.createComponent(RecipeProcess);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestModule, RecipeProcess],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(RecipeProcess);
+    setInputs(fixture, { value: RecipeId.AdvancedCircuit });
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
