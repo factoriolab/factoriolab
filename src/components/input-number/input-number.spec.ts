@@ -39,28 +39,28 @@ describe('InputNumber', () => {
 
   describe('constructor', () => {
     it('should set up a subscription to the emit observable', () => {
-      spyOn(component, 'writeValue');
+      spyOn(component, 'setValue');
       component['valueChange'].next({ type: 'keydown', value: rational(2n) });
-      expect(component.writeValue).toHaveBeenCalledWith(rational(2n));
+      expect(component.setValue).toHaveBeenCalledWith(rational(2n));
     });
 
     it('should round when configured as integer number', () => {
       setInputs(fixture, { integer: true });
-      spyOn(component, 'writeValue');
+      spyOn(component, 'setValue');
       component['valueChange'].next({
         type: 'keydown',
         value: rational(2n, 3n),
       });
-      expect(component.writeValue).toHaveBeenCalledWith(rational.one);
+      expect(component.setValue).toHaveBeenCalledWith(rational.one);
     });
 
     it('should debounce on input', () => {
-      spyOn(component, 'writeValue');
+      spyOn(component, 'setValue');
       component['valueChange'].next({
         type: 'input',
         value: rational(2n),
       });
-      expect(component.writeValue).not.toHaveBeenCalled();
+      expect(component.setValue).not.toHaveBeenCalled();
     });
   });
 

@@ -119,7 +119,7 @@ export class Tabs<T extends string = string>
   }
 
   select(tab: TabData<T>): void {
-    this.writeValue(tab.value);
+    this.setValue(tab.value);
     if (tab.command) tab.command();
   }
 

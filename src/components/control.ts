@@ -19,12 +19,16 @@ export abstract class Control<T = unknown> implements ControlValueAccessor {
     return a === b;
   }
 
-  writeValue(value: T | null | undefined): void {
+  setValue(value: T | null | undefined): void {
     value = value ?? undefined;
     if (this.valuesEqual(value, this.value())) return;
 
-    this.value.set(value);
+    this.writeValue(value);
     this.onFormChange?.(value);
+  }
+
+  writeValue(value: T | undefined): void {
+    this.value.set(value);
   }
 
   registerOnChange(fn: (value: T | undefined) => void): void {

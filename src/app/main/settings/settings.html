@@ -72,7 +72,7 @@
           labTooltip="settings.gameTooltip"
           labTooltipPosition="adjacent"
           [ngModel]="data().game"
-          (ngModelChange)="routerSync.setGame($event)"
+          (ngModelChange)="routerSync.setGame($event, ['list'])"
         ></lab-select>
       </lab-form-field>
 
@@ -91,7 +91,7 @@
               rounded="start"
               labTooltip="modSetTooltip"
               [ngModel]="modId"
-              (ngModelChange)="routerSync.setMod($event)"
+              (ngModelChange)="routerSync.setMod($event, ['list'])"
             ></lab-select>
             <button
               type="button"

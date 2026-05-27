@@ -125,7 +125,7 @@ export class InputNumber extends Control<Rational> {
   constructor() {
     super();
     this.emit.pipe(takeUntilDestroyed()).subscribe((v) => {
-      this.writeValue(v);
+      this.setValue(v);
     });
   }
 

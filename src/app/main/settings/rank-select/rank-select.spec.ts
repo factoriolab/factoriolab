@@ -63,10 +63,10 @@ describe('RankSelect', () => {
       component['opened'].set(true);
       component['editValue'].set(['id']);
       spyOn(component['opened'], 'set');
-      spyOn(component, 'writeValue');
+      spyOn(component, 'setValue');
       component.toggle();
       expect(component['opened'].set).toHaveBeenCalledWith(false);
-      expect(component.writeValue).toHaveBeenCalledWith(['id']);
+      expect(component.setValue).toHaveBeenCalledWith(['id']);
     });
 
     it('should not open the overlay if disabled', () => {

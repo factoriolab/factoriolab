@@ -166,7 +166,7 @@ export class RankSelect extends Control<string[]> {
       this.opened.set(false);
       const value = this.value();
       const editValue = this.editValue();
-      if (!areArraysEqual(value, editValue)) this.writeValue(editValue);
+      if (!areArraysEqual(value, editValue)) this.setValue(editValue);
     } else {
       this.opened.set(true);
       this.filterText.set('');

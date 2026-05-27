@@ -37,9 +37,9 @@ describe('BeaconsSelect', () => {
 
   describe('save', () => {
     it('should write the new value', () => {
-      spyOn(component, 'writeValue');
+      spyOn(component, 'setValue');
       component.save();
-      expect(component.writeValue).toHaveBeenCalledWith(mockBeaconSettings);
+      expect(component.setValue).toHaveBeenCalledWith(mockBeaconSettings);
     });
   });
 

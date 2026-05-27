@@ -59,7 +59,7 @@ export class BeltSelect extends Control<ItemSettings> {
   save(): void {
     const value = this.editValue();
     if (value == null) return;
-    this.writeValue(value);
+    this.setValue(value);
   }
 
   setStack(stack: Rational): void {

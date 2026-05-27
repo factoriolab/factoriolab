@@ -75,7 +75,7 @@ export class BeaconsSelect extends Control<BeaconSettings[]> {
   }
 
   save(): void {
-    this.writeValue(this.editValue());
+    this.setValue(this.editValue());
   }
 
   setField<F extends keyof BeaconSettings>(

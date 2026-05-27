@@ -7,7 +7,7 @@
     [attr.aria-labelledby]="labelledBy()"
     [disabled]="disabled()"
     [ngModel]="value()"
-    (ngModelChange)="writeValue($event)"
+    (ngModelChange)="setValue($event)"
   />
   <fa-icon
     class="absolute *:z-1 after:absolute after:size-4 after:content-['']"

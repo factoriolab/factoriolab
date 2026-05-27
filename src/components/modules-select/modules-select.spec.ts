@@ -41,12 +41,12 @@ describe('ModulesSelect', () => {
 
   describe('save', () => {
     it('should emit a list filtered for nonzero module entries', () => {
-      spyOn(component, 'writeValue');
+      spyOn(component, 'setValue');
       component['editValue'].set([
         { id: ItemId.ProductivityModule, count: rational.zero },
       ]);
       component.save();
-      expect(component.writeValue).toHaveBeenCalledWith([]);
+      expect(component.setValue).toHaveBeenCalledWith([]);
     });
   });
 });

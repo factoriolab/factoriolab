@@ -211,12 +211,12 @@ export class RouterSync {
       .subscribe();
   }
 
-  setGame(game: Game): Promise<boolean> {
-    return this.setMod(gameInfo[game].modId);
+  setGame(game: Game, commands: string[] = []): Promise<boolean> {
+    return this.setMod(gameInfo[game].modId, commands);
   }
 
-  setMod(modId: string): Promise<boolean> {
-    return this.router.navigate([modId, 'list']);
+  setMod(modId: string, commands: string[] = []): Promise<boolean> {
+    return this.router.navigate([modId, ...commands]);
   }
 
   async updateUrl(zState: ZipState): Promise<void> {
