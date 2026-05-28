@@ -16,6 +16,8 @@ import { Translate } from '~/translate/translate';
 import { coalesce } from '~/utils/nullish';
 
 import { FlowData } from './flow-data';
+import { Link } from './link';
+import { Node } from './node';
 
 export const MIN_LINK_VALUE = 1e-10;
 
@@ -261,22 +263,31 @@ export class FlowBuilder {
     }
 
     // Remove unnecessary item nodes
-    const removeNodes = new Map<string, string>();
+    const reTargetSources = new Map<string, string>();
+    const reSourceTargets = new Map<string, string>();
     for (const node of flow.nodes) {
-      if (node.id.startsWith('i')) {
-        const links = flow.links.filter((l) => l.target === node.id);
-        if (links.length === 1) {
-          const link = links[0];
-          removeNodes.set(link.target, link.source);
-        }
+      if (!node.id.startsWith('i')) continue;
+
+      let link = this.redundantBySource(node, flow);
+      if (link) {
+        reTargetSources.set(link.target, link.source);
+        continue;
       }
+
+      link = this.redundantByTarget(node, flow);
+      if (link) reSourceTargets.set(link.source, link.target);
     }
 
-    flow.nodes = flow.nodes.filter((n) => !removeNodes.has(n.id));
-    flow.links = flow.links.filter((l) => !removeNodes.has(l.target));
-    flow.links.forEach(
-      (l) => (l.source = removeNodes.get(l.source) ?? l.source),
+    flow.nodes = flow.nodes.filter(
+      (n) => !reTargetSources.has(n.id) && !reSourceTargets.has(n.id),
     );
+    flow.links = flow.links.filter(
+      (l) => !reTargetSources.has(l.target) && !reSourceTargets.has(l.source),
+    );
+    flow.links.forEach((l) => {
+      l.source = reTargetSources.get(l.source) ?? l.source;
+      l.target = reSourceTargets.get(l.target) ?? l.target;
+    });
 
     // Mark bidirectional nodes
     flow.links.forEach((l) => {
@@ -359,5 +370,35 @@ export class FlowBuilder {
       case LinkValue.Machines:
         return columns.machines.precision;
     }
+  }
+
+  /**
+   * Determines whether a node has a single source where the source also only
+   * targets this node.
+   */
+  private redundantBySource(node: Node, flow: FlowData): Link | undefined {
+    const incomingLinks = flow.links.filter((l) => l.target === node.id);
+    if (incomingLinks.length !== 1) return undefined;
+    const link = incomingLinks[0];
+    const otherSourceOutgoingLinks = flow.links.filter(
+      (l) => l !== link && l.source === link.source,
+    );
+    if (otherSourceOutgoingLinks.length > 0) return undefined;
+    return link;
+  }
+
+  /**
+   * Determines whether a node has a single target where the target also only
+   * sources from this node.
+   */
+  private redundantByTarget(node: Node, flow: FlowData): Link | undefined {
+    const outgoingLinks = flow.links.filter((l) => l.source === node.id);
+    if (outgoingLinks.length !== 1) return undefined;
+    const link = outgoingLinks[0];
+    const otherTargetIncomingLinks = flow.links.filter(
+      (l) => l !== link && l.target === link.target,
+    );
+    if (otherTargetIncomingLinks.length > 0) return undefined;
+    return link;
   }
 }
