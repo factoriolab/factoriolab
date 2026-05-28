@@ -125,7 +125,7 @@ export class Select<T = unknown> extends Control<T> {
   readonly iconOnly = input<boolean>(false);
 
   protected readonly filterText = signal('');
-  protected readonly opened = signal(false);
+  readonly opened = signal(false);
 
   protected readonly selection = linkedSignal(() =>
     this.selectionValue(this.value()),

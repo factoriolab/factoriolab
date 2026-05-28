@@ -6,13 +6,14 @@
     text="flow.flowSettings"
     (click)="dialog.open(FlowSettingsDialog)"
   ></button>
-  @if (flowBuilder.flowData().nodes.length) {
+  @let _flowData = flowBuilder.flowData();
+  @if (_flowData && _flowData.nodes.length) {
     <button
       type="button"
       labButton
       [faIcon]="faFileArrowDown"
       text="flow.downloadAsJson"
-      (click)="exporter.flowToJson(flowBuilder.flowData())"
+      (click)="exporter.flowToJson(_flowData)"
     ></button>
   }
 </div>

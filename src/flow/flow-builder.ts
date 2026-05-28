@@ -29,12 +29,13 @@ export class FlowBuilder {
 
   readonly flowData = computed(() => {
     const steps = this.objectivesStore.steps();
+    const iconColor = this.settingsStore.iconColor.value();
+    if (!steps.length || iconColor == null) return null;
     const settings = this.settingsStore.settings();
     const preferences = this.preferencesStore.state();
     const data = this.recipesStore.adjustedDataset();
     const suffixKey = displayRateInfo[settings.displayRate].suffix;
     const suffix = this.translate.get(suffixKey);
-    const iconColor = this.settingsStore.iconColor.value() ?? {};
     return this.buildGraph(
       steps,
       suffix,

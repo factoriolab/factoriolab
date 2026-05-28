@@ -185,7 +185,7 @@ export class SettingsStore extends Store<SettingsState> {
   readonly iconColor = resource({
     params: () => ({ modData: this.modData(), iconPath: this.iconPath() }),
     loader: async ({ params: { modData, iconPath } }) => {
-      if (modData == null || !iconPath) return {};
+      if (modData == null || !iconPath) return null;
       const img = document.createElement('img');
       img.src = iconPath;
 

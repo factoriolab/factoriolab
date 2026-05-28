@@ -93,16 +93,16 @@ export class Flow {
   }
 
   async rebuildChart(
-    flowData: FlowData,
+    flowData: FlowData | null,
     flowSettings: FlowSettings,
   ): Promise<void> {
     select(`#${SVG_ID} > *`).remove();
 
-    if (flowData.nodes.length && flowData.links.length) {
-      if (flowSettings.diagram === FlowDiagram.Sankey)
-        this.rebuildSankey(flowData, flowSettings);
-      else await this.rebuildBoxLine(flowData, flowSettings);
-    }
+    if (flowData == null) return;
+
+    if (flowSettings.diagram === FlowDiagram.Sankey)
+      this.rebuildSankey(flowData, flowSettings);
+    else await this.rebuildBoxLine(flowData, flowSettings);
   }
 
   rebuildSankey(flowData: FlowData, flowSettings: FlowSettings): void {
