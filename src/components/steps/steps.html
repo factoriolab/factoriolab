@@ -333,7 +333,7 @@
                           'steps.beltSelectTooltip' | translate
                         "
                         [value]="itemSettings"
-                        (valueChange)="changeBelts(step, $event)"
+                        (valueChange)="changeBelts(step.itemId, $event)"
                       ></lab-belt-select>
                     } @else {
                       @let tooltip = 'steps.' + type + 'Tooltip';

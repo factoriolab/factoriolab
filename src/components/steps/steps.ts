@@ -279,16 +279,17 @@ export class Steps {
     this.settingsStore.apply({ excludedItemIds: new Set() });
   }
 
-  changeBelts(step: Step, state?: ItemSettings): void {
-    if (step.itemId == null || state == null) return;
+  changeBelts(itemId: string, state?: ItemSettings): void {
+    if (state == null) return;
+
     this.itemsStore.updateRecordField(
-      step.itemId,
+      itemId,
       'stack',
       state.stack,
       state.defaultStack,
     );
     this.itemsStore.updateRecordField(
-      step.itemId,
+      itemId,
       'beltId',
       state.beltId,
       state.defaultBeltId,

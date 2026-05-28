@@ -146,4 +146,89 @@ describe('Steps', () => {
       expect(component['recipesStore'].updateRecord).not.toHaveBeenCalled();
     });
   });
+
+  describe('changeStepChecked', () => {
+    it('should set checked state based on the step item', () => {
+      const step = mocks.step1();
+      spyOn(component['settingsStore'], 'apply');
+      component.changeStepChecked(step, true);
+      expect(component['settingsStore'].apply).toHaveBeenCalledWith({
+        checkedItemIds: new Set([step.itemId]),
+      });
+    });
+
+    it('should set checked state based on the step recipe', () => {
+      const step = { ...mocks.step1(), itemId: undefined };
+      spyOn(component['settingsStore'], 'apply');
+      component.changeStepChecked(step, true);
+      expect(component['settingsStore'].apply).toHaveBeenCalledWith({
+        checkedRecipeIds: new Set([step.recipeId]),
+      });
+    });
+
+    it('should set checked state based on the step recipe objective', () => {
+      const step = {
+        ...mocks.step1(),
+        itemId: undefined,
+        recipeObjectiveId: 'id',
+      };
+      spyOn(component['settingsStore'], 'apply');
+      component.changeStepChecked(step, true);
+      expect(component['settingsStore'].apply).toHaveBeenCalledWith({
+        checkedObjectiveIds: new Set([step.recipeObjectiveId]),
+      });
+    });
+  });
+
+  describe('resetChecked', () => {
+    it('should apply the state to the settingsStore', () => {
+      spyOn(component['settingsStore'], 'apply');
+      component.resetChecked();
+      expect(component['settingsStore'].apply).toHaveBeenCalled();
+    });
+  });
+
+  describe('resetExcludeditems', () => {
+    it('should apply the state to the settingsStore', () => {
+      spyOn(component['settingsStore'], 'apply');
+      component.resetExcludedItems();
+      expect(component['settingsStore'].apply).toHaveBeenCalled();
+    });
+  });
+
+  describe('changeBelts', () => {
+    it('should update the item stack and beltId based on the result', () => {
+      spyOn(component['itemsStore'], 'updateRecordField');
+      component.changeBelts(ItemId.AdvancedCircuit, {} as any);
+      expect(component['itemsStore'].updateRecordField).toHaveBeenCalledTimes(
+        2,
+      );
+    });
+
+    it('should return early if state is undefined', () => {
+      spyOn(component['itemsStore'], 'updateRecordField');
+      component.changeBelts(ItemId.AdvancedCircuit, undefined);
+      expect(component['itemsStore'].updateRecordField).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('resetMachines', () => {
+    it('should call to reset the objectivesStore and recipesStore', () => {
+      spyOn(component['objectivesStore'], 'resetFields');
+      spyOn(component['recipesStore'], 'resetFields');
+      component.resetMachines();
+      expect(component['objectivesStore'].resetFields).toHaveBeenCalled();
+      expect(component['recipesStore'].resetFields).toHaveBeenCalled();
+    });
+  });
+
+  describe('resetBeacons', () => {
+    it('should call to reset the objectivesStore and recipesStore', () => {
+      spyOn(component['objectivesStore'], 'resetFields');
+      spyOn(component['recipesStore'], 'resetFields');
+      component.resetBeacons();
+      expect(component['objectivesStore'].resetFields).toHaveBeenCalled();
+      expect(component['recipesStore'].resetFields).toHaveBeenCalled();
+    });
+  });
 });
