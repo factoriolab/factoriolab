@@ -492,7 +492,7 @@
                   >{{ data().recipeRecord[step.recipeId].name }}</span
                 >
                 <lab-recipes-select [step]="step"></lab-recipes-select>
-                @if (!step.recipe.flags.has('hideProducer')) {
+                @if (step.recipe.producers?.length) {
                   <lab-select
                     [border]="false"
                     [iconOnly]="true"

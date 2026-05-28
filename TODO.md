@@ -3,8 +3,6 @@
 ## NOW
 
 - Removal of machine hideRate, totalRecipe - just don't include producers for these, right?
-- Likewise, removal of RecipeFlag 'hideProducer'
-- Do we _really_ need recycling cost and the recycling flag?
 - Tests, tests, tests
 
 ## LATER

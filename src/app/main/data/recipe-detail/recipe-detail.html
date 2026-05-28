@@ -90,7 +90,7 @@
           </td>
         </tr>
       }
-      @if (!obj.flags.has('hideProducer')) {
+      @if (obj.producers?.length) {
         <tr>
           <th>{{ 'data.producers' | translate }}</th>
           <td>

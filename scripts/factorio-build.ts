@@ -1785,7 +1785,6 @@ async function processMod(): Promise<void> {
           time: 1,
           in: { [proto.name]: 1 },
           out: { [proto.spoil_result]: 1 },
-          flags: ['hideProducer'],
         };
         modData.recipes.push(recipe);
       }

@@ -5,7 +5,7 @@ import * as Color from 'color-bits';
 export class IsLightPipe implements PipeTransform {
   transform(
     iconId: string,
-    iconColor: Record<string, string> | undefined,
+    iconColor: Record<string, string> | null | undefined,
   ): boolean {
     const value = iconColor?.[iconId];
     if (!value) return false;

@@ -19,7 +19,7 @@
 </div>
 
 <div class="flex flex-wrap justify-between gap-2">
-  @if (r.producers?.length && !r.flags.has('hideProducer')) {
+  @if (r.producers?.length) {
     <div>
       <div class="mt-1 text-sm">{{ 'data.producers' | translate }}</div>
       <div>
@@ -39,7 +39,7 @@
   }
 
   @if (r.locations; as locations) {
-    <div [class.text-end]="!r.flags.has('hideProducer')">
+    <div [class.text-end]="r.producers?.length">
       <div class="mt-1 text-sm">{{ 'data.locations' | translate }}</div>
       <div>
         @for (location of locations; track location) {

@@ -202,7 +202,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         if (step.machines?.nonzero()) {
           const recipe = step.recipe;
           // Don't include silos from launch recipes
-          if (!recipe.part && !recipe.flags.has('hideProducer')) {
+          if (!recipe.part && recipe.producers?.length) {
             const settings = step.recipeSettings;
             let machine = settings.machineId;
             let iconType: IconType = 'item';
