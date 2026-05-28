@@ -2,7 +2,6 @@
 
 ## NOW
 
-- Removal of machine hideRate, totalRecipe - just don't include producers for these, right?
 - Tests, tests, tests
 
 ## LATER
