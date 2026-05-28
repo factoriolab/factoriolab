@@ -368,6 +368,7 @@ export class Flow {
     const edge = svg
       .append('g')
       .attr('fill', 'none')
+      .style('will-change', 'opacity')
       .selectAll('g')
       .data(edges)
       .join('g')
