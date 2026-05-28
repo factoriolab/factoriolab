@@ -266,6 +266,10 @@ export class FlowBuilder {
         const links = flow.links.filter((l) => l.target === node.id);
         if (links.length === 1) {
           const link = links[0];
+          const outgoingItemLinks = flow.links.filter(
+            (l) => l.source === link.source && l.target.startsWith('i|'),
+          );
+          if (outgoingItemLinks.length > 1) continue;
           removeNodes.set(link.target, link.source);
         }
       }
