@@ -56,9 +56,9 @@ export const initialSettingsState: SettingsState = {
   netProductionOnly: false,
   proliferatorSprayId: '',
   costs: {
-    factor: rational(1, 10),
-    machine: rational(1, 10),
-    footprint: rational(1, 10),
+    factor: rational(1),
+    machine: rational(1),
+    footprint: rational(1),
     unproduceable: rational(10000000n),
     excluded: rational.zero,
     surplus: rational.zero,

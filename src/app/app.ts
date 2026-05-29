@@ -1,7 +1,7 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { Component, effect, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { faCheck, faRotate, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { filter, merge, switchMap } from 'rxjs';
@@ -17,11 +17,12 @@ import { WindowClient } from '~/utils/window-client';
 @Component({
   selector: 'lab-root',
   imports: [RouterOutlet],
-  template: '<router-outlet></router-outlet>',
+  templateUrl: './app.html',
   host: { class: 'block h-full' },
 })
 export class App {
   private readonly swUpdate = inject(SwUpdate);
+  protected readonly router = inject(Router);
   private readonly dialog = inject(Dialog);
   private readonly release = inject(Release);
   private readonly confirm = inject(Confirm);
