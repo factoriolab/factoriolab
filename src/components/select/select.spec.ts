@@ -70,40 +70,40 @@ describe('Select', () => {
       spyOn(component['selection'], 'set');
       spyOn<any>(component, 'focusAfterOpen');
       component.toggle();
-      expect(component['opened']()).toBeTrue();
+      expect(component.opened()).toBeTrue();
       expect(component['filterText'].set).toHaveBeenCalledWith('');
       expect(component['selection'].set).toHaveBeenCalledWith(new Set());
       expect(component['focusAfterOpen']).toHaveBeenCalled();
     });
 
     it('should close the overlay and call setValue with a set', async () => {
-      component['opened'].set(true);
+      component.opened.set(true);
       setInputs(fixture, { value: new Set() });
       component['selection'].set(new Set([1]));
       spyOn(component, 'setValue');
       component.toggle();
       await TestBed.inject(ApplicationRef).whenStable();
-      expect(component['opened']()).toBeFalse();
+      expect(component.opened()).toBeFalse();
       expect(component.setValue).toHaveBeenCalledWith(new Set([1]));
     });
 
     it('should close the overlay and call setValue with an array', async () => {
-      component['opened'].set(true);
+      component.opened.set(true);
       setInputs(fixture, { value: [] });
       component['selection'].set(new Set([1]));
       spyOn(component, 'setValue');
       component.toggle();
       await TestBed.inject(ApplicationRef).whenStable();
-      expect(component['opened']()).toBeFalse();
+      expect(component.opened()).toBeFalse();
       expect(component.setValue).toHaveBeenCalledWith([1]);
     });
 
     it('should not open the overlay if disabled or unmatched KeyboardEvent', () => {
       component.toggle(new KeyboardEvent('keydown'));
-      expect(component['opened']()).toBeFalse();
+      expect(component.opened()).toBeFalse();
       component.disabled.set(true);
       component.toggle();
-      expect(component['opened']()).toBeFalse();
+      expect(component.opened()).toBeFalse();
     });
   });
 

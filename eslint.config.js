@@ -52,7 +52,15 @@ export default defineConfig(
       ],
       '@typescript-eslint/restrict-template-expressions': [
         'error',
-        { allowNumber: true },
+        {
+          allow: [{ name: ['Error', 'URL', 'URLSearchParams'], from: 'lib' }],
+          allowAny: false,
+          allowBoolean: false,
+          allowNever: false,
+          allowNullish: false,
+          allowNumber: true,
+          allowRegExp: false,
+        },
       ],
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',

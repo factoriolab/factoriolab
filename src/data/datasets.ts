@@ -15,7 +15,6 @@ export const datasets: Datasets = {
   mods: [
     { id: 'spa', name: 'Space Age', game: 'factorio' },
     { id: '2.0', name: '2.0', game: 'factorio' },
-    { id: '2.0q', name: '2.0 + Quality', game: 'factorio' },
     { id: '1.1', name: '1.1', game: 'factorio' },
     { id: '1.1e', name: '1.1 Expensive', game: 'factorio' },
     { id: '1.0', name: '1.0', game: 'factorio' },
@@ -115,7 +114,7 @@ export const datasets: Datasets = {
     null,
     null,
     '2.0',
-    '2.0q',
+    null,
     'mds',
     'mde',
     'fdy',
