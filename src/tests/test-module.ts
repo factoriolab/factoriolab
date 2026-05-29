@@ -30,7 +30,7 @@ import { mockLangData, mockModData, mockModHash } from './mocks/data';
       provide: SettingsStore,
       useFactory: (): SettingsStore => {
         const settingsStore = new SettingsStore();
-        settingsStore.apply({ modId: '1.1', preset: Preset.Beacon8 });
+        settingsStore.apply({ modId: '2.0', preset: Preset.Beacon8 });
         settingsStore['modDataResource'].set(mockModData);
         settingsStore['modHashResource'].set(mockModHash);
         settingsStore['fac'].getColorAsync =

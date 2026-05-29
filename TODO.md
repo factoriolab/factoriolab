@@ -2,6 +2,9 @@
 
 ## NOW
 
+- Update 2.0 data
+- Fix tests to use 2.0 data
+- Try using default fonts
 - Tests, tests, tests
 
 ## LATER

@@ -23,4 +23,10 @@ describe('DetailRow', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // describe('inserterId', () => {
+  //   it('should determine the best initial inserterId to use', () => {
+  //     expect(component['inserterId']()).toEqual('id');
+  //   });
+  // });
 });

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { rational } from '~/rational/rational';
 import { setInputs } from '~/tests/utils';
 
 import { BeltSelect } from './belt-select';
@@ -30,6 +31,31 @@ describe('BeltSelect', () => {
       setInputs(fixture, { value: {} });
       component.open();
       expect(component.editValue.set).toHaveBeenCalled();
+    });
+  });
+
+  describe('save', () => {
+    it('should call setValue if the editValue is defined', () => {
+      spyOn(component, 'setValue');
+      component.save();
+      expect(component.setValue).not.toHaveBeenCalled();
+      component.editValue.set({} as any);
+      component.save();
+      expect(component.setValue).toHaveBeenCalled();
+    });
+  });
+
+  describe('setStack', () => {
+    it('should update the stack value', () => {
+      component.setStack(rational.one);
+      expect(component.editValue()?.stack).toEqual(rational.one);
+    });
+  });
+
+  describe('setBelt', () => {
+    it('should update the beltId value', () => {
+      component.setBelt('id');
+      expect(component.editValue()?.beltId).toEqual('id');
     });
   });
 });
