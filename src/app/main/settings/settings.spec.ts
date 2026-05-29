@@ -26,7 +26,7 @@ describe('Settings', () => {
 
   describe('miningSpeed', () => {
     it('should return the mining bonus plus 100', () => {
-      expect(component['miningSpeed']().eq(rational(100n))).toBeTrue();
+      expect(component['miningSpeed']().eq(rational(140n))).toBeTrue();
     });
   });
 
@@ -45,15 +45,15 @@ describe('Settings', () => {
       expect(component['settingsStore'].updateField).toHaveBeenCalledWith(
         'machineRankIds',
         [
-          ItemId.AssemblingMachine3,
-          ItemId.ElectricFurnace,
           ItemId.ElectricMiningDrill,
+          ItemId.ElectricFurnace,
+          ItemId.AssemblingMachine3,
           ItemId.AssemblingMachine2,
         ],
         [
-          ItemId.AssemblingMachine3,
-          ItemId.ElectricFurnace,
           ItemId.ElectricMiningDrill,
+          ItemId.ElectricFurnace,
+          ItemId.AssemblingMachine3,
         ],
       );
     });
@@ -68,12 +68,12 @@ describe('Settings', () => {
         [
           ItemId.AssemblingMachine2,
           ItemId.ElectricFurnace,
-          ItemId.ElectricMiningDrill,
+          ItemId.AssemblingMachine3,
         ],
         [
-          ItemId.AssemblingMachine3,
-          ItemId.ElectricFurnace,
           ItemId.ElectricMiningDrill,
+          ItemId.ElectricFurnace,
+          ItemId.AssemblingMachine3,
         ],
       );
     });
@@ -87,13 +87,13 @@ describe('Settings', () => {
         'machineRankIds',
         [
           ItemId.ElectricFurnace,
-          ItemId.AssemblingMachine3,
           ItemId.ElectricMiningDrill,
+          ItemId.AssemblingMachine3,
         ],
         [
-          ItemId.AssemblingMachine3,
-          ItemId.ElectricFurnace,
           ItemId.ElectricMiningDrill,
+          ItemId.ElectricFurnace,
+          ItemId.AssemblingMachine3,
         ],
       );
     });
@@ -125,11 +125,11 @@ describe('Settings', () => {
       component.removeMachine(ItemId.AssemblingMachine3);
       expect(component['settingsStore'].updateField).toHaveBeenCalledWith(
         'machineRankIds',
-        [ItemId.ElectricFurnace, ItemId.ElectricMiningDrill],
+        [ItemId.ElectricMiningDrill, ItemId.ElectricFurnace],
         [
-          ItemId.AssemblingMachine3,
-          ItemId.ElectricFurnace,
           ItemId.ElectricMiningDrill,
+          ItemId.ElectricFurnace,
+          ItemId.AssemblingMachine3,
         ],
       );
     });

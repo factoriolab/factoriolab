@@ -41,7 +41,7 @@ describe('ItemDetail', () => {
       const recipes = component['recipes']();
       expect(recipes.producedBy.length).toEqual(1);
       expect(recipes.consumedBy.length).toEqual(1);
-      expect(recipes.producible.length).toEqual(170);
+      expect(recipes.producible.length).toEqual(178);
       expect(recipes.unlocked).toBeUndefined();
       setInputs(fixture, { id: ItemId.SteelProcessing });
       await TestBed.inject(ApplicationRef).whenStable();

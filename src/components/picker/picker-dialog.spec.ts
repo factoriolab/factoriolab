@@ -152,7 +152,7 @@ describe('PickerDialog', () => {
   describe('selectedCategory', () => {
     it('should preserve the last value used in this instance', () => {
       component['selectedCategory'].set('combat');
-      component['filter'].set('pistol');
+      component['filter'].set('gun');
       expect(component['selectedCategory']()).toEqual('combat');
     });
   });
