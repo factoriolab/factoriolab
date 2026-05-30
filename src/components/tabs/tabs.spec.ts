@@ -1,22 +1,25 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { Tabs } from './tabs';
+import { setInputs } from '~/tests/utils';
 
-// describe('Tabs', () => {
-//   let component: Tabs;
-//   let fixture: ComponentFixture<Tabs>;
+import { Tabs } from './tabs';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [Tabs],
-//     }).compileComponents();
+describe('Tabs', () => {
+  let component: Tabs;
+  let fixture: ComponentFixture<Tabs>;
 
-//     fixture = TestBed.createComponent(Tabs);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Tabs],
+    }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    fixture = TestBed.createComponent(Tabs);
+    setInputs(fixture, { tabs: [] });
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
