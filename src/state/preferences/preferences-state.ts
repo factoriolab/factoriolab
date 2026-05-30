@@ -3,11 +3,8 @@ import { Language } from '~/translate/language';
 
 import { StepDetailSection } from '../objectives/step-detail-section';
 import { ColumnsState, initialColumnsState } from './columns-state';
-import { FlowDiagram } from './flow-diagram';
-import { FlowSettings } from './flow-settings';
-import { LinkValue } from './link-value';
+import { FlowSettings, initialFlowSettings } from './flow-settings';
 import { PowerUnit } from './power-unit';
-import { SankeyAlign } from './sankey-align';
 
 export interface PreferencesState {
   states: Record<string, Record<string, string>>;
@@ -35,14 +32,7 @@ export const initialPreferencesState: PreferencesState = {
   showTechLabels: false,
   paused: false,
   convertObjectiveValues: false,
-  flowSettings: {
-    diagram: FlowDiagram.Sankey,
-    linkSize: LinkValue.Items,
-    linkText: LinkValue.Items,
-    sankeyAlign: SankeyAlign.Justify,
-    elkAlgorithm: 'layered',
-    hideExcluded: false,
-  },
+  flowSettings: initialFlowSettings,
   sections: {
     sources: true,
     destinations: true,

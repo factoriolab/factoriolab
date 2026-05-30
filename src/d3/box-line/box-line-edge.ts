@@ -6,7 +6,7 @@ import { num } from '../helpers';
 import { BoxEdge, BoxNode } from './models';
 
 export function boxEdgeLine(
-  offset = 5,
+  offset: number,
   forceLtr = false,
 ): (e: BoxEdge) => string | null {
   const generator = line();
@@ -88,7 +88,7 @@ function getEndPoint(
   return getOffset(intersect, source, offset);
 }
 
-function getOffset(
+export function getOffset(
   intersect: [number, number],
   source: [number, number],
   offset: number,
@@ -106,7 +106,7 @@ function getOffset(
   return [nx, ny];
 }
 
-function getIntersect(
+export function getIntersect(
   source: [number, number],
   target: [number, number],
   node: BoxNode,

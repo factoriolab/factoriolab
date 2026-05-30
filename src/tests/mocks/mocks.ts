@@ -6,11 +6,14 @@ import { Node } from '~/flow/node';
 import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { isRecipeObjective } from '~/state/objectives/objective';
+import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { Dataset } from '~/state/settings/dataset';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { spread } from '~/utils/object';
 
+import { ItemId } from '../item-id';
+import { RecipeId } from '../recipe-id';
 import { mockModData, mockModHash, mockModInfo } from './data';
 import {
   mockObjective1,
@@ -20,8 +23,9 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class Mocks {
-  private readonly settingsStore = inject(SettingsStore);
-  private readonly recipesStore = inject(RecipesStore);
+  readonly settingsStore = inject(SettingsStore);
+  readonly recipesStore = inject(RecipesStore);
+  readonly preferencesStore = inject(PreferencesStore);
 
   readonly flow = computed<FlowData>(() => {
     const data = this.settingsStore.dataset();
@@ -48,13 +52,14 @@ export class Mocks {
       return result;
     }
 
-    function link(source: string, target: string): Link {
+    function link(source: string, target: string, bidi?: boolean): Link {
       return {
         text: `${source}-${target}`,
         color: 'black',
         source,
         target,
         value: 1,
+        bidi,
       };
     }
 
@@ -75,7 +80,7 @@ export class Mocks {
         link('r|1', 'r|2'),
         link('r|2', 'r|2'),
         link('r|2', 'o|3'),
-        link('r|2', 's|4'),
+        link('r|2', 's|4', true),
       ],
     };
   });
@@ -126,6 +131,67 @@ export class Mocks {
     };
   });
   readonly steps = computed(() => [this.step1(), this.step2()]);
+  readonly lightOilSteps = computed((): Step[] => {
+    const recipesState = this.recipesStore.settings();
+    return [
+      {
+        id: '0',
+        itemId: ItemId.LightOil,
+        items: rational(60n),
+        output: rational(60n),
+        machines: rational(1n, 51n),
+        recipeId: RecipeId.HeavyOilCracking,
+        recipeSettings: recipesState[RecipeId.HeavyOilCracking],
+        parents: {
+          '': rational.one,
+        },
+        outputs: { [ItemId.LightOil]: rational(5n, 17n) },
+      },
+      {
+        id: '3',
+        itemId: ItemId.HeavyOil,
+        items: rational(4000n, 17n),
+        machines: rational(4n, 51n),
+        recipeId: RecipeId.AdvancedOilProcessing,
+        recipeSettings: recipesState[RecipeId.AdvancedOilProcessing],
+        parents: { '0': rational.one },
+        outputs: {
+          [ItemId.HeavyOil]: rational.one,
+          [ItemId.LightOil]: rational(12n, 17n),
+          [ItemId.PetroleumGas]: rational.one,
+        },
+      },
+      {
+        id: '2',
+        itemId: ItemId.CrudeOil,
+        items: rational(1600n, 17n),
+        machines: rational(8n, 51n),
+        recipeId: RecipeId.CrudeOil,
+        recipeSettings: recipesState[RecipeId.CrudeOil],
+        parents: { '3': rational.one },
+        outputs: { [ItemId.CrudeOil]: rational.one },
+      },
+      {
+        id: '4',
+        itemId: ItemId.PetroleumGas,
+        items: rational(880n, 17n),
+        surplus: rational(880n, 17n),
+      },
+      {
+        id: '1',
+        itemId: ItemId.Water,
+        items: rational(1100n, 17n),
+        machines: rational(11n, 12240n),
+        recipeId: RecipeId.Water,
+        recipeSettings: recipesState[RecipeId.Water],
+        outputs: { [ItemId.Water]: rational.one },
+        parents: {
+          '0': rational(3n, 11n),
+          '1': rational(8n, 11n),
+        },
+      },
+    ];
+  });
 
   getDataset(): Dataset {
     return this.settingsStore.computeDataset(

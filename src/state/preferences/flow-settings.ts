@@ -11,3 +11,12 @@ export interface FlowSettings {
   hideExcluded: boolean;
   elkAlgorithm: ElkAlgorithm;
 }
+
+export const initialFlowSettings: FlowSettings = {
+  diagram: FlowDiagram.Sankey,
+  linkSize: LinkValue.Items,
+  linkText: LinkValue.Items,
+  sankeyAlign: SankeyAlign.Justify,
+  hideExcluded: false,
+  elkAlgorithm: 'layered',
+};

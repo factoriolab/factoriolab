@@ -48,11 +48,11 @@ export class FlowBuilder {
     );
   });
 
-  recipeStepNodeType(step: Step): string {
+  private recipeStepNodeType(step: Step): string {
     return step.recipeObjectiveId ? 'm' : 'r';
   }
 
-  buildGraph(
+  private buildGraph(
     steps: Step[],
     suffix: string,
     settings: Settings,
@@ -300,7 +300,7 @@ export class FlowBuilder {
     return flow;
   }
 
-  stepLinkValue(step: Step, prop: LinkValue): Rational {
+  private stepLinkValue(step: Step, prop: LinkValue): Rational {
     if (prop === LinkValue.None || prop === LinkValue.Percent)
       return rational.one;
 
@@ -316,7 +316,7 @@ export class FlowBuilder {
     }
   }
 
-  linkSize(
+  private linkSize(
     value: Rational,
     percent: Rational,
     prop: LinkValue,
@@ -333,7 +333,7 @@ export class FlowBuilder {
     return value.mul(percent).toNumber() || MIN_LINK_VALUE;
   }
 
-  linkText(
+  private linkText(
     value: Rational,
     percent: Rational,
     prop: LinkValue,
@@ -356,7 +356,7 @@ export class FlowBuilder {
     }
   }
 
-  linkPrecision(prop: LinkValue, columns: ColumnsState): number | null {
+  private linkPrecision(prop: LinkValue, columns: ColumnsState): number | null {
     switch (prop) {
       case LinkValue.None:
       case LinkValue.Percent:

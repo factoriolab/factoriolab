@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { select } from 'd3';
 
 import { FlowDiagram } from '~/state/preferences/flow-diagram';
-import { mockFlowSettings } from '~/tests/mocks/flow';
+import { initialFlowSettings } from '~/state/preferences/flow-settings';
 import { Mocks } from '~/tests/mocks/mocks';
 import { TestModule } from '~/tests/test-module';
 import {
@@ -38,17 +38,17 @@ describe('Flow', () => {
   describe('rebuildChart', () => {
     it('should call to rebuild the sankey', async () => {
       spyOn(component, 'rebuildSankey');
-      await component.rebuildChart(mocks.flow(), mockFlowSettings);
+      await component.rebuildChart(mocks.flow(), initialFlowSettings);
       expect(component.rebuildSankey).toHaveBeenCalledWith(
         mocks.flow(),
-        mockFlowSettings,
+        initialFlowSettings,
       );
     });
 
     it('should call to rebuild the box-line', async () => {
       spyOn(component, 'rebuildBoxLine');
       const flow = mocks.flow();
-      const flowSettings = spread(mockFlowSettings, {
+      const flowSettings = spread(initialFlowSettings, {
         diagram: FlowDiagram.BoxLine,
       });
       await component.rebuildChart(flow, flowSettings);
@@ -59,7 +59,7 @@ describe('Flow', () => {
   describe('rebuildSankey', () => {
     beforeEach(() => {
       select(`#${SVG_ID} > *`).remove();
-      component.rebuildSankey(mocks.flow(), mockFlowSettings);
+      component.rebuildSankey(mocks.flow(), initialFlowSettings);
     });
 
     it('should build the sankey', () => {
@@ -97,7 +97,7 @@ describe('Flow', () => {
     });
 
     it('should build the box-line', async () => {
-      await component.rebuildBoxLine(mocks.flow(), mockFlowSettings);
+      await component.rebuildBoxLine(mocks.flow(), initialFlowSettings);
       const gElements = document.getElementsByTagName('g');
       expect(gElements.length).toEqual(8);
     });
@@ -106,13 +106,13 @@ describe('Flow', () => {
       spyOn(component['elk'], 'layout').and.returnValue(
         Promise.resolve({ children: [], edges: [], width: 1 }),
       );
-      await component.rebuildBoxLine(mocks.flow(), mockFlowSettings);
+      await component.rebuildBoxLine(mocks.flow(), initialFlowSettings);
       const gElements = document.getElementsByTagName('g');
       expect(gElements.length).toEqual(0);
     });
 
     it('should handle drag and drop', async () => {
-      await component.rebuildBoxLine(mocks.flow(), mockFlowSettings);
+      await component.rebuildBoxLine(mocks.flow(), initialFlowSettings);
       assert(component['svg'] != null);
       const movingEl = component['svg'].select('svg');
       const x = movingEl.attr('x');
@@ -123,20 +123,20 @@ describe('Flow', () => {
     });
 
     it('should handle zoom', async () => {
-      await component.rebuildBoxLine(mocks.flow(), mockFlowSettings);
+      await component.rebuildBoxLine(mocks.flow(), initialFlowSettings);
       zoomSelector(fixture, '#lab-flow-svg > svg', 500);
       assert(component['svg'] != null);
       expect(component['svg'].select('svg > g').attr('transform')).toBeTruthy();
     });
 
     it('should set selectedId when a rect is clicked', async () => {
-      await component.rebuildBoxLine(mocks.flow(), mockFlowSettings);
+      await component.rebuildBoxLine(mocks.flow(), initialFlowSettings);
       altClickSelector(fixture, '#lab-flow-svg svg svg');
       expect(component['selectedId']()).toEqual(mocks.flow().nodes[0].stepId);
     });
 
     it('should not set selectedId when default is prevented', async () => {
-      await component.rebuildBoxLine(mocks.flow(), mockFlowSettings);
+      await component.rebuildBoxLine(mocks.flow(), initialFlowSettings);
       spyOn(component['selectedId'], 'set');
       altClickSelector(fixture, '#lab-flow-svg svg svg', 0, true);
       expect(component['selectedId'].set).not.toHaveBeenCalled();
