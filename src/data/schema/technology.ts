@@ -5,7 +5,7 @@ export interface TechnologyJson {
 
   /** Belt stack size bonus */
   beltStack?: number;
-  /** TODO Inserter stack size bonuses */
+  /** Inserter stack size bonuses */
   inserterStack?: { value: number; category?: string }[];
   /** Mining productivity bonus (%) */
   miningProductivity?: number;
