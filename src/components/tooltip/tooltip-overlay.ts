@@ -5,7 +5,6 @@ import {
   computed,
   DestroyRef,
   inject,
-  OnInit,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -108,7 +107,7 @@ const nub = cva(
     '[class]': 'hostClass()',
   },
 })
-export class TooltipOverlay implements OnInit {
+export class TooltipOverlay {
   private readonly destroyRef = inject(DestroyRef);
   protected readonly adjustment = inject(Adjustment);
   protected readonly recipesStore = inject(RecipesStore);
@@ -144,7 +143,7 @@ export class TooltipOverlay implements OnInit {
     return undefined;
   });
 
-  ngOnInit(): void {
+  constructor() {
     this.tooltipData.positionChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((p) => {

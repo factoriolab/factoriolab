@@ -127,7 +127,7 @@ export class Tooltip implements OnDestroy {
   }
 
   cancelTouch(): void {
-    clearTimeout(this.touchTimer);
+    window.clearTimeout(this.touchTimer);
   }
 
   hide(): void {
