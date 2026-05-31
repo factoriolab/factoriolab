@@ -13,6 +13,7 @@ export enum RecipeId {
   CopperOre = 'copper-ore',
   CopperPlate = 'copper-plate',
   CrudeOil = 'crude-oil',
+  DepletedUraniumFuelCell = 'depleted-uranium-fuel-cell',
   ElectronicCircuit = 'electronic-circuit',
   Electronics = 'electronics',
   FirearmMagazine = 'firearm-magazine',
@@ -36,7 +37,6 @@ export enum RecipeId {
   SteelPlate = 'steel-plate',
   TransportBelt = 'transport-belt',
   UraniumProcessing = 'uranium-processing',
-  UsedUpUraniumFuelCell = 'used-up-uranium-fuel-cell',
   Water = 'water',
   WoodenChest = 'wooden-chest',
 }

@@ -378,7 +378,7 @@ export class Adjustment {
             }
 
             // Don't go past unlocked quality level
-            if (settings.quality === quality) break;
+            if (settings.quality.level === quality.level) break;
           }
         }
       }

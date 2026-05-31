@@ -557,7 +557,7 @@ describe('Solver', () => {
       ]);
     });
 
-    it('should include recipe objective output a new step', () => {
+    it('should include recipe objective output in a new step', () => {
       const solution: any = {
         surplus: {},
         unproduceable: { [ItemId.PiercingRoundsMagazine]: rational.one },
@@ -572,7 +572,7 @@ describe('Solver', () => {
         {
           id: '0',
           itemId: ItemId.PiercingRoundsMagazine,
-          items: rational(33n, 10n),
+          items: rational(62n, 15n),
         },
       ]);
     });

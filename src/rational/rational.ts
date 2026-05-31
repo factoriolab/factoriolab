@@ -188,7 +188,7 @@ export class Rational {
 
   /**
    * Converts rational to string
-   * * Default: Use decimals if 2 or less, use num/den otherwise
+   * * Default: Use decimals if 3 or less, use num/den otherwise
    * * Custom:
    *   * Specify null to use mixed fraction
    *   * Specify number to specify number of decimals
@@ -196,8 +196,8 @@ export class Rational {
   toString(precision?: number | null): string {
     if (precision) return this.toPrecision(precision).toString();
 
-    const compare = this.toNumber() * 100;
-    if (precision === null || Math.floor(compare) !== compare)
+    const number = this.toNumber();
+    if (precision === null || Number(number.toFixed(3)) !== number)
       return this.toFraction(precision !== undefined);
 
     return this.toNumber().toString();
