@@ -2,6 +2,7 @@ import { rational } from '~/rational/rational';
 import { ObjectiveBase, ObjectiveState } from '~/state/objectives/objective';
 import { ObjectiveType } from '~/state/objectives/objective-type';
 import { ObjectiveUnit } from '~/state/objectives/objective-unit';
+import { toRecord } from '~/utils/record';
 
 import { ItemId } from '../item-id';
 import { RecipeId } from '../recipe-id';
@@ -78,3 +79,4 @@ export const mockObjectivesList = [
   mockObjective7,
   mockObjective8,
 ];
+export const mockObjectivesState = toRecord(mockObjectivesList);

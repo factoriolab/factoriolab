@@ -10,7 +10,10 @@ export type RecursivePartial<T> = { [P in keyof T]?: RecursivePartial<T[P]> };
  * Compares an array with a default array. If it differs from the default,
  * returns the value, otherwise returns undefined.
  */
-function compareRank(value: string[], def: string[]): string[] | undefined {
+export function compareRank(
+  value: string[],
+  def: string[],
+): string[] | undefined {
   if (value.length === def.length && value.every((v, i) => v === def[i]))
     return undefined;
 
