@@ -9,6 +9,7 @@ import { Adjustment } from '~/state/adjustment';
 import { ItemsStore } from '~/state/items/items-store';
 import { isRecipeObjective } from '~/state/objectives/objective';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
+import { RecipeSettings } from '~/state/recipes/recipe-settings';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { AdjustedDataset, Dataset } from '~/state/settings/dataset';
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -22,6 +23,7 @@ import {
   mockObjective2,
   mockObjectivesList,
 } from './objective';
+import { mockRecipeSettings } from './recipe';
 
 @Injectable({ providedIn: 'root' })
 export class Mocks {
@@ -195,6 +197,13 @@ export class Mocks {
         },
       },
     ];
+  });
+  readonly recipeSettings = computed(() => {
+    const dataset = this.settingsStore.dataset();
+    const recipesState: Record<string, RecipeSettings> = {};
+    for (const recipe of dataset.recipeIds.map((i) => dataset.recipeRecord[i]))
+      recipesState[recipe.id] = spread(mockRecipeSettings);
+    return recipesState;
   });
 
   getDataset(): Dataset {
