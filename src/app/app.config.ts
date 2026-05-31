@@ -18,6 +18,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { loadModule } from 'glpk-ts';
 
 import { Dialog } from '~/components/dialog/dialog';
+import { SIMPLEX_CONFIG } from '~/solver/simplex-config';
 import { Translate } from '~/translate/translate';
 
 import { routes } from './app.routes';
@@ -62,5 +63,9 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
+    {
+      provide: SIMPLEX_CONFIG,
+      useFactory: () => (isDevMode() ? {} : { msgLevel: 'off' }),
+    },
   ],
 };

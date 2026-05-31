@@ -87,7 +87,14 @@
             "karmaConfig": "karma.conf.js",
             "codeCoverage": true,
             "codeCoverageExclude": ["src/tests/**/*"],
-            "assets": [{ "glob": "**/*", "input": "public" }],
+            "assets": [
+              { "glob": "**/*", "input": "public" },
+              {
+                "glob": "glpk.all.wasm",
+                "input": "node_modules/glpk-wasm/dist/",
+                "output": "/assets/glpk-wasm/"
+              }
+            ],
             "styles": ["src/styles.css"]
           }
         },

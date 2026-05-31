@@ -7,6 +7,7 @@ import {
   mockObjective5,
   mockObjectiveBase,
 } from '~/tests/mocks/objective';
+import { TestModule } from '~/tests/test-module';
 
 import { Objectives } from './objectives';
 
@@ -16,7 +17,7 @@ describe('Objectives', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Objectives],
+      imports: [TestModule, Objectives],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Objectives);

@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { FastAverageColorResult } from 'fast-average-color';
 
+import { SIMPLEX_CONFIG } from '~/solver/simplex-config';
 import { Preset } from '~/state/settings/preset';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { Translate } from '~/translate/translate';
@@ -47,6 +48,7 @@ import { mockLangData, mockModData, mockModHash } from './mocks/data';
         return translate;
       },
     },
+    { provide: SIMPLEX_CONFIG, useValue: { msgLevel: 'off' } },
   ],
 })
 export class TestModule {}

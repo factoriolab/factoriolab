@@ -1,11 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
+import { TestModule } from '~/tests/test-module';
+
 import { StepHrefPipe } from './step-href-pipe';
 
 describe('StepHrefPipe', () => {
   let pipe: StepHrefPipe;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [TestModule] });
     TestBed.runInInjectionContext(() => {
       pipe = new StepHrefPipe();
     });

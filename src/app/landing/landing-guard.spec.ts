@@ -5,6 +5,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
 import { MockComponent } from '~/tests/mocks/component';
+import { TestModule } from '~/tests/test-module';
 
 import { landingGuard } from './landing-guard';
 
@@ -15,6 +16,7 @@ describe('landingGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       providers: [
         provideRouter([
           {

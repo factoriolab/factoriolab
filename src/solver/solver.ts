@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   Constraint,
   ConstraintProperties,
@@ -29,7 +29,7 @@ import { contains } from '~/utils/record';
 
 import { GlpkResult } from './glpk-result';
 import { ItemValues } from './item-values';
-import { simplexConfig } from './simplex-config';
+import { SIMPLEX_CONFIG } from './simplex-config';
 import { SimplexResult } from './simplex-result';
 import { SimplexSolution } from './simplex-solution';
 import { SimplexState } from './simplex-state';
@@ -37,6 +37,8 @@ import { Step } from './step';
 
 @Injectable({ providedIn: 'root' })
 export class Solver {
+  private readonly simplexConfig = inject<Simplex.Options>(SIMPLEX_CONFIG);
+
   solve(
     objectives: ObjectiveState[],
     settings: Settings,
@@ -714,7 +716,7 @@ export class Solver {
 
   /** Simplex method wrapper mainly for test mocking */
   private glpkSimplex(model: Model): [Simplex.ReturnCode, Status] {
-    const returnCode = model.simplex(simplexConfig);
+    const returnCode = model.simplex(this.simplexConfig);
     return [returnCode, model.status];
   }
   //#endregion

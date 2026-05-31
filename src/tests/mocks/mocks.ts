@@ -5,10 +5,12 @@ import { Link } from '~/flow/link';
 import { Node } from '~/flow/node';
 import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
+import { Adjustment } from '~/state/adjustment';
+import { ItemsStore } from '~/state/items/items-store';
 import { isRecipeObjective } from '~/state/objectives/objective';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RecipesStore } from '~/state/recipes/recipes-store';
-import { Dataset } from '~/state/settings/dataset';
+import { AdjustedDataset, Dataset } from '~/state/settings/dataset';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { spread } from '~/utils/object';
 
@@ -23,9 +25,11 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class Mocks {
+  readonly adjustment = inject(Adjustment);
   readonly settingsStore = inject(SettingsStore);
   readonly recipesStore = inject(RecipesStore);
   readonly preferencesStore = inject(PreferencesStore);
+  readonly itemsStore = inject(ItemsStore);
 
   readonly flow = computed<FlowData>(() => {
     const data = this.settingsStore.dataset();
@@ -200,6 +204,15 @@ export class Mocks {
       mockModHash,
       undefined,
       'factorio',
+    );
+  }
+
+  getAdjustedDataset(): AdjustedDataset {
+    return this.adjustment.adjustDataset(
+      this.recipesStore.settings(),
+      this.itemsStore.settings(),
+      this.settingsStore.settings(),
+      this.getDataset(),
     );
   }
 }

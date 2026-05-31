@@ -6,7 +6,10 @@ import { initialColumnsState } from '~/state/preferences/columns-state';
 import { initialFlowSettings } from '~/state/preferences/flow-settings';
 import { LinkValue } from '~/state/preferences/link-value';
 import { initialPreferencesState } from '~/state/preferences/preferences-state';
+import { ItemId } from '~/tests/item-id';
 import { Mocks } from '~/tests/mocks/mocks';
+import { mockUncommonQualityJson } from '~/tests/mocks/quality';
+import { RecipeId } from '~/tests/recipe-id';
 import { TestModule } from '~/tests/test-module';
 import { spread } from '~/utils/object';
 
@@ -105,6 +108,65 @@ describe('FlowService', () => {
 
       expect(result.nodes.length).toEqual(7);
       expect(result.links.length).toEqual(7);
+    });
+
+    it('should hide excluded items if specified', () => {
+      const result = service['buildGraph'](
+        mocks.lightOilSteps(),
+        '/m',
+        {
+          ...mocks.settingsStore.settings(),
+          excludedItemIds: new Set([ItemId.Water]),
+        },
+        {
+          ...mocks.preferencesStore.state(),
+          flowSettings: { ...initialFlowSettings, hideExcluded: true },
+        },
+        {},
+        mocks.recipesStore.adjustedDataset(),
+      );
+
+      expect(result.nodes.length).toEqual(6);
+      expect(result.links.length).toEqual(5);
+    });
+
+    it('should include quality icons', () => {
+      const data = mocks.getAdjustedDataset();
+      data.iconRecord.item[ItemId.Water].quality = mockUncommonQualityJson;
+      data.iconRecord.item[ItemId.OffshorePump].quality =
+        mockUncommonQualityJson;
+      data.iconRecord.recipe[RecipeId.Water].quality = mockUncommonQualityJson;
+
+      data.iconRecord.quality[mockUncommonQualityJson.id] = 'test' as any;
+      const result = service['buildGraph'](
+        mocks.lightOilSteps(),
+        '/m',
+        mocks.settingsStore.settings(),
+        mocks.preferencesStore.state(),
+        {},
+        data,
+      );
+
+      expect(result.nodes[6].qualityIcon).toEqual('test' as any);
+      expect(result.nodes[6].recipeQualityIcon).toEqual('test' as any);
+    });
+
+    it('should handle a missing machine', () => {
+      const steps = mocks
+        .lightOilSteps()
+        .map((s) => (s.id === '1' ? { ...s, recipeSettings: undefined } : s));
+
+      const result = service['buildGraph'](
+        steps,
+        '/m',
+        mocks.settingsStore.settings(),
+        mocks.preferencesStore.state(),
+        {},
+        mocks.recipesStore.adjustedDataset(),
+      );
+
+      expect(result.nodes.length).toEqual(7);
+      expect(result.links.length).toEqual(8);
     });
   });
 

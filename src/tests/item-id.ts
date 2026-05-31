@@ -39,6 +39,7 @@ export enum ItemId {
   MiningDrill = 'mining-drill',
   MiningMachine = 'mining-machine',
   MiningProductivity = 'mining-productivity-4',
+  OffshorePump = 'offshore-pump',
   OilRefinery = 'oil-refinery',
   PetroleumGas = 'petroleum-gas',
   PiercingRoundsMagazine = 'piercing-rounds-magazine',

@@ -111,6 +111,10 @@ describe('Rational', () => {
     it('should multiply two rationals', () => {
       expect(new Rational(2n).mul(new Rational(2n))).toEqual(new Rational(4n));
     });
+
+    it('should return early for multiplication by zero', () => {
+      expect(new Rational(0n).mul(new Rational(3n))).toEqual(new Rational(0n));
+    });
   });
 
   describe('div', () => {
@@ -162,6 +166,18 @@ describe('Rational', () => {
     it('should deterine absolute value', () => {
       expect(rational(2).abs()).toEqual(new Rational(2n));
       expect(rational(-2).abs()).toEqual(new Rational(2n));
+    });
+  });
+
+  describe('pow', () => {
+    it('should use Math.pow and convert back to rational', () => {
+      expect(new Rational(2n).pow(2)).toEqual(new Rational(4n));
+    });
+  });
+
+  describe('simplify', () => {
+    it('should convert to JavaScript number and back to rational', () => {
+      expect(new Rational(1n, 3n).simplify()).toEqual(new Rational(1n, 3n));
     });
   });
 

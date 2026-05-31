@@ -3,6 +3,7 @@ import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { MockComponent } from '~/tests/mocks/component';
+import { TestModule } from '~/tests/test-module';
 
 import { idGuard } from './id-guard';
 
@@ -11,6 +12,7 @@ describe('idGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       providers: [
         provideRouter([
           {
