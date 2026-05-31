@@ -1,20 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AdjustedRecipe } from '~/data/schema/recipe';
+import { AdjustedRecipe, Recipe, RecipeFlag } from '~/data/schema/recipe';
 import { rational } from '~/rational/rational';
 import { ItemId } from '~/tests/item-id';
 import { Mocks } from '~/tests/mocks/mocks';
 import { mockModuleEffects } from '~/tests/mocks/module';
+import { mockObjective1 } from '~/tests/mocks/objective';
 import { RecipeId } from '~/tests/recipe-id';
 import { TestModule } from '~/tests/test-module';
 import { spread } from '~/utils/object';
 
 import { Adjustment } from './adjustment';
 import { ItemsStore } from './items/items-store';
+import { MachinesStore } from './machines/machines-store';
 import { ObjectiveState } from './objectives/objective';
 import { ObjectiveType } from './objectives/objective-type';
 import { ObjectiveUnit } from './objectives/objective-unit';
 import { RecipesStore } from './recipes/recipes-store';
+import { initialSettingsState } from './settings/settings-state';
 import { SettingsStore } from './settings/settings-store';
 
 describe('Adjustment', () => {
@@ -22,6 +25,7 @@ describe('Adjustment', () => {
   let recipesStore: RecipesStore;
   let itemsStore: ItemsStore;
   let settingsStore: SettingsStore;
+  let machinesStore: MachinesStore;
   let mocks: Mocks;
 
   beforeEach(() => {
@@ -30,6 +34,7 @@ describe('Adjustment', () => {
     recipesStore = TestBed.inject(RecipesStore);
     itemsStore = TestBed.inject(ItemsStore);
     settingsStore = TestBed.inject(SettingsStore);
+    machinesStore = TestBed.inject(MachinesStore);
     mocks = TestBed.inject(Mocks);
   });
 
@@ -977,6 +982,157 @@ describe('Adjustment', () => {
       expect(service.adjustRecipe).toHaveBeenCalledTimes(
         recipesStore.adjustedDataset().recipeIds.length,
       );
+    });
+  });
+
+  describe('adjustCosts', () => {
+    let adjustedRecipe: Record<string, Recipe>;
+
+    beforeEach(() => {
+      adjustedRecipe = service.adjustRecipes(
+        recipesStore.settings(),
+        itemsStore.settings(),
+        settingsStore.settings(),
+        recipesStore.adjustedDataset(),
+      );
+    });
+
+    it('should apply an overridden cost', () => {
+      const recipeSettings = spread(recipesStore.settings(), {
+        [RecipeId.Coal]: spread(recipesStore.settings()[RecipeId.Coal], {
+          cost: rational(2n),
+        }),
+      });
+      service.adjustCosts(
+        adjustedRecipe,
+        recipeSettings,
+        initialSettingsState.costs,
+        recipesStore.adjustedDataset(),
+      );
+      expect(adjustedRecipe[RecipeId.Coal].cost).toEqual(rational(2n));
+    });
+
+    it('should apply normal recipe and machine costs', () => {
+      service.adjustCosts(
+        adjustedRecipe,
+        recipesStore.settings(),
+        initialSettingsState.costs,
+        recipesStore.adjustedDataset(),
+      );
+      expect(adjustedRecipe[RecipeId.Coal].cost).toEqual(rational(8143n, 20n));
+      expect(adjustedRecipe[RecipeId.CopperCable].cost).toEqual(rational(9n));
+    });
+
+    it('should adjust recycling cost', () => {
+      adjustedRecipe[RecipeId.Coal] = spread(adjustedRecipe[RecipeId.Coal], {
+        flags: new Set<RecipeFlag>(['recycling']),
+      });
+      service.adjustCosts(
+        adjustedRecipe,
+        recipesStore.settings(),
+        spread(initialSettingsState.costs, { recycling: rational.zero }),
+        recipesStore.adjustedDataset(),
+      );
+      expect(adjustedRecipe[RecipeId.Coal].cost).toEqual(rational.zero);
+    });
+  });
+
+  describe('finalizeData', () => {
+    it('should filter out recipe ids that are not viable', () => {
+      const adjustedRecipe = mocks.getAdjustedDataset().adjustedRecipe;
+      adjustedRecipe[RecipeId.IronOre].output = {
+        [ItemId.IronPlate]: rational(-50n),
+        [ItemId.Concrete]: rational(-50n),
+      };
+      adjustedRecipe[RecipeId.IronPlate].output = {
+        [ItemId.ElectronicCircuit]: rational(-50n),
+        [ItemId.IronPlate]: rational.one,
+      };
+      const keepSet = new Set<string>([
+        RecipeId.ElectronicCircuit,
+        RecipeId.IronOre,
+        RecipeId.IronPlate,
+        RecipeId.Concrete,
+      ]);
+      Object.keys(adjustedRecipe).forEach((k) => {
+        if (!keepSet.has(k)) delete adjustedRecipe[k];
+      });
+      const data = mocks.getDataset();
+      data.itemIds = data.itemIds.filter((i) => i !== ItemId.ElectronicCircuit);
+      data.itemIds.unshift(ItemId.ElectronicCircuit);
+      const result = service.finalizeData(
+        {},
+        adjustedRecipe,
+        settingsStore.settings(),
+        data,
+      );
+      expect(result.itemAvailableRecipeIds[ItemId.IronPlate].length).toEqual(0);
+      expect(result.itemAvailableRecipeIds[ItemId.Concrete].length).toEqual(0);
+      expect(
+        result.itemAvailableRecipeIds[ItemId.ElectronicCircuit].length,
+      ).toEqual(1);
+    });
+  });
+
+  describe('adjustObjective', () => {
+    it('should return an item objective unaltered', () => {
+      expect(
+        service.adjustObjective(
+          mockObjective1,
+          itemsStore.settings(),
+          recipesStore.settings(),
+          machinesStore.settings(),
+          settingsStore.settings(),
+          recipesStore.adjustedDataset(),
+        ),
+      ).toEqual(mockObjective1);
+    });
+
+    it('should adjust a recipe objective based on settings', () => {
+      const result = service.adjustObjective(
+        {
+          id: '1',
+          targetId: RecipeId.IronPlate,
+          value: rational.one,
+          unit: ObjectiveUnit.Machines,
+          type: ObjectiveType.Output,
+        },
+        itemsStore.settings(),
+        recipesStore.settings(),
+        machinesStore.settings(),
+        settingsStore.settings(),
+        recipesStore.adjustedDataset(),
+      );
+      expect(result.machineId).toEqual(ItemId.ElectricFurnace);
+      expect(result.moduleOptions?.length).toEqual(10);
+      expect(result.modules).toEqual([
+        { count: rational(2n), id: ItemId.ProductivityModule3 },
+      ]);
+      expect(result.beacons?.[0].count).toEqual(rational(8n));
+      expect(result.beacons?.[0].id).toEqual(ItemId.Beacon);
+      expect(result.beacons?.[0].modules).toEqual([
+        { count: rational(2n), id: ItemId.SpeedModule3 },
+      ]);
+      expect(result.overclock).toBeUndefined();
+    });
+
+    it('should use the correct fuel for a burn recipe objective', () => {
+      const result = service.adjustObjective(
+        {
+          id: '1',
+          targetId: RecipeId.DepletedUraniumFuelCell,
+          value: rational.one,
+          unit: ObjectiveUnit.Machines,
+          type: ObjectiveType.Output,
+          fuelId: ItemId.Coal,
+        },
+        itemsStore.settings(),
+        recipesStore.settings(),
+        machinesStore.settings(),
+        settingsStore.settings(),
+        recipesStore.adjustedDataset(),
+      );
+      expect(result.fuelId).toEqual(ItemId.UraniumFuelCell);
     });
   });
 });
