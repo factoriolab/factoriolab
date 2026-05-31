@@ -7,9 +7,11 @@ import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { Adjustment } from '~/state/adjustment';
 import { ItemsStore } from '~/state/items/items-store';
+import { MachinesStore } from '~/state/machines/machines-store';
 import { isRecipeObjective } from '~/state/objectives/objective';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RecipeSettings } from '~/state/recipes/recipe-settings';
+import { RecipeState } from '~/state/recipes/recipe-state';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { AdjustedDataset, Dataset } from '~/state/settings/dataset';
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -32,6 +34,7 @@ export class Mocks {
   readonly recipesStore = inject(RecipesStore);
   readonly preferencesStore = inject(PreferencesStore);
   readonly itemsStore = inject(ItemsStore);
+  readonly machinesStore = inject(MachinesStore);
 
   readonly flow = computed<FlowData>(() => {
     const data = this.settingsStore.dataset();
@@ -222,6 +225,15 @@ export class Mocks {
       this.itemsStore.settings(),
       this.settingsStore.settings(),
       this.getDataset(),
+    );
+  }
+
+  getRecipesState(): Record<string, RecipeState> {
+    return this.recipesStore.computeRecipesSettings(
+      {},
+      this.machinesStore.settings(),
+      this.settingsStore.settings(),
+      this.settingsStore.dataset(),
     );
   }
 }

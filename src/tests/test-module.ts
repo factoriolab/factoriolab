@@ -6,7 +6,6 @@ import { provideRouter } from '@angular/router';
 import { FastAverageColorResult } from 'fast-average-color';
 
 import { SIMPLEX_CONFIG } from '~/solver/simplex-config';
-import { Preset } from '~/state/settings/preset';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { Translate } from '~/translate/translate';
 import { WindowClient } from '~/utils/window-client';
@@ -31,7 +30,7 @@ import { mockLangData, mockModData, mockModHash } from './mocks/data';
       provide: SettingsStore,
       useFactory: (): SettingsStore => {
         const settingsStore = new SettingsStore();
-        settingsStore.apply({ modId: '2.0', preset: Preset.Beacon8 });
+        settingsStore.apply({ modId: '2.0', preset: 8 });
         settingsStore['modDataResource'].set(mockModData);
         settingsStore['modHashResource'].set(mockModHash);
         settingsStore['fac'].getColorAsync =

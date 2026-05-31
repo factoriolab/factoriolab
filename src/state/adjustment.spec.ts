@@ -11,6 +11,9 @@ import { spread } from '~/utils/object';
 
 import { Adjustment } from './adjustment';
 import { ItemsStore } from './items/items-store';
+import { ObjectiveState } from './objectives/objective';
+import { ObjectiveType } from './objectives/objective-type';
+import { ObjectiveUnit } from './objectives/objective-unit';
 import { RecipesStore } from './recipes/recipes-store';
 import { SettingsStore } from './settings/settings-store';
 
@@ -450,13 +453,6 @@ describe('Adjustment', () => {
 
     it('should calculate proliferator usage', () => {
       const settings = spread(recipesStore.settings()[ItemId.SteelChest], {
-        beacons: [
-          {
-            id: ItemId.Beacon,
-            count: rational(8n),
-            modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
-          },
-        ],
         modules: [{ count: rational.one, id: ItemId.ProductivityModule3 }],
       });
       const data = mocks.getDataset();
@@ -711,8 +707,16 @@ describe('Adjustment', () => {
       const data = mocks.getDataset();
       data.moduleRecord[ItemId.SpeedModule3].speed = rational.zero;
       data.moduleRecord[ItemId.SpeedModule3].quality = rational(1n, 40n);
-      data.qualityIds = ['normal', 'uncommon', 'rare', 'epic', 'legendary'];
+      data.qualityIds = [
+        'negative',
+        'normal',
+        'uncommon',
+        'rare',
+        'epic',
+        'legendary',
+      ];
       data.qualityRecord = {
+        negative: { id: 'negative', name: 'Negative', level: -1 },
         normal: { id: 'normal', name: 'Normal', level: 0 },
         uncommon: { id: 'uncommon', name: 'Uncommon', level: 1 },
         rare: { id: 'rare', name: 'Rare', level: 2 },
@@ -793,6 +797,186 @@ describe('Adjustment', () => {
         settingsStore.dataset(),
       );
       expect(result.out[ItemId.SteelPlate]).toEqual(rational(17n, 10n));
+    });
+  });
+
+  describe('adjustLaunchRecipeObjective', () => {
+    it('should skip non-launch objectives', () => {
+      const recipe = spread(
+        settingsStore.dataset().recipeRecord[RecipeId.IronPlate],
+      );
+      const time = recipe.time;
+
+      // No recipe part
+      service.adjustLaunchRecipeObjective(
+        recipe,
+        recipesStore.settings(),
+        recipesStore.adjustedDataset(),
+      );
+      expect(recipe.time).toEqual(time);
+
+      // No silo
+      recipe.part = ItemId.IronPlate;
+      service.adjustLaunchRecipeObjective(
+        recipe,
+        recipesStore.settings(),
+        recipesStore.adjustedDataset(),
+      );
+      expect(recipe.time).toEqual(time);
+
+      // No machine id
+      const settings = mocks.getRecipesState();
+      delete settings[RecipeId.IronPlate].machineId;
+      service.adjustLaunchRecipeObjective(
+        recipe,
+        settings,
+        recipesStore.adjustedDataset(),
+      );
+      expect(recipe.time).toEqual(time);
+    });
+
+    it('should adjust a launch objective based on rocket part recipe', () => {
+      const objective: ObjectiveState = {
+        id: '0',
+        targetId: RecipeId.SpaceSciencePack,
+        value: rational.one,
+        unit: ObjectiveUnit.Machines,
+        type: ObjectiveType.Output,
+      };
+      const recipe = service.adjustRecipe(
+        objective.targetId,
+        objective,
+        itemsStore.settings(),
+        settingsStore.settings(),
+        settingsStore.dataset(),
+      );
+      service.adjustLaunchRecipeObjective(
+        recipe,
+        recipesStore.settings(),
+        recipesStore.adjustedDataset(),
+      );
+      expect(recipe.time).toEqual(rational(9375n, 203n));
+    });
+  });
+
+  describe('adjustSiloRecipes', () => {
+    let adjustedRecipe: Record<string, AdjustedRecipe>;
+
+    beforeEach(() => {
+      adjustedRecipe = settingsStore
+        .dataset()
+        .recipeIds.reduce((e: Record<string, AdjustedRecipe>, i) => {
+          e[i] = service.adjustRecipe(
+            i,
+            recipesStore.settings()[i],
+            itemsStore.settings(),
+            settingsStore.settings(),
+            settingsStore.dataset(),
+          );
+          return e;
+        }, {});
+    });
+
+    it('should adjust recipes', () => {
+      const result = service.adjustSiloRecipes(
+        adjustedRecipe,
+        recipesStore.settings(),
+        settingsStore.dataset(),
+      );
+      expect(result[RecipeId.SpaceSciencePack].time).toEqual(
+        rational(9375n, 203n),
+      );
+      expect(result[RecipeId.RocketPart].time).toEqual(rational(75n, 116n));
+    });
+
+    it('should handle invalid machine', () => {
+      const settings2 = spread(recipesStore.settings(), {
+        [RecipeId.SpaceSciencePack]: {
+          machineId: 'id',
+        },
+      });
+      const result = service.adjustSiloRecipes(
+        adjustedRecipe,
+        settings2,
+        settingsStore.dataset(),
+      );
+      expect(result[RecipeId.SpaceSciencePack].time).toEqual(
+        rational(203n, 5n),
+      );
+      expect(result[RecipeId.RocketPart].time).toEqual(rational(75n, 116n));
+    });
+
+    it('should handle missing machine id', () => {
+      const settings2 = spread(recipesStore.settings(), {
+        [RecipeId.SpaceSciencePack]: {
+          machineId: '',
+        },
+      });
+      const result = service.adjustSiloRecipes(
+        adjustedRecipe,
+        settings2,
+        settingsStore.dataset(),
+      );
+      expect(result[RecipeId.SpaceSciencePack].time).toEqual(
+        rational(203n, 5n),
+      );
+      expect(result[RecipeId.RocketPart].time).toEqual(rational(75n, 116n));
+    });
+  });
+
+  describe('allowsModules', () => {
+    it('should check machine and rocket recipes', () => {
+      // Silo recipes
+      expect(
+        service.allowsModules(
+          recipesStore.adjustedDataset().recipeRecord[RecipeId.RocketPart],
+          recipesStore.adjustedDataset().machineRecord[ItemId.RocketSilo],
+        ),
+      ).toBeTrue();
+      expect(
+        service.allowsModules(
+          recipesStore.adjustedDataset().recipeRecord[
+            RecipeId.SpaceSciencePack
+          ],
+          recipesStore.adjustedDataset().machineRecord[ItemId.RocketSilo],
+        ),
+      ).toBeFalse();
+      // Normal recipes
+      expect(
+        service.allowsModules(
+          recipesStore.adjustedDataset().recipeRecord[ItemId.Coal],
+          recipesStore.adjustedDataset().machineRecord[
+            ItemId.ElectricMiningDrill
+          ],
+        ),
+      ).toBeTrue();
+      expect(
+        service.allowsModules(
+          recipesStore.adjustedDataset().recipeRecord[ItemId.Coal],
+          recipesStore.adjustedDataset().machineRecord[
+            ItemId.BurnerMiningDrill
+          ],
+        ),
+      ).toBeFalse();
+    });
+  });
+
+  xdescribe('adjustDataset', () => {
+    it('should adjust recipes and silo recipes', () => {
+      const data = recipesStore.adjustedDataset();
+      spyOn(service, 'adjustSiloRecipes').and.callThrough();
+      spyOn(service, 'adjustRecipe').and.callThrough();
+      const result = service.adjustDataset(
+        recipesStore.settings(),
+        itemsStore.settings(),
+        settingsStore.settings(),
+        data,
+      );
+      expect(result).toBeTruthy();
+      expect(service.adjustSiloRecipes).toHaveBeenCalledTimes(1);
+      expect(service.adjustRecipe).toHaveBeenCalledTimes(
+        recipesStore.adjustedDataset().recipeIds.length,
+      );
     });
   });
 });

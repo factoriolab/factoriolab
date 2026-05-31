@@ -1571,8 +1571,9 @@ async function processMod(): Promise<void> {
         if (disallowedEffects) recipe.disallowedEffects = disallowedEffects;
 
         if (id !== proto.name) {
-          recipeAliases[id] ??= [];
-          recipeAliases[id].push(id);
+          const name = proto.name;
+          recipeAliases[name] ??= [];
+          recipeAliases[name].push(id);
         }
 
         modData.recipes.push(recipe);

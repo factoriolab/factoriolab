@@ -92,7 +92,7 @@ describe('Exporter', () => {
         Machines: '=5',
         Machine: ItemId.ElectricFurnace,
         Modules: `"2 ${ItemId.ProductivityModule3}"`,
-        Beacons: `"2 ${ItemId.Beacon} (2 ${ItemId.SpeedModule3})"`,
+        Beacons: `"8 ${ItemId.Beacon} (2 ${ItemId.SpeedModule3})"`,
         Power: '=6',
         Pollution: '=7',
       });
@@ -107,7 +107,7 @@ describe('Exporter', () => {
         Recipe: recipeId,
         Machine: ItemId.ElectricFurnace,
         Modules: `"2 ${ItemId.ProductivityModule3}"`,
-        Beacons: `"2 ${ItemId.Beacon} (2 ${ItemId.SpeedModule3})"`,
+        Beacons: `"8 ${ItemId.Beacon} (2 ${ItemId.SpeedModule3})"`,
       });
     });
   });

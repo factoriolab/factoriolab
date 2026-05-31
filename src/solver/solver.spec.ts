@@ -191,7 +191,7 @@ describe('Solver', () => {
           [ItemId.SteelPlate]: { out: rational.zero },
           [ItemId.CopperPlate]: {
             out: rational.zero,
-            in: rational(423n, 200n),
+            in: rational(741n, 200n),
           },
           [ItemId.PetroleumGas]: { out: rational.zero, lim: rational(100n) },
         },
@@ -550,7 +550,7 @@ describe('Solver', () => {
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: rational(4539n, 1000n),
+          items: rational(8143n, 1000n),
           output: rational(3n),
           parents: { '': rational(3n) },
         },
@@ -572,7 +572,7 @@ describe('Solver', () => {
         {
           id: '0',
           itemId: ItemId.PiercingRoundsMagazine,
-          items: rational(62n, 15n),
+          items: rational(301n, 60n),
         },
       ]);
     });
@@ -593,7 +593,7 @@ describe('Solver', () => {
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: rational(4539n, 500n),
+          items: rational(8143n, 500n),
           surplus: rational(3n),
         },
       ]);
@@ -602,7 +602,7 @@ describe('Solver', () => {
     it('should avoid floating point errors in surpluses', () => {
       const solution: any = {
         surplus: {
-          [ItemId.Coal]: rational(4539000000001n, 500000000000n),
+          [ItemId.Coal]: rational(8143000000001n, 500000000000n),
         },
         unproduceable: {},
         excluded: {},
@@ -617,8 +617,8 @@ describe('Solver', () => {
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: rational(4539n, 500n),
-          surplus: rational(4539n, 500n),
+          items: rational(8143n, 500n),
+          surplus: rational(8143n, 500n),
         },
       ]);
     });
