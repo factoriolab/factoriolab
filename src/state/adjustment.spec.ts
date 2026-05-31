@@ -961,7 +961,7 @@ describe('Adjustment', () => {
     });
   });
 
-  xdescribe('adjustDataset', () => {
+  describe('adjustDataset', () => {
     it('should adjust recipes and silo recipes', () => {
       const data = recipesStore.adjustedDataset();
       spyOn(service, 'adjustSiloRecipes').and.callThrough();

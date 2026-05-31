@@ -1316,7 +1316,6 @@ async function processMod(): Promise<void> {
         };
 
         for (const quality of abnormalQualities) {
-          // console.log(proto.name, quality);
           const multiplier = getDefaultMultiplier(quality);
           for (const eff of Object.keys(effectPrecision) as ModuleEffect[]) {
             let value = item.module[eff] as number;
@@ -1324,7 +1323,6 @@ async function processMod(): Promise<void> {
             if (value && !filterEffect(eff, value)) {
               value = value * multiplier;
               value = Math.floor(value * precision) / precision;
-              // console.log(proto.name, eff, value, value === item.module[eff]);
               if (value !== item.module[eff]) {
                 let qualityRecord = item.module.qualityRecord;
                 if (qualityRecord == null) {
@@ -1340,7 +1338,6 @@ async function processMod(): Promise<void> {
 
                 qualityModule[eff] = value;
                 item.module.qualityRecord = qualityRecord;
-                console.log(qualityRecord);
               }
             }
           }
