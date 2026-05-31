@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { EnergyType } from '~/data/schema/energy-type';
 import { AdjustedInserter } from '~/data/schema/inserter';
 import { itemHasQuality } from '~/data/schema/item';
-import { DEFAULT_MACHINE, Machine } from '~/data/schema/machine';
+import { Machine } from '~/data/schema/machine';
 import {
   effectPrecision,
   effects,
@@ -767,13 +767,13 @@ export class Adjustment {
     );
     s.machineId = coalesce(s.machineId, s.defaultMachineId);
 
-    const machine = data.machineRecord[s.machineId] ?? DEFAULT_MACHINE;
+    const machine = data.machineRecord[s.machineId] as Machine | undefined;
     const def = machines[s.machineId];
 
     if (recipe.flags.has('burn')) {
       s.defaultFuelId = Object.keys(recipe.in)[0];
       s.fuelId = s.defaultFuelId;
-    } else if (machine.type === EnergyType.Burner) {
+    } else if (machine?.type === EnergyType.Burner) {
       s.defaultFuelId = def?.fuelId;
       s.fuelId = coalesce(s.fuelId, s.defaultFuelId);
       s.fuelOptions = def?.fuelOptions;

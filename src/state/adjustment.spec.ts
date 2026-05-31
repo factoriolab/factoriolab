@@ -16,6 +16,7 @@ import { MachinesStore } from './machines/machines-store';
 import { ObjectiveState } from './objectives/objective';
 import { ObjectiveType } from './objectives/objective-type';
 import { ObjectiveUnit } from './objectives/objective-unit';
+import { RecipeSettings } from './recipes/recipe-settings';
 import { RecipesStore } from './recipes/recipes-store';
 import { initialSettingsState } from './settings/settings-state';
 import { SettingsStore } from './settings/settings-store';
@@ -1071,6 +1072,23 @@ describe('Adjustment', () => {
       expect(
         result.itemAvailableRecipeIds[ItemId.ElectronicCircuit].length,
       ).toEqual(1);
+    });
+  });
+
+  describe('computeRecipeSettings', () => {
+    it('should remove the total field if no beacons are present', () => {
+      const settings: RecipeSettings = {
+        beacons: [{ total: rational.one, count: rational.zero }],
+        machineId: ItemId.AssemblingMachine3,
+      };
+      service.computeRecipeSettings(
+        settings,
+        settingsStore.dataset().recipeRecord[RecipeId.ElectronicCircuit],
+        machinesStore.settings(),
+        settingsStore.settings(),
+        settingsStore.dataset(),
+      );
+      expect(settings.beacons?.[0].total).toBeUndefined();
     });
   });
 

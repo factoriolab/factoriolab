@@ -76,11 +76,6 @@ export interface Machine {
   ingredientUsage?: Rational;
 }
 
-export const DEFAULT_MACHINE: Machine = {
-  speed: rational.one,
-  hideRate: true,
-};
-
 export function parseMachine(json: MachineJson): Machine;
 export function parseMachine(
   json: MachineJson | undefined,
