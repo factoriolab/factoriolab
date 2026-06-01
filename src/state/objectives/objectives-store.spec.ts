@@ -5,13 +5,20 @@ import { Step } from '~/solver/step';
 import { ItemId } from '~/tests/item-id';
 import { Mocks } from '~/tests/mocks/mocks';
 import {
+  mockObjective3,
   mockObjective5,
+  mockObjectiveBase,
   mockObjectivesList,
   mockObjectivesState,
 } from '~/tests/mocks/objective';
 import { RecipeId } from '~/tests/recipe-id';
 import { TestModule } from '~/tests/test-module';
 
+import { PowerUnit } from '../preferences/power-unit';
+import { DisplayRate } from '../settings/display-rate';
+import { ObjectiveState } from './objective';
+import { ObjectiveType } from './objective-type';
+import { ObjectiveUnit } from './objective-unit';
 import { ObjectivesStore } from './objectives-store';
 
 describe('ObjectivesStore', () => {
@@ -370,231 +377,404 @@ describe('ObjectivesStore', () => {
     });
   });
 
-  // describe('stepById', () => {
-  //   it('should create a map of step ids to steps', () => {
-  //     spyOn(service, 'steps').and.returnValue(Mocks.steps);
-  //     const result = service.stepById();
-  //     expect(Object.keys(result).length).toEqual(Mocks.steps.length);
-  //   });
-  // });
+  describe('stepRecipes', () => {
+    it('should collect recipes relevant to each step', () => {
+      const steps: Step[] = [
+        { id: '0', itemId: ItemId.ElectronicCircuit },
+        { id: '1', recipeId: ItemId.ElectronicCircuit },
+      ];
+      spyOn(service, 'steps').and.returnValue(steps);
+      const result = service.stepRecipes();
+      expect(result).toEqual({
+        '0': {
+          ids: [RecipeId.ElectronicCircuit],
+          enabledIds: [RecipeId.ElectronicCircuit],
+          options: [
+            {
+              label: 'Electronic circuit',
+              value: RecipeId.ElectronicCircuit,
+              icon: RecipeId.ElectronicCircuit,
+              iconType: 'recipe',
+              tooltip: RecipeId.ElectronicCircuit,
+              tooltipType: 'recipe',
+            },
+          ],
+        },
+        '1': {
+          ids: [RecipeId.ElectronicCircuit],
+          enabledIds: [RecipeId.ElectronicCircuit],
+          options: [
+            {
+              label: 'Electronic circuit',
+              value: RecipeId.ElectronicCircuit,
+              icon: RecipeId.ElectronicCircuit,
+              iconType: 'recipe',
+              tooltip: RecipeId.ElectronicCircuit,
+              tooltipType: 'recipe',
+            },
+          ],
+        },
+      });
+    });
+  });
 
-  // describe('stepByItemEntities', () => {
-  //   it('should create a map of item ids to steps', () => {
-  //     spyOn(service, 'steps').and.returnValue(Mocks.steps);
-  //     const result = service.stepByItemEntities();
-  //     expect(Object.keys(result).length).toEqual(Mocks.steps.length);
-  //   });
-  // });
+  describe('stepById', () => {
+    it('should create a map of step ids to steps', () => {
+      spyOn(service, 'steps').and.returnValue(mocks.steps());
+      const result = service.stepById();
+      expect(Object.keys(result).length).toEqual(mocks.steps().length);
+    });
+  });
 
-  // describe('stepTree', () => {
-  //   it('should map steps into a hierarchical tree', () => {
-  //     const steps: Step[] = [
-  //       {
-  //         id: '0',
-  //         recipeId: ItemId.PlasticBar,
-  //       },
-  //       {
-  //         id: '1',
-  //         recipeId: RecipeId.Coal,
-  //         parents: {
-  //           ['0']: rational.one,
-  //         },
-  //       },
-  //       {
-  //         id: '2',
-  //         parents: { ['1']: rational.one },
-  //       },
-  //       {
-  //         id: '3',
-  //         parents: { ['1']: rational.one },
-  //       },
-  //       {
-  //         id: '4',
-  //         parents: {
-  //           ['0']: rational.one,
-  //         },
-  //       },
-  //     ];
-  //     spyOn(service, 'steps').and.returnValue(steps);
-  //     const result = service.stepTree();
-  //     expect(result).toEqual({
-  //       ['0']: [],
-  //       ['1']: [true],
-  //       ['2']: [true, true],
-  //       ['3']: [true, false],
-  //       ['4']: [false],
-  //     });
-  //   });
-  // });
+  describe('stepByItemRecord', () => {
+    it('should create a map of item ids to steps', () => {
+      spyOn(service, 'steps').and.returnValue(mocks.steps());
+      const result = service.stepByItemRecord();
+      expect(Object.keys(result).length).toEqual(mocks.steps().length);
+    });
+  });
 
-  // describe('effectivePowerUnit', () => {
-  //   it('should calculate an auto power unit as kW', () => {
-  //     spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(
-  //       PowerUnit.Auto,
-  //     );
-  //     expect(service.effectivePowerUnit()).toEqual(PowerUnit.kW);
-  //   });
+  describe('stepTree', () => {
+    it('should map steps into a hierarchical tree', () => {
+      const steps: Step[] = [
+        {
+          id: '0',
+          recipeId: ItemId.PlasticBar,
+        },
+        {
+          id: '1',
+          recipeId: RecipeId.Coal,
+          parents: {
+            ['0']: rational.one,
+          },
+        },
+        {
+          id: '2',
+          parents: { ['1']: rational.one },
+        },
+        {
+          id: '3',
+          parents: { ['1']: rational.one },
+        },
+        {
+          id: '4',
+          parents: {
+            ['0']: rational.one,
+          },
+        },
+      ];
+      spyOn(service, 'steps').and.returnValue(steps);
+      const result = service.stepTree();
+      expect(result).toEqual({
+        ['0']: [],
+        ['1']: [true],
+        ['2']: [true, true],
+        ['3']: [true, false],
+        ['4']: [false],
+      });
+    });
+  });
 
-  //   it('should calculate auto power unit as MW', () => {
-  //     spyOn(service, 'steps').and.returnValue([
-  //       { id: '0', power: rational(1000n) },
-  //     ]);
-  //     spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(
-  //       PowerUnit.Auto,
-  //     );
-  //     expect(service.effectivePowerUnit()).toEqual(PowerUnit.MW);
-  //   });
+  describe('effectivePowerUnit', () => {
+    it('should calculate an auto power unit as kW', () => {
+      spyOn(service['preferencesStore'], 'powerUnit').and.returnValue(
+        PowerUnit.Auto,
+      );
+      expect(service.effectivePowerUnit()).toEqual(PowerUnit.kW);
+    });
 
-  //   it('should calculate auto power unit as GW', () => {
-  //     spyOn(service, 'steps').and.returnValue([
-  //       { id: '0', power: rational(1000000n) },
-  //       { id: '1', power: rational(1000000n) },
-  //     ]);
-  //     spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(
-  //       PowerUnit.Auto,
-  //     );
-  //     expect(service.effectivePowerUnit()).toEqual(PowerUnit.GW);
-  //   });
+    it('should calculate auto power unit as MW', () => {
+      spyOn(service, 'steps').and.returnValue([
+        { id: '0', power: rational(1000n) },
+      ]);
+      spyOn(service['preferencesStore'], 'powerUnit').and.returnValue(
+        PowerUnit.Auto,
+      );
+      expect(service.effectivePowerUnit()).toEqual(PowerUnit.MW);
+    });
 
-  //   it('should override with specified power unit', () => {
-  //     spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(PowerUnit.GW);
-  //     expect(service.effectivePowerUnit()).toEqual(PowerUnit.GW);
-  //   });
-  // });
+    it('should calculate auto power unit as GW', () => {
+      spyOn(service, 'steps').and.returnValue([
+        { id: '0', power: rational(1000000n) },
+        { id: '1', power: rational(1000000n) },
+      ]);
+      spyOn(service['preferencesStore'], 'powerUnit').and.returnValue(
+        PowerUnit.Auto,
+      );
+      expect(service.effectivePowerUnit()).toEqual(PowerUnit.GW);
+    });
 
-  // describe('recipesModified', () => {
-  //   it('should determine whether columns are modified', () => {
-  //     spyOn(service.recipesSvc, 'state').and.returnValue({
-  //       [RecipeId.Coal]: {
-  //         machineId: undefined,
-  //         modules: undefined,
-  //         overclock: rational(100n),
-  //         beacons: [
-  //           {
-  //             count: rational.one,
-  //             id: ItemId.Beacon,
-  //             modules: [{ count: rational(2n), id: '' }],
-  //             total: rational.one,
-  //           },
-  //         ],
-  //       },
-  //     });
-  //     const result = service.recipesModified();
-  //     expect(result.machines).toBeTrue();
-  //     expect(result.beacons).toBeTrue();
-  //     expect(result.cost).toBeFalse();
-  //   });
+    it('should override with specified power unit', () => {
+      spyOn(service['preferencesStore'], 'powerUnit').and.returnValue(
+        PowerUnit.GW,
+      );
+      expect(service.effectivePowerUnit()).toEqual(PowerUnit.GW);
+    });
+  });
 
-  //   it('should account for recipe objective settings', () => {
-  //     const objective: ObjectiveState = {
-  //       id: '1',
-  //       targetId: RecipeId.Coal,
-  //       value: rational.one,
-  //       unit: ObjectiveUnit.Machines,
-  //       type: ObjectiveType.Output,
-  //       overclock: rational(100n),
-  //       beacons: [
-  //         {
-  //           count: rational.one,
-  //           id: ItemId.Beacon,
-  //           modules: [{ count: rational(2n), id: '' }],
-  //         },
-  //       ],
-  //     };
-  //     spyOn(service, 'baseObjectives').and.returnValue([objective]);
-  //     spyOn(service.recipesSvc, 'state').and.returnValue({
-  //       [RecipeId.Coal]: {},
-  //     });
-  //     const result = service.recipesModified();
-  //     expect(result.machines).toBeTrue();
-  //     expect(result.beacons).toBeTrue();
-  //     expect(result.cost).toBeFalse();
-  //   });
-  // });
+  describe('recipesModified', () => {
+    it('should determine whether columns are modified', () => {
+      spyOn(service['recipesStore'], 'state').and.returnValue({
+        [RecipeId.Coal]: {
+          machineId: undefined,
+          modules: undefined,
+          overclock: rational(100n),
+          beacons: [
+            {
+              count: rational.one,
+              id: ItemId.Beacon,
+              modules: [{ count: rational(2n), id: '' }],
+              total: rational.one,
+            },
+          ],
+        },
+      });
+      const result = service.recipesModified();
+      expect(result.machines).toBeTrue();
+      expect(result.beacons).toBeTrue();
+      expect(result.cost).toBeFalse();
+    });
 
-  // describe('effects', () => {
-  //   it('should automatically trigger adjustDisplayRate', () => {
-  //     service.settingsSvc.load$.next();
-  //     spyOn(service, 'adjustDisplayRate');
-  //     TestBed.flushEffects();
-  //     service.settingsSvc.apply({ displayRate: DisplayRate.PerHour });
-  //     TestBed.flushEffects();
-  //     expect(service.adjustDisplayRate).toHaveBeenCalledWith(rational(60n));
-  //   });
-  // });
+    it('should account for recipe objective settings', () => {
+      const objective: ObjectiveState = {
+        id: '1',
+        targetId: RecipeId.Coal,
+        value: rational.one,
+        unit: ObjectiveUnit.Machines,
+        type: ObjectiveType.Output,
+        overclock: rational(100n),
+        beacons: [
+          {
+            count: rational.one,
+            id: ItemId.Beacon,
+            modules: [{ count: rational(2n), id: '' }],
+          },
+        ],
+      };
+      spyOn(service, 'baseObjectives').and.returnValue([objective]);
+      spyOn(service['recipesStore'], 'state').and.returnValue({
+        [RecipeId.Coal]: {},
+      });
+      const result = service.recipesModified();
+      expect(result.machines).toBeTrue();
+      expect(result.beacons).toBeTrue();
+      expect(result.cost).toBeFalse();
+    });
+  });
 
-  // describe('add', () => {
-  //   it('should add the objective', () => {
-  //     service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
-  //     expect(service.state()).toEqual({
-  //       ['1']: {
-  //         id: '1',
-  //         targetId: ItemId.Coal,
-  //         value: rational.one,
-  //         unit: ObjectiveUnit.Items,
-  //         type: ObjectiveType.Output,
-  //       },
-  //     });
-  //   });
+  describe('message', () => {
+    it('should generate a message for paused', () => {
+      spyOn(service, 'matrixResult').and.returnValue({
+        resultType: 'paused',
+      } as any);
+      expect(service.message()?.detail).toEqual('objectives.pausedMessage');
+    });
 
-  //   it('should use the last value', () => {
-  //     service.create({
-  //       targetId: ItemId.Coal,
-  //       value: rational(60n),
-  //       unit: ObjectiveUnit.Items,
-  //       type: ObjectiveType.Output,
-  //     });
-  //     service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
-  //     expect(service.state()['1'].value).toEqual(rational(60n));
-  //   });
-  // });
+    it('should generate no message when successful', () => {
+      spyOn(service, 'matrixResult').and.returnValue({
+        resultType: 'solved',
+      } as any);
+      expect(service.message()).toBeUndefined();
+    });
 
-  // describe('remove', () => {
-  //   it('should remove an objective and re-sort remaining objectives', () => {
-  //     service.create({
-  //       targetId: ItemId.Coal,
-  //       value: rational.one,
-  //       unit: ObjectiveUnit.Items,
-  //       type: ObjectiveType.Output,
-  //     });
-  //     service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
-  //     service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
-  //     service.remove('2');
-  //     expect(service.state()).toEqual({
-  //       ['1']: {
-  //         id: '1',
-  //         targetId: ItemId.Coal,
-  //         value: rational.one,
-  //         unit: ObjectiveUnit.Items,
-  //         type: ObjectiveType.Output,
-  //       },
-  //       ['2']: {
-  //         id: '2',
-  //         targetId: ItemId.Coal,
-  //         value: rational.one,
-  //         unit: ObjectiveUnit.Items,
-  //         type: ObjectiveType.Output,
-  //       },
-  //     });
-  //   });
-  // });
+    it('should generate a default error message', () => {
+      spyOn(service, 'matrixResult').and.returnValue({
+        resultType: 'failed',
+      } as any);
+      expect(service.message()?.detail).toEqual('objectives.errorDetail');
+    });
 
-  // describe('setOrder', () => {
-  //   it('should map objectives to an ids array', () => {
-  //     service.setOrder(mocks.objectives());
-  //     expect(Object.keys(service.state())).toEqual(
-  //       mocks.objectives().map((o) => o.id),
-  //     );
-  //   });
-  // });
+    it('should generate a message for unbounded with unboundedRecipeId', () => {
+      spyOn(service, 'objectives').and.returnValue(mockObjectivesList);
+      spyOn(service, 'matrixResult').and.returnValue({
+        resultType: 'failed',
+        simplexStatus: 'unbounded',
+        unboundedRecipeId: RecipeId.ElectronicCircuit,
+      } as any);
+      expect(service.message()?.detail).toEqual(
+        'objectives.errorSimplexUnboundedRecipe',
+      );
+    });
 
-  // describe('adjustDisplayRate', () => {
-  //   it('should adjust display rates', () => {
-  //     service.load(mocks.objectives()State);
-  //     service.adjustDisplayRate(rational(2n));
-  //     const result = service.state();
-  //     expect(result['1'].value).toEqual(rational(2n));
-  //     expect(result['3'].value).toEqual(rational.one);
-  //   });
-  // });
+    it('should generate a message for unbounded with no limits', () => {
+      spyOn(service, 'objectives').and.returnValue([mockObjective3]);
+      spyOn(service, 'matrixResult').and.returnValue({
+        resultType: 'failed',
+        simplexStatus: 'unbounded',
+      } as any);
+      expect(service.message()?.detail).toEqual('objectives.errorNoLimits');
+    });
+
+    it('should generate a message for unbounded with excluded maximize item', () => {
+      spyOn(service['settingsStore'], 'settings').and.returnValue({
+        excludedItemIds: new Set([ItemId.PlasticBar]),
+        excludedRecipeIds: new Set(),
+      } as any);
+      spyOn(service, 'objectives').and.returnValue(mockObjectivesList);
+      spyOn(service, 'matrixResult').and.returnValue({
+        resultType: 'failed',
+        simplexStatus: 'unbounded',
+      } as any);
+      expect(service.message()?.detail).toEqual(
+        'objectives.errorMaximizeExcluded',
+      );
+    });
+
+    it('should generate a message for unbounded with excluded maximize recipe', () => {
+      spyOn(service['settingsStore'], 'settings').and.returnValue({
+        excludedItemIds: new Set(),
+        excludedRecipeIds: new Set([ItemId.FirearmMagazine]),
+      } as any);
+      spyOn(service, 'objectives').and.returnValue(mockObjectivesList);
+      spyOn(service, 'matrixResult').and.returnValue({
+        resultType: 'failed',
+        simplexStatus: 'unbounded',
+      } as any);
+      expect(service.message()?.detail).toEqual(
+        'objectives.errorMaximizeExcluded',
+      );
+    });
+
+    it('should generate a message for no_feasible', () => {
+      spyOn(service, 'objectives').and.returnValue([mockObjective3]);
+      spyOn(service, 'matrixResult').and.returnValue({
+        resultType: 'failed',
+        simplexStatus: 'no_feasible',
+      } as any);
+      expect(service.message()?.detail).toEqual(
+        'objectives.errorInfeasibleDetail',
+      );
+    });
+  });
+
+  describe('effects', () => {
+    it('should set the page title', () => {
+      const spy = spyOn(service['title'], 'setTitle');
+      service.add(mockObjectiveBase);
+      TestBed.tick();
+      expect(service['title'].setTitle).toHaveBeenCalledWith(
+        'Coal | FactorioLab',
+      );
+      spy.calls.reset();
+      service.remove('1');
+      TestBed.tick();
+      expect(service['title'].setTitle).toHaveBeenCalledWith('FactorioLab');
+      spy.calls.reset();
+      service.add({
+        targetId: RecipeId.ElectronicCircuit,
+        value: rational.one,
+        unit: ObjectiveUnit.Machines,
+        type: ObjectiveType.Output,
+      });
+      TestBed.tick();
+      expect(service['title'].setTitle).toHaveBeenCalledWith(
+        'Electronic circuit | FactorioLab',
+      );
+    });
+  });
+
+  describe('add', () => {
+    it('should add the objective', () => {
+      service.add({
+        targetId: ItemId.Coal,
+        value: rational.one,
+        unit: ObjectiveUnit.Items,
+        type: ObjectiveType.Output,
+      });
+      expect(service.state()).toEqual({
+        ['1']: {
+          id: '1',
+          targetId: ItemId.Coal,
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        },
+      });
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove an objective and re-sort remaining objectives', () => {
+      service.create({
+        targetId: ItemId.Coal,
+        value: rational.one,
+        unit: ObjectiveUnit.Items,
+        type: ObjectiveType.Output,
+      });
+      service.add({
+        targetId: ItemId.Coal,
+        value: rational.one,
+        unit: ObjectiveUnit.Items,
+        type: ObjectiveType.Output,
+      });
+      service.add({
+        targetId: ItemId.Coal,
+        value: rational.one,
+        unit: ObjectiveUnit.Items,
+        type: ObjectiveType.Output,
+      });
+      service.remove('2');
+      expect(service.state()).toEqual({
+        ['1']: {
+          id: '1',
+          targetId: ItemId.Coal,
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        },
+        ['2']: {
+          id: '2',
+          targetId: ItemId.Coal,
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        },
+      });
+    });
+  });
+
+  describe('setOrder', () => {
+    it('should map objectives to an ids array', () => {
+      service.setOrder(mocks.objectives());
+      expect(Object.keys(service.state())).toEqual(
+        mocks.objectives().map((o) => o.id),
+      );
+    });
+  });
+
+  describe('updateRecipeField', () => {
+    it('should update the recipe field for a recipe objective', () => {
+      spyOn(service, 'updateRecordField');
+      spyOn(service, 'removeRecordFields');
+      service.updateRecipeField(
+        { id: '1', recipeObjectiveId: '1' },
+        'machineId',
+        ItemId.AssemblingMachine1,
+      );
+      expect(service.updateRecordField).toHaveBeenCalled();
+      expect(service.removeRecordFields).toHaveBeenCalled();
+    });
+
+    it('should update the recipe field for a recipe', () => {
+      spyOn(service['recipesStore'], 'updateRecordField');
+      spyOn(service['recipesStore'], 'removeRecordFields');
+      service.updateRecipeField(
+        { id: '1', recipeId: RecipeId.ElectronicCircuit },
+        'machineId',
+        ItemId.AssemblingMachine1,
+      );
+      expect(service['recipesStore'].updateRecordField).toHaveBeenCalled();
+      expect(service['recipesStore'].removeRecordFields).toHaveBeenCalled();
+    });
+  });
+
+  describe('adjustDisplayRate', () => {
+    it('should adjust display rates', () => {
+      service.load(mockObjectivesState);
+      service.adjustDisplayRate(DisplayRate.PerHour);
+      const result = service.state();
+      expect(result['1'].value).toEqual(rational(60n));
+      expect(result['3'].value).toEqual(rational.one);
+    });
+  });
 });

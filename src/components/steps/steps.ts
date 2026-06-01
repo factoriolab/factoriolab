@@ -46,7 +46,6 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 import { updateSetIds } from '~/utils/set';
 
-import { StepIdPipe } from '../../state/objectives/step-id-pipe';
 import { BeaconsSelect } from '../beacons-select/beacons-select';
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
@@ -89,7 +88,6 @@ import { TotalCell } from './total-cell/total-cell';
     RecipesSelect,
     SortHeader,
     StepHrefPipe,
-    StepIdPipe,
     TotalCell,
   ],
   templateUrl: './steps.html',

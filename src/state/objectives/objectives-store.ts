@@ -623,9 +623,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
   });
 
   readonly message = computed((): MessageData | undefined => {
-    const objectives = this.objectives();
     const matrixResult = this.matrixResult();
-    const settings = this.settingsStore.settings();
 
     if (matrixResult.resultType === 'paused')
       return { icon: faPauseCircle, detail: 'objectives.pausedMessage' };
@@ -643,6 +641,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     };
 
     if (matrixResult.simplexStatus === 'unbounded') {
+      const objectives = this.objectives();
       const maxObjectives = objectives.filter(
         (o) => o.type === ObjectiveType.Maximize,
       );
@@ -650,6 +649,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
       summary = 'objectives.errorUnbounded';
       detail = 'objectives.errorUnboundedDetail';
 
+      const settings = this.settingsStore.settings();
       if (matrixResult.unboundedRecipeId) {
         detail = 'objectives.errorSimplexUnboundedRecipe';
         recipeId = matrixResult.unboundedRecipeId;
