@@ -227,107 +227,146 @@ describe('ObjectivesStore', () => {
     });
   });
 
+  describe('itemSourceMap', () => {
+    it('should generate a map of item sources', () => {
+      const step1: Step = {
+        id: '0',
+        itemId: ItemId.ElectronicCircuit,
+        outputs: { [ItemId.ElectronicCircuit]: rational(1n, 2n) },
+      };
+      spyOn(service, 'steps').and.returnValue([
+        step1,
+        { id: '1', itemId: ItemId.IronOre },
+      ]);
+      const result = service.itemSourceMap();
+      expect(result).toEqual({
+        [ItemId.ElectronicCircuit]: [
+          { value: rational(1n, 2n), step: step1 },
+          { isInput: true, value: rational(1n, 2n) },
+        ],
+        [ItemId.IronOre]: [{ isInput: true, value: rational.one }],
+      });
+    });
+  });
+
   describe('stepDetails', () => {
-    it('should determine detail tabs to display for steps', () => {
+    it('should collect information for various step detail sections', () => {
+      const data = mocks.getAdjustedDataset();
+      const recipe = data.adjustedRecipe[RecipeId.ElectronicCircuit];
+      recipe.flags.add('mining');
+      recipe.in[ItemId.ElectronicCircuit] = rational(1n, 100n);
+      recipe.out[ItemId.IronOre] = rational.zero;
       const steps: Step[] = [
         {
           id: '0',
-          itemId: ItemId.PetroleumGas,
+          itemId: ItemId.ElectronicCircuit,
           items: rational.one,
-          recipeId: RecipeId.Coal,
-          machines: rational.one,
-          outputs: { [ItemId.PetroleumGas]: rational(2n) },
-        },
-        {
-          id: '1',
-          recipeId: RecipeId.CrudeOil,
-          machines: rational(2n),
-          outputs: { [ItemId.PetroleumGas]: rational.one },
-        },
-        {
-          id: '2',
+          recipeId: RecipeId.ElectronicCircuit,
+          parents: {
+            '0': rational.one,
+          },
+          recipe,
+          outputs: {
+            [ItemId.ElectronicCircuit]: rational.one,
+            [ItemId.IronOre]: rational.zero,
+          },
         },
       ];
       spyOn(service, 'steps').and.returnValue(steps);
+      spyOn(service, 'itemSourceMap').and.returnValue({
+        [ItemId.ElectronicCircuit]: [
+          { step: { id: '1' }, value: rational.one },
+        ],
+      });
       const result = service.stepDetails();
       expect(result).toEqual({
-        ['0']: {
-          sources: [
-            {
-              items: rational(2n),
-              itemId: ItemId.PetroleumGas,
-              belts: undefined,
-              beltId: ItemId.Pump,
-              stack: rational.one,
-              wagons: undefined,
-              wagonId: ItemId.FluidWagon,
-              machines: rational.one,
-              machineId: undefined,
-              recipeId: RecipeId.Coal,
-              recipeObjectiveId: undefined,
-              percent: rational(2n),
-              percentOnDest: true,
-              destId: ItemId.PetroleumGas,
-              destType: 'item',
-              isInput: undefined,
-            },
+        '0': {
+          destinations: [
             {
               items: rational.one,
-              itemId: ItemId.PetroleumGas,
+              itemId: ItemId.ElectronicCircuit,
               belts: undefined,
-              beltId: ItemId.Pump,
+              beltId: ItemId.ExpressTransportBelt,
               stack: rational.one,
               wagons: undefined,
-              wagonId: ItemId.FluidWagon,
-              machines: rational(2n),
-              machineId: undefined,
-              recipeId: RecipeId.CrudeOil,
+              wagonId: ItemId.CargoWagon,
+              recipeId: RecipeId.ElectronicCircuit,
               recipeObjectiveId: undefined,
               percent: rational.one,
-              percentOnDest: true,
-              destId: ItemId.PetroleumGas,
-              destType: 'item',
-              isInput: undefined,
+              destId: RecipeId.ElectronicCircuit,
+              destType: 'recipe',
+              isOutput: false,
+              machines: undefined,
+              machineId: undefined,
             },
+          ],
+          sources: [
             {
-              items: rational(-2n),
-              itemId: ItemId.PetroleumGas,
+              items: rational.one,
+              itemId: ItemId.ElectronicCircuit,
               belts: undefined,
-              beltId: ItemId.Pump,
+              beltId: ItemId.ExpressTransportBelt,
               stack: rational.one,
               wagons: undefined,
-              wagonId: ItemId.FluidWagon,
+              wagonId: ItemId.CargoWagon,
               machines: undefined,
               machineId: undefined,
               recipeId: undefined,
               recipeObjectiveId: undefined,
-              percent: rational(-2n),
+              percent: rational.one,
               percentOnDest: true,
-              destId: ItemId.PetroleumGas,
+              destId: ItemId.ElectronicCircuit,
               destType: 'item',
-              isInput: true,
+              isInput: undefined,
             },
           ],
-          destinations: [],
-          depletion: [],
-          inputs: [],
-          outputs: [],
+          depletion: [
+            {
+              items: rational(5n, 7n),
+              itemId: ItemId.ElectronicCircuit,
+            },
+          ],
+          inputs: [
+            {
+              items: rational.one,
+              itemId: ItemId.ElectronicCircuit,
+              belts: undefined,
+              beltId: ItemId.ExpressTransportBelt,
+              stack: rational.one,
+              wagons: undefined,
+              wagonId: ItemId.CargoWagon,
+              machines: undefined,
+              machineId: undefined,
+              recipeId: undefined,
+              recipeObjectiveId: undefined,
+              percent: rational.one,
+              destId: RecipeId.ElectronicCircuit,
+              destRecipeObjectiveId: undefined,
+              destType: 'recipe',
+            },
+          ],
+          outputs: [
+            {
+              items: rational.one,
+              itemId: ItemId.ElectronicCircuit,
+              belts: undefined,
+              beltId: ItemId.ExpressTransportBelt,
+              stack: rational.one,
+              wagons: undefined,
+              wagonId: ItemId.CargoWagon,
+              machines: undefined,
+              machineId: undefined,
+              recipeId: RecipeId.ElectronicCircuit,
+              recipeObjectiveId: undefined,
+              percent: rational.one,
+              percentOnDest: true,
+              destId: ItemId.ElectronicCircuit,
+              destType: 'item',
+              destRecipeObjectiveId: undefined,
+            },
+          ],
         },
-        ['1']: {
-          sources: [],
-          destinations: [],
-          depletion: [],
-          inputs: [],
-          outputs: [],
-        },
-        ['2']: {
-          sources: [],
-          destinations: [],
-          depletion: [],
-          inputs: [],
-          outputs: [],
-        },
-      } as any);
+      });
     });
   });
 

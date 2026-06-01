@@ -299,9 +299,7 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
       return e;
     }, {});
 
-    for (const itemId of Object.keys(result)) {
-      const sources = result[itemId];
-      if (sources == null) continue;
+    for (const sources of Object.values(result)) {
       const inputs = sources.reduce((r: Rational, o) => {
         return r.sub(o.value);
       }, rational.one);
@@ -423,11 +421,13 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
           .map(([key]): StepDetailRow | undefined => {
             const step = stepByItem[key];
             const percent = step?.parents?.[s.id];
+
+            if (step == null || percent == null) return undefined;
+
             let source: ItemSource | undefined;
             if (step.itemId && itemSourceMap[step.itemId].length === 1)
               source = itemSourceMap[step.itemId][0];
 
-            if (step == null || percent == null) return undefined;
             return {
               items: step.items?.mul(percent),
               itemId: key,
