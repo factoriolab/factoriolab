@@ -142,8 +142,9 @@ export class Preferences {
       })
       .subscribe((res) => {
         if (res === 1) {
-          const state = initialPreferencesState as Partial<PreferencesState>;
-          delete state.states; // Do not reset saved states
+          // Do not reset saved states
+          const { states, ...state } =
+            initialPreferencesState as Partial<PreferencesState>;
           this.preferencesStore.apply(state);
         } else if (res === 2) {
           this.windowClient.clearLocalStorage();
