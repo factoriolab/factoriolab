@@ -21,6 +21,6 @@ export class Id {
   private setup(): void {
     const modId = this.route.snapshot.paramMap.get('id');
     if (modId) this.settingsStore.apply({ modId });
-    this.routerSvc.route.next(this.route);
+    this.routerSvc.route$.next(this.route);
   }
 }

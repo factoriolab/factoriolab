@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { noop } from '~/utils/function';
+
 /** Simple memoization function for single-input, single-output functions */
 function memoize<I, O>(fn: (i: I) => O): (i: I) => O {
   const cache = new Map<I, O>();
@@ -177,12 +179,8 @@ export class Compression {
   ): Promise<string> {
     const cs = new DecompressionStream(encoding);
     const writer = cs.writable.getWriter();
-    writer.write(byteArray).catch(() => {
-      // Ignore error
-    });
-    writer.close().catch(() => {
-      // Ignore error
-    });
+    writer.write(byteArray).catch(noop);
+    writer.close().catch(noop);
     const arrayBuffer = new Response(cs.readable).arrayBuffer();
     return new TextDecoder().decode(await arrayBuffer);
   }

@@ -1,4 +1,3 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -55,19 +54,19 @@ import { Zip } from './zip';
 import { ZipData } from './zip-data';
 import { ZipVersion } from './zip-version';
 
-const MIN_ZIP = 200;
+export const MIN_ZIP = 200;
 
 interface ZipRecipeSettingsInfo {
   idMap: Record<string, number>;
   list: ZipData[];
 }
 
-interface ZipMachineSettings {
+export interface ZipMachineSettings {
   moduleMap: Record<string, number[]>;
   beaconMap: Record<string, number[]>;
 }
 
-interface ZipState {
+export interface ZipState {
   objectives: ZipData<LabParams>;
   config: ZipData<LabParams>;
   objectiveSettings: ZipMachineSettings;
@@ -87,7 +86,7 @@ interface State {
   hash: ModHash;
 }
 
-interface PartialState {
+export interface PartialState {
   objectivesState?: Record<string, ObjectiveState>;
   itemsState?: Record<string, ItemState>;
   recipesState?: Record<string, RecipeState>;
@@ -99,7 +98,6 @@ interface PartialState {
 @Injectable({ providedIn: 'root' })
 export class RouterSync {
   private readonly router = inject(Router);
-  private readonly dialog = inject(Dialog);
   private readonly compression = inject(Compression);
   private readonly itemsStore = inject(ItemsStore);
   private readonly machinesStore = inject(MachinesStore);
@@ -115,7 +113,7 @@ export class RouterSync {
   // Current hashing algorithm version
   private readonly version = ZipVersion.Version11;
   private readonly zipTail: LabParams = { v: this.version };
-  readonly route = new Subject<ActivatedRoute>();
+  readonly route$ = new Subject<ActivatedRoute>();
   private readonly ready = signal(false);
   readonly stored = storedSignal('router');
 
@@ -139,7 +137,7 @@ export class RouterSync {
   }
 
   constructor() {
-    this.route
+    this.route$
       .pipe(
         switchMap((r) =>
           combineLatest({
@@ -211,7 +209,7 @@ export class RouterSync {
       .subscribe();
   }
 
-  setGame(game: Game, commands: string[] = []): Promise<boolean> {
+  setGame(game: Game, commands?: string[]): Promise<boolean> {
     return this.setMod(gameInfo[game].modId, commands);
   }
 
