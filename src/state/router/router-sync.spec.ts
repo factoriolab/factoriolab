@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Params } from '@angular/router';
 import { of, Subject } from 'rxjs';
 
+import { Confirm } from '~/components/confirm/confirm';
 import { rational } from '~/rational/rational';
 import { ItemId } from '~/tests/item-id';
 import { mockModData, mockModHash } from '~/tests/mocks/data';
@@ -105,7 +106,7 @@ const mockSettingsState: SettingsState = {
   proliferatorSprayId: ItemId.ProductivityModule,
   miningBonus: rational(100n),
   researchBonus: rational.zero,
-  researchedTechnologyIds: new Set([ItemId.Automation]),
+  researchedTechnologyIds: new Set([ItemId.Electronics]),
   costs: {
     factor: rational(2n),
     machine: rational(10n),
@@ -151,7 +152,7 @@ const mockZipPartial: ZipData<LabParams> = {
     ich: 'C',
     rex: 'C',
     rch: 'C',
-    tre: 'F',
+    tre: 'C-',
     omt: '0',
   },
   hash: {
@@ -183,7 +184,7 @@ const mockZipPartial: ZipData<LabParams> = {
     ich: 'C',
     rex: 'C',
     rch: 'C',
-    tre: 'F',
+    tre: 'C-',
     omt: '0',
   },
 };
@@ -240,6 +241,12 @@ describe('RouterSync', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestModule],
+      providers: [
+        {
+          provide: Confirm,
+          useValue: { open: (): void => {} },
+        },
+      ],
     });
     service = TestBed.inject(RouterSync);
     service.route$.next(mockRoute as unknown as ActivatedRoute);
@@ -483,9 +490,6 @@ describe('RouterSync', () => {
 
     beforeEach(() => {
       dispatch = spyOn(service, 'dispatch');
-      //   spyOn(service.dataSvc, 'requestData').and.returnValue(
-      //     of([Mocks.modData, Mocks.modHash]),
-      //   );
     });
 
     it('should skip if loading empty, current state', () => {
@@ -502,7 +506,7 @@ describe('RouterSync', () => {
       mockRoute.next({}, { z: 'eJwrsAUAAR8Arg==' });
     });
 
-    xit('should unzip v0', (done) => {
+    it('should unzip v0', (done) => {
       dispatch.and.callFake((v) => {
         expect(v).toEqual(mockStateV0);
         done();
@@ -510,11 +514,7 @@ describe('RouterSync', () => {
       mockRoute.next(
         {},
         {
-          z:
-            'eJxtUNsKwyAM.Zr5EHDUFsZeZC.7j6E2toJVp3ZjL.v2dbSD2pUQyOXk5CSBp4xo' +
-            'qeoxZWDAyL2sEMkZMRtUjsKl4GOmEm0GJWLn6VN03pFYQEVKOEhrXEcHoXrjkNaA' +
-            'WqPK5mHyiw6-HS2-.0vTlhQQ2x9inYBEobyDuqqATX4mmjMIcWpueIupknEhue1J' +
-            'vM036DE6oZAkzo4VHJrrzuleWGBfIc1pUTPb6ieg7WjaJb58AJs7glk_',
+          z: 'eJxtUMsKwjAQ.BpzWIgkLYiX4MX.KHlsaiBNah5KL367SCu0WvayO8wOMzOKXBA91TfMBThwct8iRAlO3A-rJBnyGFOhCn0BLVMf6VP2MZC0ocqccVDehZ4OUt9cQNoAWuu0w6AnOkRTPb7-EOCQR0TzJawPUCh1DNAwBpwxOBMrOIwpmqqLe7gy7X5tFReRbs9gNyewNQWpkWTBjwwO7XUneJQe-MdIe1rczLNqBKyvziz75Q02PYE.',
         },
       );
     });
@@ -527,29 +527,29 @@ describe('RouterSync', () => {
       mockRoute.next({}, { p: '', v: '1' });
     });
 
-    //   it('should unzip v1', (done) => {
-    //     dispatch.and.callFake((v) => {
-    //       expect(v).toEqual(mockStateV1);
-    //       done();
-    //     });
-    //     mockRoute.next(
-    //       {},
-    //       {
-    //         p: 'steel-chest*1*1',
-    //         i: 'steel-chest*1*transport-belt*cargo-wagon',
-    //         r:
-    //           'steel-chest*assembling-machine-2*efficiency-module~efficiency-' +
-    //           'module*1*speed-module~speed-module*beacon*200*100*8',
-    //         f:
-    //           '1*productivity-module~speed-module*1*speed-module*beacon_assembl' +
-    //           'ing-machine-2_steel-furnace',
-    //         s:
-    //           '1.0*2*1*=*transport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid' +
-    //           '-wagon*?*2*10*0*100*1*productivity-module',
-    //         v: '1',
-    //       },
-    //     );
-    //   });
+    it('should unzip v1', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV1);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          p: 'steel-chest*1*1',
+          i: 'steel-chest*1*transport-belt*cargo-wagon',
+          r:
+            'steel-chest*assembling-machine-2*efficiency-module~efficiency-' +
+            'module*1*speed-module~speed-module*beacon*200*100*8',
+          f:
+            '1*productivity-module~speed-module*1*speed-module*beacon_assembl' +
+            'ing-machine-2_steel-furnace',
+          s:
+            '1.0*2*1*=*transport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid' +
+            '-wagon*?*2*10*0*100*1*productivity-module',
+          v: '1',
+        },
+      );
+    });
 
     it('should unzip empty v2', (done) => {
       dispatch.and.callFake((v) => {
@@ -559,21 +559,18 @@ describe('RouterSync', () => {
       mockRoute.next({}, { z: 'eJwrUCszAgADVAE.' });
     });
 
-    //   it('should unzip v2', (done) => {
-    //     dispatch.and.callFake((v) => {
-    //       expect(v).toEqual(mockStateV1);
-    //       done();
-    //     });
-    //     mockRoute.next(
-    //       {},
-    //       {
-    //         z:
-    //           'eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78m' +
-    //           'mFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSM' +
-    //           'GkU_',
-    //       },
-    //     );
-    //   });
+    it('should unzip v2', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV1);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwdjDEKgDAQBH9zxVR3qWxELgmIYOcDAhaC2IiCdnm7xG52FuZMGCZrlL2R43IlZnLNRLw6TlDFVOlkM8bq7cDLXCa5A0ZPU8tLPHAU.UORgYD9swUY5QkfxkgZkw__',
+        },
+      );
+    });
 
     it('should unzip empty v3', (done) => {
       dispatch.and.callFake((v) => {
@@ -583,21 +580,18 @@ describe('RouterSync', () => {
       mockRoute.next({}, { z: 'eJwrUCszBgADVQFA' });
     });
 
-    //   it('should unzip v3', (done) => {
-    //     dispatch.and.callFake((v) => {
-    //       expect(v).toEqual(mockStateV3);
-    //       done();
-    //     });
-    //     mockRoute.next(
-    //       {},
-    //       {
-    //         z:
-    //           'eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX' +
-    //           '5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6' +
-    //           'AbeMG5w_',
-    //       },
-    //     );
-    //   });
+    it('should unzip v3', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV3);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwlzD0KAjEQQOHbTPGqmdjYyDKTQBDSeYAFiwWx8QfcLmdfEssPHu-VMUzeGZN7yGPQcflkGqWXwe44SRVT5SybUbv.u7WtV.kmjAtOcNuJJ46iMwgWEjY5BlT5nQ5Gmhqn',
+        },
+      );
+    });
 
     it('should unzip empty v4', (done) => {
       dispatch.and.callFake((v) => {
@@ -607,28 +601,28 @@ describe('RouterSync', () => {
       mockRoute.next({}, { p: '', v: '4' });
     });
 
-    //   it('should unzip v4', (done) => {
-    //     dispatch.and.callFake((v) => {
-    //       expect(v).toEqual(mockStateV3);
-    //       done();
-    //     });
-    //     mockRoute.next(
-    //       {},
-    //       {
-    //         p: 'steel-chest*1*1',
-    //         q: 'steel-chest*1',
-    //         i: 'steel-chest*1*transport-belt*cargo-wagon',
-    //         r: 'steel-chest*assembling-machine-2*efficiency-module~efficiency-module*1*speed-module~speed-module*beacon*200*100*8',
-    //         f:
-    //           '1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine' +
-    //           '-2_steel-furnace',
-    //         s:
-    //           '1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
-    //           'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
-    //         v: '4',
-    //       },
-    //     );
-    //   });
+    it('should unzip v4', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV3);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          p: 'steel-chest*1*1',
+          q: 'steel-chest*1',
+          i: 'steel-chest*1*transport-belt*cargo-wagon',
+          r: 'steel-chest*assembling-machine-2*efficiency-module~efficiency-module*1*speed-module~speed-module*beacon*200*100*8',
+          f:
+            '1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine' +
+            '-2_steel-furnace',
+          s:
+            '1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
+            'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
+          v: '4',
+        },
+      );
+    });
 
     it('should unzip empty v5', (done) => {
       dispatch.and.callFake((v) => {
@@ -638,22 +632,19 @@ describe('RouterSync', () => {
       mockRoute.next({}, { z: 'eJwrUCszBQADVwFC', v: '5' });
     });
 
-    //   it('should unzip v5', (done) => {
-    //     dispatch.and.callFake((v) => {
-    //       expect(v).toEqual(mockStateV3);
-    //       done();
-    //     });
-    //     mockRoute.next(
-    //       {},
-    //       {
-    //         z:
-    //           'eJwdjDsKgDAQRG-zxVRJQLGx2E0gtXiAgIUgNn5Au5zdiSz7mTfMHrGHh5czGedi' +
-    //           'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4D' +
-    //           'ZYwbBA__',
-    //         v: '5',
-    //       },
-    //     );
-    //   });
+    it('should unzip v5', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV3);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwlyzsKgDAQRdHdTHGrmYBgYzGJIIKdCxAsBLHxA9pl7RLt3oF394RhciRM5ihroeNyJgba3BZmxwmqmCq1LEaX.f9Nw9TLFTAanMj4EDccRT8TsLJLaXRyVy.3cxoP',
+          v: '5',
+        },
+      );
+    });
 
     it('should unzip empty v6', (done) => {
       dispatch.and.callFake((v) => {
@@ -663,31 +654,31 @@ describe('RouterSync', () => {
       mockRoute.next({}, { p: '', v: '6' });
     });
 
-    //   it('should unzip v6', (done) => {
-    //     dispatch.and.callFake((v) => {
-    //       expect(v).toEqual(mockStateV6);
-    //       done();
-    //     });
-    //     mockRoute.next(
-    //       {},
-    //       {
-    //         p: 'steel-chest*1*1',
-    //         q: 'steel-chest*1',
-    //         e: '1*speed-module~speed-module*beacon*8',
-    //         i: 'steel-chest*1*transport-belt*cargo-wagon',
-    //         r:
-    //           'steel-chest*assembling-machine-2*efficiency-module~efficiency-' +
-    //           'module*0*200*100',
-    //         f:
-    //           '1*productivity-module~speed-module*1*speed-module*beacon_assembl' +
-    //           'ing-machine-2_steel-furnace',
-    //         s:
-    //           '1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*cargo-wagon*fluid' +
-    //           '-wagon**2*10*0*100*1*productivity-module*1',
-    //         v: '6',
-    //       },
-    //     );
-    //   });
+    it('should unzip v6', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV6);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          p: 'steel-chest*1*1',
+          q: 'steel-chest*1',
+          e: '1*speed-module~speed-module*beacon*8',
+          i: 'steel-chest*1*transport-belt*cargo-wagon',
+          r:
+            'steel-chest*assembling-machine-2*efficiency-module~efficiency-' +
+            'module*0*200*100',
+          f:
+            '1*productivity-module~speed-module*1*speed-module*beacon_assembl' +
+            'ing-machine-2_steel-furnace',
+          s:
+            '1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*cargo-wagon*fluid' +
+            '-wagon**2*10*0*100*1*productivity-module*1',
+          v: '6',
+        },
+      );
+    });
 
     it('should unzip empty v7', (done) => {
       dispatch.and.callFake((v) => {
@@ -697,22 +688,19 @@ describe('RouterSync', () => {
       mockRoute.next({}, { z: 'eJwrUCszBwADWQFE', v: '7' });
     });
 
-    //   it('should unzip v7', (done) => {
-    //     dispatch.and.callFake((v) => {
-    //       expect(v).toEqual(mockStateV6);
-    //       done();
-    //     });
-    //     mockRoute.next(
-    //       {},
-    //       {
-    //         z:
-    //           'eJwdjbEKg1AMRf8mw5kSB-3ikPjAWfwAoWChdGkr6Oa3m-dyueGcS75Di2HyK5G5' +
-    //           'GuM54jzkGfK-2YDLP2ngp6M0qpiqvIySbi7wJZZJtiaPvvrMB.Gh2poZkKh2q1tK' +
-    //           'ftq7C.WaHBw_',
-    //         v: '7',
-    //       },
-    //     );
-    //   });
+    it('should unzip v7', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV6);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwli70Kg0AQBt9mi6n2u0abFHsnSMDOBxACCiFNfsB09-xy2s0wzLsgZJ-CbBVRg6C3R7ZnK0HYtzAx1AEnuSN328RY4-rLtNztlxA3gsz8J78IHD-dhBqrvYzI9u4AgQEbJw__',
+          v: '7',
+        },
+      );
+    });
 
     it('should unzip empty v8', (done) => {
       dispatch.and.callFake((v) => {
@@ -722,22 +710,19 @@ describe('RouterSync', () => {
       mockRoute.next({}, { z: 'eJwrUCuzAAADWgFF', v: '8' });
     });
 
-    //   it('should unzip v8', (done) => {
-    //     dispatch.and.callFake((v) => {
-    //       expect(v).toEqual(mockStateV8);
-    //       done();
-    //     });
-    //     mockRoute.next(
-    //       {},
-    //       {
-    //         z:
-    //           'eJwli0EKwlAMRG-TxYNC0kXpTpIWuhYPUBAUxI0o2F3P3vkayAwM772mgSDsFiz7' +
-    //           'QjLatezxWyfS3nNBkXvi9O6Eu92DWbAUcq31bJ8T.V.gslFPGu1KyWL12YC2yVd2' +
-    //           'Kp19xwOrTh0O',
-    //         v: '8',
-    //       },
-    //     );
-    //   });
+    it('should unzip v8', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV8);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwlijEKwkAURG.ziwfCzFbp5G8CQUjnAQKCgtiIgnZ7dtl1ioH3Zp4zxnE12ZJkikuNe5dJxmuGjaUtiCJhKW5mbfk.7Nt-iveRMrBy.lIfJEKDMeuYCu7O6n2wRuIz.QBtTByM',
+          v: '8',
+        },
+      );
+    });
 
     it('should unzip empty v9', (done) => {
       dispatch.and.callFake((v) => {
@@ -747,22 +732,19 @@ describe('RouterSync', () => {
       mockRoute.next({}, { z: 'eJwrUCuzBAADWwFG', v: '9' });
     });
 
-    //   it('should unzip v9', (done) => {
-    //     dispatch.and.callFake((v) => {
-    //       expect(v).toEqual(mockStateV8);
-    //       done();
-    //     });
-    //     mockRoute.next(
-    //       {},
-    //       {
-    //         z:
-    //           'eJwljEEKwlAMRG-TxQMh6ULsSpIWuhYP8EGoIG5EQXc9u.N1IBMY5s1j2hOErcGy' +
-    //           'LSQHu5TdfulE2nMuKHJLnMGdcG9Jl12DWYxIslU72evI8Oc4f6g7HXK5NtTVZS.0' +
-    //           'TDPynZ5k7.ELdcIegQ__',
-    //         v: '9',
-    //       },
-    //     );
-    //   });
+    it('should unzip v9', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV8);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwlijEKwzAQBH9zxYDhVpVTmZMNJuAuDxAEHAhuTAJJp7cHKVsszOyeM0K2i6hBMNo927PJIOw1w8ZSF5zkjtxL0GIPsdb4.8pWrvaeSB0zty.5IHC8M2LtU0LNyVsP8h77XH40dx3.',
+          v: '9',
+        },
+      );
+    });
 
     it('should unzip empty v10', (done) => {
       dispatch.and.callFake((v) => {
@@ -772,19 +754,19 @@ describe('RouterSync', () => {
       mockRoute.next({}, { z: 'eJyrsjU0AAADNQEZ', v: '10' });
     });
 
-    //   it('should unzip v10', (done) => {
-    //     dispatch.and.callFake((v) => {
-    //       expect(v).toEqual(mockStateV10);
-    //       done();
-    //     });
-    //     mockRoute.next(
-    //       {},
-    //       {
-    //         z: 'eJwdjDsKAkEQRG.TwQOhawIx2aBnByaWPcCAsIKIIAqaeXbpKXhJ.Z7rESGmZLtwgtMQhbBLtdssrASyV6uIxCnuKLHrQvt1RIw6zvYOylxsX-qdwOdlBdGylXF6uXYO8pR95PYo9FGIQf8D4wMhKw__',
-    //         v: '9',
-    //       },
-    //     );
-    //   });
+    it('should unzip v10', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV10);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5M8gH7yO0RZA9OnfwDvtcg2w__',
+          v: '9',
+        },
+      );
+    });
   });
 
   // describe('dispatch', () => {
