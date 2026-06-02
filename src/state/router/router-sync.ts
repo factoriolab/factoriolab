@@ -981,7 +981,12 @@ export class RouterSync {
       data.technologyIds,
       hash.technologies,
     );
-    sub('loc', (s) => s.locationIds, data.locationIds, hash.locations ?? []);
+    sub(
+      'loc',
+      (s) => s.locationIds,
+      data.locationIds,
+      coalesce(hash.locations, []),
+    );
     rat('cfa', (s) => s.costs.factor);
     rat('cma', (s) => s.costs.machine);
     rat('cfp', (s) => s.costs.footprint);
@@ -1040,7 +1045,7 @@ export class RouterSync {
       researchBonus: rat('bre'),
       researchProductivity: rat('brp'),
       researchedTechnologyIds: sub('tre', modHash.technologies),
-      locationIds: sub('loc', modHash.locations ?? []),
+      locationIds: sub('loc', coalesce(modHash.locations, [])),
     };
 
     const costs: Partial<CostSettings> = {

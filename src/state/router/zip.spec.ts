@@ -311,6 +311,14 @@ describe('Zip', () => {
     it('should parse value', () => {
       expect(service.parseNString('A', ['a'])).toEqual('a');
     });
+
+    it('should handle empty', () => {
+      expect(service.parseNString(ZEMPTY, [])).toEqual('');
+    });
+
+    it('should handle value missing from hash', () => {
+      expect(service.parseNString('A', [])).toBeUndefined();
+    });
   });
 
   describe('parseNArray', () => {

@@ -23,7 +23,8 @@ import {
   initialSettingsState,
   SettingsState,
 } from '../settings/settings-state';
-import { initialTableState } from '../table/table-state';
+import { initialTableState, TableState } from '../table/table-state';
+import { ZTRUE } from './constants';
 import { LabParams } from './lab-params';
 import {
   MIN_ZIP,
@@ -205,6 +206,14 @@ const mockState: PartialState = {
   machinesState: undefined,
   settingsState: mockSettingsState,
   tableState: undefined,
+};
+
+const mockTableState: TableState = {
+  filter: 'filter',
+  sort: 'sort',
+  asc: true,
+  page: 1,
+  rows: 10,
 };
 
 describe('RouterSync', () => {
@@ -769,260 +778,285 @@ describe('RouterSync', () => {
     });
   });
 
-  // describe('dispatch', () => {
-  //   it('should dispatch a state', () => {
-  //     const load: jasmine.Spy[] = [];
-  //     load.push(spyOn(service.objectivesSvc, 'load'));
-  //     load.push(spyOn(service.itemsSvc, 'load'));
-  //     load.push(spyOn(service.recipesSvc, 'load'));
-  //     load.push(spyOn(service.machinesSvc, 'load'));
-  //     load.push(spyOn(service.settingsSvc, 'load'));
-  //     spyOn(service.ready, 'set');
-  //     service.dispatch(mockEmpty);
-  //     load.forEach((s) => {
-  //       expect(s).toHaveBeenCalledWith(undefined);
-  //     });
-  //     expect(service.ready.set).toHaveBeenCalledWith(true);
-  //   });
-  // });
+  describe('dispatch', () => {
+    it('should dispatch a state', () => {
+      const load: jasmine.Spy[] = [];
+      load.push(spyOn(service['objectivesStore'], 'load'));
+      load.push(spyOn(service['itemsStore'], 'load'));
+      load.push(spyOn(service['recipesStore'], 'load'));
+      load.push(spyOn(service['machinesStore'], 'load'));
+      load.push(spyOn(service['settingsStore'], 'load'));
+      spyOn(service['ready'], 'set');
+      service.dispatch(mockEmpty);
+      load.forEach((s) => {
+        expect(s).toHaveBeenCalledWith(undefined);
+      });
+      expect(service['ready'].set).toHaveBeenCalledWith(true);
+    });
+  });
 
-  // describe('beaconModuleMap', () => {
-  //   it('should return undefined for beacons without modules', () => {
-  //     const result = service.beaconModuleMap(
-  //       [{}],
-  //       service.emptyRecipeSettingsInfo,
-  //       Mocks.modHash,
-  //     );
-  //     expect(result[0]).toBeUndefined();
-  //   });
-  // });
+  describe('beaconModuleMap', () => {
+    it('should return undefined for beacons without modules', () => {
+      const result = service.beaconModuleMap(
+        [{}],
+        service.emptyRecipeSettingsInfo,
+        mockModHash,
+      );
+      expect(result[0]).toBeUndefined();
+    });
+  });
 
-  // describe('zipObjectives', () => {
-  //   it('should handle RateUnit Items', () => {
-  //     const zip = mockZipData();
-  //     service.zipObjectives(
-  //       zip,
-  //       {
-  //         ['1']: {
-  //           id: '1',
-  //           targetId: ItemId.SteelChest,
-  //           value: rational.one,
-  //           unit: ObjectiveUnit.Items,
-  //           type: ObjectiveType.Output,
-  //         },
-  //       },
-  //       Mocks.modHash,
-  //     );
-  //     expect(zip.objectives).toEqual({
-  //       bare: { o: ['steel-chest'] },
-  //       hash: { o: ['C6'] },
-  //     });
-  //   });
+  describe('zipObjectives', () => {
+    it('should handle RateUnit Items', () => {
+      const zip = mockZipData();
+      service.zipObjectives(
+        zip,
+        {
+          ['1']: {
+            id: '1',
+            targetId: ItemId.SteelChest,
+            value: rational.one,
+            unit: ObjectiveUnit.Items,
+            type: ObjectiveType.Output,
+          },
+        },
+        mockModHash,
+      );
+      expect(zip.objectives).toEqual({
+        bare: { o: ['steel-chest'] },
+        hash: { o: ['C'] },
+      });
+    });
 
-  //   it('should handle RateUnit Belts', () => {
-  //     const zip = mockZipData();
-  //     service.zipObjectives(
-  //       zip,
-  //       {
-  //         ['1']: {
-  //           id: '1',
-  //           targetId: ItemId.SteelChest,
-  //           value: rational.one,
-  //           unit: ObjectiveUnit.Belts,
-  //           type: ObjectiveType.Output,
-  //         },
-  //       },
-  //       Mocks.modHash,
-  //     );
-  //     expect(zip.objectives).toEqual({
-  //       bare: { o: ['steel-chest**1'] },
-  //       hash: { o: ['C6**1'] },
-  //     });
-  //   });
+    it('should handle RateUnit Belts', () => {
+      const zip = mockZipData();
+      service.zipObjectives(
+        zip,
+        {
+          ['1']: {
+            id: '1',
+            targetId: ItemId.SteelChest,
+            value: rational.one,
+            unit: ObjectiveUnit.Belts,
+            type: ObjectiveType.Output,
+          },
+        },
+        mockModHash,
+      );
+      expect(zip.objectives).toEqual({
+        bare: { o: ['steel-chest**1'] },
+        hash: { o: ['C**1'] },
+      });
+    });
 
-  //   it('should handle RateUnit Wagons', () => {
-  //     const zip = mockZipData();
-  //     service.zipObjectives(
-  //       zip,
-  //       {
-  //         ['1']: {
-  //           id: '1',
-  //           targetId: ItemId.SteelChest,
-  //           value: rational.one,
-  //           unit: ObjectiveUnit.Wagons,
-  //           type: ObjectiveType.Output,
-  //         },
-  //       },
-  //       Mocks.modHash,
-  //     );
-  //     expect(zip.objectives).toEqual({
-  //       bare: { o: ['steel-chest**2'] },
-  //       hash: { o: ['C6**2'] },
-  //     });
-  //   });
+    it('should handle RateUnit Wagons', () => {
+      const zip = mockZipData();
+      service.zipObjectives(
+        zip,
+        {
+          ['1']: {
+            id: '1',
+            targetId: ItemId.SteelChest,
+            value: rational.one,
+            unit: ObjectiveUnit.Wagons,
+            type: ObjectiveType.Output,
+          },
+        },
+        mockModHash,
+      );
+      expect(zip.objectives).toEqual({
+        bare: { o: ['steel-chest**2'] },
+        hash: { o: ['C**2'] },
+      });
+    });
 
-  //   it('should handle RateUnit Machines', () => {
-  //     const zip = mockZipData();
-  //     service.zipObjectives(
-  //       zip,
-  //       {
-  //         ['1']: {
-  //           id: '1',
-  //           targetId: RecipeId.SteelChest,
-  //           value: rational.one,
-  //           unit: ObjectiveUnit.Machines,
-  //           type: ObjectiveType.Output,
-  //         },
-  //       },
-  //       Mocks.modHash,
-  //     );
-  //     expect(zip.objectives).toEqual({
-  //       bare: { o: ['steel-chest**3'] },
-  //       hash: { o: ['DB**3'] },
-  //     });
-  //   });
-  // });
+    it('should handle RateUnit Machines', () => {
+      const zip = mockZipData();
+      service.zipObjectives(
+        zip,
+        {
+          ['1']: {
+            id: '1',
+            targetId: RecipeId.SteelChest,
+            value: rational.one,
+            unit: ObjectiveUnit.Machines,
+            type: ObjectiveType.Output,
+          },
+        },
+        mockModHash,
+      );
+      expect(zip.objectives).toEqual({
+        bare: { o: ['steel-chest**3'] },
+        hash: { o: ['C**3'] },
+      });
+    });
+  });
 
-  // describe('unzipObjectives', () => {
-  //   it('bare should unzip', () => {
-  //     const result = service.unzipObjectives(
-  //       {
-  //         o: ['steel-chest*1*1'],
-  //       },
-  //       [],
-  //       [],
-  //     );
-  //     expect(result).toEqual({
-  //       ['1']: {
-  //         id: '1',
-  //         targetId: ItemId.SteelChest,
-  //         value: rational.one,
-  //         unit: ObjectiveUnit.Belts,
-  //         type: ObjectiveType.Output,
-  //       },
-  //     });
-  //   });
+  describe('unzipObjectives', () => {
+    it('bare should unzip', () => {
+      const result = service.unzipObjectives(
+        {
+          o: ['steel-chest*1*1'],
+        },
+        [],
+        [],
+      );
+      expect(result).toEqual({
+        ['1']: {
+          id: '1',
+          targetId: ItemId.SteelChest,
+          value: rational.one,
+          unit: ObjectiveUnit.Belts,
+          type: ObjectiveType.Output,
+        },
+      });
+    });
 
-  //   it('hash should map values to empty strings if null', () => {
-  //     const result = service.unzipObjectives(
-  //       { o: ['*1'] },
-  //       [],
-  //       [],
-  //       Mocks.modHash,
-  //     );
-  //     expect(result).toEqual({
-  //       ['1']: {
-  //         id: '1',
-  //         targetId: '',
-  //         value: rational.one,
-  //         unit: ObjectiveUnit.Items,
-  //         type: ObjectiveType.Output,
-  //       },
-  //     });
-  //   });
+    it('hash should map values to empty strings if null', () => {
+      const result = service.unzipObjectives(
+        { o: ['*1'] },
+        [],
+        [],
+        mockModHash,
+      );
+      expect(result).toEqual({
+        ['1']: {
+          id: '1',
+          targetId: '',
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        },
+      });
+    });
 
-  //   it('should map modules and beacons', () => {
-  //     const result = service.unzipObjectives({ o: ['*1*3***0*0'] }, [], []);
-  //     expect(result).toEqual({
-  //       ['1']: {
-  //         id: '1',
-  //         targetId: '',
-  //         value: rational.one,
-  //         unit: ObjectiveUnit.Machines,
-  //         type: ObjectiveType.Output,
-  //         modules: [{}],
-  //         beacons: [{}],
-  //       },
-  //     });
-  //   });
-  // });
+    it('should map modules and beacons', () => {
+      const result = service.unzipObjectives({ o: ['*1*3***0*0'] }, [], []);
+      expect(result).toEqual({
+        ['1']: {
+          id: '1',
+          targetId: '',
+          value: rational.one,
+          unit: ObjectiveUnit.Machines,
+          type: ObjectiveType.Output,
+          modules: [{}],
+          beacons: [{}],
+        },
+      });
+    });
+  });
 
-  // describe('unzipItems', () => {
-  //   it('should remove unspecified fields', () => {
-  //     const result = service.unzipItems({
-  //       i: ['steel-chest*transport-belt*'],
-  //     });
-  //     expect(result).toEqual({
-  //       [ItemId.SteelChest]: { beltId: ItemId.TransportBelt },
-  //     });
-  //   });
+  describe('unzipItems', () => {
+    it('should remove unspecified fields', () => {
+      const result = service.unzipItems({
+        i: ['steel-chest*transport-belt*'],
+      });
+      expect(result).toEqual({
+        [ItemId.SteelChest]: { beltId: ItemId.TransportBelt },
+      });
+    });
 
-  //   it('hash should map id to empty string if null', () => {
-  //     const result = service.unzipItems({ i: ['*C*'] }, Mocks.modHash);
-  //     expect(result).toEqual({
-  //       ['']: { beltId: ItemId.TransportBelt },
-  //     });
-  //   });
-  // });
+    it('hash should map id to empty string if null', () => {
+      const result = service.unzipItems({ i: ['*A*'] }, mockModHash);
+      expect(result).toEqual({
+        ['']: { beltId: ItemId.TransportBelt },
+      });
+    });
+  });
 
-  // describe('unzipRecipes', () => {
-  //   it('should remove unspecified fields', () => {
-  //     const result = service.unzipRecipes(
-  //       {
-  //         r: ['steel-chest*assembling-machine-2*'],
-  //       },
-  //       [],
-  //       [],
-  //     );
-  //     expect(result).toEqual({
-  //       [RecipeId.SteelChest]: { machineId: ItemId.AssemblingMachine2 },
-  //     });
-  //   });
+  describe('unzipRecipes', () => {
+    it('should remove unspecified fields', () => {
+      const result = service.unzipRecipes(
+        { r: ['steel-chest*assembling-machine-2*'] },
+        [],
+        [],
+      );
+      expect(result).toEqual({
+        [RecipeId.SteelChest]: { machineId: ItemId.AssemblingMachine2 },
+      });
+    });
 
-  //   it('hash should map values to empty strings if null', () => {
-  //     const result = service.unzipRecipes(
-  //       { r: ['*A*'] },
-  //       [],
-  //       [],
-  //       Mocks.modHash,
-  //     );
-  //     expect(result).toEqual({
-  //       ['']: { machineId: ItemId.AssemblingMachine1 },
-  //     });
-  //   });
+    it('hash should map values to empty strings if null', () => {
+      const result = service.unzipRecipes({ r: ['*K*'] }, [], [], mockModHash);
+      expect(result).toEqual({
+        ['']: { machineId: ItemId.AssemblingMachine1 },
+      });
+    });
 
-  //   it('should map modules and beacons', () => {
-  //     const result = service.unzipRecipes({ r: ['iron-plate**0*0'] }, [], []);
-  //     expect(result).toEqual({
-  //       [ItemId.IronPlate]: {
-  //         modules: [{}],
-  //         beacons: [{}],
-  //       },
-  //     });
-  //   });
-  // });
+    it('should map modules and beacons', () => {
+      const result = service.unzipRecipes({ r: ['iron-plate**0*0'] }, [], []);
+      expect(result).toEqual({
+        [ItemId.IronPlate]: {
+          modules: [{}],
+          beacons: [{}],
+        },
+      });
+    });
+  });
 
-  // describe('zipMachines', () => {
-  //   it('should ignore empty state', () => {
-  //     const zip = mockZipData();
-  //     service.zipMachines(zip, {}, Mocks.modHash);
-  //     expect(zip.config.bare.m).toBeUndefined();
-  //   });
+  describe('zipMachines', () => {
+    it('should ignore empty state', () => {
+      const zip = mockZipData();
+      service.zipMachines(zip, {}, mockModHash);
+      expect(zip.config.bare.m).toBeUndefined();
+    });
 
-  //   it('should zip', () => {
-  //     const zip = mockZipData();
-  //     service.zipMachines(
-  //       zip,
-  //       { [ItemId.AssemblingMachine1]: {} },
-  //       Mocks.modHash,
-  //     );
-  //     expect(zip.config.bare.m).toEqual(['assembling-machine-1']);
-  //   });
-  // });
+    it('should zip', () => {
+      const zip = mockZipData();
+      service.zipMachines(
+        zip,
+        { [ItemId.AssemblingMachine1]: {} },
+        mockModHash,
+      );
+      expect(zip.config.bare.m).toEqual(['assembling-machine-1']);
+    });
+  });
 
-  // describe('unzipMachines', () => {
-  //   it('should unzip', () => {
-  //     const result = service.unzipMachines(
-  //       { m: ['assembling-machine-2*0*0'] },
-  //       [],
-  //       [],
-  //     );
-  //     expect(result).toEqual({
-  //       ['assembling-machine-2']: {
-  //         modules: [{}],
-  //         beacons: [{}],
-  //       },
-  //     });
-  //   });
-  // });
+  describe('unzipMachines', () => {
+    it('should unzip', () => {
+      const result = service.unzipMachines(
+        { m: ['assembling-machine-2*0*0'] },
+        [],
+        [],
+      );
+      expect(result).toEqual({
+        ['assembling-machine-2']: {
+          modules: [{}],
+          beacons: [{}],
+        },
+      });
+    });
+  });
+
+  describe('zipTable', () => {
+    it('should ignore empty state', () => {
+      const zip = mockZipData();
+      service.zipTable(zip, initialTableState);
+      expect(zip.config.bare).toEqual({});
+    });
+
+    it('should zip', () => {
+      const zip = mockZipData();
+      service.zipTable(zip, mockTableState);
+      expect(zip.config.bare).toHaveSize(5);
+    });
+  });
+
+  describe('unzipTable', () => {
+    it('should unzip empty', () => {
+      const result = service.unzipTable({});
+      expect(result).toBeUndefined();
+    });
+
+    it('should unzip', () => {
+      const result = service.unzipTable({
+        tfi: 'filter',
+        tso: 'sort',
+        tas: ZTRUE,
+        tpg: '1',
+        tro: '10',
+      });
+      expect(result).toEqual(mockTableState);
+    });
+  });
 });
