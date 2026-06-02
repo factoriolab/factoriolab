@@ -32,6 +32,7 @@
     "factorio-dump:mac": "scripts/factorio-dump-mac.sh",
     "factorio-dump:flatpak": "scripts/factorio-dump-flatpak.sh",
     "factorio-build": "ts-node -r tsconfig-paths/register scripts/factorio-build.ts",
+    "starrupture-build": "ts-node -r tsconfig-paths/register scripts/starrupture-build.ts",
     "factorio-update": "ts-node -r tsconfig-paths/register scripts/factorio-update.ts",
     "calculate-color": "ts-node -r tsconfig-paths/register scripts/calculate-color.ts",
     "minify-data": "ts-node -r tsconfig-paths/register scripts/minify-data.ts",

@@ -76,4 +76,10 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.moteMancer',
     modId: 'mtm',
   },
+  [Game.StarRupture]: {
+    icon: 'game-starrupture',
+    route: '/str',
+    label: 'options.game.starRupture',
+    modId: 'str',
+  },
 };

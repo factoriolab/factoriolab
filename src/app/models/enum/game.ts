@@ -12,6 +12,7 @@ export enum Game {
   Foundry = 'Foundry',
   OutworldStation = 'OutworldStation',
   MoteMancer = 'MoteMancer',
+  StarRupture = 'StarRupture',
 }
 
 export const gameOptions: SelectItem<Game>[] = [
@@ -26,4 +27,5 @@ export const gameOptions: SelectItem<Game>[] = [
   { value: Game.Foundry, label: 'options.game.foundry' },
   { value: Game.OutworldStation, label: 'options.game.outworldStation' },
   { value: Game.MoteMancer, label: 'options.game.moteMancer' },
+  { value: Game.StarRupture, label: 'options.game.starRupture' },
 ];
