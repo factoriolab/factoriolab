@@ -27,7 +27,7 @@ export class MachinesStore extends RecordStore<MachineState> {
     ),
   );
 
-  computeMachinesSettings(
+  private computeMachinesSettings(
     state: Record<string, MachineState>,
     settings: Settings,
     data: Dataset,

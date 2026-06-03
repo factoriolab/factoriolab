@@ -36,7 +36,7 @@ export class ItemsStore extends RecordStore<ItemState> {
     };
   });
 
-  computeItemsSettings(
+  private computeItemsSettings(
     state: Record<string, ItemState>,
     settings: Settings,
     data: Dataset,
@@ -70,19 +70,23 @@ export class ItemsStore extends RecordStore<ItemState> {
     return value;
   }
 
-  defaultBelt(item: Item, settings: Settings, pipeCount: number): string {
+  private defaultBelt(
+    item: Item,
+    settings: Settings,
+    pipeCount: number,
+  ): string {
     if (item.stack) return coalesce(settings.beltId, '');
     else if (settings.pipeId != null) return settings.pipeId;
     else if (pipeCount === 0) return PIPE;
     return '';
   }
 
-  defaultStack(item: Item, settings: Settings): Rational {
+  private defaultStack(item: Item, settings: Settings): Rational {
     if (item.stack == null || settings.stack == null) return rational.one;
     return item.stack.lt(settings.stack) ? item.stack : settings.stack;
   }
 
-  defaultWagon(item: Item, settings: Settings): string {
+  private defaultWagon(item: Item, settings: Settings): string {
     return coalesce(
       item.stack ? settings.cargoWagonId : settings.fluidWagonId,
       '',

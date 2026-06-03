@@ -69,7 +69,7 @@ export class RecipesStore extends RecordStore<RecipeState> {
     );
   });
 
-  computeRecipesSettings(
+  private computeRecipesSettings(
     state: Record<string, RecipeState>,
     machines: Record<string, MachineState>,
     settings: Settings,

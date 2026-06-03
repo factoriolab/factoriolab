@@ -55,18 +55,18 @@ describe('ItemsStore', () => {
 
   describe('defaultBelt', () => {
     it('should fall back to the hard-coded pipe option if none are available', () => {
-      expect(service.defaultBelt({} as any, {} as any, 0)).toEqual(PIPE);
+      expect(service['defaultBelt']({} as any, {} as any, 0)).toEqual(PIPE);
     });
 
     it('should return an empty string if no default belt can be found', () => {
-      expect(service.defaultBelt({} as any, {} as any, 1)).toEqual('');
+      expect(service['defaultBelt']({} as any, {} as any, 1)).toEqual('');
     });
   });
 
   describe('defaultStack', () => {
     it('should return the item stack value if less than stack setting', () => {
       expect(
-        service.defaultStack(
+        service['defaultStack'](
           { stack: rational.one } as any,
           { stack: rational(2n) } as any,
         ),

@@ -381,7 +381,7 @@ export class SettingsStore extends Store<SettingsState> {
     }
   }
 
-  computeDefaults(
+  private computeDefaults(
     modInfo: ModInfo | undefined,
     modData: ModData | undefined,
     presetSetting: number,
@@ -490,7 +490,7 @@ export class SettingsStore extends Store<SettingsState> {
     };
   }
 
-  computeDataset(
+  private computeDataset(
     info: ModInfo | undefined,
     data: ModData | undefined,
     hash: ModHash | undefined,
@@ -928,7 +928,7 @@ export class SettingsStore extends Store<SettingsState> {
     };
   }
 
-  computeSettings(
+  private computeSettings(
     state: SettingsState,
     defaults: Defaults | undefined,
     data: Dataset,

@@ -1,4 +1,3 @@
-import { ApplicationRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestModule } from '~/tests/test-module';
@@ -40,13 +39,19 @@ describe('CustomDataDialog', () => {
   });
 
   describe('save', () => {
-    it('should save the data and icons file to the settingsStore', async () => {
+    it('should save the data and icons file to the settingsStore', () => {
       component['dataFile'] = new Blob(['text'], { type: 'text/plain' }) as any;
       component['iconsFile'] = 'iconsFile' as any;
       spyOn(component['settingsStore'], 'setCustomData');
       spyOn(component['settingsStore'].customIcons, 'set');
+      const fileReader = {
+        onload: (_: any): void => {},
+        readAsText: (): void => {
+          fileReader.onload({ target: { result: 'text' } });
+        },
+      };
+      spyOn(window, 'FileReader').and.returnValue(fileReader as any);
       component.save();
-      await TestBed.inject(ApplicationRef).whenStable();
       expect(component['settingsStore'].setCustomData).toHaveBeenCalledWith(
         'text',
       );

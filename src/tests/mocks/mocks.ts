@@ -210,7 +210,7 @@ export class Mocks {
   });
 
   getDataset(): Dataset {
-    return this.settingsStore.computeDataset(
+    return this.settingsStore['computeDataset'](
       mockModInfo,
       mockModData,
       mockModHash,
@@ -229,7 +229,7 @@ export class Mocks {
   }
 
   getRecipesState(): Record<string, RecipeState> {
-    return this.recipesStore.computeRecipesSettings(
+    return this.recipesStore['computeRecipesSettings'](
       {},
       this.machinesStore.settings(),
       this.settingsStore.settings(),

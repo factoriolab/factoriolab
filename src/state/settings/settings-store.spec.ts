@@ -16,6 +16,7 @@ import {
 } from '~/tests/mocks/data';
 import { Mocks } from '~/tests/mocks/mocks';
 import { mockPreferencesState } from '~/tests/mocks/preferences';
+import { RecipeId } from '~/tests/recipe-id';
 import { TestModule } from '~/tests/test-module';
 import { assert } from '~/tests/utils';
 
@@ -195,110 +196,6 @@ describe('SettingsStore', () => {
     });
   });
 
-  describe('defaults', () => {
-    it('should handle null base data', () => {
-      spyOn(service, 'modInfo').and.returnValue(undefined);
-      expect(service.defaults()).toBeUndefined();
-    });
-
-    it('should use minimum values', () => {
-      service['modDataResource'].set(mockModData11);
-      service.apply({ preset: Preset.Minimum });
-      TestBed.tick();
-      const result = service.defaults();
-      assert(result != null);
-      expect(result.beltId).toEqual(mockDefaults11.minBelt);
-      expect(result.machineRankIds).toEqual(mockDefaults11.minMachineRank!);
-      expect(result.moduleRankIds).toEqual([]);
-      expect(result.beacons).toEqual([
-        {
-          count: rational.zero,
-          id: ItemId.Beacon,
-          modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
-        },
-      ]);
-    });
-
-    it('should use 8 beacons', () => {
-      service['modDataResource'].set(mockModData11);
-      service.apply({ preset: Preset.Beacon8 });
-      TestBed.tick();
-      const result = service.defaults();
-      assert(result != null);
-      expect(result.beacons).toEqual([
-        {
-          count: rational(8n),
-          id: ItemId.Beacon,
-          modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
-        },
-      ]);
-    });
-
-    it('should use 12 beacons', () => {
-      service['modDataResource'].set(mockModData11);
-      service.apply({ preset: Preset.Beacon12 });
-      TestBed.tick();
-      const result = service.defaults();
-      assert(result != null);
-      expect(result.beacons).toEqual([
-        {
-          count: rational(12n),
-          id: ItemId.Beacon,
-          modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
-        },
-      ]);
-    });
-
-    it('should handle DSP minimum module rank', () => {
-      const modInfo = { ...mockModInfo, game: 'dyson-sphere-program' as Game };
-      spyOn(service, 'modInfo').and.returnValue(modInfo);
-      service['modDataResource'].set(mockModData11);
-      service.apply({ preset: Preset.Minimum });
-      TestBed.tick();
-      const result = service.defaults();
-      assert(result != null);
-      expect(result.moduleRankIds).toEqual([]);
-    });
-
-    it('should handle DSP maximum module rank', () => {
-      const modInfo = { ...mockModInfo, game: 'dyson-sphere-program' as Game };
-      spyOn(service, 'modInfo').and.returnValue(modInfo);
-      service['modDataResource'].set(mockModData11);
-      service.apply({ preset: Preset.Beacon8 });
-      TestBed.tick();
-      const result = service.defaults();
-      assert(result != null);
-      expect(result.moduleRankIds).toEqual(mockDefaults11.moduleRank!);
-    });
-
-    it('should handle Satisfactory module rank', () => {
-      const modInfo = { ...mockModInfo, game: 'satisfactory' as Game };
-      spyOn(service, 'modInfo').and.returnValue(modInfo);
-      service['modDataResource'].set(mockModData11);
-      service.apply({ preset: Preset.Beacon8 });
-      const result = service.defaults();
-      assert(result != null);
-      expect(result.moduleRankIds).toEqual(mockDefaults11.moduleRank!);
-      expect(result.overclock).toEqual(rational(100n));
-    });
-
-    it('should handle Final Factory module rank', () => {
-      const modInfo = { ...mockModInfo, game: 'final-factory' as Game };
-      spyOn(service, 'modInfo').and.returnValue(modInfo);
-      service['modDataResource'].set(mockModData11);
-      service.apply({ preset: Preset.Beacon8 });
-      const result = service.defaults();
-      assert(result != null);
-      expect(result.moduleRankIds).toEqual(mockDefaults11.moduleRank!);
-    });
-
-    it('should handle custom presets', () => {
-      const result = service.defaults();
-      assert(result != null);
-      expect(result.fuelRankIds).toEqual([ItemId.Coal]);
-    });
-  });
-
   describe('linkValueOptions', () => {
     it('should return the list of link value options', () => {
       expect(service.linkValueOptions().length).toEqual(6);
@@ -332,7 +229,161 @@ describe('SettingsStore', () => {
     });
   });
 
-  describe('dataset', () => {
+  describe('beltSpeed', () => {
+    it('should return the map of belt speeds', () => {
+      const flowRate = rational(2000n);
+      spyOn(service, 'flowRate').and.returnValue(flowRate);
+      const result = service.beltSpeed();
+      expect(result[ItemId.TransportBelt]).toEqual(
+        mocks.getAdjustedDataset().beltRecord[ItemId.TransportBelt].speed,
+      );
+      expect(result[ItemId.Pipe]).toEqual(flowRate);
+    });
+  });
+
+  describe('beltSpeedTxt', () => {
+    it('should map belt speeds to appropriate rounded values for tooltips', () => {
+      spyOn(service, 'beltSpeed').and.returnValue({
+        a: rational(1n, 60n),
+        b: rational(1n, 180n),
+      });
+      const result = service.beltSpeedTxt();
+      expect(result['a']).toEqual('1');
+      expect(result['b']).toEqual('0.33');
+    });
+  });
+
+  describe('modMenuItem', () => {
+    it('should create a mod menu item', () => {
+      expect(service.modMenuItem().label).toEqual(mockModInfo.name);
+    });
+  });
+
+  describe('setCustomData', () => {
+    it('should write data and hash', () => {
+      spyOn(service.customData, 'set');
+      spyOn(service.customHash, 'set');
+      service.setCustomData(JSON.stringify(mockModData));
+      expect(service.customData.set).toHaveBeenCalled();
+      expect(service.customHash.set).toHaveBeenCalled();
+    });
+  });
+
+  describe('computeDefaults', () => {
+    it('should handle null base data', () => {
+      expect(
+        service['computeDefaults'](undefined, mockModData, 0),
+      ).toBeUndefined();
+    });
+
+    it('should use minimum values', () => {
+      const result = service['computeDefaults'](
+        mockModInfo,
+        mockModData11,
+        Preset.Minimum,
+      );
+      assert(result != null);
+      expect(result.beltId).toEqual(mockDefaults11.minBelt);
+      expect(result.machineRankIds).toEqual(mockDefaults11.minMachineRank!);
+      expect(result.moduleRankIds).toEqual([]);
+      expect(result.beacons).toEqual([
+        {
+          count: rational.zero,
+          id: ItemId.Beacon,
+          modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
+        },
+      ]);
+    });
+
+    it('should use 8 beacons', () => {
+      const result = service['computeDefaults'](
+        mockModInfo,
+        mockModData11,
+        Preset.Beacon8,
+      );
+      assert(result != null);
+      expect(result.beacons).toEqual([
+        {
+          count: rational(8n),
+          id: ItemId.Beacon,
+          modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
+        },
+      ]);
+    });
+
+    it('should use 12 beacons', () => {
+      const result = service['computeDefaults'](
+        mockModInfo,
+        mockModData11,
+        Preset.Beacon12,
+      );
+      assert(result != null);
+      expect(result.beacons).toEqual([
+        {
+          count: rational(12n),
+          id: ItemId.Beacon,
+          modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
+        },
+      ]);
+    });
+
+    it('should handle DSP minimum module rank', () => {
+      const modInfo = { ...mockModInfo, game: 'dyson-sphere-program' as Game };
+      const result = service['computeDefaults'](
+        modInfo,
+        mockModData11,
+        Preset.Minimum,
+      );
+      assert(result != null);
+      expect(result.moduleRankIds).toEqual([]);
+    });
+
+    it('should handle DSP maximum module rank', () => {
+      const modInfo = { ...mockModInfo, game: 'dyson-sphere-program' as Game };
+      const result = service['computeDefaults'](
+        modInfo,
+        mockModData11,
+        Preset.Beacon8,
+      );
+      assert(result != null);
+      expect(result.moduleRankIds).toEqual(mockDefaults11.moduleRank!);
+    });
+
+    it('should handle Satisfactory module rank', () => {
+      const modInfo = { ...mockModInfo, game: 'satisfactory' as Game };
+      const result = service['computeDefaults'](
+        modInfo,
+        mockModData11,
+        Preset.Beacon8,
+      );
+      assert(result != null);
+      expect(result.moduleRankIds).toEqual(mockDefaults11.moduleRank!);
+      expect(result.overclock).toEqual(rational(100n));
+    });
+
+    it('should handle Final Factory module rank', () => {
+      const modInfo = { ...mockModInfo, game: 'final-factory' as Game };
+      const result = service['computeDefaults'](
+        modInfo,
+        mockModData11,
+        Preset.Beacon8,
+      );
+      assert(result != null);
+      expect(result.moduleRankIds).toEqual(mockDefaults11.moduleRank!);
+    });
+
+    it('should handle custom presets', () => {
+      const result = service['computeDefaults'](
+        mockModInfo,
+        mockModData,
+        Preset.Beacon8,
+      );
+      assert(result != null);
+      expect(result.fuelRankIds).toEqual([ItemId.Coal]);
+    });
+  });
+
+  describe('computeDataset', () => {
     it('should return a complete dataset for the base and mods', () => {
       const modData = {
         ...mockModData,
@@ -347,12 +398,24 @@ describe('SettingsStore', () => {
             module: { sprays: 1 },
           },
         ],
+        locations: [{ id: 'nauvis', name: 'Nauvis', icon: ItemId.Coal }],
+        qualities: [
+          { id: 'normal', name: 'Normal', icon: ItemId.Coal, level: 1 },
+        ],
       };
-      service['modDataResource'].set(modData);
-      spyOn(service, 'modI18n').and.returnValue(mockModI18n);
-      TestBed.tick();
+      const modI18n = {
+        ...mockModI18n,
+        locations: { nauvis: 'test' },
+        qualities: { normal: 'test' },
+      };
 
-      const result = service.dataset();
+      const result = service['computeDataset'](
+        mockModInfo,
+        modData,
+        mockModHash,
+        modI18n,
+        'factorio',
+      );
       expect(result.categoryIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.categoryRecord).length).toEqual(
         result.categoryIds.length,
@@ -397,13 +460,17 @@ describe('SettingsStore', () => {
             },
             cargoWagon: { size: 1 },
             fluidWagon: { capacity: 1 },
+            pipe: { speed: 1 },
           },
         ],
       };
-      service['modDataResource'].set(modData);
-      TestBed.tick();
-
-      const result = service.dataset();
+      const result = service['computeDataset'](
+        mockModInfo,
+        modData,
+        mockModHash,
+        mockModI18n,
+        'factorio',
+      );
       expect(result.beaconIds).toEqual(['id', 'beacon']);
       expect(result.beltIds).toEqual([
         ItemId.TransportBelt,
@@ -424,98 +491,111 @@ describe('SettingsStore', () => {
       ]);
     });
 
-    //   it('should handle pipes when found', () => {
-    //     const items = Mocks.mod.items.map((i) => {
-    //       if (i.id === ItemId.Pipe) return spread(i, { pipe: { speed: 100 } });
-    //       else if (i.id === ItemId.CopperCable)
-    //         return spread(i, { pipe: { speed: 10 } });
-    //       else return spread(i);
-    //     });
-    //     spyOn(service, 'mod').and.returnValue(spread(Mocks.mod, { items }));
-    //     const result = service.dataset();
-    //     expect(result.pipeIds).toEqual([ItemId.CopperCable, ItemId.Pipe]);
-    //   });
+    it('should calculate missing recipe icons', () => {
+      const icons = mockModData.icons.filter(
+        (i) => i.id !== RecipeId.AdvancedOilProcessing,
+      );
+      const modData = { ...mockModData, icons };
+      const result = service['computeDataset'](
+        mockModInfo,
+        modData,
+        mockModHash,
+        mockModI18n,
+        'factorio',
+      );
+      expect(result.recipeRecord[RecipeId.AdvancedOilProcessing].icon).toEqual(
+        ItemId.HeavyOil,
+      );
+    });
 
-    //   it('should calculate missing recipe icons', () => {
-    //     const icons = Mocks.mod.icons.filter(
-    //       (i) => i.id !== RecipeId.AdvancedOilProcessing,
-    //     );
-    //     spyOn(service, 'mod').and.returnValue(spread(Mocks.mod, { icons }));
-    //     const result = service.dataset();
-    //     expect(
-    //       result.recipeEntities[RecipeId.AdvancedOilProcessing].icon,
-    //     ).toEqual(ItemId.HeavyOil);
-    //   });
+    it('should handle quality', () => {
+      const modData = {
+        ...mockModData,
+        items: [
+          ...mockModData.items,
+          {
+            id: 'id',
+            icon: ItemId.Coal,
+            name: 'Item',
+            category: 'logistics',
+            row: 0,
+            stack: 1,
+            beacon: {
+              effectivity: 1,
+              modules: 1,
+              range: 1,
+              type: EnergyType.Electric as const,
+              usage: 1,
+              qualityRecord: { uncommon: { effectivity: 2 } },
+            },
+            belt: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
+            inserter: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
+            machine: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
+            module: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
+            pipe: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
+          },
+          {
+            id: 'techId',
+            icon: ItemId.Coal,
+            name: 'Tech',
+            category: 'logistics',
+            row: 0,
+            technology: {
+              recipeProductivity: [
+                { id: RecipeId.ElectronicCircuit, value: 10 },
+              ],
+            },
+          },
+        ],
+        recipes: [
+          ...mockModData.recipes,
+          {
+            id: 'id',
+            icon: RecipeId.Coal,
+            name: 'Recipe',
+            category: 'logistics',
+            row: 0,
+            time: 1,
+            in: {},
+            out: {},
+          },
+        ],
+        qualities: [
+          { id: 'normal', name: 'Normal', icon: ItemId.Coal, level: 0 },
+          { id: 'uncommon', name: 'Uncommon', icon: ItemId.Coal, level: 1 },
+        ],
+      };
+      const result = service['computeDataset'](
+        mockModInfo,
+        modData,
+        mockModHash,
+        mockModI18n,
+        'factorio',
+      );
+      expect(result).toBeTruthy();
+      expect(result.beaconRecord['id(1)']).toBeDefined();
+      expect(result.beltRecord['id(1)']).toBeDefined();
+      expect(result.inserterRecord['id(1)']).toBeDefined();
+      expect(result.machineRecord['id(1)']).toBeDefined();
+      expect(result.moduleRecord['id(1)']).toBeDefined();
+      expect(result.beltRecord['id(1)']).toBeDefined();
+    });
 
-    //   it('should handle data not loaded yet', () => {
-    //     spyOn(service, 'mod').and.returnValue(undefined);
-    //     const result = service.dataset();
-    //     expect(result.categoryIds.length).toEqual(0);
-    //   });
-
-    //   it('should handle quality', () => {
-    //     const items = Mocks.mod.items.map((i) =>
-    //       i.id === ItemId.ElectricMiningDrill
-    //         ? spread(i, {
-    //             machine: spread(i.machine!, { entityType: 'mining-drill' }),
-    //           })
-    //         : i.id === ItemId.AssemblingMachine1
-    //           ? spread(i, {
-    //               machine: spread(i.machine!, {
-    //                 entityType: 'assembling-machine',
-    //               }),
-    //             })
-    //           : i.id === ItemId.Pump
-    //             ? spread(i, { pipe: { speed: 1200 } })
-    //             : i.id === ItemId.SpeedModule
-    //               ? spread(i, { module: { quality: 0.1 } })
-    //               : i,
-    //     );
-    //     spyOn(service, 'mod').and.returnValue(
-    //       spread(Mocks.mod, { flags: 'spa', items }),
-    //     );
-    //     spyOn(service, 'i18n').and.returnValue(Mocks.modI18n);
-    //     const result = service.dataset();
-    //     expect(result.categoryIds.length).toBeGreaterThan(0);
-    //     expect(Object.keys(result.categoryEntities).length).toEqual(
-    //       result.categoryIds.length,
-    //     );
-    //     expect(Object.keys(result.categoryItemRows).length).toEqual(
-    //       result.categoryIds.length,
-    //     );
-    //     expect(result.iconIds.length).toBeGreaterThan(0);
-    //     expect(Object.keys(result.iconEntities).length).toEqual(
-    //       result.iconIds.length,
-    //     );
-    //     expect(result.itemIds.length).toBeGreaterThan(0);
-    //     expect(result.beltIds.length).toBeGreaterThan(0);
-    //     expect(Object.keys(result.fuelIds).length).toBeGreaterThan(0);
-    //     expect(result.machineIds.length).toBeGreaterThan(0);
-    //     expect(result.moduleIds.length).toBeGreaterThan(0);
-    //     expect(Object.keys(result.itemEntities).length).toEqual(
-    //       result.itemIds.length,
-    //     );
-    //     expect(result.recipeIds.length).toBeGreaterThan(0);
-    //     expect(Object.keys(result.recipeEntities).length).toEqual(
-    //       result.recipeIds.length,
-    //     );
-    //   });
-
-    //   it('should build list of recipes that allow prod upgrades', () => {
-    //     const items = Mocks.mod.items.map((i) =>
-    //       i.id === ItemId.ArtilleryShellRange
-    //         ? spread(i, { technology: { prodUpgrades: [RecipeId.SteelChest] } })
-    //         : i,
-    //     );
-    //     spyOn(service, 'mod').and.returnValue(
-    //       spread(Mocks.mod, { items, flags: 'spa' }),
-    //     );
-    //     const result = service.dataset();
-    //     expect(result.prodUpgradeTechs).toEqual([ItemId.ArtilleryShellRange]);
-    //   });
+    it('should use the correct file for custom data', () => {
+      spyOn(service, 'customIconsUrl').and.returnValue('test');
+      const modInfo = { ...mockModInfo, id: CUSTOM_MOD };
+      const result = service['computeDataset'](
+        modInfo,
+        mockModData,
+        mockModHash,
+        undefined,
+        'factorio',
+      );
+      expect(result.iconRecord.item[ItemId.Coal].file).toEqual('test');
+    });
   });
 
-  describe('settings', () => {
+  describe('computeSettings', () => {
     it('should overwrite defaults when specified', () => {
       const value: any = {
         modId: '1.1',
@@ -528,20 +608,26 @@ describe('SettingsStore', () => {
         fuelRankIds: [ItemId.Coal],
         moduleRankIds: [ItemId.SpeedModule],
       };
-      spyOn(service, 'state').and.returnValue(value);
-      const result = service.settings();
+      const result = service['computeSettings'](
+        value,
+        service.defaults(),
+        service.dataset(),
+      );
       for (const key of Object.keys(value) as (keyof Settings)[])
         expect(result[key]).toEqual(value[key]);
       expect(result.quality).toBeUndefined();
     });
 
-    //   it('should fall back if setting and defaults are undefined', () => {
-    //     spyOn(service, 'state').and.returnValue({} as any);
-    //     const result = service.settings();
-    //     expect(result.machineRankIds).toEqual([]);
-    //     expect(result.fuelRankIds).toEqual([]);
-    //     expect(result.moduleRankIds).toEqual([]);
-    //   });
+    it('should fall back if setting and defaults are undefined', () => {
+      const result = service['computeSettings'](
+        {} as any,
+        undefined,
+        service.dataset(),
+      );
+      expect(result.machineRankIds).toEqual([]);
+      expect(result.fuelRankIds).toEqual([]);
+      expect(result.moduleRankIds).toEqual([]);
+    });
 
     //   it('should calculate legendary quality level', () => {
     //     const data = Mocks.getDataset();
@@ -619,35 +705,5 @@ describe('SettingsStore', () => {
     //     expect(result.availableRecipeIds.size).toEqual(data.recipeIds.length - 2);
     //     expect(result.availableItemIds.size).toEqual(data.itemIds.length);
     //   });
-  });
-
-  describe('beltSpeed', () => {
-    it('should return the map of belt speeds', () => {
-      const flowRate = rational(2000n);
-      spyOn(service, 'flowRate').and.returnValue(flowRate);
-      const result = service.beltSpeed();
-      expect(result[ItemId.TransportBelt]).toEqual(
-        mocks.getAdjustedDataset().beltRecord[ItemId.TransportBelt].speed,
-      );
-      expect(result[ItemId.Pipe]).toEqual(flowRate);
-    });
-  });
-
-  describe('beltSpeedTxt', () => {
-    it('should map belt speeds to appropriate rounded values for tooltips', () => {
-      spyOn(service, 'beltSpeed').and.returnValue({
-        a: rational(1n, 60n),
-        b: rational(1n, 180n),
-      });
-      const result = service.beltSpeedTxt();
-      expect(result['a']).toEqual('1');
-      expect(result['b']).toEqual('0.33');
-    });
-  });
-
-  describe('modMenuItem', () => {
-    it('should create a mod menu item', () => {
-      expect(service.modMenuItem().label).toEqual(mockModInfo.name);
-    });
   });
 });
