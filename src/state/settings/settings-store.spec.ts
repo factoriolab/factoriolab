@@ -635,11 +635,16 @@ describe('SettingsStore', () => {
       const settings = {
         ...initialSettingsState,
         locationIds: new Set(['1']),
+        machineRankIds: [ItemId.Pumpjack],
       };
       const data = mocks.getDataset();
       data.locationIds = ['1', '2', '3'];
+      data.recipeRecord[RecipeId.CrudeOil].locations = ['1'];
+      data.itemRecord[ItemId.Pumpjack].machine!.locations = ['3'];
       const result = service['computeSettings'](settings, undefined, data);
       expect(result.locationIds).toEqual(new Set(['1']));
+      expect(result.availableRecipeIds).not.toContain(RecipeId.CrudeOil);
+      expect(result.machineRankIds).toHaveSize(0);
     });
 
     it('should process effects of researched technologies', () => {
@@ -662,6 +667,9 @@ describe('SettingsStore', () => {
         inserterStack: [{ value: rational.one }],
         miningProductivity: rational.one,
         qualityUnlock: ['normal'],
+        recipeProductivity: [
+          { id: RecipeId.ElectronicCircuit, value: rational.one },
+        ],
         researchSpeed: rational.one,
         researchProductivity: rational.one,
       };
@@ -676,6 +684,27 @@ describe('SettingsStore', () => {
       expect(result.quality).toEqual(uncommon);
       expect(result.researchBonus).toEqual(rational(100n));
       expect(result.researchProductivity).toEqual(rational(100n));
+      expect(result.recipeBonus[RecipeId.ElectronicCircuit]).toEqual(
+        rational(100n),
+      );
+    });
+
+    it('should handle no items available for settings', () => {
+      const settings = { ...initialSettingsState };
+      const data = mocks.getDataset();
+      const result = service['computeSettings'](
+        settings,
+        {
+          beltId: 'nonsense',
+          fuelRankIds: [],
+          excludedRecipeIds: [],
+          machineRankIds: [],
+          moduleRankIds: [],
+          beacons: [],
+        },
+        data,
+      );
+      expect(result.beltId).toEqual('');
     });
   });
 });
