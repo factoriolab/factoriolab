@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { CUSTOM_MOD, Game } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
 import { EnergyType } from '~/data/schema/energy-type';
+import { QualityJson } from '~/data/schema/quality';
 import { rational } from '~/rational/rational';
 import { ItemId } from '~/tests/item-id';
 import {
@@ -23,6 +24,7 @@ import { assert } from '~/tests/utils';
 import { DisplayRate, displayRateInfo } from './display-rate';
 import { Preset } from './preset';
 import { Settings } from './settings';
+import { initialSettingsState } from './settings-state';
 import { SettingsStore } from './settings-store';
 
 describe('SettingsStore', () => {
@@ -629,81 +631,51 @@ describe('SettingsStore', () => {
       expect(result.moduleRankIds).toEqual([]);
     });
 
-    //   it('should calculate legendary quality level', () => {
-    //     const data = Mocks.getDataset();
-    //     data.flags = flags.spa;
-    //     data.technologyEntities[ItemId.LegendaryQuality] = {};
-    //     spyOn(service, 'dataset').and.returnValue(data);
-    //     spyOn(service, 'state').and.returnValue(
-    //       spread(Mocks.settingsStateInitial, {
-    //         researchedTechnologyIds: new Set([ItemId.LegendaryQuality]),
-    //       }),
-    //     );
-    //     expect(service.settings().quality).toEqual(Quality.Legendary);
-    //   });
+    it('should filter locations', () => {
+      const settings = {
+        ...initialSettingsState,
+        locationIds: new Set(['1']),
+      };
+      const data = mocks.getDataset();
+      data.locationIds = ['1', '2', '3'];
+      const result = service['computeSettings'](settings, undefined, data);
+      expect(result.locationIds).toEqual(new Set(['1']));
+    });
 
-    //   it('should calculate epic quality level', () => {
-    //     const data = Mocks.getDataset();
-    //     data.flags = flags.spa;
-    //     data.technologyEntities[ItemId.EpicQuality] = {};
-    //     spyOn(service, 'dataset').and.returnValue(data);
-    //     spyOn(service, 'state').and.returnValue(
-    //       spread(Mocks.settingsStateInitial, {
-    //         researchedTechnologyIds: new Set([ItemId.EpicQuality]),
-    //       }),
-    //     );
-    //     expect(service.settings().quality).toEqual(Quality.Epic);
-    //   });
-
-    //   it('should calculate rare quality level', () => {
-    //     const data = Mocks.getDataset();
-    //     data.flags = flags.spa;
-    //     data.technologyEntities[ItemId.QualityModuleTechnology] = {};
-    //     spyOn(service, 'dataset').and.returnValue(data);
-    //     spyOn(service, 'state').and.returnValue(
-    //       spread(Mocks.settingsStateInitial, {
-    //         researchedTechnologyIds: new Set([ItemId.QualityModuleTechnology]),
-    //       }),
-    //     );
-    //     expect(service.settings().quality).toEqual(Quality.Rare);
-    //   });
-
-    //   it('should filter items based on unlocked recipes', () => {
-    //     const data = Mocks.getDataset();
-    //     data.flags = flags.spa;
-    //     const qId = ItemId.Coal + '(1)';
-    //     data.itemIds.push(qId);
-    //     data.noRecipeItemIds.add(qId);
-    //     data.itemEntities[qId] = spread(data.itemEntities[ItemId.Coal], {
-    //       quality: Quality.Uncommon,
-    //     });
-    //     data.recipeIds.push(qId);
-    //     data.recipeEntities[qId] = spread(data.recipeEntities[ItemId.Coal], {
-    //       quality: Quality.Uncommon,
-    //     });
-    //     spyOn(service, 'state').and.returnValue(
-    //       spread(Mocks.settingsStateInitial, {
-    //         preset: Preset.Beacon8,
-    //         researchedTechnologyIds: new Set([ItemId.Automation]),
-    //       }),
-    //     );
-    //     spyOn(service, 'defaults').and.returnValue(Mocks.defaults);
-    //     spyOn(service, 'dataset').and.returnValue(data);
-    //     const result = service.settings();
-    //     expect(result.cargoWagonId).toBeUndefined();
-    //     expect(result.beacons).toEqual([]);
-    //   });
-
-    //   it('should filter for recipes and machines that match locations', () => {
-    //     const data = Mocks.getDataset();
-    //     data.recipeEntities[RecipeId.Coal].locations = ['id2'];
-    //     data.machineEntities[ItemId.ElectricMiningDrill].locations = ['id2'];
-    //     spyOn(service, 'state').and.returnValue(Mocks.settingsStateInitial);
-    //     spyOn(service, 'defaults').and.returnValue(Mocks.defaults);
-    //     spyOn(service, 'dataset').and.returnValue(data);
-    //     const result = service.settings();
-    //     expect(result.availableRecipeIds.size).toEqual(data.recipeIds.length - 2);
-    //     expect(result.availableItemIds.size).toEqual(data.itemIds.length);
-    //   });
+    it('should process effects of researched technologies', () => {
+      const settings = {
+        ...initialSettingsState,
+        researchedTechnologyIds: new Set(['tech1', 'tech2']),
+      };
+      const data = service.dataset();
+      const normal: QualityJson = { id: 'normal', name: 'Normal', level: 0 };
+      const uncommon: QualityJson = {
+        id: 'uncommon',
+        name: 'Uncommon',
+        level: 1,
+      };
+      data.qualityIds = ['normal', 'uncommon'];
+      data.qualityRecord = { normal, uncommon };
+      data.technologyIds.push('tech1', 'tech2');
+      data.technologyRecord['tech1'] = {
+        beltStack: rational.one,
+        inserterStack: [{ value: rational.one }],
+        miningProductivity: rational.one,
+        qualityUnlock: ['normal'],
+        researchSpeed: rational.one,
+        researchProductivity: rational.one,
+      };
+      data.technologyRecord['tech2'] = {
+        qualityUnlock: ['uncommon'],
+      };
+      const result = service['computeSettings'](settings, undefined, data);
+      expect(result.researchedTechnologyIds.size).toEqual(2);
+      expect(result.stack).toEqual(rational(2n));
+      expect(result.inserterBonus).toEqual({ '': rational.one });
+      expect(result.miningBonus).toEqual(rational(100n));
+      expect(result.quality).toEqual(uncommon);
+      expect(result.researchBonus).toEqual(rational(100n));
+      expect(result.researchProductivity).toEqual(rational(100n));
+    });
   });
 });

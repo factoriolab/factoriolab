@@ -934,9 +934,8 @@ export class SettingsStore extends Store<SettingsState> {
     data: Dataset,
   ): Settings {
     const techIds = state.researchedTechnologyIds;
-    const allTechnologyIds = Object.keys(data.technologyRecord);
-    let researchedTechnologyIds = new Set(allTechnologyIds);
-    if (techIds != null && allTechnologyIds.length > 0) {
+    let researchedTechnologyIds = new Set(data.technologyIds);
+    if (techIds != null && researchedTechnologyIds.size > 0) {
       // Filter for only technologies that still exist in this data set
       const filteredTechs = Array.from(techIds).filter((i) =>
         researchedTechnologyIds.has(i),
@@ -945,8 +944,7 @@ export class SettingsStore extends Store<SettingsState> {
     }
 
     const locIds = state.locationIds;
-    const defaultLocationIds =
-      defaults?.locations ?? Object.keys(data.locationRecord);
+    const defaultLocationIds = defaults?.locations ?? data.locationIds;
     let locationIds = new Set(defaultLocationIds);
     if (locIds != null && defaultLocationIds.length > 0) locationIds = locIds;
 
