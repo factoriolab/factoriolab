@@ -105,8 +105,10 @@ export function updateHash(data: ModData, hash: ModHash): void {
   // Clean up existing hash data
   const keys = Object.keys(hashSet) as (keyof ModHash)[];
   for (const key of keys) {
+    // The continue block should be unreachable and exists to satisfy TypeScript
+    // istanbul ignore if
     if (hash[key] == null) continue;
-    hash[key] = hash[key]?.map((i) =>
+    hash[key] = hash[key].map((i) =>
       i != null && hashSet[key].has(i) ? i : null,
     );
   }

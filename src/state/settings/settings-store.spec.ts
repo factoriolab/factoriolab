@@ -676,7 +676,11 @@ describe('SettingsStore', () => {
       data.technologyRecord['tech2'] = {
         qualityUnlock: ['uncommon'],
       };
-      const result = service['computeSettings'](settings, undefined, data);
+      const result = service['computeSettings'](
+        settings,
+        service.defaults(),
+        data,
+      );
       expect(result.researchedTechnologyIds.size).toEqual(2);
       expect(result.stack).toEqual(rational(2n));
       expect(result.inserterBonus).toEqual({ '': rational.one });
@@ -687,6 +691,7 @@ describe('SettingsStore', () => {
       expect(result.recipeBonus[RecipeId.ElectronicCircuit]).toEqual(
         rational(100n),
       );
+      expect(result.beacons).toEqual([]);
     });
 
     it('should handle no items available for settings', () => {

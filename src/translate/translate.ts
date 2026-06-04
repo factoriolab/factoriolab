@@ -1,5 +1,11 @@
 import { httpResource } from '@angular/common/http';
-import { computed, inject, Injectable, linkedSignal } from '@angular/core';
+import {
+  computed,
+  inject,
+  Injectable,
+  Injector,
+  linkedSignal,
+} from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { filter, firstValueFrom } from 'rxjs';
 
@@ -20,6 +26,7 @@ interface ParseEntry {
 
 @Injectable({ providedIn: 'root' })
 export class Translate {
+  private readonly injector = inject(Injector);
   private readonly preferences = inject(PreferencesStore);
 
   private readonly templateMatcher = /{{\s?([^{}\s]*)\s?}}/g;
@@ -43,7 +50,9 @@ export class Translate {
 
   load(): Promise<boolean> {
     return firstValueFrom(
-      toObservable(this.httpData.isLoading).pipe(filter((v) => v)),
+      toObservable(this.httpData.isLoading, { injector: this.injector }).pipe(
+        filter((v) => v),
+      ),
     );
   }
 
@@ -71,6 +80,11 @@ export class Translate {
     );
     while (entries.length) {
       const entry = entries.pop();
+      /**
+       * This if statement should be impossible to reach and only exists to
+       * satisfy TypeScript
+       */
+      // istanbul ignore if
       if (entry == null) break;
       const data = entry.data[entry.key];
       if (typeof data === 'string') result[entry.path] = data;
