@@ -121,6 +121,7 @@
         <button
           type="button"
           labButton
+          color="brand"
           [faIcon]="faMicrochip"
           [text]="
             settingsStore.researchedTechnologyIds()
@@ -310,7 +311,7 @@
                   cdkDragBoundary=".flex-col"
                   class="flex"
                 >
-                  <div class="flex items-center bg-gray-950">
+                  <div class="flex items-center">
                     <div
                       cdkDragHandle
                       class="flex size-9 cursor-grab items-center justify-center rounded-s-xs border border-gray-600"
@@ -676,6 +677,7 @@
           <button
             type="button"
             labButton
+            color="brand"
             [faIcon]="faArrowTrendUp"
             text="settings.recipeProductivity"
             labTooltip="settings.recipeProductivityTooltip"
@@ -720,6 +722,7 @@
       <button
         type="button"
         labButton
+        color="brand"
         [faIcon]="faDollar"
         text="costs.header"
         (click)="dialog.open(CostSettingsDialog)"
