@@ -492,6 +492,36 @@ export class RecipeService {
         delete recipe.consumption;
       }
 
+      if (data.flags.has('electricity')) {
+        // Scale: 1 electricity unit = 1 kW·min (60 kJ)
+        // After finalizeRecipe divides by time and displayRate multiplies by 60,
+        // the items/min value equals the power in kW.
+        const elecScale = rational(60n);
+        if (machine.type === EnergyType.Electric && usage.gt(rational.zero)) {
+          const elecIn = recipe.time.mul(usage).div(elecScale);
+          recipe.in['electricity'] = (
+            recipe.in['electricity'] || rational.zero
+          ).add(elecIn);
+        } else if (
+          machine.type === EnergyType.Electric &&
+          usage.lt(rational.zero)
+        ) {
+          // Free power generator (wind turbine, solar panel): produces electricity
+          const elecOut = recipe.time.mul(usage.abs()).div(elecScale);
+          recipe.out['electricity'] = (
+            recipe.out['electricity'] || rational.zero
+          ).add(elecOut);
+        } else if (
+          machine.type === EnergyType.Burner &&
+          usage.gt(rational.zero)
+        ) {
+          const elecOut = recipe.time.mul(usage).div(elecScale);
+          recipe.out['electricity'] = (
+            recipe.out['electricity'] || rational.zero
+          ).add(elecOut);
+        }
+      }
+
       // Pollution
       recipe.pollution =
         machine.pollution && recipeSettings.machineId !== ItemId.Pumpjack

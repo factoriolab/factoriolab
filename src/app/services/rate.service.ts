@@ -215,7 +215,7 @@ export class RateService {
       delete step.belts;
       delete step.wagons;
       delete step.rockets;
-    } else if (step.itemId != null) {
+    } else if (step.itemId != null && step.itemId !== 'electricity') {
       const itemSettings = items[step.itemId];
       const belt = itemSettings.beltId;
       if (step.items != null && belt != null) {

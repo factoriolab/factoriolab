@@ -4,6 +4,7 @@ export type Flag =
   | 'consumptionAsDrain'
   | 'diminishingBeacons'
   | 'duplicators'
+  | 'electricity'
   | 'expensive'
   | 'fuels'
   | 'hideMachineSettings'
@@ -137,6 +138,7 @@ export const flags: Record<FlagSet, Set<Flag>> = {
   ]),
   dsp: new Set([
     'beltStack',
+    'electricity',
     'fuels',
     'inactiveDrain',
     'miningSpeed',
