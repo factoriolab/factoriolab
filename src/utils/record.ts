@@ -58,17 +58,21 @@ export function toRationalRecord(
   }, {});
 }
 
-export function toRecord<T extends { id: string }>(
+export const toRecord = isDevMode() ? devModeToRecord : standardToRecord;
+
+function devModeToRecord<T extends { id: string }>(
   value: T[],
 ): Record<string, T> {
-  if (isDevMode()) {
-    return value.reduce((e: Record<string, T>, v) => {
-      if (e[v.id]) console.warn(`Duplicate id: ${v.id}`);
-      e[v.id] = v;
-      return e;
-    }, {});
-  }
+  return value.reduce((e: Record<string, T>, v) => {
+    if (e[v.id]) console.warn(`Duplicate id: ${v.id}`);
+    e[v.id] = v;
+    return e;
+  }, {});
+}
 
+function standardToRecord<T extends { id: string }>(
+  value: T[],
+): Record<string, T> {
   return value.reduce((e: Record<string, T>, v) => {
     e[v.id] = v;
     return e;
