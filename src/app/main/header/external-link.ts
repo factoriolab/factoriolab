@@ -1,6 +1,9 @@
 import { IconDefinition } from '@fortawesome/angular-fontawesome';
 import { faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
+import {
+  faClockRotateLeft,
+  faHandHoldingDollar,
+} from '@fortawesome/free-solid-svg-icons';
 
 interface ExternalLink {
   text: string;
@@ -23,5 +26,10 @@ export const externalLinks: ExternalLink[] = [
     text: 'header.source',
     icon: faGithub,
     href: 'https://github.com/factoriolab/factoriolab',
+  },
+  {
+    text: 'header.v3',
+    icon: faClockRotateLeft,
+    href: 'https://factoriolab.github.io/old',
   },
 ];

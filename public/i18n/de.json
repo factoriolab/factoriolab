@@ -186,7 +186,8 @@
     "resetTooltip": "Click to reset",
     "selectGame": "Select game",
     "source": "Source",
-    "sponsor": "Sponsor"
+    "sponsor": "Sponsor",
+    "v3": "FactorioLab 3"
   },
   "inputNumber": {
     "decrement": "Decrement",
