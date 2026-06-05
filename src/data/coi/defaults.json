@@ -1,8 +1,8 @@
 {
-  "minBelt": "flat-conveyor",
-  "maxBelt": "flat-conveyor-3",
-  "minPipe": "pipe",
-  "maxPipe": "pipe-3",
+  "minBelt": "flat-conveyor-t1",
+  "maxBelt": "flat-conveyor-t3",
+  "minPipe": "pipe-t1",
+  "maxPipe": "pipe-t4",
   "excludedRecipes": [
     "contract-cement-coal",
     "contract-household-goods-coal",
