@@ -1,0 +1,27 @@
+<table>
+  <thead>
+    <tr>
+      <th>{{ 'versions.mod' | translate }}</th>
+      <th>{{ 'versions.version' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (mod of settingsStore.dataset().version | keyvalue; track mod.key) {
+      <tr>
+        <td>{{ mod.key }}</td>
+        <td>{{ mod.value }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="flex justify-end">
+  <button
+    type="button"
+    labButton
+    text="ok"
+    [faIcon]="faCheck"
+    color="brand"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

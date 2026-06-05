@@ -1,12 +1,11 @@
 import fs from 'fs';
-import { data } from 'src/app/models/app-data';
 
-import { ModData } from '~/models/data/mod-data';
-import { ModHash } from '~/models/data/mod-hash';
-import { flags } from '~/models/flags';
+import { datasets } from '~/data/datasets';
+import { ModData } from '~/data/schema/mod-data';
+import { ModHash } from '~/data/schema/mod-hash';
+import { emptyModHash, updateHash } from '~/utils/hash';
 
-import { updateHash } from './helpers/data.helpers';
-import { getJsonData } from './helpers/file.helpers';
+import { getJsonData, writeJsonData } from './utils/file';
 
 const modId = process.argv[2];
 
@@ -16,20 +15,20 @@ if (!modId) {
   );
 }
 
-const mod = data.mods.find((m) => m.id === modId);
+const mod = datasets.mods.find((m) => m.id === modId);
 if (!mod)
   throw new Error(
     'Please define this mod set in `src/data/index.ts` before running build.',
   );
 
-const modPath = `./src/data/${modId}`;
+const modPath = `./public/data/${modId}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
 
 const modData = getJsonData(modDataPath) as ModData;
-const modHash = getJsonData(modHashPath) as ModHash;
-const modFlags = flags[mod.flags];
+const modHash = fs.existsSync(modHashPath)
+  ? (getJsonData(modHashPath) as ModHash)
+  : emptyModHash();
 
-updateHash(modData, modHash, modFlags);
-
-fs.writeFileSync(modHashPath, JSON.stringify(modHash));
+updateHash(modData, modHash);
+writeJsonData(modHashPath, modHash);

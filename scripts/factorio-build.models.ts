@@ -1,5 +1,3 @@
-import { Entities } from '~/models/utils';
-
 import * as M from './factorio.models';
 
 export interface ModList {
@@ -42,63 +40,60 @@ export function isFluidProduct(
   return value.type === 'fluid';
 }
 
-export function isResearchProduct(
-  value: M.ProductPrototype,
-): value is M.ProductPrototype {
-  return value.type === 'research-progress';
-}
-
 export interface DataRawDump {
-  'agricultural-tower'?: Entities<M.AgriculturalTowerPrototype>;
-  ammo: Entities<M.AmmoItemPrototype>;
-  armor: Entities<M.ArmorPrototype>;
-  'assembling-machine': Entities<M.AssemblingMachinePrototype>;
-  asteroid?: Entities<M.AsteroidPrototype>;
-  'asteroid-chunk': Entities<M.AsteroidChunkPrototype>;
-  'asteroid-collector'?: Entities<M.AsteroidCollectorPrototype>;
-  beacon: Entities<M.BeaconPrototype>;
-  boiler: Entities<M.BoilerPrototype>;
-  capsule: Entities<M.CapsulePrototype>;
-  'cargo-wagon': Entities<M.CargoWagonPrototype>;
-  fluid: Entities<M.FluidPrototype>;
-  'fluid-wagon': Entities<M.FluidWagonPrototype>;
-  furnace: Entities<M.FurnacePrototype>;
-  gun: Entities<M.GunPrototype>;
-  item: Entities<M.ItemPrototype>;
-  'item-group': Entities<M.ItemGroup>;
-  'item-subgroup': Entities<M.ItemSubGroup>;
-  'item-with-entity-data': Entities<M.ItemWithEntityDataPrototype>;
-  lab: Entities<M.LabPrototype>;
-  'mining-drill': Entities<M.MiningDrillPrototype>;
-  module: Entities<M.ModulePrototype>;
-  'offshore-pump': Entities<M.OffshorePumpPrototype>;
-  planet: Entities<M.PlanetPrototype>;
-  plant: Entities<M.PlantPrototype>;
-  pump: Entities<M.PumpPrototype>;
-  'rail-planner': Entities<M.RailPlannerPrototype>;
-  reactor: Entities<M.ReactorPrototype>;
-  recipe: Entities<M.RecipePrototype>;
-  'recipe-category': Entities<M.RecipeCategory>;
-  'repair-tool': Entities<M.RepairToolPrototype>;
-  resource: Entities<M.ResourceEntityPrototype>;
-  'rocket-silo': Entities<M.RocketSiloPrototype>;
-  'rocket-silo-rocket': Entities<M.RocketSiloRocketPrototype>;
-  'selection-tool': Entities<M.SelectionToolPrototype>;
-  'space-connection'?: Entities<M.SpaceConnectionPrototype>;
-  'space-location': Entities<M.SpaceLocationPrototype>;
-  'space-platform-starter-pack'?: Entities<M.SpacePlatformStarterPackPrototype>;
-  'spidertron-remote': Entities<M.SpidertronRemotePrototype>;
-  surface: Entities<M.SurfacePrototype>;
-  'surface-property': Entities<M.SurfacePropertyPrototype>;
-  technology: Entities<M.TechnologyPrototype>;
-  tile: Entities<M.TilePrototype>;
-  tool: Entities<M.ToolPrototype>;
-  'transport-belt': Entities<M.TransportBeltPrototype>;
+  ammo: Record<string, M.AmmoItemPrototype>;
+  armor: Record<string, M.ArmorPrototype>;
+  'assembling-machine': Record<string, M.AssemblingMachinePrototype>;
+  asteroid?: Record<string, M.AsteroidPrototype>;
+  'asteroid-chunk': Record<string, M.AsteroidChunkPrototype>;
+  beacon: Record<string, M.BeaconPrototype>;
+  boiler: Record<string, M.BoilerPrototype>;
+  capsule: Record<string, M.CapsulePrototype>;
+  'cargo-wagon': Record<string, M.CargoWagonPrototype>;
+  fluid: Record<string, M.FluidPrototype>;
+  'fluid-wagon': Record<string, M.FluidWagonPrototype>;
+  furnace: Record<string, M.FurnacePrototype>;
+  gun: Record<string, M.GunPrototype>;
+  item: Record<string, M.ItemPrototype>;
+  inserter: Record<string, M.InserterPrototype>;
+  'item-group': Record<string, M.ItemGroup>;
+  'item-subgroup': Record<string, M.ItemSubGroup>;
+  'item-with-entity-data': Record<string, M.ItemWithEntityDataPrototype>;
+  lab: Record<string, M.LabPrototype>;
+  'mining-drill': Record<string, M.MiningDrillPrototype>;
+  module: Record<string, M.ModulePrototype>;
+  'offshore-pump': Record<string, M.OffshorePumpPrototype>;
+  planet: Record<string, M.PlanetPrototype>;
+  plant: Record<string, M.PlantPrototype>;
+  pump: Record<string, M.PumpPrototype>;
+  quality?: Record<string, M.QualityPrototype>;
+  'rail-planner': Record<string, M.RailPlannerPrototype>;
+  reactor: Record<string, M.ReactorPrototype>;
+  recipe: Record<string, M.RecipePrototype>;
+  'recipe-category': Record<string, M.RecipeCategory>;
+  'repair-tool': Record<string, M.RepairToolPrototype>;
+  resource: Record<string, M.ResourceEntityPrototype>;
+  'rocket-silo': Record<string, M.RocketSiloPrototype>;
+  'rocket-silo-rocket': Record<string, M.RocketSiloRocketPrototype>;
+  'selection-tool': Record<string, M.SelectionToolPrototype>;
+  'space-connection'?: Record<string, M.SpaceConnectionPrototype>;
+  'space-location': Record<string, M.SpaceLocationPrototype>;
+  'space-platform-starter-pack'?: Record<
+    string,
+    M.SpacePlatformStarterPackPrototype
+  >;
+  'spidertron-remote': Record<string, M.SpidertronRemotePrototype>;
+  surface: Record<string, M.SurfacePrototype>;
+  'surface-property': Record<string, M.SurfacePropertyPrototype>;
+  technology: Record<string, M.TechnologyPrototype>;
+  tile: Record<string, M.TilePrototype>;
+  tool: Record<string, M.ToolPrototype>;
+  'transport-belt': Record<string, M.TransportBeltPrototype>;
   'utility-constants': { default: M.UtilityConstants };
 }
 
 export interface Locale {
-  names: Entities;
+  names: Record<string, string>;
 }
 
 export type AnyItemPrototype =
@@ -150,14 +145,12 @@ export type AnyEntityPrototype =
   | M.CargoWagonPrototype
   | M.FluidWagonPrototype
   | M.PumpPrototype
-  | M.AsteroidCollectorPrototype
-  | M.AgriculturalTowerPrototype;
+  | M.InserterPrototype;
 
 export type AnyLocationPrototype = M.PlanetPrototype | M.SurfacePrototype;
 
 export interface ModDataReport {
   machineSpeedZero: string[];
-  noProducers: string[];
   resourceNoMinableProducts: string[];
   resourceDuplicate: string[];
   disabledRecipeDoesntExist: string[];
@@ -171,9 +164,7 @@ export type MachineProto =
   | M.LabPrototype
   | M.MiningDrillPrototype
   | M.OffshorePumpPrototype
-  | M.ReactorPrototype
-  | M.AsteroidCollectorPrototype
-  | M.AgriculturalTowerPrototype;
+  | M.ReactorPrototype;
 
 export const anyEntityKeys = [
   'beacon',
@@ -189,8 +180,7 @@ export const anyEntityKeys = [
   'cargo-wagon',
   'fluid-wagon',
   'pump',
-  'asteroid-collector',
-  'agricultural-tower',
+  'inserter',
 ] as const;
 
 export const anyItemKeys = [

@@ -1,0 +1,15 @@
+:host ::ng-deep {
+  td,
+  th {
+    border-bottom: 1px solid var(--color-gray-600);
+    padding: calc(var(--spacing) * 2);
+  }
+
+  th:has(+ td) {
+    text-align: start;
+  }
+
+  td {
+    text-align: end;
+  }
+}

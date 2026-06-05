@@ -8,8 +8,9 @@
       "resources": {
         "files": [
           "/favicon.ico",
+          "/index.csr.html",
           "/index.html",
-          "/site.webmanifest",
+          "/manifest.webmanifest",
           "/*.css",
           "/*.js"
         ]
@@ -21,8 +22,6 @@
       "updateMode": "prefetch",
       "resources": {
         "files": [
-          "/assets/**",
-          "/data/**",
           "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
       }

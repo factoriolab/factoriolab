@@ -2,5 +2,9 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": ["source.fixAll"],
-  "stylelint.validate": ["css", "scss"]
+  "editor.rulers": [80],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "stylelint.validate": ["tailwindcss"]
 }

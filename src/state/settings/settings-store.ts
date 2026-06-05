@@ -1,0 +1,1170 @@
+import { httpResource } from '@angular/common/http';
+import { computed, effect, inject, Injectable, resource } from '@angular/core';
+import { faDatabase } from '@fortawesome/free-solid-svg-icons';
+import { FastAverageColor } from 'fast-average-color';
+
+import { DEFAULT_MOD, modOptions, modRecord } from '~/data/datasets';
+import { CUSTOM_MOD, Game } from '~/data/game';
+import { gameInfo } from '~/data/game-info';
+import { IconType } from '~/data/icon-type';
+import { ModInfo } from '~/data/mod';
+import { Beacon, parseBeacon } from '~/data/schema/beacon';
+import { Belt, parseBelt, PIPE } from '~/data/schema/belt';
+import { CargoWagon } from '~/data/schema/cargo-wagon';
+import { Category } from '~/data/schema/category';
+import { FluidWagon } from '~/data/schema/fluid-wagon';
+import { Fuel } from '~/data/schema/fuel';
+import {
+  IconBase,
+  IconData,
+  parseIcon,
+  parseIconData,
+} from '~/data/schema/icon-data';
+import { Inserter, parseInserter } from '~/data/schema/inserter';
+import { Item, itemHasQuality, ItemJson, parseItem } from '~/data/schema/item';
+import { Machine, parseMachine } from '~/data/schema/machine';
+import { ModData } from '~/data/schema/mod-data';
+import { ModHash } from '~/data/schema/mod-hash';
+import { ModI18n } from '~/data/schema/mod-i18n';
+import { Module, parseModule } from '~/data/schema/module';
+import { baseId, Quality, qualityId } from '~/data/schema/quality';
+import { parseRecipe, Recipe, recipeHasQuality } from '~/data/schema/recipe';
+import { Technology } from '~/data/schema/technology';
+import { LinkOption } from '~/option/link-option';
+import { getIdOptions, Option, OptionParams } from '~/option/option';
+import { Rational, rational } from '~/rational/rational';
+import { emptyModHash, updateHash } from '~/utils/hash';
+import { localForageResource } from '~/utils/local-forage-resource';
+import { log } from '~/utils/log';
+import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
+import { spread } from '~/utils/object';
+import { reduceRecord, toRecord } from '~/utils/record';
+
+import { BeaconSettings } from '../beacon-settings';
+import { Hydration } from '../hydration';
+import { ModuleSettings } from '../module-settings';
+import { objectiveUnitOptions } from '../objectives/objective-unit';
+import { columnOptions, gameColumnsState } from '../preferences/columns-state';
+import { linkValueOptions } from '../preferences/link-value';
+import { PreferencesStore } from '../preferences/preferences-store';
+import { Store } from '../store';
+import { Dataset } from './dataset';
+import { Defaults } from './defaults';
+import { displayRateInfo } from './display-rate';
+import { Options } from './options';
+import { Preset, presetOptions } from './preset';
+import { Settings } from './settings';
+import { initialSettingsState, SettingsState } from './settings-state';
+import { systemIconsRecord } from './system-icons';
+
+@Injectable({ providedIn: 'root' })
+export class SettingsStore extends Store<SettingsState> {
+  private readonly hydration = inject(Hydration);
+  private readonly preferencesStore = inject(PreferencesStore);
+
+  readonly customData = localForageResource<ModData>('data');
+  readonly customHash = localForageResource<ModHash>('hash');
+  readonly customIcons = localForageResource<File>('icons');
+
+  readonly customIconsUrl = computed(() => {
+    const file = this.customIcons.value();
+    if (file) {
+      try {
+        return URL.createObjectURL(file);
+      } catch {
+        return '';
+      }
+    }
+
+    return '';
+  });
+
+  readonly modId = this.select('modId');
+  readonly maximizeType = this.select('maximizeType');
+  readonly displayRate = this.select('displayRate');
+  readonly flowRate = this.select('flowRate');
+  readonly preset = this.select('preset');
+  readonly researchedTechnologyIds = this.select('researchedTechnologyIds');
+
+  private readonly modDataResource = httpResource<ModData>(() => {
+    const modId = this.modId();
+    if (modId == null || modId === CUSTOM_MOD) return undefined;
+    return `data/${modId}/data.json`;
+  });
+
+  private readonly modHashResource = httpResource<ModHash>(() => {
+    const modId = this.modId();
+    if (modId == null || modId === CUSTOM_MOD) return undefined;
+    return `data/${modId}/hash.json`;
+  });
+
+  private readonly modI18nResource = httpResource<ModI18n>(() => {
+    const modId = this.modId();
+    const lang = this.preferencesStore.language();
+    if (modId == null || lang === 'en') return undefined;
+    return `data/${modId}/i18n/${lang}.json`;
+  });
+
+  readonly modData = computed(() => {
+    const modId = this.modId();
+    if (modId == null) return undefined;
+
+    if (modId === CUSTOM_MOD) return this.customData.value() ?? undefined;
+
+    if (this.modDataResource.error()) return undefined;
+    return this.modDataResource.value();
+  });
+
+  readonly modHash = computed(() => {
+    const modId = this.modId();
+    if (modId == null) return undefined;
+
+    if (modId === CUSTOM_MOD) return this.customHash.value() ?? undefined;
+
+    if (this.modHashResource.error()) return undefined;
+    return this.modHashResource.value();
+  });
+
+  readonly modI18n = computed(() => {
+    if (this.modI18nResource.error()) return undefined;
+    return this.modI18nResource.value();
+  });
+
+  readonly modInfo = computed(() => {
+    const modId = this.modId();
+    if (modId == null) return undefined;
+    return modRecord[modId];
+  });
+
+  readonly game = computed(() => {
+    const mod = this.modInfo();
+    return coalesce<Game>(mod?.game, 'factorio');
+  });
+
+  readonly modStates = computed(() => {
+    const modId = this.modId();
+    if (modId == null) return {};
+    const states = this.preferencesStore.states();
+    return coalesce(states[modId], {});
+  });
+
+  readonly stateOptions = computed(() => {
+    const states = this.modStates();
+    return Object.keys(states)
+      .sort()
+      .map((i): Option => ({ label: i, value: i }));
+  });
+
+  readonly gameInfo = computed(() => {
+    const game = this.game();
+    return gameInfo[game];
+  });
+
+  readonly displayRateInfo = computed(() => {
+    const displayRate = this.displayRate();
+    return displayRateInfo[displayRate];
+  });
+
+  readonly modOptions = computed(() => {
+    const game = this.game();
+    return modOptions(game);
+  });
+
+  readonly defaults = computed(() =>
+    this.computeDefaults(this.modInfo(), this.modData(), this.preset()),
+  );
+
+  readonly iconPath = computed(() => {
+    const info = this.modInfo();
+    const modId = coalesce(info?.id, DEFAULT_MOD);
+    if (modId === CUSTOM_MOD) return this.customIconsUrl();
+    return `data/${modId}/icons.webp`;
+  });
+
+  private readonly fac = new FastAverageColor();
+  readonly iconColor = resource({
+    params: () => ({ modData: this.modData(), iconPath: this.iconPath() }),
+    loader: async ({ params: { modData, iconPath } }) => {
+      if (modData == null || !iconPath) return null;
+      const img = document.createElement('img');
+      img.src = iconPath;
+
+      const colors = await Promise.all(
+        modData.icons.map(async (icon) => {
+          return await this.fac.getColorAsync(img, {
+            top: icon.y,
+            left: icon.x,
+            width: 64,
+            height: 64,
+          });
+        }),
+      );
+
+      return modData.icons.reduce<Record<string, string>>((a, b, i) => {
+        a[b.id] = colors[i].hex;
+        return a;
+      }, {});
+    },
+  });
+
+  readonly dataset = computed(() =>
+    this.computeDataset(
+      this.modInfo(),
+      this.modData(),
+      this.modHash(),
+      this.modI18n(),
+      this.game(),
+    ),
+  );
+
+  readonly linkValueOptions = computed(() => {
+    const data = this.dataset();
+    return linkValueOptions(data);
+  });
+
+  readonly objectiveUnitOptions = computed(() => {
+    const dispRateInfo = this.displayRateInfo();
+    const data = this.dataset();
+    return objectiveUnitOptions(dispRateInfo, data);
+  });
+
+  readonly presetOptions = computed(() => {
+    const modData = this.modData();
+    const data = this.dataset();
+    return presetOptions(data, modData?.defaults);
+  });
+
+  readonly columnOptions = computed(() => {
+    const data = this.dataset();
+    return columnOptions(data);
+  });
+
+  readonly columnsState = computed(() => {
+    const data = this.dataset();
+    const columns = this.preferencesStore.columns();
+    return gameColumnsState(columns, data);
+  });
+
+  readonly settings = computed(() =>
+    this.computeSettings(this.state(), this.defaults(), this.dataset()),
+  );
+
+  readonly options = computed((): Options => {
+    const data = this.dataset();
+    const settings = this.settings();
+    const itemSet = new Set(settings.availableItemIds);
+
+    function itemOptions(ids: string[], params?: OptionParams): Option[] {
+      return getIdOptions(ids, data.itemRecord, {
+        ...params,
+        ...{ include: itemSet, iconType: 'item' },
+      });
+    }
+
+    return {
+      categories: getIdOptions(data.categoryIds, data.categoryRecord),
+      beacons: itemOptions(data.beaconIds, { tooltipType: 'beacon' }),
+      belts: itemOptions(data.beltIds, {
+        exclude: data.itemQIds,
+        tooltipType: 'belt',
+        firstAsEmpty: true,
+      }),
+      pipes: itemOptions(data.pipeIds, {
+        tooltipType: 'pipe',
+        firstAsEmpty: true,
+      }),
+      cargoWagons: itemOptions(data.cargoWagonIds, {
+        exclude: data.itemQIds,
+        tooltipType: 'wagon',
+        firstAsEmpty: true,
+      }),
+      fluidWagons: itemOptions(data.fluidWagonIds, {
+        exclude: data.itemQIds,
+        tooltipType: 'wagon',
+        firstAsEmpty: true,
+      }),
+      inserters: itemOptions(data.inserterIds, { tooltipType: 'inserter' }),
+      fuels: itemOptions(data.fuelIds, {
+        exclude: data.itemQIds,
+        tooltipType: 'fuel',
+      }),
+      modules: itemOptions(data.moduleIds, { tooltipType: 'module' }),
+      proliferatorModules: itemOptions(data.proliferatorModuleIds, {
+        emptyOption: {
+          label: 'none',
+          value: '',
+          icon: 'module',
+        },
+        include: itemSet,
+        tooltipType: 'module',
+      }),
+      machines: itemOptions(data.machineIds, { tooltipType: 'machine' }),
+      locations: getIdOptions(data.locationIds, data.locationRecord, {
+        iconType: 'location',
+      }),
+      qualities: getIdOptions(data.qualityIds, data.qualityRecord, {
+        iconType: 'quality',
+        emptyOption: {
+          label: 'any',
+          value: '',
+          icon: 'q-any',
+          iconType: 'system',
+        },
+      }),
+    };
+  });
+
+  readonly beltSpeed = computed(() => {
+    const data = this.dataset();
+    const flowRate = this.flowRate();
+
+    const value: Record<string, Rational> = { [PIPE]: flowRate };
+    if (data.beltIds) {
+      for (const id of data.beltIds) value[id] = data.beltRecord[id].speed;
+    }
+
+    if (data.pipeIds) {
+      for (const id of data.pipeIds) value[id] = data.beltRecord[id].speed;
+    }
+
+    return value;
+  });
+
+  readonly beltSpeedTxt = computed(() => {
+    const beltSpeed = this.beltSpeed();
+    const dispRateInfo = this.displayRateInfo();
+
+    return Object.keys(beltSpeed).reduce(
+      (e: Record<string, string>, beltId) => {
+        const speed = beltSpeed[beltId].mul(dispRateInfo.value);
+        e[beltId] = Number(speed.toNumber().toFixed(2)).toString();
+        return e;
+      },
+      {},
+    );
+  });
+
+  readonly modMenuItem = computed((): LinkOption => {
+    const mod = this.modInfo();
+
+    return {
+      faIcon: faDatabase,
+      routerLink: `/${coalesce(mod?.id, DEFAULT_MOD)}/data`,
+      label: coalesce(mod?.name, ''),
+    };
+  });
+
+  constructor() {
+    super(initialSettingsState, ['costs']);
+
+    effect(() => {
+      const modId = this.modId();
+      if (modId) log('set_mod_id', modId);
+    });
+
+    effect(() => {
+      const mod = this.modInfo();
+      if (mod) log('set_game', mod.game);
+    });
+  }
+
+  setCustomData(json: string): void {
+    try {
+      const data = JSON.parse(json) as ModData;
+      this.customData.set(data);
+      const hashJson = this.customHash.value();
+      const hash = hashJson ?? emptyModHash();
+      updateHash(data, hash);
+      this.customHash.set(hash);
+    } catch {
+      // Do nothing
+    }
+  }
+
+  private computeDefaults(
+    modInfo: ModInfo | undefined,
+    modData: ModData | undefined,
+    presetSetting: number,
+  ): Defaults | undefined {
+    if (modInfo == null || modData?.defaults == null) return undefined;
+
+    const m = modData.defaults;
+    if ('presets' in m) {
+      const p = coalesce(
+        m.presets.find((p) => p.id === presetSetting),
+        coalesce(m.presets[0], { id: 0, label: '' }),
+      );
+      let beacons: BeaconSettings[] = [];
+      const beaconId = coalesce(p.beacon, m.beacon);
+      if (beaconId) {
+        const beaconBaseId = baseId(beaconId);
+        const beacon = modData.items.find((i) => i.id === beaconBaseId)?.beacon;
+        if (beacon) {
+          const beaconModule = coalesce(p.beaconModule, m.beaconModule);
+          const modules: ModuleSettings[] = [
+            {
+              count: rational(beacon.modules),
+              id: coalesce(beaconModule, ''),
+            },
+          ];
+          const count = rational(coalesce(p.beaconCount, 0));
+          beacons = [{ count, id: beaconId, modules }];
+        }
+      }
+      const excludedRecipe = coalesce(p.excludedRecipes, m.excludedRecipes);
+      const machineRank = coalesce(p.machineRank, m.machineRank);
+      const fuelRank = coalesce(p.fuelRank, m.fuelRank);
+      const moduleRank = coalesce(p.moduleRank, m.moduleRank);
+      return {
+        locations: coalesce(p.locations, m.locations),
+        beltId: coalesce(p.belt, m.belt),
+        beltStack: rational(coalesce(p.beltStack, m.beltStack)),
+        pipeId: coalesce(p.pipe, m.pipe),
+        cargoWagonId: coalesce(p.cargoWagon, m.cargoWagon),
+        fluidWagonId: coalesce(p.fluidWagon, m.fluidWagon),
+        excludedRecipeIds: coalesce(excludedRecipe, []),
+        machineRankIds: coalesce(machineRank, []),
+        fuelRankIds: coalesce(fuelRank, []),
+        moduleRankIds: coalesce(moduleRank, []),
+        beacons,
+      };
+    }
+
+    const preset: Preset = presetSetting;
+    let beacons: BeaconSettings[] = [];
+    let moduleRank: string[] | undefined;
+    let overclock: Rational | undefined;
+    switch (modInfo.game) {
+      case 'factorio': {
+        moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
+        if (m.beacon) {
+          const beacon = modData.items.find((i) => i.id === m.beacon)?.beacon;
+          if (beacon) {
+            const id = m.beacon;
+            const modules: ModuleSettings[] = [
+              {
+                count: rational(beacon.modules),
+                id: coalesce(m.beaconModule, ''),
+              },
+            ];
+
+            const count =
+              preset < Preset.Beacon8
+                ? rational.zero
+                : preset === Preset.Beacon8
+                  ? rational(8n)
+                  : rational(12n);
+            beacons = [{ count, id, modules }];
+          }
+        }
+        break;
+      }
+      case 'dyson-sphere-program': {
+        moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
+        break;
+      }
+      case 'satisfactory': {
+        moduleRank = m.moduleRank;
+        overclock = rational(100n);
+        break;
+      }
+      case 'final-factory': {
+        moduleRank = m.moduleRank;
+        break;
+      }
+    }
+
+    const machineRankIds =
+      preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
+    return {
+      beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
+      pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
+      cargoWagonId: m.cargoWagon,
+      fluidWagonId: m.fluidWagon,
+      excludedRecipeIds: coalesce(m.excludedRecipes, []),
+      machineRankIds: coalesce(machineRankIds, []),
+      fuelRankIds: coalesce(m.fuelRank, []),
+      moduleRankIds: coalesce(moduleRank, []),
+      beacons,
+      overclock,
+    };
+  }
+
+  private computeDataset(
+    info: ModInfo | undefined,
+    data: ModData | undefined,
+    hash: ModHash | undefined,
+    i18n: ModI18n | undefined,
+    game: Game,
+  ): Dataset {
+    // Map out records with mods
+    const categoryRecord = toRecord(coalesce(data?.categories, []));
+    const iconData = toRecord(
+      coalesce(data?.icons, []).map((i) => parseIcon(i)),
+    );
+    const itemData = toRecord(coalesce(data?.items, []));
+    const recipeData = toRecord(coalesce(data?.recipes, []));
+    const limitations = reduceRecord(coalesce(data?.limitations, {}));
+    const locationRecord = toRecord(coalesce(data?.locations, []));
+    const qualityRecord = toRecord(coalesce(data?.qualities, []));
+
+    // Apply localization
+    if (i18n) {
+      for (const i of Object.keys(i18n.categories).filter(
+        (i) => categoryRecord[i],
+      )) {
+        categoryRecord[i] = spread(categoryRecord[i], {
+          name: i18n.categories[i],
+        });
+      }
+
+      for (const i of Object.keys(i18n.items).filter((i) => itemData[i]))
+        itemData[i] = spread(itemData[i], { name: i18n.items[i] });
+
+      for (const i of Object.keys(i18n.recipes).filter((i) => recipeData[i]))
+        recipeData[i] = spread(recipeData[i], { name: i18n.recipes[i] });
+
+      if (i18n.locations) {
+        for (const i of Object.keys(i18n.locations).filter(
+          (i) => locationRecord[i],
+        )) {
+          locationRecord[i] = spread(locationRecord[i], {
+            name: i18n.locations[i],
+          });
+        }
+      }
+
+      if (i18n.qualities) {
+        for (const i of Object.keys(i18n.qualities).filter(
+          (i) => qualityRecord[i],
+        )) {
+          qualityRecord[i] = spread(qualityRecord[i], {
+            name: i18n.qualities[i],
+          });
+        }
+      }
+    }
+
+    // Convert to id arrays
+    const categoryIds = Object.keys(categoryRecord);
+    const iconIds = Object.keys(iconData);
+    const itemIds = Object.keys(itemData);
+    const recipeIds = Object.keys(recipeData);
+    const locationIds = Object.keys(locationRecord);
+    const qualityIds = Object.keys(qualityRecord).sort(
+      (a, b) => qualityRecord[a].level - qualityRecord[b].level,
+    );
+
+    // Generate temporary object arrays
+    const items = itemIds.map((i) => parseItem(itemData[i]));
+    const recipes = recipeIds.map((r) => parseRecipe(recipeData[r]));
+
+    // Calculate missing implicit recipe icons
+    // For recipes with no icon, use icon of first output item
+    recipes
+      .filter((r) => !iconData[r.id] && !r.icon)
+      .forEach((r) => {
+        const firstOutId = Object.keys(r.out)[0];
+        const firstOutItem = itemData[firstOutId];
+        r.icon = firstOutItem.icon ?? firstOutId;
+      });
+
+    const itemQIds = new Set<string>();
+    const recipeQIds = new Set<string>();
+    const abnormalQualities = data?.qualities?.filter((q) => q.level) ?? [];
+    if (abnormalQualities.length) {
+      recipes.forEach((r) => {
+        const producers = r.producers;
+        if (producers == null) return;
+        r.producers = [
+          ...producers,
+          ...abnormalQualities.flatMap((q) =>
+            producers.map((p) => qualityId(p, q)),
+          ),
+        ];
+      });
+      const itemsLen = items.length;
+      const recipesLen = recipes.length;
+      abnormalQualities.forEach((quality) => {
+        for (let i = 0; i < itemsLen; i++) {
+          const item = items[i];
+          if (!itemHasQuality(item)) continue;
+
+          const itemJson = itemData[item.id];
+          const id = qualityId(item.id, quality);
+          itemQIds.add(id);
+          itemIds.push(id);
+          const qItem = spread(item, {
+            id,
+            quality,
+            icon: coalesce(item.icon, item.id),
+          });
+
+          if (itemJson.beacon?.qualityRecord) {
+            const qBeaconJson = itemJson.beacon.qualityRecord[quality.id];
+            if (qBeaconJson)
+              qItem.beacon = parseBeacon(spread(itemJson.beacon, qBeaconJson));
+          }
+
+          /** Unused in Space Age data, quality does not affect belt speed */
+          if (itemJson.belt?.qualityRecord) {
+            const qBeltJson = itemJson.belt.qualityRecord[quality.id];
+            if (qBeltJson)
+              qItem.belt = parseBelt(spread(itemJson.belt, qBeltJson));
+          }
+
+          if (itemJson.inserter?.qualityRecord) {
+            const qInserterJson = itemJson.inserter.qualityRecord[quality.id];
+            if (qInserterJson)
+              qItem.inserter = parseInserter(
+                spread(itemJson.inserter, qInserterJson),
+              );
+          }
+
+          if (itemJson.machine?.qualityRecord) {
+            const qMachineJson = itemJson.machine.qualityRecord[quality.id];
+            if (qMachineJson)
+              qItem.machine = parseMachine(
+                spread(itemJson.machine, qMachineJson),
+              );
+          }
+
+          if (itemJson.module?.qualityRecord) {
+            const qModuleJson = itemJson.module.qualityRecord[quality.id];
+            if (qModuleJson)
+              qItem.module = parseModule(spread(itemJson.module, qModuleJson));
+          }
+
+          if (itemJson.pipe?.qualityRecord) {
+            const qPipeJson = itemJson.pipe.qualityRecord[quality.id];
+            if (qPipeJson)
+              qItem.pipe = parseBelt(spread(itemJson.pipe, qPipeJson));
+          }
+
+          items.push(qItem);
+        }
+
+        for (let i = 0; i < recipesLen; i++) {
+          const recipe = recipes[i];
+          if (!recipeHasQuality(recipe, itemData)) continue;
+
+          const id = qualityId(recipe.id, quality);
+          recipeQIds.add(id);
+          recipeIds.push(id);
+
+          const qIn = this.qualityRecord(
+            recipe.in,
+            quality,
+            itemData,
+            recipe.flags.has('technology'),
+          );
+          const qOut = recipe.flags.has('technology')
+            ? recipe.out
+            : this.qualityRecord(recipe.out, quality, itemData);
+          let qCatalyst: Record<string, Rational> | undefined;
+          if (recipe.catalyst)
+            qCatalyst = this.qualityRecord(recipe.catalyst, quality, itemData);
+
+          recipes.push(
+            spread(recipe, {
+              id,
+              in: qIn,
+              out: qOut,
+              catalyst: qCatalyst,
+              quality,
+              icon: coalesce(recipe.icon, recipe.id),
+            }),
+          );
+        }
+      });
+    }
+
+    // Filter for item types
+    const beaconIds = items
+      .filter(fnPropsNotNullish('beacon'))
+      .sort(
+        (a, b) =>
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
+          a.beacon.modules.sub(b.beacon.modules).toNumber(),
+      )
+      .map((i) => i.id);
+    const beltIds = items
+      .filter(fnPropsNotNullish('belt'))
+      .sort(
+        (a, b) =>
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
+          a.belt.speed.sub(b.belt.speed).toNumber(),
+      )
+      .map((i) => i.id);
+    const pipeIds = items
+      .filter(fnPropsNotNullish('pipe'))
+      .sort(
+        (a, b) =>
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
+          a.pipe.speed.sub(b.pipe.speed).toNumber(),
+      )
+      .map((i) => i.id);
+    const cargoWagonIds = items
+      .filter(fnPropsNotNullish('cargoWagon'))
+      .sort(
+        (a, b) =>
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
+          a.cargoWagon.size.sub(b.cargoWagon.size).toNumber(),
+      )
+      .map((i) => i.id);
+    const fluidWagonIds = items
+      .filter(fnPropsNotNullish('fluidWagon'))
+      .sort(
+        (a, b) =>
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
+          a.fluidWagon.capacity.sub(b.fluidWagon.capacity).toNumber(),
+      )
+      .map((i) => i.id);
+    const machineIds = items
+      .filter(fnPropsNotNullish('machine'))
+      .sort(
+        (a, b) =>
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
+          a.name.localeCompare(b.name),
+      )
+      .map((i) => i.id);
+    const modules = items.filter(fnPropsNotNullish('module'));
+    const moduleIds = modules.map((i) => i.id);
+    const proliferatorModuleIds = modules
+      .filter((i) => i.module.sprays != null)
+      .map((i) => i.id);
+    const fuels = items
+      .filter(fnPropsNotNullish('fuel'))
+      .sort(
+        (a, b) =>
+          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
+          a.fuel.value.sub(b.fuel.value).toNumber(),
+      );
+    const fuelIds = fuels.map((i) => i.id);
+    const technologyIds = items
+      .filter(fnPropsNotNullish('technology'))
+      .map((r) => r.id);
+    const inserterIds = items
+      .filter(fnPropsNotNullish('inserter'))
+      .map((i) => i.id);
+
+    // Calculate category item rows
+    const itemCategoryRows: Record<string, string[][]> = {};
+    for (const id of categoryIds) {
+      const rows: string[][] = [[]];
+      const rowItems = items
+        .filter((i) => i.category === id)
+        .sort((a, b) => a.row - b.row);
+      if (rowItems.length) {
+        let index = rowItems[0].row;
+        for (const item of rowItems) {
+          if (item.row > index) {
+            rows.push([]);
+            index = item.row;
+          }
+
+          rows[rows.length - 1].push(item.id);
+        }
+
+        itemCategoryRows[id] = rows;
+      }
+    }
+
+    // Calculate recipe item rows
+    const recipeCategoryRows: Record<string, string[][]> = {};
+    for (const id of categoryIds) {
+      const rows: string[][] = [[]];
+      const rowRecipes = recipes
+        .filter((r) => r.category === id)
+        .sort((a, b) => a.row - b.row);
+      if (rowRecipes.length) {
+        let index = rowRecipes[0].row;
+        for (const recipe of rowRecipes) {
+          if (recipe.row > index) {
+            rows.push([]);
+            index = recipe.row;
+          }
+
+          rows[rows.length - 1].push(recipe.id);
+        }
+
+        recipeCategoryRows[id] = rows;
+      }
+    }
+
+    // Convert to rationals
+    const beaconRecord: Record<string, Beacon> = {};
+    const beltRecord: Record<string, Belt> = {};
+    const cargoWagonRecord: Record<string, CargoWagon> = {};
+    const fluidWagonRecord: Record<string, FluidWagon> = {};
+    const machineRecord: Record<string, Machine> = {};
+    const moduleRecord: Record<string, Module> = {};
+    const fuelRecord: Record<string, Fuel> = {};
+    const technologyRecord: Record<string, Technology> = {};
+    const inserterRecord: Record<string, Inserter> = {};
+    const itemRecord = items.reduce((e: Record<string, Item>, i) => {
+      if (i.beacon) beaconRecord[i.id] = i.beacon;
+
+      if (i.belt) beltRecord[i.id] = i.belt;
+      else if (i.pipe) beltRecord[i.id] = i.pipe;
+
+      if (i.cargoWagon) cargoWagonRecord[i.id] = i.cargoWagon;
+      if (i.fluidWagon) fluidWagonRecord[i.id] = i.fluidWagon;
+      if (i.machine) machineRecord[i.id] = i.machine;
+      if (i.module) moduleRecord[i.id] = i.module;
+      if (i.fuel) fuelRecord[i.id] = i.fuel;
+      if (i.technology) technologyRecord[i.id] = i.technology;
+      if (i.inserter) inserterRecord[i.id] = i.inserter;
+
+      e[i.id] = i;
+      return e;
+    }, {});
+    const noRecipeItemIds = new Set(itemIds);
+    const recipeRecord = recipes.reduce((e: Record<string, Recipe>, r) => {
+      Object.keys(r.out).forEach((i) => {
+        if ((r.in[i] ?? 0) < r.out[i]) noRecipeItemIds.delete(i);
+      });
+
+      e[r.id] = r;
+      return e;
+    }, {});
+
+    if (abnormalQualities.length) {
+      for (const quality of abnormalQualities) {
+        for (const techId in technologyRecord) {
+          const tech = technologyRecord[techId];
+          if (tech.recipeProductivity) {
+            for (const effect of tech.recipeProductivity) {
+              const id = qualityId(effect.id, quality);
+              if (recipeQIds.has(id))
+                tech.recipeProductivity.push({
+                  id,
+                  value: effect.value,
+                });
+            }
+          }
+        }
+      }
+    }
+
+    const prodUpgradeTechIds = technologyIds.filter(
+      (id) => technologyRecord[id].recipeProductivity,
+    );
+
+    const modId = coalesce(info?.id, DEFAULT_MOD);
+    let file = `data/${modId}/icons.webp`;
+    if (modId === CUSTOM_MOD) file = this.customIconsUrl();
+
+    function toIconRecord(
+      ids: string[],
+      rec: Record<string, Category | Item | Recipe | IconBase>,
+    ): Record<string, IconData> {
+      return ids.reduce<Record<string, IconData>>((e, i) => {
+        const entity = rec[i];
+        const id = coalesce((entity as Category | Item | Recipe).icon, i);
+        e[i] = parseIconData(iconData[id], file, entity);
+        return e;
+      }, {});
+    }
+
+    // Generate Icon Record
+    const iconRecord: Record<IconType, Record<string, IconData>> = {
+      system: systemIconsRecord,
+      game: toIconRecord(iconIds, iconData),
+      category: toIconRecord(categoryIds, categoryRecord),
+      item: toIconRecord(itemIds, itemRecord),
+      recipe: toIconRecord(recipeIds, recipeRecord),
+      location: toIconRecord(locationIds, locationRecord),
+      quality: toIconRecord(qualityIds, qualityRecord),
+    };
+
+    return {
+      game,
+      modId: modId,
+      info: gameInfo[game],
+      flags: new Set(data?.flags),
+      version: coalesce(data?.version, {}),
+      categoryIds,
+      categoryRecord,
+      itemCategoryRows,
+      recipeCategoryRows,
+      iconIds,
+      iconRecord,
+      itemIds,
+      itemQIds,
+      itemRecord,
+      noRecipeItemIds,
+      beaconIds,
+      beaconRecord,
+      beltIds,
+      pipeIds,
+      beltRecord,
+      cargoWagonIds,
+      cargoWagonRecord,
+      fluidWagonIds,
+      fluidWagonRecord,
+      machineIds,
+      machineRecord,
+      moduleIds,
+      proliferatorModuleIds,
+      moduleRecord,
+      fuelIds,
+      fuelRecord,
+      recipeIds,
+      recipeQIds,
+      recipeRecord,
+      prodUpgradeTechIds,
+      technologyIds,
+      technologyRecord,
+      inserterIds,
+      inserterRecord,
+      locationIds,
+      locationRecord,
+      qualityIds,
+      qualityRecord,
+      abnormalQualities,
+      limitations,
+      hash,
+    };
+  }
+
+  private computeSettings(
+    state: SettingsState,
+    defaults: Defaults | undefined,
+    data: Dataset,
+  ): Settings {
+    const techIds = state.researchedTechnologyIds;
+    let researchedTechnologyIds = new Set(data.technologyIds);
+    if (techIds != null && researchedTechnologyIds.size > 0) {
+      // Filter for only technologies that still exist in this data set
+      const filteredTechs = Array.from(techIds).filter((i) =>
+        researchedTechnologyIds.has(i),
+      );
+      researchedTechnologyIds = new Set(filteredTechs);
+    }
+
+    const locIds = state.locationIds;
+    const defaultLocationIds = defaults?.locations ?? data.locationIds;
+    let locationIds = new Set(defaultLocationIds);
+    if (locIds != null && defaultLocationIds.length > 0) locationIds = locIds;
+
+    let quality: Quality | undefined;
+    let stack = rational.one;
+    const inserterBonus: Partial<Record<string, Rational>> = {};
+    let miningBonus = rational.zero;
+    let researchBonus = rational.zero;
+    let researchProductivity = rational.zero;
+    researchedTechnologyIds.forEach((techId) => {
+      const tech = data.technologyRecord[techId];
+      if (tech.beltStack) stack = stack.add(tech.beltStack);
+
+      if (tech.inserterStack) {
+        tech.inserterStack.forEach((eff) => {
+          const category = eff.category ?? '';
+          inserterBonus[category] ??= rational.zero;
+          inserterBonus[category] = inserterBonus[category].add(eff.value);
+        });
+      }
+
+      if (tech.miningProductivity) {
+        miningBonus = miningBonus.add(
+          tech.miningProductivity.mul(rational(100n)),
+        );
+      }
+
+      if (tech.qualityUnlock) {
+        tech.qualityUnlock.forEach((q) => {
+          const unlock = data.qualityRecord[q];
+          if (quality == null || unlock.level > quality.level) quality = unlock;
+        });
+      }
+
+      if (tech.researchSpeed) {
+        researchBonus = researchBonus.add(
+          tech.researchSpeed.mul(rational(100n)),
+        );
+      }
+
+      if (tech.researchProductivity) {
+        researchProductivity = researchProductivity.add(
+          tech.researchProductivity.mul(rational(100n)),
+        );
+      }
+    });
+
+    // List of recipes that have been unlocked by technology
+    const researchedRecipeIds = new Set(
+      Array.from(researchedTechnologyIds).flatMap(
+        (t) => data.technologyRecord[t].recipeUnlock,
+      ),
+    );
+    const unlockedRecipes = data.recipeIds
+      .map((r) => data.recipeRecord[r])
+      .filter(
+        (r) =>
+          (!r.flags.has('locked') || researchedRecipeIds.has(baseId(r.id))) &&
+          (r.quality == null || r.quality.level <= coalesce(quality?.level, 0)),
+      );
+
+    // Recipe productivity bonuses unlocked by technology
+    const recipeBonus = Array.from(researchedTechnologyIds).reduce<
+      Partial<Record<string, Rational>>
+    >((result, b) => {
+      const tech = data.technologyRecord[b];
+      tech.recipeProductivity?.forEach((eff) => {
+        result[eff.id] ??= rational.zero;
+        result[eff.id] = result[eff.id]?.add(eff.value.mul(rational(100n)));
+      });
+      return result;
+    }, {});
+
+    // Initialize list of items with those that have no recipe
+    const noRecipeQualItemIds = Array.from(data.noRecipeItemIds)
+      .map((i) => data.itemRecord[i])
+      .filter(
+        (i) =>
+          i.quality == null || i.quality.level < coalesce(quality?.level, 0),
+      )
+      .map((i) => i.id);
+    const availableItemIds = new Set(noRecipeQualItemIds);
+    // Add all items that are consumed or produced by unlocked recipes
+    unlockedRecipes.forEach((r) => {
+      Object.keys(r.in).forEach((i) => availableItemIds.add(i));
+      Object.keys(r.out).forEach((i) => availableItemIds.add(i));
+    });
+
+    // Limit available recipes based on locations and whether machines are available
+    const availableRecipes = unlockedRecipes.filter(
+      (r) =>
+        (r.locations == null || r.locations.some((l) => locationIds.has(l))) &&
+        (r.producers == null ||
+          r.producers.some(
+            (p) =>
+              availableItemIds.has(p) &&
+              (data.machineRecord[p].locations == null ||
+                data.machineRecord[p].locations.some((l) =>
+                  locationIds.has(l),
+                )),
+          )),
+    );
+    const availableRecipeIds = new Set(availableRecipes.map((r) => r.id));
+
+    function pickItemId(itemId: string | undefined, defaultId: string): string {
+      itemId = coalesce(itemId, defaultId);
+      if (itemId === '') return itemId;
+      if (!itemId || !availableItemIds.has(itemId)) return '';
+      return itemId;
+    }
+
+    function pickItemIds(
+      itemIds: string[] | undefined,
+      defaultIds: string[],
+    ): string[] {
+      itemIds = coalesce(itemIds, defaultIds);
+      return itemIds.filter((i) => availableItemIds.has(i));
+    }
+
+    const defaultBeltId = coalesce(defaults?.beltId, '');
+    const beltId = pickItemId(state.beltId, defaultBeltId);
+    const defaultPipeId = coalesce(defaults?.pipeId, '');
+    const pipeId = pickItemId(state.pipeId, defaultPipeId);
+    const defaultCargoWagonId = coalesce(defaults?.cargoWagonId, '');
+    const cargoWagonId = pickItemId(state.cargoWagonId, defaultCargoWagonId);
+    const defaultFluidWagonId = coalesce(defaults?.fluidWagonId, '');
+    const fluidWagonId = pickItemId(state.fluidWagonId, defaultFluidWagonId);
+    const defaultMachineRankIds = coalesce(defaults?.machineRankIds, []);
+    const machineRankIds = pickItemIds(
+      state.machineRankIds,
+      defaultMachineRankIds,
+    ).filter(
+      (m) =>
+        data.machineRecord[m].locations == null ||
+        data.machineRecord[m].locations.some((l) => locationIds.has(l)),
+    );
+    const defaultFuelRankIds = coalesce(defaults?.fuelRankIds, []);
+    const fuelRankIds = pickItemIds(state.fuelRankIds, defaultFuelRankIds);
+    const defaultModuleRankIds = coalesce(defaults?.moduleRankIds, []);
+    const moduleRankIds = pickItemIds(
+      state.moduleRankIds,
+      defaultModuleRankIds,
+    );
+    let defaultBeacons = defaults?.beacons;
+    if (defaultBeacons) {
+      // Prune default beacons to available beacons / modules
+      defaultBeacons = defaultBeacons
+        .map((b) => {
+          if (b.id && !availableItemIds.has(b.id))
+            b = spread(b, { id: undefined });
+          if (b.modules) {
+            b = spread(b, {
+              modules: b.modules.map((m) => {
+                if (m.id && !availableItemIds.has(m.id))
+                  m = spread(m, { id: '' });
+                return m;
+              }),
+            });
+          }
+          return b;
+        })
+        .filter((b) => b.id);
+    }
+    const defaultExcludedRecipeIds = new Set(defaults?.excludedRecipeIds);
+    const excludedRecipeIds = coalesce(
+      state.excludedRecipeIds,
+      defaultExcludedRecipeIds,
+    );
+
+    return spread(state as Settings, {
+      beltId,
+      defaultBeltId,
+      stack: coalesce(state.stack, coalesce(defaults?.beltStack, stack)),
+      pipeId,
+      defaultPipeId,
+      cargoWagonId,
+      defaultCargoWagonId,
+      fluidWagonId,
+      defaultFluidWagonId,
+      excludedRecipeIds,
+      defaultExcludedRecipeIds,
+      recipeBonus,
+      machineRankIds,
+      defaultMachineRankIds,
+      fuelRankIds,
+      defaultFuelRankIds,
+      moduleRankIds,
+      defaultModuleRankIds,
+      beacons: this.hydration.hydrateBeacons(state.beacons, defaultBeacons),
+      overclock: state.overclock ?? defaults?.overclock,
+      miningBonus: coalesce(state.miningBonus, miningBonus),
+      researchBonus: coalesce(state.researchBonus, researchBonus),
+      inserterBonus,
+      researchProductivity: coalesce(
+        state.researchProductivity,
+        researchProductivity,
+      ),
+      researchedTechnologyIds,
+      locationIds,
+      defaultLocationIds: new Set(data.locationIds),
+      availableRecipeIds,
+      availableItemIds,
+      quality,
+    });
+  }
+
+  private qualityRecord(
+    record: Record<string, Rational>,
+    quality: Quality,
+    itemData: Record<string, ItemJson>,
+    qualityDurability = false,
+  ): Record<string, Rational> {
+    const factor = qualityDurability
+      ? rational.one.add(rational(quality.level))
+      : rational.one;
+    return Object.keys(record).reduce((e: Record<string, Rational>, k) => {
+      if (itemData[k].stack) {
+        e[qualityId(k, quality)] = record[k].div(factor);
+      } else e[k] = record[k];
+      return e;
+    }, {});
+  }
+}

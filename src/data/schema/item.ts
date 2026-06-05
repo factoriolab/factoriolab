@@ -1,0 +1,75 @@
+import { Rational, rational } from '~/rational/rational';
+
+import { BaseJson } from './base';
+import { Beacon, BeaconJson, parseBeacon } from './beacon';
+import { Belt, BeltJson, parseBelt } from './belt';
+import { CargoWagon, CargoWagonJson, parseCargoWagon } from './cargo-wagon';
+import { FluidWagon, FluidWagonJson, parseFluidWagon } from './fluid-wagon';
+import { Fuel, FuelJson, parseFuel } from './fuel';
+import { Inserter, InserterJson, parseInserter } from './inserter';
+import { Machine, MachineJson, parseMachine } from './machine';
+import { Module, ModuleJson, parseModule } from './module';
+import { Quality } from './quality';
+import { parseTechnology, Technology, TechnologyJson } from './technology';
+
+export interface ItemJson extends BaseJson {
+  category: string;
+  row: number;
+  stack?: number;
+  rocketCapacity?: number;
+  beacon?: BeaconJson;
+  belt?: BeltJson;
+  pipe?: BeltJson;
+  machine?: MachineJson;
+  module?: ModuleJson;
+  fuel?: FuelJson;
+  cargoWagon?: CargoWagonJson;
+  fluidWagon?: FluidWagonJson;
+  technology?: TechnologyJson;
+  inserter?: InserterJson;
+}
+
+export interface Item extends BaseJson {
+  category: string;
+  row: number;
+  stack?: Rational;
+  rocketCapacity?: Rational;
+  beacon?: Beacon;
+  belt?: Belt;
+  pipe?: Belt;
+  machine?: Machine;
+  module?: Module;
+  fuel?: Fuel;
+  cargoWagon?: CargoWagon;
+  fluidWagon?: FluidWagon;
+  technology?: Technology;
+  inserter?: Inserter;
+  quality?: Quality;
+}
+
+export function parseItem(json: ItemJson): Item {
+  return {
+    id: json.id,
+    name: json.name,
+    category: json.category,
+    row: json.row,
+    stack: rational(json.stack),
+    rocketCapacity: rational(json.rocketCapacity),
+    beacon: parseBeacon(json.beacon),
+    belt: parseBelt(json.belt),
+    pipe: parseBelt(json.pipe),
+    machine: parseMachine(json.machine),
+    module: parseModule(json.module),
+    fuel: parseFuel(json.fuel),
+    cargoWagon: parseCargoWagon(json.cargoWagon),
+    fluidWagon: parseFluidWagon(json.fluidWagon),
+    technology: parseTechnology(json.technology),
+    inserter: parseInserter(json.inserter),
+    icon: json.icon,
+    iconText: json.iconText,
+  };
+}
+
+export function itemHasQuality(item: Item | ItemJson): boolean {
+  return item.technology == null && item.stack != null;
+}

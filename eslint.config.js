@@ -1,16 +1,11 @@
 // @ts-check
-const eslint = require('@eslint/js');
-const tseslint = require('typescript-eslint');
-const angular = require('angular-eslint');
-const simpleImportSort = require('eslint-plugin-simple-import-sort');
+import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
+import angular from 'angular-eslint';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import tseslint from 'typescript-eslint';
 
-/**
- * TODO:
- * * Investigate currently turned 'off' tseslint rules in *.ts files
- * * Add rxjs rules, if/when they support ESLint 9.x
- */
-
-module.exports = tseslint.config(
+export default defineConfig(
   {
     files: ['**/*.ts'],
     extends: [
@@ -20,32 +15,29 @@ module.exports = tseslint.config(
       ...angular.configs.tsRecommended,
     ],
     processor: angular.processInlineTemplates,
-    languageOptions: {
-      parserOptions: {
-        project: 'tsconfig.json',
-      },
-    },
-    plugins: {
-      'simple-import-sort': simpleImportSort,
-    },
+    languageOptions: { parserOptions: { projectService: true } },
+    plugins: { 'simple-import-sort': simpleImportSort },
     rules: {
       '@angular-eslint/directive-selector': [
         'error',
-        {
-          type: 'attribute',
-          prefix: 'lab',
-          style: 'camelCase',
-        },
+        { type: 'attribute', prefix: 'lab', style: 'camelCase' },
       ],
       '@angular-eslint/component-selector': [
         'error',
-        {
-          type: 'element',
-          prefix: 'lab',
-          style: 'kebab-case',
-        },
+        { type: ['element', 'attribute'], prefix: 'lab', style: 'kebab-case' },
       ],
       '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/explicit-member-accessibility': [
+        'error',
+        { accessibility: 'no-public' },
+      ],
+      '@typescript-eslint/prefer-enum-initializers': 'error',
+      '@typescript-eslint/no-dynamic-delete': 'off',
+      '@typescript-eslint/no-extraneous-class': [
+        'error',
+        { allowWithDecorator: true },
+      ],
+      '@typescript-eslint/no-unnecessary-condition': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -54,29 +46,30 @@ module.exports = tseslint.config(
           ignoreRestSiblings: true,
         },
       ],
-      '@typescript-eslint/prefer-enum-initializers': 'error',
-      '@typescript-eslint/no-extraneous-class': [
-        'error',
-        { allowWithDecorator: true },
-      ],
-      '@typescript-eslint/no-dynamic-delete': 'off',
-      '@typescript-eslint/no-unnecessary-condition': 'off',
       '@typescript-eslint/prefer-nullish-coalescing': [
         'error',
         { ignorePrimitives: true },
       ],
+      '@typescript-eslint/restrict-template-expressions': [
+        'error',
+        {
+          allow: [{ name: ['Error', 'URL', 'URLSearchParams'], from: 'lib' }],
+          allowAny: false,
+          allowBoolean: false,
+          allowNever: false,
+          allowNullish: false,
+          allowNumber: true,
+          allowRegExp: false,
+        },
+      ],
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       eqeqeq: ['error', 'smart'],
+      'no-duplicate-imports': 'error',
     },
   },
   {
-    files: ['**/*.spec.ts', 'src/app/tests/**/*.ts'],
-    languageOptions: {
-      parserOptions: {
-        project: 'tsconfig.spec.json',
-      },
-    },
+    files: ['**/*.spec.ts', 'src/tests/**/*.ts'],
     rules: {
       '@typescript-eslint/dot-notation': [
         'error',
@@ -90,6 +83,7 @@ module.exports = tseslint.config(
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-enum-comparison': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/unbound-method': 'off',
@@ -108,7 +102,7 @@ module.exports = tseslint.config(
       ],
       '@angular-eslint/template/elements-content': [
         'error',
-        { allowList: ['pButton'] },
+        { allowList: ['text'] },
       ],
     },
   },

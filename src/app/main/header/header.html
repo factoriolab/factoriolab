@@ -1,0 +1,93 @@
+<div class="flex w-full justify-between gap-2 md:w-auto">
+  @if (settingsXlHidden()) {
+    <button
+      type="button"
+      labButton
+      class="xl:inline-flex"
+      [faIcon]="faSliders"
+      size="large"
+      [border]="false"
+      [hide]="true"
+      labTooltip="settings.header"
+      [attr.aria-label]="'settings.header' | translate"
+      (click)="settingsXlHidden.set(false)"
+    ></button>
+  }
+  <button
+    type="button"
+    class="xl:hidden"
+    labButton
+    [faIcon]="faSliders"
+    size="large"
+    [border]="false"
+    labTooltip="settings.header"
+    [attr.aria-label]="'settings.header' | translate"
+    (click)="toggleSettings()"
+  ></button>
+  <div class="flex gap-px">
+    <a
+      [routerLink]="['/', settingsStore.modId()]"
+      labButton
+      [text]="gameInfo().label"
+      iconType="system"
+      [icon]="game()"
+      rounded="start"
+      size="large"
+      [border]="false"
+      labTooltip="header.resetTooltip"
+    ></a>
+    <lab-select
+      #gameSelect
+      class="w-11 shrink-0"
+      [attr.aria-label]="'header.selectGame' | translate"
+      rounded="end"
+      [iconOnly]="true"
+      [border]="false"
+      [options]="gameOptions()"
+      (valueChange)="setGame($event)"
+    >
+      <fa-icon
+        class="absolute text-gray-400 transition-transform"
+        [class.-scale-y-100]="gameSelect.opened()"
+        [icon]="faChevronDown"
+      ></fa-icon>
+    </lab-select>
+  </div>
+  <button
+    type="button"
+    class="md:hidden"
+    labButton
+    [faIcon]="faUserGear"
+    size="large"
+    [border]="false"
+    labTooltip="preferences.header"
+    [attr.aria-label]="'preferences.header' | translate"
+    (click)="togglePreferences()"
+  ></button>
+</div>
+<div class="flex w-full items-center gap-2 md:w-auto">
+  @for (link of externalLinks; track link.href) {
+    <a
+      [href]="link.href"
+      target="_blank"
+      class="grow md:grow-0"
+      labButton
+      [text]="link.text"
+      [faIcon]="link.icon"
+      size="small"
+      [border]="false"
+    ></a>
+  }
+  <button
+    type="button"
+    class="md:inline-flex"
+    labButton
+    [faIcon]="faUserGear"
+    size="large"
+    [border]="false"
+    [hide]="true"
+    labTooltip="preferences.header"
+    [attr.aria-label]="'preferences.header' | translate"
+    (click)="togglePreferences()"
+  ></button>
+</div>

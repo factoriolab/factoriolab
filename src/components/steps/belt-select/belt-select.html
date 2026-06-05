@@ -1,0 +1,44 @@
+<lab-dropdown
+  [controlId]="controlId()"
+  [border]="false"
+  (open)="open()"
+  (save)="save()"
+>
+  @if (value()?.beltId; as beltId) {
+    @let stack = value()?.stack;
+    <lab-icon
+      [value]="beltId"
+      type="item"
+      [text]="stack?.gt(rational.one) ? stack?.toString() : ''"
+    ></lab-icon>
+  } @else {
+    <lab-icon
+      class="opacity-40 grayscale"
+      [value]="settingsStore.dataset().beltIds[0]"
+      type="item"
+    ></lab-icon>
+  }
+
+  <ng-template #overlay>
+    <div class="flex">
+      <lab-input-number
+        class="w-0 grow"
+        rounded="start"
+        [minimum]="rational.one"
+        [maximum]="stack()"
+        [buttons]="true"
+        labTooltip="beltSelect.stackTooltip"
+        [ngModel]="editValue()?.stack"
+        (ngModelChange)="setStack($event)"
+      ></lab-input-number>
+      <lab-select
+        class="-ms-px"
+        rounded="end"
+        [iconOnly]="true"
+        [options]="settingsStore.options().belts"
+        [ngModel]="editValue()?.beltId"
+        (ngModelChange)="setBelt($event)"
+      ></lab-select>
+    </div>
+  </ng-template>
+</lab-dropdown>

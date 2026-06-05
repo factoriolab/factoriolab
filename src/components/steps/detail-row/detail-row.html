@@ -1,0 +1,197 @@
+<td [colSpan]="leftSpan()"></td>
+
+<td class="w-0 px-0">
+  @if (items(); as items) {
+    <div class="flex items-center justify-end">
+      <span class="font-mono whitespace-pre">{{
+        items | rate: cols().items.precision
+      }}</span>
+    </div>
+  }
+</td>
+
+<td>
+  @if (value().itemId; as itemId) {
+    <div class="flex items-center">
+      <lab-icon
+        class="mx-0.5"
+        [value]="itemId"
+        type="item"
+        [labTooltip]="itemId"
+        labTooltipType="item"
+        labTooltipPosition="adjacent"
+      ></lab-icon>
+    </div>
+  }
+</td>
+
+@if (cols().belts.show) {
+  <td class="pe-0">
+    @if (value().belts; as belts) {
+      <div class="flex items-center justify-end">
+        <span class="font-mono whitespace-pre">{{
+          belts.div(factor()) | rate: cols().belts.precision
+        }}</span>
+      </div>
+    }
+  </td>
+  <td>
+    @if (value().beltId; as beltId) {
+      <div class="flex items-center">
+        <lab-icon
+          class="mx-0.5"
+          [value]="beltId"
+          type="item"
+          [text]="
+            value().stack?.gt(rational.one) ? value().stack?.toString() : ''
+          "
+          [labTooltip]="beltId"
+          labTooltipType="belt"
+          labTooltipPosition="adjacent"
+        ></lab-icon>
+      </div>
+    }
+  </td>
+}
+
+@if (cols().wagons.show) {
+  <td class="pe-0">
+    @if (value().wagons; as wagons) {
+      <div class="flex items-center justify-end">
+        <span class="font-mono whitespace-pre">{{
+          wagons.div(factor()) | rate: cols().wagons.precision
+        }}</span>
+      </div>
+    }
+  </td>
+  <td>
+    @if (value().wagonId; as wagonId) {
+      <div class="flex items-center">
+        <lab-icon
+          class="mx-0.5"
+          [value]="wagonId"
+          type="item"
+          [labTooltip]="wagonId"
+          labTooltipType="wagon"
+          labTooltipPosition="adjacent"
+        ></lab-icon>
+      </div>
+    }
+  </td>
+}
+
+@if (cols().rockets.show) {
+  <td colspan="2"></td>
+}
+
+@if (data().inserterIds.length) {
+  <td class="pe-0">
+    @if (inserterCount(); as count) {
+      <div
+        class="flex items-center justify-end"
+        labTooltip="steps.inserterCountTooltip"
+      >
+        <span class="font-mono whitespace-pre"
+          >{{ count.div(factor()) | rate: cols().items.precision }}*</span
+        >
+      </div>
+    }
+  </td>
+  <td>
+    @if (inserterId()) {
+      <div class="flex items-center">
+        <lab-select
+          [iconOnly]="true"
+          [border]="false"
+          [options]="settingsStore.options()['inserters']"
+          [labTooltip]="inserterId()"
+          labTooltipType="inserter"
+          labTooltipAction="steps.inserterTooltip"
+          labTooltipPosition="adjacent"
+          [attr.aria-label]="'steps.inserterTooltip' | translate"
+          [(ngModel)]="inserterId"
+        ></lab-select>
+      </div>
+    }
+  </td>
+} @else {
+  <td colspan="2"></td>
+}
+
+<td class="pe-0">
+  @if (
+    !data().machineRecord[value().machineId ?? '']?.hideRate &&
+      value().machines;
+    as machines
+  ) {
+    <div class="flex items-center justify-end">
+      <span class="font-mono whitespace-pre">{{
+        machines.div(factor()) | rate: cols().machines.precision
+      }}</span>
+    </div>
+  }
+</td>
+<td [colSpan]="machineIdSpan()">
+  <div class="flex items-center">
+    <div class="flex items-center gap-1">
+      @if (value().isInput) {
+        <span class="w-19">{{ 'steps.inputs' | translate }}</span>
+      } @else {
+        @if (value().recipeId; as recipeId) {
+          @let objId = value().recipeObjectiveId;
+          <lab-icon
+            class="mx-0.5"
+            [value]="recipeId"
+            type="recipe"
+            [text]="objId ? '#' + objId : ''"
+            [labTooltip]="recipeId"
+            labTooltipType="recipe"
+            labTooltipPosition="adjacent"
+          ></lab-icon>
+        } @else {
+          <div class="size-9"></div>
+        }
+
+        @if (value().machineId; as machineId) {
+          <lab-icon
+            class="mx-0.5"
+            [value]="machineId"
+            type="item"
+            [labTooltip]="machineId"
+            labTooltipType="machine"
+            labTooltipPosition="adjacent"
+          ></lab-icon>
+        } @else {
+          <div class="size-9"></div>
+        }
+      }
+    </div>
+
+    @if (value().percent; as percent) {
+      <div class="flex items-center gap-1 ps-2">
+        <div
+          class="flex items-center justify-center p-2"
+          [class.order-1]="!value().percentOnDest"
+        >
+          <fa-icon [icon]="faArrowRightLong"></fa-icon>
+        </div>
+        <span class="font-mono whitespace-pre">{{
+          percent.div(factor()) | rate: -2 | percentPad
+        }}</span>
+        @if (value().destId; as destId) {
+          <lab-icon
+            class="order-2 mx-0.5"
+            [value]="destId"
+            [type]="value().destType"
+            [text]="value().destRecipeObjectiveId"
+            [labTooltip]="destId"
+            [labTooltipType]="value().destType"
+          ></lab-icon>
+        }
+        @if (value().isOutput) {
+          <span class="order-2">{{ 'steps.outputs' | translate }}</span>
+        }
+      </div>
+    }
+  </div>
+</td>

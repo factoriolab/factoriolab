@@ -1,0 +1,16 @@
+<button
+  type="button"
+  labButton
+  class="bg-gray-950"
+  [icon]="itemId()"
+  [toggleIcon]="faEyeSlash"
+  [toggled]="excluded()"
+  iconType="item"
+  [border]="false"
+  [labTooltip]="itemId()"
+  labTooltipType="item"
+  labTooltipPosition="adjacent"
+  [labTooltipAction]="tooltip()"
+  [attr.aria-label]="tooltip() | translate"
+  (click)="changeItemExcluded()"
+></button>

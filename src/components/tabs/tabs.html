@@ -1,0 +1,71 @@
+@if (scroll.scrollWidth > scroll.clientWidth + 4 && scroll.scrollLeft !== 0) {
+  <div class="absolute left-0 z-1 h-full">
+    <button
+      type="button"
+      labButton
+      [faIcon]="faAngleLeft"
+      rounded="end"
+      tabindex="-1"
+      aria-hidden="true"
+      class="h-full bg-gray-950 shadow-sm shadow-gray-700"
+      (click)="scrollNext(scroll, -1)"
+    ></button>
+  </div>
+}
+<div
+  #scroll
+  class="relative inline-flex grow overflow-hidden scroll-smooth"
+  (scrollend)="onScrollEnd()"
+>
+  @for (tab of tabs(); track tab.value) {
+    <a
+      #tab
+      class="flex shrink-0 cursor-pointer items-center gap-2 overflow-hidden rounded-t-xs border-b-2 border-gray-600 px-3 py-2 select-none"
+      role="tab"
+      labRipple
+      [routerLink]="tab.routerLink"
+      [queryParams]="resetTableParams"
+      routerLinkActive
+      queryParamsHandling="merge"
+      (isActiveChange)="$event ? value.set(tab.value) : null"
+      [class]="
+        tab.value === value()
+          ? 'text-brand-400 group-focus-visible:outline-brand-400 -outline-offset-1 group-focus-visible:outline'
+          : 'hover:text-brand-400'
+      "
+      (click)="select(tab)"
+    >
+      @if (tab.faIcon) {
+        <fa-icon [icon]="tab.faIcon"></fa-icon>
+      }
+      @if (type(); as type) {
+        <lab-icon [type]="type" [value]="tab.icon ?? tab.value"></lab-icon>
+      }
+      <span class="font-semibold lg:line-clamp-1" [class.hidden]="!!type()">{{
+        tab.label | translate
+      }}</span>
+    </a>
+  }
+  <span class="grow border-b-2 border-gray-600"></span>
+  <div
+    class="bg-brand-400 absolute bottom-0 h-0.5 transition-[left,width] duration-300"
+    [style]="indicatorStyle()?.()"
+  ></div>
+</div>
+@if (
+  scroll.scrollWidth > scroll.clientWidth + 4 &&
+  scroll.scrollLeft <= scroll.scrollWidth - scroll.clientWidth - 2
+) {
+  <div class="absolute right-0 z-1 h-full">
+    <button
+      type="button"
+      labButton
+      [faIcon]="faAngleRight"
+      tabindex="-1"
+      aria-hidden="true"
+      rounded="start"
+      class="h-full bg-gray-950 shadow-sm shadow-gray-700"
+      (click)="scrollNext(scroll, 1)"
+    ></button>
+  </div>
+}

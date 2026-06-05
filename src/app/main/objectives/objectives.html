@@ -1,0 +1,200 @@
+<h2 class="mb-1 hidden text-2xl font-light xl:block">
+  {{ 'objectives.title' | translate }}
+</h2>
+
+<div class="flex flex-wrap gap-1 sm:gap-2">
+  <div class="flex w-full max-w-3xl grow flex-col sm:w-auto">
+    <div class="mb-1 flex">
+      <span class="min-w-9 md:hidden"></span>
+      <span class="hidden basis-2/5 px-1 text-sm text-gray-300 md:block">{{
+        'objectives.target' | translate
+      }}</span>
+      <span
+        id="quantity-label"
+        class="basis-1/4 px-1 text-sm text-gray-300 md:basis-1/5"
+        >{{ 'objectives.quantity' | translate }}</span
+      >
+      <span
+        id="units-label"
+        class="basis-3/8 px-1 text-sm text-gray-300 md:basis-1/5"
+        >{{ 'objectives.units' | translate }}</span
+      >
+      <span
+        id="type-label"
+        class="basis-3/8 px-1 text-sm text-gray-300 md:basis-1/5"
+        >{{ 'objectives.type' | translate }}</span
+      >
+      <div class="invisible min-w-9"></div>
+    </div>
+
+    @if (objectives().length) {
+      <div
+        class="mb-1 flex flex-col gap-1 sm:mb-2 sm:gap-2"
+        cdkDropList
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (objective of objectives(); track objective.id) {
+          <div cdkDrag cdkDragLockAxis="y" cdkDragBoundary=".flex.flex-col">
+            <div class="flex bg-gray-950">
+              <button
+                type="button"
+                class="md:hidden"
+                labButton
+                cdkDragHandle
+                [iconType]="
+                  objective.unit === ObjectiveUnit.Machines ? 'recipe' : 'item'
+                "
+                [icon]="objective.targetId"
+                [iconText]="
+                  objective.unit === ObjectiveUnit.Machines
+                    ? '#' + objective.id
+                    : undefined
+                "
+                rounded="start"
+                [attr.aria-label]="
+                  (objective.unit === ObjectiveUnit.Machines
+                    ? data().recipeRecord
+                    : data().itemRecord)[objective.targetId].name
+                "
+                (click)="changeTarget(objective)"
+              ></button>
+              <button
+                type="button"
+                class="basis-2/5 md:inline-flex"
+                labButton
+                cdkDragHandle
+                [faIcon]="objectives().length > 1 ? faGrip : undefined"
+                [iconType]="
+                  objective.unit === ObjectiveUnit.Machines ? 'recipe' : 'item'
+                "
+                [icon]="objective.targetId"
+                [iconText]="
+                  objective.unit === ObjectiveUnit.Machines
+                    ? '#' + objective.id
+                    : undefined
+                "
+                [text]="
+                  (objective.unit === ObjectiveUnit.Machines
+                    ? data().recipeRecord
+                    : data().itemRecord)[objective.targetId].name
+                "
+                [hide]="true"
+                rounded="start"
+                (click)="changeTarget(objective)"
+              ></button>
+              <lab-input-number
+                class="-ms-px basis-1/3 md:basis-1/5"
+                labelledBy="quantity-label"
+                rounded="none"
+                [buttons]="true"
+                [ngModel]="objective.value"
+                (ngModelChange)="
+                  objectivesStore.updateRecord(objective.id, { value: $event })
+                "
+              ></lab-input-number>
+              <lab-select
+                class="-ms-px basis-1/3 md:basis-1/5"
+                labelledBy="units-label"
+                rounded="none"
+                [options]="unitOptions()"
+                [ngModel]="objective.unit"
+                (ngModelChange)="conversion.changeUnit(objective, $event)"
+              ></lab-select>
+              <lab-select
+                class="-ms-px basis-1/3 md:basis-1/5"
+                labelledBy="type-label"
+                rounded="none"
+                [options]="typeOptions"
+                [ngModel]="objective.type"
+                (ngModelChange)="
+                  objectivesStore.updateRecord(objective.id, { type: $event })
+                "
+              ></lab-select>
+              <button
+                type="button"
+                class="-ms-px"
+                labButton
+                [faIcon]="faXmark"
+                rounded="end"
+                [attr.aria-label]="'objectives.removeTooltip' | translate"
+                (click)="objectivesStore.remove(objective.id)"
+              ></button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <div class="flex">
+      <button
+        type="button"
+        class="md:hidden"
+        labButton
+        [faIcon]="faPlus"
+        color="brand"
+        rounded="start"
+        [attr.aria-label]="
+          isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'
+        "
+        (click)="openPicker()"
+      ></button>
+      <button
+        type="button"
+        class="basis-2/5 md:inline-flex"
+        labButton
+        [faIcon]="faPlus"
+        color="brand"
+        rounded="start"
+        [text]="isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'"
+        [hide]="true"
+        (click)="openPicker()"
+      ></button>
+      <lab-input-number
+        class="-ms-px basis-1/3 md:basis-1/5"
+        labelledBy="quantity-label"
+        rounded="none"
+        [buttons]="true"
+        [(ngModel)]="value"
+      ></lab-input-number>
+      <lab-select
+        class="-ms-px basis-1/3 md:basis-1/5"
+        labelledBy="units-label"
+        rounded="none"
+        [(ngModel)]="unit"
+        [options]="unitOptions()"
+      ></lab-select>
+      <lab-select
+        class="-ms-px basis-1/3 md:basis-1/5"
+        labelledBy="type-label"
+        rounded="none"
+        [(ngModel)]="type"
+        [options]="typeOptions"
+      ></lab-select>
+      @let paused = preferencesStore.paused();
+      @let pausedTooltip =
+        paused ? 'objectives.playTooltip' : 'objectives.pauseTooltip';
+      <button
+        type="button"
+        class="-ms-px"
+        labButton
+        [faIcon]="paused ? faPlay : faPause"
+        [labTooltip]="pausedTooltip"
+        [color]="paused ? 'brand' : 'gray'"
+        rounded="end"
+        [attr.aria-label]="pausedTooltip | translate"
+        (click)="preferencesStore.apply({ paused: !paused })"
+      ></button>
+    </div>
+  </div>
+  <div class="flex items-end">
+    <lab-form-field label="objectives.displayRate">
+      <lab-select
+        [options]="displayRateOptions"
+        [ngModel]="settingsStore.displayRate()"
+        (ngModelChange)="objectivesStore.adjustDisplayRate($event)"
+      ></lab-select>
+    </lab-form-field>
+  </div>
+</div>
+
+<lab-message [message]="objectivesStore.message()"></lab-message>

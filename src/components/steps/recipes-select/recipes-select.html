@@ -1,0 +1,35 @@
+@if (recipes(); as recipes) {
+  <lab-select
+    #select
+    class="group"
+    [border]="false"
+    [iconOnly]="true"
+    [options]="recipes.options"
+    [labTooltip]="step().recipeId"
+    labTooltipType="recipe"
+    labTooltipPosition="adjacent"
+    labTooltipAction="steps.selectRecipesTooltip"
+    [attr.aria-label]="'steps.selectRecipesTooltip' | translate"
+    [labTooltipAdjustedRecipe]="step().recipe"
+    [ngModel]="recipes.enabledIds"
+    (ngModelChange)="changeRecipesIncluded($event)"
+  >
+    <div class="flex group-hover:opacity-40">
+      @if (step().recipeId; as recipeId) {
+        @let objId = step().recipeObjectiveId;
+        <lab-icon
+          type="recipe"
+          [value]="recipeId"
+          [text]="objId ? '#' + objId : ''"
+        ></lab-icon>
+      } @else {
+        <fa-icon [icon]="faFlaskVial"></fa-icon>
+      }
+    </div>
+    <fa-icon
+      class="text-brand-400 absolute hidden transition-transform group-hover:block"
+      [class.-scale-y-100]="select.opened()"
+      [icon]="faChevronDown"
+    ></fa-icon>
+  </lab-select>
+}

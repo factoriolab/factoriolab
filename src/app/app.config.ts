@@ -1,77 +1,71 @@
-import { APP_BASE_HREF } from '@angular/common';
-import { provideHttpClient } from '@angular/common/http';
 import {
-  APP_INITIALIZER,
+  DEFAULT_DIALOG_CONFIG,
+  DialogConfig,
+  DialogRef,
+} from '@angular/cdk/dialog';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import {
   ApplicationConfig,
   ErrorHandler,
-  provideZoneChangeDetection,
+  inject,
+  isDevMode,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideAnimations } from '@angular/platform-browser/animations';
-import {
-  PreloadAllModules,
-  provideRouter,
-  withComponentInputBinding,
-  withPreloading,
-  withRouterConfig,
-} from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { loadModule } from 'glpk-ts';
-import { PrimeNGConfig } from 'primeng/api';
-import { environment } from 'src/environments';
+
+import { Dialog } from '~/components/dialog/dialog';
+import { SIMPLEX_CONFIG } from '~/solver/simplex-config';
+import { Translate } from '~/translate/translate';
 
 import { routes } from './app.routes';
-import { ErrorService } from './services/error.service';
-import { ThemeService } from './services/theme.service';
-import {
-  DEFAULT_LANGUAGE,
-  TranslateService,
-} from './services/translate.service';
+import { LabErrorHandler } from './error/error-handler';
 
-function initializeApp(primengConfig: PrimeNGConfig): () => Promise<unknown> {
-  return () => {
-    // Enable ripple
-    primengConfig.ripple = true;
+let closePredicateIndex = 0;
+export const APP_DIALOG_CONFIG: DialogConfig = {
+  container: Dialog,
+  hasBackdrop: true,
+  /** Hacky workaround to animate leaving all dialogs */
+  closePredicate: (result, _, component): boolean => {
+    // Find the dialogRef reference on the component
+    const dialogRef = (component as { dialogRef: DialogRef }).dialogRef;
+    // If not found, just allow the dialog to close, we can't animate it
+    if (dialogRef?.containerInstance == null) {
+      if (isDevMode())
+        console.warn('Closing dialog without animation', component);
+      return true;
+    }
 
-    // Set up initial theme
-    ThemeService.appInitTheme();
+    // Animate leaving dialog, return false, return true on the next call
+    // (after the animation completes)
+    (dialogRef.containerInstance as Dialog).animateClose(result);
+    return closePredicateIndex++ % 2 === 1;
+  },
+};
 
-    // Load glpk-wasm
-    return loadModule('assets/glpk-wasm/glpk.all.wasm');
-  };
+async function initializeApp(): Promise<unknown> {
+  return Promise.all([inject(Translate).load(), loadModule('glpk.all.wasm')]);
 }
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    { provide: APP_BASE_HREF, useValue: environment.baseHref },
-    { provide: DEFAULT_LANGUAGE, useValue: 'en' },
-    { provide: ErrorHandler, useClass: ErrorService },
-    {
-      provide: APP_INITIALIZER,
-      deps: [
-        PrimeNGConfig,
-        /**
-         * Not actually used by `initializeApp`; included to ensure service
-         * constructor is run so language data is requested immediately.
-         */
-        TranslateService,
-      ],
-      useFactory: initializeApp,
-      multi: true,
-    },
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideAnimations(),
-    provideRouter(
-      routes,
-      withComponentInputBinding(),
-      withPreloading(PreloadAllModules),
-      withRouterConfig({ paramsInheritanceStrategy: 'always' }),
-    ),
-    provideHttpClient(),
+    { provide: DEFAULT_DIALOG_CONFIG, useValue: APP_DIALOG_CONFIG },
+    { provide: ErrorHandler, useClass: LabErrorHandler },
+    provideAppInitializer(() => initializeApp()),
+    provideBrowserGlobalErrorListeners(),
+    provideZonelessChangeDetection(),
+    provideRouter(routes, withComponentInputBinding()),
+    provideHttpClient(withFetch()),
     provideServiceWorker('ngsw-worker.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
+      enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
+    {
+      provide: SIMPLEX_CONFIG,
+      useFactory: () => (isDevMode() ? {} : { msgLevel: 'off' }),
+    },
   ],
 };

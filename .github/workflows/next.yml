@@ -1,0 +1,44 @@
+name: next
+on:
+  push:
+    branches: [next]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Use the package manager cache if available
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run build
+        run: npm run build -- -c=production,next
+
+      - name: Copy index to 404
+        run: cp dist/factoriolab/browser/index.html dist/factoriolab/browser/404.html
+
+      - name: Copy index to spa (DEFAULT_MOD)
+        run: cp dist/factoriolab/browser/index.html dist/factoriolab/browser/spa.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository-name: factoriolab/next
+          branch: main
+          folder: dist/factoriolab/browser
+          clean: true

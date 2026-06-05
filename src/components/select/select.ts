@@ -1,0 +1,276 @@
+import { CdkOverlayOrigin, OverlayModule } from '@angular/cdk/overlay';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  Injector,
+  input,
+  linkedSignal,
+  model,
+  signal,
+  viewChildren,
+} from '@angular/core';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import {
+  faChevronDown,
+  faMagnifyingGlass,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
+import { cva } from 'class-variance-authority';
+
+import { Option } from '~/option/option';
+import { TranslatePipe } from '~/translate/translate-pipe';
+import { areSetsEqual } from '~/utils/equality';
+
+import { Button } from '../button/button';
+import { Checkbox } from '../checkbox/checkbox';
+import { Control } from '../control';
+import { FormField } from '../form-field/form-field';
+import { Icon } from '../icon/icon';
+import { Ripple } from '../ripple/ripple';
+import { Rounded, roundedVariants } from '../rounding';
+import { Tooltip } from '../tooltip/tooltip';
+
+let nextUniqueId = 0;
+const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
+
+const host = cva(
+  'hover:border-brand-600 focus-visible:border-brand-600 group inline-flex min-h-9 grow cursor-pointer items-center overflow-hidden select-none hover:z-2 focus:z-2 focus-visible:outline',
+  {
+    variants: {
+      opened: {
+        true: 'border-brand-600 z-2 outline',
+        false: 'border-gray-600',
+      },
+      border: { true: 'border', false: 'hover:border' },
+      rounded: roundedVariants,
+      iconOnly: {
+        true: 'outline-brand-600 min-w-9 grow-0 justify-center',
+        false: 'outline-brand-600 px-1',
+      },
+      disabled: {
+        true: 'pointer-events-none',
+      },
+    },
+    compoundVariants: [
+      {
+        border: false,
+        opened: true,
+        class: 'border',
+      },
+    ],
+  },
+);
+
+@Component({
+  selector: 'lab-select',
+  imports: [
+    FormsModule,
+    OverlayModule,
+    FaIconComponent,
+    Button,
+    Checkbox,
+    Icon,
+    Ripple,
+    Tooltip,
+    TranslatePipe,
+  ],
+  templateUrl: './select.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    role: 'combobox',
+    '[class]': 'hostClass()',
+    '[attr.id]': 'controlId()',
+    '[attr.tabindex]': 'disabled() ? -1 : 0',
+    '[attr.aria-disabled]': 'disabled() ? "true" : null',
+    '[attr.aria-controls]': 'opened() ? controlId() + "-listbox" : null',
+    '[attr.aria-expanded]': 'opened()',
+    '[attr.aria-labelledby]': 'labelledBy() ?? formField?.labelId ?? null',
+    '(keydown)': 'toggle($event)',
+    '(click)': 'toggle()',
+  },
+  hostDirectives: [CdkOverlayOrigin],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: Select,
+    },
+    { provide: Control, useExisting: Select },
+  ],
+})
+export class Select<T = unknown> extends Control<T> {
+  protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected readonly overlayOrigin = inject(CdkOverlayOrigin);
+  protected readonly formField = inject(FormField, { optional: true });
+  private readonly injector = inject(Injector);
+
+  protected readonly listItems =
+    viewChildren<ElementRef<HTMLLIElement>>('option');
+
+  private readonly uniqueId = (nextUniqueId++).toString();
+
+  readonly controlId = input(`lab-select-${this.uniqueId}`);
+  readonly value = model<T>();
+  readonly disabled = model(false);
+  readonly labelledBy = input<string>();
+  readonly options = input.required<Option<T>[]>();
+  readonly placeholder = input<string>();
+  readonly border = input(true);
+  readonly rounded = input<Rounded>('all');
+  readonly iconOnly = input<boolean>(false);
+
+  protected readonly filterText = signal('');
+  readonly opened = signal(false);
+
+  protected readonly selection = linkedSignal(() =>
+    this.selectionValue(this.value()),
+  );
+  protected readonly hostClass = computed(() =>
+    host({
+      opened: this.opened(),
+      border: this.border(),
+      rounded: this.rounded(),
+      iconOnly: this.iconOnly(),
+      disabled: this.disabled(),
+    }),
+  );
+  protected readonly filter = computed(() => this.options().length > 10);
+  protected readonly multi = computed(() => {
+    const value = this.value();
+    return Array.isArray(value) || value instanceof Set;
+  });
+  protected readonly allSelected = computed(() => {
+    if (this.options().length === this.selection().size) return true;
+    if (this.selection().size === 0) return false;
+    return undefined;
+  });
+  protected readonly selectedOption = computed(() =>
+    this.options()?.find((o) => o.value === this.value()),
+  );
+  protected readonly filterLower = computed(() =>
+    this.filterText().toLowerCase(),
+  );
+
+  protected readonly faChevronDown = faChevronDown;
+  protected readonly faMagnifyingGlass = faMagnifyingGlass;
+  protected readonly faXmark = faXmark;
+
+  toggle(event?: Event): void {
+    if (
+      this.disabled() ||
+      (event instanceof KeyboardEvent && !TOGGLE_KEYS.has(event.key))
+    )
+      return;
+
+    if (this.opened()) {
+      this.opened.set(false);
+      const value = this.value();
+      const selection = this.selection();
+      if (
+        (Array.isArray(value) || value instanceof Set) &&
+        !areSetsEqual(value, selection)
+      ) {
+        const newValue = Array.isArray(value)
+          ? Array.from(selection)
+          : selection;
+        this.setValue(newValue as unknown as T);
+      }
+    } else {
+      this.opened.set(true);
+      this.filterText.set('');
+      this.selection.set(this.selectionValue(this.value()));
+      this.focusAfterOpen(event);
+    }
+
+    event?.preventDefault();
+  }
+
+  select(value: T): void {
+    if (this.multi()) {
+      this.selection.update((s) => {
+        const result = new Set(s);
+        if (result.has(value)) result.delete(value);
+        else result.add(value);
+        return result;
+      });
+    } else {
+      this.toggle();
+      this.setValue(value);
+    }
+  }
+
+  selectAll(value: boolean | undefined): void {
+    if (!this.multi() || value == null) return;
+    if (value) this.selection.set(new Set(this.options().map((o) => o.value)));
+    else this.selection.set(new Set());
+  }
+
+  focusFirst(event: Event): void {
+    const el = this.listItems()[0]?.nativeElement;
+    if (el == null) return;
+    el.focus();
+    event.preventDefault();
+  }
+
+  focusLast(event: Event): void {
+    const items = this.listItems();
+    const el = items[items.length - 1]?.nativeElement;
+    if (el == null) return;
+    el.focus();
+    event.preventDefault();
+  }
+
+  focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
+    const index = this.listItems().findIndex((i) => i.nativeElement === option);
+    const el = this.listItems()[index + dir]?.nativeElement;
+    if (el == null) return;
+    el.focus();
+    event.preventDefault();
+  }
+
+  private selectionValue(value: T | undefined): Set<unknown> {
+    if (Array.isArray(value)) return new Set(value);
+    if (value instanceof Set) return value;
+    return new Set();
+  }
+
+  private focusAfterOpen(event?: Event): void {
+    // Determine which element to focus, most likely the selected element
+    // Don't need to worry about filter, none can be applied yet
+    const options = this.options();
+    let index = options.findIndex((o) => o.value === this.value());
+    if (this.multi()) index = 0;
+    if (event instanceof KeyboardEvent) {
+      switch (event.key) {
+        case 'ArrowUp':
+          if (index > 0) index--;
+          break;
+        case 'ArrowDown':
+          if (index !== -1 && index < options.length - 1) index++;
+          break;
+        case 'Home':
+          index = 0;
+          break;
+        case 'End':
+          index = options.length - 1;
+          break;
+      }
+    }
+
+    if (index !== -1)
+      afterNextRender(
+        () => {
+          const el = this.listItems().at(index)?.nativeElement;
+          if (el == null) return;
+          el.scrollIntoView();
+          el.focus();
+        },
+        { injector: this.injector },
+      );
+  }
+}

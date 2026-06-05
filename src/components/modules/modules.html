@@ -1,0 +1,39 @@
+@for (entry of value(); track entry.id) {
+  <div class="flex" [class.-mt-px]="!$first">
+    <lab-input-number
+      class="w-0 grow"
+      rounded="start"
+      [maximum]="maximum()[$index]"
+      [buttons]="true"
+      [disabled]="!entry.id"
+      labTooltip="modules.eachTooltip"
+      ariaLabel="modules.eachTooltip"
+      [ngModel]="entry.count"
+      (ngModelChange)="setField($index, 'count', $event)"
+    ></lab-input-number>
+    <lab-select
+      class="-ms-px"
+      [rounded]="entity().modules === true ? 'end' : 'none'"
+      [iconOnly]="true"
+      [options]="moduleOptions() | filterOptions: exclude() : entry.id"
+      [labTooltip]="entry.id || 'modules.moduleTooltip'"
+      [labTooltipType]="entry.id ? 'module' : undefined"
+      [labTooltipAction]="entry.id ? 'modules.moduleTooltip' : ''"
+      [attr.aria-label]="'modules.moduleTooltip' | translate"
+      [ngModel]="entry.id"
+      (ngModelChange)="setField($index, 'id', $event)"
+    ></lab-select>
+    @if (entity().modules !== true) {
+      <button
+        type="button"
+        class="-ms-px"
+        labButton
+        rounded="end"
+        [faIcon]="faXmark"
+        [aria-label]="'remove' | translate"
+        [disabled]="entry.id === ''"
+        (click)="removeEntry($index)"
+      ></button>
+    }
+  </div>
+}

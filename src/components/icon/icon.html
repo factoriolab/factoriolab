@@ -1,0 +1,44 @@
+@if (icon(); as icon) {
+  <span
+    class="absolute size-16 origin-top-left"
+    [class.scale-50]="!full()"
+    [style.background-image]="icon.image"
+    [style.background-position]="icon.position"
+    [class.light:invert]="icon.id | isLight: settingsStore.iconColor.value()"
+  >
+  </span>
+
+  @if (icon.quality; as q) {
+    <lab-icon
+      class="top-2 right-2"
+      type="quality"
+      [value]="q.id"
+      [full]="full()"
+    ></lab-icon>
+  }
+
+  @if (icon.text; as text) {
+    <span
+      class="text-shadow-solid pointer-events-none absolute top-0 left-0 text-sm/3.5 font-semibold text-white select-none text-shadow-black"
+      >{{ text }}</span
+    >
+  }
+} @else {
+  @if (faIcon(); as faIcon) {
+    <fa-icon [icon]="faIcon" class="size-8" size="xl"></fa-icon>
+  }
+}
+
+@if (alt(); as text) {
+  <span
+    class="text-shadow-solid pointer-events-none absolute top-0 right-0 text-sm/3.5 font-semibold text-white select-none text-shadow-black"
+    >{{ text }}</span
+  >
+}
+
+@if (text(); as text) {
+  <span
+    class="text-shadow-solid pointer-events-none absolute right-0 bottom-0 text-sm/3.5 font-semibold text-white select-none text-shadow-black"
+    >{{ text }}</span
+  >
+}

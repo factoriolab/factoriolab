@@ -1,0 +1,55 @@
+<input
+  [id]="controlId()"
+  type="text"
+  [(ngModel)]="text"
+  labValidateRational
+  [minimum]="minimum()"
+  [maximum]="maximum()"
+  [class]="controlClass()"
+  [attr.aria-label]="ariaLabel() | translate"
+  [attr.aria-labelledby]="labelledBy()"
+  [disabled]="disabled()"
+  (input)="onChange($event)"
+  (blur)="onChange($event)"
+  (keydown.enter)="onChange($event)"
+  (keydown.arrowup)="increment(1)"
+  (keydown.arrowdown)="increment(-1)"
+/>
+@if (buttons() && value(); as value) {
+  <div class="-ms-px flex flex-col">
+    <button
+      type="button"
+      class="grow"
+      labButton
+      size="micro"
+      rounded="none"
+      [faIcon]="faChevronUp"
+      [disabled]="disabled() || !!maximum()?.lte(value)"
+      [attr.aria-label]="'inputNumber.increment' | translate"
+      (click)="increment(1)"
+    ></button>
+    <button
+      type="button"
+      class="grow border-t-0"
+      labButton
+      size="micro"
+      rounded="none"
+      [faIcon]="faChevronDown"
+      [disabled]="disabled() || !!minimum()?.gte(value)"
+      [attr.aria-label]="'inputNumber.decrement' | translate"
+      (click)="increment(-1)"
+    ></button>
+  </div>
+}
+@if (bonus()) {
+  <span class="pointer-events-none absolute top-1.5 left-1.5 z-3 text-base/snug"
+    >+</span
+  >
+}
+@if (percent()) {
+  <span
+    class="pointer-events-none absolute top-1.5 z-3"
+    [class]="buttons() ? 'right-11' : 'right-1.5'"
+    >%</span
+  >
+}

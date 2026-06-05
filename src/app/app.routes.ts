@@ -1,47 +1,36 @@
 import { Routes } from '@angular/router';
 
-import { canActivateId } from './guards/id.guard';
-import { canActivateLanding } from './guards/landing.guard';
-import { canActivateRatio } from './guards/ratio.guard';
+import { errorGuard } from './error/error';
+import { idGuard } from './id/id-guard';
+import { landingGuard } from './landing/landing-guard';
 
 export const routes: Routes = [
   {
+    path: 'error',
+    canActivate: [errorGuard],
+    loadComponent: () => import('./error/error').then((c) => c.Error),
+  },
+  {
     path: ':id',
-    canActivate: [canActivateId],
-    loadComponent: () =>
-      import('./routes/id.component').then((c) => c.IdComponent),
+    canActivate: [idGuard],
+    loadComponent: () => import('./id/id').then((c) => c.Id),
     children: [
-      {
-        path: 'wizard',
-        loadComponent: () =>
-          import('./routes/wizard/wizard.component').then(
-            (c) => c.WizardComponent,
-          ),
-      },
-      {
-        path: 'ratio',
-        canActivate: [canActivateRatio],
-        children: [],
-      },
       {
         path: '',
         pathMatch: 'full',
-        canActivate: [canActivateLanding],
-        loadComponent: () =>
-          import('./routes/landing/landing.component').then(
-            (c) => c.LandingComponent,
-          ),
+        canActivate: [landingGuard],
+        loadComponent: () => import('./landing/landing').then((c) => c.Landing),
       },
       {
         path: '',
-        loadChildren: () =>
-          import('./routes/main/main.routes').then((m) => m.routes),
+        loadComponent: () => import('./main/main').then((c) => c.Main),
+        loadChildren: () => import('./main/main.routes').then((m) => m.routes),
       },
     ],
   },
   {
     path: '**',
-    canActivate: [canActivateLanding],
+    canActivate: [landingGuard],
     children: [],
   },
 ];

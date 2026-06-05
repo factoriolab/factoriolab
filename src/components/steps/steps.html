@@ -1,0 +1,817 @@
+<div class="flex gap-1 sm:gap-2">
+  <button
+    type="button"
+    labButton
+    [faIcon]="faTableColumns"
+    text="columns.header"
+    (click)="dialog.open(ColumnsDialog)"
+  ></button>
+  @if (objectivesStore.steps().length) {
+    <button
+      type="button"
+      labButton
+      [faIcon]="faFileArrowDown"
+      text="steps.downloadAsCsv"
+      (click)="exporter.stepsToCsv(objectivesStore.steps())"
+    ></button>
+  }
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <!-- Row Actions -->
+      <th class="w-0"></th>
+      <!-- Checkbox -->
+      @if (cols().checkbox.show) {
+        <th class="w-0">
+          <div class="flex">
+            @let disabled =
+              !settings().checkedItemIds.size &&
+              !settings().checkedRecipeIds.size &&
+              !settings().checkedObjectiveIds.size;
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'steps.checkedUndoTooltip' | translate"
+              [faIcon]="disabled ? faSquareCheck : faRotateLeft"
+              [labTooltip]="disabled ? '' : 'steps.checkedUndoTooltip'"
+              [disabled]="disabled"
+              [border]="!disabled"
+              (click)="resetChecked()"
+            ></button>
+          </div>
+        </th>
+      }
+      <!-- Tree -->
+      @if (!focus() && cols().tree.show) {
+        <th>{{ 'options.column.tree' | translate }}</th>
+      }
+      <!-- Items (Surplus, Value, & Icon) -->
+      <th
+        colspan="3"
+        labSortHeader
+        column="items"
+        [text]="displayRateInfo().itemsLabel"
+        [showUndo]="!!settings().excludedItemIds.size"
+        [state]="tableStore.state()"
+        (stateChange)="tableStore.set($event)"
+        undoTooltip="steps.itemsUndoTooltip"
+        (undo)="resetExcludedItems()"
+      ></th>
+      <!-- Belts (Value & Icon) -->
+      @if (cols().belts.show) {
+        <th
+          colspan="2"
+          labSortHeader
+          column="belts"
+          text="options.column.belts"
+          [showUndo]="itemsStore.itemsModified().belts"
+          [state]="tableStore.state()"
+          (stateChange)="tableStore.set($event)"
+          undoTooltip="steps.beltsUndoTooltip"
+          (undo)="itemsStore.resetFields('beltId', 'stack')"
+        ></th>
+      }
+      <!-- Wagons (Value & Icon) -->
+      @if (cols().wagons.show) {
+        <th
+          colspan="2"
+          labSortHeader
+          column="wagons"
+          [text]="displayRateInfo().wagonsLabel"
+          [showUndo]="itemsStore.itemsModified().wagons"
+          [state]="tableStore.state()"
+          (stateChange)="tableStore.set($event)"
+          undoTooltip="steps.wagonsUndoTooltip"
+          (undo)="itemsStore.resetFields('wagonId')"
+        ></th>
+      }
+      <!-- Rockets (Value & Icon) -->
+      @if (cols().rockets.show) {
+        <th
+          colspan="2"
+          labSortHeader
+          column="rockets"
+          [text]="displayRateInfo().rocketsLabel"
+          [showUndo]="itemsStore.itemsModified().rockets"
+          [state]="tableStore.state()"
+          (stateChange)="tableStore.set($event)"
+          undoTooltip="steps.rocketsUndoTooltip"
+          (undo)="itemsStore.resetFields('wagonId')"
+        ></th>
+      }
+      <!-- Inserters (Value & Icon) -->
+      <th colspan="2"></th>
+      <!-- Machines (Value & Icon) -->
+      <th
+        colspan="2"
+        labSortHeader
+        column="machines"
+        text="options.column.machines"
+        [showUndo]="objectivesStore.recipesModified().machines"
+        [state]="tableStore.state()"
+        (stateChange)="tableStore.set($event)"
+        undoTooltip="steps.machinesUndoTooltip"
+        (undo)="resetMachines()"
+      ></th>
+      <!-- Beacons -->
+      @if (cols().beacons.show) {
+        <th>
+          <div class="flex items-center gap-2">
+            <span>{{ 'options.column.beacons' | translate }}</span>
+            @if (objectivesStore.recipesModified().beacons) {
+              <button
+                type="button"
+                class="ms-auto"
+                labButton
+                [attr.aria-label]="'steps.beaconsUndoTooltip' | translate"
+                labTooltip="steps.beaconsUndoTooltip"
+                labTooltipPosition="adjacent"
+                [faIcon]="faArrowRotateLeft"
+                (click)="resetBeacons()"
+              ></button>
+            }
+          </div>
+        </th>
+      }
+      <!-- Power -->
+      @if (cols().power.show) {
+        <th
+          labSortHeader
+          column="power"
+          text="options.column.power"
+          [state]="tableStore.state()"
+          (stateChange)="tableStore.set($event)"
+        ></th>
+      }
+      <!-- Pollution -->
+      @if (cols().pollution.show) {
+        <th
+          labSortHeader
+          column="pollution"
+          [text]="displayRateInfo().pollutionLabel"
+          [state]="tableStore.state()"
+          (stateChange)="tableStore.set($event)"
+        ></th>
+      }
+      <!-- Link -->
+      @if (cols().link.show) {
+        <th class="w-0"></th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (step of sortedSteps(); track step.id) {
+      @let expanded = expandedSteps().has(step.id);
+      <tr>
+        <!-- Row Actions -->
+        <td>
+          <div class="flex">
+            @let tooltip = expanded ? 'steps.hideDetails' : 'steps.showDetails';
+            <button
+              type="button"
+              class="*:transition-transform"
+              [class.*:rotate-90]="expanded"
+              labButton
+              [faIcon]="faAngleRight"
+              [border]="false"
+              [attr.aria-label]="tooltip | translate"
+              (click)="toggleStep(step.id)"
+            ></button>
+          </div>
+        </td>
+        <!-- Checkbox -->
+        @if (cols().checkbox.show) {
+          <td>
+            <div class="flex justify-center">
+              <lab-checkbox
+                ariaLabel="checked"
+                [ngModel]="step.checked"
+                (ngModelChange)="changeStepChecked(step, $event)"
+              ></lab-checkbox>
+            </div>
+          </td>
+        }
+        <!-- Tree -->
+        @if (!focus() && cols().tree.show) {
+          <td class="overflow-hidden px-0 py-0 sm:px-2">
+            <div class="flex h-12 items-center">
+              @let tree = objectivesStore.stepTree()[step.id];
+              @if (tableStore.sort() == null && tree.length) {
+                @for (trail of tree; track $index) {
+                  <div
+                    class="self-end border-e-2 border-dotted"
+                    [class]="{
+                      'border-gray-100': trail || $last,
+                      'ms-2': $first,
+                      'ms-4': !$first,
+                      'sm:ms-4.5': $first,
+                      'sm:ms-6': !$first,
+                      'h-12.5': trail || $last,
+                      'mb-6': $last && !trail,
+                    }"
+                  ></div>
+                }
+                <div class="w-2 border-t-2 border-dotted border-gray-100"></div>
+              }
+
+              <div
+                class="relative flex h-full flex-col items-center justify-center"
+              >
+                @if (step.itemId && step.recipeObjectiveId == null) {
+                  <lab-exclude-button
+                    [itemId]="step.itemId"
+                  ></lab-exclude-button>
+                } @else if (step.recipeId) {
+                  <lab-icon
+                    [value]="step.recipeId"
+                    type="recipe"
+                    [text]="
+                      step.recipeObjectiveId ? '#' + step.recipeObjectiveId : ''
+                    "
+                    [labTooltip]="step.recipeId"
+                    labTooltipType="recipe"
+                    labTooltipPosition="adjacent"
+                    [labTooltipAdjustedRecipe]="step.recipe"
+                  ></lab-icon>
+                }
+
+                @if (tableStore.sort() == null) {
+                  @let nextId = sortedSteps()[$index + 1]?.id;
+                  @if (nextId) {
+                    @let nextTree = objectivesStore.stepTree()[nextId];
+                    @if (nextTree.length > tree.length) {
+                      <span
+                        class="absolute bottom-0 left-2 -z-1 h-4 border-e-2 border-dotted border-gray-100"
+                        [class]="{
+                          'sm:left-4.5': !tree.length,
+                          'sm:left-4': tree.length,
+                        }"
+                      ></span>
+                    }
+                  }
+                }
+              </div>
+            </div>
+          </td>
+        }
+        <!-- Items (Value & Icon) -->
+        <td class="pe-0">
+          @if (step.surplus) {
+            <span
+              class="text-brand-400 flex justify-end font-mono whitespace-pre"
+              >(+{{ step.surplus | rate: cols().items.precision }})</span
+            >
+          }
+        </td>
+        <td class="w-0 px-0">
+          @if (step.items) {
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              step.items | rate: cols().items.precision
+            }}</span>
+          }
+        </td>
+        <td>
+          @if (step.itemId) {
+            <div class="relative flex">
+              <span
+                class="absolute top-1 -z-1 text-transparent select-none"
+                aria-hidden="true"
+                >{{ data().itemRecord[step.itemId].name }}</span
+              >
+              <lab-exclude-button [itemId]="step.itemId"></lab-exclude-button>
+            </div>
+          }
+        </td>
+        <!-- Belts (Value & Icon) -->
+        @if (cols().belts.show) {
+          <td class="pe-0">
+            @if (step.belts) {
+              <span class="flex justify-end font-mono whitespace-pre">{{
+                step.belts | rate: cols().belts.precision
+              }}</span>
+            }
+          </td>
+          <td>
+            @if (
+              step.belts && step.itemId && items()[step.itemId];
+              as itemSettings
+            ) {
+              @let beltId = itemSettings.beltId;
+              @if (beltId != null) {
+                <div class="flex items-center">
+                  @if (
+                    beltId !== '' &&
+                    !data().beltIds.includes(beltId) &&
+                    !data().pipeIds.includes(beltId)
+                  ) {
+                    <lab-icon
+                      [value]="beltId"
+                      type="item"
+                      [labTooltip]="beltId"
+                      labTooltipType="pipe"
+                    ></lab-icon>
+                  } @else {
+                    @let stack = data().itemRecord[step.itemId].stack;
+                    @let type = stack ? 'belt' : 'pipe';
+                    @if (
+                      data().flags.has('beltStack') &&
+                      stack &&
+                      stack.gt(rational.one)
+                    ) {
+                      <lab-belt-select
+                        [stack]="stack"
+                        [labTooltip]="beltId || 'steps.beltSelectTooltip'"
+                        [labTooltipType]="beltId ? 'belt' : undefined"
+                        [labTooltipAction]="
+                          beltId ? 'steps.beltSelectTooltip' : undefined
+                        "
+                        labTooltipPosition="adjacent"
+                        [attr.aria-label]="
+                          'steps.beltSelectTooltip' | translate
+                        "
+                        [value]="itemSettings"
+                        (valueChange)="changeBelts(step.itemId, $event)"
+                      ></lab-belt-select>
+                    } @else {
+                      @let tooltip = 'steps.' + type + 'Tooltip';
+                      <lab-select
+                        [iconOnly]="true"
+                        [border]="false"
+                        [options]="
+                          settingsStore.options()[
+                            type === 'belt' ? 'belts' : 'pipes'
+                          ]
+                        "
+                        [labTooltip]="beltId || tooltip"
+                        [labTooltipType]="beltId ? 'belt' : undefined"
+                        [labTooltipAction]="beltId ? tooltip : undefined"
+                        labTooltipPosition="adjacent"
+                        [attr.aria-label]="tooltip | translate"
+                        [ngModel]="beltId"
+                        (ngModelChange)="
+                          itemsStore.updateRecordField(
+                            step.itemId,
+                            'beltId',
+                            $event,
+                            itemSettings.defaultBeltId
+                          )
+                        "
+                      ></lab-select>
+                    }
+                  }
+                </div>
+              }
+            }
+          </td>
+        }
+        <!-- Wagons (Value & Icon) -->
+        @if (cols().wagons.show) {
+          <td class="pe-0">
+            @if (step.wagons) {
+              <span class="flex justify-end font-mono whitespace-pre">{{
+                step.wagons | rate: cols().wagons.precision
+              }}</span>
+            }
+          </td>
+          <td>
+            @if (
+              step.wagons && step.itemId && items()[step.itemId];
+              as itemSettings
+            ) {
+              @let wagonId = itemSettings.wagonId;
+              @if (wagonId != null) {
+                <div class="flex items-center">
+                  @let type =
+                    data().itemRecord[step.itemId].stack
+                      ? 'cargo-wagon'
+                      : 'fluid-wagon';
+                  <lab-select
+                    [iconOnly]="true"
+                    [border]="false"
+                    [options]="
+                      settingsStore.options()[
+                        type === 'cargo-wagon' ? 'cargoWagons' : 'fluidWagons'
+                      ]
+                    "
+                    [labTooltip]="wagonId || 'steps.wagonTooltip'"
+                    [labTooltipType]="wagonId ? 'wagon' : undefined"
+                    [labTooltipAction]="
+                      wagonId ? 'steps.wagonTooltip' : undefined
+                    "
+                    labTooltipPosition="adjacent"
+                    [attr.aria-label]="'steps.wagonTooltip' | translate"
+                    [ngModel]="wagonId"
+                    (ngModelChange)="
+                      itemsStore.updateRecordField(
+                        step.itemId,
+                        'wagonId',
+                        $event,
+                        itemSettings.defaultWagonId
+                      )
+                    "
+                  ></lab-select>
+                </div>
+              }
+            }
+          </td>
+        }
+        <!-- Rockets (Value & Icon) -->
+        @if (cols().rockets.show) {
+          <td class="pe-0">
+            @if (step.rockets) {
+              <span class="flex justify-end font-mono whitespace-pre">{{
+                step.rockets | rate: cols().rockets.precision
+              }}</span>
+            }
+          </td>
+          <td>
+            @if (step.rockets && step.itemId) {
+              <div class="flex items-center">
+                @let excluded =
+                  itemsStore.settings()[step.itemId].excludeRockets;
+                @let tooltip =
+                  excluded
+                    ? 'steps.includeRocketsTooltip'
+                    : 'steps.excludeRocketsTooltip';
+                <button
+                  type="button"
+                  labButton
+                  class="bg-gray-950"
+                  icon="rocket-pod"
+                  [toggleIcon]="faEyeSlash"
+                  [toggled]="excluded"
+                  iconType="system"
+                  [border]="false"
+                  [labTooltip]="tooltip"
+                  labTooltipPosition="adjacent"
+                  [attr.aria-label]="tooltip | translate"
+                  (click)="
+                    itemsStore.updateRecordField(
+                      step.itemId,
+                      'excludeRockets',
+                      excluded ? undefined : true
+                    )
+                  "
+                ></button>
+              </div>
+            }
+          </td>
+        }
+        <!-- Inserters (Value & Icon) -->
+        <td colspan="2"></td>
+        <!-- Machines (Value & Icon) -->
+        @if (step.recipeSettings?.machineId; as machineId) {
+          <td class="pe-0">
+            @if (
+              step.recipeId &&
+              step.machines &&
+              step.machines.nonzero() &&
+              !data().machineRecord[machineId].hideRate
+            ) {
+              <span class="flex justify-end font-mono whitespace-pre">
+                @if (
+                  step.recipeId &&
+                  data().recipeRecord[step.recipeId].flags.has('infinite')
+                ) {
+                  {{ step.machines | rate: -2 }}%
+                } @else {
+                  {{ step.machines | rate: cols().machines.precision }}
+                }
+              </span>
+            }
+          </td>
+          <td>
+            @if (step.recipeId && step.recipe && step.recipeSettings) {
+              <div class="relative flex items-center gap-1">
+                <span
+                  class="absolute top-1 -z-1 text-transparent select-none"
+                  aria-hidden="true"
+                  >{{ data().recipeRecord[step.recipeId].name }}</span
+                >
+                <lab-recipes-select [step]="step"></lab-recipes-select>
+                @if (step.recipe.producers?.length) {
+                  <lab-select
+                    [border]="false"
+                    [iconOnly]="true"
+                    [options]="step.recipeSettings.machineOptions ?? []"
+                    [labTooltip]="machineId"
+                    labTooltipType="machine"
+                    labTooltipPosition="adjacent"
+                    labTooltipAction="steps.selectMachineTooltip"
+                    [attr.aria-label]="'steps.selectMachineTooltip' | translate"
+                    [ngModel]="machineId"
+                    (ngModelChange)="
+                      objectivesStore.updateRecipeField(
+                        step,
+                        'machineId',
+                        $event,
+                        step.recipeSettings.defaultMachineId
+                      )
+                    "
+                  ></lab-select>
+                }
+
+                @if (data().flags.has('overclock')) {
+                  <lab-input-number
+                    class="w-16"
+                    [minimum]="rational.one"
+                    [maximum]="rational(250)"
+                    [step]="rational(10)"
+                    [percent]="true"
+                    [border]="false"
+                    labTooltip="steps.overclockTooltip"
+                    [ngModel]="step.recipeSettings.overclock"
+                    (ngModelChange)="
+                      objectivesStore.updateRecipeField(
+                        step,
+                        'overclock',
+                        $event,
+                        step.recipeSettings.defaultOverclock
+                      )
+                    "
+                  ></lab-input-number>
+                }
+
+                @if (step.recipeSettings.fuelId; as fuelId) {
+                  @if (step.recipe.flags.has('burn')) {
+                    <lab-icon
+                      [value]="fuelId"
+                      type="item"
+                      [labTooltip]="fuelId"
+                      labTooltipType="fuel"
+                    ></lab-icon>
+                  } @else {
+                    <lab-select
+                      [border]="false"
+                      [iconOnly]="true"
+                      [options]="step.recipeSettings.fuelOptions ?? []"
+                      [labTooltip]="fuelId"
+                      labTooltipType="fuel"
+                      labTooltipAction="steps.selectFuelTooltip"
+                      [attr.aria-label]="'steps.selectFuelTooltip' | translate"
+                      [ngModel]="fuelId"
+                      (ngModelChange)="
+                        objectivesStore.updateRecipeField(
+                          step,
+                          'fuelId',
+                          $event,
+                          step.recipeSettings.defaultFuelId
+                        )
+                      "
+                    ></lab-select>
+                  }
+                }
+
+                @if (step.recipeSettings.modules; as modules) {
+                  @if (data().machineRecord[machineId]; as machine) {
+                    @if (machine.modules !== true && machine.modules?.isOne()) {
+                      <lab-select
+                        [iconOnly]="true"
+                        [border]="false"
+                        [options]="step.recipeSettings.moduleOptions ?? []"
+                        [labTooltip]="
+                          modules[0].id || 'settings.modifierTooltip'
+                        "
+                        [labTooltipType]="modules[0].id ? 'module' : undefined"
+                        [labTooltipAction]="
+                          modules[0].id ? 'settings.modifierTooltip' : undefined
+                        "
+                        [ngModel]="modules[0].id"
+                        (ngModelChange)="
+                          changeModulesBeacons(step, {
+                            modules: [{ id: $event, count: rational.one }],
+                          })
+                        "
+                      ></lab-select>
+                    } @else if (machine.modules != null) {
+                      <lab-modules-select
+                        [machine]="machine"
+                        [recipeId]="step.recipeId"
+                        [border]="false"
+                        [ngModel]="modules"
+                        (ngModelChange)="
+                          changeModulesBeacons(step, { modules: $event })
+                        "
+                      ></lab-modules-select>
+                    }
+                  }
+                }
+              </div>
+            }
+          </td>
+        } @else {
+          <td class="pe-0"></td>
+          <td>
+            <lab-recipes-select [step]="step"></lab-recipes-select>
+          </td>
+        }
+        <!-- Beacons -->
+        @if (cols().beacons.show) {
+          <td>
+            @if (
+              step.recipeId &&
+              step.recipeSettings &&
+              step.recipeSettings.beacons &&
+              step.recipeSettings.beacons.length
+            ) {
+              <lab-beacons-select
+                [border]="false"
+                [ngModel]="step.recipeSettings.beacons"
+                (ngModelChange)="
+                  changeModulesBeacons(step, { beacons: $event })
+                "
+              ></lab-beacons-select>
+            }
+          </td>
+        }
+        <!-- Power -->
+        @if (cols().power.show) {
+          <td>
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              step.power
+                | power
+                  : cols().power.precision
+                  : objectivesStore.effectivePowerUnit()
+            }}</span>
+          </td>
+        }
+        <!-- Pollution -->
+        @if (cols().pollution.show) {
+          <td>
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              step.pollution | rate: cols().pollution.precision
+            }}</span>
+          </td>
+        }
+        <!-- Link -->
+        @if (cols().link.show) {
+          <td>
+            <div class="flex gap-1">
+              <a
+                target="_blank"
+                routerLink="."
+                [queryParams]="step | stepHref: routerSync.zipConfig() | async"
+                labButton
+                [faIcon]="faArrowUpRightFromSquare"
+                [border]="false"
+                labTooltip="steps.openNewTabTooltip"
+                [attr.aria-label]="'steps.openNewTabTooltip' | translate"
+              >
+              </a>
+              @let mod = objectivesStore.stepsModified();
+              @if (
+                (step.recipeId && mod.recipes[step.recipeId]) ||
+                (step.itemId && mod.items[step.itemId]) ||
+                (step.recipeObjectiveId &&
+                  mod.objectives[step.recipeObjectiveId])
+              ) {
+                <button
+                  type="button"
+                  labButton
+                  [faIcon]="faArrowRotateLeft"
+                  [border]="false"
+                  labTooltip="steps.stepUndoTooltip"
+                  [attr.aria-label]="'steps.stepUndoTooltip' | translate"
+                  (click)="resetStep(step)"
+                ></button>
+              }
+            </div>
+          </td>
+        }
+      </tr>
+      @if (expanded) {
+        @let detail = objectivesStore.stepDetails()[step.id];
+        @for (section of stepDetailSections; track section) {
+          @if (detail[section].length) {
+            <tr class="detail">
+              <td [colSpan]="leftSpan()" class="p-0">
+                <div class="flex items-center justify-end">
+                  <lab-checkbox
+                    #showCheckbox
+                    [value]="preferencesStore.state().sections[section]"
+                  ></lab-checkbox>
+                </div>
+              </td>
+              <td colspan="100" class="p-0 font-semibold">
+                <div class="flex items-center gap-2">
+                  <label
+                    [for]="showCheckbox.controlId()"
+                    class="cursor-pointer ps-2 select-none"
+                    >{{ 'options.detailSection.' + section | translate }}</label
+                  >
+                  @if (
+                    section === 'inputs' &&
+                    step.recipeId &&
+                    step.machines &&
+                    step.machines.gt(rational.one)
+                  ) {
+                    <lab-checkbox
+                      [ngModel]="perMachine[step.recipeId] ?? false"
+                      (ngModelChange)="perMachine[step.recipeId] = $event"
+                      label="steps.perMachine"
+                      [labelParams]="{
+                        count: step.machines.ceil().toString(),
+                      }"
+                    ></lab-checkbox>
+                  }
+
+                  <lab-checkbox
+                    class="ms-auto me-2"
+                    [ngModel]="preferencesStore.state().sections[section]"
+                    (ngModelChange)="
+                      preferencesStore.setSectionDefault(section, $event)
+                    "
+                    label="Default"
+                  ></lab-checkbox>
+                </div>
+              </td>
+            </tr>
+            @if (showCheckbox.value()) {
+              @for (value of detail[section]; track $index) {
+                <tr
+                  labDetailRow
+                  [value]="value"
+                  [leftSpan]="leftSpan()"
+                  [factor]="
+                    (section === 'inputs' || section === 'outputs') &&
+                    step.recipeId &&
+                    perMachine[step.recipeId]
+                      ? (step.machines?.ceil() ?? rational.one)
+                      : rational.one
+                  "
+                ></tr>
+              }
+            }
+          }
+        }
+      }
+    } @empty {
+      @if (focus()) {
+        <tr>
+          <td colspan="100" class="border-b-0">
+            <div class="flex items-center justify-center">
+              {{ 'steps.emptyMessage' | translate }}
+            </div>
+          </td>
+        </tr>
+      }
+    }
+  </tbody>
+  @if (!focus()) {
+    <tfoot>
+      <tr>
+        <td></td>
+        @if (cols().checkbox.show) {
+          <td></td>
+        }
+        @if (cols().tree.show) {
+          <td></td>
+        }
+        <td colspan="3" class="text-center">{{ 'steps.total' | translate }}</td>
+        @if (cols().belts.show) {
+          <td colspan="2" labTotalCell [value]="totals().belts"></td>
+        }
+        @if (cols().wagons.show) {
+          <td colspan="2" labTotalCell [value]="totals().wagons"></td>
+        }
+        @if (cols().rockets.show) {
+          <td>
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              totals().rockets
+            }}</span>
+          </td>
+          <td class="ps-0">
+            <lab-icon value="rocket-pod"></lab-icon>
+          </td>
+        }
+        <td colspan="2"><!-- Inserters --></td>
+        <td colspan="2" labTotalCell [value]="totals().machines"></td>
+        @if (cols().beacons.show) {
+          <td labTotalCell [value]="totals().beacons"></td>
+        }
+        @if (cols().power.show) {
+          <td>
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              totals().power
+                | power
+                  : cols().power.precision
+                  : objectivesStore.effectivePowerUnit()
+            }}</span>
+          </td>
+        }
+        @if (cols().pollution.show) {
+          <td>
+            <span class="flex justify-end font-mono whitespace-pre">{{
+              totals().pollution | rate: cols().pollution.precision
+            }}</span>
+          </td>
+        }
+        @if (cols().link.show) {
+          <td></td>
+        }
+      </tr>
+    </tfoot>
+  }
+</table>

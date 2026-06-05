@@ -1,0 +1,148 @@
+<ng-content>
+  <div class="flex grow">
+    @for (id of value(); track $index) {
+      <lab-icon
+        [value]="id"
+        type="item"
+        [text]="
+          (value() ?? []).length > 1 ? ($index + 1).toString() : undefined
+        "
+      ></lab-icon>
+    } @empty {
+      <span class="ms-1 text-gray-400 italic">
+        {{ placeholder() | translate }}
+      </span>
+    }
+  </div>
+  <fa-icon
+    class="text-gray-400 transition-transform"
+    [class.-scale-y-100]="opened()"
+    [icon]="faChevronDown"
+  ></fa-icon>
+</ng-content>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="overlayOrigin"
+  [cdkConnectedOverlayOpen]="opened()"
+  [cdkConnectedOverlayMinWidth]="elementRef.nativeElement.offsetWidth"
+  (overlayOutsideClick)="toggle($event)"
+>
+  <div
+    #overlay
+    class="mt-1 flex max-h-96 max-w-80 min-w-full origin-top flex-col overflow-hidden rounded-xs border border-gray-600 bg-gray-950 transition-all starting:scale-y-75 starting:opacity-0"
+    animate.leave="animate-fade-y"
+  >
+    @if (options().length > 10) {
+      <div class="flex items-center gap-1 p-2">
+        <lab-checkbox
+          [ngModel]="allSelected()"
+          (ngModelChange)="selectAll($event)"
+        ></lab-checkbox>
+        <div class="relative flex grow">
+          <input
+            class="input w-0"
+            [placeholder]="'filter' | translate"
+            [(ngModel)]="filterText"
+          />
+          <fa-icon
+            class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+            [icon]="faMagnifyingGlass"
+          ></fa-icon>
+        </div>
+        <button
+          type="button"
+          labButton
+          [border]="false"
+          [faIcon]="faXmark"
+          [attr.aria-label]="'cancel' | translate"
+          (click)="opened.set(false)"
+        ></button>
+      </div>
+    }
+    <div class="border-y border-gray-800 px-2 py-1">
+      <span class="text-sm text-gray-300">{{
+        'rankSelect.label' | translate
+      }}</span>
+      <div
+        class="flex shrink-0 items-center overflow-x-auto"
+        cdkDropList
+        cdkDropListOrientation="horizontal"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @if (editValue().length) {
+        } @else {
+          <span class="ms-1 text-base/9 text-gray-500 italic">
+            {{ placeholder() | translate }}
+          </span>
+        }
+        @for (opt of editValue(); track opt) {
+          <div
+            class="flex cursor-grab items-center justify-center rounded-xs p-0.5 hover:bg-gray-600"
+            cdkDrag
+            cdkDragLockAxis="x"
+            cdkDragBoundary=".border-y"
+            (cdkDragStarted)="dragging.set(true)"
+            (cdkDragEnded)="dragging.set(false)"
+          >
+            <lab-icon
+              [value]="opt"
+              type="item"
+              [text]="($index + 1).toString()"
+            ></lab-icon>
+          </div>
+        }
+      </div>
+    </div>
+    <ul
+      [id]="controlId() + '-listbox'"
+      role="listbox"
+      class="overflow-y-auto py-1"
+      aria-multiselectable="true"
+      tabindex="-1"
+    >
+      @for (opt of options(); track opt.value) {
+        @let label = opt.label | translate;
+        @let checked = editValue().includes(opt.value);
+        @if (label.toLowerCase().includes(filterLower())) {
+          <li
+            #option
+            role="option"
+            class="cursor-pointer overflow-hidden outline-none select-none focus-visible:bg-gray-800"
+            [attr.tabindex]="opt.disabled ? -1 : 0"
+            [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
+            [attr.aria-selected]="checked"
+            [attr.aria-checked]="checked"
+            [labTooltip]="opt.tooltip"
+            [labTooltipType]="opt.tooltipType"
+            labTooltipPosition="adjacent"
+            (click)="select(opt.value)"
+            (keydown.enter)="select(opt.value)"
+            (keydown.arrowup)="focusMove(option, -1, $event)"
+            (keydown.arrowdown)="focusMove(option, 1, $event)"
+            (keydown.home)="focusFirst($event)"
+            (keydown.end)="focusLast($event)"
+          >
+            <div
+              class="flex min-h-9 items-center overflow-hidden bg-gray-950 ps-2 pe-4"
+              labRipple
+              [class.hover:bg-gray-800]="!dragging()"
+            >
+              <lab-checkbox
+                class="pointer-events-none"
+                [ngModel]="checked"
+              ></lab-checkbox>
+              <lab-icon [value]="opt.value" type="item"></lab-icon>
+              <span class="ms-1 line-clamp-1 grow">{{ label }}</span>
+            </div>
+          </li>
+        }
+      }
+      @if (filterText() && !listItems().length) {
+        <li class="flex min-h-9 items-center px-2">
+          {{ 'select.noMatches' | translate }}
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>

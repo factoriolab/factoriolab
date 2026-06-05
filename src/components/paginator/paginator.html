@@ -1,0 +1,55 @@
+<span>{{ 'paginator.label' | translate: label() }}</span>
+<button
+  type="button"
+  labButton
+  [faIcon]="faAnglesLeft"
+  [border]="false"
+  [attr.aria-label]="'paginator.first' | translate"
+  [disabled]="state().page === 0"
+  (click)="goToButton('first')"
+></button>
+<button
+  type="button"
+  labButton
+  [faIcon]="faAngleLeft"
+  [border]="false"
+  [attr.aria-label]="'paginator.previous' | translate"
+  [disabled]="state().page === 0"
+  (click)="goToButton('previous')"
+></button>
+@for (opt of pageOptions(); track $index) {
+  <button
+    type="button"
+    labButton
+    [border]="false"
+    [text]="(opt + 1).toString()"
+    [color]="state().page === opt ? 'brand' : 'gray'"
+    (click)="updateApply(state, { page: opt })"
+  ></button>
+}
+<button
+  type="button"
+  labButton
+  [faIcon]="faAngleRight"
+  [border]="false"
+  [attr.aria-label]="'paginator.next' | translate"
+  [disabled]="nextDisabled()"
+  (click)="goToButton('next')"
+></button>
+<button
+  type="button"
+  labButton
+  [faIcon]="faAnglesRight"
+  [border]="false"
+  [attr.aria-label]="'paginator.last' | translate"
+  [disabled]="nextDisabled()"
+  (click)="goToButton('last')"
+></button>
+<div>
+  <lab-select
+    [attr.aria-label]="'paginator.rows' | translate"
+    [options]="rowsOptions"
+    [ngModel]="state().rows"
+    (ngModelChange)="updateApply(state, { rows: $event })"
+  ></lab-select>
+</div>

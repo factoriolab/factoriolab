@@ -1,0 +1,102 @@
+<table class="table w-full">
+  <thead>
+    <tr>
+      <th
+        class="w-2/3"
+        labSortHeader
+        column="name"
+        text="data.name"
+        [(state)]="state"
+        [defaultAscending]="true"
+      ></th>
+      @if (hasCategory()) {
+        <th
+          class="w-1/3"
+          labSortHeader
+          column="category"
+          text="data.category"
+          [(state)]="state"
+          [defaultAscending]="true"
+        ></th>
+      }
+    </tr>
+    @if (entries().length > 10 || state().filter) {
+      <tr>
+        <th>
+          <div class="relative flex font-medium">
+            <input
+              class="input"
+              [attr.aria-label]="'filter' | translate"
+              [ngModel]="state().filter"
+              (ngModelChange)="updateApply(state, { filter: $event })"
+            />
+            <fa-icon
+              class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+              [icon]="faMagnifyingGlass"
+            ></fa-icon>
+          </div>
+        </th>
+        @if (hasCategory()) {
+          <th></th>
+        }
+      </tr>
+    }
+  </thead>
+  <tbody>
+    @for (entry of entries() | paginator: state(); track entry.id) {
+      <tr>
+        <td>
+          <a
+            [routerLink]="[
+              '/',
+              settingsStore.modId(),
+              'data',
+              collectionPath[key()],
+              entry.id,
+            ]"
+            [queryParams]="resetTableParams"
+            queryParamsHandling="merge"
+            class="link flex items-center gap-1"
+          >
+            <lab-icon [value]="entry.id" [type]="iconType()"></lab-icon>
+            {{ entry.name }}
+          </a>
+        </td>
+        @if (hasCategory()) {
+          <td>
+            @if (entry.category) {
+              <a
+                [routerLink]="[
+                  '/',
+                  settingsStore.modId(),
+                  'data',
+                  'categories',
+                  entry.category.id,
+                ]"
+                [queryParams]="resetTableParams"
+                queryParamsHandling="merge"
+                class="link flex items-center gap-1"
+              >
+                <lab-icon
+                  [value]="entry.category.id"
+                  type="category"
+                ></lab-icon>
+                {{ entry.category.name }}
+              </a>
+            }
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="2">
+        <lab-paginator
+          [(state)]="state"
+          [total]="entries().length"
+        ></lab-paginator>
+      </td>
+    </tr>
+  </tfoot>
+</table>

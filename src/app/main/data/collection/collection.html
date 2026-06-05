@@ -1,0 +1,8 @@
+<lab-breadcrumb [items]="crumbs()"></lab-breadcrumb>
+<lab-collection-table
+  [ids]="ids()"
+  [key]="key()"
+  [iconType]="iconType()"
+  [state]="tableStore.state()"
+  (stateChange)="tableStore.set($event)"
+></lab-collection-table>

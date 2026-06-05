@@ -1,3 +1,6 @@
 {
-  "endOfLine": "auto"
+  "singleQuote": true,
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "overrides": [{ "files": "*.html", "options": { "parser": "angular" } }],
+  "tailwindFunctions": ["cva"]
 }

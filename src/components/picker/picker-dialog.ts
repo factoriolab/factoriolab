@@ -1,0 +1,247 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  linkedSignal,
+  signal,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import {
+  faCheck,
+  faEyeSlash,
+  faMagnifyingGlass,
+  faRotateLeft,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
+
+import { Dataset } from '~/state/settings/dataset';
+import { SettingsStore } from '~/state/settings/settings-store';
+import { TranslatePipe } from '~/translate/translate-pipe';
+import { areSetsEqual } from '~/utils/equality';
+
+import { Button } from '../button/button';
+import { Checkbox } from '../checkbox/checkbox';
+import { Select } from '../select/select';
+import { TabData } from '../tabs/tab-data';
+import { Tabs } from '../tabs/tabs';
+import { Tooltip } from '../tooltip/tooltip';
+import { PickerData } from './picker-data';
+
+@Component({
+  selector: 'lab-picker-dialog',
+  imports: [
+    FormsModule,
+    FaIconComponent,
+    Button,
+    Checkbox,
+    Select,
+    Tabs,
+    TranslatePipe,
+    Tooltip,
+  ],
+  templateUrl: './picker-dialog.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class:
+      'flex h-[90dvh] max-h-[50rem] w-dvw max-w-5xl flex-col gap-2 p-3 pt-0 sm:h-[80dvh] md:w-3xl xl:w-[80dvw] 2xl:w-[70dvw]',
+  },
+})
+export class PickerDialog {
+  private static lastCategory: string | null = null;
+  private static lastQuality: string | null = null;
+
+  protected readonly settingsStore = inject(SettingsStore);
+  protected readonly dialogData = inject<PickerData>(DIALOG_DATA);
+  protected readonly dialogRef = inject(DialogRef);
+
+  protected readonly data = this.settingsStore.dataset;
+
+  protected readonly allIds = new Set(this.dialogData.allIds);
+  protected readonly multi = this.dialogData.selection instanceof Set;
+  protected readonly selectedId?: string;
+  /**
+   * Note: Selected items are in the excluded set, so selection is inverted in
+   * the UI so that selected ids appear as deselected.
+   */
+  protected readonly selection = signal(new Set<string>());
+  protected readonly filter = signal('');
+
+  protected readonly allSelected = computed(() => {
+    const selection = this.selection();
+    if (selection.size === 0) return true;
+    if (selection.size === this.allIds.size) return false;
+    return undefined;
+  });
+
+  protected readonly recyclingSet = computed(() => {
+    if (this.dialogData.type === 'item' || !this.multi)
+      return new Set<string>();
+    const data = this.data();
+    const recyclingIds = data.recipeIds.filter((r) =>
+      data.recipeRecord[r].flags.has('recycling'),
+    );
+    return new Set(recyclingIds);
+  });
+
+  protected readonly allRecyclingSelected = computed(() => {
+    const selection = this.selection();
+    const recyclingSet = this.recyclingSet();
+    const recyclingSelection = Array.from(recyclingSet).filter((r) =>
+      selection.has(r),
+    );
+    if (recyclingSelection.length === 0) return true;
+    if (recyclingSelection.length === recyclingSet.size) return false;
+    return undefined;
+  });
+
+  protected readonly isDefault = computed(() =>
+    areSetsEqual(this.selection(), new Set(this.dialogData.default)),
+  );
+
+  protected readonly rowsKey = `${this.dialogData.type}CategoryRows` as const;
+  protected readonly recordKey = `${this.dialogData.type}Record` as const;
+  private readonly allCategoryRows: Record<string, string[][]> = {};
+
+  protected readonly categoryRows = computed(() => {
+    const filter = this.filter();
+    const qualityId = this.selectedQuality();
+
+    if (!filter && !qualityId) return this.allCategoryRows;
+
+    let allIds = Array.from(this.dialogData.allIds);
+
+    if (qualityId) {
+      const quality = this.data().qualityRecord[qualityId];
+      const check = quality.level === 0 ? undefined : quality;
+      allIds = allIds.filter(
+        (i) => this.data()[this.recordKey][i].quality === check,
+      );
+    }
+
+    if (filter) {
+      const check = filter.toLocaleLowerCase();
+      allIds = allIds.filter((i) =>
+        this.data()[this.recordKey][i].name.toLocaleLowerCase().includes(check),
+      );
+    }
+
+    const result: Record<string, string[][]> = {};
+    const keys = Object.keys(this.allCategoryRows);
+    for (const c of keys) {
+      const rows = [];
+      for (const r of this.allCategoryRows[c]) {
+        const row = r.filter((i) => allIds.includes(i));
+        if (row.length) rows.push(row);
+      }
+
+      if (rows.length) result[c] = rows;
+    }
+
+    return result;
+  });
+
+  protected readonly categoryTabs = computed(() =>
+    Object.keys(this.categoryRows()).map(
+      (k): TabData => ({ label: this.data().categoryRecord[k].name, value: k }),
+    ),
+  );
+
+  protected readonly selectedQuality = linkedSignal<Dataset, string>({
+    source: this.data,
+    computation: (value, previous) => {
+      const keys = value.qualityIds;
+      if (previous && keys.includes(previous.value)) return previous.value;
+      if (PickerDialog.lastQuality && keys.includes(PickerDialog.lastQuality))
+        return PickerDialog.lastQuality;
+      return keys[0];
+    },
+  });
+
+  protected readonly selectedCategory = linkedSignal<
+    Record<string, string[][]>,
+    string
+  >({
+    source: this.categoryRows,
+    computation: (value, previous) => {
+      const keys = Object.keys(value);
+      if (previous && keys.includes(previous.value)) return previous.value;
+      if (PickerDialog.lastCategory && keys.includes(PickerDialog.lastCategory))
+        return PickerDialog.lastCategory;
+      return keys[0];
+    },
+  });
+
+  protected readonly faCheck = faCheck;
+  protected readonly faEyeSlash = faEyeSlash;
+  protected readonly faMagnifyingGlass = faMagnifyingGlass;
+  protected readonly faRotateLeft = faRotateLeft;
+  protected readonly faXmark = faXmark;
+
+  constructor() {
+    const { selection } = { ...this.dialogData };
+    const data = this.data();
+    data.categoryIds.forEach((c) => {
+      if (data[this.rowsKey][c]) {
+        this.allCategoryRows[c] = [];
+        data[this.rowsKey][c].forEach((r) => {
+          const row = r.filter((i) => this.allIds.has(i));
+          if (row.length) this.allCategoryRows[c].push(row);
+        });
+      }
+    });
+
+    let selectedId: string | undefined;
+    if (selection instanceof Set) {
+      selectedId = Array.from(selection)[0];
+      this.selection.set(selection);
+    } else if (selection != null) {
+      selectedId = selection;
+      this.selectedId = selection;
+    }
+
+    if (selectedId != null) {
+      const obj = data[this.recordKey][selectedId];
+      this.selectedCategory.set(obj.category);
+      if (obj.quality) this.selectedQuality.set(obj.quality.id);
+    }
+
+    effect(() => (PickerDialog.lastCategory = this.selectedCategory()));
+    effect(() => (PickerDialog.lastQuality = this.selectedQuality()));
+  }
+
+  selectAll(value: boolean): void {
+    if (value) this.selection.set(new Set());
+    else this.selection.set(new Set(this.allIds));
+  }
+
+  selectAllRecycling(value: boolean): void {
+    this.selection.update((s) => {
+      s = new Set(s);
+      for (const recipeId of Array.from(this.recyclingSet())) {
+        if (value) s.delete(recipeId);
+        else s.add(recipeId);
+      }
+
+      return s;
+    });
+  }
+
+  selectId(id: string): void {
+    if (this.multi) {
+      this.selection.update((s) => {
+        s = new Set(s);
+        if (s.has(id)) s.delete(id);
+        else s.add(id);
+        return s;
+      });
+    } else this.dialogRef.close(id);
+  }
+
+  reset(): void {
+    this.selection.set(new Set(this.dialogData.default));
+  }
+}
