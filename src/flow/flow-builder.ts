@@ -211,8 +211,10 @@ export class FlowBuilder {
         const qualityIcon = icon?.quality
           ? data.iconRecord.quality[icon.quality.id]
           : undefined;
-        const recipeIcon = data.iconRecord.recipe[recipe.id];
-        const recipeQualityIcon = recipeIcon.quality
+        const recipeIcon = machine
+          ? data.iconRecord.recipe[recipe.id]
+          : undefined;
+        const recipeQualityIcon = recipeIcon?.quality
           ? data.iconRecord.quality[recipeIcon.quality.id]
           : undefined;
         const id = `${this.recipeStepNodeType(step)}|${step.recipeId}`;
@@ -220,7 +222,7 @@ export class FlowBuilder {
           id,
           name: recipe.name,
           text: coalesce(step.machines?.toLocaleString(machinePrec), ''),
-          color: iconColor[recipeIcon.id],
+          color: iconColor[recipeIcon?.id ?? icon.id],
           stepId: step.id,
           recipe,
           icon,
