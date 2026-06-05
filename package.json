@@ -22,6 +22,7 @@
     "test:ci": "ng test --no-watch --progress=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "prettier": "prettier --check .",
+    "ngsw-config": "ngsw-config ./dist/browser ./ngsw-config.json",
     "stylelint": "stylelint **/*.css",
     "postfactorio-api": "prettier --write \"scripts/factorio.models.ts\"",
     "factorio-dump": "scripts\\factorio-dump.bat",
