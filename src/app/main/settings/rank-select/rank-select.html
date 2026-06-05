@@ -30,7 +30,7 @@
 >
   <div
     #overlay
-    class="mt-1 flex max-h-96 max-w-80 min-w-full origin-top flex-col overflow-hidden rounded-xs border border-gray-600 bg-gray-950 transition-all starting:scale-y-75 starting:opacity-0"
+    class="bg-ground-950 mt-1 flex max-h-96 max-w-80 min-w-full origin-top flex-col overflow-hidden rounded-xs border border-gray-600 transition-all starting:scale-y-75 starting:opacity-0"
     animate.leave="animate-fade-y"
   >
     @if (options().length > 10) {
@@ -124,7 +124,7 @@
             (keydown.end)="focusLast($event)"
           >
             <div
-              class="flex min-h-9 items-center overflow-hidden bg-gray-950 ps-2 pe-4"
+              class="flex min-h-9 items-center overflow-hidden ps-2 pe-4"
               labRipple
               [class.hover:bg-gray-800]="!dragging()"
             >

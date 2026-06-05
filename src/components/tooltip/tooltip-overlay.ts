@@ -33,7 +33,7 @@ const positionVariants = {
 };
 
 const host = cva(
-  'animate-delayed-fade-in relative inline-flex max-w-69 flex-col rounded-xs border border-gray-600 bg-gray-950 px-3 py-[5px]',
+  'animate-delayed-fade-in bg-ground-950 relative inline-flex max-w-69 flex-col rounded-xs border border-gray-600 px-3 py-[5px]',
   {
     variants: positionVariants,
     compoundVariants: [
@@ -46,7 +46,7 @@ const host = cva(
 );
 
 const nub = cva(
-  'absolute m-auto size-1.75 border-t border-l border-gray-600 bg-gray-950',
+  'bg-ground-950 absolute m-auto size-1.75 border-t border-l border-gray-600',
   {
     variants: positionVariants,
     compoundVariants: [

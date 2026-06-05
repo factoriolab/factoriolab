@@ -2,7 +2,7 @@
   .input {
     flex-grow: 1;
     border: 1px solid var(--color-gray-600);
-    background-color: var(--color-gray-950);
+    background-color: var(--color-ground);
     padding-inline: calc(var(--spacing) * 2);
     width: 100%;
     min-height: calc(var(--spacing) * 9);
@@ -51,7 +51,6 @@
       position: sticky;
       top: 0;
       z-index: 3;
-      background-color: var(--color-gray-950);
       text-align: start;
       font-weight: var(--font-weight-semibold);
     }

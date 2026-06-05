@@ -1,14 +1,14 @@
 <aside #settings="labSettings" labSettings></aside>
 <div
   role="none"
-  class="fixed z-5 hidden h-dvh w-dvw bg-gray-950/75 xl:hidden"
+  class="bg-ground-950/75 fixed z-5 hidden h-dvh w-dvw xl:hidden"
   [class.hidden]="!settings.open()"
   (click)="settings.open.set(false)"
 ></div>
 <aside #preferences="labPreferences" labPreferences></aside>
 <div
   role="none"
-  class="fixed z-5 hidden h-dvh w-dvw bg-gray-950/75 xl:hidden"
+  class="bg-ground-950/75 fixed z-5 hidden h-dvh w-dvw xl:hidden"
   [class.hidden]="!preferences.open()"
   (click)="preferences.open.set(false)"
 ></div>
