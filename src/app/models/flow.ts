@@ -16,6 +16,8 @@ export interface Node extends FlowBase {
   recipe?: Recipe;
   machines?: string;
   machineId?: string;
+  /** Pin node to 'start' (leftmost), 'end' (near-end), or 'sink' (rightmost) */
+  anchor?: 'start' | 'end' | 'sink';
 
   stepId: string;
   posX: string;

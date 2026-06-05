@@ -85,6 +85,16 @@ export class FlowService {
       return e;
     }, {});
 
+    // Count how many recipe steps produce each output item
+    const outputProducerCount: Entities<number> = {};
+    for (const step of steps) {
+      if (step.outputs) {
+        for (const itemId of Object.keys(step.outputs)) {
+          outputProducerCount[itemId] = (outputProducerCount[itemId] ?? 0) + 1;
+        }
+      }
+    }
+
     for (const step of steps) {
       if (
         step.itemId &&
@@ -95,6 +105,12 @@ export class FlowService {
         const item = data.itemEntities[step.itemId];
         const icon = data.iconEntities[item.icon ?? item.id];
         const id = `i|${step.itemId}`;
+        // Determine if this item is an objective output or a root input
+        const isOutput = step.output != null;
+        const isInput =
+          step.parents == null ||
+          (Object.keys(step.parents).length === 1 && step.parents[''] != null);
+        const anchor = isOutput ? 'end' : isInput ? 'start' : undefined;
         flow.nodes.push({
           id,
           name: item.name,
@@ -102,6 +118,7 @@ export class FlowService {
           color: icon.color,
           stepId: step.id,
           href: data.iconFile,
+          anchor,
           ...this.positionProps(icon),
         });
 
@@ -144,6 +161,7 @@ export class FlowService {
             color: themeValues.dangerBackground,
             stepId: step.id,
             href: data.iconFile,
+            anchor: 'sink',
             ...this.positionProps(icon),
           });
           flow.links.push({
@@ -177,6 +195,7 @@ export class FlowService {
             color: themeValues.successBackground,
             stepId: step.id,
             href: data.iconFile,
+            anchor: 'sink',
             ...this.positionProps(icon),
           });
           flow.links.push({
@@ -206,6 +225,16 @@ export class FlowService {
         const machine = data.itemEntities[step.recipeSettings?.machineId];
         const icon = data.iconEntities[recipe.icon ?? recipe.id];
         const id = `${this.recipeStepNodeType(step)}|${step.recipeId}`;
+        // Anchor recipe near end if it's the sole producer of an objective output.
+        // When multiple recipes produce the same output, they merge into the
+        // item node (which is already anchored), so don't pin recipe nodes.
+        const producesOutput =
+          step.outputs &&
+          Object.keys(step.outputs).some(
+            (itemId) =>
+              stepItemMap[itemId]?.output != null &&
+              outputProducerCount[itemId] <= 1,
+          );
         flow.nodes.push({
           id,
           name: recipe.name,
@@ -214,6 +243,7 @@ export class FlowService {
           stepId: step.id,
           href: data.iconFile,
           recipe,
+          anchor: producesOutput ? 'end' : undefined,
           ...this.positionProps(icon),
         });
 

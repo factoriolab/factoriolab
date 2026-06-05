@@ -139,6 +139,8 @@ export function sankey<
     computeNodeValues(graph);
     computeReversedLinks(graph);
     computeNodeDepths(graph);
+    adjustAnchorDepths(graph);
+    computeReversedLinks(graph);
     computeNodeHeights(graph);
     computeNodeBreadths(graph);
     computeLinkBreadths(graph);
@@ -346,6 +348,31 @@ export function sankey<
       if (++x > n) throw new Error('circular link');
       current = next;
       next = new Set();
+    }
+  }
+
+  /**
+   * Adjust depths of anchored nodes so they appear after all regular nodes.
+   * 'end' nodes get max_depth + 1, 'sink' nodes get max_depth + 2.
+   */
+  function adjustAnchorDepths({ nodes }: SankeyGraph<N, L>): void {
+    const hasEnd = nodes.some((n) => n['anchor'] === 'end');
+    const hasSink = nodes.some((n) => n['anchor'] === 'sink');
+    if (!hasEnd && !hasSink) return;
+
+    const maxDepth = nodes.reduce(
+      (m, n) => Math.max(m, n['anchor'] ? 0 : coalesce(n.depth, 0)),
+      0,
+    );
+
+    for (const node of nodes) {
+      if (node['anchor'] === 'start') {
+        node.depth = 0;
+      } else if (node['anchor'] === 'end') {
+        node.depth = maxDepth + 1;
+      } else if (node['anchor'] === 'sink') {
+        node.depth = maxDepth + (hasEnd ? 2 : 1);
+      }
     }
   }
 

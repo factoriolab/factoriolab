@@ -95,6 +95,7 @@
           }
           <lab-input-number
             labNoDrag
+            [inputId]="'objective-' + objective.id"
             [pTooltip]="
               objective.type === ObjectiveType.Maximize
                 ? maximizeType() === MaximizeType.Weight
