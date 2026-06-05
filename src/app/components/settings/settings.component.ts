@@ -42,7 +42,7 @@ import { qualityOptions } from '~/models/enum/quality';
 import { researchBonusOptions } from '~/models/enum/research-bonus';
 import { themeOptions } from '~/models/enum/theme';
 import { gameInfo } from '~/models/game-info';
-import { rational } from '~/models/rational';
+import { Rational, rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { Entities } from '~/models/utils';
@@ -191,6 +191,7 @@ export class SettingsComponent {
 
   ItemId = ItemId;
   rational = rational;
+  defaultYield = rational(100n);
   isStandalone = window.matchMedia('(display-mode: standalone)').matches;
 
   get search(): string {
@@ -309,6 +310,48 @@ export class SettingsComponent {
   toggleBeaconReceivers(value: boolean): void {
     const beaconReceivers = value ? rational.one : undefined;
     this.settingsSvc.apply({ beaconReceivers });
+  }
+
+  pumpjackRecipeIds = computed(() => {
+    const data = this.data();
+    return data.recipeIds.filter((id) =>
+      data.recipeEntities[id].producers.includes(ItemId.Pumpjack),
+    );
+  });
+
+  updatePumpjackYield(recipeId: string, value: Rational): void {
+    const current = this.settings().pumpjackYield;
+    if (!current) return;
+    this.settingsSvc.apply({
+      pumpjackYield: { ...current, [recipeId]: value },
+    });
+  }
+
+  togglePumpjackRecipeYield(recipeId: string, enabled: boolean): void {
+    const current = this.settings().pumpjackYield;
+    if (!current) return;
+    const next = { ...current };
+    if (enabled) {
+      next[recipeId] = rational(100n);
+    } else {
+      delete next[recipeId];
+    }
+    this.settingsSvc.apply({ pumpjackYield: next });
+  }
+
+  togglePumpjackYield(value: boolean): void {
+    if (!value) {
+      this.settingsSvc.apply({ pumpjackYield: undefined });
+      return;
+    }
+    const data = this.data();
+    const pumpjackYield: Entities<Rational> = {};
+    for (const recipe of data.recipeIds
+      .map((id) => data.recipeEntities[id])
+      .filter((r) => r.producers.includes(ItemId.Pumpjack))) {
+      pumpjackYield[recipe.id] = rational(100n);
+    }
+    this.settingsSvc.apply({ pumpjackYield });
   }
 
   addMachine(id: string): void {

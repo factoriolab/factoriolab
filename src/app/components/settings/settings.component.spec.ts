@@ -8,7 +8,8 @@ import { Confirmation } from 'primeng/api';
 
 import { Game } from '~/models/enum/game';
 import { rational } from '~/models/rational';
-import { assert, ItemId, Mocks, TestModule } from '~/tests';
+import { spread } from '~/helpers';
+import { assert, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { SettingsComponent } from './settings.component';
 
@@ -272,6 +273,41 @@ describe('SettingsComponent', () => {
       component.toggleBeaconReceivers(true);
       expect(component.settingsSvc.apply).toHaveBeenCalledWith({
         beaconReceivers: rational.one,
+      });
+    });
+  });
+
+  describe('togglePumpjackYield', () => {
+    it('should turn off pumpjack yield estimation', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.togglePumpjackYield(false);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        pumpjackYield: undefined,
+      });
+    });
+
+    it('should turn on pumpjack yield estimation with all pumpjack recipes', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.togglePumpjackYield(true);
+      const call = (
+        component.settingsSvc.apply as jasmine.Spy
+      ).calls.mostRecent().args[0];
+      expect(call.pumpjackYield).toBeDefined();
+      expect(call.pumpjackYield[RecipeId.CrudeOil]).toEqual(rational(100n));
+    });
+  });
+
+  describe('updatePumpjackYield', () => {
+    it('should update yield for a specific recipe', () => {
+      spyOn(component.settingsSvc, 'apply');
+      spyOn(component, 'settings').and.returnValue(
+        spread(Mocks.settingsStateInitial, {
+          pumpjackYield: { [RecipeId.CrudeOil]: rational(100n) },
+        }),
+      );
+      component.updatePumpjackYield(RecipeId.CrudeOil, rational(50n));
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        pumpjackYield: { [RecipeId.CrudeOil]: rational(50n) },
       });
     });
   });

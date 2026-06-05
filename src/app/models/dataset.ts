@@ -72,4 +72,6 @@ export interface AdjustedDataset extends Dataset {
   itemAvailableRecipeIds: Entities<string[]>;
   /** For each item, all included recipe ids that consume/produce the item */
   itemAvailableIoRecipeIds: Entities<string[]>;
+  /** Recipe ids produced by pumpjacks (for yield estimation) */
+  pumpjackRecipeIds: string[];
 }

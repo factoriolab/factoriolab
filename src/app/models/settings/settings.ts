@@ -2,8 +2,10 @@ import { SettingsState } from '~/store/settings.service';
 
 import { Quality } from '../enum/quality';
 
-export interface Settings
-  extends Omit<SettingsState, 'excludedRecipeIds' | 'researchedTechnologyIds'> {
+export interface Settings extends Omit<
+  SettingsState,
+  'excludedRecipeIds' | 'researchedTechnologyIds'
+> {
   defaultBeltId?: string;
   defaultPipeId?: string;
   defaultCargoWagonId?: string;

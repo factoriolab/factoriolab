@@ -221,6 +221,7 @@ export class RecipeService {
     const {
       proliferatorSprayId,
       miningBonus,
+      pumpjackYield,
       researchBonus,
       netProductionOnly,
     } = settings;
@@ -273,6 +274,13 @@ export class RecipeService {
       // Adjust for mining bonus
       if (recipe.flags.has('mining'))
         eff.productivity = eff.productivity.add(miningFactor);
+
+      // Adjust for pumpjack yield (scales output by yield percentage)
+      const recipeYield = pumpjackYield?.[recipeId];
+      if (recipeSettings.machineId === ItemId.Pumpjack && recipeYield != null)
+        eff.productivity = eff.productivity.mul(
+          recipeYield.div(rational(100n)),
+        );
 
       // Adjust for base productivity
       if (machine.baseEffect) {
@@ -492,14 +500,24 @@ export class RecipeService {
         delete recipe.consumption;
       }
 
-      // Pollution
-      recipe.pollution =
-        machine.pollution && recipeSettings.machineId !== ItemId.Pumpjack
+      // Without yield estimation, pumpjack machine count is inaccurate,
+      // so skip pollution and power to avoid misleading values
+      const skipMachineEffects =
+        recipeSettings.machineId === ItemId.Pumpjack &&
+        pumpjackYield?.[recipeId] == null;
+
+      if (skipMachineEffects) {
+        recipe.consumption = rational.zero;
+        recipe.pollution = rational.zero;
+      } else {
+        // Pollution
+        recipe.pollution = machine.pollution
           ? machine.pollution
               .div(this.pollutionFactor)
               .mul(eff.pollution)
               .mul(eff.consumption)
           : rational.zero;
+      }
 
       // Adjust for ingredient usage (Space Age: Biolab)
       if (machine.ingredientUsage) {
@@ -785,6 +803,7 @@ export class RecipeService {
       itemAvailableIoRecipeIds[i] = [];
     });
 
+    const pumpjackRecipeIds: string[] = [];
     availableRecipeIds
       .map((i) => adjustedRecipe[i])
       .forEach((recipe) => {
@@ -801,6 +820,8 @@ export class RecipeService {
           Object.keys(recipe.output).forEach((ioId) =>
             itemAvailableIoRecipeIds[ioId].push(recipe.id),
           );
+          if (recipe.producers.includes(ItemId.Pumpjack))
+            pumpjackRecipeIds.push(recipe.id);
         }
       });
 
@@ -890,6 +911,7 @@ export class RecipeService {
       itemRecipeIds,
       itemAvailableRecipeIds,
       itemAvailableIoRecipeIds,
+      pumpjackRecipeIds,
     });
   }
 

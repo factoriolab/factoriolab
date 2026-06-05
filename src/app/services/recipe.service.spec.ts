@@ -273,6 +273,40 @@ describe('RecipeService', () => {
       expect(result).toEqual(expected);
     });
 
+    it('should apply pumpjack yield to productivity', () => {
+      const settings = spread(Mocks.recipesState[RecipeId.CrudeOil]);
+      settings.machineId = ItemId.Pumpjack;
+      const result = service.adjustRecipe(
+        RecipeId.CrudeOil,
+        settings,
+        Mocks.itemsStateInitial,
+        spread(Mocks.settingsStateInitial, {
+          pumpjackYield: { [RecipeId.CrudeOil]: rational(50n) },
+        }),
+        Mocks.adjustedDataset,
+      );
+      // 50% yield → productivity multiplied by 0.5
+      expect(result.effects.productivity).toEqual(rational(1n, 2n));
+      // With yield set, pollution and consumption should be non-zero
+      expect(result.pollution?.gt(rational.zero)).toBeTrue();
+      expect(result.consumption?.gt(rational.zero)).toBeTrue();
+    });
+
+    it('should skip pollution and power for pumpjack without yield', () => {
+      const settings = spread(Mocks.recipesState[RecipeId.CrudeOil]);
+      settings.machineId = ItemId.Pumpjack;
+      const result = service.adjustRecipe(
+        RecipeId.CrudeOil,
+        settings,
+        Mocks.itemsStateInitial,
+        Mocks.settingsStateInitial,
+        Mocks.adjustedDataset,
+      );
+      // Without yield, pollution and consumption should be zero
+      expect(result.pollution).toEqual(rational.zero);
+      expect(result.consumption).toEqual(rational.zero);
+    });
+
     it('should handle modules and beacons', () => {
       const settings = spread(Mocks.recipesState[RecipeId.SteelChest]);
       settings.modules = [
