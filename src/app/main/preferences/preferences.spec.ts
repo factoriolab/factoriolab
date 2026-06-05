@@ -44,7 +44,7 @@ describe('Preferences', () => {
 
     it('should handle full reset', async () => {
       spyOn(component['confirm'], 'open').and.returnValue(of(2));
-      spyOn(component['windowClient'], 'clearLocalStorage');
+      spyOn(window.localStorage, 'clear');
       spyOn(component['router'], 'navigate').and.returnValue(
         Promise.resolve(true),
       );

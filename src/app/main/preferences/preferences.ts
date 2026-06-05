@@ -147,7 +147,7 @@ export class Preferences {
             initialPreferencesState as Partial<PreferencesState>;
           this.preferencesStore.apply(state);
         } else if (res === 2) {
-          this.windowClient.clearLocalStorage();
+          window.localStorage.clear();
           this.router
             .navigate([this.settingsStore.modId()])
             .then(

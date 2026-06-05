@@ -1,6 +1,14 @@
-import { toBoolRecord, toRecord } from './record';
+import { reduceRecord, toBoolRecord, toRecord } from './record';
 
 const id = 'id';
+
+describe('reduceRecord', () => {
+  it('should reduce a record of strings to a map of boolean records', () => {
+    expect(reduceRecord({ a: ['b', 'c'] })).toEqual({
+      a: { b: true, c: true },
+    });
+  });
+});
 
 describe('toBoolRecord', () => {
   it('should map a list of strings to a boolean record object', () => {

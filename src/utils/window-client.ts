@@ -10,10 +10,6 @@ export class WindowClient {
     window.location.reload();
   }
 
-  clearLocalStorage(): void {
-    localStorage.clear();
-  }
-
   copyToClipboard(data: string): Promise<void> {
     return window.navigator.clipboard.writeText(data);
   }

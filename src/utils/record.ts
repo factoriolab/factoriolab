@@ -58,7 +58,10 @@ export function toRationalRecord(
   }, {});
 }
 
-export const toRecord = isDevMode() ? devModeToRecord : standardToRecord;
+export const toRecord = isDevMode()
+  ? devModeToRecord
+  : // istanbul ignore next
+    standardToRecord;
 
 function devModeToRecord<T extends { id: string }>(
   value: T[],
@@ -70,6 +73,11 @@ function devModeToRecord<T extends { id: string }>(
   }, {});
 }
 
+/**
+ * Duplicate of dev-mode function aside from optional warning, coverage of
+ * devModeToRecord is sufficient.
+ */
+// istanbul ignore next
 function standardToRecord<T extends { id: string }>(
   value: T[],
 ): Record<string, T> {
