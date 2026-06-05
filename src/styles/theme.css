@@ -134,9 +134,6 @@
     --color-complement-950,
     oklch(28.2% 0.0729 48.6671deg)
   );
-  --font-sans:
-    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --font-mono:
     'Roboto Mono', ui-monospace, sfmono-regular, menlo, monaco, consolas,
     'Liberation Mono', 'Courier New', monospace;
