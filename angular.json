@@ -119,6 +119,29 @@
                 }
               ]
             },
+            "old": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.old.ts"
+                }
+              ],
+              "baseHref": "/old/",
+              "outputHashing": "all",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "baseline": "1.7mb",
+                  "maximumWarning": "100kb",
+                  "maximumError": "200kb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ]
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
