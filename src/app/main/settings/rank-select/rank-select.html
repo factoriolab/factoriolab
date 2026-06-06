@@ -30,11 +30,11 @@
 >
   <div
     #overlay
-    class="bg-ground-950 mt-1 flex max-h-96 max-w-80 min-w-full origin-top flex-col overflow-hidden rounded-xs border border-gray-600 transition-all starting:scale-y-75 starting:opacity-0"
+    class="mt-1 max-h-96 max-w-80 rounded-xs flex min-w-full origin-top flex-col overflow-hidden border border-gray-600 bg-ground-950 transition-all starting:scale-y-75 starting:opacity-0"
     animate.leave="animate-fade-y"
   >
     @if (options().length > 10) {
-      <div class="flex items-center gap-1 p-2">
+      <div class="gap-1 p-2 flex items-center">
         <lab-checkbox
           [ngModel]="allSelected()"
           (ngModelChange)="selectAll($event)"
@@ -46,7 +46,7 @@
             [(ngModel)]="filterText"
           />
           <fa-icon
-            class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+            class="top-2.5 right-2 pointer-events-none absolute z-3 text-gray-500"
             [icon]="faMagnifyingGlass"
           ></fa-icon>
         </div>
@@ -60,7 +60,7 @@
         ></button>
       </div>
     }
-    <div class="border-y border-gray-800 px-2 py-1">
+    <div class="px-2 py-1 border-y border-gray-800">
       <span class="text-sm text-gray-300">{{
         'rankSelect.label' | translate
       }}</span>
@@ -78,7 +78,7 @@
         }
         @for (opt of editValue(); track opt) {
           <div
-            class="flex cursor-grab items-center justify-center rounded-xs p-0.5 hover:bg-gray-600"
+            class="rounded-xs p-0.5 flex cursor-grab items-center justify-center hover:bg-gray-600"
             cdkDrag
             cdkDragLockAxis="x"
             cdkDragBoundary=".border-y"
@@ -97,7 +97,7 @@
     <ul
       [id]="controlId() + '-listbox'"
       role="listbox"
-      class="overflow-y-auto py-1"
+      class="py-1 scrollbar-thin overflow-y-auto"
       aria-multiselectable="true"
       tabindex="-1"
     >
@@ -124,7 +124,7 @@
             (keydown.end)="focusLast($event)"
           >
             <div
-              class="flex min-h-9 items-center overflow-hidden ps-2 pe-4"
+              class="min-h-9 ps-2 pe-4 flex items-center overflow-hidden"
               labRipple
               [class.hover:bg-gray-800]="!dragging()"
             >
@@ -139,7 +139,7 @@
         }
       }
       @if (filterText() && !listItems().length) {
-        <li class="flex min-h-9 items-center px-2">
+        <li class="min-h-9 px-2 flex items-center">
           {{ 'select.noMatches' | translate }}
         </li>
       }

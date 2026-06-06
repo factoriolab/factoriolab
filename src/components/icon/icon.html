@@ -1,6 +1,6 @@
 @if (icon(); as icon) {
   <span
-    class="absolute size-16 origin-top-left"
+    class="size-16 absolute origin-top-left"
     [class.scale-50]="!full()"
     [style.background-image]="icon.image"
     [style.background-position]="icon.position"
@@ -19,7 +19,7 @@
 
   @if (icon.text; as text) {
     <span
-      class="text-shadow-solid pointer-events-none absolute top-0 left-0 text-sm/3.5 font-semibold text-white select-none text-shadow-black"
+      class="top-0 left-0 text-sm/3.5 font-semibold text-white text-shadow-black pointer-events-none absolute select-none text-shadow-solid"
       >{{ text }}</span
     >
   }
@@ -31,14 +31,14 @@
 
 @if (alt(); as text) {
   <span
-    class="text-shadow-solid pointer-events-none absolute top-0 right-0 text-sm/3.5 font-semibold text-white select-none text-shadow-black"
+    class="top-0 right-0 text-sm/3.5 font-semibold text-white text-shadow-black pointer-events-none absolute select-none text-shadow-solid"
     >{{ text }}</span
   >
 }
 
 @if (text(); as text) {
   <span
-    class="text-shadow-solid pointer-events-none absolute right-0 bottom-0 text-sm/3.5 font-semibold text-white select-none text-shadow-black"
+    class="right-0 bottom-0 text-sm/3.5 font-semibold text-white text-shadow-black pointer-events-none absolute select-none text-shadow-solid"
     >{{ text }}</span
   >
 }

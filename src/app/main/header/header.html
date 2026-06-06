@@ -1,4 +1,4 @@
-<div class="flex w-full justify-between gap-2 md:w-auto">
+<div class="gap-2 md:w-auto flex w-full justify-between">
   @if (settingsXlHidden()) {
     <button
       type="button"
@@ -65,12 +65,12 @@
     (click)="togglePreferences()"
   ></button>
 </div>
-<div class="flex w-full items-center gap-2 md:w-auto">
+<div class="gap-2 md:w-auto flex w-full items-center">
   @for (link of externalLinks; track link.href) {
     <a
       [href]="link.href"
       target="_blank"
-      class="grow md:grow-0"
+      class="md:grow-0 grow"
       labButton
       [text]="link.text"
       [faIcon]="link.icon"

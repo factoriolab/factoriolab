@@ -1,6 +1,6 @@
 <lab-breadcrumb></lab-breadcrumb>
 
-<table class="table min-w-lg">
+<table class="min-w-lg table">
   <thead>
     <tr>
       <th>{{ 'data.collection' | translate }}</th>
@@ -16,7 +16,7 @@
             <a
               [routerLink]="collection.routerLink"
               queryParamsHandling="preserve"
-              class="link flex items-center gap-1"
+              class="link gap-1 flex items-center"
             >
               <lab-icon
                 [value]="ids[0]"

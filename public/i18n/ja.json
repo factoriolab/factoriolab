@@ -396,6 +396,7 @@
     "selectRecipe": "Select a recipe"
   },
   "preferences": {
+    "backgroundLightness": "Background lightness",
     "bypassLanding": "ランディングページを常にスキップする",
     "convertObjectiveValues": "Convert objective values",
     "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
@@ -408,6 +409,7 @@
     "hue": "Hue",
     "language": "言語",
     "nameSavedState": "名前を入力",
+    "override": "Override",
     "resetHeader": "Are you sure?",
     "resetMessage": "Do you want to keep your saved states?<br>Selecting no will remove ALL saved data in this browser and reload the page.",
     "saveState": "状態を保存",

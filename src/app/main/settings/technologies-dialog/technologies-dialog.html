@@ -6,7 +6,7 @@
       [(ngModel)]="filterText"
     />
     <fa-icon
-      class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+      class="top-2.5 right-2 pointer-events-none absolute z-3 text-gray-500"
       [icon]="faMagnifyingGlass"
     ></fa-icon>
   </div>
@@ -34,7 +34,7 @@
   ></button>
 </div>
 
-<div class="flex flex-col gap-2 overflow-y-scroll">
+<div class="gap-2 flex flex-col overflow-y-scroll">
   <lab-technologies-set
     text="technologies.available"
     [ids]="status().available"
@@ -54,7 +54,7 @@
   ></lab-technologies-set>
 </div>
 
-<div class="flex justify-end gap-1 sm:gap-2">
+<div class="gap-1 sm:gap-2 flex justify-end">
   <button
     type="button"
     labButton

@@ -1,4 +1,4 @@
-<div class="flex gap-1 sm:gap-2">
+<div class="gap-1 sm:gap-2 flex">
   <button
     type="button"
     labButton
@@ -118,7 +118,7 @@
       <!-- Beacons -->
       @if (cols().beacons.show) {
         <th>
-          <div class="flex items-center gap-2">
+          <div class="gap-2 flex items-center">
             <span>{{ 'options.column.beacons' | translate }}</span>
             @if (objectivesStore.recipesModified().beacons) {
               <button
@@ -195,8 +195,8 @@
         }
         <!-- Tree -->
         @if (!focus() && cols().tree.show) {
-          <td class="overflow-hidden px-0 py-0 sm:px-2">
-            <div class="flex h-12 items-center">
+          <td class="px-0 py-0 sm:px-2 overflow-hidden">
+            <div class="h-12 flex items-center">
               @let tree = objectivesStore.stepTree()[step.id];
               @if (tableStore.sort() == null && tree.length) {
                 @for (trail of tree; track $index) {
@@ -243,7 +243,7 @@
                     @let nextTree = objectivesStore.stepTree()[nextId];
                     @if (nextTree.length > tree.length) {
                       <span
-                        class="absolute bottom-0 left-2 -z-1 h-4 border-e-2 border-dotted border-gray-100"
+                        class="bottom-0 left-2 h-4 absolute -z-1 border-e-2 border-dotted border-gray-100"
                         [class]="{
                           'sm:left-4.5': !tree.length,
                           'sm:left-4': tree.length,
@@ -260,7 +260,7 @@
         <td class="pe-0">
           @if (step.surplus) {
             <span
-              class="text-brand-400 flex justify-end font-mono whitespace-pre"
+              class="flex justify-end font-mono whitespace-pre text-brand-400"
               >(+{{ step.surplus | rate: cols().items.precision }})</span
             >
           }
@@ -276,7 +276,7 @@
           @if (step.itemId) {
             <div class="relative flex">
               <span
-                class="absolute top-1 -z-1 text-transparent select-none"
+                class="top-1 absolute -z-1 text-transparent select-none"
                 aria-hidden="true"
                 >{{ data().itemRecord[step.itemId].name }}</span
               >
@@ -483,9 +483,9 @@
           </td>
           <td>
             @if (step.recipeId && step.recipe && step.recipeSettings) {
-              <div class="relative flex items-center gap-1">
+              <div class="gap-1 relative flex items-center">
                 <span
-                  class="absolute top-1 -z-1 text-transparent select-none"
+                  class="top-1 absolute -z-1 text-transparent select-none"
                   aria-hidden="true"
                   >{{ data().recipeRecord[step.recipeId].name }}</span
                 >
@@ -647,7 +647,7 @@
         <!-- Link -->
         @if (cols().link.show) {
           <td>
-            <div class="flex gap-1">
+            <div class="gap-1 flex">
               <a
                 target="_blank"
                 routerLink="."
@@ -694,10 +694,10 @@
                 </div>
               </td>
               <td colspan="100" class="p-0 font-semibold">
-                <div class="flex items-center gap-2">
+                <div class="gap-2 flex items-center">
                   <label
                     [for]="showCheckbox.controlId()"
-                    class="cursor-pointer ps-2 select-none"
+                    class="ps-2 cursor-pointer select-none"
                     >{{ 'options.detailSection.' + section | translate }}</label
                   >
                   @if (
@@ -717,7 +717,7 @@
                   }
 
                   <lab-checkbox
-                    class="ms-auto me-2"
+                    class="me-2 ms-auto"
                     [ngModel]="preferencesStore.state().sections[section]"
                     (ngModelChange)="
                       preferencesStore.setSectionDefault(section, $event)

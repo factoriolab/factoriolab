@@ -1,7 +1,7 @@
 <div
-  class="flex items-center justify-between border-b border-gray-600 p-2 md:min-h-16 md:p-3"
+  class="p-2 md:min-h-16 md:p-3 flex items-center justify-between border-b border-gray-600"
 >
-  <div class="flex grow items-center gap-3" labTooltip="preferences.tooltip">
+  <div class="gap-3 flex grow items-center" labTooltip="preferences.tooltip">
     <h2 class="text-2xl font-light">
       {{ 'preferences.header' | translate }}
     </h2>
@@ -26,7 +26,7 @@
   ></button>
 </div>
 
-<div class="flex flex-col gap-2 p-4">
+<div class="gap-2 p-4 flex scrollbar-thin flex-col overflow-y-auto">
   <div class="flex flex-col">
     <span class="mx-1 text-sm text-gray-300">{{
       'preferences.savedStates' | translate
@@ -81,7 +81,7 @@
           ></button>
           <ng-template #editStateMenu>
             <div
-              class="flex flex-col rounded-xs border border-gray-600 py-1"
+              class="rounded-xs py-1 flex flex-col border border-gray-600"
               cdkMenu
             >
               <button
@@ -170,6 +170,13 @@
       [ngModel]="preferences().hue"
       (ngModelChange)="apply({ hue: $event })"
     ></lab-hue>
+  </lab-form-field>
+
+  <lab-form-field label="preferences.backgroundLightness">
+    <lab-background-lightness
+      [ngModel]="preferences().backgroundLightness"
+      (ngModelChange)="apply({ backgroundLightness: $event })"
+    ></lab-background-lightness>
   </lab-form-field>
 
   <lab-checkbox

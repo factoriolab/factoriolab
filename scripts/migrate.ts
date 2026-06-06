@@ -6,8 +6,6 @@ import { ModData } from '~/data/schema/mod-data';
 import { getJsonData } from './utils/file';
 import { logTime } from './utils/log';
 
-// TODO: Clean this up before merging
-
 const modId = process.argv[2];
 if (!modId)
   throw new Error(

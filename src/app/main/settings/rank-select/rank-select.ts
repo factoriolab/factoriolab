@@ -45,11 +45,11 @@ let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
 
 const host = cva(
-  'hover:border-brand-600 focus-visible:border-brand-600 group outline-brand-600 inline-flex min-h-9 grow cursor-pointer items-center overflow-hidden px-1 select-none hover:z-2 focus:z-2 focus-visible:outline',
+  'group min-h-9 px-1 inline-flex grow cursor-pointer items-center overflow-hidden outline-brand-600 select-none hover:z-2 hover:border-brand-600 focus:z-2 focus-visible:border-brand-600 focus-visible:outline',
   {
     variants: {
       opened: {
-        true: 'border-brand-600 z-2 outline',
+        true: 'z-2 border-brand-600 outline',
         false: 'border-gray-600',
       },
       border: {

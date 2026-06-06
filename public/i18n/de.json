@@ -396,6 +396,7 @@
     "selectRecipe": "Select a recipe"
   },
   "preferences": {
+    "backgroundLightness": "Background lightness",
     "bypassLanding": "Startseite immer überspringen",
     "convertObjectiveValues": "Convert objective values",
     "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
@@ -408,6 +409,7 @@
     "hue": "Hue",
     "language": "Sprache",
     "nameSavedState": "Namen eingeben",
+    "override": "Override",
     "resetHeader": "Are you sure?",
     "resetMessage": "Do you want to keep your saved states?<br>Selecting no will remove ALL saved data in this browser and reload the page.",
     "saveState": "Speichere Speicherung",

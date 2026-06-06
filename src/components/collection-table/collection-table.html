@@ -23,7 +23,7 @@
     @if (entries().length > 10 || state().filter) {
       <tr>
         <th>
-          <div class="relative flex font-medium">
+          <div class="font-medium relative flex">
             <input
               class="input"
               [attr.aria-label]="'filter' | translate"
@@ -31,7 +31,7 @@
               (ngModelChange)="updateApply(state, { filter: $event })"
             />
             <fa-icon
-              class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+              class="top-2.5 right-2 pointer-events-none absolute z-3 text-gray-500"
               [icon]="faMagnifyingGlass"
             ></fa-icon>
           </div>
@@ -56,7 +56,7 @@
             ]"
             [queryParams]="resetTableParams"
             queryParamsHandling="merge"
-            class="link flex items-center gap-1"
+            class="link gap-1 flex items-center"
           >
             <lab-icon [value]="entry.id" [type]="iconType()"></lab-icon>
             {{ entry.name }}
@@ -75,7 +75,7 @@
                 ]"
                 [queryParams]="resetTableParams"
                 queryParamsHandling="merge"
-                class="link flex items-center gap-1"
+                class="link gap-1 flex items-center"
               >
                 <lab-icon
                   [value]="entry.category.id"

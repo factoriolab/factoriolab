@@ -29,7 +29,7 @@
     ></fa-icon>
   } @else {
     <fa-icon
-      class="text-brand-400 absolute transition-transform group-hover:block"
+      class="absolute text-brand-400 transition-transform group-hover:block"
       [class.hidden]="!opened()"
       [class.-scale-y-100]="opened()"
       [icon]="faChevronDown"
@@ -45,11 +45,11 @@
   (overlayOutsideClick)="toggle()"
 >
   <div
-    class="bg-ground-950 mt-1 flex max-h-96 max-w-80 min-w-full origin-top flex-col overflow-hidden rounded-xs border border-gray-600 transition-all starting:scale-y-75 starting:opacity-0"
+    class="mt-1 max-h-96 max-w-80 rounded-xs flex min-w-full origin-top flex-col overflow-hidden border border-gray-600 bg-ground-950 transition-all starting:scale-y-75 starting:opacity-0"
     animate.leave="animate-fade-y"
   >
     @if (filter() || multi()) {
-      <div class="flex items-center gap-1 p-2">
+      <div class="gap-1 p-2 flex items-center">
         @if (multi()) {
           <lab-checkbox
             [ngModel]="allSelected()"
@@ -63,7 +63,7 @@
             [(ngModel)]="filterText"
           />
           <fa-icon
-            class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+            class="top-2.5 right-2 pointer-events-none absolute z-3 text-gray-500"
             [icon]="faMagnifyingGlass"
           ></fa-icon>
         </div>
@@ -82,7 +82,7 @@
     <ul
       [id]="controlId() + '-listbox'"
       role="listbox"
-      class="overflow-y-auto py-1"
+      class="py-1 scrollbar-thin overflow-y-auto"
       [attr.aria-multiselectable]="multi()"
       tabindex="-1"
     >
@@ -94,14 +94,14 @@
             #option
             labRipple
             role="option"
-            class="flex min-h-9 cursor-pointer items-center overflow-hidden ps-2 pe-4 outline-none select-none"
+            class="min-h-9 ps-2 pe-4 flex cursor-pointer items-center overflow-hidden outline-none select-none"
             [attr.tabindex]="opt.disabled ? -1 : 0"
             [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
             [attr.aria-selected]="opt.value === value() || checked"
             [attr.aria-checked]="checked"
             [class]="
               opt.value === value()
-                ? 'text-brand-100 bg-brand-950 hover:bg-brand-800 focus-visible:bg-brand-800'
+                ? 'bg-brand-900 text-brand-100 hover:bg-brand-800 focus-visible:bg-brand-800'
                 : 'hover:bg-gray-800 focus-visible:bg-gray-800'
             "
             [labTooltip]="opt.tooltip"
@@ -133,7 +133,7 @@
         }
       }
       @if (filterText() && !listItems().length) {
-        <li class="flex min-h-9 items-center px-2">
+        <li class="min-h-9 px-2 flex items-center">
           {{ 'select.noMatches' | translate }}
         </li>
       }

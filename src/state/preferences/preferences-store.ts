@@ -1,7 +1,7 @@
 import { DOCUMENT, effect, inject, Injectable } from '@angular/core';
 
 import { Store } from '~/state/store';
-import { applyHue } from '~/utils/color';
+import { applyBackgroundLightness, applyHue } from '~/utils/color';
 import { log } from '~/utils/log';
 import { spread } from '~/utils/object';
 import { storedSignal, storeValue } from '~/utils/stored-signal';
@@ -26,6 +26,7 @@ export class PreferencesStore extends Store<PreferencesState> {
   readonly states = this.select('states');
   readonly theme = this.select('theme');
   readonly hue = this.select('hue');
+  readonly backgroundLightness = this.select('backgroundLightness');
 
   constructor() {
     super(initialPreferencesState, ['states', 'flowSettings']);
@@ -60,6 +61,13 @@ export class PreferencesStore extends Store<PreferencesState> {
       const hue = this.hue();
       applyHue(hue, 'brand', this.document.documentElement);
       applyHue(hue + 180, 'complement', this.document.documentElement);
+    });
+
+    effect(() => {
+      applyBackgroundLightness(
+        this.backgroundLightness(),
+        this.document.documentElement,
+      );
     });
 
     effect(() => {
