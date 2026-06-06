@@ -1,11 +1,11 @@
-<div class="flex gap-1 sm:gap-2">
+<div class="gap-1 sm:gap-2 flex">
   @if (dialogData.icon; as icon) {
     <fa-icon size="xl" [icon]="icon"></fa-icon>
   }
   <p [innerHTML]="dialogData.message | translate"></p>
 </div>
 
-<div class="flex justify-end gap-1 sm:gap-2">
+<div class="gap-1 sm:gap-2 flex justify-end">
   @for (action of dialogData.actions; track action.value) {
     <button
       type="button"

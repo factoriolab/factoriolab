@@ -1,7 +1,7 @@
 <div
-  class="flex items-center justify-between border-b border-gray-600 p-2 md:min-h-16 md:p-3"
+  class="p-2 md:min-h-16 md:p-3 flex items-center justify-between border-b border-gray-600"
 >
-  <div class="flex grow items-center gap-3" labTooltip="settings.tooltip">
+  <div class="gap-3 flex grow items-center" labTooltip="settings.tooltip">
     <h2 class="text-2xl font-light">
       {{ 'settings.header' | translate }}
     </h2>
@@ -29,7 +29,7 @@
 </div>
 
 @if (windowClient.isStandalone) {
-  <div class="flex flex-col border-b border-gray-600 p-4">
+  <div class="p-4 flex flex-col border-b border-gray-600">
     <span class="mx-1 text-sm text-gray-300">Query parameters</span>
     <div class="flex">
       <input
@@ -254,7 +254,7 @@
           </div>
           <div class="flex">
             <span
-              class="flex size-9 items-center justify-center rounded-s-xs border border-gray-600"
+              class="size-9 rounded-s-xs flex items-center justify-center border border-gray-600"
             >
               <fa-icon [icon]="faIndustry"></fa-icon>
             </span>
@@ -277,7 +277,7 @@
 
             @if (data().flags.has('overclock')) {
               <lab-input-number
-                class="-ms-px w-16"
+                class="w-16 -ms-px"
                 [rounded]="data().beaconIds.length ? 'none' : 'end'"
                 [minimum]="rational.one"
                 [maximum]="rational(250)"
@@ -300,7 +300,7 @@
           </div>
         </div>
         <div
-          class="flex flex-col gap-2"
+          class="gap-2 flex flex-col"
           cdkDropList
           (cdkDropListDropped)="dropMachine($event)"
         >
@@ -316,7 +316,7 @@
                   <div class="flex items-center">
                     <div
                       cdkDragHandle
-                      class="flex size-9 cursor-grab items-center justify-center rounded-s-xs border border-gray-600"
+                      class="size-9 rounded-s-xs flex cursor-grab items-center justify-center border border-gray-600"
                     >
                       <fa-icon [icon]="faGrip"></fa-icon>
                     </div>
@@ -400,7 +400,7 @@
 
                     @if (data().flags.has('overclock')) {
                       <lab-input-number
-                        class="-ms-px w-16"
+                        class="w-16 -ms-px"
                         rounded="none"
                         [minimum]="rational.one"
                         [maximum]="rational(250)"
@@ -588,7 +588,7 @@
               (ngModelChange)="settingsStore.apply({ flowRate: $event })"
             ></lab-input-number>
             <span
-              class="flex items-center rounded-e-xs border border-s-0 border-gray-600 px-2 text-nowrap"
+              class="rounded-e-xs px-2 flex items-center border border-s-0 border-gray-600 text-nowrap"
               >{{ 'settings.flowRateUnit' | translate }}</span
             >
           </div>

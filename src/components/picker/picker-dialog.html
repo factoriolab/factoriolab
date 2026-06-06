@@ -8,7 +8,7 @@
     />
 
     @if (filter()) {
-      <div class="absolute right-0 z-3">
+      <div class="right-0 absolute z-3">
         <button
           type="button"
           aria-hidden="true"
@@ -19,7 +19,7 @@
       </div>
     } @else {
       <fa-icon
-        class="pointer-events-none absolute top-2.5 right-2 z-3 text-gray-500"
+        class="top-2.5 right-2 pointer-events-none absolute z-3 text-gray-500"
         [icon]="faMagnifyingGlass"
       ></fa-icon>
     }
@@ -46,7 +46,7 @@
 
     @if (recyclingSet().size) {
       <lab-checkbox
-        class="-ms-px rounded-e-xs border border-gray-600"
+        class="rounded-e-xs -ms-px border border-gray-600"
         label="picker.includeAllRecycling"
         [ngModel]="allRecyclingSelected()"
         (ngModelChange)="selectAllRecycling($event)"
@@ -84,7 +84,7 @@
 </div>
 
 @if (multi) {
-  <div class="flex justify-end gap-1 sm:gap-2">
+  <div class="gap-1 sm:gap-2 flex justify-end">
     <button
       type="button"
       class="-ms-px shrink-0"

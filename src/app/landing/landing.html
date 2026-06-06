@@ -11,7 +11,7 @@
 
 <hr class="self-stretch border-t border-gray-600" />
 
-<main class="flex w-xs grow basis-120 flex-col gap-3">
+<main class="w-xs basis-120 gap-3 flex grow flex-col">
   <lab-form-field label="game">
     <lab-select
       [options]="gameOptions"
@@ -30,7 +30,7 @@
       </lab-form-field>
     }
 
-    <div class="flex gap-3">
+    <div class="gap-3 flex">
       <lab-form-field label="objectives.quantity" class="basis-1/2">
         <lab-input-number
           [buttons]="true"
@@ -61,7 +61,7 @@
     @if (stateOptions().length) {
       <div class="flex items-center">
         <fa-icon
-          class="flex size-9 items-center justify-center border border-r-0 border-gray-600"
+          class="size-9 flex items-center justify-center border border-r-0 border-gray-600"
           [icon]="faFileImport"
         ></fa-icon>
         <lab-select
@@ -96,5 +96,5 @@
     ></lab-checkbox>
   }
 
-  <span class="mt-auto mb-4 text-center">{{ release.version() }} </span>
+  <span class="mb-4 mt-auto text-center">{{ release.version() }} </span>
 </main>

@@ -17,7 +17,7 @@
     }
 
     @if (message.recipeId) {
-      <div class="flex items-center gap-2">
+      <div class="gap-2 flex items-center">
         <lab-icon [value]="message.recipeId" type="recipe"></lab-icon>
         {{ settingsStore.dataset().recipeRecord[message.recipeId].name }}
         <button

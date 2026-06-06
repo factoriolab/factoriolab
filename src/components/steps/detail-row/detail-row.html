@@ -133,7 +133,7 @@
 </td>
 <td [colSpan]="machineIdSpan()">
   <div class="flex items-center">
-    <div class="flex items-center gap-1">
+    <div class="gap-1 flex items-center">
       @if (value().isInput) {
         <span class="w-19">{{ 'steps.inputs' | translate }}</span>
       } @else {
@@ -168,9 +168,9 @@
     </div>
 
     @if (value().percent; as percent) {
-      <div class="flex items-center gap-1 ps-2">
+      <div class="gap-1 ps-2 flex items-center">
         <div
-          class="flex items-center justify-center p-2"
+          class="p-2 flex items-center justify-center"
           [class.order-1]="!value().percentOnDest"
         >
           <fa-icon [icon]="faArrowRightLong"></fa-icon>
@@ -180,7 +180,7 @@
         }}</span>
         @if (value().destId; as destId) {
           <lab-icon
-            class="order-2 mx-0.5"
+            class="mx-0.5 order-2"
             [value]="destId"
             [type]="value().destType"
             [text]="value().destRecipeObjectiveId"

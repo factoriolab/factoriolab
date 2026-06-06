@@ -1,14 +1,14 @@
 <aside #settings="labSettings" labSettings></aside>
 <div
   role="none"
-  class="bg-ground-950/75 fixed z-5 hidden h-dvh w-dvw xl:hidden"
+  class="xl:hidden fixed z-5 hidden h-dvh w-dvw bg-ground-950/75"
   [class.hidden]="!settings.open()"
   (click)="settings.open.set(false)"
 ></div>
 <aside #preferences="labPreferences" labPreferences></aside>
 <div
   role="none"
-  class="bg-ground-950/75 fixed z-5 hidden h-dvh w-dvw xl:hidden"
+  class="xl:hidden fixed z-5 hidden h-dvh w-dvw bg-ground-950/75"
   [class.hidden]="!preferences.open()"
   (click)="preferences.open.set(false)"
 ></div>
@@ -26,11 +26,11 @@
   <main class="flex grow flex-col">
     <lab-objectives></lab-objectives>
 
-    <div class="flex grow flex-col px-1 sm:px-3 lg:px-6">
-      <h2 class="mb-1 hidden text-2xl font-light xl:block">
+    <div class="px-1 sm:px-3 lg:px-6 flex grow flex-col">
+      <h2 class="mb-1 text-2xl font-light xl:block hidden">
         {{ 'app.factory' | translate }}
       </h2>
-      <div class="relative mb-1 sm:mb-2">
+      <div class="mb-1 sm:mb-2 relative">
         <lab-tabs [tabs]="tabs"></lab-tabs>
       </div>
       <div class="grow overflow-x-auto">
@@ -50,7 +50,7 @@
     </div>
 
     <div
-      class="flex justify-between border-t border-gray-600 p-1 sm:p-3 lg:p-6"
+      class="p-1 sm:p-3 lg:p-6 flex justify-between border-t border-gray-600"
     >
       <span>
         @if (result().resultType === 'solved') {

@@ -1,35 +1,35 @@
-<h2 class="mb-1 hidden text-2xl font-light xl:block">
+<h2 class="mb-1 text-2xl font-light xl:block hidden">
   {{ 'objectives.title' | translate }}
 </h2>
 
-<div class="flex flex-wrap gap-1 sm:gap-2">
-  <div class="flex w-full max-w-3xl grow flex-col sm:w-auto">
+<div class="gap-1 sm:gap-2 flex flex-wrap">
+  <div class="max-w-3xl sm:w-auto flex w-full grow flex-col">
     <div class="mb-1 flex">
       <span class="min-w-9 md:hidden"></span>
-      <span class="hidden basis-2/5 px-1 text-sm text-gray-300 md:block">{{
+      <span class="px-1 text-sm md:block hidden basis-2/5 text-gray-300">{{
         'objectives.target' | translate
       }}</span>
       <span
         id="quantity-label"
-        class="basis-1/4 px-1 text-sm text-gray-300 md:basis-1/5"
+        class="px-1 text-sm md:basis-1/5 basis-1/4 text-gray-300"
         >{{ 'objectives.quantity' | translate }}</span
       >
       <span
         id="units-label"
-        class="basis-3/8 px-1 text-sm text-gray-300 md:basis-1/5"
+        class="px-1 text-sm md:basis-1/5 basis-3/8 text-gray-300"
         >{{ 'objectives.units' | translate }}</span
       >
       <span
         id="type-label"
-        class="basis-3/8 px-1 text-sm text-gray-300 md:basis-1/5"
+        class="px-1 text-sm md:basis-1/5 basis-3/8 text-gray-300"
         >{{ 'objectives.type' | translate }}</span
       >
-      <div class="invisible min-w-9"></div>
+      <div class="min-w-9 invisible"></div>
     </div>
 
     @if (objectives().length) {
       <div
-        class="mb-1 flex flex-col gap-1 sm:mb-2 sm:gap-2"
+        class="mb-1 gap-1 sm:mb-2 sm:gap-2 flex flex-col"
         cdkDropList
         (cdkDropListDropped)="drop($event)"
       >
@@ -60,7 +60,7 @@
               ></button>
               <button
                 type="button"
-                class="basis-2/5 md:inline-flex"
+                class="md:inline-flex basis-2/5"
                 labButton
                 cdkDragHandle
                 [faIcon]="objectives().length > 1 ? faGrip : undefined"
@@ -83,7 +83,7 @@
                 (click)="changeTarget(objective)"
               ></button>
               <lab-input-number
-                class="-ms-px basis-1/3 md:basis-1/5"
+                class="md:basis-1/5 -ms-px basis-1/3"
                 labelledBy="quantity-label"
                 rounded="none"
                 [buttons]="true"
@@ -93,7 +93,7 @@
                 "
               ></lab-input-number>
               <lab-select
-                class="-ms-px basis-1/3 md:basis-1/5"
+                class="md:basis-1/5 -ms-px basis-1/3"
                 labelledBy="units-label"
                 rounded="none"
                 [options]="unitOptions()"
@@ -101,7 +101,7 @@
                 (ngModelChange)="conversion.changeUnit(objective, $event)"
               ></lab-select>
               <lab-select
-                class="-ms-px basis-1/3 md:basis-1/5"
+                class="md:basis-1/5 -ms-px basis-1/3"
                 labelledBy="type-label"
                 rounded="none"
                 [options]="typeOptions"
@@ -140,7 +140,7 @@
       ></button>
       <button
         type="button"
-        class="basis-2/5 md:inline-flex"
+        class="md:inline-flex basis-2/5"
         labButton
         [faIcon]="faPlus"
         color="brand"
@@ -150,21 +150,21 @@
         (click)="openPicker()"
       ></button>
       <lab-input-number
-        class="-ms-px basis-1/3 md:basis-1/5"
+        class="md:basis-1/5 -ms-px basis-1/3"
         labelledBy="quantity-label"
         rounded="none"
         [buttons]="true"
         [(ngModel)]="value"
       ></lab-input-number>
       <lab-select
-        class="-ms-px basis-1/3 md:basis-1/5"
+        class="md:basis-1/5 -ms-px basis-1/3"
         labelledBy="units-label"
         rounded="none"
         [(ngModel)]="unit"
         [options]="unitOptions()"
       ></lab-select>
       <lab-select
-        class="-ms-px basis-1/3 md:basis-1/5"
+        class="md:basis-1/5 -ms-px basis-1/3"
         labelledBy="type-label"
         rounded="none"
         [(ngModel)]="type"

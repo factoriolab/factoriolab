@@ -2,7 +2,7 @@
   type="button"
   [id]="controlId()"
   [attr.aria-controls]="expanded ? controlId() + '-region' : null"
-  class="flex h-9 cursor-pointer items-center gap-1 border-b border-gray-600 p-2 hover:bg-gray-600 md:h-auto md:p-3"
+  class="h-9 gap-1 p-2 md:h-auto md:p-3 flex cursor-pointer items-center border-b border-gray-600 hover:bg-gray-600"
   (click)="toggle()"
 >
   <fa-icon
@@ -25,7 +25,7 @@
     animate.leave="animate-shrink-y"
   >
     <div class="min-h-0 border-b border-gray-600">
-      <div class="flex flex-col gap-1 p-4 sm:gap-2">
+      <div class="gap-1 p-4 sm:gap-2 flex flex-col">
         <ng-container [ngTemplateOutlet]="content()"></ng-container>
       </div>
     </div>

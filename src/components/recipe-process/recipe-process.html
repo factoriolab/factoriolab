@@ -18,7 +18,7 @@
   }
 </div>
 
-<div class="flex flex-wrap justify-between gap-2">
+<div class="gap-2 flex flex-wrap justify-between">
   @if (r.producers?.length) {
     <div>
       <div class="mt-1 text-sm">{{ 'data.producers' | translate }}</div>
@@ -26,7 +26,7 @@
         @for (producer of r.producers; track producer) {
           @if (data().itemRecord[producer].quality == null) {
             <div
-              class="inline-flex rounded-xs border"
+              class="rounded-xs inline-flex border"
               [class.bg-brand-950]="producer === machineId()"
               [class.border-brand-600]="producer === machineId()"
             >

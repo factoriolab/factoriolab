@@ -1,5 +1,5 @@
 <div class="overflow-auto">
-  <table class="table w-sm">
+  <table class="w-sm table">
     <thead>
       <tr>
         <th>{{ 'columns.visibility' | translate }}</th>
@@ -64,7 +64,7 @@
   <lab-select [options]="powerUnitOptions" [(ngModel)]="powerUnit"></lab-select>
 </lab-form-field>
 
-<div class="flex justify-end gap-1 sm:gap-2">
+<div class="gap-1 sm:gap-2 flex justify-end">
   @if (modified) {
     <button
       type="button"
