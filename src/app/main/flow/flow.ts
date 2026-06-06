@@ -476,10 +476,10 @@ export class Flow {
       .attr('viewBox', (d) => coalesce(d.qualityIcon?.viewBox, ''))
       .attr('width', 32)
       .attr('height', 32)
-      .attr('x', 3)
-      .attr('y', 3)
+      .attr('x', -5)
+      .attr('y', 9)
       .append('image')
-      .attr('href', 'icons/icons.webp')
+      .attr('href', (d) => d.icon.file)
       .attr('class', 'pointer-events-none');
 
     // Filter nodes with recipeIcon
@@ -520,10 +520,10 @@ export class Flow {
       .attr('viewBox', (d) => coalesce(d.recipeQualityIcon?.viewBox, ''))
       .attr('width', 16)
       .attr('height', 16)
-      .attr('x', 11)
-      .attr('y', 11)
+      .attr('x', 8)
+      .attr('y', 14)
       .append('image')
-      .attr('href', 'icons/icons.webp')
+      .attr('href', (d) => d.icon.file)
       .attr('class', 'pointer-events-none');
 
     // Add objective id
@@ -610,6 +610,7 @@ export class Flow {
 
   private clickHandler(): (e: Event, d: { stepId: string }) => void {
     return (e: Event, d: { stepId: string }) => {
+      console.log(e, d);
       if (e.defaultPrevented) return;
       this.selectedId.set(d.stepId);
     };
