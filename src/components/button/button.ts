@@ -20,15 +20,13 @@ import { Ripple } from '../ripple/ripple';
 import { Rounded, roundedVariants } from '../rounding';
 
 const host = cva(
-  'group cursor-pointer items-center gap-1 overflow-hidden transition-colors select-none focus:z-2 focus-visible:outline disabled:pointer-events-none',
+  'group gap-1 cursor-pointer items-center overflow-hidden transition-colors select-none focus:z-2 focus-visible:outline disabled:pointer-events-none',
   {
     variants: {
       color: {
-        gray: 'outline-brand-600 focus-visible:border-brand-600 text-gray-50',
-        brand:
-          'text-brand-50 bg-brand-950 z-1 outline-gray-300 focus-visible:border-gray-600',
-        complement:
-          'text-complement-50 bg-complement-950 z-1 outline-gray-300 focus-visible:border-gray-300',
+        gray: 'text-gray-50 outline-brand-600 focus-visible:border-brand-600',
+        brand: 'z-1 text-brand-400 outline-brand-400',
+        complement: 'z-1 text-complement-400 outline-complement-400',
       },
       size: {
         micro: 'w-9',
@@ -62,12 +60,12 @@ const host = cva(
       {
         color: 'brand',
         border: true,
-        class: 'hover:bg-brand-800 border-brand-600',
+        class: 'border-brand-400 hover:bg-gray-800',
       },
       {
         color: 'complement',
         border: true,
-        class: 'hover:bg-complement-800 border-complement-600',
+        class: 'border-complement-400 hover:bg-gray-800',
       },
       {
         color: 'gray',
