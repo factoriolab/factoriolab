@@ -320,3 +320,17 @@ export function applyHue(hue: number, name: string, el: HTMLElement): void {
     el.style.setProperty(`--${name}-${weight[i]}`, `oklch(${l} ${c} ${h})`);
   });
 }
+
+const GROUND_950 = '--ground-950';
+export function applyBackgroundLightness(
+  backgroundLightness: number | undefined,
+  el: HTMLElement,
+): void {
+  if (backgroundLightness == null) el.style.removeProperty(GROUND_950);
+  else {
+    el.style.setProperty(
+      GROUND_950,
+      `oklch(${backgroundLightness.toString()}% 0 0)`,
+    );
+  }
+}

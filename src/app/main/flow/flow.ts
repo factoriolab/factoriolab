@@ -610,7 +610,6 @@ export class Flow {
 
   private clickHandler(): (e: Event, d: { stepId: string }) => void {
     return (e: Event, d: { stepId: string }) => {
-      console.log(e, d);
       if (e.defaultPrevented) return;
       this.selectedId.set(d.stepId);
     };

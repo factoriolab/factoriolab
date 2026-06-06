@@ -12,6 +12,7 @@ export interface PreferencesState {
   language: Language;
   powerUnit: PowerUnit;
   hue: number;
+  backgroundLightness?: number;
   theme: Theme;
   bypassLanding: boolean;
   showTechLabels: boolean;

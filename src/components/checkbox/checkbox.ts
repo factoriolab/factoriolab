@@ -23,7 +23,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Control } from '../control';
 
 const check = cva(
-  'rounded-xs relative inline-flex items-center justify-center outline-brand-600 transition-all hover:bg-gray-900 has-focus-visible:outline',
+  'rounded-xs relative inline-flex items-center justify-center outline-brand-600 transition-all hover:bg-gray-800 has-focus-visible:outline',
   {
     variants: {
       value: {

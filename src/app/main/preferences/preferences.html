@@ -172,6 +172,13 @@
     ></lab-hue>
   </lab-form-field>
 
+  <lab-form-field label="preferences.backgroundLightness">
+    <lab-background-lightness
+      [ngModel]="preferences().backgroundLightness"
+      (ngModelChange)="apply({ backgroundLightness: $event })"
+    ></lab-background-lightness>
+  </lab-form-field>
+
   <lab-checkbox
     label="preferences.bypassLanding"
     [ngModel]="preferences().bypassLanding"

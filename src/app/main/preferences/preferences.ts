@@ -52,6 +52,7 @@ import { languageOptions } from '~/translate/language';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { WindowClient } from '~/utils/window-client';
 
+import { BackgroundLightness } from './background-lightness/background-lightness';
 import { Hue } from './hue/hue';
 
 const host = cva(
@@ -77,6 +78,7 @@ const host = cva(
     Select,
     Tooltip,
     TranslatePipe,
+    BackgroundLightness,
   ],
   templateUrl: './preferences.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
