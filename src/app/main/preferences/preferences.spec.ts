@@ -24,13 +24,22 @@ describe('Preferences', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('state', () => {
+  describe('currentState', () => {
     it('should find a state that matches params', () => {
       spyOn(component, 'params').and.returnValue('params');
       spyOn(component['settingsStore'], 'modStates').and.returnValue({
         state: 'params',
       });
-      expect(component.state()).toEqual('state');
+      expect(component.currentState()).toEqual('state');
+    });
+  });
+
+  describe('selectedState', () => {
+    it('should use the last selected state, if none matches', () => {
+      component['preferencesStore'].saveState('2.0', 'state', '');
+      expect(component.selectedState()).toEqual('state');
+      component['preferencesStore'].removeState('2.0', 'state');
+      expect(component.selectedState()).toEqual('state');
     });
   });
 
@@ -67,7 +76,7 @@ describe('Preferences', () => {
       component.editStatus.set('edit');
       spyOn(component, 'params').and.returnValue('params');
       spyOn(component['preferencesStore'], 'saveState');
-      spyOn(component, 'state').and.returnValue('state');
+      spyOn(component, 'selectedState').and.returnValue('state');
       spyOn(component['preferencesStore'], 'removeState');
       component.saveState();
       expect(component['preferencesStore'].saveState).toHaveBeenCalled();
@@ -91,7 +100,26 @@ describe('Preferences', () => {
       );
       await component.setState('state');
       expect(component['router'].navigate).toHaveBeenCalled();
-      expect(component.state()).toEqual('state');
+    });
+  });
+
+  describe('saveChanges', () => {
+    it('should save changes to a saved state', () => {
+      spyOn(component, 'selectedState').and.returnValue('state');
+      spyOn(component, 'params').and.returnValue('params');
+      spyOn(component['preferencesStore'], 'saveState');
+      component.saveChanges();
+      expect(component['preferencesStore'].saveState).toHaveBeenCalledWith(
+        '2.0',
+        'state',
+        'params',
+      );
+    });
+
+    it('should return if no selected state is found', () => {
+      spyOn(component['preferencesStore'], 'saveState');
+      component.saveChanges();
+      expect(component['preferencesStore'].saveState).not.toHaveBeenCalled();
     });
   });
 
@@ -118,10 +146,10 @@ describe('Preferences', () => {
   describe('deleteState', () => {
     it('should remove the state from the PreferencesStore', () => {
       spyOn(component['preferencesStore'], 'removeState');
-      spyOn(component.state, 'set');
+      spyOn(component.selectedState, 'set');
       component.deleteState('state');
       expect(component['preferencesStore'].removeState).toHaveBeenCalled();
-      expect(component.state.set).toHaveBeenCalledWith('');
+      expect(component.selectedState.set).toHaveBeenCalledWith(undefined);
     });
   });
 });

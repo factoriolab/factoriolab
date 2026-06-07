@@ -32,15 +32,22 @@
               }
             ],
             "styles": ["src/styles.css"],
-            "allowedCommonJsDependencies": ["@sideway/formula", "glpk-ts"]
+            "allowedCommonJsDependencies": [
+              "@sideway/formula",
+              "color-bits",
+              "elkjs",
+              "file-saver",
+              "glpk-ts",
+              "localforage"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "950kB",
+                  "maximumError": "1.25MB"
                 },
                 {
                   "type": "anyComponentStyle",

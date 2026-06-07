@@ -225,7 +225,10 @@ export class RouterSync {
       // Use sync: true to indicate we should not re-apply this state
       info: { sync: true },
     });
-    this.stored.set(this.router.url);
+
+    // Cache url state unless on the landing page, check via number of /
+    const pathSegments = this.router.url.split('/');
+    if (pathSegments.length > 2) this.stored.set(this.router.url);
   }
 
   zipState(state: State): ZipState {

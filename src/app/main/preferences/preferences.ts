@@ -100,11 +100,19 @@ export class Preferences {
   readonly params = toSignal(
     this.route.queryParams.pipe(map(() => window.location.search.substring(1))),
   );
-  readonly state = linkedSignal(() => {
+  /** The actual current state matched against saved states */
+  readonly currentState = computed(() => {
     const params = this.params();
     const states = this.settingsStore.modStates();
     return Object.keys(states).find((s) => states[s] === params);
   });
+  /** The current state OR the last selected state if no match */
+  readonly selectedState = linkedSignal<string | undefined, string | undefined>(
+    {
+      source: this.currentState,
+      computation: (currentState, previous) => currentState ?? previous?.value,
+    },
+  );
   readonly editStatus = signal<'create' | 'edit' | null>(null);
   readonly editValue = signal('');
 
@@ -169,12 +177,11 @@ export class Preferences {
     const modId = this.settingsStore.dataset().modId;
     this.preferencesStore.saveState(modId, editValue, params);
 
-    const state = this.state();
+    const state = this.selectedState();
     if (editState === 'edit' && state)
       this.preferencesStore.removeState(modId, state);
 
     this.editStatus.set(null);
-    this.state.set(editValue);
   }
 
   async setState(id: string): Promise<void> {
@@ -184,7 +191,15 @@ export class Preferences {
     await this.router.navigate([], {
       queryParams: this.routerSync.toParams(query),
     });
-    this.state.set(id);
+  }
+
+  saveChanges(): void {
+    const selectedState = this.selectedState();
+    const params = this.params();
+    if (selectedState == null || params == null) return;
+
+    const modId = this.settingsStore.dataset().modId;
+    this.preferencesStore.saveState(modId, selectedState, params);
   }
 
   createState(): void {
@@ -202,6 +217,6 @@ export class Preferences {
       this.settingsStore.dataset().modId,
       state,
     );
-    this.state.set('');
+    this.selectedState.set(undefined);
   }
 }

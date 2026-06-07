@@ -338,14 +338,14 @@ describe('RouterSync', () => {
       spyOn(service, 'zipState').and.returnValue(mockZipData());
       spyOn(service, 'getHash').and.returnValue(Promise.resolve({ z: 'z' }));
       spyOn(service['router'], 'navigate');
-      spyOnProperty(service['router'], 'url').and.returnValue('flow');
+      spyOnProperty(service['router'], 'url').and.returnValue('/spa/list');
       await service.updateUrl(mockZipData());
       expect(service['router'].navigate).toHaveBeenCalledWith([], {
         queryParams: { z: 'z' },
         preserveFragment: true,
         info: { sync: true },
       });
-      expect(service.stored()).toEqual('flow');
+      expect(service.stored()).toEqual('/spa/list');
     });
   });
 

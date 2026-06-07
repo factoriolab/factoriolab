@@ -1,23 +1,23 @@
 <ng-content>
   @let _selectedOption = selectedOption();
-  <span
-    class="inline-flex"
-    [class.group-hover:opacity-40]="iconOnly()"
-    [class.opacity-40]="iconOnly() && opened()"
-  >
-    @if (_selectedOption && _selectedOption.icon) {
+  @if (_selectedOption && _selectedOption.icon) {
+    <span
+      class="inline-flex"
+      [class.group-hover:opacity-40]="iconOnly()"
+      [class.opacity-40]="iconOnly() && opened()"
+    >
       <lab-icon
         [value]="_selectedOption.icon"
         [type]="_selectedOption.iconType"
         [class]="_selectedOption.iconClass"
       ></lab-icon>
-    }
-  </span>
+    </span>
+  }
 
   @if (!iconOnly()) {
     <div class="ms-1 me-2 line-clamp-1 grow">
       @if (_selectedOption) {
-        {{ _selectedOption.label | translate }}
+        {{ _selectedOption.label | translate }}{{ dirty() ? '*' : '' }}
       } @else if (placeholder()) {
         <span class="text-gray-400">{{ placeholder() | translate }}</span>
       }
