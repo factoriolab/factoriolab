@@ -122,7 +122,8 @@ export class Select<T = unknown> extends Control<T> {
   readonly placeholder = input<string>();
   readonly border = input(true);
   readonly rounded = input<Rounded>('all');
-  readonly iconOnly = input<boolean>(false);
+  readonly iconOnly = input(false);
+  readonly dirty = input(false);
 
   protected readonly filterText = signal('');
   readonly opened = signal(false);

@@ -65,11 +65,12 @@
         <lab-select
           rounded="start"
           [options]="settingsStore.stateOptions()"
+          [dirty]="currentState() !== selectedState()"
           placeholder="preferences.selectSavedState"
-          [ngModel]="state()"
+          [ngModel]="selectedState()"
           (ngModelChange)="setState($event)"
         ></lab-select>
-        @if (state(); as state) {
+        @if (selectedState(); as state) {
           <button
             type="button"
             class="-ms-px"
@@ -81,9 +82,21 @@
           ></button>
           <ng-template #editStateMenu>
             <div
-              class="rounded-xs py-1 flex flex-col border border-gray-600"
+              class="rounded-xs py-1 flex flex-col border border-gray-600 bg-ground-950"
               cdkMenu
             >
+              @if (currentState() !== selectedState()) {
+                <button
+                  type="button"
+                  labButton
+                  cdkMenuItem
+                  [border]="false"
+                  [faIcon]="faFloppyDisk"
+                  text="preferences.saveChanges"
+                  textAlign="left"
+                  (click)="saveChanges()"
+                ></button>
+              }
               <button
                 type="button"
                 labButton

@@ -6,7 +6,6 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -89,7 +88,6 @@ const host = cva(
     CdkDrag,
     CdkDragHandle,
     CdkDropList,
-    CdkMenuModule,
     FaIconComponent,
     AccordionModule,
     BeaconsSelect,
