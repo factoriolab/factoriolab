@@ -185,6 +185,14 @@
     ></lab-hue>
   </lab-form-field>
 
+  <lab-form-field label="preferences.chroma">
+    <lab-hue
+      [max]="200"
+      [ngModel]="preferences().chroma"
+      (ngModelChange)="apply({ chroma: $event })"
+    ></lab-hue>
+  </lab-form-field>
+
   <lab-form-field label="preferences.backgroundLightness">
     <lab-background-lightness
       [ngModel]="preferences().backgroundLightness"

@@ -12,6 +12,7 @@ export interface PreferencesState {
   language: Language;
   powerUnit: PowerUnit;
   hue: number;
+  chroma: number;
   backgroundLightness?: number;
   theme: Theme;
   bypassLanding: boolean;
@@ -28,6 +29,7 @@ export const initialPreferencesState: PreferencesState = {
   language: 'en',
   powerUnit: PowerUnit.Auto,
   hue: 256,
+  chroma: 100,
   theme: 'system',
   bypassLanding: false,
   showTechLabels: false,

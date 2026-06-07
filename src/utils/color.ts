@@ -297,7 +297,13 @@ const tailwindColors: TailwindColor[] = [
   },
 ];
 
-export function applyHue(hue: number, name: string, el: HTMLElement): void {
+export function applyHue(
+  hue: number,
+  chroma: number,
+  name: string,
+  el: HTMLElement,
+): void {
+  chroma /= 100;
   // Ensure 0 <= hue < 360
   while (hue < 0) hue += 360;
   while (hue >= 360) hue -= 360;
@@ -315,7 +321,9 @@ export function applyHue(hue: number, name: string, el: HTMLElement): void {
     const [l, c, h] = v.map((w, j) => {
       let underV = tailwindColors[underIndex].variants[i][j];
       if (j === 2 && underV > w) underV -= 360;
-      return Number((w + percent * (w - underV)).toPrecision(j === 2 ? 6 : 3));
+      let val = w + percent * (w - underV);
+      if (j === 1) val *= chroma;
+      return Number(val.toPrecision(j === 2 ? 6 : 3));
     });
     el.style.setProperty(`--${name}-${weight[i]}`, `oklch(${l} ${c} ${h})`);
   });

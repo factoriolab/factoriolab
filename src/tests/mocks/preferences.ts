@@ -16,6 +16,7 @@ export const mockPreferencesState: PreferencesState = {
   powerUnit: PowerUnit.Auto,
   language: 'en',
   hue: 0,
+  chroma: 100,
   theme: 'dark',
   bypassLanding: false,
   showTechLabels: false,
