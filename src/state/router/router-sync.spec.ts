@@ -116,7 +116,7 @@ const mockSettingsState: SettingsState = {
     unproduceable: rational.zero,
     excluded: rational(100n),
     surplus: rational.zero,
-    maximize: rational(-1000000n),
+    maximize: rational(-1000n),
   },
 };
 const mockZip: ZipData<LabParams> = {
@@ -147,7 +147,7 @@ const mockZipPartial: ZipData<LabParams> = {
     cma: '10',
     cun: '0',
     cex: '100',
-    cmx: '-1000000',
+    cmx: '-1000',
     iex: 'C',
     och: 'A',
     ich: 'C',
@@ -179,7 +179,7 @@ const mockZipPartial: ZipData<LabParams> = {
     cma: '10',
     cun: '0',
     cex: '100',
-    cmx: '-1000000',
+    cmx: '-1000',
     iex: 'C',
     och: 'A',
     ich: 'C',
@@ -727,7 +727,7 @@ describe('RouterSync', () => {
       mockRoute.next(
         {},
         {
-          z: 'eJwlijEKwkAURG.ziwfCzFbp5G8CQUjnAQKCgtiIgnZ7dtl1ioH3Zp4zxnE12ZJkikuNe5dJxmuGjaUtiCJhKW5mbfk.7Nt-iveRMrBy.lIfJEKDMeuYCu7O6n2wRuIz.QBtTByM',
+          z: 'eJwlirEKwkAUBP.mFQPC7lXp5F0CQUjnBwQEBbERBe3u2-XOZmFm9jljHFeTLUmmuNS4d5lkvGbYWNqCKBKW4mbWlv.Dvu2neB8pAyvnL.VBIjQYs45UcHdW34MlxWf6ARkEG.w_',
           v: '8',
         },
       );
@@ -749,7 +749,7 @@ describe('RouterSync', () => {
       mockRoute.next(
         {},
         {
-          z: 'eJwlijEKwzAQBH9zxYDhVpVTmZMNJuAuDxAEHAhuTAJJp7cHKVsszOyeM0K2i6hBMNo927PJIOw1w8ZSF5zkjtxL0GIPsdb4.8pWrvaeSB0zty.5IHC8M2LtU0LNyVsP8h77XH40dx3.',
+          z: 'eJwlijEKwzAQBH9zxYBhT5VTmZMNJuAuDxAEHAhuTAJJp7cHKVsszOyeM47b7kQNgtHu2Z5NBmGvGTaWuiCShEslaLGHs9b4.8pWrvaeSB0zty.5IBDqjLP2KeHNuVoPLsk-lx.byh1v',
           v: '9',
         },
       );
@@ -771,7 +771,7 @@ describe('RouterSync', () => {
       mockRoute.next(
         {},
         {
-          z: 'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5M8gH7yO0RZA9OnfwDvtcg2w__',
+          z: 'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
           v: '9',
         },
       );
