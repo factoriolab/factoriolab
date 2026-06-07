@@ -2,7 +2,7 @@
   <input
     type="range"
     min="0"
-    max="360"
+    [max]="max()"
     class="w-full accent-brand-500"
     [disabled]="disabled()"
     [attr.aria-labelledby]="labelledBy() ?? formField?.labelId ?? null"
@@ -14,8 +14,8 @@
   <input
     type="number"
     min="0"
-    max="360"
-    class="input"
+    [max]="max()"
+    class="input w-19"
     [disabled]="disabled()"
     [attr.aria-labelledby]="labelledBy() ?? formField?.labelId ?? null"
     [ngModel]="value()"

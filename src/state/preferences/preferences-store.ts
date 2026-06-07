@@ -26,6 +26,7 @@ export class PreferencesStore extends Store<PreferencesState> {
   readonly states = this.select('states');
   readonly theme = this.select('theme');
   readonly hue = this.select('hue');
+  readonly chroma = this.select('chroma');
   readonly backgroundLightness = this.select('backgroundLightness');
 
   constructor() {
@@ -59,8 +60,9 @@ export class PreferencesStore extends Store<PreferencesState> {
 
     effect(() => {
       const hue = this.hue();
-      applyHue(hue, 'brand', this.document.documentElement);
-      applyHue(hue + 180, 'complement', this.document.documentElement);
+      const chroma = this.chroma();
+      applyHue(hue, chroma, 'brand', this.document.documentElement);
+      applyHue(hue + 180, chroma, 'complement', this.document.documentElement);
     });
 
     effect(() => {

@@ -36,6 +36,7 @@ export class Hue extends Control<number> {
 
   readonly controlId = input(`lab-hue-${this.uniqueId}`);
   readonly value = model<number>();
+  readonly max = input(360);
   readonly disabled = model(false);
   readonly labelledBy = input<string>();
 }

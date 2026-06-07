@@ -398,6 +398,7 @@
   "preferences": {
     "backgroundLightness": "Background lightness",
     "bypassLanding": "Startseite immer überspringen",
+    "chroma": "Chroma",
     "convertObjectiveValues": "Convert objective values",
     "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
     "createSavedState": "Erstellen",
