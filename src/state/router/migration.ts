@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import { Confirm } from '~/components/confirm/confirm';
@@ -55,7 +55,7 @@ enum MigrationWarning {
   LimitStepDeprecation = 'Limit steps have been replaced by limit objectives. Results may differ if using multiple objectives as limits apply to all objectives.',
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Migration {
   private readonly compression = inject(Compression);
   private readonly confirm = inject(Confirm);

@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Service } from '@angular/core';
 
 import { EnergyType } from '~/data/schema/energy-type';
 import { coalesce } from '~/utils/nullish';
@@ -13,7 +13,7 @@ import { RecordStore } from '../store';
 import { MachineSettings } from './machine-settings';
 import { MachineState } from './machine-state';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MachinesStore extends RecordStore<MachineState> {
   private readonly hydration = inject(Hydration);
   private readonly options = inject(Options);

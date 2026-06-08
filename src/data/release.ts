@@ -1,9 +1,9 @@
 import { httpResource } from '@angular/common/http';
-import { computed, Injectable } from '@angular/core';
+import { computed, Service } from '@angular/core';
 
 import { ReleaseInfo } from '~/data/release-info';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Release {
   readonly config = httpResource<ReleaseInfo>(() => 'release.json');
   readonly version = computed(() => {

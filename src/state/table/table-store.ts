@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { Store } from '../store';
 import { initialTableState, TableState } from './table-state';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TableStore extends Store<TableState> {
   readonly filter = this.select('filter');
   readonly page = this.select('page');

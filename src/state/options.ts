@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { Beacon } from '~/data/schema/beacon';
 import { Machine, MachineJson } from '~/data/schema/machine';
@@ -12,7 +12,7 @@ import { ModuleSettings } from './module-settings';
 import { Dataset } from './settings/dataset';
 import { Settings } from './settings/settings';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Options {
   /** Determines what option to use based on preferred rank */
   bestMatch(options: Option[], rank: string[]): string {

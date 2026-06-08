@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable } from '@angular/core';
+import { computed, effect, inject, Service } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {
   faExclamationCircle,
@@ -39,7 +39,7 @@ import { StepDetailSection } from './step-detail-section';
 import { StepRecipes } from './step-recipes';
 import { TotalValue } from './total-value';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ObjectivesStore extends RecordStore<ObjectiveState> {
   private readonly title = inject(Title);
   private readonly adjustment = inject(Adjustment);

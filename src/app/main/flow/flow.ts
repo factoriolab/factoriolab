@@ -211,7 +211,7 @@ export class Flow {
     // Node rect
     node
       .append('rect')
-      .attr('class', 'cursor-pointer hover:stroke-brand-500 stroke-gray-700')
+      .attr('class', 'cursor-pointer hover:stroke-brand-400 stroke-gray-700')
       .attr('x', 1)
       .attr('y', 1)
       .attr('height', (d) => this.nodeHeight(d))
@@ -446,7 +446,7 @@ export class Flow {
     // Node rect
     node
       .append('rect')
-      .attr('class', 'cursor-pointer hover:stroke-brand-500 stroke-gray-700')
+      .attr('class', 'cursor-pointer hover:stroke-brand-400 stroke-gray-700')
       .attr('x', 1)
       .attr('y', 1)
       .attr('ry', 2)

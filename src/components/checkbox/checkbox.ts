@@ -23,13 +23,13 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Control } from '../control';
 
 const check = cva(
-  'rounded-xs relative inline-flex items-center justify-center outline-brand-600 transition-all hover:bg-gray-800 has-focus-visible:outline',
+  'rounded-xs relative inline-flex items-center justify-center outline-brand-400 transition-all hover:bg-gray-800 has-focus-visible:outline',
   {
     variants: {
       value: {
-        true: 'text-brand-600 hover:text-brand-500',
-        false: 'text-gray-400 hover:text-brand-500',
-        null: 'text-brand-600 hover:text-brand-500',
+        true: 'text-brand-500 hover:text-brand-400',
+        false: 'text-gray-500 hover:text-brand-400',
+        null: 'text-brand-500 hover:text-brand-400',
       },
       disabled: {
         true: 'pointer-events-none opacity-40',

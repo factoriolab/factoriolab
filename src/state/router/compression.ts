@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { noop } from '~/utils/function';
 
@@ -23,7 +23,7 @@ const ZMAP = ZBASE64ABC.split('').reduce((e: Record<string, number>, c, i) => {
   return e;
 }, {});
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Compression {
   private readonly base64codes = new Uint8Array(256).fill(255);
 

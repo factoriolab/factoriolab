@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { Rational, rational } from '~/rational/rational';
 import { notNullish } from '~/utils/nullish';
@@ -12,7 +12,7 @@ type KeysMatching<T, V> = {
   [K in keyof T]-?: T[K] extends V ? K : never;
 }[keyof T];
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Zip {
   private readonly compression = inject(Compression);
 

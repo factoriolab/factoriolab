@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import {
   SankeyLinkExtraProperties,
@@ -21,7 +21,7 @@ import { SettingsStore } from './settings/settings-store';
 
 const ROOT_ID = '';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Normalization {
   private readonly itemsStore = inject(ItemsStore);
   private readonly recipesStore = inject(RecipesStore);

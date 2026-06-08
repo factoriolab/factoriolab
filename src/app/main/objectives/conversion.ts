@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { Picker } from '~/components/picker/picker';
 import { rational } from '~/rational/rational';
@@ -13,7 +13,7 @@ import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Conversion {
   protected readonly normalization = inject(Normalization);
   private readonly objectivesStore = inject(ObjectivesStore);

@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Service } from '@angular/core';
 
 import { Rational, rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
@@ -21,7 +21,7 @@ import { Node } from './node';
 
 export const MIN_LINK_VALUE = 1e-10;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FlowBuilder {
   private readonly objectivesStore = inject(ObjectivesStore);
   private readonly preferencesStore = inject(PreferencesStore);
@@ -174,7 +174,7 @@ export class FlowBuilder {
             id: outputId,
             name: item.name,
             text: `${step.output.toLocaleString(itemPrec)}${suffix}`,
-            color: 'var(--color-brand-500)',
+            color: 'var(--color-brand-400)',
             stepId: step.id,
             icon,
             qualityIcon,

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
   Constraint,
   ConstraintProperties,
@@ -35,7 +35,7 @@ import { SimplexSolution } from './simplex-solution';
 import { SimplexState } from './simplex-state';
 import { Step } from './step';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Solver {
   private readonly simplexConfig = inject<Simplex.Options>(SIMPLEX_CONFIG);
 

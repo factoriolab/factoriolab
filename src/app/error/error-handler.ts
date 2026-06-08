@@ -1,10 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ErrorHandler, inject, Injectable } from '@angular/core';
+import { ErrorHandler, inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ErrorInfo } from './error-info';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LabErrorHandler implements ErrorHandler {
   private readonly router = inject(Router);
 

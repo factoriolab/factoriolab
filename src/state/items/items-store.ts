@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Service } from '@angular/core';
 
 import { PIPE } from '~/data/schema/belt';
 import { Item } from '~/data/schema/item';
@@ -12,7 +12,7 @@ import { RecordStore } from '../store';
 import { ItemSettings } from './item-settings';
 import { ItemState } from './item-state';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ItemsStore extends RecordStore<ItemState> {
   private readonly settingsStore = inject(SettingsStore);
 

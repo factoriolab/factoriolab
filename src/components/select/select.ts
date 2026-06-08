@@ -39,18 +39,18 @@ let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
 
 const host = cva(
-  'group min-h-9 inline-flex grow cursor-pointer items-center overflow-hidden select-none hover:z-2 hover:border-brand-600 focus:z-2 focus-visible:border-brand-600 focus-visible:outline',
+  'group min-h-9 inline-flex grow cursor-pointer items-center overflow-hidden select-none hover:z-2 hover:border-brand-400 focus:z-2 focus-visible:border-brand-400 focus-visible:outline',
   {
     variants: {
       opened: {
-        true: 'z-2 border-brand-600 outline',
+        true: 'z-2 border-brand-400 outline',
         false: 'border-gray-600',
       },
       border: { true: 'border', false: 'hover:border' },
       rounded: roundedVariants,
       iconOnly: {
-        true: 'min-w-9 grow-0 justify-center outline-brand-600',
-        false: 'px-1 outline-brand-600',
+        true: 'min-w-9 grow-0 justify-center outline-brand-400',
+        false: 'px-1 outline-brand-400',
       },
       disabled: {
         true: 'pointer-events-none',
