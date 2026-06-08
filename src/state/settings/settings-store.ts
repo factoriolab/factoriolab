@@ -1030,7 +1030,7 @@ export class SettingsStore extends Store<SettingsState> {
       .map((i) => data.itemRecord[i])
       .filter(
         (i) =>
-          i.quality == null || i.quality.level < coalesce(quality?.level, 0),
+          i.quality == null || i.quality.level <= coalesce(quality?.level, 0),
       )
       .map((i) => i.id);
     const availableItemIds = new Set(noRecipeQualItemIds);
