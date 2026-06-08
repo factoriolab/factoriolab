@@ -13,4 +13,8 @@ describe('parseMachine', () => {
         ?.productivity,
     ).toEqual(rational(1n, 2n));
   });
+
+  it('should convert 0 modules to undefined', () => {
+    expect(parseMachine({ modules: 0 }).modules).toBeUndefined();
+  });
 });

@@ -27,7 +27,7 @@ export class App {
   private readonly release = inject(Release);
   private readonly confirm = inject(Confirm);
   private readonly windowClient = inject(WindowClient);
-  private readonly settingsStore = inject(SettingsStore);
+  protected readonly settingsStore = inject(SettingsStore);
 
   // Stored on component to enable spyOn in tests
   private readonly log = log;

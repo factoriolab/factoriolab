@@ -105,6 +105,13 @@ export class SettingsStore extends Store<SettingsState> {
     return `data/${modId}/i18n/${lang}.json`;
   });
 
+  readonly loading = computed(
+    () =>
+      this.modDataResource.isLoading() ||
+      this.modHashResource.isLoading() ||
+      this.modI18nResource.isLoading(),
+  );
+
   readonly modData = computed(() => {
     const modId = this.modId();
     if (modId == null) return undefined;

@@ -86,7 +86,12 @@ export function parseMachine(
   if (json == null) return;
   return {
     speed: rational(json.speed),
-    modules: json.modules === true ? json.modules : rational(json.modules),
+    modules:
+      json.modules === true
+        ? json.modules
+        : json.modules === 0
+          ? undefined
+          : rational(json.modules),
     disallowedEffects: json.disallowedEffects,
     type: json.type,
     fuelCategories: json.fuelCategories,
