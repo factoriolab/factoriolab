@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Service } from '@angular/core';
 
 import { Rational, rational } from '~/rational/rational';
 import { spread } from '~/utils/object';
@@ -14,7 +14,7 @@ import { RecordStore } from '../store';
 import { RecipeSettings } from './recipe-settings';
 import { RecipeState } from './recipe-state';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RecipesStore extends RecordStore<RecipeState> {
   private readonly adjustment = inject(Adjustment);
   private readonly itemsStore = inject(ItemsStore);

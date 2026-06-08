@@ -1,4 +1,4 @@
-import { DOCUMENT, effect, inject, Injectable } from '@angular/core';
+import { DOCUMENT, effect, inject, Service } from '@angular/core';
 
 import { Store } from '~/state/store';
 import { applyBackgroundLightness, applyHue } from '~/utils/color';
@@ -9,7 +9,7 @@ import { storedSignal, storeValue } from '~/utils/stored-signal';
 import { StepDetailSection } from '../objectives/step-detail-section';
 import { initialPreferencesState, PreferencesState } from './preferences-state';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PreferencesStore extends Store<PreferencesState> {
   private readonly document = inject(DOCUMENT);
 

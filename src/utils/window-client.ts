@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WindowClient {
   readonly isStandalone = window.matchMedia('(display-mode: standalone)')
     .matches;

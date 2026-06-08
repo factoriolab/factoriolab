@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { computed, effect, inject, Injectable, resource } from '@angular/core';
+import { computed, effect, inject, resource, Service } from '@angular/core';
 import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { FastAverageColor } from 'fast-average-color';
 
@@ -57,7 +57,7 @@ import { Settings } from './settings';
 import { initialSettingsState, SettingsState } from './settings-state';
 import { systemIconsRecord } from './system-icons';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SettingsStore extends Store<SettingsState> {
   private readonly hydration = inject(Hydration);
   private readonly preferencesStore = inject(PreferencesStore);

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { saveAs } from 'file-saver';
 
 import { FlowData } from '~/flow/flow-data';
@@ -17,7 +17,7 @@ const CSV_EXTENSION = '.csv';
 const JSON_TYPE = 'text/json;charset=UTF-8';
 const JSON_EXTENSION = '.json';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Exporter {
   private readonly adjustment = inject(Adjustment);
   private readonly itemsStore = inject(ItemsStore);

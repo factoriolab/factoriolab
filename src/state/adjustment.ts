@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { EnergyType } from '~/data/schema/energy-type';
 import { AdjustedInserter } from '~/data/schema/inserter';
@@ -38,7 +38,7 @@ import { CostSettings } from './settings/cost-settings';
 import { AdjustedDataset, Dataset } from './settings/dataset';
 import { Settings } from './settings/settings';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Adjustment {
   private readonly hydration = inject(Hydration);
   private readonly options = inject(Options);

@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Service, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -95,7 +95,7 @@ export interface PartialState {
   tableState?: Partial<TableState>;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RouterSync {
   private readonly router = inject(Router);
   private readonly compression = inject(Compression);

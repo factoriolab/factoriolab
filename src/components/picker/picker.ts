@@ -1,5 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -8,7 +8,7 @@ import { filterNullish } from '~/utils/nullish';
 import { PickerData } from './picker-data';
 import { PickerDialog } from './picker-dialog';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Picker {
   private readonly dialog = inject(Dialog);
   private readonly settingsStore = inject(SettingsStore);

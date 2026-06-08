@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { Option } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
@@ -9,7 +9,7 @@ import { areBeaconSettingsEqual, BeaconSettings } from './beacon-settings';
 import { areModuleSettingsEqual, ModuleSettings } from './module-settings';
 import { Options } from './options';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Hydration {
   private readonly options = inject(Options);
 

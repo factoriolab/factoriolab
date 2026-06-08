@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Service } from '@angular/core';
 
 import { FlowData } from '~/flow/flow-data';
 import { Link } from '~/flow/link';
@@ -27,7 +27,7 @@ import {
 } from './objective';
 import { mockRecipeSettings } from './recipe';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Mocks {
   readonly adjustment = inject(Adjustment);
   readonly settingsStore = inject(SettingsStore);

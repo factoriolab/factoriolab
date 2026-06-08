@@ -2,9 +2,9 @@ import { httpResource } from '@angular/common/http';
 import {
   computed,
   inject,
-  Injectable,
   Injector,
   linkedSignal,
+  Service,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { filter, firstValueFrom } from 'rxjs';
@@ -24,7 +24,7 @@ interface ParseEntry {
   path: string;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Translate {
   private readonly injector = inject(Injector);
   private readonly preferences = inject(PreferencesStore);
