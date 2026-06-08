@@ -19,11 +19,11 @@ import { Button } from '../button/button';
 import { Rounded, roundedVariants } from '../rounding';
 
 const host = cva(
-  'group min-h-9 min-w-9 relative inline-flex cursor-pointer items-center justify-center border outline-brand-600 hover:border-brand-600 hover:bg-gray-800 focus-visible:outline',
+  'group min-h-9 min-w-9 relative inline-flex cursor-pointer items-center justify-center border outline-brand-400 hover:border-brand-400 hover:bg-gray-800 focus-visible:outline',
   {
     variants: {
-      opened: { true: 'z-2 border-brand-600 outline' },
-      border: { false: 'hover:border-brand-600' },
+      opened: { true: 'z-2 border-brand-400 outline' },
+      border: { false: 'hover:border-brand-400' },
       rounded: roundedVariants,
       disabled: { true: 'pointer-events-none' },
     },

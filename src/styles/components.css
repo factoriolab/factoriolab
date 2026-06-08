@@ -14,11 +14,11 @@
     &:hover,
     &:focus-visible {
       z-index: 2;
-      border-color: var(--color-brand-600);
+      border-color: var(--color-brand-400);
     }
 
     &:focus-visible {
-      outline: 1px solid var(--color-brand-600);
+      outline: 1px solid var(--color-brand-400);
     }
 
     &::placeholder {

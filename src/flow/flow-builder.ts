@@ -174,7 +174,7 @@ export class FlowBuilder {
             id: outputId,
             name: item.name,
             text: `${step.output.toLocaleString(itemPrec)}${suffix}`,
-            color: 'var(--color-brand-500)',
+            color: 'var(--color-brand-400)',
             stepId: step.id,
             icon,
             qualityIcon,
