@@ -1,4 +1,4 @@
-@if (router.currentNavigation()) {
+@if (router.currentNavigation() || settingsStore.loading()) {
   <div
     class="absolute z-5 flex h-dvh w-dvw items-center justify-center bg-ground-950/85"
   >
