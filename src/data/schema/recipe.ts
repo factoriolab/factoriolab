@@ -12,7 +12,10 @@ export type RecipeFlag =
   | 'burn'
   | 'recycling'
   | 'locked'
-  | 'infinite';
+  /** Treats machines required as a percentage instead of a number */
+  | 'infinite'
+  /** Even if there are no producers, show the machine quantity */
+  | 'showCount';
 
 export interface RecipeJson {
   id: string;

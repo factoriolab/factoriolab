@@ -24,7 +24,7 @@ import { updateSetIds } from '~/utils/set';
   imports: [FormsModule, FaIconComponent, Icon, Select, Tooltip, TranslatePipe],
   templateUrl: './recipes-select.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'inline-flex' },
+  host: { class: 'flex items-center' },
 })
 export class RecipesSelect {
   protected readonly objectivesStore = inject(ObjectivesStore);

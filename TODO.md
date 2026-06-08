@@ -1,5 +1,9 @@
 # TODO
 
+## NOW
+
+- Add showCount flag to relevant recipes in factorio-build script and FLE
+
 ## LATER
 
 - Ability to pin objectives panel
