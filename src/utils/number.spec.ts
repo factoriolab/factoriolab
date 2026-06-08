@@ -1,6 +1,6 @@
 import { rational } from '~/rational/rational';
 
-import { inRange, toNumber } from './number';
+import { clamp, inRange, toNumber } from './number';
 
 describe('toNumber', () => {
   it('should convert values of different types to number', () => {
@@ -16,5 +16,13 @@ describe('inRange', () => {
     expect(inRange(rational.zero, rational.one, undefined)).toBeFalse();
     expect(inRange(rational.zero, undefined, rational.one)).toBeTrue();
     expect(inRange(rational.one, undefined, rational.zero)).toBeFalse();
+  });
+});
+
+describe('clamp', () => {
+  it('should clamp values within a range', () => {
+    expect(clamp(0, 5, 10)).toEqual(5);
+    expect(clamp(10, 0, 5)).toEqual(5);
+    expect(clamp(5, 0, 10)).toEqual(5);
   });
 });
