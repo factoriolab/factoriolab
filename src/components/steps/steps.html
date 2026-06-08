@@ -601,7 +601,22 @@
             }
           </td>
         } @else {
-          <td class="pe-0"></td>
+          <td class="pe-0">
+            @if (
+              step.recipeId && data().recipeRecord[step.recipeId];
+              as recipe
+            ) {
+              @if (recipe.flags.has('showCount')) {
+                <span class="flex justify-end font-mono whitespace-pre">
+                  @if (step.recipeId && recipe.flags.has('infinite')) {
+                    {{ step.machines | rate: -2 }}%
+                  } @else {
+                    {{ step.machines | rate: cols().machines.precision }}
+                  }
+                </span>
+              }
+            }
+          </td>
           <td>
             <lab-recipes-select [step]="step"></lab-recipes-select>
           </td>
