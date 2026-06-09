@@ -2,8 +2,10 @@
 name: Bug report
 about: Report an issue with this project
 title: ''
-labels: bug
+labels: ''
 assignees: ''
+type: Bug
+
 ---
 
 **Describe the bug**
