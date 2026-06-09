@@ -120,6 +120,7 @@
     "overclock": "Разгон",
     "pipe": "Труба",
     "pollution": "Загрязнение",
+    "pollutionMultiplier": "Pollution multiplier",
     "prerequisites": "Предварительные условия",
     "producedByRecipes": "Изготовлено по рецептам",
     "producers": "Произодители",

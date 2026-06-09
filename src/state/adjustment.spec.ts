@@ -804,6 +804,23 @@ describe('Adjustment', () => {
       );
       expect(result.out[ItemId.SteelPlate]).toEqual(rational(17n, 10n));
     });
+
+    it('should apply a fuel pollution multiplier', () => {
+      const data = mocks.getDataset();
+      const recipeSettings = spread(
+        recipesStore.settings()[RecipeId.SteelPlate],
+        { machineId: ItemId.SteelFurnace, fuelId: ItemId.Coal },
+      );
+      data.fuelRecord[ItemId.Coal].pollutionMultiplier = rational(10n);
+      const result = service.adjustRecipe(
+        RecipeId.SteelPlate,
+        recipeSettings,
+        itemsStore.settings(),
+        settingsStore.settings(),
+        data,
+      );
+      expect(result.pollution).toEqual(rational(854n, 125n));
+    });
   });
 
   describe('adjustLaunchRecipeObjective', () => {

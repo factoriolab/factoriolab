@@ -62,7 +62,6 @@
     "label": "Select JSON data file and image sprite sheet"
   },
   "data": {
-    "pollutionMultiplier": "Pollution multiplier",
     "beacon": "Beacon",
     "beacons": "Beacons",
     "belt": "Belt",
@@ -121,6 +120,7 @@
     "overclock": "Overclock",
     "pipe": "Pipe",
     "pollution": "Pollution",
+    "pollutionMultiplier": "Pollution multiplier",
     "prerequisites": "Prerequisites",
     "producedByRecipes": "Produced by recipes",
     "producers": "Producers",
