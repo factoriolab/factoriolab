@@ -1034,10 +1034,11 @@ export class SettingsStore extends Store<SettingsState> {
       )
       .map((i) => i.id);
     const availableItemIds = new Set(noRecipeQualItemIds);
-    // Add all items that are consumed or produced by unlocked recipes
+    // Add all items that are produced by unlocked recipes
     unlockedRecipes.forEach((r) => {
-      Object.keys(r.in).forEach((i) => availableItemIds.add(i));
-      Object.keys(r.out).forEach((i) => availableItemIds.add(i));
+      Object.keys(r.out).forEach((i) => {
+        if ((r.in[i] ?? 0) < r.out[i]) availableItemIds.add(i);
+      });
     });
 
     // Limit available recipes based on locations and whether machines are available
