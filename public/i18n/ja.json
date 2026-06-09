@@ -120,6 +120,7 @@
     "overclock": "Overclock",
     "pipe": "Pipe",
     "pollution": "汚染",
+    "pollutionMultiplier": "Pollution multiplier",
     "prerequisites": "前提条件",
     "producedByRecipes": "生産するレシピ",
     "producers": "製造可能な機械",

@@ -138,6 +138,12 @@
               <td>{{ 'data.fuelValue' | translate }}</td>
               <td>{{ fuel.value | fuelValue }}</td>
             </tr>
+            @if (fuel.pollutionMultiplier) {
+              <tr>
+                <td>{{ 'data.pollutionMultiplier' | translate }}</td>
+                <td>{{ fuel.pollutionMultiplier }}</td>
+              </tr>
+            }
           </table>
         }
       }

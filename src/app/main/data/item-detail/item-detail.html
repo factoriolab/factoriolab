@@ -118,6 +118,12 @@
           <th>{{ 'data.fuelValue' | translate }}</th>
           <td>{{ fuel.value | round }} MJ</td>
         </tr>
+        @if (fuel.pollutionMultiplier) {
+          <tr>
+            <th>{{ 'data.pollutionMultiplier' | translate }}</th>
+            <td>{{ fuel.pollutionMultiplier }}</td>
+          </tr>
+        }
         @if (fuel.result) {
           <tr>
             <th>{{ 'data.burntResult' | translate }}</th>

@@ -120,6 +120,7 @@
     "overclock": "Overclock",
     "pipe": "Tubería",
     "pollution": "Contaminación",
+    "pollutionMultiplier": "Pollution multiplier",
     "prerequisites": "Prerrequisitos",
     "producedByRecipes": "Producido por recetas",
     "producers": "Productores",

@@ -120,6 +120,7 @@
     "overclock": "超频",
     "pipe": "管道",
     "pollution": "污染",
+    "pollutionMultiplier": "Pollution multiplier",
     "prerequisites": "前置需求",
     "producedByRecipes": "制造于配方",
     "producers": "制造于",
