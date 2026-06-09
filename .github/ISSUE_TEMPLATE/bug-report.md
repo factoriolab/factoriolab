@@ -5,7 +5,6 @@ title: ''
 labels: ''
 assignees: ''
 type: Bug
-
 ---
 
 **Describe the bug**
