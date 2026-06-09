@@ -62,6 +62,7 @@
     "label": "Select JSON data file and image sprite sheet"
   },
   "data": {
+    "pollutionMultiplier": "Pollution multiplier",
     "beacon": "Beacon",
     "beacons": "Beacons",
     "belt": "Belt",

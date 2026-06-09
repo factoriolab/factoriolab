@@ -1070,6 +1070,7 @@ async function processMod(): Promise<void> {
         fuel = {
           category: ANY_FLUID_BURN,
           value: getEnergyInMJ(proto.fuel_value),
+          pollutionMultiplier: proto.emissions_multiplier,
         };
       }
 
@@ -1350,6 +1351,7 @@ async function processMod(): Promise<void> {
           category: proto.fuel_category,
           value: getEnergyInMJ(proto.fuel_value),
           result: proto.burnt_result,
+          pollutionMultiplier: proto.fuel_emissions_multiplier,
         };
       }
 

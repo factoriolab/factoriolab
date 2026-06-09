@@ -281,6 +281,13 @@ export class Adjustment {
         if (eff.pollution.lt(this.minFactor)) eff.pollution = this.minFactor;
       }
 
+      // Fuel pollution multiplier
+      if (recipeState.fuelId) {
+        const fuel = data.fuelRecord[recipeState.fuelId];
+        if (fuel?.pollutionMultiplier)
+          eff.pollution = eff.pollution.mul(fuel.pollutionMultiplier);
+      }
+
       if (
         data.flags.has('maximumFactor') &&
         !recipe.flags.has('mining') &&
