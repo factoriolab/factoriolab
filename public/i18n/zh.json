@@ -1,9 +1,9 @@
 {
-  "any": "Any",
+  "any": "任意",
   "app": {
     "data": "数据",
     "factory": "工厂",
-    "flow": "桑基图",
+    "flow": "流程图",
     "list": "列表",
     "migrationWarning": "迁移警告",
     "simplexSolved": "计算完成, {{ time }}毫秒, 耗费: {{ cost }}",
@@ -20,7 +20,7 @@
     "totalTooltip": "Total beacons"
   },
   "beltSelect": {
-    "stackTooltip": "Stack size"
+    "stackTooltip": "堆叠数"
   },
   "cancel": "取消",
   "close": "Close",
@@ -161,19 +161,19 @@
     "header": "An error occurred",
     "home": "Home"
   },
-  "filter": "Filter",
+  "filter": "筛选",
   "flow": {
     "downloadAsJson": "导出为 JSON 文件",
-    "flowSettings": "桑基图设置"
+    "flowSettings": "流程图设置"
   },
   "flowSettings": {
     "diagram": "可视化类型",
     "diagramTooltip": "选择要使用的流程可视化类型",
     "elkAlgorithm": "Layout algorithm",
     "elkAlgorithmTooltip": "Select which ELK layout algorithm to use for the box-line layout",
-    "header": "Flow settings",
+    "header": "流程图设置",
     "hideExcluded": "隐藏排除项",
-    "hideExcludedTooltip": "如果勾选，排除的项目也将从桑基图中隐藏",
+    "hideExcludedTooltip": "如果勾选，排除的项目也将从流程图中隐藏",
     "linkSize": "连线粗细",
     "linkSizeTooltip": "选择确定连线粗细的计量方式",
     "linkText": "连线文字",
@@ -184,10 +184,10 @@
   "game": "游戏",
   "header": {
     "discord": "Discord",
-    "resetTooltip": "Click to reset",
+    "resetTooltip": "点击重置目标",
     "selectGame": "Select game",
     "source": "源码",
-    "sponsor": "Sponsor",
+    "sponsor": "捐赠",
     "v3": "FactorioLab 3"
   },
   "inputNumber": {
@@ -210,10 +210,10 @@
   "modulesSelect": {
     "tooltip": "Click to select modifiers"
   },
-  "no": "No",
+  "no": "否",
   "none": "无",
   "objectives": {
-    "displayRate": "Display rate units",
+    "displayRate": "速率显示为",
     "error": "未找到解法",
     "errorDetail": "检查 <b>限制</b> 和 <b>最大化</b> 目标以及启用的配方。",
     "errorInfeasible": "无法求解",
@@ -225,15 +225,15 @@
     "errorSimplexUnboundedRecipe": "最大目标超出限制无法求解，问题配方:",
     "errorUnbounded": "解法超出限制",
     "errorUnboundedDetail": "对于 <b>最大化<b> 目标来说，<b>限制<b> 目标可能不够严格。",
-    "pauseTooltip": "暂停/继续 计算",
+    "pauseTooltip": "暂停计算",
     "pausedMessage": "已暂停计算，点击上方的播放按钮继续。",
-    "playTooltip": "Resume calculations",
-    "quantity": "Quantity",
+    "playTooltip": "继续计算",
+    "quantity": "数量",
     "removeTooltip": "移除目标",
-    "target": "Target",
+    "target": "目标",
     "title": "目标",
-    "type": "Type",
-    "units": "Units"
+    "type": "类型",
+    "units": "单位"
   },
   "ok": "确定",
   "options": {
@@ -376,7 +376,7 @@
     "theme": {
       "dark": "深色 (默认)",
       "light": "浅色",
-      "system": "System"
+      "system": "跟随系统"
     }
   },
   "paginator": {
@@ -391,39 +391,39 @@
     "includeAll": "包含全部",
     "includeAllRecycling": "Include all recycling",
     "includedItems": "Set included items",
-    "includedRecipes": "Set included recipes",
+    "includedRecipes": "启用配方",
     "qualityFilter": "Quality filter",
-    "selectItem": "Select an item",
-    "selectRecipe": "Select a recipe"
+    "selectItem": "选择一个物品",
+    "selectRecipe": "选择一个配方"
   },
   "preferences": {
-    "backgroundLightness": "Background lightness",
-    "bypassLanding": "Always skip landing page",
-    "chroma": "Chroma",
-    "convertObjectiveValues": "Convert objective values",
-    "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
-    "createSavedState": "Create new",
-    "deleteSavedState": "Delete",
-    "editSavedState": "Rename",
-    "header": "Preferences",
-    "helpTranslate": "Help translate",
-    "hide": "Hide preferences panel",
-    "hue": "Hue",
-    "language": "Language",
-    "nameSavedState": "Enter a name",
+    "backgroundLightness": "背景亮度",
+    "bypassLanding": "始终跳过起始引导页",
+    "chroma": "饱和度",
+    "convertObjectiveValues": "转换目标值",
+    "convertObjectiveValuesTooltip": "如果勾选，当类型改变时，目标值将被转换以保留物品数量",
+    "createSavedState": "新建状态",
+    "deleteSavedState": "删除此状态",
+    "editSavedState": "重命名",
+    "header": "偏好设置",
+    "helpTranslate": "帮助翻译",
+    "hide": "隐藏偏好设置面板",
+    "hue": "色调",
+    "language": "语言",
+    "nameSavedState": "请输入一个名字...",
     "override": "Override",
     "resetHeader": "Are you sure?",
-    "resetMessage": "Do you want to keep your saved states?<br>Selecting no will remove ALL saved data in this browser and reload the page.",
+    "resetMessage": "您想保留您的保存状态吗？<br>选择否将删除此浏览器中所有保存的数据并重新加载页面。",
     "saveChanges": "Save changes",
-    "saveState": "Save state",
+    "saveState": "保存当前状态",
     "savedStateMenuLabel": "Saved state menu",
-    "savedStates": "Saved states",
-    "selectSavedState": "Select state",
-    "theme": "Theme",
-    "tooltip": "The preferences in this panel are stored in the browser, not included in the shareable URL."
+    "savedStates": "已保存的状态",
+    "selectSavedState": "选择已保存的状态",
+    "theme": "主题",
+    "tooltip": "此面板中的偏好设置存储在浏览器中，不包括在可分享的URL中。"
   },
   "rankSelect": {
-    "label": "Rank (drag to reorder)"
+    "label": "顺序 (拖动排序)"
   },
   "remove": "Remove",
   "reset": "重置",
@@ -431,7 +431,7 @@
     "noMatches": "No matches found"
   },
   "settings": {
-    "addMachine": "Add machine",
+    "addMachine": "添加设备",
     "advanced": "高级",
     "allTechsResearched": "已研究所有科技",
     "applyQueryParams": "Apply query parameters",
@@ -454,7 +454,7 @@
     "factory": "工厂",
     "flowRateUnit": "u/秒",
     "fuelRank": "首选燃料",
-    "fuelRankEmpty": "No fuels selected",
+    "fuelRankEmpty": "未选择燃料",
     "fuelRankTooltip": "选择燃料的使用顺序",
     "fuelTooltip": "Click to select fuel preference",
     "gameTooltip": "选择要使用的游戏计算器",
@@ -464,7 +464,7 @@
     "itemsTooltip": "单击修改排除哪些物品 (被排除的物品不会计算生产方案)",
     "locations": "地点",
     "locationsTooltip": "为配方和设备选择允许使用的地点",
-    "machineRank": "Preferred machines",
+    "machineRank": "首选设备",
     "machineTooltip": "选择设备",
     "maximizeType": "最大化数值类型",
     "maximizeTypeTooltip": "选择最大化目标数值类型",
@@ -500,21 +500,21 @@
     "researchSpeedTooltip": "输入当前研发速度加成 (该设置只影响产品的研发)",
     "techsResearched": "已研究 {{ count }} 科技",
     "techsTooltip": "单击修改已研究哪些科技 (未解锁的配方不会参与计算)",
-    "tooltip": "The settings in this panel are included in the shareable URL."
+    "tooltip": "此面板中的设置包含在可分享的URL中。"
   },
   "steps": {
     "beaconsUndoTooltip": "取消所有对插件效果分享塔的修改",
-    "beltSelectTooltip": "Click to select belt and stack size",
-    "beltTooltip": "Click to select belt",
+    "beltSelectTooltip": "点击选择传送带和堆叠大小",
+    "beltTooltip": "点击选择传送带",
     "beltsUndoTooltip": "取消所有对传送带的修改",
     "checked": "Step checked",
     "checkedUndoTooltip": "取消所有勾选",
     "downloadAsCsv": "导出为 CSV 文件",
     "emptyMessage": "点击图表中的节点查看详细信息",
-    "excludeItemTooltip": "Click to exclude",
+    "excludeItemTooltip": "点击排除此项",
     "excludeRocketsTooltip": "Click to exclude rockets",
     "hideDetails": "隐藏详情",
-    "includeItemTooltip": "Click to include",
+    "includeItemTooltip": "点击包含此项",
     "includeRocketsTooltip": "Click to include rockets",
     "inputs": "输入",
     "inserterCountTooltip": "Note: Inserter count is based on chest to chest throughput, and does not account for belt speed",
@@ -527,13 +527,13 @@
     "perMachine": "Per machine (Divide by {{ count }})",
     "pipeTooltip": "Click to select pipe",
     "rocketsUndoTooltip": "Undo all rocket modifications",
-    "selectFuelTooltip": "Click to select fuel",
-    "selectMachineTooltip": "Click to select machine",
+    "selectFuelTooltip": "点击选择燃料",
+    "selectMachineTooltip": "点击选择设备",
     "selectRecipesTooltip": "选择该物品包含的配方",
     "showDetails": "展开详情",
     "stepUndoTooltip": "撤销此步骤之后的更改",
     "total": "总计",
-    "wagonTooltip": "Click to select wagon",
+    "wagonTooltip": "点击选择车厢",
     "wagonsUndoTooltip": "取消所有对车厢的修改"
   },
   "technologies": {
@@ -554,7 +554,7 @@
   },
   "versions": {
     "mod": "Mod",
-    "version": "Version"
+    "version": "版本"
   },
   "yes": "确定"
 }
