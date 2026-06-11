@@ -33,7 +33,7 @@
       <div class="mb-1 sm:mb-2 relative">
         <lab-tabs [tabs]="tabs"></lab-tabs>
       </div>
-      <div class="grow overflow-x-auto">
+      <div class="pb-1 grow overflow-x-auto">
         <router-outlet #ro="outlet"></router-outlet>
         @if (!ro.isActivated) {
           <div class="flex h-full items-center justify-center">
