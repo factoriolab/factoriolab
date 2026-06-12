@@ -21,6 +21,7 @@ export const mockPreferencesState: PreferencesState = {
   bypassLanding: false,
   showTechLabels: false,
   paused: false,
+  pinObjectives: false,
   convertObjectiveValues: false,
   flowSettings: initialFlowSettings,
   sections: initialPreferencesState.sections,

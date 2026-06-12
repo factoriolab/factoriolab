@@ -28,7 +28,7 @@ const host = cva(
       disabled: { true: 'pointer-events-none' },
     },
     compoundVariants: [
-      { border: true, opened: false, class: 'border-gray-600' },
+      { border: true, opened: false, class: 'border-gray-700' },
     ],
   },
 );

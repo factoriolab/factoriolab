@@ -19,8 +19,10 @@
 }
 @if (toggleIcon(); as icon) {
   <fa-icon
-    class="absolute text-brand-400 group-hover:block"
-    [class.hidden]="!toggled()"
+    class="absolute"
+    [class]="
+      toggled() ? 'text-gray-400' : 'hidden text-brand-400 group-hover:flex'
+    "
     [icon]="icon"
   ></fa-icon>
 }

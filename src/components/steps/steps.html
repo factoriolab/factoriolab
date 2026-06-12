@@ -208,8 +208,9 @@
                       'ms-4': !$first,
                       'sm:ms-4.5': $first,
                       'sm:ms-6': !$first,
-                      'h-12.5': trail || $last,
+                      'h-12.5': (trail || $last) && !($last && !trail),
                       'mb-6': $last && !trail,
+                      'h-8': $last && !trail,
                     }"
                   ></div>
                 }
@@ -338,7 +339,6 @@
                       @let tooltip = 'steps.' + type + 'Tooltip';
                       <lab-select
                         [iconOnly]="true"
-                        [border]="false"
                         [options]="
                           settingsStore.options()[
                             type === 'belt' ? 'belts' : 'pipes'
@@ -389,7 +389,6 @@
                       : 'fluid-wagon';
                   <lab-select
                     [iconOnly]="true"
-                    [border]="false"
                     [options]="
                       settingsStore.options()[
                         type === 'cargo-wagon' ? 'cargoWagons' : 'fluidWagons'
@@ -442,7 +441,6 @@
                   [toggleIcon]="faEyeSlash"
                   [toggled]="excluded"
                   iconType="system"
-                  [border]="false"
                   [labTooltip]="tooltip"
                   labTooltipPosition="adjacent"
                   [attr.aria-label]="tooltip | translate"
@@ -492,7 +490,6 @@
                 <lab-recipes-select [step]="step"></lab-recipes-select>
                 @if (step.recipe.producers?.length) {
                   <lab-select
-                    [border]="false"
                     [iconOnly]="true"
                     [options]="step.recipeSettings.machineOptions ?? []"
                     [labTooltip]="machineId"
@@ -519,7 +516,6 @@
                     [maximum]="rational(250)"
                     [step]="rational(10)"
                     [percent]="true"
-                    [border]="false"
                     labTooltip="steps.overclockTooltip"
                     [ngModel]="step.recipeSettings.overclock"
                     (ngModelChange)="
@@ -543,7 +539,6 @@
                     ></lab-icon>
                   } @else {
                     <lab-select
-                      [border]="false"
                       [iconOnly]="true"
                       [options]="step.recipeSettings.fuelOptions ?? []"
                       [labTooltip]="fuelId"
@@ -568,7 +563,6 @@
                     @if (machine.modules !== true && machine.modules?.isOne()) {
                       <lab-select
                         [iconOnly]="true"
-                        [border]="false"
                         [options]="step.recipeSettings.moduleOptions ?? []"
                         [labTooltip]="
                           modules[0].id || 'settings.modifierTooltip'
@@ -588,7 +582,6 @@
                       <lab-modules-select
                         [machine]="machine"
                         [recipeId]="step.recipeId"
-                        [border]="false"
                         [ngModel]="modules"
                         (ngModelChange)="
                           changeModulesBeacons(step, { modules: $event })
@@ -631,7 +624,6 @@
               step.recipeSettings.beacons.length
             ) {
               <lab-beacons-select
-                [border]="false"
                 [ngModel]="step.recipeSettings.beacons"
                 (ngModelChange)="
                   changeModulesBeacons(step, { beacons: $event })
