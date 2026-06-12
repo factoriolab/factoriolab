@@ -729,11 +729,7 @@ export class SettingsStore extends Store<SettingsState> {
       .map((i) => i.id);
     const machineIds = items
       .filter(fnPropsNotNullish('machine'))
-      .sort(
-        (a, b) =>
-          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
-          a.name.localeCompare(b.name),
-      )
+      .sort((a, b) => (a.quality?.level ?? 0) - (b.quality?.level ?? 0))
       .map((i) => i.id);
     const modules = items.filter(fnPropsNotNullish('module'));
     const moduleIds = modules.map((i) => i.id);
