@@ -2,7 +2,7 @@
   @if (data().recipeRecord[tooltipData.value]; as recipe) {
     <div>{{ recipe.name }}</div>
     <lab-recipe-process [value]="recipe.id"></lab-recipe-process>
-    @if (tooltipData.adjustedRecipe?.effects; as effects) {
+    @if (hasEffects && tooltipData.adjustedRecipe?.effects; as effects) {
       <table>
         <ng-template #effectRow let-label="label" let-value="value">
           @if (!value.eq(rational.one)) {
@@ -275,7 +275,8 @@
             }
           </table>
           @if (machine.consumption) {
-            <div class="mt-1 flex items-center justify-center">
+            <div class="mt-1 text-sm">{{ 'data.consumption' | translate }}</div>
+            <div class="flex items-center">
               @for (input of machine.consumption | keyvalue; track input.key) {
                 <lab-icon
                   [value]="input.key"
@@ -288,7 +289,7 @@
           }
           @if (machine.locations) {
             <div class="mt-1 text-sm">{{ 'data.locations' | translate }}</div>
-            <div>
+            <div class="flex items-center">
               @for (location of machine.locations; track location) {
                 <lab-icon [value]="location" type="location"></lab-icon>
               }
@@ -480,7 +481,7 @@
 }
 
 @if (tooltipData.action) {
-  <div class="text-sm text-gray-400 italic">
+  <div class="text-sm mt-1 text-gray-400 italic">
     {{ tooltipData.action | translate }}
   </div>
 }
