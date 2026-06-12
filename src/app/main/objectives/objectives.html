@@ -1,6 +1,16 @@
-<h2 class="mb-1 text-2xl font-light xl:block hidden">
-  {{ 'objectives.title' | translate }}
-</h2>
+@let pinned = preferencesStore.pinObjectives();
+<div class="xl:flex hidden items-center justify-between">
+  <h2 class="mb-1 text-2xl font-light">
+    {{ 'objectives.title' | translate }}
+  </h2>
+  <button
+    type="button"
+    labButton
+    [faIcon]="pinned ? faThumbtackSlash : faThumbtack"
+    [aria-label]="'preferences.pinObjectives' | translate"
+    (click)="preferencesStore.apply({ pinObjectives: !pinned })"
+  ></button>
+</div>
 
 <div class="gap-1 sm:gap-2 flex flex-wrap">
   <div class="max-w-3xl sm:w-auto flex w-full grow flex-col">
@@ -89,7 +99,9 @@
                 [buttons]="true"
                 [ngModel]="objective.value"
                 (ngModelChange)="
-                  objectivesStore.updateRecord(objective.id, { value: $event })
+                  objectivesStore.updateRecord(objective.id, {
+                    value: $event,
+                  })
                 "
               ></lab-input-number>
               <lab-select

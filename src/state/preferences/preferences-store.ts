@@ -28,6 +28,7 @@ export class PreferencesStore extends Store<PreferencesState> {
   readonly hue = this.select('hue');
   readonly chroma = this.select('chroma');
   readonly backgroundLightness = this.select('backgroundLightness');
+  readonly pinObjectives = this.select('pinObjectives');
 
   constructor() {
     super(initialPreferencesState, ['states', 'flowSettings']);

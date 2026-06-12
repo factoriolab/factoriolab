@@ -17,6 +17,7 @@ export interface PreferencesState {
   theme: Theme;
   bypassLanding: boolean;
   showTechLabels: boolean;
+  pinObjectives: boolean;
   paused: boolean;
   convertObjectiveValues: boolean;
   flowSettings: FlowSettings;
@@ -33,6 +34,7 @@ export const initialPreferencesState: PreferencesState = {
   theme: 'system',
   bypassLanding: false,
   showTechLabels: false,
+  pinObjectives: false,
   paused: false,
   convertObjectiveValues: false,
   flowSettings: initialFlowSettings,

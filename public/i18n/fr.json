@@ -412,6 +412,7 @@
     "language": "Language",
     "nameSavedState": "Entrez un nom",
     "override": "Override",
+    "pinObjectives": "Pin objectives panel",
     "resetHeader": "Are you sure?",
     "resetMessage": "Do you want to keep your saved states?<br>Selecting no will remove ALL saved data in this browser and reload the page.",
     "saveChanges": "Save changes",

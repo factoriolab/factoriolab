@@ -412,6 +412,7 @@
     "language": "语言",
     "nameSavedState": "请输入一个名字...",
     "override": "Override",
+    "pinObjectives": "Pin objectives panel",
     "resetHeader": "Are you sure?",
     "resetMessage": "您想保留您的保存状态吗？<br>选择否将删除此浏览器中所有保存的数据并重新加载页面。",
     "saveChanges": "Save changes",

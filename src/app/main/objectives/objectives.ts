@@ -5,7 +5,12 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   faBookOpen,
@@ -14,8 +19,11 @@ import {
   faPause,
   faPlay,
   faPlus,
+  faThumbtack,
+  faThumbtackSlash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import { cva } from 'class-variance-authority';
 
 import { Button } from '~/components/button/button';
 import { FormField } from '~/components/form-field/form-field';
@@ -39,6 +47,17 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { Conversion } from './conversion';
 import { Message } from './message';
 
+const host = cva(
+  'gap-1.5 p-1 sm:p-3 lg:gap-3 lg:px-6 lg:py-3 flex flex-col border-b',
+  {
+    variants: {
+      pin: {
+        true: 'top-0 xl:-top-12 sticky z-4 border-gray-600 bg-ground-950',
+      },
+    },
+  },
+);
+
 @Component({
   selector: 'lab-objectives',
   imports: [
@@ -56,7 +75,9 @@ import { Message } from './message';
   ],
   templateUrl: './objectives.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex flex-col gap-1.5 p-1 sm:p-3 lg:gap-3 lg:p-6' },
+  host: {
+    '[class]': 'hostClass()',
+  },
 })
 export class Objectives extends ObjectiveForm {
   protected readonly conversion = inject(Conversion);
@@ -69,6 +90,8 @@ export class Objectives extends ObjectiveForm {
   protected readonly faBookOpen = faBookOpen;
   protected readonly faGrip = faGrip;
   protected readonly faPause = faPause;
+  protected readonly faThumbtack = faThumbtack;
+  protected readonly faThumbtackSlash = faThumbtackSlash;
   protected readonly faPlay = faPlay;
   protected readonly faPlus = faPlus;
   protected readonly faXmark = faXmark;
@@ -80,6 +103,10 @@ export class Objectives extends ObjectiveForm {
   protected readonly result = this.objectivesStore.matrixResult;
   protected readonly typeOptions = objectiveTypeOptions;
   protected readonly unitOptions = this.settingsStore.objectiveUnitOptions;
+
+  protected readonly hostClass = computed(() =>
+    host({ pin: this.preferencesStore.pinObjectives() }),
+  );
 
   addObjective(value: ObjectiveBase): void {
     this.objectivesStore.add(value);
