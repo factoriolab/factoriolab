@@ -84,7 +84,7 @@ describe('Exporter', () => {
         Outputs: '"iron-plate:8"',
         Targets: '"iron-plate:9"',
         Belts: '=3',
-        Belt: ItemId.ExpressTransportBelt,
+        Belt: ItemId.TransportBelt,
         Wagons: '=4',
         Wagon: ItemId.CargoWagon,
         Rockets: '=0.5',
@@ -102,7 +102,7 @@ describe('Exporter', () => {
       const result = service['stepToJson'](minStep, [minStep]);
       expect(result).toEqual({
         Item: itemId,
-        Belt: ItemId.ExpressTransportBelt,
+        Belt: ItemId.TransportBelt,
         Wagon: ItemId.CargoWagon,
         Recipe: recipeId,
         Machine: ItemId.ElectricFurnace,

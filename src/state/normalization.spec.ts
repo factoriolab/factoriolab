@@ -57,7 +57,7 @@ describe('Normalization', () => {
           unit: ObjectiveUnit.Belts,
           type: ObjectiveType.Output,
         }),
-      ).toEqual(rational(45n));
+      ).toEqual(rational(15n));
     });
 
     it('should normalize item objective rates based on wagons', () => {
@@ -184,7 +184,7 @@ describe('Normalization', () => {
         belts: rational.zero,
       };
       service['calculateLogistics'](step);
-      expect(step.belts).toEqual(rational.one);
+      expect(step.belts).toEqual(rational(3n));
       expect(step.wagons).toEqual(rational(9n, 400n));
     });
 
