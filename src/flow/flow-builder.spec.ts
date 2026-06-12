@@ -45,7 +45,6 @@ describe('FlowService', () => {
     it('should call to build the graph', () => {
       spyOn<any>(service, 'buildGraph');
       spyOn(service['objectivesStore'], 'steps').and.returnValue(mocks.steps());
-      service['settingsStore'].iconColor.set({});
       expect(service.flowData()).toBeUndefined();
       expect(service['buildGraph']).toHaveBeenCalled();
     });
@@ -67,7 +66,6 @@ describe('FlowService', () => {
         '/m',
         mocks.settingsStore.settings(),
         mocks.preferencesStore.state(),
-        {},
         mocks.recipesStore.adjustedDataset(),
       );
 
@@ -85,7 +83,6 @@ describe('FlowService', () => {
             linkText: LinkValue.None,
           }),
         }),
-        {},
         mocks.recipesStore.adjustedDataset(),
       );
 
@@ -102,7 +99,6 @@ describe('FlowService', () => {
         '/m',
         mocks.settingsStore.settings(),
         mocks.preferencesStore.state(),
-        {},
         mocks.recipesStore.adjustedDataset(),
       );
 
@@ -122,7 +118,6 @@ describe('FlowService', () => {
           ...mocks.preferencesStore.state(),
           flowSettings: { ...initialFlowSettings, hideExcluded: true },
         },
-        {},
         mocks.recipesStore.adjustedDataset(),
       );
 
@@ -143,7 +138,6 @@ describe('FlowService', () => {
         '/m',
         mocks.settingsStore.settings(),
         mocks.preferencesStore.state(),
-        {},
         data,
       );
 
@@ -161,7 +155,6 @@ describe('FlowService', () => {
         '/m',
         mocks.settingsStore.settings(),
         mocks.preferencesStore.state(),
-        {},
         mocks.recipesStore.adjustedDataset(),
       );
 

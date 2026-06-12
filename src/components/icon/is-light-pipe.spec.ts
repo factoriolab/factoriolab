@@ -17,12 +17,13 @@ describe('IsLightPipe', () => {
 
   describe('transform', () => {
     it('should determine whether a color is light enough to require inversion against a light background', () => {
-      expect(pipe.transform('id', { id: '#000' })).toBeFalse();
-      expect(pipe.transform('id', { id: '#fff' })).toBeTrue();
+      expect(pipe.transform('#000')).toBeFalse();
+      expect(pipe.transform('#fff')).toBeTrue();
     });
 
     it('should handle an invalid icon', () => {
-      expect(pipe.transform('id', undefined)).toBeFalse();
+      expect(pipe.transform(undefined)).toBeFalse();
+      expect(pipe.transform('123')).toBeFalse();
     });
   });
 });

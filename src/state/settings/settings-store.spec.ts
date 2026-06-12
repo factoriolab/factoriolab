@@ -91,6 +91,11 @@ describe('SettingsStore', () => {
       TestBed.tick();
       expect(service.modData()).toBeUndefined();
     });
+
+    it('should handle custom data', () => {
+      service.apply({ modId: CUSTOM_MOD });
+      expect(service.modData()).toBeUndefined();
+    });
   });
 
   describe('modHash', () => {
@@ -198,6 +203,14 @@ describe('SettingsStore', () => {
     });
   });
 
+  describe('iconPath', () => {
+    it('should get a custom mod path', () => {
+      service.apply({ modId: CUSTOM_MOD });
+      spyOn(service, 'customIconsUrl').and.returnValue('test');
+      expect(service.iconPath()).toEqual('test');
+    });
+  });
+
   describe('linkValueOptions', () => {
     it('should return the list of link value options', () => {
       expect(service.linkValueOptions().length).toEqual(6);
@@ -258,16 +271,6 @@ describe('SettingsStore', () => {
   describe('modMenuItem', () => {
     it('should create a mod menu item', () => {
       expect(service.modMenuItem().label).toEqual(mockModInfo.name);
-    });
-  });
-
-  describe('setCustomData', () => {
-    it('should write data and hash', () => {
-      spyOn(service.customData, 'set');
-      spyOn(service.customHash, 'set');
-      service.setCustomData(JSON.stringify(mockModData));
-      expect(service.customData.set).toHaveBeenCalled();
-      expect(service.customHash.set).toHaveBeenCalled();
     });
   });
 

@@ -1,7 +1,6 @@
 import { httpResource } from '@angular/common/http';
-import { computed, effect, inject, resource, Service } from '@angular/core';
+import { computed, effect, inject, Service } from '@angular/core';
 import { faDatabase } from '@fortawesome/free-solid-svg-icons';
-import { FastAverageColor } from 'fast-average-color';
 
 import { DEFAULT_MOD, modOptions, modRecord } from '~/data/datasets';
 import { CUSTOM_MOD, Game } from '~/data/game';
@@ -33,7 +32,6 @@ import { Technology } from '~/data/schema/technology';
 import { LinkOption } from '~/option/link-option';
 import { getIdOptions, Option, OptionParams } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
-import { emptyModHash, updateHash } from '~/utils/hash';
 import { localForageResource } from '~/utils/local-forage-resource';
 import { log } from '~/utils/log';
 import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
@@ -186,32 +184,6 @@ export class SettingsStore extends Store<SettingsState> {
     const modId = coalesce(info?.id, DEFAULT_MOD);
     if (modId === CUSTOM_MOD) return this.customIconsUrl();
     return `data/${modId}/icons.webp`;
-  });
-
-  private readonly fac = new FastAverageColor();
-  readonly iconColor = resource({
-    params: () => ({ modData: this.modData(), iconPath: this.iconPath() }),
-    loader: async ({ params: { modData, iconPath } }) => {
-      if (modData == null || !iconPath) return null;
-      const img = document.createElement('img');
-      img.src = iconPath;
-
-      const colors = await Promise.all(
-        modData.icons.map(async (icon) => {
-          return await this.fac.getColorAsync(img, {
-            top: icon.y,
-            left: icon.x,
-            width: 64,
-            height: 64,
-          });
-        }),
-      );
-
-      return modData.icons.reduce<Record<string, string>>((a, b, i) => {
-        a[b.id] = colors[i].hex;
-        return a;
-      }, {});
-    },
   });
 
   readonly dataset = computed(() =>
@@ -373,19 +345,6 @@ export class SettingsStore extends Store<SettingsState> {
       const mod = this.modInfo();
       if (mod) log('set_game', mod.game);
     });
-  }
-
-  setCustomData(json: string): void {
-    try {
-      const data = JSON.parse(json) as ModData;
-      this.customData.set(data);
-      const hashJson = this.customHash.value();
-      const hash = hashJson ?? emptyModHash();
-      updateHash(data, hash);
-      this.customHash.set(hash);
-    } catch {
-      // Do nothing
-    }
   }
 
   private computeDefaults(

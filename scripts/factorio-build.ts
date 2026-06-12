@@ -1,3 +1,4 @@
+import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
@@ -312,6 +313,7 @@ async function processMod(): Promise<void> {
   const iconSet = new Set<string>();
   // Record of file path : icon id
   const iconFiles: Record<string, string> = {};
+  const iconColors: Record<string, string> = {};
 
   async function resizeQualityIcon(
     path: string,
@@ -334,8 +336,10 @@ async function processMod(): Promise<void> {
 
   async function resizeIcon(path: string, iconId: string): Promise<void> {
     const outPath = `${tempIconsPath}/${iconId}.png`;
+    const color = await getAverageColor(path, { mode: 'precision' });
     await sharp(path).resize(64, 64).png().toFile(outPath);
     iconFiles[outPath] = iconId;
+    iconColors[outPath] = color.hex;
   }
 
   async function getIcon(
@@ -2348,7 +2352,12 @@ async function processMod(): Promise<void> {
   function finalize(result: spritesmith.SpritesmithResult): void {
     modData.icons = Object.keys(result.coordinates).map((file) => {
       const coords = result.coordinates[file];
-      return { id: iconFiles[file], x: coords.x, y: coords.y };
+      return {
+        id: iconFiles[file],
+        x: coords.x,
+        y: coords.y,
+        color: iconColors[file],
+      };
     });
 
     logTime('Writing data');

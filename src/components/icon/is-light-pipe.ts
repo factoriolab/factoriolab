@@ -3,13 +3,13 @@ import * as Color from 'color-bits';
 
 @Pipe({ name: 'isLight' })
 export class IsLightPipe implements PipeTransform {
-  transform(
-    iconId: string,
-    iconColor: Record<string, string> | null | undefined,
-  ): boolean {
-    const value = iconColor?.[iconId];
-    if (!value) return false;
-    const color = Color.parse(value);
-    return Color.getLuminance(color) > 0.9;
+  transform(color: string | undefined): boolean {
+    if (!color) return false;
+    try {
+      const parsed = Color.parse(color);
+      return Color.getLuminance(parsed) > 0.9;
+    } catch {
+      return false;
+    }
   }
 }

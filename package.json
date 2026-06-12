@@ -34,6 +34,7 @@
     "minify-data": "bun scripts/minify-data.ts",
     "sync-i18n": "bun scripts/sync-i18n.ts",
     "update-hash": "bun scripts/update-hash.ts",
+    "update-color": "bun scripts/update-color.ts",
     "migrate": "bun scripts/migrate.ts"
   },
   "dependencies": {
@@ -77,6 +78,7 @@
     "bun": "^1.3.3",
     "eslint": "^10.3.0",
     "eslint-plugin-simple-import-sort": "^13.0.0",
+    "fast-average-color-node": "^3.2.0",
     "handlebars": "^4.7.9",
     "istanbul-lib-instrument": "^6.0.3",
     "jasmine-core": "^6.3.0",

@@ -3,7 +3,6 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NgModule } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { FastAverageColorResult } from 'fast-average-color';
 
 import { SIMPLEX_CONFIG } from '~/solver/simplex-config';
 import { SettingsStore } from '~/state/settings/settings-store';
@@ -33,9 +32,6 @@ import { mockLangData, mockModData, mockModHash } from './mocks/data';
         settingsStore.apply({ modId: '2.0', preset: 8 });
         settingsStore['modDataResource'].set(mockModData);
         settingsStore['modHashResource'].set(mockModHash);
-        settingsStore['fac'].getColorAsync =
-          (): Promise<FastAverageColorResult> =>
-            Promise.resolve({ hex: '#000000' } as FastAverageColorResult);
         return settingsStore;
       },
     },
