@@ -116,6 +116,11 @@ export class TooltipOverlay {
 
   protected readonly data = this.recipesStore.adjustedDataset;
   protected readonly rational = rational;
+  protected readonly hasEffects = Object.entries(
+    this.tooltipData.adjustedRecipe?.effects ?? {},
+  ).some(([eff, val]) =>
+    eff === 'quality' ? val.nonzero() : !val.eq(rational.one),
+  );
 
   /**
    * Assume preferred position is taken instead of waiting, so that content is

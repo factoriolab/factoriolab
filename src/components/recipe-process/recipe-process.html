@@ -22,7 +22,7 @@
   @if (r.producers?.length) {
     <div>
       <div class="mt-1 text-sm">{{ 'data.producers' | translate }}</div>
-      <div>
+      <div class="flex items-center">
         @for (producer of r.producers; track producer) {
           @if (data().itemRecord[producer].quality == null) {
             <div

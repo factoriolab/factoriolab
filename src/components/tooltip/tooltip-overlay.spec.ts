@@ -5,6 +5,7 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EMPTY, Subject } from 'rxjs';
 
+import { rational } from '~/rational/rational';
 import { ItemId } from '~/tests/item-id';
 import { RecipeId } from '~/tests/recipe-id';
 import { TestModule } from '~/tests/test-module';
@@ -73,6 +74,15 @@ describe('TooltipOverlay', () => {
             type: 'recipe',
             defaultPosition: STANDARD_DROPDOWN_BELOW_POSITIONS[0],
             positionChanges: EMPTY,
+            adjustedRecipe: {
+              effects: {
+                consumption: rational.one,
+                pollution: rational.one,
+                productivity: rational.one,
+                quality: rational.one,
+                speed: rational.one,
+              },
+            },
           },
         },
       ],
