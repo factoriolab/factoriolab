@@ -37,7 +37,7 @@
     "migrate": "bun scripts/migrate.ts"
   },
   "dependencies": {
-    "@angular/cdk": "^21.2.10",
+    "@angular/cdk": "^22.0.0",
     "@angular/common": "^22.0.0",
     "@angular/compiler": "^22.0.0",
     "@angular/core": "^22.0.0",
