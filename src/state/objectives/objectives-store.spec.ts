@@ -157,7 +157,7 @@ describe('ObjectivesStore', () => {
       const result = service.totals();
       expect(result).toEqual({
         belts: {
-          [ItemId.ExpressTransportBelt]: {
+          [ItemId.TransportBelt]: {
             total: rational.one,
             iconType: 'item',
             tooltipType: 'belt',
@@ -293,7 +293,7 @@ describe('ObjectivesStore', () => {
               items: rational.one,
               itemId: ItemId.ElectronicCircuit,
               belts: undefined,
-              beltId: ItemId.ExpressTransportBelt,
+              beltId: ItemId.TransportBelt,
               stack: rational.one,
               wagons: undefined,
               wagonId: ItemId.CargoWagon,
@@ -312,7 +312,7 @@ describe('ObjectivesStore', () => {
               items: rational.one,
               itemId: ItemId.ElectronicCircuit,
               belts: undefined,
-              beltId: ItemId.ExpressTransportBelt,
+              beltId: ItemId.TransportBelt,
               stack: rational.one,
               wagons: undefined,
               wagonId: ItemId.CargoWagon,
@@ -338,7 +338,7 @@ describe('ObjectivesStore', () => {
               items: rational.one,
               itemId: ItemId.ElectronicCircuit,
               belts: undefined,
-              beltId: ItemId.ExpressTransportBelt,
+              beltId: ItemId.TransportBelt,
               stack: rational.one,
               wagons: undefined,
               wagonId: ItemId.CargoWagon,
@@ -357,7 +357,7 @@ describe('ObjectivesStore', () => {
               items: rational.one,
               itemId: ItemId.ElectronicCircuit,
               belts: undefined,
-              beltId: ItemId.ExpressTransportBelt,
+              beltId: ItemId.TransportBelt,
               stack: rational.one,
               wagons: undefined,
               wagonId: ItemId.CargoWagon,

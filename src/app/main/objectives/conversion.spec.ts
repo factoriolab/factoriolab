@@ -184,7 +184,7 @@ describe('Conversion', () => {
       );
       expect(service['objectivesStore'].updateRecord).toHaveBeenCalledWith(
         '1',
-        { value: rational(1n, 2700n) },
+        { value: rational(1n, 900n) },
       );
     });
 

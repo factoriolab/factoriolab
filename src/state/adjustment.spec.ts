@@ -611,7 +611,7 @@ describe('Adjustment', () => {
         ] as AdjustedRecipe,
         {
           out: { [ItemId.ElectronicCircuit]: rational.one },
-          time: rational(1n, 90n),
+          time: rational(1n, 30n),
           drain: rational(5n),
           consumption: rational(150n),
           pollution: rational(1n, 20n),
