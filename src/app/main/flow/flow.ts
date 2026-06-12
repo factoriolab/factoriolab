@@ -2,15 +2,16 @@ import { Dialog } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   ElementRef,
   inject,
   signal,
   viewChild,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { faFileArrowDown, faGear } from '@fortawesome/free-solid-svg-icons';
 import { drag, select, Selection, zoom } from 'd3';
 import ELK, { ElkExtendedEdge, ElkNode } from 'elkjs';
+import { combineLatest, debounceTime, switchMap } from 'rxjs';
 
 import { Button } from '~/components/button/button';
 import { FlowSettingsDialog } from '~/components/flow-settings-dialog/flow-settings-dialog';
@@ -85,11 +86,15 @@ export class Flow {
   protected readonly FlowSettingsDialog = FlowSettingsDialog;
 
   constructor() {
-    effect(() => {
-      const data = this.flowBuilder.flowData();
-      const settings = this.preferencesStore.flowSettings();
-      void this.rebuildChart(data, settings);
-    });
+    combineLatest({
+      data: toObservable(this.flowBuilder.flowData),
+      settings: toObservable(this.preferencesStore.flowSettings),
+    })
+      .pipe(
+        debounceTime(200),
+        switchMap(({ data, settings }) => this.rebuildChart(data, settings)),
+      )
+      .subscribe();
   }
 
   async rebuildChart(
