@@ -7,6 +7,7 @@ export interface IconJson {
   id: string;
   x: number;
   y: number;
+  color: string;
 }
 
 export interface IconBase extends IconJson {
@@ -26,6 +27,7 @@ export function parseIcon(json: IconJson): IconBase {
     id: json.id,
     x: json.x,
     y: json.y,
+    color: json.color,
     position: `-${json.x}px -${json.y}px`,
     viewBox: `${json.x} ${json.y} 64 64`,
   };
@@ -40,6 +42,7 @@ export function parseIconData(
     id: icon.id,
     x: icon.x,
     y: icon.y,
+    color: icon.color,
     position: icon.position,
     viewBox: icon.viewBox,
     file,

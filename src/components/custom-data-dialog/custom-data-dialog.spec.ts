@@ -39,25 +39,52 @@ describe('CustomDataDialog', () => {
   });
 
   describe('save', () => {
-    it('should save the data and icons file to the settingsStore', () => {
+    it('should save the data and icons file to the settingsStore', async () => {
       component['dataFile'] = new Blob(['text'], { type: 'text/plain' }) as any;
       component['iconsFile'] = 'iconsFile' as any;
-      spyOn(component['settingsStore'], 'setCustomData');
+      spyOn(component['settingsStore'], 'customIconsUrl').and.returnValue(
+        'url',
+      );
+      spyOn(component['settingsStore'].customData, 'set');
       spyOn(component['settingsStore'].customIcons, 'set');
+      spyOn(component['settingsStore'].customData, 'value').and.returnValue(
+        {} as any,
+      );
+      spyOn<any>(component, 'updateColors').and.returnValue(Promise.resolve());
       const fileReader = {
         onload: (_: any): void => {},
         readAsText: (): void => {
-          fileReader.onload({ target: { result: 'text' } });
+          fileReader.onload({
+            target: { result: '{"items":[],"recipes":[]}' },
+          });
         },
       };
       spyOn(window, 'FileReader').and.returnValue(fileReader as any);
-      component.save();
-      expect(component['settingsStore'].setCustomData).toHaveBeenCalledWith(
-        'text',
-      );
+      await component.save();
+      expect(component['updateColors']).toHaveBeenCalledTimes(2);
+      expect(component['settingsStore'].customData.set).toHaveBeenCalledWith({
+        items: [],
+        recipes: [],
+      } as any);
       expect(component['settingsStore'].customIcons.set).toHaveBeenCalledWith(
         'iconsFile' as any,
       );
+    });
+  });
+
+  describe('updateColors', () => {
+    it('should fill in colors', async () => {
+      const fac = {
+        getColorAsync: (): Promise<{ hex: string }> => {
+          return Promise.resolve({ hex: '#000' });
+        },
+      };
+      spyOn(fac, 'getColorAsync').and.callThrough();
+      (component as any).fac = fac;
+      const data = { icons: [{ id: 'id', color: '' }] };
+      await component['updateColors'](data as any, 'icons');
+      expect(fac.getColorAsync).toHaveBeenCalled();
+      expect(data.icons[0].color).toEqual('#000');
     });
   });
 });

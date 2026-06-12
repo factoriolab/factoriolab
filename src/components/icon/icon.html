@@ -4,7 +4,7 @@
     [class.scale-50]="!full()"
     [style.background-image]="icon.image"
     [style.background-position]="icon.position"
-    [class.light:invert]="icon.id | isLight: settingsStore.iconColor.value()"
+    [class.light:invert]="icon.color | isLight"
   >
   </span>
 
