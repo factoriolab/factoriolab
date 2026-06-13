@@ -1,26 +1,26 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { TestModule } from '~/tests/test-module';
-// import { setInputs } from '~/tests/utils';
+import { TestModule } from '~/tests/test-module';
+import { setInputs } from '~/tests/utils';
 
-// import { Detail } from './detail';
+import { Detail } from './detail';
 
-// describe('Detail', () => {
-//   let component: Detail;
-//   let fixture: ComponentFixture<Detail>;
+describe('Detail', () => {
+  let component: Detail;
+  let fixture: ComponentFixture<Detail>;
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [TestModule, Detail],
-//     }).compileComponents();
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestModule, Detail],
+    }).compileComponents();
 
-//     fixture = TestBed.createComponent(Detail);
-//     setInputs(fixture, { crumbs: [], obj: undefined, type: 'system' });
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+    fixture = TestBed.createComponent(Detail);
+    setInputs(fixture, { crumbs: [], obj: undefined, type: 'system' });
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

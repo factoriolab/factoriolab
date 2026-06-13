@@ -691,7 +691,7 @@
         @let detail = objectivesStore.stepDetails()[step.id];
         @for (section of stepDetailSections; track section) {
           @if (detail[section].length) {
-            <tr class="detail">
+            <tr class="*:bg-gray-950/75">
               <td [colSpan]="leftSpan()" class="p-0">
                 <div class="flex items-center justify-end">
                   <lab-checkbox
