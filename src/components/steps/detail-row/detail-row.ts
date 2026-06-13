@@ -40,7 +40,7 @@ import { PercentPadPipe } from './percent-pad-pipe';
   ],
   templateUrl: './detail-row.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'detail' },
+  host: { class: '*:bg-gray-950/75' },
 })
 export class DetailRow {
   private readonly recipesStore = inject(RecipesStore);
