@@ -98,7 +98,7 @@
           [state]="tableStore.state()"
           (stateChange)="tableStore.set($event)"
           undoTooltip="steps.rocketsUndoTooltip"
-          (undo)="itemsStore.resetFields('wagonId')"
+          (undo)="itemsStore.resetFields('excludeRockets')"
         ></th>
       }
       <!-- Inserters (Value & Icon) -->
