@@ -67,7 +67,7 @@
           [options]="settingsStore.stateOptions()"
           [dirty]="currentState() !== selectedState()"
           placeholder="preferences.selectSavedState"
-          [ngModel]="selectedState()"
+          [(ngModel)]="selectedState"
           (ngModelChange)="setState($event)"
         ></lab-select>
         @if (selectedState(); as state) {
