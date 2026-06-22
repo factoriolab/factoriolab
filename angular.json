@@ -95,11 +95,14 @@
             "codeCoverage": true,
             "codeCoverageExclude": ["src/tests/**/*"],
             "assets": [
-              { "glob": "**/*", "input": "public" },
+              {
+                "glob": "**/*",
+                "input": "public",
+                "ignore": ["**/defaults.json"]
+              },
               {
                 "glob": "glpk.all.wasm",
-                "input": "node_modules/glpk-wasm/dist/",
-                "output": "/assets/glpk-wasm/"
+                "input": "node_modules/glpk-wasm/dist/"
               }
             ],
             "styles": ["src/styles.css"]

@@ -7,10 +7,11 @@
         <ng-template #effectRow let-label="label" let-value="value">
           @if (!value.eq(rational.one)) {
             <tr
-              [class.text-orange-500]="
+              [class.text-complement-500]="
                 (data().flags.has('minimumFactor') &&
                   value.eq(adjustment.minFactor)) ||
-                (data().flags.has('maximumFactor') &&
+                (label === 'data.productivity' &&
+                  data().flags.has('maximumFactor') &&
                   !recipe.flags.has('mining') &&
                   !recipe.flags.has('technology') &&
                   value.eq(adjustment.maxFactor))

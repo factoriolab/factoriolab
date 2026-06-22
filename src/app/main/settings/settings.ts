@@ -7,10 +7,12 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
   inject,
+  Injector,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -109,6 +111,7 @@ const host = cva(
   host: { '[class]': 'hostClass()' },
 })
 export class Settings {
+  private readonly injector = inject(Injector);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   protected readonly dialog = inject(Dialog);
@@ -177,9 +180,12 @@ export class Settings {
     );
 
     // Reset control value
-    queueMicrotask(() => {
-      this.addMachineValue.set(null);
-    });
+    afterNextRender(
+      () => {
+        this.addMachineValue.set(null);
+      },
+      { injector: this.injector },
+    );
   }
 
   changeMachine(index: number, value: string): void {

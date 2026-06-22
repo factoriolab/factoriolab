@@ -44,7 +44,7 @@ describe('Solver', () => {
   });
 
   beforeEach(async () => {
-    await loadModule('/assets/glpk-wasm/glpk.all.wasm');
+    await loadModule('glpk.all.wasm');
     TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(Solver);
     settingsStore = TestBed.inject(SettingsStore);

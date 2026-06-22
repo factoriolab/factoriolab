@@ -30,7 +30,7 @@
     @if (value().belts; as belts) {
       <div class="flex items-center justify-end">
         <span class="font-mono whitespace-pre">{{
-          belts.div(factor()) | rate: cols().belts.precision
+          belts.div(safeFactor()) | rate: cols().belts.precision
         }}</span>
       </div>
     }
@@ -59,7 +59,7 @@
     @if (value().wagons; as wagons) {
       <div class="flex items-center justify-end">
         <span class="font-mono whitespace-pre">{{
-          wagons.div(factor()) | rate: cols().wagons.precision
+          wagons.div(safeFactor()) | rate: cols().wagons.precision
         }}</span>
       </div>
     }
@@ -92,7 +92,7 @@
         labTooltip="steps.inserterCountTooltip"
       >
         <span class="font-mono whitespace-pre"
-          >{{ count.div(factor()) | rate: cols().items.precision }}*</span
+          >{{ count | rate: cols().items.precision }}*</span
         >
       </div>
     }
@@ -126,7 +126,7 @@
   ) {
     <div class="flex items-center justify-end">
       <span class="font-mono whitespace-pre">{{
-        machines.div(factor()) | rate: cols().machines.precision
+        machines.div(safeFactor()) | rate: cols().machines.precision
       }}</span>
     </div>
   }
@@ -176,7 +176,7 @@
           <fa-icon [icon]="faArrowRightLong"></fa-icon>
         </div>
         <span class="font-mono whitespace-pre">{{
-          percent.div(factor()) | rate: -2 | percentPad
+          percent.div(safeFactor()) | rate: -2 | percentPad
         }}</span>
         @if (value().destId; as destId) {
           <lab-icon

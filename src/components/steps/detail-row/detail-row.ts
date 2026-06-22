@@ -50,8 +50,19 @@ export class DetailRow {
   readonly leftSpan = input.required<number>();
   readonly factor = input<Rational>(rational.one);
 
+  /**
+   * Ceil and check nonzero in a computed, to avoid calling ceil function from
+   * the template, which would cause computations to re-run on each change
+   * detection cycle.
+   */
+  protected readonly safeFactor = computed(() => {
+    const factor = this.factor().ceil();
+    if (factor.isZero()) return rational.one;
+    return factor;
+  });
+
   protected readonly items = computed(() =>
-    this.value().items?.div(this.factor()),
+    this.value().items?.div(this.safeFactor()),
   );
 
   protected readonly inserterId = linkedSignal(() => {

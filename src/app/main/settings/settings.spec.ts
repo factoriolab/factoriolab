@@ -1,3 +1,4 @@
+import { ApplicationRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { rational } from '~/rational/rational';
@@ -39,7 +40,7 @@ describe('Settings', () => {
   });
 
   describe('addMachine', () => {
-    it('should update the set and pass to the store action', () => {
+    it('should update the set and pass to the store action, then reset the signal', async () => {
       spyOn(component['settingsStore'], 'updateField');
       component.addMachine(ItemId.AssemblingMachine2);
       expect(component['settingsStore'].updateField).toHaveBeenCalledWith(
@@ -56,6 +57,10 @@ describe('Settings', () => {
           ItemId.AssemblingMachine3,
         ],
       );
+
+      spyOn(component['addMachineValue'], 'set');
+      await TestBed.inject(ApplicationRef).whenStable();
+      expect(component['addMachineValue'].set).toHaveBeenCalledWith(null);
     });
   });
 
