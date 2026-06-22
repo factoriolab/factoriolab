@@ -188,12 +188,6 @@ export class Normalization {
 
       if (step.items != null && !itemSettings.excludeRockets) {
         const item = data.itemRecord[step.itemId];
-        if (item.rocketCapacity)
-          step.rockets = step.items.div(item.rocketCapacity);
-      }
-
-      if (step.items != null) {
-        const item = data.itemRecord[step.itemId];
         if (item.rocketCapacity?.nonzero())
           step.rockets = step.items.div(item.rocketCapacity);
       }

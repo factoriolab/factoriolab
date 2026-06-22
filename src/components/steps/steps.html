@@ -426,7 +426,10 @@
             }
           </td>
           <td>
-            @if (step.rockets && step.itemId) {
+            @if (
+              step.itemId &&
+              data().itemRecord[step.itemId].rocketCapacity?.nonzero()
+            ) {
               <div class="flex items-center">
                 @let excluded =
                   itemsStore.settings()[step.itemId].excludeRockets;
