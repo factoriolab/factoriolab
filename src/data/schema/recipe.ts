@@ -136,7 +136,6 @@ export function recipeHasQuality(
   const flags = new Set(recipe.flags);
   return (
     recipe.part == null &&
-    !!recipe.producers?.length &&
     !flags.has('mining') &&
     (!flags.has('technology') || Object.keys(recipe.in).length > 0) &&
     !flags.has('burn') &&
