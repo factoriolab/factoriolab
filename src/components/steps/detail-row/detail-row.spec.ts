@@ -33,6 +33,13 @@ describe('DetailRow', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('safeFactor', () => {
+    it("should ensure we don't divide by zero", () => {
+      setInputs(fixture, { factor: rational.zero });
+      expect(component['safeFactor']()).toEqual(rational.one);
+    });
+  });
+
   describe('inserterId', () => {
     it('should determine the best initial inserterId to use', async () => {
       expect(component['inserterId']()).toEqual(ItemId.FastInserter);
