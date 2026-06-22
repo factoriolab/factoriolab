@@ -746,7 +746,7 @@
                     (section === 'inputs' || section === 'outputs') &&
                     step.recipeId &&
                     perMachine[step.recipeId]
-                      ? (step.machines?.ceil() ?? rational.one)
+                      ? (step.machines ?? rational.one)
                       : rational.one
                   "
                 ></tr>
