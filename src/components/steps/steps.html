@@ -208,9 +208,8 @@
                       'ms-4': !$first,
                       'sm:ms-4.5': $first,
                       'sm:ms-6': !$first,
-                      'h-12.5': (trail || $last) && !($last && !trail),
+                      'h-12.5': trail || $last,
                       'mb-6': $last && !trail,
-                      'h-8': $last && !trail,
                     }"
                   ></div>
                 }
@@ -244,7 +243,7 @@
                     @let nextTree = objectivesStore.stepTree()[nextId];
                     @if (nextTree.length > tree.length) {
                       <span
-                        class="bottom-0 left-2 h-4 absolute -z-1 border-e-2 border-dotted border-gray-100"
+                        class="bottom-0 left-2 h-2 absolute -z-1 border-e-2 border-dotted border-gray-100"
                         [class]="{
                           'sm:left-4.5': !tree.length,
                           'sm:left-4': tree.length,
