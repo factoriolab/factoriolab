@@ -190,7 +190,13 @@ export function getLastIngredient(ingredients: ResearchIngredient[]): string {
   return ingredient[0];
 }
 
-const builtIn = new Set(['base', 'elevated-rails', 'quality', 'space-age']);
+const builtIn = new Set([
+  'base',
+  'elevated-rails',
+  'quality',
+  'space-age',
+  'recycler',
+]);
 export function getVersion(
   modsPath: string,
   factorioPath: string,

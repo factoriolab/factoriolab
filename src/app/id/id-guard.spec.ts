@@ -48,7 +48,7 @@ describe('idGuard', () => {
 
   it('should migrate old game shortcuts', async () => {
     const rth = await RouterTestingHarness.create('/factorio');
-    expect(router.url).toEqual('/spa');
+    expect(router.url).toEqual('/2x1');
     await rth.navigateByUrl('/final-factory');
     expect(router.url).toEqual('/ffy');
     await rth.navigateByUrl('/foundry');

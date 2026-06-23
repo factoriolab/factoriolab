@@ -9,7 +9,15 @@ export type ModuleEffect =
   | 'quality'
   | 'speed';
 
-export const effectPrecision: Record<ModuleEffect, number> = {
+export const highEffectPrecision: Record<ModuleEffect, number> = {
+  consumption: 4,
+  pollution: 4,
+  productivity: 4,
+  quality: 4,
+  speed: 4,
+};
+
+export const lowEffectPrecision: Record<ModuleEffect, number> = {
   consumption: 2,
   pollution: 2,
   productivity: 2,

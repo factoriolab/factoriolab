@@ -5,8 +5,9 @@ import { AdjustedInserter } from '~/data/schema/inserter';
 import { itemHasQuality } from '~/data/schema/item';
 import { Machine } from '~/data/schema/machine';
 import {
-  effectPrecision,
   effects,
+  highEffectPrecision,
+  lowEffectPrecision,
   ModuleEffect,
   SOMERSLOOP,
 } from '~/data/schema/module';
@@ -55,6 +56,9 @@ export class Adjustment {
     settings: Settings,
     data: Dataset,
   ): AdjustedRecipe {
+    const effectPrecision = data.flags.has('lowEffectPrecision')
+      ? lowEffectPrecision
+      : highEffectPrecision;
     const recipe = spread(
       cloneRecipe(data.recipeRecord[recipeId]) as AdjustedRecipe,
       {

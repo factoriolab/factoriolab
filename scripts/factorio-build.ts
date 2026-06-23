@@ -12,8 +12,8 @@ import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import { ModI18n } from '~/data/schema/mod-i18n';
 import {
-  effectPrecision,
   goodNegativeEffects,
+  highEffectPrecision,
   ModuleEffect,
 } from '~/data/schema/module';
 import { QualityJson } from '~/data/schema/quality';
@@ -456,6 +456,18 @@ async function processMod(): Promise<void> {
     }
   }
 
+  function getProducers(type: ProducerType, categories: string[]): string[] {
+    const result = new Set<string>();
+    for (const category of categories) {
+      const producers = producersMap[type][category];
+      if (producers) {
+        for (const producer of producers) result.add(producer);
+      }
+    }
+
+    return Array.from(result);
+  }
+
   function processProducers(proto: MachineProto, name: string): void {
     if (isMiningDrillPrototype(proto))
       addProducers(name, proto.resource_categories, 'resource');
@@ -561,7 +573,13 @@ async function processMod(): Promise<void> {
 
         if (amount == null) continue;
 
-        if (product.probability) amount = amount * product.probability;
+        if (product.independent_probability)
+          amount = amount * product.independent_probability;
+
+        if (product.shared_probability)
+          amount =
+            amount *
+            (product.shared_probability.max - product.shared_probability.min);
 
         if (isItemProductPrototype(product) && product.extra_count_fraction)
           amount += product.extra_count_fraction;
@@ -824,8 +842,8 @@ async function processMod(): Promise<void> {
     // Process recycling recipes later, after determining included items
     // In Krastorio2, crushing is similar to recycling
     if (
-      recipe.category === 'recycling' ||
-      recipe.category === 'kr-void-crushing'
+      recipe.categories?.includes('recycling') ||
+      recipe.categories?.includes('kr-void-crushing')
     )
       continue;
 
@@ -942,8 +960,8 @@ async function processMod(): Promise<void> {
 
     const recipe = dataRaw.recipe[key];
     if (
-      recipe.category !== 'recycling' &&
-      recipe.category !== 'kr-void-crushing'
+      !recipe.categories?.includes('recycling') &&
+      !recipe.categories?.includes('kr-void-crushing')
     )
       continue;
 
@@ -1310,21 +1328,21 @@ async function processMod(): Promise<void> {
 
       // Parse module
       if (isModulePrototype(proto)) {
-        let quality: number | undefined;
-        if (proto.effect.quality) quality = proto.effect.quality / 10;
         item.module = {
           consumption: proto.effect.consumption || undefined,
           pollution: proto.effect.pollution || undefined,
           productivity: proto.effect.productivity || undefined,
-          quality,
+          quality: proto.effect.quality || undefined,
           speed: proto.effect.speed || undefined,
         };
 
         for (const quality of abnormalQualities) {
           const multiplier = getDefaultMultiplier(quality);
-          for (const eff of Object.keys(effectPrecision) as ModuleEffect[]) {
+          for (const eff of Object.keys(
+            highEffectPrecision,
+          ) as ModuleEffect[]) {
             let value = item.module[eff] as number;
-            const precision = 10 ** effectPrecision[eff];
+            const precision = 10 ** highEffectPrecision[eff];
             if (value && !filterEffect(eff, value)) {
               value = value * multiplier;
               value = Math.floor(value * precision) / precision;
@@ -1467,7 +1485,10 @@ async function processMod(): Promise<void> {
         }
       }
 
-      let producers = producersMap.crafting[proto.category ?? 'crafting'];
+      let producers = getProducers(
+        'crafting',
+        proto.categories ?? ['crafting'],
+      );
       if (producers != null) {
         // Ensure producers have sufficient fluid boxes
         const fluidIngredients = Object.keys(recipeIn)
@@ -1566,7 +1587,7 @@ async function processMod(): Promise<void> {
         const flags: RecipeFlag[] = [];
 
         if (recipesLocked.has(proto.name)) flags.push('locked');
-        if (proto.category === 'recycling') flags.push('recycling');
+        if (proto.categories?.includes('recycling')) flags.push('recycling');
 
         if (flags.length) recipe.flags = flags;
 
@@ -1698,7 +1719,10 @@ async function processMod(): Promise<void> {
               partRecipes.push(
                 ...Object.keys(dataRaw.recipe)
                   .map((r) => dataRaw.recipe[r])
-                  .filter((r) => categories.includes(r.category ?? 'crafting')),
+                  .filter((r) => {
+                    const recipeCategories = r.categories ?? ['crafting'];
+                    return categories.some((c) => recipeCategories.includes(c));
+                  }),
               );
             }
 
@@ -1850,10 +1874,11 @@ async function processMod(): Promise<void> {
   // https://lua-api.factorio.com/latest/auxiliary/item-weight.html
   const defaultItemWeight =
     dataRaw['utility-constants'].default.default_item_weight;
-  const rocketLiftWeight =
-    dataRaw['utility-constants'].default.rocket_lift_weight;
+  const defaultRocketLiftWeight =
+    dataRaw['utility-constants'].default.default_rocket_lift_weight;
   const categoryOrder = (recipe: RecipePrototype): string =>
-    dataRaw['recipe-category'][recipe.category ?? 'crafting'].order ?? '';
+    dataRaw['recipe-category'][(recipe.categories ?? ['crafting'])[0]].order ??
+    '';
   const subgroupOrder = (recipe: RecipePrototype): string =>
     dataRaw['item-subgroup'][getSubgroup(recipe)].order ?? '';
   const itemWeightBeingComputed = new Set<string>();
@@ -1917,7 +1942,13 @@ async function processMod(): Promise<void> {
       if (product.type === 'item') {
         const min = product.amount_min ?? product.amount ?? 0;
         const max = product.amount_max ?? product.amount ?? 0;
-        productCount += (product.probability ?? 1) * 0.5 * (min + max);
+        let amount = (product.independent_probability ?? 1) * 0.5 * (min + max);
+        if (product.shared_probability) {
+          amount *=
+            product.shared_probability.max - product.shared_probability.min;
+        }
+
+        productCount += amount;
       }
     }
     if (productCount === 0) return defaultItemWeight;
@@ -1930,20 +1961,25 @@ async function processMod(): Promise<void> {
       (recipeWeight / productCount) *
       (item.ingredient_to_weight_coefficient ?? 0.5);
     if (!chosenRecipe.allow_productivity) {
-      const simpleResult = rocketLiftWeight / item.stack_size;
+      const simpleResult = defaultRocketLiftWeight / item.stack_size;
       if (simpleResult >= intermediateResult) return simpleResult;
     }
 
-    const stackAmount = rocketLiftWeight / intermediateResult / item.stack_size;
+    const stackAmount =
+      defaultRocketLiftWeight / intermediateResult / item.stack_size;
     if (stackAmount <= 1) return intermediateResult;
-    else return rocketLiftWeight / Math.floor(stackAmount) / item.stack_size;
+    else
+      return (
+        defaultRocketLiftWeight / Math.floor(stackAmount) / item.stack_size
+      );
   }
 
   for (const item of modData.items) {
     // Skip fluids
     if (item.stack) {
       const weight = getItemWeight(item.id);
-      if (weight) item.rocketCapacity = Math.floor(rocketLiftWeight / weight);
+      if (weight)
+        item.rocketCapacity = Math.floor(defaultRocketLiftWeight / weight);
     }
   }
 

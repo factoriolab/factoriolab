@@ -6,6 +6,7 @@ export type Flag =
   | 'inactiveDrain'
   | 'flowRate'
   | 'fluidCostRatio'
+  | 'lowEffectPrecision'
   | 'maximumFactor'
   | 'minimumFactor'
   | 'minimumRecipeTime'
