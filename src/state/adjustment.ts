@@ -544,15 +544,8 @@ export class Adjustment {
       let time = rocketRecipe.time.mul(factor);
 
       if (rocketMachine.silo.buffered) {
-        if (time.lt(rocketMachine.silo.launch)) {
-          console.log(
-            time,
-            rocketMachine.silo.launch,
-            time.toNumber(),
-            rocketMachine.silo.launch.toNumber(),
-          );
+        if (time.lt(rocketMachine.silo.launch))
           time = rocketMachine.silo.launch;
-        }
       } else {
         time = time.add(rocketMachine.silo.launch);
       }

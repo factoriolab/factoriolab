@@ -945,6 +945,38 @@ describe('Adjustment', () => {
       );
       expect(result[RecipeId.RocketPart].time).toEqual(rational(75n, 116n));
     });
+
+    it('should limit speed based on launch speed when buffered', () => {
+      adjustedRecipe[RecipeId.RocketPart].time = rational(1n, 100n);
+      const result = service.adjustSiloRecipes(
+        adjustedRecipe,
+        recipesStore.settings(),
+        settingsStore.dataset(),
+      );
+      expect(result[RecipeId.SpaceSciencePack].time).toEqual(
+        rational(1561n, 60n),
+      );
+      expect(result[RecipeId.RocketPart].time).toEqual(
+        rational(10927n, 30000n),
+      );
+    });
+
+    it('should add launch speed when unbuffered', () => {
+      adjustedRecipe[RecipeId.RocketPart].time = rational(1n, 100n);
+      const data = mocks.getDataset();
+      data.machineRecord[ItemId.RocketSilo].silo!.buffered = false;
+      const result = service.adjustSiloRecipes(
+        adjustedRecipe,
+        recipesStore.settings(),
+        data,
+      );
+      expect(result[RecipeId.SpaceSciencePack].time).toEqual(
+        rational(11227n, 420n),
+      );
+      expect(result[RecipeId.RocketPart].time).toEqual(
+        rational(11227n, 30000n),
+      );
+    });
   });
 
   describe('allowsModules', () => {
