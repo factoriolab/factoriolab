@@ -243,11 +243,15 @@ export function getMachinePollution(
   return pollution;
 }
 
-export function getMachineSilo(proto: D.MachineProto): SiloJson | undefined {
+export function getMachineSilo(
+  proto: D.MachineProto,
+  dataRaw: D.DataRawDump,
+): SiloJson | undefined {
   if (M.isRocketSiloPrototype(proto)) {
     return {
       parts: proto.rocket_parts_required,
-      launch: 0,
+      launch: getRocketLaunchTime(proto, dataRaw),
+      buffered: true,
     };
   }
 
@@ -260,10 +264,7 @@ export function getEntitySize(
   if (proto.collision_box === undefined) return [0, 0];
 
   // MapPositions can be arrays or objects
-  let left = 0,
-    top = 0,
-    right = 0,
-    bottom = 0;
+  let left: number, top: number, right: number, bottom: number;
   if (Array.isArray(proto.collision_box)) {
     const [topLeft, bottomRight] = proto.collision_box;
     [left, top] = Array.isArray(topLeft) ? topLeft : [topLeft.x, topLeft.y];
@@ -425,4 +426,43 @@ export function getRecipeDisallowedEffects(
 
 export function getDefaultMultiplier(proto: M.QualityPrototype): number {
   return proto.default_multiplier ?? 1 + 0.3 * proto.level;
+}
+
+export function getRocketLaunchTime(
+  proto: M.RocketSiloPrototype,
+  dataRaw: D.DataRawDump,
+): number {
+  const rocket = dataRaw['rocket-silo-rocket'][proto.rocket_entity];
+
+  let launch = 0;
+  // Lights blinking open
+  launch += 1 / proto.light_blinking_speed + 1;
+  // Doors opening
+  launch += 1 / proto.door_opening_speed + 1;
+  // Doors opened
+  launch += (proto.rocket_rising_delay ?? 30) + 1;
+  // Rocket rising
+  launch += 1 / rocket.rising_speed + 1;
+  // Rocket ready
+  launch += 14; // Estimate for satellite inserter swing time
+  // Launch started
+  launch += (proto.launch_wait_time ?? 120) + 1;
+  // Engine starting
+  launch += 1 / rocket.engine_starting_speed + 1;
+  // Rocket flying
+  const rocketFlightThreshold = 0.5;
+  launch +=
+    Math.log(
+      1 +
+        (rocketFlightThreshold * rocket.flying_acceleration) /
+          rocket.flying_speed,
+    ) / Math.log(1 + rocket.flying_acceleration);
+  // Lights blinking close
+  launch += 1 / proto.light_blinking_speed + 1;
+  // Doors closing
+  launch += 1 / proto.door_opening_speed + 1;
+
+  launch = Math.floor(launch + 0.5);
+
+  return launch;
 }
