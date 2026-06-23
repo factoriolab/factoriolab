@@ -63,11 +63,11 @@ describe('landingGuard', () => {
   it('should navigate to the list', async () => {
     spyOn(preferencesStore, 'bypassLanding').and.returnValue(true);
     await RouterTestingHarness.create('/?v=6');
-    expect(router.url).toEqual('/spa/list?v=6');
+    expect(router.url).toEqual('/2x1/list?v=6');
   });
 
   it('should allow navigating to the landing page', async () => {
     await RouterTestingHarness.create('/');
-    expect(router.url).toEqual('/spa');
+    expect(router.url).toEqual('/2x1');
   });
 });

@@ -3,7 +3,7 @@ import { ModInfo } from '~/data/mod';
 import { Option } from '~/option/option';
 import { toRecord } from '~/utils/record';
 
-export const DEFAULT_MOD = 'sp1';
+export const DEFAULT_MOD = '2x1';
 
 export interface Datasets {
   mods: ModInfo[];
@@ -13,7 +13,7 @@ export interface Datasets {
 
 export const datasets: Datasets = {
   mods: [
-    { id: 'sa1', name: 'Space Age', game: 'factorio' },
+    { id: '2x1', name: 'Space Age', game: 'factorio' },
     { id: '2.1', name: '2.1', game: 'factorio' },
     { id: 'spa', name: 'Space Age 2.0', game: 'factorio' },
     { id: '2.0', name: '2.0', game: 'factorio' },
@@ -73,7 +73,7 @@ export const datasets: Datasets = {
     'bob',
     'bobang',
     'dsp',
-    'sa1',
+    '2x1',
     '2.1',
     'kr2',
     'kr2sxp',
