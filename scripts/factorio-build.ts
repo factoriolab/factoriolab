@@ -12,8 +12,8 @@ import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
 import { ModI18n } from '~/data/schema/mod-i18n';
 import {
-  effectPrecision,
   goodNegativeEffects,
+  highEffectPrecision,
   ModuleEffect,
 } from '~/data/schema/module';
 import { QualityJson } from '~/data/schema/quality';
@@ -1328,21 +1328,21 @@ async function processMod(): Promise<void> {
 
       // Parse module
       if (isModulePrototype(proto)) {
-        let quality: number | undefined;
-        if (proto.effect.quality) quality = proto.effect.quality / 10;
         item.module = {
           consumption: proto.effect.consumption || undefined,
           pollution: proto.effect.pollution || undefined,
           productivity: proto.effect.productivity || undefined,
-          quality,
+          quality: proto.effect.quality || undefined,
           speed: proto.effect.speed || undefined,
         };
 
         for (const quality of abnormalQualities) {
           const multiplier = getDefaultMultiplier(quality);
-          for (const eff of Object.keys(effectPrecision) as ModuleEffect[]) {
+          for (const eff of Object.keys(
+            highEffectPrecision,
+          ) as ModuleEffect[]) {
             let value = item.module[eff] as number;
-            const precision = 10 ** effectPrecision[eff];
+            const precision = 10 ** highEffectPrecision[eff];
             if (value && !filterEffect(eff, value)) {
               value = value * multiplier;
               value = Math.floor(value * precision) / precision;
