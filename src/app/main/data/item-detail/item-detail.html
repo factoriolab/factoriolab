@@ -242,6 +242,16 @@
             <th>{{ 'data.rocketLaunchTime' | translate }}</th>
             <td>{{ silo.launch | round }}</td>
           </tr>
+          @if (silo.buffered) {
+            <tr>
+              <th>{{ 'data.buffered' | translate }}</th>
+              <td>
+                <div class="flex justify-end">
+                  <fa-icon [icon]="faCheck"></fa-icon>
+                </div>
+              </td>
+            </tr>
+          }
         }
         @if (machine.locations) {
           <tr>
@@ -465,7 +475,9 @@
         @if (inserter.ignoresBonus) {
           <tr>
             <th>{{ 'data.inserterIgnoresBonus' | translate }}</th>
-            <td><fa-icon [icon]="faCheck"></fa-icon></td>
+            <div class="flex justify-end">
+              <fa-icon [icon]="faCheck"></fa-icon>
+            </div>
           </tr>
         }
       }

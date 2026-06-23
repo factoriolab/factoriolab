@@ -531,15 +531,26 @@ export class Adjustment {
           adjustedRecipe[i].part === partId &&
           settings[i].machineId === partMachineId,
       )) {
-        adjustedRecipe[launchId].time = rocketRecipe.time
-          .mul(factor)
-          .add(rocketMachine.silo.launch);
+        let time = rocketRecipe.time.mul(factor);
+
+        if (rocketMachine.silo.buffered) {
+          if (time.lt(rocketMachine.silo.launch))
+            time = rocketMachine.silo.launch;
+        } else time = time.add(rocketMachine.silo.launch);
+
+        adjustedRecipe[launchId].time = time;
       }
 
-      rocketRecipe.time = rocketRecipe.time
-        .mul(factor)
-        .add(rocketMachine.silo.launch)
-        .div(factor);
+      let time = rocketRecipe.time.mul(factor);
+
+      if (rocketMachine.silo.buffered) {
+        if (time.lt(rocketMachine.silo.launch))
+          time = rocketMachine.silo.launch;
+      } else {
+        time = time.add(rocketMachine.silo.launch);
+      }
+
+      rocketRecipe.time = time.div(factor);
     }
 
     return adjustedRecipe;
