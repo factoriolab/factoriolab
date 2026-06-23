@@ -435,10 +435,9 @@ export function getRocketLaunchTime(
   const rocket = dataRaw['rocket-silo-rocket'][proto.rocket_entity];
 
   let launch = 0;
-  // Lights blinking open
-  launch += 1 / proto.light_blinking_speed + 1;
-  // Doors opening
-  launch += 1 / proto.door_opening_speed + 1;
+
+  // Skip steps: Lights blinking open, Doors opening
+
   // Doors opened
   launch += (proto.rocket_rising_delay ?? 30) + 1;
   // Rocket rising
@@ -457,10 +456,8 @@ export function getRocketLaunchTime(
         (rocketFlightThreshold * rocket.flying_acceleration) /
           rocket.flying_speed,
     ) / Math.log(1 + rocket.flying_acceleration);
-  // Lights blinking close
-  launch += 1 / proto.light_blinking_speed + 1;
-  // Doors closing
-  launch += 1 / proto.door_opening_speed + 1;
+
+  // Skip steps: Lights blinking close, Doors closing
 
   launch = Math.floor(launch + 0.5);
 
