@@ -8,6 +8,7 @@ export interface Options {
   cargoWagons: Option[];
   fluidWagons: Option[];
   inserters: Option[];
+  insertersAuto: Option[];
   fuels: Option[];
   modules: Option[];
   proliferatorModules: Option[];
