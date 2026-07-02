@@ -79,6 +79,12 @@
     }
   }
 
+  .icon-sprite {
+    width: 64px;
+    height: 64px;
+    zoom: tan(atan2(1rem, 16px));
+  }
+
   fa-icon {
     display: flex;
     align-items: center;
