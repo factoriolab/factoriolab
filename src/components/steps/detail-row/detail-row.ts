@@ -69,6 +69,7 @@ export class DetailRow {
     const data = this.data();
     const value = this.value();
     const items = this.items();
+    const settings = this.settingsStore.state();
     /**
      * Verify data includes inserters, step includes items, and item is not a
      * fluid
@@ -80,6 +81,12 @@ export class DetailRow {
       data.itemRecord[value.itemId].stack == null
     )
       return undefined;
+
+    if (
+      settings.inserterId !== undefined &&
+      settings.inserterId !== '' /* Optimal inserter, computed below */
+    )
+      return settings.inserterId;
 
     const inserterSpeed = this.recipesStore.inserterSpeed();
     let inserterId: string | undefined;
