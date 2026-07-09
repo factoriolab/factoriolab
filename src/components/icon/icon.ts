@@ -16,7 +16,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
 
 import { IsLightPipe } from './is-light-pipe';
 
-const host = cva('relative inline-flex shrink-0', {
+const host = cva('relative inline-flex shrink-0 overflow-hidden', {
   variants: {
     full: {
       true: 'size-16',
@@ -24,6 +24,10 @@ const host = cva('relative inline-flex shrink-0', {
     },
   },
 });
+
+const fontSize = window.getComputedStyle(document.documentElement).fontSize;
+const fontSizePx = parseInt(fontSize);
+const zoom = (fontSizePx / 16) * 100;
 
 @Component({
   selector: 'lab-icon',
@@ -41,6 +45,7 @@ export class Icon {
   readonly alt = input<string>();
   readonly full = input<boolean>(false);
 
+  protected readonly zoom = zoom;
   protected readonly hostClass = computed(() => host({ full: this.full() }));
 
   protected readonly icon = computed(() => {
