@@ -2,6 +2,7 @@
   <span
     class="size-16 absolute origin-top-left"
     [class.scale-50]="!full()"
+    [style.zoom.%]="zoom"
     [style.background-image]="icon.image"
     [style.background-position]="icon.position"
     [class.light:invert]="icon.color | isLight"
