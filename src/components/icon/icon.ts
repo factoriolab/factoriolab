@@ -25,6 +25,7 @@ const host = cva('relative inline-flex shrink-0 overflow-hidden', {
   },
 });
 
+// Account for non-standard REM values in sizing of icons by applying zoom.
 const fontSize = window.getComputedStyle(document.documentElement).fontSize;
 const fontSizePx = parseInt(fontSize);
 const zoom = (fontSizePx / 16) * 100;
