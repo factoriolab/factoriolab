@@ -1,5 +1,5 @@
-<div class="flex">
-  <div class="relative flex grow">
+<div class="gap-y-1 flex flex-wrap">
+  <div class="md:w-auto relative flex w-full grow">
     <input
       class="input square rounded-s-xs"
       [placeholder]="'filter' | translate"
@@ -11,20 +11,20 @@
     ></fa-icon>
   </div>
   <lab-checkbox
-    class="border border-s-0 border-gray-700"
+    class="md:border-s-0 md:grow-0 grow border border-gray-700"
     label="technologies.unlockAll"
     [ngModel]="allSelected()"
     (ngModelChange)="selectAll($event)"
   ></lab-checkbox>
   <lab-checkbox
-    class="border border-s-0 border-gray-700"
+    class="md:grow-0 grow border border-s-0 border-gray-700"
     label="technologies.showLabels"
     [ngModel]="preferencesStore.showTechLabels()"
     (ngModelChange)="preferencesStore.apply({ showTechLabels: $event })"
   ></lab-checkbox>
   <button
     type="button"
-    class="-ms-px"
+    class="md:grow-0 -ms-px grow"
     rounded="end"
     labButton
     [faIcon]="faFileImport"
