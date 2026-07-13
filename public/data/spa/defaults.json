@@ -10,6 +10,7 @@
       "id": 0,
       "label": "options.preset.minimum",
       "belt": "transport-belt",
+      "beltStack": 1,
       "machineRank": [
         "electric-mining-drill",
         "stone-furnace",
@@ -21,6 +22,7 @@
       "id": 1,
       "label": "options.preset.upgraded",
       "belt": "express-transport-belt",
+      "beltStack": 1,
       "machineRank": [
         "electric-mining-drill",
         "electric-furnace",
@@ -32,7 +34,6 @@
       "id": 2,
       "label": "options.preset.beacon2",
       "belt": "turbo-transport-belt",
-      "beltStack": 4,
       "machineRank": [
         "big-mining-drill",
         "foundry",
@@ -53,7 +54,6 @@
       "id": 5,
       "label": "options.quality.legendary",
       "belt": "turbo-transport-belt",
-      "beltStack": 4,
       "machineRank": [
         "big-mining-drill(5)",
         "pumpjack(5)",
