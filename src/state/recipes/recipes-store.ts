@@ -46,10 +46,12 @@ export class RecipesStore extends RecordStore<RecipeState> {
 
   readonly inserterSpeed = computed(() => {
     const data = this.adjustedDataset();
+    const options = this.settingsStore.options();
     const dispRateInfo = this.settingsStore.displayRateInfo();
 
     return (
-      data.inserterIds
+      options.inserters
+        .map((opt) => opt.value)
         .map<[string, Rational]>((id) => {
           // Calculate items/s for each inserter
           const inserter = data.adjustedInserter[id];
