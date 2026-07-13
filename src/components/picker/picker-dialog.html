@@ -1,5 +1,5 @@
-<div class="flex">
-  <div class="relative flex grow basis-2/3">
+<div class="gap-y-1 flex flex-wrap">
+  <div class="relative flex grow">
     <input
       class="input square rounded-s-xs pe-9"
       [class.rounded-e-xs]="!data().abnormalQualities.length && !multi"
@@ -27,7 +27,7 @@
 
   @if (data().abnormalQualities.length) {
     <lab-select
-      class="-ms-px basis-1/3"
+      class="-ms-px grow-0"
       [rounded]="multi ? 'none' : 'end'"
       [attr.aria-label]="'picker.qualityFilter' | translate"
       [options]="settingsStore.options().qualities"
@@ -37,7 +37,7 @@
 
   @if (multi) {
     <lab-checkbox
-      class="-ms-px border border-gray-700"
+      class="sm:grow-0 -ms-px grow border border-gray-700"
       [class.rounded-e-xs]="!recyclingSet().size"
       label="picker.includeAll"
       [ngModel]="allSelected()"
@@ -46,7 +46,7 @@
 
     @if (recyclingSet().size) {
       <lab-checkbox
-        class="rounded-e-xs -ms-px border border-gray-700"
+        class="rounded-e-xs sm:grow-0 -ms-px grow border border-gray-700"
         label="picker.includeAllRecycling"
         [ngModel]="allRecyclingSelected()"
         (ngModelChange)="selectAllRecycling($event)"
