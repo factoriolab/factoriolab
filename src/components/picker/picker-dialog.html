@@ -102,14 +102,14 @@
       color="brand"
       [faIcon]="faCheck"
       text="ok"
-      (click)="dialogRef.close(selection())"
+      (click)="dialogRef.close()"
     ></button>
     <button
       type="button"
       labButton
       [faIcon]="faXmark"
       text="cancel"
-      (click)="dialogRef.close()"
+      (click)="dialogRef.close(false)"
     ></button>
   </div>
 }

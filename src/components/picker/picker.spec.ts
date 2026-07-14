@@ -38,7 +38,8 @@ describe('Picker', () => {
   describe('pickExcludedRecipes', () => {
     it('should open the dialog and apply the result', () => {
       spyOn(service['dialog'], 'open').and.returnValue({
-        closed: of(new Set()),
+        closed: of(undefined),
+        componentInstance: { selection: () => new Set() },
       } as any);
       spyOn(service['settingsStore'], 'apply');
       service.pickExcludedRecipes();
@@ -49,10 +50,11 @@ describe('Picker', () => {
     });
   });
 
-  describe('pickExcludedItems', () => {
+  describe('pickExcludedItems and apply the result', () => {
     it('should open the dialog', () => {
       spyOn(service['dialog'], 'open').and.returnValue({
-        closed: of(new Set()),
+        closed: of(undefined),
+        componentInstance: { selection: () => new Set() },
       } as any);
       spyOn(service['settingsStore'], 'apply');
       service.pickExcludedItems();

@@ -61,13 +61,13 @@
     text="ok"
     [faIcon]="faCheck"
     color="brand"
-    (click)="save()"
+    (click)="dialogRef.close()"
   ></button>
   <button
     type="button"
     labButton
     text="cancel"
     [faIcon]="faXmark"
-    (click)="dialogRef.close()"
+    (click)="dialogRef.close(false)"
   ></button>
 </div>

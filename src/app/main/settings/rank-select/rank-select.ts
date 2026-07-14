@@ -25,11 +25,9 @@ import {
   faChevronDown,
   faGrip,
   faMagnifyingGlass,
-  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
-import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
 import { Control } from '~/components/control';
 import { FormField } from '~/components/form-field/form-field';
@@ -77,7 +75,6 @@ const host = cva(
     CdkDropList,
     OverlayModule,
     FaIconComponent,
-    Button,
     Checkbox,
     Icon,
     Ripple,
@@ -152,7 +149,6 @@ export class RankSelect extends Control<string[]> {
   protected readonly faChevronDown = faChevronDown;
   protected readonly faGrip = faGrip;
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
-  protected readonly faXmark = faXmark;
 
   toggle(event?: Event): void {
     if (

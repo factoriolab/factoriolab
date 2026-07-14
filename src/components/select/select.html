@@ -67,16 +67,6 @@
             [icon]="faMagnifyingGlass"
           ></fa-icon>
         </div>
-        @if (multi()) {
-          <button
-            type="button"
-            labButton
-            [border]="false"
-            [faIcon]="faXmark"
-            [attr.aria-label]="'cancel' | translate"
-            (click)="opened.set(false)"
-          ></button>
-        }
       </div>
     }
     <ul

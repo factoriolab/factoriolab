@@ -56,7 +56,8 @@ export class PickerDialog {
 
   protected readonly settingsStore = inject(SettingsStore);
   protected readonly dialogData = inject<PickerData>(DIALOG_DATA);
-  protected readonly dialogRef = inject(DialogRef);
+  protected readonly dialogRef =
+    inject<DialogRef<boolean | string, PickerDialog>>(DialogRef);
 
   protected readonly data = this.settingsStore.dataset;
 
@@ -67,7 +68,7 @@ export class PickerDialog {
    * Note: Selected items are in the excluded set, so selection is inverted in
    * the UI so that selected ids appear as deselected.
    */
-  protected readonly selection = signal(new Set<string>());
+  readonly selection = signal(new Set<string>());
   protected readonly filter = signal('');
 
   protected readonly allSelected = computed(() => {

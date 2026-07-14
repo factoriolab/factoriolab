@@ -100,28 +100,4 @@ describe('TechnologiesDialog', () => {
       );
     });
   });
-
-  describe('save', () => {
-    it('should apply the selection', () => {
-      const researchedTechnologyIds = new Set([
-        RecipeId.Electronics,
-        RecipeId.Automation,
-      ]);
-      component['selection'].set(researchedTechnologyIds);
-      spyOn(component['settingsStore'], 'apply');
-      component.save();
-      expect(component['settingsStore'].apply).toHaveBeenCalledWith({
-        researchedTechnologyIds,
-      });
-    });
-
-    it('should emit null if all technologies are selected', () => {
-      component['selection'].set(new Set(component['data']().technologyIds));
-      spyOn(component['settingsStore'], 'apply');
-      component.save();
-      expect(component['settingsStore'].apply).toHaveBeenCalledWith({
-        researchedTechnologyIds: undefined,
-      });
-    });
-  });
 });
