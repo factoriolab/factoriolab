@@ -47,9 +47,9 @@ describe('PickerDialog', () => {
   describe('allSelected', () => {
     it('should determine the checkbox state for the select all', () => {
       expect(component['allSelected']()).toBeTrue();
-      component['selection'].set(new Set(component['dialogData'].allIds));
+      component.selection.set(new Set(component['dialogData'].allIds));
       expect(component['allSelected']()).toBeFalse();
-      component['selection'].set(new Set(['id']));
+      component.selection.set(new Set(['id']));
       expect(component['allSelected']()).toBeUndefined();
     });
   });
@@ -80,11 +80,11 @@ describe('PickerDialog', () => {
       component['dialogData'].allIds = data.recipeIds;
       (component as any).multi = true;
       expect(component['allRecyclingSelected']()).toBeTrue();
-      component['selection'].set(
+      component.selection.set(
         new Set([RecipeId.ElectronicCircuit, RecipeId.AdvancedCircuit]),
       );
       expect(component['allRecyclingSelected']()).toBeFalse();
-      component['selection'].set(new Set([RecipeId.ElectronicCircuit]));
+      component.selection.set(new Set([RecipeId.ElectronicCircuit]));
       expect(component['allRecyclingSelected']()).toBeUndefined();
     });
   });
@@ -160,9 +160,9 @@ describe('PickerDialog', () => {
   describe('selectAll', () => {
     it('should select and deselect allIds', () => {
       component.selectAll(false);
-      expect(component['selection']().size).toBeGreaterThan(0);
+      expect(component.selection().size).toBeGreaterThan(0);
       component.selectAll(true);
-      expect(component['selection']().size).toEqual(0);
+      expect(component.selection().size).toEqual(0);
     });
   });
 
@@ -170,9 +170,9 @@ describe('PickerDialog', () => {
     it('should select and deselect all recycling ids', () => {
       spyOn<any>(component, 'recyclingSet').and.returnValue(new Set(['id']));
       component.selectAllRecycling(false);
-      expect(component['selection']().size).toEqual(1);
+      expect(component.selection().size).toEqual(1);
       component.selectAllRecycling(true);
-      expect(component['selection']().size).toEqual(0);
+      expect(component.selection().size).toEqual(0);
     });
   });
 
@@ -180,9 +180,9 @@ describe('PickerDialog', () => {
     it('should select and deselect in multi mode', () => {
       (component as any).multi = true;
       component.selectId('id');
-      expect(component['selection']().size).toEqual(1);
+      expect(component.selection().size).toEqual(1);
       component.selectId('id');
-      expect(component['selection']().size).toEqual(0);
+      expect(component.selection().size).toEqual(0);
     });
 
     it('should close the dialog in single selection mode', () => {
@@ -194,9 +194,9 @@ describe('PickerDialog', () => {
 
   describe('reset', () => {
     it('should reset to the default selection', () => {
-      spyOn(component['selection'], 'set');
+      spyOn(component.selection, 'set');
       component.reset();
-      expect(component['selection'].set).toHaveBeenCalledWith(new Set());
+      expect(component.selection.set).toHaveBeenCalledWith(new Set());
     });
   });
 });
