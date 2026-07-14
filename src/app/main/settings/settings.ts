@@ -36,7 +36,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
-import { map } from 'rxjs';
+import { filter, map } from 'rxjs';
 
 import { AccordionModule } from '~/components/accordion/accordion-module';
 import { BeaconsSelect } from '~/components/beacons-select/beacons-select';
@@ -160,7 +160,6 @@ export class Settings {
   protected readonly options = this.settingsStore.options;
   protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
-  protected readonly TechnologiesDialog = TechnologiesDialog;
   protected readonly VersionsDialog = VersionsDialog;
 
   setParams(params: string): void {
@@ -168,6 +167,20 @@ export class Settings {
     const urlParams = new URLSearchParams(params);
     urlParams.forEach((value, key) => (tree.queryParams[key] = value));
     void this.router.navigateByUrl(tree);
+  }
+
+  openTechnologies(): void {
+    const ref = this.dialog.open<boolean, undefined, TechnologiesDialog>(
+      TechnologiesDialog,
+    );
+    ref.closed
+      .pipe(
+        filter((result) => result !== false),
+        map(() => ref.componentInstance?.result()),
+      )
+      .subscribe((researchedTechnologyIds) => {
+        this.settingsStore.apply({ researchedTechnologyIds });
+      });
   }
 
   addMachine(machineId: string): void {

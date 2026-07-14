@@ -48,7 +48,8 @@ import { TechnologiesSet } from './technologies-set';
 })
 export class TechnologiesDialog implements DialogData {
   protected readonly dialog = inject(Dialog);
-  protected readonly dialogRef = inject(DialogRef);
+  protected readonly dialogRef =
+    inject<DialogRef<boolean, TechnologiesDialog>>(DialogRef);
   protected readonly preferencesStore = inject(PreferencesStore);
   private readonly settingsStore = inject(SettingsStore);
 
@@ -56,6 +57,14 @@ export class TechnologiesDialog implements DialogData {
   protected readonly selection = linkedSignal(
     () => this.settingsStore.settings().researchedTechnologyIds,
   );
+  readonly result = computed(() => {
+    const researchedTechnologyIds = this.selection();
+    const data = this.data();
+    if (researchedTechnologyIds?.size === data.technologyIds.length)
+      return undefined;
+
+    return researchedTechnologyIds;
+  });
 
   protected readonly allSelected = computed(
     () => this.selection().size === this.data().technologyIds.length,
@@ -138,16 +147,6 @@ export class TechnologiesDialog implements DialogData {
       this.addPrerequisites(set);
       this.selection.set(set);
     });
-  }
-
-  save(): void {
-    let researchedTechnologyIds: Set<string> | undefined = this.selection();
-    const data = this.data();
-    if (researchedTechnologyIds?.size === data.technologyIds.length)
-      researchedTechnologyIds = undefined;
-
-    this.settingsStore.apply({ researchedTechnologyIds });
-    this.dialogRef.close();
   }
 
   // Add any technologies whose prerequisites were not previously met

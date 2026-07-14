@@ -18,7 +18,6 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faChevronDown,
   faMagnifyingGlass,
-  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
@@ -26,7 +25,6 @@ import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areSetsEqual } from '~/utils/equality';
 
-import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
 import { Control } from '../control';
 import { FormField } from '../form-field/form-field';
@@ -72,7 +70,6 @@ const host = cva(
     FormsModule,
     OverlayModule,
     FaIconComponent,
-    Button,
     Checkbox,
     Icon,
     Ripple,
@@ -159,7 +156,6 @@ export class Select<T = unknown> extends Control<T> {
 
   protected readonly faChevronDown = faChevronDown;
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
-  protected readonly faXmark = faXmark;
 
   toggle(event?: Event): void {
     if (
