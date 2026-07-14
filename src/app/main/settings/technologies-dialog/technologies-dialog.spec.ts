@@ -24,6 +24,14 @@ describe('TechnologiesDialog', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('result', () => {
+    it('should compare the selection against the dataset', () => {
+      expect(component.result()).toBeUndefined();
+      component['selection'].set(new Set());
+      expect(component.result()).toEqual(new Set());
+    });
+  });
+
   describe('status', () => {
     it('should filter technologies', () => {
       component['filterText'].set('laser');

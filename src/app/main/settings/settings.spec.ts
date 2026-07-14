@@ -1,5 +1,6 @@
 import { ApplicationRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 
 import { rational } from '~/rational/rational';
 import { ItemId } from '~/tests/item-id';
@@ -36,6 +37,21 @@ describe('Settings', () => {
       spyOn(component['router'], 'navigateByUrl');
       component.setParams('v=9');
       expect(component['router'].navigateByUrl).toHaveBeenCalled();
+    });
+  });
+
+  describe('openTechnologies', () => {
+    it('should open the technologies dialog and apply the result', () => {
+      spyOn(component['dialog'], 'open').and.returnValue({
+        closed: of(undefined),
+        componentInstance: { result: () => new Set() },
+      } as any);
+      spyOn(component['settingsStore'], 'apply');
+      component.openTechnologies();
+      expect(component['dialog'].open).toHaveBeenCalled();
+      expect(component['settingsStore'].apply).toHaveBeenCalledWith({
+        researchedTechnologyIds: new Set(),
+      });
     });
   });
 

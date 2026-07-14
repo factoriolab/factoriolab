@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
 
 import { Picker } from './picker';
 
@@ -16,22 +16,27 @@ describe('Picker', () => {
   });
 
   describe('pickItem', () => {
-    it('should open the dialog', () => {
+    it('should open the dialog and filter the result', () => {
       spyOn(service['dialog'], 'open').and.returnValue({
-        closed: EMPTY,
+        closed: of('result'),
       } as any);
-      service.pickItem();
+      let result: string | undefined;
+      service.pickItem().subscribe((r) => (result = r));
       expect(service['dialog'].open).toHaveBeenCalled();
+      expect(result).toEqual('result');
     });
   });
 
   describe('pickRecipe', () => {
     it('should open the dialog', () => {
       spyOn(service['dialog'], 'open').and.returnValue({
-        closed: EMPTY,
+        closed: of('result'),
       } as any);
+      let result: string | undefined;
+      service.pickRecipe().subscribe((r) => (result = r));
       service.pickRecipe();
       expect(service['dialog'].open).toHaveBeenCalled();
+      expect(result).toEqual('result');
     });
   });
 
