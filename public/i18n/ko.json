@@ -124,10 +124,10 @@
     "pollutionMultiplier": "오염 배수",
     "prerequisites": "선행 조건",
     "producedByRecipes": "생산하는 제작법",
-    "producers": "다음에서 생산",
+    "producers": "제작 가능 시설",
     "producibleRecipes": "생산 가능한 제작법",
     "productivity": "생산성",
-    "products": "생산물",
+    "products": "생산품",
     "proliferator": "증식제",
     "pumps": "펌프",
     "quality": "품질",
@@ -305,13 +305,13 @@
       "weight": "가중치"
     },
     "objectiveType": {
-      "input": "입력",
+      "input": "투입",
       "inputTooltip": "이미 이 수량을 생산하고 있습니다<br><span class=\"text-sm italic\">(계산에서 제외)</span>",
       "limit": "제한",
       "limitTooltip": "이 생산량을 제한하고 싶습니다<br><span class=\"text-sm italic\">(주로 최대화에 사용)</span>",
       "maximize": "최대화",
       "maximizeTooltip": "이 생산량을 최대화하고 싶습니다<br><span class=\"text-sm italic\">(제한이 필요함)</span>",
-      "output": "출력",
+      "output": "산출",
       "outputTooltip": "이 수량을 생산하고 싶습니다<br><span class=\"text-sm italic\">(기본 옵션)</span>"
     },
     "objectiveUnit": {
@@ -398,7 +398,7 @@
     "selectRecipe": "제작법 선택"
   },
   "preferences": {
-    "backgroundLightness": "배경 명도",
+    "backgroundLightness": "배경 밝기",
     "bypassLanding": "항상 랜딩 페이지 건너뛰기",
     "chroma": "채도",
     "convertObjectiveValues": "목표 값 변환",
@@ -409,7 +409,7 @@
     "header": "환경설정",
     "helpTranslate": "번역 도와주기",
     "hide": "환경설정 패널 숨기기",
-    "hue": "색조",
+    "hue": "색상",
     "language": "언어",
     "nameSavedState": "이름을 입력하세요",
     "override": "재정의",
