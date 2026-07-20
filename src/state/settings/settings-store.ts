@@ -263,6 +263,15 @@ export class SettingsStore extends Store<SettingsState> {
         firstAsEmpty: true,
       }),
       inserters: itemOptions(data.inserterIds, { tooltipType: 'inserter' }),
+      insertersAuto: itemOptions(data.inserterIds, {
+        tooltipType: 'inserter',
+        emptyOption: {
+          label: 'Optimal inserter',
+          value: '',
+          icon: data.inserterIds[1], // Basic inserter
+          iconClass: 'opacity-40',
+        },
+      }),
       fuels: itemOptions(data.fuelIds, {
         exclude: data.itemQIds,
         tooltipType: 'fuel',
@@ -388,6 +397,7 @@ export class SettingsStore extends Store<SettingsState> {
         pipeId: coalesce(p.pipe, m.pipe),
         cargoWagonId: coalesce(p.cargoWagon, m.cargoWagon),
         fluidWagonId: coalesce(p.fluidWagon, m.fluidWagon),
+        inserterId: coalesce(p.inserter, m.inserter),
         excludedRecipeIds: coalesce(excludedRecipe, []),
         machineRankIds: coalesce(machineRank, []),
         fuelRankIds: coalesce(fuelRank, []),
@@ -447,6 +457,7 @@ export class SettingsStore extends Store<SettingsState> {
       pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
       cargoWagonId: m.cargoWagon,
       fluidWagonId: m.fluidWagon,
+      inserterId: m.inserter,
       excludedRecipeIds: coalesce(m.excludedRecipes, []),
       machineRankIds: coalesce(machineRankIds, []),
       fuelRankIds: coalesce(m.fuelRank, []),
@@ -1035,6 +1046,8 @@ export class SettingsStore extends Store<SettingsState> {
     const cargoWagonId = pickItemId(state.cargoWagonId, defaultCargoWagonId);
     const defaultFluidWagonId = coalesce(defaults?.fluidWagonId, '');
     const fluidWagonId = pickItemId(state.fluidWagonId, defaultFluidWagonId);
+    const defaultInserterId = coalesce(defaults?.inserterId, '');
+    const inserterId = pickItemId(state.inserterId, defaultInserterId);
     const defaultMachineRankIds = coalesce(defaults?.machineRankIds, []);
     const machineRankIds = pickItemIds(
       state.machineRankIds,
@@ -1087,6 +1100,8 @@ export class SettingsStore extends Store<SettingsState> {
       defaultCargoWagonId,
       fluidWagonId,
       defaultFluidWagonId,
+      inserterId,
+      defaultInserterId,
       excludedRecipeIds,
       defaultExcludedRecipeIds,
       recipeBonus,

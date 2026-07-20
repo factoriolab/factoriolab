@@ -581,6 +581,24 @@
         </lab-form-field>
       }
 
+      @if (options().inserters.length > 1) {
+        <lab-form-field label="settings.defaultInserter">
+          <lab-select
+            [options]="options().insertersAuto"
+            labTooltip="settings.defaultInserterTooltip"
+            labTooltipPosition="adjacent"
+            [ngModel]="settings().inserterId"
+            (ngModelChange)="
+              settingsStore.updateField(
+                'inserterId',
+                $event,
+                settings().defaultInserterId
+              )
+            "
+          ></lab-select>
+        </lab-form-field>
+      }
+
       @if (data().flags.has('flowRate')) {
         <lab-form-field label="settings.pipeFlowRate">
           <div class="flex items-stretch">

@@ -51,9 +51,11 @@ export class ItemsStore extends RecordStore<ItemState> {
       );
       const defaultStack = this.defaultStack(item, settings);
       const defaultWagonId = this.defaultWagon(item, settings);
+      const defaultInserterId = this.defaultInserter(item, settings);
       const beltId = coalesce(s?.beltId, defaultBeltId);
       const stack = coalesce(s?.stack, defaultStack);
       const wagonId = coalesce(s?.wagonId, defaultWagonId);
+      const inserterId = coalesce(s?.inserterId, defaultInserterId);
       const excludeRockets = s?.excludeRockets;
 
       value[item.id] = {
@@ -63,6 +65,8 @@ export class ItemsStore extends RecordStore<ItemState> {
         defaultStack,
         wagonId,
         defaultWagonId,
+        inserterId,
+        defaultInserterId,
         excludeRockets,
       };
     }
@@ -91,5 +95,9 @@ export class ItemsStore extends RecordStore<ItemState> {
       item.stack ? settings.cargoWagonId : settings.fluidWagonId,
       '',
     );
+  }
+
+  private defaultInserter(item: Item, settings: Settings): string {
+    return coalesce(settings.inserterId, '');
   }
 }

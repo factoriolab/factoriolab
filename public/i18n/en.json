@@ -445,6 +445,8 @@
     "defaultCargoWagonTooltip": "Select the default cargo wagon to be used by all items",
     "defaultFluidWagon": "Default fluid wagon",
     "defaultFluidWagonTooltip": "Select the default fluid wagon to be used by all fluids",
+    "defaultInserter": "Default inserter",
+    "defaultInserterTooltip": "Select the default inserter to be used by all recipes",
     "defaultPipe": "Default pipe",
     "defaultPipeTooltip": "Select the default pipe to be used by all fluids",
     "defaultStack": "Default stack size",

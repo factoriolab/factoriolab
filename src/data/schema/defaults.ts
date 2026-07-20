@@ -9,6 +9,7 @@ export interface HardCodedPresetsJson {
   fuelRank?: string[];
   cargoWagon?: string;
   fluidWagon?: string;
+  inserter?: string;
   excludedRecipes?: string[];
   minMachineRank?: string[];
   maxMachineRank?: string[];
@@ -27,6 +28,7 @@ export interface CustomPresetsJson {
   fuelRank?: string[];
   cargoWagon?: string;
   fluidWagon?: string;
+  inserter?: string;
   excludedRecipes?: string[];
   machineRank?: string[];
   moduleRank?: string[];
@@ -49,6 +51,7 @@ export interface PresetJson {
   fuelRank?: string[];
   cargoWagon?: string;
   fluidWagon?: string;
+  inserter?: string;
   excludedRecipes?: string[];
   machineRank?: string[];
   moduleRank?: string[];
