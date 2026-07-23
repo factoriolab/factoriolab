@@ -1,6 +1,11 @@
-import { Simplex, Status } from 'glpk-ts';
+import { Interior, MIP, Simplex, Status } from 'glpk-ts';
 
 import { Rational } from '~/rational/rational';
+
+export type GlpkReturnCode =
+  | Simplex.ReturnCode
+  | Interior.ReturnCode
+  | MIP.ReturnCode;
 
 export interface GlpkResult {
   surplus: Record<string, Rational>;
@@ -8,7 +13,7 @@ export interface GlpkResult {
   unproduceable: Record<string, Rational>;
   excluded: Record<string, Rational>;
   cost: Rational;
-  returnCode: Simplex.ReturnCode;
+  returnCode: GlpkReturnCode;
   status: Status;
   unboundedRecipeId?: string;
   error: boolean;

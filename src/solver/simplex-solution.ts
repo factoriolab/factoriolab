@@ -1,13 +1,14 @@
-import { Simplex, Status } from 'glpk-ts';
+import { Status } from 'glpk-ts';
 
 import { Rational } from '~/rational/rational';
 
+import { GlpkReturnCode } from './glpk-result';
 import { SimplexResultType } from './simplex-result-type';
 
 export interface SimplexSolution {
   resultType: SimplexResultType;
   /** GLPK simplex return code */
-  returnCode?: Simplex.ReturnCode;
+  returnCode?: GlpkReturnCode;
   /** GLPK model simplex status */
   simplexStatus?: Status;
   /** If simplex solution is unbounded, the recipe that represents the ray */
