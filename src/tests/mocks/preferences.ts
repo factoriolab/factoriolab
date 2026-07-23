@@ -25,4 +25,5 @@ export const mockPreferencesState: PreferencesState = {
   convertObjectiveValues: false,
   flowSettings: initialFlowSettings,
   sections: initialPreferencesState.sections,
+  glpkAlgorithm: 'simplex',
 };
