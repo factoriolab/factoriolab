@@ -292,6 +292,10 @@
       "starRupture": "StarRupture",
       "techtonica": "Techtonica"
     },
+    "glpkAlgorithm": {
+      "exact": "Exact",
+      "simplex": "Simplex (Default)"
+    },
     "linkValue": {
       "belts": "ベルトの数",
       "items": "個数",
@@ -406,6 +410,7 @@
     "createSavedState": "新規作成",
     "deleteSavedState": "削除",
     "editSavedState": "名前変更",
+    "glpkAlgorithm": "GLPK Algorithm",
     "header": "Preferences",
     "helpTranslate": "翻訳を手伝う",
     "hide": "Hide preferences panel",

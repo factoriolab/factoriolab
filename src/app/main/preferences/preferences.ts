@@ -39,6 +39,7 @@ import { FlowSettingsDialog } from '~/components/flow-settings-dialog/flow-setti
 import { FormField } from '~/components/form-field/form-field';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
+import { glpkAlgorithmOptions } from '~/state/preferences/glpk-algorithm';
 import { powerUnitOptions } from '~/state/preferences/power-unit';
 import {
   initialPreferencesState,
@@ -137,6 +138,7 @@ export class Preferences {
   protected readonly powerUnitOptions = powerUnitOptions;
   protected readonly preferences = this.preferencesStore.state;
   protected readonly themeOptions = themeOptions;
+  protected readonly glpkAlgorithmOptions = glpkAlgorithmOptions;
 
   reset(): void {
     this.confirm

@@ -292,6 +292,10 @@
       "starRupture": "StarRupture",
       "techtonica": "星核工厂"
     },
+    "glpkAlgorithm": {
+      "exact": "Exact",
+      "simplex": "Simplex (Default)"
+    },
     "linkValue": {
       "belts": "按传送带",
       "items": "按物品",
@@ -406,6 +410,7 @@
     "createSavedState": "新建状态",
     "deleteSavedState": "删除此状态",
     "editSavedState": "重命名",
+    "glpkAlgorithm": "GLPK Algorithm",
     "header": "偏好设置",
     "helpTranslate": "帮助翻译",
     "hide": "隐藏偏好设置面板",
