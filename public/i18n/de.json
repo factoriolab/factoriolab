@@ -292,6 +292,10 @@
       "starRupture": "StarRupture",
       "techtonica": "Techtonica"
     },
+    "glpkAlgorithm": {
+      "exact": "Exact",
+      "simplex": "Simplex (Default)"
+    },
     "linkValue": {
       "belts": "Belts",
       "items": "Items",
@@ -406,6 +410,7 @@
     "createSavedState": "Erstellen",
     "deleteSavedState": "Löschen",
     "editSavedState": "Umbenennen",
+    "glpkAlgorithm": "GLPK Algorithm",
     "header": "Preferences",
     "helpTranslate": "Beim Übersetzen mithelfen",
     "hide": "Hide preferences panel",

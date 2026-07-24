@@ -219,6 +219,14 @@
     (ngModelChange)="apply({ convertObjectiveValues: $event })"
   ></lab-checkbox>
 
+  <lab-form-field label="preferences.glpkAlgorithm">
+    <lab-select
+      [options]="glpkAlgorithmOptions"
+      [ngModel]="preferences().glpkAlgorithm"
+      (ngModelChange)="apply({ glpkAlgorithm: $event })"
+    ></lab-select>
+  </lab-form-field>
+
   <button
     type="button"
     labButton

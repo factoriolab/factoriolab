@@ -75,6 +75,7 @@ describe('Solver', () => {
         maximize: rational(-1000000n),
       },
       hasSurplusCost: false,
+      glpkAlgorithm: 'simplex',
     });
   });
 
@@ -90,6 +91,7 @@ describe('Solver', () => {
           settingsStore.settings(),
           recipesStore.adjustedDataset(),
           true,
+          'simplex',
         ),
       ).toEqual({ steps: [], resultType: 'paused' });
     });
@@ -101,6 +103,7 @@ describe('Solver', () => {
           settingsStore.settings(),
           recipesStore.adjustedDataset(),
           false,
+          'simplex',
         ),
       ).toEqual({ steps: [], resultType: 'skipped' });
     });
@@ -118,6 +121,7 @@ describe('Solver', () => {
           settingsStore.settings(),
           recipesStore.adjustedDataset(),
           false,
+          'simplex',
         ),
       ).toEqual({
         steps: mocks.steps(),
@@ -145,6 +149,7 @@ describe('Solver', () => {
         settingsStore.settings(),
         recipesStore.adjustedDataset(),
         false,
+        'simplex',
       );
       expect(result.unboundedRecipeId).toBeDefined();
     });
@@ -176,6 +181,7 @@ describe('Solver', () => {
         objectives,
         settingsStore.settings(),
         data,
+        'simplex',
       );
       expect(result).toEqual({
         objectives,
@@ -213,6 +219,7 @@ describe('Solver', () => {
         requireMachinesOutput: false,
         costs: initialSettingsState.costs,
         hasSurplusCost: false,
+        glpkAlgorithm: 'simplex',
       });
     });
   });

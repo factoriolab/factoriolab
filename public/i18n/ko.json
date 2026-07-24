@@ -292,6 +292,10 @@
       "starRupture": "StarRupture",
       "techtonica": "Techtonica"
     },
+    "glpkAlgorithm": {
+      "exact": "Exact",
+      "simplex": "Simplex (Default)"
+    },
     "linkValue": {
       "belts": "벨트",
       "items": "아이템",
@@ -406,6 +410,7 @@
     "createSavedState": "새로 만들기",
     "deleteSavedState": "삭제",
     "editSavedState": "이름 바꾸기",
+    "glpkAlgorithm": "GLPK Algorithm",
     "header": "환경설정",
     "helpTranslate": "번역 도와주기",
     "hide": "환경설정 패널 숨기기",

@@ -4,6 +4,7 @@ import { Language } from '~/translate/language';
 import { StepDetailSection } from '../objectives/step-detail-section';
 import { ColumnsState, initialColumnsState } from './columns-state';
 import { FlowSettings, initialFlowSettings } from './flow-settings';
+import { GlpkAlgorithm } from './glpk-algorithm';
 import { PowerUnit } from './power-unit';
 
 export interface PreferencesState {
@@ -20,6 +21,7 @@ export interface PreferencesState {
   pinObjectives: boolean;
   paused: boolean;
   convertObjectiveValues: boolean;
+  glpkAlgorithm: GlpkAlgorithm;
   flowSettings: FlowSettings;
   sections: Record<StepDetailSection, boolean>;
 }
@@ -37,6 +39,7 @@ export const initialPreferencesState: PreferencesState = {
   pinObjectives: false,
   paused: false,
   convertObjectiveValues: false,
+  glpkAlgorithm: 'simplex',
   flowSettings: initialFlowSettings,
   sections: {
     sources: true,

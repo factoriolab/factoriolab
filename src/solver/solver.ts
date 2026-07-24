@@ -17,6 +17,7 @@ import {
   RecipeObjective,
 } from '~/state/objectives/objective';
 import { ObjectiveType } from '~/state/objectives/objective-type';
+import { GlpkAlgorithm } from '~/state/preferences/glpk-algorithm';
 import {
   CostKey,
   FACTORIO_FLUID_COST_RATIO,
@@ -27,7 +28,7 @@ import { Settings } from '~/state/settings/settings';
 import { spread } from '~/utils/object';
 import { contains } from '~/utils/record';
 
-import { GlpkResult } from './glpk-result';
+import { GlpkResult, GlpkReturnCode } from './glpk-result';
 import { ItemValues } from './item-values';
 import { SIMPLEX_CONFIG } from './simplex-config';
 import { SimplexResult } from './simplex-result';
@@ -44,13 +45,14 @@ export class Solver {
     settings: Settings,
     data: AdjustedDataset,
     paused: boolean,
+    glpkAlgorithm: GlpkAlgorithm,
   ): SimplexResult {
     if (paused) return { steps: [], resultType: 'paused' };
 
     if (objectives.length === 0) return { steps: [], resultType: 'skipped' };
 
     // Get matrix state
-    const state = this.getState(objectives, settings, data);
+    const state = this.getState(objectives, settings, data, glpkAlgorithm);
 
     // Get solution for matrix state
     const solution = this.getSolution(state);
@@ -89,6 +91,7 @@ export class Solver {
     objectives: ObjectiveState[],
     settings: Settings,
     data: AdjustedDataset,
+    glpkAlgorithm: GlpkAlgorithm,
   ): SimplexState {
     // Set up state object
     const state: SimplexState = {
@@ -110,6 +113,7 @@ export class Solver {
       costs: settings.costs,
       data,
       hasSurplusCost: settings.costs.surplus.gt(rational.zero),
+      glpkAlgorithm,
     };
 
     // Add item objectives to matrix state
@@ -609,7 +613,7 @@ export class Solver {
 
     // Run GLPK simplex
     const start = Date.now();
-    const [returnCode, status] = this.glpkSimplex(m);
+    const [returnCode, status] = this.glpkSimplex(m, state.glpkAlgorithm);
     const time = Date.now() - start;
     const surplus: Record<string, Rational> = {};
     const unproduceable: Record<string, Rational> = {};
@@ -715,8 +719,11 @@ export class Solver {
   }
 
   /** Simplex method wrapper mainly for test mocking */
-  private glpkSimplex(model: Model): [Simplex.ReturnCode, Status] {
-    const returnCode = model.simplex(this.simplexConfig);
+  private glpkSimplex(
+    model: Model,
+    glpkAlgorithm: GlpkAlgorithm,
+  ): [GlpkReturnCode, Status] {
+    const returnCode = model[glpkAlgorithm](this.simplexConfig);
     return [returnCode, model.status];
   }
   //#endregion
