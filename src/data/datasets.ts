@@ -30,6 +30,7 @@ export const datasets: Datasets = {
     { id: 'pysalf', name: 'Pyanodons + AL', game: 'factorio' },
     { id: 'sea', name: 'Sea Block', game: 'factorio' },
     { id: 'sxp', name: 'Space Exploration', game: 'factorio' },
+    { id: 'boi', name: 'Belts of Iron', game: 'belts-of-iron' },
     { id: 'coi', name: 'Captain of Industry', game: 'captain-of-industry' },
     { id: 'dsp', name: 'Dyson Sphere Program', game: 'dyson-sphere-program' },
     { id: 'fay', name: 'Factor Y', game: 'factor-y' },

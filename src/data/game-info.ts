@@ -14,6 +14,7 @@ export const gameInfo: Record<Game, GameInfo> = {
     modId: 'dsp',
   },
   satisfactory: { label: 'options.game.satisfactory', modId: 'sfy' },
+  'belts-of-iron': { label: 'options.game.beltsOfIron', modId: 'boi' },
   'captain-of-industry': {
     label: 'options.game.captainOfIndustry',
     modId: 'coi',

@@ -1,6 +1,7 @@
 import { Option } from '../option/option';
 
 export type Game =
+  | 'belts-of-iron'
   | 'captain-of-industry'
   | 'dyson-sphere-program'
   | 'factor-y'
@@ -41,6 +42,12 @@ export const gameOptions: Option<Game>[] = [
     value: 'factorio',
     label: 'options.game.factorio',
     icon: 'factorio',
+    iconType: 'system',
+  },
+  {
+    value: 'belts-of-iron',
+    label: 'options.game.beltsOfIron',
+    icon: 'belts-of-iron',
     iconType: 'system',
   },
   {
