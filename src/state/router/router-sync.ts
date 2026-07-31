@@ -966,6 +966,7 @@ export class RouterSync {
     rat('ist', (s) => s.stack);
     sub('rex', (s) => s.excludedRecipeIds, data.recipeIds, hash.recipes);
     sub('rch', (s) => s.checkedRecipeIds, data.recipeIds, hash.recipes);
+    rat('rcm', (s) => s.recipeCostMultiplier);
     bln('rnp', (s) => s.netProductionOnly);
     num('mpr', (s) => s.preset);
     rnk('mmr', (s) => s.machineRankIds, hash.machines);
@@ -1035,6 +1036,7 @@ export class RouterSync {
       stack: rat('ist'),
       excludedRecipeIds: sub('rex', modHash.recipes),
       checkedRecipeIds: sub('rch', modHash.recipes),
+      recipeCostMultiplier: rat('rcm'),
       netProductionOnly: bln('rnp'),
       preset: num('mpr'),
       machineRankIds: rnk('mmr', hash?.machines),

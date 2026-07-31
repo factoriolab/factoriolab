@@ -12,6 +12,7 @@ export interface Settings extends SettingsState {
   excludedRecipeIds: Set<string>;
   defaultExcludedRecipeIds: Set<string>;
   recipeBonus: Partial<Record<string, Rational>>;
+  recipeCostMultiplier: Rational;
   machineRankIds: string[];
   defaultMachineRankIds: string[];
   fuelRankIds: string[];
