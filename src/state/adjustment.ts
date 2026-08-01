@@ -278,6 +278,7 @@ export class Adjustment {
       }
 
       if (
+        !settings.recipeCostMultiplier.eq(rational.one) &&
         data.flags.has('recipeCostMultiplier') &&
         !recipe.producers?.includes('packager') &&
         !recipe.producers?.includes('space-elevator')

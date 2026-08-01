@@ -459,6 +459,7 @@ describe('RouterSync', () => {
     delete mockStateV10.settingsState?.requireMachinesOutput;
     delete mockStateV10.settingsState?.costs?.footprint;
     delete mockStateV10.settingsState?.costs?.recycling;
+    delete mockStateV10.settingsState?.recipeCostMultiplier;
 
     const mockStateV8: PartialState = spread(mockStateV10, {
       settingsState: spread(mockStateV10.settingsState),

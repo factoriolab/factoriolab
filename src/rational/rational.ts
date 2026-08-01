@@ -79,11 +79,11 @@ export class Rational {
   }
 
   max(x: Rational): Rational {
-    return this >= x ? this : x;
+    return this.gte(x) ? this : x;
   }
 
   min(x: Rational): Rational {
-    return this <= x ? this : x;
+    return this.lte(x) ? this : x;
   }
 
   add(x: Rational): Rational {
