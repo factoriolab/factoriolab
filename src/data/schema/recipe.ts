@@ -12,6 +12,8 @@ export type RecipeFlag =
   | 'burn'
   | 'recycling'
   | 'locked'
+  /** Unaffected by Satisfactory recipe cost multiplier (e.g. fluid packaging) */
+  | 'noCostMultiplier'
   /** Treats machines required as a percentage instead of a number */
   | 'infinite'
   /** Even if there are no producers, show the machine quantity */
