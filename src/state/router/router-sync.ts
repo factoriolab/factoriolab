@@ -117,12 +117,15 @@ export class RouterSync {
   private readonly ready = signal(false);
   readonly stored = storedSignal('router');
 
-  private readonly modData = toObservable(this.settingsStore.modData).pipe(
-    filterNullish(),
-  );
-  private readonly modHash = toObservable(this.settingsStore.modHash).pipe(
-    filterNullish(),
-  );
+  private readonly modData = toObservable(this.settingsStore.modData); //.pipe(
+  // filterNullish(),
+  // );
+  private readonly modHash = toObservable(this.settingsStore.modHash); //.pipe(
+  // filterNullish(),
+  // tap((x) => {
+  //   console.log('modHash', x);
+  // }),
+  // );
 
   get empty(): ZipData<LabParams> {
     return { bare: {}, hash: {} };
@@ -164,11 +167,18 @@ export class RouterSync {
             queryParams,
           ),
         ),
-        combineLatestWith(
-          this.modData.pipe(take(1)),
-          this.modHash.pipe(take(1)),
+        combineLatestWith(this.modData, this.modHash),
+        filter(
+          (
+            x,
+          ): x is [
+            { modId: string; params: LabParams; isBare: boolean },
+            ModData,
+            ModHash,
+          ] => x[1] != null && x[2] != null,
         ),
         tap(([{ modId, params, isBare }, modData, modHash]) => {
+          console.log('updateState', modId, params, isBare, modData, modHash);
           this.updateState(modId, params, isBare, modData, modHash);
         }),
       )
