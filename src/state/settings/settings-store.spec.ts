@@ -386,6 +386,56 @@ describe('SettingsStore', () => {
       assert(result != null);
       expect(result.fuelRankIds).toEqual([ItemId.Coal]);
     });
+
+    it('should include researched technologies if specified by hard coded presets', () => {
+      const modData = {
+        ...mockModData11,
+        ...{
+          defaults: {
+            ...mockModData11.defaults,
+            researchedTechnologies: [ItemId.ArtilleryShellRange],
+          },
+        },
+      };
+      const result = service['computeDefaults'](
+        mockModInfo,
+        modData,
+        Preset.Beacon8,
+      );
+      assert(result != null);
+      expect(result.fuelRankIds).toEqual([ItemId.Coal]);
+      expect(result.researchedTechnologyIds).toEqual(
+        new Set([ItemId.ArtilleryShellRange]),
+      );
+    });
+
+    it('should include researched technologies if specified by custom presets', () => {
+      const modData = {
+        ...mockModData11,
+        ...{
+          defaults: {
+            ...mockModData11.defaults,
+            presets: [
+              {
+                id: 0,
+                label: 'test',
+                researchedTechnologies: [ItemId.ArtilleryShellRange],
+              },
+            ],
+          },
+        },
+      };
+      const result = service['computeDefaults'](
+        mockModInfo,
+        modData,
+        Preset.Beacon8,
+      );
+      assert(result != null);
+      expect(result.fuelRankIds).toEqual([ItemId.Coal]);
+      expect(result.researchedTechnologyIds).toEqual(
+        new Set([ItemId.ArtilleryShellRange]),
+      );
+    });
   });
 
   describe('computeDataset', () => {
