@@ -73,6 +73,13 @@ async function processMod(): Promise<void> {
 
   const modData: ModData = getJsonData(tempDataPath) as ModData;
   modData.version = { boi: '0.4.0' };
+  modData.flags = [
+    'consumptionAsDrain',
+    'miningProductivity',
+    'miningDepletion',
+    'power',
+  ];
+
   modData.categories = [
     {
       id: 'logistics',
