@@ -24,9 +24,9 @@ describe('gameColumnsState', () => {
       { ...initialColumnsState, test: 'test' } as any,
       data,
     );
-    expect(result.wagons.show).toBeFalse();
-    expect(result.beacons.show).toBeFalse();
-    expect(result.pollution.show).toBeFalse();
+    expect(result.wagons?.show).toBeUndefined();
+    expect(result.beacons?.show).toBeUndefined();
+    expect(result.pollution?.show).toBeUndefined();
     expect((result as any).test).toBeUndefined();
   });
 });

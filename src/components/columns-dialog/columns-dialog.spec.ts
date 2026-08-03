@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { initialColumnsState } from '~/state/preferences/columns-state';
 import { TestModule } from '~/tests/test-module';
+import { spread } from '~/utils/object';
 
 import { ColumnsDialog } from './columns-dialog';
 
@@ -36,8 +37,12 @@ describe('ColumnsDialog', () => {
       spyOn(component['preferencesStore'], 'apply');
       spyOn(component['dialogRef'], 'close');
       component.save();
+      const columns = spread(
+        component['preferencesStore'].columns(),
+        component['value'],
+      );
       expect(component['preferencesStore'].apply).toHaveBeenCalledWith({
-        columns: component['value'],
+        columns,
         powerUnit: component['powerUnit'](),
       });
       expect(component['dialogRef'].close).toHaveBeenCalled();

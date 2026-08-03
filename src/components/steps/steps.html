@@ -23,7 +23,7 @@
       <!-- Row Actions -->
       <th class="w-0"></th>
       <!-- Checkbox -->
-      @if (cols().checkbox.show) {
+      @if (cols().checkbox?.show) {
         <th class="w-0">
           <div class="flex">
             @let disabled =
@@ -44,7 +44,7 @@
         </th>
       }
       <!-- Tree -->
-      @if (!focus() && cols().tree.show) {
+      @if (!focus() && cols().tree?.show) {
         <th>{{ 'options.column.tree' | translate }}</th>
       }
       <!-- Items (Surplus, Value, & Icon) -->
@@ -60,7 +60,7 @@
         (undo)="resetExcludedItems()"
       ></th>
       <!-- Belts (Value & Icon) -->
-      @if (cols().belts.show) {
+      @if (cols().belts?.show) {
         <th
           colspan="2"
           labSortHeader
@@ -74,7 +74,7 @@
         ></th>
       }
       <!-- Wagons (Value & Icon) -->
-      @if (cols().wagons.show) {
+      @if (cols().wagons?.show) {
         <th
           colspan="2"
           labSortHeader
@@ -88,7 +88,7 @@
         ></th>
       }
       <!-- Rockets (Value & Icon) -->
-      @if (cols().rockets.show) {
+      @if (cols().rockets?.show) {
         <th
           colspan="2"
           labSortHeader
@@ -116,7 +116,7 @@
         (undo)="resetMachines()"
       ></th>
       <!-- Beacons -->
-      @if (cols().beacons.show) {
+      @if (cols().beacons?.show) {
         <th>
           <div class="gap-2 flex items-center">
             <span>{{ 'options.column.beacons' | translate }}</span>
@@ -136,7 +136,7 @@
         </th>
       }
       <!-- Power -->
-      @if (cols().power.show) {
+      @if (cols().power?.show) {
         <th
           labSortHeader
           column="power"
@@ -146,7 +146,7 @@
         ></th>
       }
       <!-- Pollution -->
-      @if (cols().pollution.show) {
+      @if (cols().pollution?.show) {
         <th
           labSortHeader
           column="pollution"
@@ -156,7 +156,7 @@
         ></th>
       }
       <!-- Link -->
-      @if (cols().link.show) {
+      @if (cols().link?.show) {
         <th class="w-0"></th>
       }
     </tr>
@@ -182,7 +182,7 @@
           </div>
         </td>
         <!-- Checkbox -->
-        @if (cols().checkbox.show) {
+        @if (cols().checkbox?.show) {
           <td>
             <div class="flex justify-center">
               <lab-checkbox
@@ -194,7 +194,7 @@
           </td>
         }
         <!-- Tree -->
-        @if (!focus() && cols().tree.show) {
+        @if (!focus() && cols().tree?.show) {
           <td class="px-0 py-0 sm:px-2 overflow-hidden">
             <div class="h-12 flex items-center">
               @let tree = objectivesStore.stepTree()[step.id];
@@ -261,14 +261,14 @@
           @if (step.surplus) {
             <span
               class="flex justify-end font-mono whitespace-pre text-brand-400"
-              >(+{{ step.surplus | rate: cols().items.precision }})</span
+              >(+{{ step.surplus | rate: cols().items?.precision }})</span
             >
           }
         </td>
         <td class="w-0 px-0">
           @if (step.items) {
             <span class="flex justify-end font-mono whitespace-pre">{{
-              step.items | rate: cols().items.precision
+              step.items | rate: cols().items?.precision
             }}</span>
           }
         </td>
@@ -285,11 +285,11 @@
           }
         </td>
         <!-- Belts (Value & Icon) -->
-        @if (cols().belts.show) {
+        @if (cols().belts?.show) {
           <td class="pe-0">
             @if (step.belts) {
               <span class="flex justify-end font-mono whitespace-pre">{{
-                step.belts | rate: cols().belts.precision
+                step.belts | rate: cols().belts?.precision
               }}</span>
             }
           </td>
@@ -366,11 +366,11 @@
           </td>
         }
         <!-- Wagons (Value & Icon) -->
-        @if (cols().wagons.show) {
+        @if (cols().wagons?.show) {
           <td class="pe-0">
             @if (step.wagons) {
               <span class="flex justify-end font-mono whitespace-pre">{{
-                step.wagons | rate: cols().wagons.precision
+                step.wagons | rate: cols().wagons?.precision
               }}</span>
             }
           </td>
@@ -416,11 +416,11 @@
           </td>
         }
         <!-- Rockets (Value & Icon) -->
-        @if (cols().rockets.show) {
+        @if (cols().rockets?.show) {
           <td class="pe-0">
             @if (step.rockets) {
               <span class="flex justify-end font-mono whitespace-pre">{{
-                step.rockets | rate: cols().rockets.precision
+                step.rockets | rate: cols().rockets?.precision
               }}</span>
             }
           </td>
@@ -476,7 +476,7 @@
                 ) {
                   {{ step.machines | rate: -2 }}%
                 } @else {
-                  {{ step.machines | rate: cols().machines.precision }}
+                  {{ step.machines | rate: cols().machines?.precision }}
                 }
               </span>
             }
@@ -606,7 +606,7 @@
                   @if (step.recipeId && recipe.flags.has('infinite')) {
                     {{ step.machines | rate: -2 }}%
                   } @else {
-                    {{ step.machines | rate: cols().machines.precision }}
+                    {{ step.machines | rate: cols().machines?.precision }}
                   }
                 </span>
               }
@@ -617,7 +617,7 @@
           </td>
         }
         <!-- Beacons -->
-        @if (cols().beacons.show) {
+        @if (cols().beacons?.show) {
           <td>
             @if (
               step.recipeId &&
@@ -635,26 +635,26 @@
           </td>
         }
         <!-- Power -->
-        @if (cols().power.show) {
+        @if (cols().power?.show) {
           <td>
             <span class="flex justify-end font-mono whitespace-pre">{{
               step.power
                 | power
-                  : cols().power.precision
+                  : cols().power?.precision
                   : objectivesStore.effectivePowerUnit()
             }}</span>
           </td>
         }
         <!-- Pollution -->
-        @if (cols().pollution.show) {
+        @if (cols().pollution?.show) {
           <td>
             <span class="flex justify-end font-mono whitespace-pre">{{
-              step.pollution | rate: cols().pollution.precision
+              step.pollution | rate: cols().pollution?.precision
             }}</span>
           </td>
         }
         <!-- Link -->
-        @if (cols().link.show) {
+        @if (cols().link?.show) {
           <td>
             <div class="gap-1 flex">
               <a
@@ -771,20 +771,20 @@
     <tfoot>
       <tr>
         <td></td>
-        @if (cols().checkbox.show) {
+        @if (cols().checkbox?.show) {
           <td></td>
         }
-        @if (cols().tree.show) {
+        @if (cols().tree?.show) {
           <td></td>
         }
         <td colspan="3" class="text-center">{{ 'steps.total' | translate }}</td>
-        @if (cols().belts.show) {
+        @if (cols().belts?.show) {
           <td colspan="2" labTotalCell [value]="totals().belts"></td>
         }
-        @if (cols().wagons.show) {
+        @if (cols().wagons?.show) {
           <td colspan="2" labTotalCell [value]="totals().wagons"></td>
         }
-        @if (cols().rockets.show) {
+        @if (cols().rockets?.show) {
           <td>
             <span class="flex justify-end font-mono whitespace-pre">{{
               totals().rockets
@@ -796,27 +796,27 @@
         }
         <td colspan="2"><!-- Inserters --></td>
         <td colspan="2" labTotalCell [value]="totals().machines"></td>
-        @if (cols().beacons.show) {
+        @if (cols().beacons?.show) {
           <td labTotalCell [value]="totals().beacons"></td>
         }
-        @if (cols().power.show) {
+        @if (cols().power?.show) {
           <td>
             <span class="flex justify-end font-mono whitespace-pre">{{
               totals().power
                 | power
-                  : cols().power.precision
+                  : cols().power?.precision
                   : objectivesStore.effectivePowerUnit()
             }}</span>
           </td>
         }
-        @if (cols().pollution.show) {
+        @if (cols().pollution?.show) {
           <td>
             <span class="flex justify-end font-mono whitespace-pre">{{
-              totals().pollution | rate: cols().pollution.precision
+              totals().pollution | rate: cols().pollution?.precision
             }}</span>
           </td>
         }
-        @if (cols().link.show) {
+        @if (cols().link?.show) {
           <td></td>
         }
       </tr>

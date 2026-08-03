@@ -111,10 +111,10 @@ export class DetailRow {
   protected readonly machineIdSpan = computed(() => {
     const cols = this.cols();
     let colspan = 1;
-    if (cols.beacons.show) colspan++;
-    if (cols.power.show) colspan++;
-    if (cols.pollution.show) colspan++;
-    if (cols.link.show) colspan++;
+    if (cols.beacons?.show) colspan++;
+    if (cols.power?.show) colspan++;
+    if (cols.pollution?.show) colspan++;
+    if (cols.link?.show) colspan++;
     return colspan;
   });
 }

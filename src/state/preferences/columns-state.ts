@@ -90,32 +90,28 @@ export function columnOptions(data: Dataset): Option<ColumnKey>[] {
 export function gameColumnsState(
   columnsState: ColumnsState,
   data: Dataset,
-): ColumnsState {
+): Partial<ColumnsState> {
   // Apply all defaults
   columnsState = spread(initialColumnsState, columnsState);
 
-  // Delete any keys that are not valid
+  // Delete any keys that are not valid for the current game
   const oldKeys = Object.keys(columnsState) as ColumnKey[];
   oldKeys
-    .filter((c) => !initialColumnsState[c])
+    .filter((c) => !initialColumnsState[c] || columnsInfo[c].exclude?.(data))
     .forEach((c) => delete columnsState[c]);
-
-  // Hide any columns that are not relevant to the current game
-  allColumns
-    .filter((c) => columnsInfo[c].exclude?.(data))
-    .forEach((c) => {
-      columnsState = spread(columnsState, {
-        [c]: spread(columnsState[c], { show: false }),
-      });
-    });
 
   return columnsState;
 }
 
-export function copyColumnsState(value: ColumnsState): ColumnsState {
+export function copyColumnsState(
+  value: Partial<ColumnsState>,
+): Partial<ColumnsState> {
   const keys = Object.keys(value) as ColumnKey[];
-  return keys.reduce((s, c) => {
-    s[c] = spread(value[c]);
+  return keys.reduce<Partial<ColumnsState>>((s, c) => {
+    const val = value[c];
+    // istanbul ignore if: This should not be possible to hit but is here for type safety
+    if (val == null) return s;
+    s[c] = spread(val);
     return s;
-  }, {} as ColumnsState);
+  }, {});
 }

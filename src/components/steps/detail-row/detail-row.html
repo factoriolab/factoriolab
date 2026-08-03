@@ -4,7 +4,7 @@
   @if (items(); as items) {
     <div class="flex items-center justify-end">
       <span class="font-mono whitespace-pre">{{
-        items | rate: cols().items.precision
+        items | rate: cols().items?.precision
       }}</span>
     </div>
   }
@@ -25,12 +25,12 @@
   }
 </td>
 
-@if (cols().belts.show) {
+@if (cols().belts?.show) {
   <td class="pe-0">
     @if (value().belts; as belts) {
       <div class="flex items-center justify-end">
         <span class="font-mono whitespace-pre">{{
-          belts.div(safeFactor()) | rate: cols().belts.precision
+          belts.div(safeFactor()) | rate: cols().belts?.precision
         }}</span>
       </div>
     }
@@ -54,12 +54,12 @@
   </td>
 }
 
-@if (cols().wagons.show) {
+@if (cols().wagons?.show) {
   <td class="pe-0">
     @if (value().wagons; as wagons) {
       <div class="flex items-center justify-end">
         <span class="font-mono whitespace-pre">{{
-          wagons.div(safeFactor()) | rate: cols().wagons.precision
+          wagons.div(safeFactor()) | rate: cols().wagons?.precision
         }}</span>
       </div>
     }
@@ -80,7 +80,7 @@
   </td>
 }
 
-@if (cols().rockets.show) {
+@if (cols().rockets?.show) {
   <td colspan="2"></td>
 }
 
@@ -92,7 +92,7 @@
         labTooltip="steps.inserterCountTooltip"
       >
         <span class="font-mono whitespace-pre"
-          >{{ count | rate: cols().items.precision }}*</span
+          >{{ count | rate: cols().items?.precision }}*</span
         >
       </div>
     }
@@ -126,7 +126,7 @@
   ) {
     <div class="flex items-center justify-end">
       <span class="font-mono whitespace-pre">{{
-        machines.div(safeFactor()) | rate: cols().machines.precision
+        machines.div(safeFactor()) | rate: cols().machines?.precision
       }}</span>
     </div>
   }
