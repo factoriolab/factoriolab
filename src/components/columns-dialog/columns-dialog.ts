@@ -23,6 +23,7 @@ import { powerUnitOptions } from '~/state/preferences/power-unit';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { spread } from '~/utils/object';
 
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
@@ -70,7 +71,7 @@ export class ColumnsDialog implements DialogData {
   get modified(): boolean {
     return (Object.keys(this.value) as ColumnKey[]).some(
       (k) =>
-        this.value[k].precision !== initialColumnsState[k].precision ||
+        this.value[k]?.precision !== initialColumnsState[k].precision ||
         this.value[k].show !== initialColumnsState[k].show,
     );
   }
@@ -81,8 +82,9 @@ export class ColumnsDialog implements DialogData {
   }
 
   save(): void {
+    const columns = spread(this.preferencesStore.columns(), this.value);
     this.preferencesStore.apply({
-      columns: this.value,
+      columns,
       powerUnit: this.powerUnit(),
     });
     this.dialogRef.close();
