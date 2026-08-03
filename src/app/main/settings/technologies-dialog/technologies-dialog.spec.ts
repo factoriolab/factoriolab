@@ -24,14 +24,6 @@ describe('TechnologiesDialog', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('result', () => {
-    it('should compare the selection against the dataset', () => {
-      expect(component.result()).toBeUndefined();
-      component['selection'].set(new Set());
-      expect(component.result()).toEqual(new Set());
-    });
-  });
-
   describe('status', () => {
     it('should filter technologies', () => {
       component['filterText'].set('laser');
@@ -42,7 +34,7 @@ describe('TechnologiesDialog', () => {
     });
 
     it('should set up lists of available, locked, and researched technologies', () => {
-      component['selection'].set(new Set([RecipeId.MiningProductivity]));
+      component.selection.set(new Set([RecipeId.MiningProductivity]));
       const status = component['status']();
       expect(status.available.length).toEqual(2);
       expect(status.researched.length).toEqual(1);
@@ -52,25 +44,25 @@ describe('TechnologiesDialog', () => {
 
   describe('selectAll', () => {
     it('should set the selection to all', () => {
-      spyOn(component['selection'], 'set');
+      spyOn(component.selection, 'set');
       component.selectAll(true);
-      expect(component['selection'].set).toHaveBeenCalledWith(
+      expect(component.selection.set).toHaveBeenCalledWith(
         new Set(component['data']().technologyIds),
       );
     });
 
     it('should set the selection to empty', () => {
-      spyOn(component['selection'], 'set');
+      spyOn(component.selection, 'set');
       component.selectAll(false);
-      expect(component['selection'].set).toHaveBeenCalledWith(new Set());
+      expect(component.selection.set).toHaveBeenCalledWith(new Set());
     });
   });
 
   describe('toggleId', () => {
     it('should add the id and any dependencies to the selection', () => {
-      component['selection'].set(new Set());
+      component.selection.set(new Set());
       component.toggleId(RecipeId.AutomationSciencePackTechnology);
-      expect(component['selection']()).toEqual(
+      expect(component.selection()).toEqual(
         new Set([
           RecipeId.Electronics,
           RecipeId.AutomationSciencePackTechnology,
@@ -80,16 +72,16 @@ describe('TechnologiesDialog', () => {
     });
 
     it('should remove id and any dependencies from the selection', () => {
-      component['selection'].set(
+      component.selection.set(
         new Set([
           RecipeId.Electronics,
           RecipeId.AutomationSciencePackTechnology,
           RecipeId.SteamPower,
         ]),
       );
-      spyOn(component['selection'], 'set');
+      spyOn(component.selection, 'set');
       component.toggleId(RecipeId.SteamPower);
-      expect(component['selection']()).toEqual(new Set([RecipeId.Electronics]));
+      expect(component.selection()).toEqual(new Set([RecipeId.Electronics]));
     });
   });
 
@@ -99,7 +91,7 @@ describe('TechnologiesDialog', () => {
         closed: of([RecipeId.AutomationSciencePackTechnology]),
       } as any);
       component.openImport();
-      expect(component['selection']()).toEqual(
+      expect(component.selection()).toEqual(
         new Set([
           RecipeId.AutomationSciencePackTechnology,
           RecipeId.SteamPower,
