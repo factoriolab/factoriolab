@@ -15,4 +15,5 @@ export interface Defaults {
   moduleRankIds: string[];
   beacons: BeaconSettings[];
   overclock?: Rational;
+  researchedTechnologyIds?: Set<string>;
 }

@@ -14,6 +14,7 @@ export interface HardCodedPresetsJson {
   maxMachineRank?: string[];
   moduleRank?: string[];
   beaconModule?: string;
+  researchedTechnologies?: string[];
 }
 
 export interface CustomPresetsJson {
@@ -57,4 +58,5 @@ export interface PresetJson {
 
   /** Defaults to zero */
   beaconCount?: number | string;
+  researchedTechnologies?: string[];
 }

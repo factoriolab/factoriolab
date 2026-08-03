@@ -54,17 +54,9 @@ export class TechnologiesDialog implements DialogData {
   private readonly settingsStore = inject(SettingsStore);
 
   protected readonly filterText = signal('');
-  protected readonly selection = linkedSignal(
+  readonly selection = linkedSignal(
     () => this.settingsStore.settings().researchedTechnologyIds,
   );
-  readonly result = computed(() => {
-    const researchedTechnologyIds = this.selection();
-    const data = this.data();
-    if (researchedTechnologyIds?.size === data.technologyIds.length)
-      return undefined;
-
-    return researchedTechnologyIds;
-  });
 
   protected readonly allSelected = computed(
     () => this.selection().size === this.data().technologyIds.length,

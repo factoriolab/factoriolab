@@ -124,9 +124,10 @@
           color="brand"
           [faIcon]="faMicrochip"
           [text]="
-            settingsStore.researchedTechnologyIds()
-              ? 'settings.techsResearched'
-              : 'settings.allTechsResearched'
+            settings().researchedTechnologyIds.size ===
+            data().technologyIds.length
+              ? 'settings.allTechsResearched'
+              : 'settings.techsResearched'
           "
           [textParams]="{ count: settings().researchedTechnologyIds.size }"
           labTooltip="settings.techsTooltip"

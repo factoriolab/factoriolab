@@ -381,6 +381,9 @@ export class SettingsStore extends Store<SettingsState> {
       const machineRank = coalesce(p.machineRank, m.machineRank);
       const fuelRank = coalesce(p.fuelRank, m.fuelRank);
       const moduleRank = coalesce(p.moduleRank, m.moduleRank);
+      const researchedTechnologyIds = p.researchedTechnologies
+        ? new Set(p.researchedTechnologies)
+        : undefined;
       return {
         locations: coalesce(p.locations, m.locations),
         beltId: coalesce(p.belt, m.belt),
@@ -393,6 +396,7 @@ export class SettingsStore extends Store<SettingsState> {
         fuelRankIds: coalesce(fuelRank, []),
         moduleRankIds: coalesce(moduleRank, []),
         beacons,
+        researchedTechnologyIds,
       };
     }
 
@@ -442,6 +446,9 @@ export class SettingsStore extends Store<SettingsState> {
 
     const machineRankIds =
       preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
+    const researchedTechnologyIds = m.researchedTechnologies
+      ? new Set(m.researchedTechnologies)
+      : undefined;
     return {
       beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
       pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
@@ -453,6 +460,7 @@ export class SettingsStore extends Store<SettingsState> {
       moduleRankIds: coalesce(moduleRank, []),
       beacons,
       overclock,
+      researchedTechnologyIds,
     };
   }
 
@@ -895,7 +903,8 @@ export class SettingsStore extends Store<SettingsState> {
     defaults: Defaults | undefined,
     data: Dataset,
   ): Settings {
-    const techIds = state.researchedTechnologyIds;
+    const techIds =
+      state.researchedTechnologyIds ?? defaults?.researchedTechnologyIds;
     let researchedTechnologyIds = new Set(data.technologyIds);
     if (techIds != null && researchedTechnologyIds.size > 0) {
       // Filter for only technologies that still exist in this data set
