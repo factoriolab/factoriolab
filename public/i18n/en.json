@@ -493,6 +493,7 @@
     "proliferatorSelfSpray": "Proliferator self-spray",
     "proliferatorSelfSprayTooltip": "Select the proliferator spray applied to proliferator itself",
     "queryParamsPlaceholder": "Paste query parameters",
+    "recipeCostMultiplier": "Recipe cost multiplier",
     "recipeProductivity": "Recipe productivity bonuses",
     "recipeProductivityTooltip": "Click to set productivity bonuses for recipes upgraded by technology",
     "recipesExcluded": "{{ count }} recipes excluded",

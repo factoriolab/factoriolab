@@ -158,6 +158,27 @@
         labTooltipPosition="adjacent"
         (click)="picker.pickExcludedItems()"
       ></button>
+
+      @if (data().flags.has('recipeCostMultiplier')) {
+        <lab-form-field label="settings.recipeCostMultiplier">
+          <lab-select
+            [options]="[
+              { label: '0.25×', value: 0.25 },
+              { label: '0.5×', value: 0.5 },
+              { label: '0.75×', value: 0.75 },
+              { label: '1×', value: 1 },
+              { label: '1.25×', value: 1.25 },
+              { label: '1.5×', value: 1.5 },
+              { label: '1.75×', value: 1.75 },
+              { label: '2×', value: 2 },
+            ]"
+            [ngModel]="settings().recipeCostMultiplier.toNumber()"
+            (ngModelChange)="
+              settingsStore.apply({ recipeCostMultiplier: rational($event) })
+            "
+          ></lab-select>
+        </lab-form-field>
+      }
     </ng-template>
   </lab-accordion-item>
 

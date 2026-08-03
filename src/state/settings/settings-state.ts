@@ -22,6 +22,7 @@ export interface SettingsState {
   stack?: Rational;
   excludedRecipeIds?: Set<string>;
   checkedRecipeIds: Set<string>;
+  recipeCostMultiplier: Rational;
   netProductionOnly: boolean;
   preset: number;
   machineRankIds?: string[];
@@ -53,6 +54,7 @@ export const initialSettingsState: SettingsState = {
   checkedItemIds: new Set(),
   flowRate: rational(1200n),
   checkedRecipeIds: new Set(),
+  recipeCostMultiplier: rational(1),
   netProductionOnly: false,
   proliferatorSprayId: '',
   costs: {
