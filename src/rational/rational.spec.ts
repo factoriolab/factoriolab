@@ -91,16 +91,15 @@ describe('Rational', () => {
     it('should return the maximum of the rational or the compared value', () => {
       expect(rational.zero.max(rational.one)).toEqual(rational.one);
       expect(rational.one.max(rational.zero)).toEqual(rational.one);
-    })
-  })
-
+    });
+  });
 
   describe('min', () => {
     it('should return the minimum of the rational or the compared value', () => {
       expect(rational.zero.min(rational.one)).toEqual(rational.zero);
       expect(rational.one.min(rational.zero)).toEqual(rational.zero);
-    })
-  })
+    });
+  });
 
   describe('add', () => {
     it('should add two rationals', () => {

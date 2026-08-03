@@ -825,7 +825,9 @@ describe('Adjustment', () => {
     it('should apply a recipeCostMultiplier', () => {
       const data = mocks.getDataset();
       data.flags.add('recipeCostMultiplier');
-      const settings = spread(settingsStore.settings(), { recipeCostMultiplier: rational(2n)})
+      const settings = spread(settingsStore.settings(), {
+        recipeCostMultiplier: rational(2n),
+      });
       const result = service.adjustRecipe(
         RecipeId.SteelPlate,
         recipesStore.settings()[RecipeId.SteelPlate],
@@ -834,7 +836,7 @@ describe('Adjustment', () => {
         data,
       );
       expect(result.in[ItemId.IronPlate]).toEqual(rational(10n));
-    })
+    });
   });
 
   describe('adjustLaunchRecipeObjective', () => {
