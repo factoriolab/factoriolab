@@ -850,9 +850,18 @@ async function processMod(): Promise<void> {
     // Don't include recipes with no inputs/outputs
     const ingredients = getIngredients(recipe.ingredients);
     const products = getProducts(recipe.results);
+
+    const ingredientKeys = Object.keys(ingredients[0]);
+    const productKeys = Object.keys(products[0]);
+    if (ingredientKeys.length === 0 && productKeys.length === 0) continue;
+
+    /**
+     * Don't include recipes with items that won't map (blueprint books,
+     * blueprints, deconstruction planners, etc)
+     */
     if (
-      Object.keys(ingredients[0]).length === 0 &&
-      Object.keys(products[0]).length === 0
+      ingredientKeys.some((k) => itemMap[k] == null) ||
+      productKeys.some((k) => itemMap[k] == null)
     )
       continue;
 
@@ -994,8 +1003,8 @@ async function processMod(): Promise<void> {
   const entitiesUsedProtos = entityKeys
     .filter((id) => !placedEntities.has(id) && !itemsUsed.has(id))
     .map((id) => entityMap[id])
-    // Exclude any entities without icons (non-placeable)
-    .filter((e) => e.icon || e.icons);
+    // Exclude any entities without icons (non-placeable) or without name
+    .filter((e) => (e.icon || e.icons) && entityLocale.names[e.name]);
 
   // Sort items
   const protos = [
@@ -1143,8 +1152,8 @@ async function processMod(): Promise<void> {
                 id: `${id}-heat-fuel`,
                 name: itemTemp.name,
                 category: itemTemp.category,
+                icon: icon ?? proto.name,
                 row: getItemRow(proto),
-                icon,
                 fuel: heatFuel,
               });
             }
@@ -2036,16 +2045,21 @@ async function processMod(): Promise<void> {
         recipeInOptions.forEach(([recipeIn, ids], i) => {
           const id = i === 0 ? fakeId : `${fakeId}-${ids.join('-')}`;
 
-          const locations = allLocations
-            .filter((l) => {
-              if (!isPlanetPrototype(l)) return false;
-              return (
-                l.map_gen_settings?.autoplace_settings?.entity?.settings?.[
-                  key
-                ] != null
-              );
-            })
-            .map((l) => l.name);
+          let locations: string[] | undefined;
+          if (allLocations.length > 1) {
+            locations = allLocations
+              .filter((l) => {
+                if (!isPlanetPrototype(l)) return false;
+                console.log(l.map_gen_settings);
+                return (
+                  l.map_gen_settings?.autoplace_settings?.entity?.settings?.[
+                    key
+                  ] != null
+                );
+              })
+              .map((l) => l.name);
+          }
+
           const recipe: RecipeJson = {
             id: '',
             name: isFluidPrototype(proto)
