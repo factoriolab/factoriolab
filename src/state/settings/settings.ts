@@ -8,6 +8,7 @@ export interface Settings extends SettingsState {
   defaultPipeId: string;
   defaultCargoWagonId: string;
   defaultFluidWagonId: string;
+  defaultInserterId: string;
   stack: Rational;
   excludedRecipeIds: Set<string>;
   defaultExcludedRecipeIds: Set<string>;

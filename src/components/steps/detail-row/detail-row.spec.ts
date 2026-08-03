@@ -72,5 +72,14 @@ describe('DetailRow', () => {
       await TestBed.inject(ApplicationRef).whenStable();
       expect(component['inserterId']()).toEqual(ItemId.BulkInserter);
     });
+
+    it('should use the inserterId from the settings', async () => {
+      component['settingsStore'].apply({ inserterId: ItemId.FastInserter });
+      setInputs(fixture, {
+        value: { itemId: ItemId.ElectronicCircuit, items: rational(3600n) },
+      });
+      await TestBed.inject(ApplicationRef).whenStable();
+      expect(component['inserterId']()).toEqual(ItemId.FastInserter);
+    });
   });
 });

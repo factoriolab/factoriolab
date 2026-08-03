@@ -10,6 +10,7 @@ export interface Defaults {
   fuelRankIds: string[];
   cargoWagonId?: string;
   fluidWagonId?: string;
+  inserterId?: string;
   excludedRecipeIds: string[];
   machineRankIds: string[];
   moduleRankIds: string[];

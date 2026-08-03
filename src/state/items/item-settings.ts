@@ -6,4 +6,5 @@ export interface ItemSettings extends ItemState {
   defaultBeltId: string;
   defaultStack: Rational;
   defaultWagonId: string;
+  defaultInserterId: string;
 }

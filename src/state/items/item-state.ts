@@ -4,5 +4,6 @@ export interface ItemState {
   beltId?: string;
   stack?: Rational;
   wagonId?: string;
+  inserterId?: string;
   excludeRockets?: boolean;
 }

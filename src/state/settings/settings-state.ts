@@ -18,6 +18,7 @@ export interface SettingsState {
   pipeId?: string;
   cargoWagonId?: string;
   fluidWagonId?: string;
+  inserterId?: string;
   flowRate: Rational;
   stack?: Rational;
   excludedRecipeIds?: Set<string>;
