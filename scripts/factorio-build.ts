@@ -19,7 +19,7 @@ import {
 import { QualityJson } from '~/data/schema/quality';
 import { RecipeFlag, RecipeJson } from '~/data/schema/recipe';
 import { TechnologyJson } from '~/data/schema/technology';
-import { updateHash } from '~/utils/hash';
+import { emptyModHash, updateHash } from '~/utils/hash';
 import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 
@@ -719,7 +719,9 @@ async function processMod(): Promise<void> {
       modData.defaults = modDefaults;
     }
     if (fs.existsSync(modDataPath)) {
-      const oldHash = getJsonData(modHashPath) as ModHash;
+      let oldHash = emptyModHash();
+      if (fs.existsSync(modHashPath))
+        oldHash = getJsonData(modHashPath) as ModHash;
 
       if (modData.defaults?.excludedRecipes) {
         // Filter excluded recipes for only recipes that exist
@@ -1167,6 +1169,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         beacon: getBeacon(proto, abnormalQualities),
@@ -1185,6 +1188,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         machine: getMachine(proto, proto.name),
@@ -1194,6 +1198,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         belt: getBelt(proto),
@@ -1203,6 +1208,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         pipe: getPipe(proto, abnormalQualities),
@@ -1212,6 +1218,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         cargoWagon: getCargoWagon(proto),
@@ -1221,6 +1228,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         fluidWagon: getFluidWagon(proto),
@@ -1230,6 +1238,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         inserter: getInserter(proto, abnormalQualities),
@@ -2050,7 +2059,6 @@ async function processMod(): Promise<void> {
             locations = allLocations
               .filter((l) => {
                 if (!isPlanetPrototype(l)) return false;
-                console.log(l.map_gen_settings);
                 return (
                   l.map_gen_settings?.autoplace_settings?.entity?.settings?.[
                     key
