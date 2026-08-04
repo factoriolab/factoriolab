@@ -3,7 +3,7 @@ export function round(number: number, decimals: number): number {
   return Math.round(number * factor) / factor;
 }
 
-export function getEnergyInMJ(usage: string, proto: unknown): number {
+export function getEnergyInMJ(usage: string): number {
   const match = /(\d*\.?\d*)(\w*)/.exec(usage);
   if (match == null) throw new Error(`Unrecognized energy format: '${usage}'`);
 
@@ -12,7 +12,6 @@ export function getEnergyInMJ(usage: string, proto: unknown): number {
   if (unit.endsWith('W')) {
     isWatts = true;
   } else if (!unit.endsWith('J')) {
-    console.log(proto);
     throw new Error(`Unrecognized energy unit: '${usage}'`);
   }
 
