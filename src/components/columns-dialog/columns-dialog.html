@@ -10,51 +10,49 @@
     </thead>
     <tbody>
       @for (column of settingsStore.columnOptions(); track column.value) {
-        <tr>
-          <td>
-            <lab-checkbox
-              [label]="column.label"
-              [class.opacity-40]="column.disabled"
-              [(ngModel)]="value[column.value].show"
-              [disabled]="!!column.disabled"
-              (ngModelChange)="ref.markForCheck()"
-            ></lab-checkbox>
-          </td>
-          @if (
-            !columnsInfo[column.value].hasPrecision || !value[column.value].show
-          ) {
-            <td colspan="3" class="text-center">
-              @if (!columnsInfo[column.value].hasPrecision) {
-                {{ 'columns.notApplicable' | translate }}
-              } @else {
-                {{ 'columns.hidden' | translate }}
-              }
-            </td>
-          } @else {
-            <td class="w-20">
-              <input
-                type="number"
-                class="input"
-                aria-labelledby="decimals-label"
-                [(ngModel)]="value[column.value].precision"
-              />
-            </td>
+        @if (value[column.value]; as entry) {
+          <tr>
             <td>
-              <div class="flex items-center justify-center">
-                <lab-checkbox
-                  labelledBy="fractions-label"
-                  [ngModel]="value[column.value].precision == null"
-                  (ngModelChange)="
-                    value[column.value].precision = $event ? null : 1
-                  "
-                ></lab-checkbox>
-              </div>
+              <lab-checkbox
+                [label]="column.label"
+                [class.opacity-40]="column.disabled"
+                [(ngModel)]="entry.show"
+                [disabled]="!!column.disabled"
+                (ngModelChange)="ref.markForCheck()"
+              ></lab-checkbox>
             </td>
-            <td class="text-center font-mono">
-              {{ value[column.value].precision | precisionExample }}
-            </td>
-          }
-        </tr>
+            @if (!columnsInfo[column.value].hasPrecision || !entry.show) {
+              <td colspan="3" class="text-center">
+                @if (!columnsInfo[column.value].hasPrecision) {
+                  {{ 'columns.notApplicable' | translate }}
+                } @else {
+                  {{ 'columns.hidden' | translate }}
+                }
+              </td>
+            } @else {
+              <td class="w-20">
+                <input
+                  type="number"
+                  class="input"
+                  aria-labelledby="decimals-label"
+                  [(ngModel)]="entry.precision"
+                />
+              </td>
+              <td>
+                <div class="flex items-center justify-center">
+                  <lab-checkbox
+                    labelledBy="fractions-label"
+                    [ngModel]="entry.precision == null"
+                    (ngModelChange)="entry.precision = $event ? null : 1"
+                  ></lab-checkbox>
+                </div>
+              </td>
+              <td class="text-center font-mono">
+                {{ entry.precision | precisionExample }}
+              </td>
+            }
+          </tr>
+        }
       }
     </tbody>
   </table>

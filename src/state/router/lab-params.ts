@@ -47,6 +47,8 @@ export interface LabParams {
   rex?: string;
   /** `Set` Checked recipes */
   rch?: string;
+  /** `Rational` Satisfactory game mode: recipe cost multiplier */
+  rcm?: string;
   /** V10 Legacy excluded recipes */
   v10rex?: string;
   /** V10 Legacy checked recipes */

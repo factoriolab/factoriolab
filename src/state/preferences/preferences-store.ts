@@ -29,6 +29,7 @@ export class PreferencesStore extends Store<PreferencesState> {
   readonly chroma = this.select('chroma');
   readonly backgroundLightness = this.select('backgroundLightness');
   readonly pinObjectives = this.select('pinObjectives');
+  readonly glpkAlgorithm = this.select('glpkAlgorithm');
 
   constructor() {
     super(initialPreferencesState, ['states', 'flowSettings']);

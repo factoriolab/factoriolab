@@ -184,12 +184,13 @@ export const anyEntityKeys = [
 ] as const;
 
 export const anyItemKeys = [
-  'item',
   'ammo',
   'armor',
   'capsule',
-  'gun',
+  'fluid',
+  'item',
   'item-with-entity-data',
+  'gun',
   'module',
   'rail-planner',
   'repair-tool',
@@ -197,7 +198,6 @@ export const anyItemKeys = [
   'spidertron-remote',
   'space-platform-starter-pack',
   'tool',
-  'fluid',
 ] as const;
 
 export const anyLocationKeys = ['surface', 'planet'] as const;

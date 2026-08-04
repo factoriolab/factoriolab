@@ -47,11 +47,11 @@
     "maximize": "최대화",
     "maximizeTooltip": "최대화 목표의 비용 (음수여야 함)",
     "recycling": "재활용",
-    "recyclingTooltip": "재활용 레시피의 비용에 이 값을 곱함",
+    "recyclingTooltip": "재활용 제작법의 비용에 이 값을 곱함",
     "surplus": "잉여",
     "surplusTooltip": "잉여 항목을 생산하는 데 드는 비용",
     "unproduceable": "생산 불가",
-    "unproduceableTooltip": "포함된 어떤 레시피로도 생산할 수 없는 항목의 비용"
+    "unproduceableTooltip": "포함된 어떤 제작법으로도 생산할 수 없는 항목의 비용"
   },
   "customData": {
     "cached": "캐시됨",
@@ -124,10 +124,10 @@
     "pollutionMultiplier": "공해 배수",
     "prerequisites": "선행 조건",
     "producedByRecipes": "생산하는 제작법",
-    "producers": "생산자",
+    "producers": "제작 가능 시설",
     "producibleRecipes": "생산 가능한 제작법",
     "productivity": "생산성",
-    "products": "생산물",
+    "products": "생산품",
     "proliferator": "증식제",
     "pumps": "펌프",
     "quality": "품질",
@@ -154,7 +154,7 @@
     "unlockQuality": "품질 잠금 해제",
     "unlockRecipe": "제작법 잠금 해제",
     "unlockedBy": "잠금 해제 조건",
-    "unlockedRecipes": "잠금 해제된 레시피",
+    "unlockedRecipes": "잠금 해제된 제작법",
     "value": "값"
   },
   "error": {
@@ -292,6 +292,10 @@
       "starRupture": "StarRupture",
       "techtonica": "Techtonica"
     },
+    "glpkAlgorithm": {
+      "exact": "Exact",
+      "simplex": "Simplex (Default)"
+    },
     "linkValue": {
       "belts": "벨트",
       "items": "아이템",
@@ -305,13 +309,13 @@
       "weight": "가중치"
     },
     "objectiveType": {
-      "input": "입력",
+      "input": "투입",
       "inputTooltip": "이미 이 수량을 생산하고 있습니다<br><span class=\"text-sm italic\">(계산에서 제외)</span>",
       "limit": "제한",
       "limitTooltip": "이 생산량을 제한하고 싶습니다<br><span class=\"text-sm italic\">(주로 최대화에 사용)</span>",
       "maximize": "최대화",
       "maximizeTooltip": "이 생산량을 최대화하고 싶습니다<br><span class=\"text-sm italic\">(제한이 필요함)</span>",
-      "output": "출력",
+      "output": "산출",
       "outputTooltip": "이 수량을 생산하고 싶습니다<br><span class=\"text-sm italic\">(기본 옵션)</span>"
     },
     "objectiveUnit": {
@@ -398,7 +402,7 @@
     "selectRecipe": "제작법 선택"
   },
   "preferences": {
-    "backgroundLightness": "배경 명도",
+    "backgroundLightness": "배경 밝기",
     "bypassLanding": "항상 랜딩 페이지 건너뛰기",
     "chroma": "채도",
     "convertObjectiveValues": "목표 값 변환",
@@ -406,10 +410,11 @@
     "createSavedState": "새로 만들기",
     "deleteSavedState": "삭제",
     "editSavedState": "이름 바꾸기",
+    "glpkAlgorithm": "GLPK Algorithm",
     "header": "환경설정",
     "helpTranslate": "번역 도와주기",
     "hide": "환경설정 패널 숨기기",
-    "hue": "색조",
+    "hue": "색상",
     "language": "언어",
     "nameSavedState": "이름을 입력하세요",
     "override": "재정의",
@@ -475,8 +480,8 @@
     "miningSpeed": "채취 속도",
     "miningSpeedTooltip": "보너스가 적용된 현재 채취 속도를 입력하세요. 기본값은 100%입니다",
     "modVersions": "버전",
-    "modifierRank": "선호 모듈 설정",
-    "modifierRankEmpty": "선택된 모듈 설정 없음",
+    "modifierRank": "선호 모듈",
+    "modifierRankEmpty": "선택된 모듈 없음",
     "modifierRankTooltip": "해당되는 경우 사용할 선호 모듈의 순서를 선택하세요",
     "modifierTooltip": "모듈 설정 선택",
     "netProductionOnly": "순생산량만 표시",
@@ -490,8 +495,8 @@
     "queryParamsPlaceholder": "쿼리 매개변수 붙여넣기",
     "recipeProductivity": "제작법 생산성 보너스",
     "recipeProductivityTooltip": "클릭하여 기술로 업그레이드된 제작법의 생산성 보너스를 설정하세요",
-    "recipesExcluded": "레시피 {{ count }}개 제외됨",
-    "recipesTooltip": "클릭하여 포함할 레시피를 수정하세요. 제외된 제작법은 결과에서 사용되지 않습니다.",
+    "recipesExcluded": "제작법 {{ count }}개 제외됨",
+    "recipesTooltip": "클릭하여 포함할 제작법을 수정하세요. 제외된 제작법은 결과에서 사용되지 않습니다.",
     "removeMachinePreference": "기계 선호도 제거",
     "requestMod": "모드 요청하기",
     "requireMachinesOutput": "기계 산출물 필수화",

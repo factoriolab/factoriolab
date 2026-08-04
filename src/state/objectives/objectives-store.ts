@@ -95,8 +95,9 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
     const settings = this.settingsStore.settings();
     const data = this.recipesStore.adjustedDataset();
     const paused = this.preferencesStore.paused();
+    const glpkAlgorithm = this.preferencesStore.glpkAlgorithm();
 
-    return this.solver.solve(objectives, settings, data, paused);
+    return this.solver.solve(objectives, settings, data, paused, glpkAlgorithm);
   });
 
   readonly steps = computed(() => {

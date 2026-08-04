@@ -78,6 +78,14 @@ export class Rational {
     return this.p === x.p && this.q === x.q;
   }
 
+  max(x: Rational): Rational {
+    return this.gte(x) ? this : x;
+  }
+
+  min(x: Rational): Rational {
+    return this.lte(x) ? this : x;
+  }
+
   add(x: Rational): Rational {
     if (x.isZero()) return this;
     return new Rational(this.p * x.q + this.q * x.p, this.q * x.q);

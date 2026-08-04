@@ -238,9 +238,9 @@ describe('SettingsStore', () => {
   describe('columnsState', () => {
     it('should return the columns state', () => {
       const result = service.columnsState();
-      expect(result.wagons.show).toBeTrue();
-      expect(result.beacons.show).toBeTrue();
-      expect(result.pollution.show).toBeTrue();
+      expect(result.wagons?.show).toBeTrue();
+      expect(result.beacons?.show).toBeTrue();
+      expect(result.pollution?.show).toBeTrue();
     });
   });
 

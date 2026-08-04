@@ -3,17 +3,23 @@ export function round(number: number, decimals: number): number {
   return Math.round(number * factor) / factor;
 }
 
-export function getEnergyInMJ(usage: string): number {
+export function getEnergyInMJ(usage: string, proto: unknown): number {
   const match = /(\d*\.?\d*)(\w*)/.exec(usage);
   if (match == null) throw new Error(`Unrecognized energy format: '${usage}'`);
 
   const [_, numStr, unit] = [...match];
-  if (!unit.endsWith('J'))
+  let isWatts = false;
+  if (unit.endsWith('W')) {
+    isWatts = true;
+  } else if (!unit.endsWith('J')) {
+    console.log(proto);
     throw new Error(`Unrecognized energy unit: '${usage}'`);
+  }
 
   const multiplier = getMultiplier(unit.substring(0, unit.length - 1)) / 1000;
   const num = Number(numStr);
-  const result = multiplier * num;
+  let result = multiplier * num;
+  if (isWatts) result /= 60;
   return round(result, 10);
 }
 

@@ -1,6 +1,7 @@
 import { AdjustedRecipe } from '~/data/schema/recipe';
 import { Rational } from '~/rational/rational';
 import { ObjectiveState, RecipeObjective } from '~/state/objectives/objective';
+import { GlpkAlgorithm } from '~/state/preferences/glpk-algorithm';
 import { CostSettings } from '~/state/settings/cost-settings';
 import { AdjustedDataset } from '~/state/settings/dataset';
 import { MaximizeType } from '~/state/settings/maximize-type';
@@ -34,4 +35,5 @@ export interface SimplexState {
   requireMachinesOutput: boolean;
   costs: CostSettings;
   hasSurplusCost: boolean;
+  glpkAlgorithm: GlpkAlgorithm;
 }
