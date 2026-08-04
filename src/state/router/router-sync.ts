@@ -8,6 +8,7 @@ import {
   map,
   Subject,
   switchMap,
+  takeWhile,
   tap,
 } from 'rxjs';
 
@@ -160,6 +161,7 @@ export class RouterSync {
             queryParams,
           ),
         ),
+        takeWhile(() => !this.appRef.destroyed),
         tap(({ modId }) => {
           /**
            * Apply modId before getting latest modData & modHash, and tick to
