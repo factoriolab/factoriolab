@@ -1102,7 +1102,7 @@ async function processMod(): Promise<void> {
       if (proto.fuel_value) {
         fuel = {
           category: ANY_FLUID_BURN,
-          value: getEnergyInMJ(proto.fuel_value, proto),
+          value: getEnergyInMJ(proto.fuel_value),
           pollutionMultiplier: proto.emissions_multiplier,
         };
       }
@@ -1142,7 +1142,7 @@ async function processMod(): Promise<void> {
             // Add fluid heat fuel
             const tempDiff = temp - proto.default_temperature;
             const energyGenerated =
-              tempDiff * getEnergyInMJ(proto.heat_capacity ?? '1KJ', proto);
+              tempDiff * getEnergyInMJ(proto.heat_capacity ?? '1KJ');
             const heatFuel: FuelJson = {
               category: ANY_FLUID_HEAT,
               value: round(energyGenerated, 10),
@@ -1391,7 +1391,7 @@ async function processMod(): Promise<void> {
       if (proto.fuel_category != null && proto.fuel_value != null) {
         item.fuel = {
           category: proto.fuel_category,
-          value: getEnergyInMJ(proto.fuel_value, proto),
+          value: getEnergyInMJ(proto.fuel_value),
           result: proto.burnt_result,
           pollutionMultiplier: proto.fuel_emissions_multiplier,
         };
@@ -1691,9 +1691,7 @@ async function processMod(): Promise<void> {
           const tempDiff =
             boiler.target_temperature - inputProto.default_temperature;
           const energyReqd =
-            tempDiff *
-            getEnergyInMJ(inputProto.heat_capacity ?? '1KJ', inputProto) *
-            1000;
+            tempDiff * getEnergyInMJ(inputProto.heat_capacity ?? '1KJ') * 1000;
 
           const recipe: RecipeJson = {
             id,

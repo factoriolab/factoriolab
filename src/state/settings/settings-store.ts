@@ -90,7 +90,7 @@ export class SettingsStore extends Store<SettingsState> {
     return `data/${modId}/data.json`;
   });
 
-  private readonly modHashResource = httpResource<ModHash>(() => {
+  readonly modHashResource = httpResource<ModHash>(() => {
     const modId = this.modId();
     if (modId == null || modId === CUSTOM_MOD) return undefined;
     return `data/${modId}/hash.json`;
@@ -116,8 +116,7 @@ export class SettingsStore extends Store<SettingsState> {
 
     if (modId === CUSTOM_MOD) return this.customData.value() ?? undefined;
 
-    if (this.modDataResource.error() || this.modDataResource.isLoading())
-      return undefined;
+    if (this.modDataResource.error()) return undefined;
     return this.modDataResource.value();
   });
 
@@ -127,13 +126,8 @@ export class SettingsStore extends Store<SettingsState> {
 
     if (modId === CUSTOM_MOD) return this.customHash.value() ?? undefined;
 
-    if (this.modHashResource.error() || this.modHashResource.isLoading())
-      return undefined;
-
-    const result = this.modHashResource.value();
-    console.log(modId, result);
-    return result;
-    // return this.modHashResource.value();
+    if (this.modHashResource.error()) return undefined;
+    return this.modHashResource.value();
   });
 
   readonly modI18n = computed(() => {
