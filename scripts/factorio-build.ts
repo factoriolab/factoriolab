@@ -19,7 +19,7 @@ import {
 import { QualityJson } from '~/data/schema/quality';
 import { RecipeFlag, RecipeJson } from '~/data/schema/recipe';
 import { TechnologyJson } from '~/data/schema/technology';
-import { updateHash } from '~/utils/hash';
+import { emptyModHash, updateHash } from '~/utils/hash';
 import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 
@@ -719,7 +719,9 @@ async function processMod(): Promise<void> {
       modData.defaults = modDefaults;
     }
     if (fs.existsSync(modDataPath)) {
-      const oldHash = getJsonData(modHashPath) as ModHash;
+      let oldHash = emptyModHash();
+      if (fs.existsSync(modHashPath))
+        oldHash = getJsonData(modHashPath) as ModHash;
 
       if (modData.defaults?.excludedRecipes) {
         // Filter excluded recipes for only recipes that exist
@@ -850,9 +852,18 @@ async function processMod(): Promise<void> {
     // Don't include recipes with no inputs/outputs
     const ingredients = getIngredients(recipe.ingredients);
     const products = getProducts(recipe.results);
+
+    const ingredientKeys = Object.keys(ingredients[0]);
+    const productKeys = Object.keys(products[0]);
+    if (ingredientKeys.length === 0 && productKeys.length === 0) continue;
+
+    /**
+     * Don't include recipes with items that won't map (blueprint books,
+     * blueprints, deconstruction planners, etc)
+     */
     if (
-      Object.keys(ingredients[0]).length === 0 &&
-      Object.keys(products[0]).length === 0
+      ingredientKeys.some((k) => itemMap[k] == null) ||
+      productKeys.some((k) => itemMap[k] == null)
     )
       continue;
 
@@ -994,8 +1005,8 @@ async function processMod(): Promise<void> {
   const entitiesUsedProtos = entityKeys
     .filter((id) => !placedEntities.has(id) && !itemsUsed.has(id))
     .map((id) => entityMap[id])
-    // Exclude any entities without icons (non-placeable)
-    .filter((e) => e.icon || e.icons);
+    // Exclude any entities without icons (non-placeable) or without name
+    .filter((e) => (e.icon || e.icons) && entityLocale.names[e.name]);
 
   // Sort items
   const protos = [
@@ -1091,7 +1102,7 @@ async function processMod(): Promise<void> {
       if (proto.fuel_value) {
         fuel = {
           category: ANY_FLUID_BURN,
-          value: getEnergyInMJ(proto.fuel_value),
+          value: getEnergyInMJ(proto.fuel_value, proto),
           pollutionMultiplier: proto.emissions_multiplier,
         };
       }
@@ -1131,7 +1142,7 @@ async function processMod(): Promise<void> {
             // Add fluid heat fuel
             const tempDiff = temp - proto.default_temperature;
             const energyGenerated =
-              tempDiff * getEnergyInMJ(proto.heat_capacity ?? '1KJ');
+              tempDiff * getEnergyInMJ(proto.heat_capacity ?? '1KJ', proto);
             const heatFuel: FuelJson = {
               category: ANY_FLUID_HEAT,
               value: round(energyGenerated, 10),
@@ -1143,8 +1154,8 @@ async function processMod(): Promise<void> {
                 id: `${id}-heat-fuel`,
                 name: itemTemp.name,
                 category: itemTemp.category,
+                icon: icon ?? proto.name,
                 row: getItemRow(proto),
-                icon,
                 fuel: heatFuel,
               });
             }
@@ -1158,6 +1169,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         beacon: getBeacon(proto, abnormalQualities),
@@ -1176,6 +1188,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         machine: getMachine(proto, proto.name),
@@ -1185,6 +1198,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         belt: getBelt(proto),
@@ -1194,6 +1208,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         pipe: getPipe(proto, abnormalQualities),
@@ -1203,6 +1218,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         cargoWagon: getCargoWagon(proto),
@@ -1212,6 +1228,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         fluidWagon: getFluidWagon(proto),
@@ -1221,6 +1238,7 @@ async function processMod(): Promise<void> {
         id: proto.name,
         name: entityLocale.names[proto.name],
         category: group.name,
+        stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
         inserter: getInserter(proto, abnormalQualities),
@@ -1229,7 +1247,9 @@ async function processMod(): Promise<void> {
       if (proto.weight != null) {
         itemWeight[proto.name] = proto.weight;
       } else if (
-        proto.flags?.some((f) => f === 'only-in-cursor' || f === 'spawnable')
+        coerceArray(proto.flags).some(
+          (f) => f === 'only-in-cursor' || f === 'spawnable',
+        )
       ) {
         itemWeight[proto.name] = 0;
       }
@@ -1371,7 +1391,7 @@ async function processMod(): Promise<void> {
       if (proto.fuel_category != null && proto.fuel_value != null) {
         item.fuel = {
           category: proto.fuel_category,
-          value: getEnergyInMJ(proto.fuel_value),
+          value: getEnergyInMJ(proto.fuel_value, proto),
           result: proto.burnt_result,
           pollutionMultiplier: proto.fuel_emissions_multiplier,
         };
@@ -1493,7 +1513,7 @@ async function processMod(): Promise<void> {
         // Ensure producers have sufficient fluid boxes
         const fluidIngredients = Object.keys(recipeIn)
           .map((i) => itemMap[i])
-          .filter((i) => isFluidPrototype(i));
+          .filter((i) => i != null && isFluidPrototype(i));
         if (fluidIngredients.length > 0) {
           producers = producers.filter((p) => {
             const fluidBoxes = craftingFluidBoxes[p];
@@ -1525,7 +1545,7 @@ async function processMod(): Promise<void> {
         }
         const fluidProducts = Object.keys(_recipeOut)
           .map((i) => itemMap[i])
-          .filter((i) => isFluidPrototype(i));
+          .filter((i) => i != null && isFluidPrototype(i));
         if (fluidProducts.length > 0) {
           producers = producers.filter((p) => {
             const fluidBoxes = craftingFluidBoxes[p];
@@ -1671,7 +1691,9 @@ async function processMod(): Promise<void> {
           const tempDiff =
             boiler.target_temperature - inputProto.default_temperature;
           const energyReqd =
-            tempDiff * getEnergyInMJ(inputProto.heat_capacity ?? '1KJ') * 1000;
+            tempDiff *
+            getEnergyInMJ(inputProto.heat_capacity ?? '1KJ', inputProto) *
+            1000;
 
           const recipe: RecipeJson = {
             id,
@@ -1929,7 +1951,7 @@ async function processMod(): Promise<void> {
     }
 
     let recipeWeight = 0;
-    for (const ingredient of chosenRecipe.ingredients ?? []) {
+    for (const ingredient of coerceArray(chosenRecipe.ingredients)) {
       const factor =
         ingredient.type === 'item' ? getItemWeight(ingredient.name) : 100;
       recipeWeight += ingredient.amount * factor;
@@ -1938,7 +1960,7 @@ async function processMod(): Promise<void> {
     if (recipeWeight === 0) return defaultItemWeight;
 
     let productCount = 0;
-    for (const product of chosenRecipe.results ?? []) {
+    for (const product of coerceArray(chosenRecipe.results)) {
       if (product.type === 'item') {
         const min = product.amount_min ?? product.amount ?? 0;
         const max = product.amount_max ?? product.amount ?? 0;
@@ -2032,16 +2054,20 @@ async function processMod(): Promise<void> {
         recipeInOptions.forEach(([recipeIn, ids], i) => {
           const id = i === 0 ? fakeId : `${fakeId}-${ids.join('-')}`;
 
-          const locations = allLocations
-            .filter((l) => {
-              if (!isPlanetPrototype(l)) return false;
-              return (
-                l.map_gen_settings?.autoplace_settings?.entity?.settings?.[
-                  key
-                ] != null
-              );
-            })
-            .map((l) => l.name);
+          let locations: string[] | undefined;
+          if (allLocations.length > 1) {
+            locations = allLocations
+              .filter((l) => {
+                if (!isPlanetPrototype(l)) return false;
+                return (
+                  l.map_gen_settings?.autoplace_settings?.entity?.settings?.[
+                    key
+                  ] != null
+                );
+              })
+              .map((l) => l.name);
+          }
+
           const recipe: RecipeJson = {
             id: '',
             name: isFluidPrototype(proto)
@@ -2431,7 +2457,7 @@ async function processMod(): Promise<void> {
 
     if (modDataReport.disabledRecipeDoesntExist.length) {
       logWarn(
-        `Inexistent recipes disabled in defaults.json: ${modDataReport.disabledRecipeDoesntExist.length.toString()}`,
+        `Nonexistent recipes disabled in defaults.json: ${modDataReport.disabledRecipeDoesntExist.length.toString()}`,
       );
       console.log('These recipes have been ignored.');
     }

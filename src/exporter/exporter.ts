@@ -68,17 +68,17 @@ export class Exporter {
 
       if (step.surplus != null) exp.Surplus = '=' + step.surplus.toString();
 
-      if (columns.belts.show) {
+      if (columns.belts?.show) {
         if (step.belts != null) exp.Belts = '=' + step.belts.toString();
         exp.Belt = itemSettings.beltId;
       }
 
-      if (columns.wagons.show) {
+      if (columns.wagons?.show) {
         if (step.wagons != null) exp.Wagons = '=' + step.wagons.toString();
         exp.Wagon = itemSettings.wagonId;
       }
 
-      if (columns.rockets.show) {
+      if (columns.rockets?.show) {
         if (step.rockets != null) exp.Rockets = '=' + step.rockets.toString();
       }
     }
@@ -101,7 +101,7 @@ export class Exporter {
       if (recipeSettings.machineId != null) {
         const machine = data.machineRecord[recipeSettings.machineId];
         const allowsModules = this.adjustment.allowsModules(recipe, machine);
-        if (columns.machines.show) {
+        if (columns.machines?.show) {
           if (step.machines != null)
             exp.Machines = '=' + step.machines.toString();
           exp.Machine = recipeSettings.machineId;
@@ -113,7 +113,7 @@ export class Exporter {
           }
         }
 
-        if (columns.beacons.show && allowsModules) {
+        if (columns.beacons?.show && allowsModules) {
           exp.Beacons = `"${coalesce(
             recipeSettings.beacons
               ?.map(
@@ -131,10 +131,10 @@ export class Exporter {
           )}"`;
         }
 
-        if (columns.power.show && step.power != null)
+        if (columns.power?.show && step.power != null)
           exp.Power = '=' + step.power.toString();
 
-        if (columns.pollution.show && step.pollution != null) {
+        if (columns.pollution?.show && step.pollution != null) {
           exp.Pollution = '=' + step.pollution.toString();
         }
       }

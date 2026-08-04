@@ -162,8 +162,8 @@ export class Steps {
   protected readonly leftSpan = computed(() => {
     const cols = this.cols();
     let colspan = 2;
-    if (cols.checkbox.show) colspan++;
-    if (cols.tree.show) colspan++;
+    if (cols.checkbox?.show) colspan++;
+    if (cols.tree?.show) colspan++;
     return colspan;
   });
 

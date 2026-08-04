@@ -277,6 +277,23 @@ export class Adjustment {
         eff.speed = eff.speed.mul(oc);
       }
 
+      if (
+        data.flags.has('recipeCostMultiplier') &&
+        !settings.recipeCostMultiplier.eq(rational.one) &&
+        !recipe.flags.has('noCostMultiplier')
+      ) {
+        for (const ingredient in recipe.in) {
+          let newAmount = recipe.in[ingredient].mul(
+            settings.recipeCostMultiplier,
+          );
+          const isSolid = !!data.itemRecord[ingredient].stack;
+          if (isSolid) {
+            newAmount = newAmount.round().max(rational(1));
+          }
+          recipe.in[ingredient] = newAmount;
+        }
+      }
+
       if (data.flags.has('minimumFactor')) {
         // Check for speed, consumption, or pollution below minimum value (20%)
         if (eff.speed.lt(this.minFactor)) eff.speed = this.minFactor;

@@ -91,6 +91,7 @@ const mockSettingsState: SettingsState = {
   flowRate: rational(1200n),
   excludedRecipeIds: new Set([RecipeId.SteelChest]),
   checkedRecipeIds: new Set([RecipeId.SteelChest]),
+  recipeCostMultiplier: rational(1n),
   netProductionOnly: true,
   preset: Preset.Modules,
   machineRankIds: [ItemId.AssemblingMachine2, ItemId.SteelFurnace],
@@ -458,6 +459,7 @@ describe('RouterSync', () => {
     delete mockStateV10.settingsState?.requireMachinesOutput;
     delete mockStateV10.settingsState?.costs?.footprint;
     delete mockStateV10.settingsState?.costs?.recycling;
+    delete mockStateV10.settingsState?.recipeCostMultiplier;
 
     const mockStateV8: PartialState = spread(mockStateV10, {
       settingsState: spread(mockStateV10.settingsState),

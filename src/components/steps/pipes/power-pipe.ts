@@ -9,7 +9,7 @@ import { Rational, rational } from '../../../rational/rational';
 export class PowerPipe implements PipeTransform {
   transform(
     value: Rational | null | undefined,
-    precision: number | null,
+    precision: number | null | undefined,
     unit?: PowerUnit,
   ): string {
     if (value == null) return '';

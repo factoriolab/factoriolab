@@ -6,7 +6,7 @@ import { Rational, rational } from '~/rational/rational';
 export class RatePipe implements PipeTransform {
   static transform(
     value: Rational | null | undefined,
-    precision: number | null,
+    precision: number | null | undefined,
   ): string {
     if (value == null) return '';
 
@@ -38,7 +38,7 @@ export class RatePipe implements PipeTransform {
 
   transform(
     value: Rational | null | undefined,
-    precision: number | null,
+    precision: number | null | undefined,
   ): string {
     return RatePipe.transform(value, precision);
   }
