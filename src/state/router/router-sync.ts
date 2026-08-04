@@ -1,4 +1,4 @@
-import { effect, inject, Service, signal } from '@angular/core';
+import { ApplicationRef, effect, inject, Service, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -8,7 +8,7 @@ import {
   map,
   Subject,
   switchMap,
-  take,
+  takeWhile,
   tap,
 } from 'rxjs';
 
@@ -19,7 +19,7 @@ import { ModHash } from '~/data/schema/mod-hash';
 import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { asString } from '~/utils/coercion';
-import { coalesce, filterNullish } from '~/utils/nullish';
+import { coalesce } from '~/utils/nullish';
 import { prune, spread } from '~/utils/object';
 import { storedSignal } from '~/utils/stored-signal';
 
@@ -97,6 +97,7 @@ export interface PartialState {
 
 @Service()
 export class RouterSync {
+  private readonly appRef = inject(ApplicationRef);
   private readonly router = inject(Router);
   private readonly compression = inject(Compression);
   private readonly itemsStore = inject(ItemsStore);
@@ -117,12 +118,8 @@ export class RouterSync {
   private readonly ready = signal(false);
   readonly stored = storedSignal('router');
 
-  private readonly modData = toObservable(this.settingsStore.modData).pipe(
-    filterNullish(),
-  );
-  private readonly modHash = toObservable(this.settingsStore.modHash).pipe(
-    filterNullish(),
-  );
+  private readonly modData = toObservable(this.settingsStore.modData);
+  private readonly modHash = toObservable(this.settingsStore.modHash);
 
   get empty(): ZipData<LabParams> {
     return { bare: {}, hash: {} };
@@ -164,9 +161,24 @@ export class RouterSync {
             queryParams,
           ),
         ),
-        combineLatestWith(
-          this.modData.pipe(take(1)),
-          this.modHash.pipe(take(1)),
+        takeWhile(() => !this.appRef.destroyed),
+        tap(({ modId }) => {
+          /**
+           * Apply modId before getting latest modData & modHash, and tick to
+           * ensure resource requests are kicked off.
+           */
+          this.settingsStore.apply({ modId });
+          this.appRef.tick();
+        }),
+        combineLatestWith(this.modData, this.modHash),
+        filter(
+          (
+            x,
+          ): x is [
+            { modId: string; params: LabParams; isBare: boolean },
+            ModData,
+            ModHash,
+          ] => x[1] != null && x[2] != null,
         ),
         tap(([{ modId, params, isBare }, modData, modHash]) => {
           this.updateState(modId, params, isBare, modData, modHash);
