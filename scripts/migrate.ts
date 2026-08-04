@@ -6,14 +6,18 @@ import { ModData } from '~/data/schema/mod-data';
 import { getJsonData } from './utils/file';
 import { logTime } from './utils/log';
 
-const modId = process.argv[2];
-if (!modId)
-  throw new Error(
-    'Please specify a mod to process by the folder name, e.g. "1.1" for public/data/1.1',
-  );
+const OLD_FACTORIO_MODS = new Set(['2.0', 'spa', '1.0', '017', '016']);
+const CURRENT_FACTORIO_MODS = datasets.mods
+  .filter((m) => m.game === 'factorio' && !OLD_FACTORIO_MODS.has(m.id))
+  .map((m) => m.id);
 
 // Load mods from arguments
-const mods = datasets.mods.map((m) => m.id).filter((id) => id === modId);
+let mods = process.argv.slice(2);
+
+// Fallback to update all mods
+if (mods.length === 0) {
+  mods = CURRENT_FACTORIO_MODS;
+}
 
 /** Run all scripts required to update an array of Factorio mod sets */
 function updateMods(mods: string[]): void {
@@ -23,24 +27,12 @@ function updateMods(mods: string[]): void {
     const modDataPath = `${modPath}/data.json`;
     const modData = getJsonData(modDataPath) as ModData;
 
-    // Last migration: Convert icon positions to x/y, remove color
-    modData.icons.forEach((i) => {
-      const old = i as unknown as {
-        position?: string;
-        color?: string;
-        x: number;
-        y: number;
-      };
-      const position: string = old.position ?? '';
-      delete old.color;
-      delete old.position;
-
-      const coords = /-?(\d+)px -?(\d+)px/.exec(position);
-      old.x = Number(coords?.[1]);
-      old.y = Number(coords?.[2]);
+    modData.items.forEach((i) => {
+      if (i.name == null) console.log('item', i.id);
     });
-
-    fs.writeFileSync(modDataPath, JSON.stringify(modData));
+    modData.recipes.forEach((i) => {
+      if (i.name == null) console.log('recipe', i.id);
+    });
 
     logTime(
       `Migrated mod '${mod}' (${(i + 1).toString()} of ${mods.length.toString()})`,
