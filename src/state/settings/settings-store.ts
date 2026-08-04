@@ -90,7 +90,7 @@ export class SettingsStore extends Store<SettingsState> {
     return `data/${modId}/data.json`;
   });
 
-  readonly modHashResource = httpResource<ModHash>(() => {
+  private readonly modHashResource = httpResource<ModHash>(() => {
     const modId = this.modId();
     if (modId == null || modId === CUSTOM_MOD) return undefined;
     return `data/${modId}/hash.json`;
