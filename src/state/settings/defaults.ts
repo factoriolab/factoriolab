@@ -15,5 +15,10 @@ export interface Defaults {
   moduleRankIds: string[];
   beacons: BeaconSettings[];
   overclock?: Rational;
+  miningBonus?: Rational;
+  researchBonus?: Rational;
+  researchProductivity?: Rational;
   researchedTechnologyIds?: Set<string>;
+  // TODO: This default is not yet applied to recipe settings
+  recipeProductivity?: Partial<Record<string, Rational>>;
 }

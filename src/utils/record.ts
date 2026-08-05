@@ -43,19 +43,38 @@ export function toBoolRecord(
 }
 
 export function toRationalRecord(
-  value: Record<string, string | number>,
-): Record<string, Rational>;
+  value: Partial<Record<string, string | number>>,
+): Partial<Record<string, Rational>>;
 export function toRationalRecord(
-  value: Record<string, string | number> | undefined,
-): Record<string, Rational> | undefined;
+  value: Partial<Record<string, string | number>> | undefined,
+): Partial<Record<string, Rational>> | undefined;
 export function toRationalRecord(
-  value: Record<string, string | number> | undefined,
-): Record<string, Rational> | undefined {
+  value: Partial<Record<string, string | number>> | undefined,
+): Partial<Record<string, Rational>> | undefined {
   if (value == null) return;
-  return Object.keys(value).reduce((e: Record<string, Rational>, v) => {
-    e[v] = rational(value[v]);
-    return e;
-  }, {});
+  return Object.keys(value).reduce(
+    (e: Partial<Record<string, Rational>>, v) => {
+      e[v] = rational(value[v]);
+      return e;
+    },
+    {},
+  );
+}
+
+export function toRecordEntries<T>(
+  value: Partial<Record<string, T>>,
+): [string, T][] {
+  return Object.entries(value).filter(
+    (entry): entry is [string, T] => entry[1] != null,
+  );
+}
+
+export function sortedKeyValues(
+  record: Partial<Record<string, Rational>>,
+): [string, Rational][] {
+  return toRecordEntries(record).sort(([_aKey, a], [_bKey, b]) =>
+    b.sub(a).toNumber(),
+  );
 }
 
 export const toRecord = isDevMode()
