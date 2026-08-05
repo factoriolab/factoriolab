@@ -20,6 +20,7 @@ import { mockPreferencesState } from '~/tests/mocks/preferences';
 import { RecipeId } from '~/tests/recipe-id';
 import { TestModule } from '~/tests/test-module';
 import { assert } from '~/tests/utils';
+import { spread } from '~/utils/object';
 
 import { DisplayRate, displayRateInfo } from './display-rate';
 import { Preset } from './preset';
@@ -763,6 +764,26 @@ describe('SettingsStore', () => {
         data,
       );
       expect(result.beltId).toEqual('');
+    });
+
+    it('should use default bonus values if greater than calculated values', () => {
+      const defaults = spread(service.defaults(), {
+        miningBonus: rational(100n),
+        researchBonus: rational(300n),
+        researchProductivity: rational(50n),
+        recipeProductivity: {
+          [RecipeId.SteelPlate]: rational(80n),
+        },
+      });
+      const result = service['computeSettings'](
+        service.state(),
+        defaults,
+        service.dataset(),
+      );
+      expect(result.miningBonus).toEqual(rational(100n));
+      expect(result.researchBonus).toEqual(rational(300n));
+      expect(result.researchProductivity).toEqual(rational(50n));
+      expect(result.recipeBonus[RecipeId.SteelPlate]).toEqual(rational(80n));
     });
   });
 });
