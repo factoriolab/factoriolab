@@ -1,4 +1,11 @@
-import { reduceRecord, toBoolRecord, toRecord } from './record';
+import { rational } from '~/rational/rational';
+
+import {
+  reduceRecord,
+  sortedKeyValues,
+  toBoolRecord,
+  toRecord,
+} from './record';
 
 const id = 'id';
 
@@ -13,6 +20,18 @@ describe('reduceRecord', () => {
 describe('toBoolRecord', () => {
   it('should map a list of strings to a boolean record object', () => {
     expect(toBoolRecord([id])).toEqual({ [id]: true });
+  });
+});
+
+describe('sortedKeyValues', () => {
+  it('should sort the key-value pairs in a record', () => {
+    expect(
+      sortedKeyValues({ a: rational(2n), b: rational(4n), c: rational(3n) }),
+    ).toEqual([
+      ['b', rational(4n)],
+      ['c', rational(3n)],
+      ['a', rational(2n)],
+    ]);
   });
 });
 

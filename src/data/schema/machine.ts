@@ -32,7 +32,7 @@ export interface MachineJson {
   /** Pollution in #/m */
   pollution?: number | string;
   silo?: SiloJson;
-  consumption?: Record<string, number | string>;
+  consumption?: Partial<Record<string, number | string>>;
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
   /** Bonus effects that this machine always has */
@@ -62,7 +62,7 @@ export interface Machine {
   drain?: Rational;
   pollution?: Rational;
   silo?: Silo;
-  consumption?: Record<string, Rational>;
+  consumption?: Partial<Record<string, Rational>>;
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
   /** Bonus effects that this machine always has */

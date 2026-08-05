@@ -44,7 +44,7 @@ describe('Settings', () => {
     it('should open the technologies dialog and apply the result', () => {
       spyOn(component['dialog'], 'open').and.returnValue({
         closed: of(undefined),
-        componentInstance: { result: () => new Set() },
+        componentInstance: { selection: () => new Set() },
       } as any);
       spyOn(component['settingsStore'], 'apply');
       component.openTechnologies();
