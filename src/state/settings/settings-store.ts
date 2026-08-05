@@ -1014,6 +1014,15 @@ export class SettingsStore extends Store<SettingsState> {
       return result;
     }, {});
 
+    if (defaults?.recipeProductivity) {
+      for (const [recipeId, bonus] of toRecordEntries(
+        defaults?.recipeProductivity,
+      )) {
+        if (bonus.gt(coalesce(recipeBonus[recipeId], rational.zero)))
+          recipeBonus[recipeId] = bonus;
+      }
+    }
+
     // Initialize list of items with those that have no recipe
     const noRecipeQualItemIds = Array.from(data.noRecipeItemIds)
       .map((i) => data.itemRecord[i])
