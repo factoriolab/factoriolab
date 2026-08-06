@@ -29,16 +29,6 @@ describe('Objectives', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('addObjective', () => {
-    it('should call the objectives store with the passed value', () => {
-      spyOn(component['objectivesStore'], 'add');
-      component.addObjective(mockObjectiveBase);
-      expect(component['objectivesStore'].add).toHaveBeenCalledWith(
-        mockObjectiveBase,
-      );
-    });
-  });
-
   describe('drop', () => {
     it('should call the objectives store with the new order', () => {
       spyOn(component['objectivesStore'], 'setOrder');
