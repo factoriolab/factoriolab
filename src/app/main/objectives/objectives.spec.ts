@@ -53,6 +53,19 @@ describe('Objectives', () => {
     });
   });
 
+  describe('openPicker', () => {
+    it('should open the picker and create an objective', () => {
+      spyOn(component['objectiveForm'], 'openPicker').and.returnValue(
+        of(mockObjectiveBase),
+      );
+      spyOn(component['objectivesStore'], 'create');
+      component.openPicker();
+      expect(component['objectivesStore'].create).toHaveBeenCalledWith(
+        mockObjectiveBase,
+      );
+    });
+  });
+
   describe('changeTarget', () => {
     it('should pick a recipe', () => {
       spyOn(component['picker'], 'pickRecipe').and.returnValue(of('id'));

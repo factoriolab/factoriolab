@@ -4,6 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NgModule } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
+import { Release } from '~/data/release';
 import { SIMPLEX_CONFIG } from '~/solver/simplex-config';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { Translate } from '~/translate/translate';
@@ -41,6 +42,18 @@ import { mockLangData, mockModData, mockModHash } from './mocks/data';
         const translate = new Translate();
         translate['httpData'].set(mockLangData);
         return translate;
+      },
+    },
+    {
+      provide: Release,
+      useFactory: (): Release => {
+        const release = new Release();
+        release.config.set({
+          version: '0.0.0',
+          branch: '',
+          date: new Date().toISOString(),
+        });
+        return release;
       },
     },
     { provide: SIMPLEX_CONFIG, useValue: { msgLevel: 'off' } },
