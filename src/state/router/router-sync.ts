@@ -167,8 +167,10 @@ export class RouterSync {
            * Apply modId before getting latest modData & modHash, and tick to
            * ensure resource requests are kicked off.
            */
-          this.settingsStore.apply({ modId });
-          this.appRef.tick();
+          if (this.settingsStore.modId() !== modId) {
+            this.settingsStore.apply({ modId });
+            this.appRef.tick();
+          }
         }),
         combineLatestWith(this.modData, this.modHash),
         filter(
