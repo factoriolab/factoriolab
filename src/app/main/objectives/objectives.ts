@@ -29,6 +29,7 @@ import { Button } from '~/components/button/button';
 import { FormField } from '~/components/form-field/form-field';
 import { InputNumber } from '~/components/input-number/input-number';
 import { ObjectiveForm } from '~/components/objective-form';
+import { Picker } from '~/components/picker/picker';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { rational } from '~/rational/rational';
@@ -42,6 +43,7 @@ import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { displayRateOptions } from '~/state/settings/display-rate';
 import { MaximizeType } from '~/state/settings/maximize-type';
+import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Conversion } from './conversion';
@@ -79,10 +81,13 @@ const host = cva(
     '[class]': 'hostClass()',
   },
 })
-export class Objectives extends ObjectiveForm {
+export class Objectives {
   protected readonly conversion = inject(Conversion);
+  protected readonly objectiveForm = inject(ObjectiveForm);
   protected readonly objectivesStore = inject(ObjectivesStore);
+  protected readonly picker = inject(Picker);
   protected readonly preferencesStore = inject(PreferencesStore);
+  protected readonly settingsStore = inject(SettingsStore);
 
   protected readonly data = this.settingsStore.dataset;
   protected readonly displayRateOptions = displayRateOptions;
@@ -116,6 +121,12 @@ export class Objectives extends ObjectiveForm {
     const objectives = [...this.objectives()];
     moveItemInArray(objectives, event.previousIndex, event.currentIndex);
     this.objectivesStore.setOrder(objectives);
+  }
+
+  openPicker(): void {
+    this.objectiveForm.openPicker().subscribe((value) => {
+      this.objectivesStore.create(value);
+    });
   }
 
   changeTarget(objective: ObjectiveSettings): void {

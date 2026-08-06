@@ -34,12 +34,12 @@
       <lab-form-field label="objectives.quantity" class="basis-1/2">
         <lab-input-number
           [buttons]="true"
-          [(ngModel)]="value"
+          [(ngModel)]="objectiveForm.value"
         ></lab-input-number>
       </lab-form-field>
       <lab-form-field label="objectives.units" class="basis-1/2">
         <lab-select
-          [(ngModel)]="unit"
+          [(ngModel)]="objectiveForm.unit"
           [options]="settingsStore.objectiveUnitOptions()"
         ></lab-select>
       </lab-form-field>
@@ -48,9 +48,11 @@
     <button
       type="button"
       labButton
-      [faIcon]="isRecipe() ? faBookOpen : faBoxOpen"
+      [faIcon]="objectiveForm.isRecipe() ? faBookOpen : faBoxOpen"
       color="brand"
-      [text]="isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'"
+      [text]="
+        objectiveForm.isRecipe() ? 'picker.selectRecipe' : 'picker.selectItem'
+      "
       (click)="openPicker()"
     ></button>
 
