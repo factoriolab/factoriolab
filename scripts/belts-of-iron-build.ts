@@ -8,13 +8,11 @@ import { ModData } from '~/data/schema/mod-data';
 import { getJsonData } from './utils/file';
 import { logTime } from './utils/log';
 
-
 const modId = process.argv[2];
 if (!modId)
   throw new Error(
     'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
   );
-
 
 const mod = datasets.mods.find((m) => m.id === modId);
 if (!mod)
@@ -99,7 +97,7 @@ async function processMod(): Promise<void> {
     {
       id: 'energy-and-power',
       name: 'Energy & Power',
-      icon: 'wood_power_pole'
+      icon: 'wood_power_pole',
     },
     {
       id: 'architecture',
@@ -158,14 +156,14 @@ async function processMod(): Promise<void> {
     result: spritesmith.SpritesmithResult,
   ): Promise<void> {
     modData.icons = Object.keys(result.coordinates).map((file) => {
-        const coords = result.coordinates[file];
-        return {
-          id: iconFiles[file],
-          x: coords.x,
-          y: coords.y,
-          color: iconColors[file],
-        };
-      });
+      const coords = result.coordinates[file];
+      return {
+        id: iconFiles[file],
+        x: coords.x,
+        y: coords.y,
+        color: iconColors[file],
+      };
+    });
 
     logTime('Writing data');
     writeData();
