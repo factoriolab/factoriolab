@@ -8,9 +8,9 @@
     "migrationWarning": "Advertencia de migración",
     "simplexSolved": "Resuelto, {{ time }}ms, coste: {{ cost }}",
     "updateAvailable": "Actualización disponible",
-    "updateAvailableMessage": "Hay una actualización disponible. ¿Te gustaría recargar la página para actualizar?",
+    "updateAvailableMessage": "<div>Hay una actualización disponible. ¿Te gustaría recargar la página para actualizar?</div><a href=\"https://github.com/factoriolab/factoriolab/releases\" target=\"_blank\" class=\"link\">Ver notas de lanzamiento</a>",
     "updateRequired": "Actualización requerida",
-    "updateRequiredMessage": "Hay una actualización disponible y la página debe recargarse para continuar."
+    "updateRequiredMessage": "<div>Hay una actualización disponible y la página debe recargarse para continuar.</div><a href=\"https://github.com/factoriolab/factoriolab/releases\" target=\"_blank\" class=\"link\">Ver notas de lanzamiento</a>"
   },
   "beaconsSelect": {
     "addBeacons": "Añadir faros",

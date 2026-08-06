@@ -10,6 +10,7 @@ import {
   faForward,
   faQuestion,
 } from '@fortawesome/free-solid-svg-icons';
+import { switchMap } from 'rxjs';
 
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
@@ -19,10 +20,10 @@ import { ObjectiveForm } from '~/components/objective-form';
 import { Select } from '~/components/select/select';
 import { gameOptions } from '~/data/game';
 import { Release } from '~/data/release';
-import { ObjectiveBase } from '~/state/objectives/objective';
 import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { PreferencesStore } from '~/state/preferences/preferences-store';
 import { RouterSync } from '~/state/router/router-sync';
+import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 @Component({
@@ -42,13 +43,15 @@ import { TranslatePipe } from '~/translate/translate-pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex h-dvh flex-col items-center justify-center gap-2' },
 })
-export class Landing extends ObjectiveForm {
+export class Landing {
   protected readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  protected readonly objectiveForm = inject(ObjectiveForm);
   private readonly objectivesStore = inject(ObjectivesStore);
   protected readonly preferencesStore = inject(PreferencesStore);
   protected readonly release = inject(Release);
   protected readonly routerSync = inject(RouterSync);
+  protected readonly settingsStore = inject(SettingsStore);
 
   protected readonly data = this.settingsStore.dataset;
   protected readonly faBoxOpen = faBoxOpen;
@@ -60,13 +63,19 @@ export class Landing extends ObjectiveForm {
   protected readonly gameOptions = gameOptions;
   protected readonly stateOptions = this.settingsStore.stateOptions;
 
-  async addObjective(value: ObjectiveBase): Promise<void> {
-    await this.router.navigate(['list'], {
-      relativeTo: this.route,
-      queryParamsHandling: 'preserve',
-    });
-
-    this.objectivesStore.create(value);
+  openPicker(): void {
+    this.objectiveForm
+      .openPicker()
+      .pipe(
+        switchMap(async (value) => {
+          await this.router.navigate(['list'], {
+            relativeTo: this.route,
+            queryParamsHandling: 'preserve',
+          });
+          this.objectivesStore.create(value);
+        }),
+      )
+      .subscribe();
   }
 
   setState(query: string): void {
