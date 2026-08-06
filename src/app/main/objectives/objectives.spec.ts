@@ -44,13 +44,13 @@ describe('Objectives', () => {
   });
 
   describe('openPicker', () => {
-    it('should open the picker and create an objective', () => {
+    it('should open the picker and add an objective', () => {
       spyOn(component['objectiveForm'], 'openPicker').and.returnValue(
         of(mockObjectiveBase),
       );
-      spyOn(component['objectivesStore'], 'create');
+      spyOn(component['objectivesStore'], 'add');
       component.openPicker();
-      expect(component['objectivesStore'].create).toHaveBeenCalledWith(
+      expect(component['objectivesStore'].add).toHaveBeenCalledWith(
         mockObjectiveBase,
       );
     });
