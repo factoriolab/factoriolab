@@ -11,6 +11,7 @@ export const systemIcons: IconJson[] = [
   { id: 'module', x: 132, y: 0, color: '#ffffff' },
   { id: 'pipe', x: 198, y: 0, color: '#6d644e' },
   { id: 'q-any', x: 264, y: 0, color: '#716d6f' },
+  { id: 'belts-of-iron', x: 0, y: 264, color: '#aa5933' },
   { id: 'captain-of-industry', x: 0, y: 66, color: '#aa5933' },
   { id: 'dyson-sphere-program', x: 66, y: 66, color: '#857e75' },
   { id: 'factor-y', x: 132, y: 66, color: '#657c4c' },
