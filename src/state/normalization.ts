@@ -10,7 +10,7 @@ import { Rational, rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
-import { toRecord } from '~/utils/record';
+import { toRecord, toRecordEntries } from '~/utils/record';
 
 import { ItemsStore } from './items/items-store';
 import { ObjectiveSettings } from './objectives/objective';
@@ -96,9 +96,9 @@ export class Normalization {
     if (step.recipe && step.machines?.nonzero()) {
       const recipe = step.recipe;
       const quantity = step.machines.div(recipe.time);
-      for (const itemId of Object.keys(recipe.in)) {
-        if (recipe.in[itemId].nonzero()) {
-          const amount = recipe.in[itemId].mul(quantity);
+      for (const [itemId, val] of toRecordEntries(recipe.in)) {
+        if (val.nonzero()) {
+          const amount = val.mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
           if (itemStep != null)
             this.addEntityValue(
@@ -109,9 +109,9 @@ export class Normalization {
             );
         }
       }
-      for (const itemId of Object.keys(recipe.out)) {
-        if (recipe.out[itemId].nonzero()) {
-          const amount = recipe.out[itemId].mul(quantity);
+      for (const [itemId, val] of toRecordEntries(recipe.out)) {
+        if (val.nonzero()) {
+          const amount = val.mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
           if (itemStep?.items?.nonzero()) {
             this.addEntityValue(

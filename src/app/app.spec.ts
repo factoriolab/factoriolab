@@ -1,5 +1,4 @@
-import { HttpTestingController } from '@angular/common/http/testing';
-import { ApplicationRef, provideZonelessChangeDetection } from '@angular/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   SwUpdate,
@@ -17,7 +16,7 @@ import { App } from './app';
 describe('App', () => {
   let component: App;
   let fixture: ComponentFixture<App>;
-  let http: HttpTestingController;
+  let logSpy: jasmine.Spy;
   const swUpdate = {
     unrecoverable: new Subject<UnrecoverableStateEvent>(),
     versionUpdates: new Subject<VersionEvent>(),
@@ -33,8 +32,8 @@ describe('App', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(App);
-    http = TestBed.inject(HttpTestingController);
     component = fixture.componentInstance;
+    logSpy = spyOn<any, any>(component, 'log');
     fixture.detectChanges();
   });
 
@@ -43,11 +42,8 @@ describe('App', () => {
   });
 
   describe('constructor', () => {
-    it('should log the version info', async () => {
-      spyOn<any, any>(component, 'log');
-      http.expectOne('release.json').flush({ version: 'version' });
-      await TestBed.inject(ApplicationRef).whenStable();
-      expect(component['log']).toHaveBeenCalled();
+    it('should log the version info', () => {
+      expect(logSpy).toHaveBeenCalled();
     });
 
     it('should handle unrecoverable updates', () => {

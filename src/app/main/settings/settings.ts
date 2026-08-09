@@ -176,7 +176,7 @@ export class Settings {
     ref.closed
       .pipe(
         filter((result) => result !== false),
-        map(() => ref.componentInstance?.result()),
+        map(() => ref.componentInstance?.selection()),
       )
       .subscribe((researchedTechnologyIds) => {
         this.settingsStore.apply({ researchedTechnologyIds });

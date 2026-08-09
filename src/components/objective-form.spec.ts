@@ -8,25 +8,23 @@ import { ObjectiveUnit } from '~/state/objectives/objective-unit';
 
 import { ObjectiveForm } from './objective-form';
 
-class TestObjectiveForm extends ObjectiveForm {
-  addObjective(_value: ObjectiveBase): void {}
-}
-
 describe('ObjectiveForm', () => {
-  let objectiveForm: TestObjectiveForm;
+  let service: ObjectiveForm;
 
   beforeEach(() => {
-    TestBed.runInInjectionContext(() => {
-      objectiveForm = new TestObjectiveForm();
-    });
+    service = TestBed.inject(ObjectiveForm);
+  });
+
+  it('should create', () => {
+    expect(service).toBeTruthy();
   });
 
   describe('openPicker', () => {
     it('should open the item picker and add an objective', () => {
-      spyOn(objectiveForm['picker'], 'pickItem').and.returnValue(of('id'));
-      spyOn(objectiveForm, 'addObjective');
-      objectiveForm.openPicker();
-      expect(objectiveForm.addObjective).toHaveBeenCalledWith({
+      spyOn(service['picker'], 'pickItem').and.returnValue(of('id'));
+      let value: ObjectiveBase | undefined;
+      service.openPicker().subscribe((v) => (value = v));
+      expect(value).toEqual({
         targetId: 'id',
         value: rational.one,
         unit: ObjectiveUnit.Items,
@@ -35,11 +33,11 @@ describe('ObjectiveForm', () => {
     });
 
     it('should open the item picker and add an objective', () => {
-      objectiveForm.unit.set(ObjectiveUnit.Machines);
-      spyOn(objectiveForm['picker'], 'pickRecipe').and.returnValue(of('id'));
-      spyOn(objectiveForm, 'addObjective');
-      objectiveForm.openPicker();
-      expect(objectiveForm.addObjective).toHaveBeenCalledWith({
+      service.unit.set(ObjectiveUnit.Machines);
+      spyOn(service['picker'], 'pickRecipe').and.returnValue(of('id'));
+      let value: ObjectiveBase | undefined;
+      service.openPicker().subscribe((v) => (value = v));
+      expect(value).toEqual({
         targetId: 'id',
         value: rational.one,
         unit: ObjectiveUnit.Machines,

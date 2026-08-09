@@ -29,16 +29,6 @@ describe('Objectives', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('addObjective', () => {
-    it('should call the objectives store with the passed value', () => {
-      spyOn(component['objectivesStore'], 'add');
-      component.addObjective(mockObjectiveBase);
-      expect(component['objectivesStore'].add).toHaveBeenCalledWith(
-        mockObjectiveBase,
-      );
-    });
-  });
-
   describe('drop', () => {
     it('should call the objectives store with the new order', () => {
       spyOn(component['objectivesStore'], 'setOrder');
@@ -50,6 +40,19 @@ describe('Objectives', () => {
         'b',
         'a',
       ] as any);
+    });
+  });
+
+  describe('openPicker', () => {
+    it('should open the picker and add an objective', () => {
+      spyOn(component['objectiveForm'], 'openPicker').and.returnValue(
+        of(mockObjectiveBase),
+      );
+      spyOn(component['objectivesStore'], 'add');
+      component.openPicker();
+      expect(component['objectivesStore'].add).toHaveBeenCalledWith(
+        mockObjectiveBase,
+      );
     });
   });
 

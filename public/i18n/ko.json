@@ -8,9 +8,9 @@
     "migrationWarning": "마이그레이션 경고",
     "simplexSolved": "계산됨, {{ time }}ms, 비용: {{ cost }}",
     "updateAvailable": "업데이트 가능",
-    "updateAvailableMessage": "업데이트가 있습니다. 페이지를 새로고침하여 업데이트하시겠습니까?",
+    "updateAvailableMessage": "<div>업데이트가 있습니다. 페이지를 새로고침하여 업데이트하시겠습니까?</div><a href=\"https://github.com/factoriolab/factoriolab/releases\" target=\"_blank\" class=\"link\">출시 노트 보기</a>",
     "updateRequired": "업데이트 필요",
-    "updateRequiredMessage": "업데이트가 있으며, 계속하려면 페이지를 새로고침해야 합니다."
+    "updateRequiredMessage": "<div>업데이트가 있으며, 계속하려면 페이지를 새로고침해야 합니다.</div><a href=\"https://github.com/factoriolab/factoriolab/releases\" target=\"_blank\" class=\"link\">출시 노트 보기</a>"
   },
   "beaconsSelect": {
     "addBeacons": "신호기 추가",

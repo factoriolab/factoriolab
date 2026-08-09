@@ -36,7 +36,12 @@ import { localForageResource } from '~/utils/local-forage-resource';
 import { log } from '~/utils/log';
 import { coalesce, fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
-import { reduceRecord, toRecord } from '~/utils/record';
+import {
+  reduceRecord,
+  toRationalRecord,
+  toRecord,
+  toRecordEntries,
+} from '~/utils/record';
 
 import { BeaconSettings } from '../beacon-settings';
 import { Hydration } from '../hydration';
@@ -366,33 +371,46 @@ export class SettingsStore extends Store<SettingsState> {
         const beaconBaseId = baseId(beaconId);
         const beacon = modData.items.find((i) => i.id === beaconBaseId)?.beacon;
         if (beacon) {
-          const beaconModule = coalesce(p.beaconModule, m.beaconModule);
           const modules: ModuleSettings[] = [
             {
               count: rational(beacon.modules),
-              id: coalesce(beaconModule, ''),
+              id: coalesce(coalesce(p.beaconModule, m.beaconModule), ''),
             },
           ];
-          const count = rational(coalesce(p.beaconCount, 0));
-          beacons = [{ count, id: beaconId, modules }];
+          beacons = [
+            {
+              count: rational(coalesce(p.beaconCount, 0)),
+              id: beaconId,
+              modules,
+            },
+          ];
         }
       }
-      const excludedRecipe = coalesce(p.excludedRecipes, m.excludedRecipes);
-      const machineRank = coalesce(p.machineRank, m.machineRank);
-      const fuelRank = coalesce(p.fuelRank, m.fuelRank);
-      const moduleRank = coalesce(p.moduleRank, m.moduleRank);
+
       return {
         locations: coalesce(p.locations, m.locations),
         beltId: coalesce(p.belt, m.belt),
         beltStack: rational(coalesce(p.beltStack, m.beltStack)),
         pipeId: coalesce(p.pipe, m.pipe),
+        fuelRankIds: coalesce(coalesce(p.fuelRank, m.fuelRank), []),
         cargoWagonId: coalesce(p.cargoWagon, m.cargoWagon),
         fluidWagonId: coalesce(p.fluidWagon, m.fluidWagon),
-        excludedRecipeIds: coalesce(excludedRecipe, []),
-        machineRankIds: coalesce(machineRank, []),
-        fuelRankIds: coalesce(fuelRank, []),
-        moduleRankIds: coalesce(moduleRank, []),
+        excludedRecipeIds: coalesce(
+          coalesce(p.excludedRecipes, m.excludedRecipes),
+          [],
+        ),
+        machineRankIds: coalesce(coalesce(p.machineRank, m.machineRank), []),
+        moduleRankIds: coalesce(coalesce(p.moduleRank, m.moduleRank), []),
         beacons,
+        miningBonus: rational(coalesce(p.miningBonus, m.miningBonus)),
+        researchBonus: rational(coalesce(p.researchBonus, m.researchBonus)),
+        researchProductivity: rational(
+          coalesce(p.researchProductivity, m.researchProductivity),
+        ),
+        researchedTechnologyIds: p.researchedTechnologies
+          ? new Set(p.researchedTechnologies)
+          : undefined,
+        recipeProductivity: toRationalRecord(p.recipeProductivity),
       };
     }
 
@@ -440,19 +458,27 @@ export class SettingsStore extends Store<SettingsState> {
       }
     }
 
-    const machineRankIds =
-      preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
     return {
       beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
       pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
       cargoWagonId: m.cargoWagon,
       fluidWagonId: m.fluidWagon,
       excludedRecipeIds: coalesce(m.excludedRecipes, []),
-      machineRankIds: coalesce(machineRankIds, []),
+      machineRankIds: coalesce(
+        preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
+        [],
+      ),
       fuelRankIds: coalesce(m.fuelRank, []),
       moduleRankIds: coalesce(moduleRank, []),
       beacons,
       overclock,
+      miningBonus: rational(m.miningBonus),
+      researchBonus: rational(m.researchBonus),
+      researchProductivity: rational(m.researchProductivity),
+      researchedTechnologyIds: m.researchedTechnologies
+        ? new Set(m.researchedTechnologies)
+        : undefined,
+      recipeProductivity: toRationalRecord(m.recipeProductivity),
     };
   }
 
@@ -783,8 +809,8 @@ export class SettingsStore extends Store<SettingsState> {
     }, {});
     const noRecipeItemIds = new Set(itemIds);
     const recipeRecord = recipes.reduce((e: Record<string, Recipe>, r) => {
-      Object.keys(r.out).forEach((i) => {
-        if ((r.in[i] ?? 0) < r.out[i]) noRecipeItemIds.delete(i);
+      toRecordEntries(r.out).forEach(([i, val]) => {
+        if ((r.in[i] ?? 0) < val) noRecipeItemIds.delete(i);
       });
 
       e[r.id] = r;
@@ -895,7 +921,8 @@ export class SettingsStore extends Store<SettingsState> {
     defaults: Defaults | undefined,
     data: Dataset,
   ): Settings {
-    const techIds = state.researchedTechnologyIds;
+    const techIds =
+      state.researchedTechnologyIds ?? defaults?.researchedTechnologyIds;
     let researchedTechnologyIds = new Set(data.technologyIds);
     if (techIds != null && researchedTechnologyIds.size > 0) {
       // Filter for only technologies that still exist in this data set
@@ -954,6 +981,13 @@ export class SettingsStore extends Store<SettingsState> {
       }
     });
 
+    if (defaults?.miningBonus?.gt(miningBonus))
+      miningBonus = defaults.miningBonus;
+    if (defaults?.researchBonus?.gt(researchBonus))
+      researchBonus = defaults.researchBonus;
+    if (defaults?.researchProductivity?.gt(researchProductivity))
+      researchProductivity = defaults?.researchProductivity;
+
     // List of recipes that have been unlocked by technology
     const researchedRecipeIds = new Set(
       Array.from(researchedTechnologyIds).flatMap(
@@ -980,6 +1014,15 @@ export class SettingsStore extends Store<SettingsState> {
       return result;
     }, {});
 
+    if (defaults?.recipeProductivity) {
+      for (const [recipeId, bonus] of toRecordEntries(
+        defaults?.recipeProductivity,
+      )) {
+        if (bonus.gt(coalesce(recipeBonus[recipeId], rational.zero)))
+          recipeBonus[recipeId] = bonus;
+      }
+    }
+
     // Initialize list of items with those that have no recipe
     const noRecipeQualItemIds = Array.from(data.noRecipeItemIds)
       .map((i) => data.itemRecord[i])
@@ -991,8 +1034,8 @@ export class SettingsStore extends Store<SettingsState> {
     const availableItemIds = new Set(noRecipeQualItemIds);
     // Add all items that are produced by unlocked recipes
     unlockedRecipes.forEach((r) => {
-      Object.keys(r.out).forEach((i) => {
-        if ((r.in[i] ?? 0) < r.out[i]) availableItemIds.add(i);
+      toRecordEntries(r.out).forEach(([i, val]) => {
+        if ((r.in[i] ?? 0) < val) availableItemIds.add(i);
       });
     });
 
@@ -1115,7 +1158,7 @@ export class SettingsStore extends Store<SettingsState> {
   }
 
   private qualityRecord(
-    record: Record<string, Rational>,
+    record: Partial<Record<string, Rational>>,
     quality: Quality,
     itemData: Record<string, ItemJson>,
     qualityDurability = false,
@@ -1123,11 +1166,14 @@ export class SettingsStore extends Store<SettingsState> {
     const factor = qualityDurability
       ? rational.one.add(rational(quality.level))
       : rational.one;
-    return Object.keys(record).reduce((e: Record<string, Rational>, k) => {
-      if (itemData[k].stack) {
-        e[qualityId(k, quality)] = record[k].div(factor);
-      } else e[k] = record[k];
-      return e;
-    }, {});
+    return toRecordEntries(record).reduce(
+      (e: Record<string, Rational>, [k, val]) => {
+        if (itemData[k].stack) {
+          e[qualityId(k, quality)] = val.div(factor);
+        } else e[k] = val;
+        return e;
+      },
+      {},
+    );
   }
 }

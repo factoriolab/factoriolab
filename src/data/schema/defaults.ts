@@ -1,60 +1,49 @@
 export type DefaultsJson = HardCodedPresetsJson | CustomPresetsJson;
 
-export interface HardCodedPresetsJson {
+export interface HardCodedPresetsJson extends BaseDefaultsJson {
   beacon?: string;
   minBelt?: string;
   maxBelt?: string;
   minPipe?: string;
   maxPipe?: string;
-  fuelRank?: string[];
-  cargoWagon?: string;
-  fluidWagon?: string;
-  excludedRecipes?: string[];
   minMachineRank?: string[];
   maxMachineRank?: string[];
-  moduleRank?: string[];
-  beaconModule?: string;
 }
 
-export interface CustomPresetsJson {
+export interface CustomPresetsJson extends BaseCustomJson {
   presets: PresetJson[];
-
-  // Defaults for corresponding `DefaultsPresetJson` properties:
-  locations?: string[];
-  belt?: string;
-  beltStack?: number | string;
-  pipe?: string;
-  fuelRank?: string[];
-  cargoWagon?: string;
-  fluidWagon?: string;
-  excludedRecipes?: string[];
-  machineRank?: string[];
-  moduleRank?: string[];
-  beacon?: string;
-  beaconModule?: string;
 }
 
-export interface PresetJson {
+export interface PresetJson extends BaseCustomJson {
   /**
    * ID in `public/data/{mod}/defaults.json`
    * Example: "options.preset.minimum"
    */
   id: number;
   label: string;
+}
 
+export interface BaseCustomJson extends BaseDefaultsJson {
   locations?: string[];
   belt?: string;
   beltStack?: number | string;
   pipe?: string;
+  machineRank?: string[];
+  /** Defaults to zero */
+  beaconCount?: number | string;
+  beacon?: string;
+}
+
+export interface BaseDefaultsJson {
   fuelRank?: string[];
   cargoWagon?: string;
   fluidWagon?: string;
   excludedRecipes?: string[];
-  machineRank?: string[];
   moduleRank?: string[];
-  beacon?: string;
   beaconModule?: string;
-
-  /** Defaults to zero */
-  beaconCount?: number | string;
+  miningBonus?: string | number;
+  researchBonus?: string | number;
+  researchProductivity?: string | number;
+  researchedTechnologies?: string[];
+  recipeProductivity?: Partial<Record<string, string | number>>;
 }

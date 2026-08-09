@@ -1,4 +1,6 @@
+import { ApplicationRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 
 import { mockObjectiveBase } from '~/tests/mocks/objective';
 import { TestModule } from '~/tests/test-module';
@@ -23,13 +25,17 @@ describe('Landing', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('addObjective', () => {
+  describe('openPicker', () => {
     it('should navigate and then create an objective', async () => {
+      spyOn(component['objectiveForm'], 'openPicker').and.returnValue(
+        of(mockObjectiveBase),
+      );
       spyOn(component['router'], 'navigate').and.returnValue(
         Promise.resolve(true),
       );
       spyOn(component['objectivesStore'], 'create');
-      await component.addObjective(mockObjectiveBase);
+      component.openPicker();
+      await TestBed.inject(ApplicationRef).whenStable();
       expect(component['router'].navigate).toHaveBeenCalled();
       expect(component['objectivesStore'].create).toHaveBeenCalledWith(
         mockObjectiveBase,

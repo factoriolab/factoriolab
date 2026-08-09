@@ -8,9 +8,9 @@
     "migrationWarning": "迁移警告",
     "simplexSolved": "计算完成, {{ time }}毫秒, 耗费: {{ cost }}",
     "updateAvailable": "发现新版本",
-    "updateAvailableMessage": "发现新版本，是否要刷新页面进行更新？",
+    "updateAvailableMessage": "<div>发现新版本，是否要刷新页面进行更新？</div><a href=\"https://github.com/factoriolab/factoriolab/releases\" target=\"_blank\" class=\"link\">查看发行说明</a>",
     "updateRequired": "需要更新",
-    "updateRequiredMessage": "发现新版本，必须刷新页面才能继续使用。"
+    "updateRequiredMessage": "<div>发现新版本，必须刷新页面才能继续使用。</div><a href=\"https://github.com/factoriolab/factoriolab/releases\" target=\"_blank\" class=\"link\">查看发行说明</a>"
   },
   "beaconsSelect": {
     "addBeacons": "Add beacons",

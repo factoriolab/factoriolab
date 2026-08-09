@@ -38,7 +38,7 @@
                   [text]="data().itemRecord[i].name"
                   [icon]="i"
                   iconType="item"
-                  [iconText]="obj.in[i].toString()"
+                  [iconText]="obj.in[i]?.toString()"
                 >
                 </a>
               }
@@ -82,7 +82,7 @@
                   [text]="data().itemRecord[i].name"
                   [icon]="i"
                   iconType="item"
-                  [iconText]="obj.out[i].toString()"
+                  [iconText]="obj.out[i]?.toString()"
                 >
                 </a>
               }

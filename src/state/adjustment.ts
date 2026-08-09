@@ -22,6 +22,7 @@ import {
 import { Rational, rational } from '~/rational/rational';
 import { coalesce, notNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
+import { toRecordEntries } from '~/utils/record';
 
 import { Hydration } from './hydration';
 import { ItemSettings } from './items/item-settings';
@@ -92,8 +93,12 @@ export class Adjustment {
         // Calculate based on belt speed
         // Use minimum speed of all inputs/outputs in recipe
         const ids = [
-          ...Object.keys(recipe.in).filter((i) => recipe.in[i].nonzero()),
-          ...Object.keys(recipe.out).filter((i) => recipe.out[i].nonzero()),
+          ...toRecordEntries(recipe.in)
+            .filter(([_, val]) => val.nonzero())
+            .map(([key]) => key),
+          ...toRecordEntries(recipe.out)
+            .filter(([_, val]) => val.nonzero())
+            .map(([key]) => key),
         ];
         const speeds = ids
           .map((i) => {
@@ -282,10 +287,8 @@ export class Adjustment {
         !settings.recipeCostMultiplier.eq(rational.one) &&
         !recipe.flags.has('noCostMultiplier')
       ) {
-        for (const ingredient in recipe.in) {
-          let newAmount = recipe.in[ingredient].mul(
-            settings.recipeCostMultiplier,
-          );
+        for (const [ingredient, val] of toRecordEntries(recipe.in)) {
+          let newAmount = val.mul(settings.recipeCostMultiplier);
           const isSolid = !!data.itemRecord[ingredient].stack;
           if (isSolid) {
             newAmount = newAmount.round().max(rational(1));
@@ -331,15 +334,15 @@ export class Adjustment {
         recipe.time = this.minFactorioRecipeTime;
 
       // Productivity
-      for (const outId of Object.keys(recipe.out)) {
+      for (const [outId, val] of toRecordEntries(recipe.out)) {
         if (recipe.catalyst?.[outId]) {
           // Catalyst - only multiply prod by extra produced
           const catalyst = recipe.catalyst[outId];
-          const affected = recipe.out[outId].sub(catalyst);
+          const affected = val.sub(catalyst);
           // Only change output if affected amount > 0
           if (affected.gt(rational.zero))
             recipe.out[outId] = catalyst.add(affected.mul(eff.productivity));
-        } else recipe.out[outId] = recipe.out[outId].mul(eff.productivity);
+        } else recipe.out[outId] = val.mul(eff.productivity);
       }
 
       // Power
@@ -374,18 +377,17 @@ export class Adjustment {
 
       // Adjust for ingredient usage (Space Age: Biolab)
       if (machine.ingredientUsage) {
-        for (const i of Object.keys(recipe.in)) {
-          recipe.in[i] = recipe.in[i].mul(machine.ingredientUsage);
+        for (const [i, val] of toRecordEntries(recipe.in)) {
+          recipe.in[i] = val.mul(machine.ingredientUsage);
         }
       }
 
       // Adjust for quality
       if (eff.quality.gt(rational.zero)) {
-        for (const outId of Object.keys(recipe.out)) {
+        for (const [outId, original] of toRecordEntries(recipe.out)) {
           // Adjust by factor
           const item = data.itemRecord[outId];
           if (!itemHasQuality(item)) continue;
-          const original = recipe.out[outId];
           let amount = original;
           const id = baseId(outId);
           let lastId: string | undefined;
@@ -399,7 +401,10 @@ export class Adjustment {
               amount = amount.mul(eff.quality);
               lastId = qId;
             } else {
-              recipe.out[lastId] = recipe.out[lastId].sub(amount);
+              recipe.out[lastId] = coalesce(
+                recipe.out[lastId],
+                rational.zero,
+              ).sub(amount);
               recipe.out[qId] = amount;
               amount = amount.mul(rational(1n, 10n));
               lastId = qId;
@@ -414,9 +419,9 @@ export class Adjustment {
       // Add machine consumption
       if (machine.consumption) {
         const consumption = machine.consumption;
-        for (const id of Object.keys(consumption)) {
-          const amount = recipe.time.div(rational(60n)).mul(consumption[id]);
-          recipe.in[id] = (recipe.in[id] || rational.zero).add(amount);
+        for (const [id, val] of toRecordEntries(consumption)) {
+          const amount = recipe.time.div(rational(60n)).mul(val);
+          recipe.in[id] = (recipe.in[id] ?? rational.zero).add(amount);
         }
       }
 
@@ -431,12 +436,12 @@ export class Adjustment {
             .div(rational(1000n));
 
           recipe.in[recipeState.fuelId] = (
-            recipe.in[recipeState.fuelId] || rational.zero
+            recipe.in[recipeState.fuelId] ?? rational.zero
           ).add(fuelIn);
 
           if (fuel.result) {
             recipe.out[fuel.result] = (
-              recipe.out[fuel.result] || rational.zero
+              recipe.out[fuel.result] ?? rational.zero
             ).add(fuelIn);
           }
         }
@@ -449,9 +454,9 @@ export class Adjustment {
         for (const pId of Object.keys(proliferatorSprays)) {
           proliferatorUses[pId] = rational.zero;
 
-          for (const id of Object.keys(recipe.in)) {
+          for (const [_, val] of toRecordEntries(recipe.in)) {
             const sprays = proliferatorSprays[pId];
-            const amount = recipe.in[id].div(sprays);
+            const amount = val.div(sprays);
             proliferatorUses[pId] = proliferatorUses[pId].add(amount);
           }
         }
@@ -487,8 +492,7 @@ export class Adjustment {
     }
 
     if (settings.netProductionOnly) {
-      for (const outId of Object.keys(recipe.out)) {
-        const output = recipe.out[outId];
+      for (const [outId, output] of toRecordEntries(recipe.out)) {
         if (recipe.in[outId] != null) {
           // Recipe contains loop; reduce to net production
           const input = recipe.in[outId];
@@ -526,8 +530,10 @@ export class Adjustment {
     if (!rocketMachine?.silo) return;
 
     const rocketRecipe = data.adjustedRecipe[recipe.part];
-    const itemId = Object.keys(rocketRecipe.out)[0];
-    const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
+    const entry = toRecordEntries(rocketRecipe.out)[0];
+    if (entry == null) return;
+    const [_, itemVal] = entry;
+    const factor = rocketMachine.silo.parts.div(itemVal);
     recipe.time = rocketRecipe.time.mul(factor);
   }
 
@@ -545,8 +551,10 @@ export class Adjustment {
       const rocketRecipe = adjustedRecipe[partId];
       if (!rocketMachine?.silo || rocketRecipe.part) continue;
 
-      const itemId = Object.keys(rocketRecipe.out)[0];
-      const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
+      const entry = toRecordEntries(rocketRecipe.out)[0];
+      if (entry == null) continue;
+      const [_, itemVal] = entry;
+      const factor = rocketMachine.silo.parts.div(itemVal);
       for (const launchId of Object.keys(adjustedRecipe).filter(
         (i) =>
           adjustedRecipe[i].part === partId &&
@@ -648,8 +656,8 @@ export class Adjustment {
       } else if (recipe.cost) {
         // Recipe has a declared cost, base this on output items not machines
         // Calculate total output, sum, and multiply cost by output
-        const output = Object.keys(recipe.out)
-          .reduce((v, o) => v.add(recipe.out[o]), rational.zero)
+        const output = toRecordEntries(recipe.out)
+          .reduce((v, [_, val]) => v.add(val), rational.zero)
           .div(recipe.time);
         recipe.cost = output.mul(recipe.cost).mul(costs.factor);
       } else {
