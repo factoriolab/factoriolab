@@ -33,7 +33,7 @@ import { Picker } from '~/components/picker/picker';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { rational } from '~/rational/rational';
-import { ObjectiveBase, ObjectiveSettings } from '~/state/objectives/objective';
+import { ObjectiveSettings } from '~/state/objectives/objective';
 import {
   ObjectiveType,
   objectiveTypeOptions,
@@ -113,10 +113,6 @@ export class Objectives {
     host({ pin: this.preferencesStore.pinObjectives() }),
   );
 
-  addObjective(value: ObjectiveBase): void {
-    this.objectivesStore.add(value);
-  }
-
   drop(event: CdkDragDrop<string[]>): void {
     const objectives = [...this.objectives()];
     moveItemInArray(objectives, event.previousIndex, event.currentIndex);
@@ -125,7 +121,7 @@ export class Objectives {
 
   openPicker(): void {
     this.objectiveForm.openPicker().subscribe((value) => {
-      this.objectivesStore.create(value);
+      this.objectivesStore.add(value);
     });
   }
 
