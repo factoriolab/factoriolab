@@ -17,6 +17,7 @@ const flatpakSteamPath = `${process.env['HOME'] ?? ''}/.var/app/com.valvesoftwar
 export const factorioPath = fs.existsSync(flatpakSteamPath)
   ? `${flatpakSteamPath}/.factorio`
   : `${appDataPath}/Factorio`;
+export const steamPath = `${process.env['ProgramFiles(x86)'] ?? ''}/Steam/steamapps/common/Factorio`;
 
 export function getLocale(file: string): Locale {
   const path = `${factorioPath}/script-output/${file}`;

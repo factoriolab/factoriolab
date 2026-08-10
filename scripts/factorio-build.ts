@@ -682,7 +682,7 @@ async function processMod(): Promise<void> {
     ],
   };
 
-  modData.version = getVersion(modsPath, factorioPath);
+  modData.version = getVersion(modsPath);
   if (modData.version['space-age'])
     modData.flags.push('beltStack', 'rockets', 'researchProductivity');
 

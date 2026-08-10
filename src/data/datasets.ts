@@ -14,6 +14,7 @@ export interface Datasets {
 export const datasets: Datasets = {
   mods: [
     { id: '2x1', name: 'Space Age', game: 'factorio' },
+    { id: '2q1', name: 'Quality', game: 'factorio' },
     { id: '2.1', name: '2.1', game: 'factorio' },
     { id: 'spa', name: 'Space Age 2.0', game: 'factorio' },
     { id: '2.0', name: '2.0', game: 'factorio' },
@@ -85,7 +86,7 @@ export const datasets: Datasets = {
     'kr2spo',
     'nls',
     'boi',
-    null,
+    '2q1',
     null,
     'sfy',
     'coi',
