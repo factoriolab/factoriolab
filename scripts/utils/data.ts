@@ -19,10 +19,11 @@ import {
   DataRawDump,
   EffectType,
   isFluidIngredient,
+  ModInfo,
   ModList,
-  PlayerData,
+  // PlayerData,
 } from '../factorio-build.models';
-import { getJsonData } from './file';
+import { getJsonData, steamPath } from './file';
 
 export function addEntityValue(
   e: Record<string, number>,
@@ -190,21 +191,18 @@ export function getLastIngredient(ingredients: ResearchIngredient[]): string {
   return ingredient[0];
 }
 
-const builtIn = new Set([
-  'base',
-  'elevated-rails',
-  'quality',
-  'space-age',
-  'recycler',
-]);
-export function getVersion(
-  modsPath: string,
-  factorioPath: string,
-): Record<string, string> {
+// const builtIn = new Set([
+//   'base',
+//   'elevated-rails',
+//   'quality',
+//   'space-age',
+//   'recycler',
+// ]);
+export function getVersion(modsPath: string): Record<string, string> {
   const modListPath = `${modsPath}/mod-list.json`;
   const modList = getJsonData(modListPath) as ModList;
-  const playerDataPath = `${factorioPath}/player-data.json`;
-  const playerData = getJsonData(playerDataPath) as PlayerData;
+  // const playerDataPath = `${factorioPath}/player-data.json`;
+  // const playerData = getJsonData(playerDataPath) as PlayerData;
 
   const modFiles = fs
     .readdirSync(modsPath)
@@ -216,8 +214,10 @@ export function getVersion(
   return modList.mods
     .filter((m) => m.enabled)
     .reduce((version: Record<string, string>, mod) => {
-      if (builtIn.has(mod.name)) {
-        version[mod.name] = playerData['last-played-version'].game_version;
+      const dataInfoPath = `${steamPath}/data/${mod.name}/info.json`;
+      if (fs.existsSync(dataInfoPath)) {
+        const info = getJsonData(dataInfoPath) as ModInfo;
+        version[mod.name] = info.version;
         return version;
       }
 

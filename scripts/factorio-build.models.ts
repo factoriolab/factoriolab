@@ -4,13 +4,23 @@ export interface ModList {
   mods: { name: string; enabled: boolean }[];
 }
 
-export interface PlayerData {
-  'last-played-version': {
-    game_version: string;
-    build_version: number;
-    build_mode: string;
-    platform: string;
-  };
+// export interface PlayerData {
+//   'last-played-version': {
+//     game_version: string;
+//     build_version: number;
+//     build_mode: string;
+//     platform: string;
+//   };
+// }
+
+export interface ModInfo {
+  name: string;
+  version: string;
+  title: string;
+  author: string;
+  contact: string;
+  homepage: string;
+  dependencies: string[];
 }
 
 export type EffectType =
