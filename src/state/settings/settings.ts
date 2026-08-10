@@ -28,5 +28,5 @@ export interface Settings extends SettingsState {
   defaultLocationIds: Set<string>;
   availableRecipeIds: Set<string>;
   availableItemIds: Set<string>;
-  quality: Quality;
+  quality?: Quality;
 }
