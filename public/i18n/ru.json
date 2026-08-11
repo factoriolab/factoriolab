@@ -349,14 +349,6 @@
       "proliferated": "Распространенный",
       "upgraded": "Улучшено"
     },
-    "quality": {
-      "any": "Any",
-      "epic": "Epic",
-      "legendary": "Legendary",
-      "normal": "Normal",
-      "rare": "Rare",
-      "uncommon": "Uncommon"
-    },
     "researchBonus": {
       "speed0": "Без бонуса иследований",
       "speed1": "Скорость иследования 1",
@@ -493,6 +485,7 @@
     "proliferatorSelfSpray": "Пролифератор спрей",
     "proliferatorSelfSprayTooltip": "Выберите спрей от пролифератора, наносимый на сам пролифератор.",
     "queryParamsPlaceholder": "Paste query parameters",
+    "recipeCostMultiplier": "Recipe cost multiplier",
     "recipeProductivity": "Recipe productivity bonuses",
     "recipeProductivityTooltip": "Click to set productivity bonuses for recipes upgraded by technology",
     "recipesExcluded": "{{ count }} Установить включенные элементы",

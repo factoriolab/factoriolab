@@ -349,14 +349,6 @@
       "proliferated": "Vermehrt",
       "upgraded": "mit Upgrade"
     },
-    "quality": {
-      "any": "Any",
-      "epic": "Epic",
-      "legendary": "Legendary",
-      "normal": "Normal",
-      "rare": "Rare",
-      "uncommon": "Uncommon"
-    },
     "researchBonus": {
       "speed0": "Kein Forschungsbonus",
       "speed1": "Forschungsgeschwindigkeit 1",
@@ -493,6 +485,7 @@
     "proliferatorSelfSpray": "Proliferator Selbstbesprühung",
     "proliferatorSelfSprayTooltip": "Wähle den Proliferatorspray, welcher auf den Proliferator selbst angewendet wurde",
     "queryParamsPlaceholder": "Paste query parameters",
+    "recipeCostMultiplier": "Recipe cost multiplier",
     "recipeProductivity": "Recipe productivity bonuses",
     "recipeProductivityTooltip": "Click to set productivity bonuses for recipes upgraded by technology",
     "recipesExcluded": "{{ count }} Rezepte exkludiert",
