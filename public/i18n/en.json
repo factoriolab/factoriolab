@@ -168,7 +168,8 @@
     "export": "Export",
     "id": "Id",
     "image": "Image",
-    "chooseImage": "Choose image"
+    "chooseImage": "Choose image",
+    "chooseImages": "Choose images"
   },
   "error": {
     "deleteCustom": "Delete custom data",

@@ -1,3 +1,23 @@
+<div>
+  <button
+    type="button"
+    labButton
+    text="editor.chooseImages"
+    [faIcon]="faUpload"
+    (click)="filesInput.click()"
+  ></button>
+</div>
+<input
+  #filesInput
+  type="file"
+  accept="image/*"
+  multiple
+  aria-labelledby="image-header"
+  class="hidden"
+  (change)="selectFiles($event)"
+  (click)="filesInput.value = ''"
+/>
+
 <table class="table">
   <thead>
     <tr>
@@ -46,7 +66,7 @@
           labButton
           [faIcon]="faFloppyDisk"
           [aria-label]="'save' | translate"
-          (click)="add(id.value)"
+          (click)="add(id.value, fileInfo())"
         ></button>
       </td>
     </tr>
