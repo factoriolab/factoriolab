@@ -8,6 +8,7 @@ import {
   FaIconComponent,
   IconDefinition,
 } from '@fortawesome/angular-fontawesome';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { cva } from 'class-variance-authority';
 
 import { IconType } from '~/data/icon-type';
@@ -103,6 +104,7 @@ export class Button {
   readonly border = input(true);
   readonly rounded = input<Rounded>('all');
   readonly hide = input(false);
+  readonly loading = input(false);
   readonly toggleIcon = input<IconDefinition>();
   readonly toggled = input<boolean | undefined>(false);
   readonly disabled = input(false);
@@ -117,6 +119,7 @@ export class Button {
     center: 'text-center',
     right: 'text-end',
   };
+  protected readonly faGear = faGear;
   protected readonly hostClass = computed(() =>
     host({
       color: this.color(),

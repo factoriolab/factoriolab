@@ -1,4 +1,3 @@
-import { KeyValuePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,11 +5,7 @@ import {
   Signal,
 } from '@angular/core';
 import { ROUTER_OUTLET_DATA } from '@angular/router';
-import {
-  faFloppyDisk,
-  faTrash,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
+import { faFloppyDisk, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { TranslatePipe } from '~/translate/translate-pipe';
@@ -18,23 +13,15 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { EditorData } from '../editor.types';
 
 @Component({
-  selector: 'lab-version',
-  imports: [KeyValuePipe, Button, TranslatePipe],
-  templateUrl: './version.html',
+  selector: 'lab-icons',
+  imports: [Button, TranslatePipe],
+  templateUrl: './icons.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'flex flex-col' },
 })
-export class Version {
+export class Icons {
   protected readonly edit = inject<Signal<EditorData>>(ROUTER_OUTLET_DATA);
 
-  protected readonly faXmark = faXmark;
   protected readonly faTrash = faTrash;
   protected readonly faFloppyDisk = faFloppyDisk;
-
-  add(key: string, value: string): void {
-    this.edit().data.version[key] = value;
-  }
-
-  remove(key: string): void {
-    delete this.edit().data.version[key];
-  }
 }

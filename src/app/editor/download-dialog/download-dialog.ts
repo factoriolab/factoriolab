@@ -1,0 +1,50 @@
+import { DialogRef } from '@angular/cdk/dialog';
+import { HttpClient } from '@angular/common/http';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
+import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+
+import { Button } from '~/components/button/button';
+import { DialogData } from '~/components/dialog/dialog';
+import { Select } from '~/components/select/select';
+import { datasets, DEFAULT_MOD } from '~/data/datasets';
+import { ModData } from '~/data/schema/mod-data';
+import { Option } from '~/option/option';
+import { TranslatePipe } from '~/translate/translate-pipe';
+
+@Component({
+  selector: 'lab-download-dialog',
+  imports: [Button, Select, TranslatePipe],
+  templateUrl: './download-dialog.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'flex flex-col gap-3 p-3 pt-0 sm:gap-6 sm:p-6 sm:pt-0 lg:max-w-3xl',
+  },
+})
+export class DownloadDialog implements DialogData {
+  protected readonly http = inject(HttpClient);
+  protected readonly dialogRef = inject<DialogRef<ModData>>(DialogRef);
+
+  readonly header = 'Load existing data';
+  protected readonly faCheck = faCheck;
+  protected readonly faXmark = faXmark;
+  protected readonly loading = signal(false);
+  protected readonly modId = signal(DEFAULT_MOD);
+  protected readonly options = datasets.mods.map(
+    (m): Option => ({ label: m.name, value: m.id }),
+  );
+
+  save(): void {
+    this.loading.set(true);
+    this.http
+      .get<ModData>(`data/${this.modId()}/data.json`)
+      .subscribe((data) => {
+        this.dialogRef.close(data);
+      });
+    // spritesmith.run();
+  }
+}

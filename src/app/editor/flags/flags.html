@@ -1,0 +1,7 @@
+@for (flag of flags; track flag) {
+  <lab-checkbox
+    [label]="flag"
+    [value]="edit().data.flags.includes(flag)"
+    (valueChange)="toggleFlag(flag, $event)"
+  ></lab-checkbox>
+}

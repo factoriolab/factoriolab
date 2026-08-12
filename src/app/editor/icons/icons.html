@@ -1,0 +1,39 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>image</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>id editor</td>
+      <td>image editor</td>
+      <td>
+        <button
+          type="button"
+          labButton
+          [faIcon]="faFloppyDisk"
+          [aria-label]="'save' | translate"
+        ></button>
+      </td>
+    </tr>
+    @for (icon of edit().data.icons; track icon.id) {
+      <tr>
+        <td>{{ icon.id }}</td>
+        <td>
+          <img [src]="edit().icons[icon.id]?.url" [alt]="icon.id" />
+        </td>
+        <td>
+          <button
+            type="button"
+            labButton
+            [faIcon]="faTrash"
+            [aria-label]="'delete' | translate"
+          ></button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

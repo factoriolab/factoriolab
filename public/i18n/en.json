@@ -157,6 +157,15 @@
     "unlockedRecipes": "Unlocked recipes",
     "value": "Value"
   },
+  "editor": {
+    "header": "Game data editor",
+    "download": "Load existing data",
+    "upload": "Upload custom files",
+    "icons": "Icons",
+    "limitations": "Limitations",
+    "qualities": "Qualities",
+    "defaults": "Defaults"
+  },
   "error": {
     "deleteCustom": "Delete custom data",
     "header": "An error occurred",
@@ -401,6 +410,8 @@
     "selectItem": "Select an item",
     "selectRecipe": "Select a recipe"
   },
+  "delete": "Delete",
+  "save": "Save",
   "preferences": {
     "backgroundLightness": "Background lightness",
     "bypassLanding": "Always skip landing page",
@@ -408,7 +419,6 @@
     "convertObjectiveValues": "Convert objective values",
     "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
     "createSavedState": "Create new",
-    "deleteSavedState": "Delete",
     "editSavedState": "Rename",
     "glpkAlgorithm": "GLPK Algorithm",
     "header": "Preferences",

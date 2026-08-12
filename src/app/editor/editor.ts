@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,10 +7,18 @@ import {
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {
+  faBoxesStacked,
   faCodeCommit,
   faDownload,
   faExclamationTriangle,
   faFlag,
+  faFlaskVial,
+  faGavel,
+  faImages,
+  faLayerGroup,
+  faLocationDot,
+  faRankingStar,
+  faRectangleList,
   faRotateLeft,
   faUpload,
   faXmark,
@@ -19,38 +28,100 @@ import { Button } from '~/components/button/button';
 import { Confirm } from '~/components/confirm/confirm';
 import { TabData } from '~/components/tabs/tab-data';
 import { Tabs } from '~/components/tabs/tabs';
-import { emptyModData } from '~/data/schema/mod-data';
+import { TranslatePipe } from '~/translate/translate-pipe';
+
+import { DownloadDialog } from './download-dialog/download-dialog';
+import { EditorData, emptyEditorData } from './editor.types';
+import { UploadDialog } from './upload-dialog/upload-dialog';
 
 @Component({
   selector: 'lab-editor',
-  imports: [RouterOutlet, Button, Tabs],
+  imports: [RouterOutlet, Button, Tabs, TranslatePipe],
   templateUrl: './editor.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'px-1 sm:px-3 lg:px-6 lg:pt-3 flex grow flex-col gap-2' },
 })
 export class Editor {
   private readonly confirm = inject(Confirm);
+  private readonly dialog = inject(Dialog);
 
   protected readonly tabs: TabData[] = [
     {
-      label: 'version',
+      label: 'settings.modVersions',
       value: 'version',
       routerLink: 'version',
       faIcon: faCodeCommit,
     },
-    { label: 'flags', value: 'flags', routerLink: 'flags', faIcon: faFlag },
+    {
+      label: 'data.flags',
+      value: 'flags',
+      routerLink: 'flags',
+      faIcon: faFlag,
+    },
+    {
+      label: 'data.categories',
+      value: 'categories',
+      routerLink: 'categories',
+      faIcon: faLayerGroup,
+    },
+    {
+      label: 'editor.icons',
+      value: 'icons',
+      routerLink: 'icons',
+      faIcon: faImages,
+    },
+    {
+      label: 'data.items',
+      value: 'items',
+      routerLink: 'items',
+      faIcon: faBoxesStacked,
+    },
+    {
+      label: 'data.recipes',
+      value: 'recipes',
+      routerLink: 'recipes',
+      faIcon: faFlaskVial,
+    },
+    {
+      label: 'editor.limitations',
+      value: 'limitations',
+      routerLink: 'limitations',
+      faIcon: faGavel,
+    },
+    {
+      label: 'data.locations',
+      value: 'locations',
+      routerLink: 'locations',
+      faIcon: faLocationDot,
+    },
+    {
+      label: 'editor.qualities',
+      value: 'qualities',
+      routerLink: 'qualities',
+      faIcon: faRankingStar,
+    },
+    {
+      label: 'editor.defaults',
+      value: 'defaults',
+      routerLink: 'defaults',
+      faIcon: faRectangleList,
+    },
   ];
-  protected readonly data = signal(emptyModData());
+  protected readonly edit = signal(emptyEditorData());
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faDownload = faDownload;
   protected readonly faUpload = faUpload;
 
   download(): void {
-    console.log('TODO');
+    this.dialog.open<EditorData>(DownloadDialog).closed.subscribe((edit) => {
+      if (edit) this.edit.set(edit);
+    });
   }
 
   upload(): void {
-    console.log('TODO');
+    this.dialog.open<EditorData>(UploadDialog).closed.subscribe((edit) => {
+      if (edit) this.edit.set(edit);
+    });
   }
 
   reset(): void {
@@ -66,7 +137,7 @@ export class Editor {
       })
       .subscribe((res) => {
         if (res === 1) {
-          this.data.set(emptyModData());
+          this.edit.set(emptyEditorData());
         }
       });
   }

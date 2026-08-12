@@ -401,6 +401,7 @@
     "selectItem": "아이템 선택",
     "selectRecipe": "제작법 선택"
   },
+  "delete": "삭제",
   "preferences": {
     "backgroundLightness": "배경 밝기",
     "bypassLanding": "항상 랜딩 페이지 건너뛰기",
@@ -408,7 +409,6 @@
     "convertObjectiveValues": "목표 값 변환",
     "convertObjectiveValuesTooltip": "체크하면 유형이 변경될 때 아이템 수량을 유지하도록 목표 값이 변환됩니다.",
     "createSavedState": "새로 만들기",
-    "deleteSavedState": "삭제",
     "editSavedState": "이름 바꾸기",
     "glpkAlgorithm": "GLPK Algorithm",
     "header": "환경설정",

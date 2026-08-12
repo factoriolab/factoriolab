@@ -1,0 +1,21 @@
+<lab-select [(value)]="modId" [options]="options"></lab-select>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faCheck"
+    [text]="'ok' | translate"
+    [loading]="loading()"
+    [disabled]="loading()"
+    (click)="save()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

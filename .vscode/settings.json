@@ -1,7 +1,10 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.codeActionsOnSave": ["source.fixAll"],
+  "editor.codeActionsOnSave": {
+    "source.removeUnusedImports": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
   "editor.rulers": [80],
   "files.associations": {
     "*.css": "tailwindcss"

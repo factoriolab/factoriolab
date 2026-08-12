@@ -7,7 +7,16 @@ export const routes: Routes = [
   },
   {
     path: 'flags',
-    loadComponent: () => import('./flags/flags').then((c) => c.FlagsEditor),
+    loadComponent: () => import('./flags/flags').then((c) => c.Flags),
+  },
+  {
+    path: 'categories',
+    loadComponent: () =>
+      import('./categories/categories').then((c) => c.Categories),
+  },
+  {
+    path: 'icons',
+    loadComponent: () => import('./icons/icons').then((c) => c.Icons),
   },
   {
     path: '**',

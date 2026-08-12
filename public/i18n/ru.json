@@ -401,6 +401,7 @@
     "selectItem": "Select an item",
     "selectRecipe": "Select a recipe"
   },
+  "delete": "Delete",
   "preferences": {
     "backgroundLightness": "Background lightness",
     "bypassLanding": "Always skip landing page",
@@ -408,7 +409,6 @@
     "convertObjectiveValues": "Convert objective values",
     "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
     "createSavedState": "Create new",
-    "deleteSavedState": "Delete",
     "editSavedState": "Rename",
     "glpkAlgorithm": "GLPK Algorithm",
     "header": "Preferences",

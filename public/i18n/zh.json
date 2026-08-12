@@ -401,6 +401,7 @@
     "selectItem": "选择一个物品",
     "selectRecipe": "选择一个配方"
   },
+  "delete": "删除此状态",
   "preferences": {
     "backgroundLightness": "背景亮度",
     "bypassLanding": "始终跳过起始引导页",
@@ -408,7 +409,6 @@
     "convertObjectiveValues": "转换目标值",
     "convertObjectiveValuesTooltip": "如果勾选，当类型改变时，目标值将被转换以保留物品数量",
     "createSavedState": "新建状态",
-    "deleteSavedState": "删除此状态",
     "editSavedState": "重命名",
     "glpkAlgorithm": "GLPK Algorithm",
     "header": "偏好设置",

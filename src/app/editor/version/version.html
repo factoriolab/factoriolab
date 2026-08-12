@@ -1,8 +1,8 @@
 <table class="table">
   <thead>
     <tr>
-      <th id="key-header">Key</th>
-      <th id="value-header">Value</th>
+      <th id="mod-header">{{ 'versions.mod' | translate }}</th>
+      <th id="version-header">{{ 'versions.version' | translate }}</th>
       <th></th>
     </tr>
   </thead>
@@ -10,22 +10,20 @@
     <tr>
       <td>
         <input
-          id="key"
-          #key
+          #mod
           type="text"
-          aria-labelledby="key-header"
+          aria-labelledby="mod-header"
           class="input"
-          placeholder="key"
+          [placeholder]="'versions.mod' | translate"
         />
       </td>
       <td>
         <input
-          id="key"
-          #value
+          #version
           type="text"
-          aria-labelledby="value-header"
+          aria-labelledby="version-header"
           class="input"
-          placeholder="value"
+          [placeholder]="'versions.version' | translate"
         />
       </td>
       <td>
@@ -33,12 +31,12 @@
           type="button"
           labButton
           [faIcon]="faFloppyDisk"
-          aria-label="Save"
-          (click)="add(key.value, value.value)"
+          [aria-label]="'save' | translate"
+          (click)="add(mod.value, version.value)"
         ></button>
       </td>
     </tr>
-    @for (kv of data().version | keyvalue; track kv.key) {
+    @for (kv of edit().data.version | keyvalue; track kv.key) {
       <tr>
         <td>{{ kv.key }}</td>
         <td>{{ kv.value }}</td>
@@ -47,7 +45,7 @@
             type="button"
             labButton
             [faIcon]="faTrash"
-            aria-label="Delete"
+            [aria-label]="'delete' | translate"
             (click)="remove(kv.key)"
           ></button>
         </td>
