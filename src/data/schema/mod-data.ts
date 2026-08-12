@@ -19,3 +19,14 @@ export interface ModData {
   qualities?: QualityJson[];
   defaults?: DefaultsJson;
 }
+
+export function emptyModData(): ModData {
+  return {
+    version: {},
+    categories: [],
+    icons: [],
+    items: [],
+    recipes: [],
+    flags: [],
+  };
+}

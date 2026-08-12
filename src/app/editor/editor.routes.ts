@@ -3,8 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'version',
-    loadComponent: () =>
-      import('./version/version').then((c) => c.VersionEditor),
+    loadComponent: () => import('./version/version').then((c) => c.Version),
   },
   {
     path: 'flags',

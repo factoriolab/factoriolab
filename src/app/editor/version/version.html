@@ -1,0 +1,57 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th id="key-header">Key</th>
+      <th id="value-header">Value</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <input
+          id="key"
+          #key
+          type="text"
+          aria-labelledby="key-header"
+          class="input"
+          placeholder="key"
+        />
+      </td>
+      <td>
+        <input
+          id="key"
+          #value
+          type="text"
+          aria-labelledby="value-header"
+          class="input"
+          placeholder="value"
+        />
+      </td>
+      <td>
+        <button
+          type="button"
+          labButton
+          [faIcon]="faFloppyDisk"
+          aria-label="Save"
+          (click)="add(key.value, value.value)"
+        ></button>
+      </td>
+    </tr>
+    @for (kv of data().version | keyvalue; track kv.key) {
+      <tr>
+        <td>{{ kv.key }}</td>
+        <td>{{ kv.value }}</td>
+        <td>
+          <button
+            type="button"
+            labButton
+            [faIcon]="faTrash"
+            aria-label="Delete"
+            (click)="remove(kv.key)"
+          ></button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
