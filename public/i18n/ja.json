@@ -349,14 +349,6 @@
       "proliferated": "Proliferated",
       "upgraded": "アップグレード済"
     },
-    "quality": {
-      "any": "Any",
-      "epic": "Epic",
-      "legendary": "Legendary",
-      "normal": "Normal",
-      "rare": "Rare",
-      "uncommon": "Uncommon"
-    },
     "researchBonus": {
       "speed0": "研究速度ボーナスなし",
       "speed1": "研究速度ボーナス1",
@@ -493,6 +485,7 @@
     "proliferatorSelfSpray": "Proliferator self-spray",
     "proliferatorSelfSprayTooltip": "Select the proliferator spray applied to proliferator itself",
     "queryParamsPlaceholder": "Paste query parameters",
+    "recipeCostMultiplier": "Recipe cost multiplier",
     "recipeProductivity": "Recipe productivity bonuses",
     "recipeProductivityTooltip": "Click to set productivity bonuses for recipes upgraded by technology",
     "recipesExcluded": "{{ count }} 個のレシピを除外",

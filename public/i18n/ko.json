@@ -349,14 +349,6 @@
       "proliferated": "증식제 적용",
       "upgraded": "업그레이드"
     },
-    "quality": {
-      "any": "모든 품질",
-      "epic": "특급",
-      "legendary": "전설",
-      "normal": "일반",
-      "rare": "희귀",
-      "uncommon": "고급"
-    },
     "researchBonus": {
       "speed0": "보너스 없음",
       "speed1": "레벨 1 (20%)",
@@ -493,6 +485,7 @@
     "proliferatorSelfSpray": "증식제 자가 분사",
     "proliferatorSelfSprayTooltip": "증식제 자체에 적용할 증식제 분사를 선택하세요",
     "queryParamsPlaceholder": "쿼리 매개변수 붙여넣기",
+    "recipeCostMultiplier": "Recipe cost multiplier",
     "recipeProductivity": "제작법 생산성 보너스",
     "recipeProductivityTooltip": "클릭하여 기술로 업그레이드된 제작법의 생산성 보너스를 설정하세요",
     "recipesExcluded": "제작법 {{ count }}개 제외됨",

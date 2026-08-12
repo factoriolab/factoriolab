@@ -349,14 +349,6 @@
       "proliferated": "Proliferado",
       "upgraded": "Mejorado"
     },
-    "quality": {
-      "any": "Cualquiera",
-      "epic": "Épico",
-      "legendary": "Legendario",
-      "normal": "Normal",
-      "rare": "Raro",
-      "uncommon": "Poco común"
-    },
     "researchBonus": {
       "speed0": "Sin bonificación de investigación",
       "speed1": "Velocidad de investigación 1",
@@ -493,6 +485,7 @@
     "proliferatorSelfSpray": "Auto-rociado de proliferador",
     "proliferatorSelfSprayTooltip": "Selecciona el rociado de proliferador aplicado al propio proliferador",
     "queryParamsPlaceholder": "Paste query parameters",
+    "recipeCostMultiplier": "Recipe cost multiplier",
     "recipeProductivity": "Bonificaciones de productividad de receta",
     "recipeProductivityTooltip": "Clic para establecer bonificaciones de productividad para recetas mejoradas por tecnología",
     "recipesExcluded": "{{ count }} recetas excluidas",

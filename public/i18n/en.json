@@ -349,14 +349,6 @@
       "proliferated": "Proliferated",
       "upgraded": "Upgraded"
     },
-    "quality": {
-      "any": "Any",
-      "epic": "Epic",
-      "legendary": "Legendary",
-      "normal": "Normal",
-      "rare": "Rare",
-      "uncommon": "Uncommon"
-    },
     "researchBonus": {
       "speed0": "No bonus",
       "speed1": "Level 1 (20%)",
