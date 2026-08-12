@@ -31,6 +31,7 @@
             labButton
             [faIcon]="faTrash"
             [aria-label]="'delete' | translate"
+            (click)="remove(icon.id)"
           ></button>
         </td>
       </tr>

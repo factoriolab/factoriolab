@@ -51,7 +51,8 @@
     color="brand"
     text="ok"
     [faIcon]="faCheck"
-    [disabled]="!dataFile || !iconsFile"
+    [loading]="loading()"
+    [disabled]="!dataFile || !iconsFile || loading()"
     (click)="save()"
   ></button>
   <button

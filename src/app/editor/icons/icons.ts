@@ -24,4 +24,9 @@ export class Icons {
 
   protected readonly faTrash = faTrash;
   protected readonly faFloppyDisk = faFloppyDisk;
+
+  remove(id: string): void {
+    const data = this.edit().data;
+    data.icons = data.icons.filter((i) => i.id !== id);
+  }
 }

@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { switchMap } from 'rxjs';
 
 import { Button } from '~/components/button/button';
 import { DialogData } from '~/components/dialog/dialog';
@@ -15,6 +16,9 @@ import { datasets, DEFAULT_MOD } from '~/data/datasets';
 import { ModData } from '~/data/schema/mod-data';
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
+
+import { EditorData } from '../editor.types';
+import { splitIcons } from '../image.utils';
 
 @Component({
   selector: 'lab-download-dialog',
@@ -27,7 +31,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 })
 export class DownloadDialog implements DialogData {
   protected readonly http = inject(HttpClient);
-  protected readonly dialogRef = inject<DialogRef<ModData>>(DialogRef);
+  protected readonly dialogRef = inject<DialogRef<EditorData>>(DialogRef);
 
   readonly header = 'Load existing data';
   protected readonly faCheck = faCheck;
@@ -40,10 +44,12 @@ export class DownloadDialog implements DialogData {
 
   save(): void {
     this.loading.set(true);
+    const modId = this.modId();
     this.http
-      .get<ModData>(`data/${this.modId()}/data.json`)
-      .subscribe((data) => {
-        this.dialogRef.close(data);
+      .get<ModData>(`data/${modId}/data.json`)
+      .pipe(switchMap((data) => splitIcons(`data/${modId}/icons.webp`, data)))
+      .subscribe((edit) => {
+        this.dialogRef.close(edit);
       });
     // spritesmith.run();
   }

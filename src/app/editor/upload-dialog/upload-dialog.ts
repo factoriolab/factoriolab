@@ -1,5 +1,10 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 
@@ -9,6 +14,7 @@ import { ModData } from '~/data/schema/mod-data';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { EditorData } from '../editor.types';
+import { splitIcons } from '../image.utils';
 
 @Component({
   selector: 'lab-upload-dialog',
@@ -28,6 +34,7 @@ export class UploadDialog implements DialogData {
 
   protected dataFile: File | undefined;
   protected iconsFile: File | undefined;
+  protected readonly loading = signal(false);
 
   selectFile(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
@@ -41,6 +48,7 @@ export class UploadDialog implements DialogData {
 
   save(): void {
     if (!this.dataFile || !this.iconsFile) return;
+    this.loading.set(true);
     const dataFile = this.dataFile;
     const iconsFile = this.iconsFile;
 
@@ -50,37 +58,47 @@ export class UploadDialog implements DialogData {
       if (typeof result === 'string') {
         try {
           const data = JSON.parse(result) as ModData;
-          const editorData: EditorData = {
-            data,
-            icons: {},
-          };
-          const image = new Image();
-          image.onload = (): void => {
-            for (const icon of data.icons) {
-              const canvas = document.createElement('canvas');
-              canvas.width = 64;
-              canvas.height = 64;
-              const context = canvas.getContext('2d');
-              if (context == null) continue;
-              context.drawImage(image, icon.x, icon.y, 64, 64, 0, 0, 64, 64);
-              console.log(canvas.toDataURL());
-              canvas.toBlob((blob) => {
-                if (blob == null) return;
-                const file = new File([blob], `${icon.id}.webp`, {
-                  type: 'image/webp',
-                });
-                const url = URL.createObjectURL(file);
-                editorData.icons[icon.id] = {
-                  file,
-                  url,
-                };
-              });
-            }
-          };
           const url = URL.createObjectURL(iconsFile);
-          image.src = url;
+          splitIcons(url, data).then(
+            (value) => {
+              this.dialogRef.close(value);
+            },
+            (err: unknown) => {
+              console.error(err);
+              this.loading.set(false);
+            },
+          );
+          // const editorData: EditorData = {
+          //   data,
+          //   icons: {},
+          // };
+          // const image = new Image();
+          // image.onload = (): void => {
+          //   for (const icon of data.icons) {
+          //     const canvas = document.createElement('canvas');
+          //     canvas.width = 64;
+          //     canvas.height = 64;
+          //     const context = canvas.getContext('2d');
+          //     if (context == null) continue;
+          //     context.drawImage(image, icon.x, icon.y, 64, 64, 0, 0, 64, 64);
+          //     console.log(canvas.toDataURL());
+          //     canvas.toBlob((blob) => {
+          //       if (blob == null) return;
+          //       const file = new File([blob], `${icon.id}.webp`, {
+          //         type: 'image/webp',
+          //       });
+          //       const url = URL.createObjectURL(file);
+          //       editorData.icons[icon.id] = {
+          //         file,
+          //         url,
+          //       };
+          //     });
+          //   }
+          // };
+          // const url = URL.createObjectURL(iconsFile);
+          // image.src = url;
 
-          this.dialogRef.close(editorData);
+          // this.dialogRef.close(editorData);
         } catch {
           // Do nothing
         }
