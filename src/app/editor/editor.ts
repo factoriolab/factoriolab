@@ -11,6 +11,7 @@ import {
   faCodeCommit,
   faDownload,
   faExclamationTriangle,
+  faFileExport,
   faFlag,
   faFlaskVial,
   faGavel,
@@ -23,6 +24,7 @@ import {
   faUpload,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import { saveAs } from 'file-saver';
 
 import { Button } from '~/components/button/button';
 import { Confirm } from '~/components/confirm/confirm';
@@ -32,6 +34,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { DownloadDialog } from './download-dialog/download-dialog';
 import { EditorData, emptyEditorData } from './editor.types';
+import { exportIcons } from './image.utils';
 import { UploadDialog } from './upload-dialog/upload-dialog';
 
 @Component({
@@ -108,6 +111,7 @@ export class Editor {
     },
   ];
   protected readonly edit = signal(emptyEditorData());
+  protected readonly faFileExport = faFileExport;
   protected readonly faRotateLeft = faRotateLeft;
   protected readonly faDownload = faDownload;
   protected readonly faUpload = faUpload;
@@ -140,5 +144,21 @@ export class Editor {
           this.edit.set(emptyEditorData());
         }
       });
+  }
+
+  export(): void {
+    const edit = this.edit();
+    exportIcons(edit).then(
+      (blob) => {
+        saveAs(new Blob([blob], { type: 'image/webp' }), 'icons.png');
+        saveAs(
+          new Blob([JSON.stringify(edit.data)], { type: 'application/json' }),
+          'data.json',
+        );
+      },
+      (err: unknown) => {
+        console.error(err);
+      },
+    );
   }
 }

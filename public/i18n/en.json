@@ -164,7 +164,11 @@
     "icons": "Icons",
     "limitations": "Limitations",
     "qualities": "Qualities",
-    "defaults": "Defaults"
+    "defaults": "Defaults",
+    "export": "Export",
+    "id": "Id",
+    "image": "Image",
+    "chooseImage": "Choose image"
   },
   "error": {
     "deleteCustom": "Delete custom data",
