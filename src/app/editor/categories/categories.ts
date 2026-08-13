@@ -24,7 +24,6 @@ import { EditorTab } from '../editor-tab';
   imports: [FormsModule, Button, Select, TranslatePipe],
   templateUrl: './categories.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex flex-col' },
 })
 export class Categories extends EditorTab {
   private readonly confirm = inject(Confirm);

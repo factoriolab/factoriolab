@@ -22,7 +22,6 @@ import { normalizeIcon } from '../image.utils';
   imports: [FormsModule, Button, TranslatePipe],
   templateUrl: './icons.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'flex flex-col' },
 })
 export class Icons extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
