@@ -169,7 +169,9 @@
     "id": "Id",
     "image": "Image",
     "chooseImage": "Choose image",
-    "chooseImages": "Choose images"
+    "chooseImages": "Choose images",
+    "icon": "Icon",
+    "iconText": "Icon text"
   },
   "error": {
     "deleteCustom": "Delete custom data",

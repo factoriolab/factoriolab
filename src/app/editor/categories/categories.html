@@ -1,1 +1,93 @@
-categories
+<table class="table">
+  <thead>
+    <tr>
+      <th id="id-header">{{ 'editor.id' | translate }}</th>
+      <th id="name-header">{{ 'data.name' | translate }}</th>
+      <th id="icon-header">{{ 'editor.icon' | translate }}</th>
+      <th id="icon-text-header">{{ 'editor.iconText' | translate }}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <input
+          #id
+          type="text"
+          aria-labelledby="id-header"
+          class="input"
+          [placeholder]="'editor.id' | translate"
+        />
+      </td>
+      <td>
+        <input
+          #name
+          type="text"
+          aria-labelledby="name-header"
+          class="input"
+          [placeholder]="'data.name' | translate"
+        />
+      </td>
+      <td></td>
+      <td>
+        <input
+          #iconText
+          type="text"
+          aria-labelledby="icon-text-header"
+          class="input"
+          [placeholder]="'editor.iconText' | translate"
+        />
+      </td>
+      <td>
+        <button
+          type="button"
+          labButton
+          [faIcon]="faFloppyDisk"
+          [aria-label]="'save' | translate"
+        ></button>
+      </td>
+    </tr>
+    @for (category of edit().data.categories; track category.id) {
+      <tr>
+        <td>
+          <input
+            type="text"
+            class="input"
+            [ngModel]="category.id"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            class="input"
+            [ngModel]="category.name"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+          />
+        </td>
+        <td>
+          <img
+            [src]="edit().icons[category.icon ?? category.id]?.url"
+            [alt]="category.name"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            class="input"
+            [ngModel]="category.iconText"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+          />
+        </td>
+        <td>
+          <button
+            type="button"
+            labButton
+            [faIcon]="faTrash"
+            [aria-label]="'delete' | translate"
+          ></button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

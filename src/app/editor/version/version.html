@@ -32,14 +32,30 @@
           labButton
           [faIcon]="faFloppyDisk"
           [aria-label]="'save' | translate"
-          (click)="add(mod.value, version.value)"
+          (click)="edit().data.version[mod.value] = version.value"
         ></button>
       </td>
     </tr>
     @for (kv of edit().data.version | keyvalue; track kv.key) {
       <tr>
-        <td>{{ kv.key }}</td>
-        <td>{{ kv.value }}</td>
+        <td>
+          <input
+            type="text"
+            class="input"
+            [ngModel]="kv.key"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="changeKey(kv.key, $event)"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            class="input"
+            [ngModel]="kv.value"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="edit().data.version[kv.key] = $event"
+          />
+        </td>
         <td>
           <button
             type="button"

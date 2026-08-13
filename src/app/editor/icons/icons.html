@@ -72,9 +72,31 @@
     </tr>
     @for (icon of edit().data.icons; track icon.id) {
       <tr>
-        <td>{{ icon.id }}</td>
         <td>
-          <img [src]="edit().icons[icon.id]?.url" [alt]="icon.id" />
+          <input
+            type="text"
+            class="input"
+            [ngModel]="icon.id"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="changeId(icon, $event)"
+          />
+        </td>
+        <td>
+          <button
+            type="button"
+            class="cursor-pointer"
+            (click)="fileInput.click()"
+          >
+            <img [src]="edit().icons[icon.id]?.url" [alt]="icon.id" />
+          </button>
+          <input
+            #fileInput
+            type="file"
+            accept="image/*"
+            class="hidden"
+            (change)="changeImage(icon, $event)"
+            (click)="fileInput.value = ''"
+          />
         </td>
         <td>
           <button

@@ -5,6 +5,7 @@ import {
   inject,
   Signal,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ROUTER_OUTLET_DATA } from '@angular/router';
 import {
   faFloppyDisk,
@@ -19,7 +20,7 @@ import { EditorData } from '../editor.types';
 
 @Component({
   selector: 'lab-version',
-  imports: [KeyValuePipe, Button, TranslatePipe],
+  imports: [FormsModule, KeyValuePipe, Button, TranslatePipe],
   templateUrl: './version.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -30,8 +31,10 @@ export class Version {
   protected readonly faTrash = faTrash;
   protected readonly faFloppyDisk = faFloppyDisk;
 
-  add(key: string, value: string): void {
-    this.edit().data.version[key] = value;
+  changeKey(oldKey: string, newKey: string): void {
+    const data = this.edit().data;
+    data.version[newKey] = data.version[oldKey];
+    delete data.version[oldKey];
   }
 
   remove(key: string): void {
