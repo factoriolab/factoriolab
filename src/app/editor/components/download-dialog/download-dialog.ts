@@ -11,14 +11,14 @@ import { switchMap } from 'rxjs';
 
 import { Button } from '~/components/button/button';
 import { DialogData } from '~/components/dialog/dialog';
-import { Select } from '~/components/select/select';
 import { datasets, DEFAULT_MOD } from '~/data/datasets';
 import { ModData } from '~/data/schema/mod-data';
-import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
-import { EditorData } from '../editor.types';
-import { splitIcons } from '../image.utils';
+import { EditorData } from '../../editor.types';
+import { splitIcons } from '../../image.utils';
+import { Option } from '../select/option';
+import { Select } from '../select/select';
 
 @Component({
   selector: 'lab-download-dialog',

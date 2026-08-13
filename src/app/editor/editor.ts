@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLinkWithHref, RouterOutlet } from '@angular/router';
 import {
   faBoxesStacked,
   faCodeCommit,
@@ -15,6 +15,7 @@ import {
   faFlag,
   faFlaskVial,
   faGavel,
+  faHome,
   faImages,
   faLayerGroup,
   faLocationDot,
@@ -32,14 +33,14 @@ import { TabData } from '~/components/tabs/tab-data';
 import { Tabs } from '~/components/tabs/tabs';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
-import { DownloadDialog } from './download-dialog/download-dialog';
+import { DownloadDialog } from './components/download-dialog/download-dialog';
+import { UploadDialog } from './components/upload-dialog/upload-dialog';
 import { EditorData, emptyEditorData } from './editor.types';
 import { exportIcons } from './image.utils';
-import { UploadDialog } from './upload-dialog/upload-dialog';
 
 @Component({
   selector: 'lab-editor',
-  imports: [RouterOutlet, Button, Tabs, TranslatePipe],
+  imports: [RouterOutlet, Button, Tabs, TranslatePipe, RouterLinkWithHref],
   templateUrl: './editor.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'px-1 sm:px-3 lg:px-6 lg:pt-3 flex grow flex-col gap-2' },
@@ -111,9 +112,10 @@ export class Editor {
     },
   ];
   protected readonly edit = signal(emptyEditorData());
-  protected readonly faFileExport = faFileExport;
-  protected readonly faRotateLeft = faRotateLeft;
   protected readonly faDownload = faDownload;
+  protected readonly faFileExport = faFileExport;
+  protected readonly faHome = faHome;
+  protected readonly faRotateLeft = faRotateLeft;
   protected readonly faUpload = faUpload;
 
   download(): void {
@@ -150,7 +152,7 @@ export class Editor {
     const edit = this.edit();
     exportIcons(edit).then(
       (blob) => {
-        saveAs(new Blob([blob], { type: 'image/webp' }), 'icons.png');
+        saveAs(new Blob([blob], { type: 'image/webp' }), 'icons.webp');
         saveAs(
           new Blob([JSON.stringify(edit.data)], { type: 'application/json' }),
           'data.json',

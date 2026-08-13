@@ -12,30 +12,38 @@
     <tr>
       <td>
         <input
-          #id
           type="text"
           aria-labelledby="id-header"
           class="input"
           [placeholder]="'editor.id' | translate"
+          [(ngModel)]="model.id"
         />
       </td>
       <td>
         <input
-          #name
           type="text"
           aria-labelledby="name-header"
           class="input"
           [placeholder]="'data.name' | translate"
+          [(ngModel)]="model.name"
         />
       </td>
-      <td></td>
+      <td>
+        <div class="flex items-center">
+          <lab-select
+            [options]="iconOptions()"
+            [iconOnly]="true"
+            [(ngModel)]="model.icon"
+          ></lab-select>
+        </div>
+      </td>
       <td>
         <input
-          #iconText
           type="text"
           aria-labelledby="icon-text-header"
           class="input"
           [placeholder]="'editor.iconText' | translate"
+          [(ngModel)]="model.iconText"
         />
       </td>
       <td>
@@ -44,6 +52,7 @@
           labButton
           [faIcon]="faFloppyDisk"
           [aria-label]="'save' | translate"
+          (click)="add()"
         ></button>
       </td>
     </tr>
@@ -53,30 +62,38 @@
           <input
             type="text"
             class="input"
+            [placeholder]="'editor.id' | translate"
             [ngModel]="category.id"
             [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="changeId(category, $event)"
           />
         </td>
         <td>
           <input
             type="text"
             class="input"
-            [ngModel]="category.name"
-            [ngModelOptions]="{ updateOn: 'blur' }"
+            [placeholder]="'data.name' | translate"
+            [(ngModel)]="category.name"
           />
         </td>
         <td>
-          <img
-            [src]="edit().icons[category.icon ?? category.id]?.url"
-            [alt]="category.name"
-          />
+          <div class="flex items-center">
+            <lab-select
+              [options]="iconOptions()"
+              [iconOnly]="true"
+              [ngModel]="category.icon ?? category.id"
+              (ngModelChange)="
+                category.icon = $event === category.id ? undefined : $event
+              "
+            ></lab-select>
+          </div>
         </td>
         <td>
           <input
             type="text"
             class="input"
-            [ngModel]="category.iconText"
-            [ngModelOptions]="{ updateOn: 'blur' }"
+            [placeholder]="'editor.iconText' | translate"
+            [(ngModel)]="category.iconText"
           />
         </td>
         <td>
@@ -85,6 +102,7 @@
             labButton
             [faIcon]="faTrash"
             [aria-label]="'delete' | translate"
+            (click)="remove(category.id)"
           ></button>
         </td>
       </tr>

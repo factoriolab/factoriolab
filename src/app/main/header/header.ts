@@ -21,7 +21,7 @@ import { gameInfo } from '~/data/game-info';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
-import { externalLinks } from './external-link';
+import { headerLinks } from './links';
 
 @Component({
   selector: 'header[labHeader], header[lab-header]',
@@ -54,7 +54,7 @@ export class Header {
   protected readonly faUserGear = faUserGear;
   protected readonly game = this.settingsStore.game;
   protected readonly gameInfo = this.settingsStore.gameInfo;
-  protected readonly externalLinks = externalLinks;
+  protected readonly headerLinks = headerLinks;
 
   protected readonly gameOptions = computed(() =>
     gameOptions.filter((o) => o.value !== this.settingsStore.game()),

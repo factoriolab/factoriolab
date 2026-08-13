@@ -10,20 +10,20 @@
     <tr>
       <td>
         <input
-          #mod
           type="text"
           aria-labelledby="mod-header"
           class="input"
           [placeholder]="'versions.mod' | translate"
+          [(ngModel)]="model.mod"
         />
       </td>
       <td>
         <input
-          #version
           type="text"
           aria-labelledby="version-header"
           class="input"
           [placeholder]="'versions.version' | translate"
+          [(ngModel)]="model.version"
         />
       </td>
       <td>
@@ -32,7 +32,7 @@
           labButton
           [faIcon]="faFloppyDisk"
           [aria-label]="'save' | translate"
-          (click)="edit().data.version[mod.value] = version.value"
+          (click)="edit().data.version[model.mod] = model.version"
         ></button>
       </td>
     </tr>

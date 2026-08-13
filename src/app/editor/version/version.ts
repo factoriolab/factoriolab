@@ -1,22 +1,12 @@
 import { KeyValuePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ROUTER_OUTLET_DATA } from '@angular/router';
-import {
-  faFloppyDisk,
-  faTrash,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
-import { EditorData } from '../editor.types';
+import { EditorTab } from '../editor-tab';
 
 @Component({
   selector: 'lab-version',
@@ -24,12 +14,10 @@ import { EditorData } from '../editor.types';
   templateUrl: './version.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Version {
-  protected readonly edit = inject<Signal<EditorData>>(ROUTER_OUTLET_DATA);
-
+export class Version extends EditorTab {
   protected readonly faXmark = faXmark;
-  protected readonly faTrash = faTrash;
-  protected readonly faFloppyDisk = faFloppyDisk;
+
+  protected readonly model = { mod: '', version: '' };
 
   changeKey(oldKey: string, newKey: string): void {
     const data = this.edit().data;

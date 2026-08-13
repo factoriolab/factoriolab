@@ -1,4 +1,12 @@
-<h2 class="text-2xl font-light">{{ 'editor.header' | translate }}</h2>
+<div class="gap-2 flex items-center">
+  <a
+    routerLink="/"
+    labButton
+    [faIcon]="faHome"
+    [attr.aria-label]="'home' | translate"
+  ></a>
+  <h2 class="text-2xl font-light">{{ 'editor.header' | translate }}</h2>
+</div>
 
 <div class="gap-2 flex items-center">
   <button

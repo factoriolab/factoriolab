@@ -30,35 +30,34 @@
     <tr>
       <td>
         <input
-          #id
           type="text"
           aria-labelledby="id-header"
           class="input"
           [placeholder]="'editor.id' | translate"
+          [(ngModel)]="model.id"
         />
       </td>
       <td>
         <div class="gap-2 flex items-center">
           <button
             type="button"
-            labButton
-            text="editor.chooseImage"
-            [faIcon]="faUpload"
+            class="min-h-9 min-w-9 rounded-xs flex cursor-pointer items-center justify-center border border-gray-700 hover:bg-gray-800"
             (click)="fileInput.click()"
-          ></button>
-          @if (fileInfo(); as info) {
-            <img [src]="info.url" alt="file image" />
-          }
+          >
+            @if (fileInfo(); as info) {
+              <img class="w-8" [src]="info.url" [alt]="info.url" />
+            }
+          </button>
+          <input
+            #fileInput
+            type="file"
+            accept="image/*"
+            aria-labelledby="image-header"
+            class="hidden"
+            (change)="selectFile($event)"
+            (click)="fileInput.value = ''"
+          />
         </div>
-        <input
-          #fileInput
-          type="file"
-          accept="image/*"
-          aria-labelledby="image-header"
-          class="hidden"
-          (change)="selectFile($event)"
-          (click)="fileInput.value = ''"
-        />
       </td>
       <td>
         <button
@@ -66,7 +65,7 @@
           labButton
           [faIcon]="faFloppyDisk"
           [aria-label]="'save' | translate"
-          (click)="add(id.value, fileInfo())"
+          (click)="add(model.id, fileInfo())"
         ></button>
       </td>
     </tr>
@@ -76,27 +75,34 @@
           <input
             type="text"
             class="input"
+            [placeholder]="'editor.id' | translate"
             [ngModel]="icon.id"
             [ngModelOptions]="{ updateOn: 'blur' }"
             (ngModelChange)="changeId(icon, $event)"
           />
         </td>
         <td>
-          <button
-            type="button"
-            class="cursor-pointer"
-            (click)="fileInput.click()"
-          >
-            <img [src]="edit().icons[icon.id]?.url" [alt]="icon.id" />
-          </button>
-          <input
-            #fileInput
-            type="file"
-            accept="image/*"
-            class="hidden"
-            (change)="changeImage(icon, $event)"
-            (click)="fileInput.value = ''"
-          />
+          <div class="flex items-center">
+            <button
+              type="button"
+              class="min-h-9 min-w-9 rounded-xs flex cursor-pointer items-center justify-center border border-gray-700 hover:bg-gray-800"
+              (click)="fileInput.click()"
+            >
+              <img
+                class="w-8"
+                [src]="edit().icons[icon.id]?.url"
+                [alt]="icon.id"
+              />
+            </button>
+            <input
+              #fileInput
+              type="file"
+              accept="image/*"
+              class="hidden"
+              (change)="changeImage(icon, $event)"
+              (click)="fileInput.value = ''"
+            />
+          </div>
         </td>
         <td>
           <button

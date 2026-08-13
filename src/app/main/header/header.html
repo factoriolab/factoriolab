@@ -66,17 +66,29 @@
   ></button>
 </div>
 <div class="gap-2 md:w-auto flex w-full items-center">
-  @for (link of externalLinks; track link.href) {
-    <a
-      [href]="link.href"
-      target="_blank"
-      class="md:grow-0 grow"
-      labButton
-      [text]="link.text"
-      [faIcon]="link.icon"
-      size="small"
-      [border]="false"
-    ></a>
+  @for (link of headerLinks; track link.text) {
+    @if (link.href.startsWith('http')) {
+      <a
+        [href]="link.href"
+        target="_blank"
+        class="md:grow-0 grow"
+        labButton
+        [text]="link.text"
+        [faIcon]="link.icon"
+        size="small"
+        [border]="false"
+      ></a>
+    } @else {
+      <a
+        [routerLink]="link.href"
+        class="md:grow-0 grow"
+        labButton
+        [text]="link.text"
+        [faIcon]="link.icon"
+        size="small"
+        [border]="false"
+      ></a>
+    }
   }
   <button
     type="button"

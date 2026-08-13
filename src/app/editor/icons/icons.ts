@@ -3,23 +3,18 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
-  Signal,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ROUTER_OUTLET_DATA } from '@angular/router';
-import {
-  faFloppyDisk,
-  faTrash,
-  faUpload,
-} from '@fortawesome/free-solid-svg-icons';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { IconJson } from '~/data/schema/icon-data';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
-import { EditorData, IconFileInfo } from '../editor.types';
+import { IconFileInfo } from '../editor.types';
+import { EditorTab } from '../editor-tab';
 import { normalizeIcon } from '../image.utils';
 
 @Component({
@@ -29,14 +24,17 @@ import { normalizeIcon } from '../image.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col' },
 })
-export class Icons {
+export class Icons extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
-  protected readonly edit = inject<Signal<EditorData>>(ROUTER_OUTLET_DATA);
 
-  protected readonly faTrash = faTrash;
-  protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faUpload = faUpload;
   protected readonly fileInfo = signal<IconFileInfo | undefined>(undefined);
+  protected readonly model: IconJson = {
+    id: '',
+    x: 0,
+    y: 0,
+    color: '',
+  };
 
   selectFiles(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
@@ -51,7 +49,7 @@ export class Icons {
           const id = parts.join('.');
           this.add(id, info);
         });
-        this.cd.markForCheck();
+        this.cd.detectChanges();
       },
       (err: unknown) => {
         console.error(err);

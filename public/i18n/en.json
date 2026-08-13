@@ -167,8 +167,8 @@
     "defaults": "Defaults",
     "export": "Export",
     "id": "Id",
+    "home": "Home",
     "image": "Image",
-    "chooseImage": "Choose image",
     "chooseImages": "Choose images",
     "icon": "Icon",
     "iconText": "Icon text"
@@ -204,7 +204,8 @@
     "resetTooltip": "Click to reset",
     "selectGame": "Select game",
     "source": "Source",
-    "sponsor": "Sponsor"
+    "sponsor": "Sponsor",
+    "editor": "Editor"
   },
   "inputNumber": {
     "decrement": "Decrement",

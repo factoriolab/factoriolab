@@ -1,15 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Signal,
-} from '@angular/core';
-import { ROUTER_OUTLET_DATA } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Checkbox } from '~/components/checkbox/checkbox';
 import { Flag } from '~/state/flags';
 
-import { EditorData } from '../editor.types';
+import { EditorTab } from '../editor-tab';
 
 @Component({
   selector: 'lab-flags',
@@ -18,9 +12,7 @@ import { EditorData } from '../editor.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col' },
 })
-export class Flags {
-  protected readonly edit = inject<Signal<EditorData>>(ROUTER_OUTLET_DATA);
-
+export class Flags extends EditorTab {
   protected readonly flags: Flag[] = [
     'beltStack',
     'consumptionAsDrain',
