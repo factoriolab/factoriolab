@@ -43,7 +43,9 @@ import { exportIcons } from './image.utils';
   imports: [RouterOutlet, Button, Tabs, TranslatePipe, RouterLinkWithHref],
   templateUrl: './editor.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'px-1 sm:px-3 lg:px-6 lg:pt-3 flex grow flex-col gap-2' },
+  host: {
+    class: 'px-1 sm:px-3 lg:px-6 pt-1 sm:pt-3 flex grow flex-col gap-2',
+  },
 })
 export class Editor {
   private readonly confirm = inject(Confirm);

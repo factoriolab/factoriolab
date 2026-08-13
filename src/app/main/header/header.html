@@ -65,7 +65,7 @@
     (click)="togglePreferences()"
   ></button>
 </div>
-<div class="gap-2 md:w-auto flex w-full items-center">
+<div class="sm:gap-2 md:w-auto flex w-full items-center">
   @for (link of headerLinks; track link.text) {
     @if (link.href.startsWith('http')) {
       <a
