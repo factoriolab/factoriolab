@@ -1,13 +1,20 @@
 import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
   faExclamationTriangle,
+  faGrip,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -21,7 +28,14 @@ import { EditorTab } from '../editor-tab';
 
 @Component({
   selector: 'lab-categories',
-  imports: [FormsModule, Button, Select, TranslatePipe],
+  imports: [
+    FormsModule,
+    DragDropModule,
+    FaIconComponent,
+    Button,
+    Select,
+    TranslatePipe,
+  ],
   templateUrl: './categories.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -29,6 +43,7 @@ export class Categories extends EditorTab {
   private readonly confirm = inject(Confirm);
   private readonly cd = inject(ChangeDetectorRef);
 
+  protected readonly faGrip = faGrip;
   protected readonly model: Category = {
     id: '',
     name: '',
@@ -43,6 +58,14 @@ export class Categories extends EditorTab {
       icon: this.model.icon || undefined,
       iconText: this.model.iconText || undefined,
     });
+  }
+
+  drop(event: CdkDragDrop<unknown>): void {
+    moveItemInArray(
+      this.edit().data.categories,
+      event.previousIndex,
+      event.currentIndex,
+    );
   }
 
   changeId(category: CategoryJson, id: string): void {

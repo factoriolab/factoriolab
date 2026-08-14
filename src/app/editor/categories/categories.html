@@ -1,6 +1,7 @@
 <table class="table">
   <thead>
     <tr>
+      <th></th>
       <th id="id-header">{{ 'editor.id' | translate }}</th>
       <th id="name-header">{{ 'data.name' | translate }}</th>
       <th id="icon-header">{{ 'editor.icon' | translate }}</th>
@@ -8,8 +9,9 @@
       <th></th>
     </tr>
   </thead>
-  <tbody>
+  <tbody cdkDropList (cdkDropListDropped)="drop($event)">
     <tr>
+      <td></td>
       <td>
         <input
           type="text"
@@ -57,7 +59,19 @@
       </td>
     </tr>
     @for (category of edit().data.categories; track category.id) {
-      <tr>
+      <tr cdkDrag cdkDragLockAxis="y">
+        <td
+          cdkDragHandle
+          class="cursor-grab hover:bg-gray-800 active:cursor-grabbing"
+        >
+          <fa-icon [icon]="faGrip"></fa-icon>
+          <img
+            *cdkDragPreview
+            class="w-8"
+            [src]="edit().icons[category.icon ?? category.id]?.url"
+            [alt]="category.name"
+          />
+        </td>
         <td>
           <input
             type="text"
