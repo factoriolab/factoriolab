@@ -2,7 +2,8 @@ import { computed, inject, Signal } from '@angular/core';
 import { ROUTER_OUTLET_DATA } from '@angular/router';
 import { faFloppyDisk, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-import { Option } from './components/select/option';
+import { Option } from '~/option/option';
+
 import { EditorData } from './editor.types';
 
 export abstract class EditorTab {

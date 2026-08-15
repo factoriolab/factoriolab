@@ -39,7 +39,7 @@
     }
   }
 
-  .table {
+  .lab-table {
     border-collapse: separate;
     border-spacing: 0;
 
@@ -52,12 +52,15 @@
     }
 
     th {
-      position: sticky;
-      top: 0;
-      z-index: 3;
       background-color: var(--color-gray-900);
       text-align: start;
       font-weight: var(--font-weight-semibold);
+    }
+
+    &:not(.lab-table-static) th {
+      position: sticky;
+      top: 0;
+      z-index: 3;
     }
 
     tr.detail {

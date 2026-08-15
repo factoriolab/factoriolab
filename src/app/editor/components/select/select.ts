@@ -27,10 +27,9 @@ import { FormField } from '~/components/form-field/form-field';
 import { Ripple } from '~/components/ripple/ripple';
 import { Rounded, roundedVariants } from '~/components/rounding';
 import { Tooltip } from '~/components/tooltip/tooltip';
+import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areSetsEqual } from '~/utils/equality';
-
-import { Option } from './option';
 
 let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);

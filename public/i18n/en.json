@@ -97,6 +97,7 @@
     "fuel": "Fuel",
     "fuelCategories": "Fuel categories",
     "fuelCategory": "Fuel category",
+    "rocketCapacity": "Rocket capacity",
     "fuelValue": "Fuel value",
     "fuels": "Fuels",
     "ingredients": "Ingredients",
@@ -173,7 +174,8 @@
     "icon": "Icon",
     "iconText": "Icon text",
     "color": "Color",
-    "resetColors": "Reset colors"
+    "resetColors": "Reset colors",
+    "row": "Row"
   },
   "error": {
     "deleteCustom": "Delete custom data",

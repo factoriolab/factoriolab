@@ -44,7 +44,7 @@ import { exportIcons } from './image.utils';
   templateUrl: './editor.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'px-1 sm:px-3 lg:px-6 pt-1 sm:pt-3 flex grow flex-col gap-2',
+    class: 'px-1 sm:px-3 lg:px-6 pt-1 sm:pt-3 flex grow flex-col gap-2 h-full',
   },
 })
 export class Editor {

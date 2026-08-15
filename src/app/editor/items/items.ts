@@ -3,11 +3,14 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   inject,
+  TrackByFunction,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -20,7 +23,8 @@ import {
 
 import { Button } from '~/components/button/button';
 import { Confirm } from '~/components/confirm/confirm';
-import { Item, ItemJson } from '~/data/schema/item';
+import { ItemJson } from '~/data/schema/item';
+import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Select } from '../components/select/select';
@@ -31,6 +35,7 @@ import { EditorTab } from '../editor-tab';
   imports: [
     FormsModule,
     DragDropModule,
+    ScrollingModule,
     FaIconComponent,
     Button,
     Select,
@@ -38,13 +43,27 @@ import { EditorTab } from '../editor-tab';
   ],
   templateUrl: './items.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'grow' },
 })
 export class Items extends EditorTab {
   private readonly confirm = inject(Confirm);
   private readonly cd = inject(ChangeDetectorRef);
 
+  protected readonly categoryOptions = computed(() => {
+    const { data, icons } = this.edit();
+    return data.categories
+      .map(
+        (c): Option => ({
+          label: c.name,
+          value: c.id,
+          icon: icons[c.icon ?? c.id]?.url,
+        }),
+      )
+      .sort((a, b) => a.label.localeCompare(b.label));
+  });
+
   protected readonly faGrip = faGrip;
-  protected readonly model: Item = {
+  protected readonly model: ItemJson = {
     id: '',
     name: '',
     icon: undefined,
@@ -52,6 +71,10 @@ export class Items extends EditorTab {
     category: '',
     row: 0,
   };
+  protected readonly trackByFn: TrackByFunction<ItemJson> = (
+    _,
+    item: ItemJson,
+  ): string => item.id;
 
   add(): void {
     this.edit().data.items.push({
@@ -61,6 +84,8 @@ export class Items extends EditorTab {
       iconText: this.model.iconText || undefined,
       category: this.model.category,
       row: this.model.row,
+      stack: this.model.stack ?? undefined,
+      rocketCapacity: this.model.rocketCapacity ?? undefined,
     });
   }
 

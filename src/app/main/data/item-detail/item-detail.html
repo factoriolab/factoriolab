@@ -26,6 +26,12 @@
           <td>{{ obj.stack }}</td>
         </tr>
       }
+      @if (obj.rocketCapacity) {
+        <tr>
+          <th>{{ 'data.rocketCapacity' | translate }}</th>
+          <td>{{ obj.rocketCapacity }}</td>
+        </tr>
+      }
       @if (obj.beacon; as beacon) {
         <tr>
           <th colspan="2" class="text-lg/9 font-semibold">

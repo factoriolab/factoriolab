@@ -3,12 +3,14 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   inject,
   signal,
+  TrackByFunction,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -32,12 +34,14 @@ import { normalizeIcon } from '../image.utils';
   imports: [
     FormsModule,
     DragDropModule,
+    ScrollingModule,
     FaIconComponent,
     Button,
     TranslatePipe,
   ],
   templateUrl: './icons.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'grow' },
 })
 export class Icons extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
@@ -52,6 +56,10 @@ export class Icons extends EditorTab {
     y: 0,
     color: '',
   };
+  protected readonly trackByFn: TrackByFunction<IconJson> = (
+    _,
+    item: IconJson,
+  ): string => item.id;
 
   selectFiles(event: Event): void {
     const files = (event.target as HTMLInputElement).files;

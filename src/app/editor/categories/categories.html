@@ -1,4 +1,4 @@
-<table class="table">
+<table class="lab-table">
   <thead>
     <tr>
       <th></th>
@@ -33,6 +33,7 @@
       <td>
         <div class="flex items-center">
           <lab-select
+            labelledBy="icon-header"
             [options]="iconOptions()"
             [iconOnly]="true"
             [(ngModel)]="model.icon"
@@ -43,7 +44,8 @@
         <input
           type="text"
           aria-labelledby="icon-text-header"
-          class="input w-24"
+          class="input"
+          size="2"
           [placeholder]="'editor.iconText' | translate"
           [(ngModel)]="model.iconText"
         />
@@ -82,6 +84,7 @@
         <td>
           <input
             type="text"
+            aria-labelledby="id-header"
             class="input"
             [placeholder]="'editor.id' | translate"
             [ngModel]="category.id"
@@ -92,6 +95,7 @@
         <td>
           <input
             type="text"
+            aria-labelledby="name-header"
             class="input"
             [placeholder]="'data.name' | translate"
             [(ngModel)]="category.name"
@@ -100,6 +104,7 @@
         <td>
           <div class="flex items-center">
             <lab-select
+              labelledBy="icon-header"
               [options]="iconOptions()"
               [iconOnly]="true"
               [ngModel]="category.icon ?? category.id"
@@ -112,7 +117,9 @@
         <td>
           <input
             type="text"
-            class="input w-24"
+            aria-labelledby="icon-text-header"
+            class="input"
+            size="2"
             [placeholder]="'editor.iconText' | translate"
             [(ngModel)]="category.iconText"
           />

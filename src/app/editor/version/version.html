@@ -1,4 +1,4 @@
-<table class="table">
+<table class="lab-table">
   <thead>
     <tr>
       <th id="mod-header">{{ 'versions.mod' | translate }}</th>
@@ -41,6 +41,7 @@
         <td>
           <input
             type="text"
+            aria-labelledby="mod-header"
             class="input"
             [ngModel]="kv.key"
             [ngModelOptions]="{ updateOn: 'blur' }"
@@ -50,6 +51,7 @@
         <td>
           <input
             type="text"
+            aria-labelledby="version-header"
             class="input"
             [ngModel]="kv.value"
             [ngModelOptions]="{ updateOn: 'blur' }"
