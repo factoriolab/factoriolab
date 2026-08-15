@@ -58,7 +58,7 @@
         ></button>
       </td>
     </tr>
-    @for (category of edit().data.categories; track category.id) {
+    @for (item of edit().data.items; track item.id) {
       <tr cdkDrag cdkDragLockAxis="y">
         <td
           cdkDragHandle
@@ -72,10 +72,10 @@
               <fa-icon [icon]="faGrip"></fa-icon>
               <img
                 class="w-8"
-                [src]="edit().icons[category.icon ?? category.id]?.url"
-                [alt]="category.name"
+                [src]="edit().icons[item.icon ?? item.id]?.url"
+                [alt]="item.name"
               />
-              <span>{{ category.name }}</span>
+              <span>{{ item.name }}</span>
             </div>
           </ng-container>
         </td>
@@ -84,9 +84,9 @@
             type="text"
             class="input"
             [placeholder]="'editor.id' | translate"
-            [ngModel]="category.id"
+            [ngModel]="item.id"
             [ngModelOptions]="{ updateOn: 'blur' }"
-            (ngModelChange)="changeId(category, $event)"
+            (ngModelChange)="changeId(item, $event)"
           />
         </td>
         <td>
@@ -94,7 +94,7 @@
             type="text"
             class="input"
             [placeholder]="'data.name' | translate"
-            [(ngModel)]="category.name"
+            [(ngModel)]="item.name"
           />
         </td>
         <td>
@@ -102,9 +102,9 @@
             <lab-select
               [options]="iconOptions()"
               [iconOnly]="true"
-              [ngModel]="category.icon ?? category.id"
+              [ngModel]="item.icon ?? item.id"
               (ngModelChange)="
-                category.icon = $event === category.id ? undefined : $event
+                item.icon = $event === item.id ? undefined : $event
               "
             ></lab-select>
           </div>
@@ -114,7 +114,7 @@
             type="text"
             class="input w-24"
             [placeholder]="'editor.iconText' | translate"
-            [(ngModel)]="category.iconText"
+            [(ngModel)]="item.iconText"
           />
         </td>
         <td>
@@ -123,7 +123,7 @@
             labButton
             [faIcon]="faTrash"
             [aria-label]="'delete' | translate"
-            (click)="remove(category.id)"
+            (click)="remove(item.id)"
           ></button>
         </td>
       </tr>

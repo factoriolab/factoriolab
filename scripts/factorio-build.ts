@@ -1,3 +1,4 @@
+import chroma from 'chroma-js';
 import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 import sharp from 'sharp';
@@ -336,10 +337,11 @@ async function processMod(): Promise<void> {
 
   async function resizeIcon(path: string, iconId: string): Promise<void> {
     const outPath = `${tempIconsPath}/${iconId}.png`;
-    const color = await getAverageColor(path, { mode: 'precision' });
+    const average = await getAverageColor(path, { mode: 'precision' });
+    const color = chroma(average.hex).saturate().hex();
     await sharp(path).resize(64, 64).png().toFile(outPath);
     iconFiles[outPath] = iconId;
-    iconColors[outPath] = color.hex;
+    iconColors[outPath] = color;
   }
 
   async function getIcon(

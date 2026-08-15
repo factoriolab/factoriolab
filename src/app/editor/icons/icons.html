@@ -1,10 +1,17 @@
-<div>
+<div class="gap-2 flex items-center">
   <button
     type="button"
     labButton
     text="editor.chooseImages"
     [faIcon]="faUpload"
     (click)="filesInput.click()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    text="editor.resetColors"
+    [faIcon]="faArrowRotateLeft"
+    (click)="resetColors()"
   ></button>
 </div>
 <input
@@ -140,14 +147,12 @@
         </td>
         <td>
           <div class="gap-2 flex items-center">
+            <input type="text" class="input w-24" [(ngModel)]="icon.color" />
             <input
               type="color"
               class="rounded-xs size-9 shrink-0"
               [(ngModel)]="icon.color"
             />
-            <div class="w-24">
-              <input type="text" class="input" [(ngModel)]="icon.color" />
-            </div>
             @if (edit().icons[icon.id]; as info) {
               <button
                 type="button"

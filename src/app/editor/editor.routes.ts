@@ -19,6 +19,10 @@ export const routes: Routes = [
     loadComponent: () => import('./icons/icons').then((c) => c.Icons),
   },
   {
+    path: 'items',
+    loadComponent: () => import('./items/items').then((c) => c.Items),
+  },
+  {
     path: '**',
     redirectTo: 'version',
   },

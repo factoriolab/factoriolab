@@ -172,7 +172,8 @@
     "chooseImages": "Choose images",
     "icon": "Icon",
     "iconText": "Icon text",
-    "color": "Color"
+    "color": "Color",
+    "resetColors": "Reset colors"
   },
   "error": {
     "deleteCustom": "Delete custom data",

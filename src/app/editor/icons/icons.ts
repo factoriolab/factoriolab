@@ -74,6 +74,14 @@ export class Icons extends EditorTab {
     );
   }
 
+  resetColors(): void {
+    const { data, icons } = this.edit();
+    for (const icon of data.icons) {
+      const info = icons[icon.id];
+      if (info) icon.color = info.color;
+    }
+  }
+
   selectFile(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
     if (!files?.length) return;

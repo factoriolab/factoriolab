@@ -1,3 +1,4 @@
+import chroma from 'chroma-js';
 import { FastAverageColor } from 'fast-average-color';
 
 import { IconData } from '~/data/schema/icon-data';
@@ -26,7 +27,8 @@ export async function splitIcons(
         }
 
         context.drawImage(image, icon.x, icon.y, 64, 64, 0, 0, 64, 64);
-        const color = fac.getColor(canvas).hex;
+        const average = fac.getColor(canvas).hex;
+        const color = chroma(average).saturate().hex();
         canvas.toBlob((blob) => {
           if (blob != null) {
             const file = new File([blob], `${icon.id}.webp`, {
@@ -78,7 +80,8 @@ export async function normalizeIcon(file: File): Promise<IconFileInfo> {
         context.drawImage(image, 0, 0, 64, 64);
       }
 
-      const color = fac.getColor(image).hex;
+      const average = fac.getColor(image).hex;
+      const color = chroma(average).saturate().hex();
       canvas.toBlob((blob) => {
         if (blob == null) {
           rej(new Error('Failed to create blob from canvas'));
