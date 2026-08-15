@@ -65,12 +65,19 @@
           class="cursor-grab hover:bg-gray-800 active:cursor-grabbing"
         >
           <fa-icon [icon]="faGrip"></fa-icon>
-          <img
-            *cdkDragPreview
-            class="w-8"
-            [src]="edit().icons[category.icon ?? category.id]?.url"
-            [alt]="category.name"
-          />
+          <ng-container *cdkDragPreview>
+            <div
+              class="gap-2 rounded-xs p-2 flex items-center border border-gray-700 bg-gray-900"
+            >
+              <fa-icon [icon]="faGrip"></fa-icon>
+              <img
+                class="w-8"
+                [src]="edit().icons[category.icon ?? category.id]?.url"
+                [alt]="category.name"
+              />
+              <span>{{ category.name }}</span>
+            </div>
+          </ng-container>
         </td>
         <td>
           <input

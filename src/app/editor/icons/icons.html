@@ -21,13 +21,15 @@
 <table class="table">
   <thead>
     <tr>
+      <th></th>
       <th id="id-header">{{ 'editor.id' | translate }}</th>
       <th id="image-header">{{ 'editor.image' | translate }}</th>
       <th></th>
     </tr>
   </thead>
-  <tbody>
+  <tbody cdkDropList (cdkDropListDropped)="drop($event)">
     <tr>
+      <td></td>
       <td>
         <input
           type="text"
@@ -70,7 +72,26 @@
       </td>
     </tr>
     @for (icon of edit().data.icons; track icon.id) {
-      <tr>
+      <tr cdkDrag cdkDragLockAxis="y">
+        <td
+          cdkDragHandle
+          class="cursor-grab hover:bg-gray-800 active:cursor-grabbing"
+        >
+          <fa-icon [icon]="faGrip"></fa-icon>
+          <ng-container *cdkDragPreview>
+            <div
+              class="gap-2 rounded-xs p-2 flex items-center border border-gray-700 bg-gray-900"
+            >
+              <fa-icon [icon]="faGrip"></fa-icon>
+              <img
+                class="w-8"
+                [src]="edit().icons[icon.id]?.url"
+                [alt]="icon.id"
+              />
+              <span>{{ icon.id }}</span>
+            </div>
+          </ng-container>
+        </td>
         <td>
           <input
             type="text"

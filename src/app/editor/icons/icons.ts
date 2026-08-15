@@ -1,4 +1,9 @@
 import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -6,7 +11,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faGrip, faUpload } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { IconJson } from '~/data/schema/icon-data';
@@ -19,13 +25,20 @@ import { normalizeIcon } from '../image.utils';
 
 @Component({
   selector: 'lab-icons',
-  imports: [FormsModule, Button, TranslatePipe],
+  imports: [
+    FormsModule,
+    DragDropModule,
+    FaIconComponent,
+    Button,
+    TranslatePipe,
+  ],
   templateUrl: './icons.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Icons extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
 
+  protected readonly faGrip = faGrip;
   protected readonly faUpload = faUpload;
   protected readonly fileInfo = signal<IconFileInfo | undefined>(undefined);
   protected readonly model: IconJson = {
@@ -73,6 +86,14 @@ export class Icons extends EditorTab {
   add(id: string, info: IconFileInfo | undefined): void {
     this.edit().data.icons.push({ id, x: 0, y: 0, color: '' });
     this.edit().icons[id] = info;
+  }
+
+  drop(event: CdkDragDrop<unknown>): void {
+    moveItemInArray(
+      this.edit().data.icons,
+      event.previousIndex,
+      event.currentIndex,
+    );
   }
 
   changeId(icon: IconJson, id: string): void {
