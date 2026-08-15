@@ -90,11 +90,9 @@ export class Items extends EditorTab {
   }
 
   drop(event: CdkDragDrop<unknown>): void {
-    moveItemInArray(
-      this.edit().data.items,
-      event.previousIndex,
-      event.currentIndex,
-    );
+    const items = [...this.edit().data.items];
+    moveItemInArray(items, event.previousIndex, event.currentIndex);
+    this.edit().data.items = items;
   }
 
   changeId(item: ItemJson, id: string): void {

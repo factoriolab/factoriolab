@@ -111,11 +111,9 @@ export class Icons extends EditorTab {
   }
 
   drop(event: CdkDragDrop<unknown>): void {
-    moveItemInArray(
-      this.edit().data.icons,
-      event.previousIndex,
-      event.currentIndex,
-    );
+    const icons = [...this.edit().data.icons];
+    moveItemInArray(icons, event.previousIndex, event.currentIndex);
+    this.edit().data.icons = icons;
   }
 
   changeId(icon: IconJson, id: string): void {
