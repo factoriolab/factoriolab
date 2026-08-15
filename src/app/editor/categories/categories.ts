@@ -19,7 +19,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
-import { Confirm } from '~/components/confirm/confirm';
 import { Category, CategoryJson } from '~/data/schema/category';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
@@ -40,7 +39,6 @@ import { EditorTab } from '../editor-tab';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Categories extends EditorTab {
-  private readonly confirm = inject(Confirm);
   private readonly cd = inject(ChangeDetectorRef);
 
   protected readonly faGrip = faGrip;
@@ -78,29 +76,22 @@ export class Categories extends EditorTab {
 
   remove(id: string): void {
     const { data } = this.edit();
-    if (
-      data.items.some((i) => i.category === id) ||
-      data.recipes.some((r) => r.category === id)
-    ) {
-      this.confirm
-        .open({
-          header: 'Category in use',
-          message:
-            'This category is in use, and deleting it will orphan some items/recipes. Continue?',
-          icon: faExclamationTriangle,
-          actions: [
-            { text: 'yes', value: 1, icon: faCheck },
-            { text: 'cancel', value: 0, icon: faXmark },
-          ],
-        })
-        .subscribe((res) => {
-          if (res === 1) {
-            data.categories = data.categories.filter((c) => c.id !== id);
-            this.cd.detectChanges();
-          }
-        });
-    } else {
-      data.categories = data.categories.filter((c) => c.id !== id);
-    }
+    this.confirm
+      .open({
+        header: 'Delete category?',
+        message:
+          'If this category is in use, deleting it will invalidate some entities. Continue?',
+        icon: faExclamationTriangle,
+        actions: [
+          { text: 'yes', value: 1, icon: faCheck },
+          { text: 'cancel', value: 0, icon: faXmark },
+        ],
+      })
+      .subscribe((res) => {
+        if (res === 1) {
+          data.categories = data.categories.filter((c) => c.id !== id);
+          this.cd.detectChanges();
+        }
+      });
   }
 }

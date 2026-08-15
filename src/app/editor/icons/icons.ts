@@ -16,8 +16,11 @@ import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faArrowRotateLeft,
+  faCheck,
+  faExclamationTriangle,
   faGrip,
   faUpload,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
@@ -149,7 +152,23 @@ export class Icons extends EditorTab {
   }
 
   remove(id: string): void {
-    const data = this.edit().data;
-    data.icons = data.icons.filter((i) => i.id !== id);
+    const { data } = this.edit();
+    this.confirm
+      .open({
+        header: 'Delete item?',
+        message:
+          'If this item is in use, deleting it will invalidate some entities. Continue?',
+        icon: faExclamationTriangle,
+        actions: [
+          { text: 'yes', value: 1, icon: faCheck },
+          { text: 'cancel', value: 0, icon: faXmark },
+        ],
+      })
+      .subscribe((res) => {
+        if (res === 1) {
+          data.categories = data.categories.filter((c) => c.id !== id);
+          this.cd.detectChanges();
+        }
+      });
   }
 }

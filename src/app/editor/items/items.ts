@@ -22,7 +22,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
-import { Confirm } from '~/components/confirm/confirm';
 import { ItemJson } from '~/data/schema/item';
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
@@ -46,7 +45,6 @@ import { EditorTab } from '../editor-tab';
   host: { class: 'grow' },
 })
 export class Items extends EditorTab {
-  private readonly confirm = inject(Confirm);
   private readonly cd = inject(ChangeDetectorRef);
 
   protected readonly categoryOptions = computed(() => {
@@ -106,30 +104,22 @@ export class Items extends EditorTab {
 
   remove(id: string): void {
     const { data } = this.edit();
-    // TODO: Update these checks
-    if (
-      data.items.some((i) => i.category === id) ||
-      data.recipes.some((r) => r.category === id)
-    ) {
-      this.confirm
-        .open({
-          header: 'Item in use',
-          message:
-            'This item is in use, and deleting it will orphan some recipe inputs, outputs, or producers. Continue?',
-          icon: faExclamationTriangle,
-          actions: [
-            { text: 'yes', value: 1, icon: faCheck },
-            { text: 'cancel', value: 0, icon: faXmark },
-          ],
-        })
-        .subscribe((res) => {
-          if (res === 1) {
-            data.items = data.items.filter((c) => c.id !== id);
-            this.cd.detectChanges();
-          }
-        });
-    } else {
-      data.items = data.items.filter((c) => c.id !== id);
-    }
+    this.confirm
+      .open({
+        header: 'Delete item?',
+        message:
+          'If this item is in use, deleting it will invalidate some entities. Continue?',
+        icon: faExclamationTriangle,
+        actions: [
+          { text: 'yes', value: 1, icon: faCheck },
+          { text: 'cancel', value: 0, icon: faXmark },
+        ],
+      })
+      .subscribe((res) => {
+        if (res === 1) {
+          data.categories = data.categories.filter((c) => c.id !== id);
+          this.cd.detectChanges();
+        }
+      });
   }
 }
