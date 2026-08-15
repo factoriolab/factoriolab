@@ -24,6 +24,7 @@
       <th></th>
       <th id="id-header">{{ 'editor.id' | translate }}</th>
       <th id="image-header">{{ 'editor.image' | translate }}</th>
+      <th id="color-header">{{ 'editor.color' | translate }}</th>
       <th></th>
     </tr>
   </thead>
@@ -59,6 +60,18 @@
             (change)="selectFile($event)"
             (click)="fileInput.value = ''"
           />
+        </div>
+      </td>
+      <td>
+        <div class="gap-2 flex items-center">
+          <input
+            type="color"
+            class="rounded-xs size-9 shrink-0"
+            [(ngModel)]="model.color"
+          />
+          <div class="w-24">
+            <input type="text" class="input" [(ngModel)]="model.color" />
+          </div>
         </div>
       </td>
       <td>
@@ -123,6 +136,28 @@
               (change)="changeImage(icon, $event)"
               (click)="fileInput.value = ''"
             />
+          </div>
+        </td>
+        <td>
+          <div class="gap-2 flex items-center">
+            <input
+              type="color"
+              class="rounded-xs size-9 shrink-0"
+              [(ngModel)]="icon.color"
+            />
+            <div class="w-24">
+              <input type="text" class="input" [(ngModel)]="icon.color" />
+            </div>
+            @if (edit().icons[icon.id]; as info) {
+              <button
+                type="button"
+                labButton
+                [faIcon]="faArrowRotateLeft"
+                [attr.aria-label]="'reset' | translate"
+                [disabled]="icon.color === info.color"
+                (click)="icon.color = info.color"
+              ></button>
+            }
           </div>
         </td>
         <td>

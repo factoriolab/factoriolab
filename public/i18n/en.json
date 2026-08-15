@@ -171,7 +171,8 @@
     "image": "Image",
     "chooseImages": "Choose images",
     "icon": "Icon",
-    "iconText": "Icon text"
+    "iconText": "Icon text",
+    "color": "Color"
   },
   "error": {
     "deleteCustom": "Delete custom data",

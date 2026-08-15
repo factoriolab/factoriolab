@@ -3,6 +3,7 @@ import { emptyModData, ModData } from '~/data/schema/mod-data';
 export interface IconFileInfo {
   url: string;
   file: File;
+  color: string;
 }
 
 export interface EditorData {

@@ -2,8 +2,6 @@
 
 ## TODO
 
-- Categories
-  - Drag and drop
 - Items
 - Recipes
 - Limitations

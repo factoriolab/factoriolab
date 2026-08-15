@@ -12,7 +12,11 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faGrip, faUpload } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowRotateLeft,
+  faGrip,
+  faUpload,
+} from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { IconJson } from '~/data/schema/icon-data';
@@ -38,6 +42,7 @@ import { normalizeIcon } from '../image.utils';
 export class Icons extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
 
+  protected readonly faArrowRotateLeft = faArrowRotateLeft;
   protected readonly faGrip = faGrip;
   protected readonly faUpload = faUpload;
   protected readonly fileInfo = signal<IconFileInfo | undefined>(undefined);
@@ -75,6 +80,7 @@ export class Icons extends EditorTab {
 
     normalizeIcon(files[0]).then(
       (fileInfo) => {
+        this.model.color = fileInfo.color;
         this.fileInfo.set(fileInfo);
       },
       (err: unknown) => {
@@ -84,7 +90,7 @@ export class Icons extends EditorTab {
   }
 
   add(id: string, info: IconFileInfo | undefined): void {
-    this.edit().data.icons.push({ id, x: 0, y: 0, color: '' });
+    this.edit().data.icons.push({ id, x: 0, y: 0, color: info?.color ?? '' });
     this.edit().icons[id] = info;
   }
 
@@ -118,6 +124,7 @@ export class Icons extends EditorTab {
 
     normalizeIcon(files[0]).then(
       (fileInfo) => {
+        icon.color = fileInfo.color;
         this.edit().icons[icon.id] = fileInfo;
         this.cd.detectChanges();
       },

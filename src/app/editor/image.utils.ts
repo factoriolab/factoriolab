@@ -1,4 +1,4 @@
-import { FastAverageColor, FastAverageColorResult } from 'fast-average-color';
+import { FastAverageColor } from 'fast-average-color';
 
 import { IconData } from '~/data/schema/icon-data';
 import { ModData } from '~/data/schema/mod-data';
@@ -9,6 +9,7 @@ export async function splitIcons(
   url: string,
   data: ModData,
 ): Promise<EditorData> {
+  const fac = new FastAverageColor();
   return new Promise((res, rej) => {
     const editorData: EditorData = { data, icons: {} };
     const image = new Image();
@@ -25,6 +26,7 @@ export async function splitIcons(
         }
 
         context.drawImage(image, icon.x, icon.y, 64, 64, 0, 0, 64, 64);
+        const color = fac.getColor(canvas).hex;
         canvas.toBlob((blob) => {
           if (blob != null) {
             const file = new File([blob], `${icon.id}.webp`, {
@@ -34,6 +36,7 @@ export async function splitIcons(
             editorData.icons[icon.id] = {
               file,
               url,
+              color,
             };
           }
 
@@ -47,6 +50,7 @@ export async function splitIcons(
 }
 
 export async function normalizeIcon(file: File): Promise<IconFileInfo> {
+  const fac = new FastAverageColor();
   return new Promise((res, rej) => {
     const canvas = document.createElement('canvas');
     canvas.width = 64;
@@ -74,6 +78,7 @@ export async function normalizeIcon(file: File): Promise<IconFileInfo> {
         context.drawImage(image, 0, 0, 64, 64);
       }
 
+      const color = fac.getColor(image).hex;
       canvas.toBlob((blob) => {
         if (blob == null) {
           rej(new Error('Failed to create blob from canvas'));
@@ -84,7 +89,7 @@ export async function normalizeIcon(file: File): Promise<IconFileInfo> {
           type: 'image/webp',
         });
         const url = URL.createObjectURL(file);
-        res({ file, url });
+        res({ file, url, color });
       });
     };
     image.src = URL.createObjectURL(file);
@@ -109,25 +114,16 @@ export async function exportIcons(edit: EditorData): Promise<Blob> {
       return;
     }
 
-    const fac = new FastAverageColor();
-
-    Promise.all(
-      arr.map(([_, info]) =>
-        Promise.all<[Promise<ImageBitmap>, Promise<FastAverageColorResult>]>([
-          createImageBitmap(info.file),
-          fac.getColorAsync(info.url),
-        ]),
-      ),
-    ).then(
+    Promise.all(arr.map(([_, info]) => createImageBitmap(info.file))).then(
       (images) => {
         let x = 0,
           y = 0;
-        images.forEach(([image, color], i) => {
-          const icon = arr[i][0];
+        images.forEach((image, i) => {
+          const [icon, info] = arr[i];
           context.drawImage(image, 0, 0, 64, 64, x, y, 64, 64);
           icon.x = x;
           icon.y = y;
-          icon.color = color.hex;
+          icon.color = icon.color || info.color;
 
           x += 66;
           if (x >= widthPx) {
