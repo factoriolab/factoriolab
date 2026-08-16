@@ -9,6 +9,8 @@ import { Quality } from './quality';
 export type RecipeFlag =
   | 'mining'
   | 'technology'
+  /** Factorio: quality seed grows a normal tree */
+  | 'plant'
   | 'burn'
   | 'recycling'
   | 'locked'

@@ -1880,7 +1880,7 @@ async function processMod(): Promise<void> {
             out: recipeOut,
             catalyst: recipeCatalyst,
             cost: 100,
-            flags: ['showCount'],
+            flags: ['showCount', 'plant'],
             icon,
             locations,
           };
