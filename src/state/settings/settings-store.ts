@@ -955,12 +955,6 @@ export class SettingsStore extends Store<SettingsState> {
         });
       }
 
-      if (tech.miningProductivity) {
-        miningBonus = miningBonus.add(
-          tech.miningProductivity.mul(rational(100n)),
-        );
-      }
-
       if (tech.qualityUnlock) {
         tech.qualityUnlock.forEach((q) => {
           const unlock = data.qualityRecord[q];
@@ -971,12 +965,6 @@ export class SettingsStore extends Store<SettingsState> {
       if (tech.researchSpeed) {
         researchBonus = researchBonus.add(
           tech.researchSpeed.mul(rational(100n)),
-        );
-      }
-
-      if (tech.researchProductivity) {
-        researchProductivity = researchProductivity.add(
-          tech.researchProductivity.mul(rational(100n)),
         );
       }
     });
@@ -1002,18 +990,7 @@ export class SettingsStore extends Store<SettingsState> {
           (r.quality == null || r.quality.level <= coalesce(quality?.level, 0)),
       );
 
-    // Recipe productivity bonuses unlocked by technology
-    const recipeBonus = Array.from(researchedTechnologyIds).reduce<
-      Partial<Record<string, Rational>>
-    >((result, b) => {
-      const tech = data.technologyRecord[b];
-      tech.recipeProductivity?.forEach((eff) => {
-        result[eff.id] ??= rational.zero;
-        result[eff.id] = result[eff.id]?.add(eff.value.mul(rational(100n)));
-      });
-      return result;
-    }, {});
-
+    const recipeBonus: Partial<Record<string, Rational>> = {};
     if (defaults?.recipeProductivity) {
       for (const [recipeId, bonus] of toRecordEntries(
         defaults?.recipeProductivity,
