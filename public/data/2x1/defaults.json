@@ -52,7 +52,7 @@
     },
     {
       "id": 5,
-      "label": "options.quality.legendary",
+      "label": "options.preset.legendary",
       "belt": "turbo-transport-belt",
       "machineRank": [
         "big-mining-drill(5)",
