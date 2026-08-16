@@ -1,7 +1,6 @@
 export type DefaultsJson = HardCodedPresetsJson | CustomPresetsJson;
 
 export interface HardCodedPresetsJson extends BaseDefaultsJson {
-  beacon?: string;
   minBelt?: string;
   maxBelt?: string;
   minPipe?: string;
@@ -31,10 +30,10 @@ export interface BaseCustomJson extends BaseDefaultsJson {
   machineRank?: string[];
   /** Defaults to zero */
   beaconCount?: number | string;
-  beacon?: string;
 }
 
 export interface BaseDefaultsJson {
+  beacon?: string;
   fuelRank?: string[];
   cargoWagon?: string;
   fluidWagon?: string;

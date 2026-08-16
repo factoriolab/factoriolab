@@ -175,7 +175,11 @@
     "iconText": "Icon text",
     "color": "Color",
     "resetColors": "Reset colors",
-    "row": "Row"
+    "row": "Row",
+    "loadExistingData": "Load existing data",
+    "editBeacon": "Edit beacon",
+    "electric": "Electric",
+    "profile": "Profile"
   },
   "error": {
     "deleteCustom": "Delete custom data",

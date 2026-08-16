@@ -99,8 +99,9 @@ export async function normalizeIcon(file: File): Promise<IconFileInfo> {
   });
 }
 
-export async function exportIcons(edit: EditorData): Promise<Blob> {
+export async function exportIcons(edit: EditorData): Promise<Blob | undefined> {
   return new Promise((res, rej) => {
+    if (edit.data.icons.length === 0) res(undefined);
     const canvas = document.createElement('canvas');
     const arr = edit.data.icons
       .map((icon) => [icon, edit.icons[icon.id]])

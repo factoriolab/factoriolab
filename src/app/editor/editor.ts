@@ -154,7 +154,8 @@ export class Editor {
     const edit = this.edit();
     exportIcons(edit).then(
       (blob) => {
-        saveAs(new Blob([blob], { type: 'image/webp' }), 'icons.webp');
+        if (blob)
+          saveAs(new Blob([blob], { type: 'image/webp' }), 'icons.webp');
         saveAs(
           new Blob([JSON.stringify(edit.data)], { type: 'application/json' }),
           'data.json',

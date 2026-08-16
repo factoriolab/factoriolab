@@ -107,7 +107,18 @@
             [(ngModel)]="model.rocketCapacity"
           />
         </td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editBeacon' | translate"
+              [color]="model.beacon ? 'brand' : 'gray'"
+              [faIcon]="model.beacon ? faPencil : faPlus"
+              (click)="editBeacon(model)"
+            ></button>
+          </div>
+        </td>
         <td></td>
         <td></td>
         <td></td>
@@ -229,7 +240,18 @@
             [(ngModel)]="item.rocketCapacity"
           />
         </td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editBeacon' | translate"
+              [color]="item.beacon ? 'brand' : 'gray'"
+              [faIcon]="item.beacon ? faPencil : faPlus"
+              (click)="editBeacon(item)"
+            ></button>
+          </div>
+        </td>
         <td></td>
         <td></td>
         <td></td>

@@ -33,7 +33,7 @@ export class DownloadDialog implements DialogData {
   protected readonly http = inject(HttpClient);
   protected readonly dialogRef = inject<DialogRef<EditorData>>(DialogRef);
 
-  readonly header = 'Load existing data';
+  readonly header = 'editor.loadExistingData';
   protected readonly faCheck = faCheck;
   protected readonly faXmark = faXmark;
   protected readonly loading = signal(false);
@@ -51,6 +51,5 @@ export class DownloadDialog implements DialogData {
       .subscribe((edit) => {
         this.dialogRef.close(edit);
       });
-    // spritesmith.run();
   }
 }
