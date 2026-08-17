@@ -21,6 +21,7 @@ export abstract class EditorTab {
           label: i.id,
           value: i.id,
           icon: icons[i.id]?.url,
+          iconType: 'img',
         }),
       )
       .sort((a, b) => a.label.localeCompare(b.label));

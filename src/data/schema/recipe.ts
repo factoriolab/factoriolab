@@ -26,10 +26,10 @@ export interface RecipeJson {
   row: number;
   time: number | string;
   producers?: string[];
-  in: Record<string, number | string>;
-  out: Record<string, number | string>;
+  in: Partial<Record<string, number | string>>;
+  out: Partial<Record<string, number | string>>;
   /** Denotes amount of output that is not affected by productivity */
-  catalyst?: Record<string, number | string>;
+  catalyst?: Partial<Record<string, number | string>>;
   cost?: number | string;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;

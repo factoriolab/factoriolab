@@ -856,7 +856,10 @@ export class SettingsStore extends Store<SettingsState> {
     }
 
     // Generate Icon Record
-    const iconRecord: Record<IconType, Record<string, IconData>> = {
+    const iconRecord: Record<
+      Exclude<IconType, 'img'>,
+      Record<string, IconData>
+    > = {
       system: systemIconsRecord,
       game: toIconRecord(iconIds, iconData),
       category: toIconRecord(categoryIds, categoryRecord),

@@ -45,7 +45,7 @@
             class="input"
             [ngModel]="kv.key"
             [ngModelOptions]="{ updateOn: 'blur' }"
-            (ngModelChange)="changeKey(kv.key, $event)"
+            (ngModelChange)="updateKey(kv.key, $event)"
           />
         </td>
         <td>

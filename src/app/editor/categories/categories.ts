@@ -19,10 +19,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
+import { Select } from '~/components/select/select';
 import { Category, CategoryJson } from '~/data/schema/category';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
-import { Select } from '../components/select/select';
 import { EditorTab } from '../editor-tab';
 
 @Component({
@@ -66,7 +66,7 @@ export class Categories extends EditorTab {
     );
   }
 
-  changeId(category: CategoryJson, id: string): void {
+  updateId(category: CategoryJson, id: string): void {
     const { data } = this.edit();
     [...data.items, ...data.recipes]
       .filter((e) => e.category === category.id)

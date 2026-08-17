@@ -25,16 +25,23 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
+import { Select } from '~/components/select/select';
 import { BeaconJson } from '~/data/schema/beacon';
+import { BeltJson } from '~/data/schema/belt';
 import { ItemJson } from '~/data/schema/item';
+import { MachineJson } from '~/data/schema/machine';
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
-import { Select } from '../components/select/select';
 import { EditorTab } from '../editor-tab';
 import { emptyItem } from '../object-utils';
 import { BeaconDialog } from './beacon-dialog/beacon-dialog';
+import { BeltDialog, BeltDialogData } from './belt-dialog/belt-dialog';
+import {
+  MachineDialog,
+  MachineDialogData,
+} from './machine-dialog/machine-dialog';
 
 @Component({
   selector: 'lab-items',
@@ -63,6 +70,7 @@ export class Items extends EditorTab {
           label: c.name,
           value: c.id,
           icon: icons[c.icon ?? c.id]?.url,
+          iconType: 'img',
         }),
       )
       .sort((a, b) => a.label.localeCompare(b.label));
@@ -87,6 +95,64 @@ export class Items extends EditorTab {
       .closed.subscribe((beacon) => {
         if (beacon === null) delete item.beacon;
         else if (beacon) item.beacon = beacon;
+        this.cd.detectChanges();
+      });
+  }
+
+  editBelt(item: ItemJson): void {
+    this.dialog
+      .open<
+        BeltJson | null | undefined,
+        BeltDialogData,
+        BeltDialog
+      >(BeltDialog, { data: { belt: coalesce(item.belt, { speed: 1 }), header: 'editor.editBelt' } })
+      .closed.subscribe((belt) => {
+        if (belt === null) delete item.belt;
+        else if (belt) item.belt = belt;
+        this.cd.detectChanges();
+      });
+  }
+
+  editPipe(item: ItemJson): void {
+    this.dialog
+      .open<
+        BeltJson | null | undefined,
+        BeltDialogData,
+        BeltDialog
+      >(BeltDialog, { data: { belt: coalesce(item.pipe, { speed: 1 }), header: 'editor.editPipe' } })
+      .closed.subscribe((pipe) => {
+        if (pipe === null) delete item.pipe;
+        else if (pipe) item.pipe = pipe;
+        this.cd.detectChanges();
+      });
+  }
+
+  editMachine(item: ItemJson): void {
+    const edit = this.edit();
+    const { data, icons } = edit;
+    const fuelOptions: Option<string | undefined>[] = [
+      { label: 'none', value: undefined },
+    ];
+    for (const item of data.items) {
+      if (item.fuel) {
+        fuelOptions.push({
+          label: item.name,
+          value: item.id,
+          icon: icons[item.icon ?? item.id]?.url,
+          iconType: 'img',
+        });
+      }
+    }
+    this.dialog
+      .open<
+        MachineJson | null | undefined,
+        MachineDialogData,
+        MachineDialog
+      >(MachineDialog, { data: { machine: coalesce(item.machine, {}), fuelOptions, edit } })
+      .closed.subscribe((machine) => {
+        console.log(machine);
+        if (machine === null) delete item.machine;
+        else if (machine) item.machine = machine;
         this.cd.detectChanges();
       });
   }

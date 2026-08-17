@@ -20,3 +20,16 @@ export const moduleEffectOptions: Option<ModuleEffect>[] = [
   { label: 'quality', value: 'quality' },
   { label: 'speed', value: 'speed' },
 ];
+
+export function toNumeric(value: string): string | number {
+  const num = Number(value);
+  if (isNaN(num)) return value;
+  return num;
+}
+
+export function toNullableNumeric(value: string): string | number | undefined {
+  if (!value) return undefined;
+  const num = Number(value);
+  if (isNaN(num)) return value;
+  return num;
+}

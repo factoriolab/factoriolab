@@ -119,9 +119,42 @@
             ></button>
           </div>
         </td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editBelt' | translate"
+              [color]="model.belt ? 'brand' : 'gray'"
+              [faIcon]="model.belt ? faPencil : faPlus"
+              (click)="editBelt(model)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editPipe' | translate"
+              [color]="model.pipe ? 'brand' : 'gray'"
+              [faIcon]="model.pipe ? faPencil : faPlus"
+              (click)="editPipe(model)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editMachine' | translate"
+              [color]="model.machine ? 'brand' : 'gray'"
+              [faIcon]="model.machine ? faPencil : faPlus"
+              (click)="editMachine(model)"
+            ></button>
+          </div>
+        </td>
         <td></td>
         <td></td>
         <td></td>
@@ -252,9 +285,42 @@
             ></button>
           </div>
         </td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editBelt' | translate"
+              [color]="item.belt ? 'brand' : 'gray'"
+              [faIcon]="item.belt ? faPencil : faPlus"
+              (click)="editBelt(item)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editPipe' | translate"
+              [color]="item.pipe ? 'brand' : 'gray'"
+              [faIcon]="item.pipe ? faPencil : faPlus"
+              (click)="editPipe(item)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editMachine' | translate"
+              [color]="item.machine ? 'brand' : 'gray'"
+              [faIcon]="item.machine ? faPencil : faPlus"
+              (click)="editMachine(item)"
+            ></button>
+          </div>
+        </td>
         <td></td>
         <td></td>
         <td></td>

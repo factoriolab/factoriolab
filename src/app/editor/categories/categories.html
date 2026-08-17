@@ -89,7 +89,7 @@
             [placeholder]="'editor.id' | translate"
             [ngModel]="category.id"
             [ngModelOptions]="{ updateOn: 'blur' }"
-            (ngModelChange)="changeId(category, $event)"
+            (ngModelChange)="updateId(category, $event)"
           />
         </td>
         <td>

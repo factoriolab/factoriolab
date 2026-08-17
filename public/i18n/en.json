@@ -178,8 +178,17 @@
     "row": "Row",
     "loadExistingData": "Load existing data",
     "editBeacon": "Edit beacon",
+    "editBelt": "Edit belt",
+    "editPipe": "Edit pipe",
+    "editMachine": "Edit machine",
+    "editConsumption": "Edit consumption",
     "electric": "Electric",
-    "profile": "Profile"
+    "profile": "Profile",
+    "unlimited": "Unlimited",
+    "burner": "Burner",
+    "editRocketSilo": "Edit rocket silo",
+    "rocketLaunchTime": "Rocket launch time (ticks)",
+    "item": "Item"
   },
   "error": {
     "deleteCustom": "Delete custom data",

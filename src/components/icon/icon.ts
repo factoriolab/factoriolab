@@ -51,9 +51,9 @@ export class Icon {
 
   protected readonly icon = computed(() => {
     const value = this.value();
-    if (typeof value !== 'string') return undefined;
-    const record = this.settingsStore.dataset().iconRecord;
     const type = this.type();
+    if (typeof value !== 'string' || type === 'img') return undefined;
+    const record = this.settingsStore.dataset().iconRecord;
     if (type) return record[type][value];
     return record.game[value] ?? record.system[value];
   });
@@ -62,5 +62,12 @@ export class Icon {
     const value = this.value();
     if (typeof value === 'string') return undefined;
     return value;
+  });
+
+  protected readonly src = computed(() => {
+    const value = this.value();
+    const type = this.type();
+    if (typeof value === 'string' || type === 'img') return value;
+    return undefined;
   });
 }

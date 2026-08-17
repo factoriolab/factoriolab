@@ -7,8 +7,11 @@
           type="text"
           aria-labelledby="efficiency-header"
           class="input"
+          required
           [placeholder]="'data.efficiency' | translate"
-          [(ngModel)]="data.effectivity"
+          [ngModel]="data.effectivity"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.effectivity = toNumeric($event)"
         />
       </td>
     </tr>
@@ -19,8 +22,11 @@
           type="text"
           aria-labelledby="modules-header"
           class="input"
+          required
           [placeholder]="'data.modules' | translate"
-          [(ngModel)]="data.modules"
+          [ngModel]="data.modules"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.modules = toNumeric($event)"
         />
       </td>
     </tr>
@@ -32,7 +38,9 @@
           aria-labelledby="range-header"
           class="input"
           [placeholder]="'data.range' | translate"
-          [(ngModel)]="data.range"
+          [ngModel]="data.range"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.range = toNullableNumeric($event)"
         />
       </td>
     </tr>
@@ -54,13 +62,18 @@
     <tr>
       <td id="usage-header">{{ 'data.energyConsumption' | translate }}</td>
       <td>
-        <input
-          type="text"
-          aria-labelledby="usage-header"
-          class="input"
-          [placeholder]="'data.energyConsumption' | translate"
-          [(ngModel)]="data.usage"
-        />
+        <div class="gap-1 flex items-center">
+          <input
+            type="text"
+            aria-labelledby="usage-header"
+            class="input"
+            [placeholder]="'data.energyConsumption' | translate"
+            [ngModel]="data.usage"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="data.usage = toNullableNumeric($event)"
+          />
+          <span>kW</span>
+        </div>
       </td>
     </tr>
     <tr>

@@ -1,0 +1,69 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <td id="parts-header">{{ 'data.rocketPartsRequired' | translate }}</td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="parts-header"
+          class="input"
+          required
+          [placeholder]="'data.rocketPartsRequired' | translate"
+          [ngModel]="data.parts"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.parts = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="launch-header">{{ 'editor.rocketLaunchTime' | translate }}</td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="launch-header"
+          class="input"
+          required
+          [placeholder]="'editor.rocketLaunchTime' | translate"
+          [ngModel]="data.launch"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.launch = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="buffered-header">{{ 'data.buffered' | translate }}</td>
+      <td>
+        <lab-checkbox
+          [ngModel]="data.buffered === true"
+          (ngModelChange)="data.buffered = $event ? true : undefined"
+        ></lab-checkbox>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="complement"
+    [faIcon]="faTrash"
+    [text]="'delete' | translate"
+    (click)="dialogRef.close(null)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

@@ -16,10 +16,9 @@ import { EditorTab } from '../editor-tab';
 })
 export class Version extends EditorTab {
   protected readonly faXmark = faXmark;
-
   protected readonly model = { mod: '', version: '' };
 
-  changeKey(oldKey: string, newKey: string): void {
+  updateKey(oldKey: string, newKey: string): void {
     const data = this.edit().data;
     data.version[newKey] = data.version[oldKey];
     delete data.version[oldKey];

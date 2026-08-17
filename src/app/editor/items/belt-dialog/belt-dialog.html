@@ -1,0 +1,45 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <td id="speed-header">{{ 'data.speed' | translate }}</td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="speed-header"
+          class="input"
+          required
+          [placeholder]="'data.speed' | translate"
+          [ngModel]="data.belt.speed"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.belt.speed = toNumeric($event)"
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="complement"
+    [faIcon]="faTrash"
+    [text]="'delete' | translate"
+    (click)="dialogRef.close(null)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data.belt)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

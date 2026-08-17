@@ -1,0 +1,220 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <td id="speed-header">{{ 'data.speed' | translate }}</td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="speed-header"
+          class="input"
+          [placeholder]="'data.speed' | translate"
+          [ngModel]="data.machine.speed"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.machine.speed = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="modules-header">{{ 'data.modules' | translate }}</td>
+      <td>
+        <div class="gap-2 flex items-center">
+          <input
+            type="number"
+            aria-labelledby="modules-header"
+            class="input"
+            [placeholder]="'data.modules' | translate"
+            [(ngModel)]="data.machine.modules"
+          />
+          <lab-checkbox
+            [ngModel]="data.machine.modules === true"
+            (ngModelChange)="data.machine.modules = $event ? true : 1"
+            label="editor.unlimited"
+          ></lab-checkbox>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="disallowed-effects-header">
+        {{ 'data.disallowedEffects' | translate }}
+      </td>
+      <td>
+        <div class="flex items-center">
+          <lab-select
+            labelledBy="disallowed-effects-header"
+            [options]="moduleEffectOptions"
+            [ngModel]="data.machine.disallowedEffects ?? []"
+            (ngModelChange)="
+              data.machine.disallowedEffects = $event.length
+                ? $event
+                : undefined
+            "
+          >
+            @if (data.machine.disallowedEffects?.length) {
+              <span>{{ data.machine.disallowedEffects.join(', ') }}</span>
+            } @else {
+              —
+            }
+          </lab-select>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="type-header">
+        {{ 'data.energySource' | translate }}
+      </td>
+      <td>
+        <div class="flex items-center">
+          <lab-select
+            labelledBy="type-header"
+            [options]="energySourceOptions"
+            [(ngModel)]="data.machine.type"
+          />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="fuel-categories-header">
+        {{ 'data.fuelCategories' | translate }}
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="fuel-categories-header"
+          class="input"
+          [placeholder]="'data.fuelCategories' | translate"
+          [ngModel]="
+            data.machine.fuelCategories
+              ? data.machine.fuelCategories.join(', ')
+              : ''
+          "
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="updateFuelCategories($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="fuel-header">
+        {{ 'data.fuel' | translate }}
+      </td>
+      <td>
+        <div class="flex items-center">
+          <lab-select
+            labelledBy="fuel-header"
+            [options]="data.fuelOptions"
+            [(ngModel)]="data.machine.fuel"
+          />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="usage-header">{{ 'data.energyConsumption' | translate }}</td>
+      <td>
+        <div class="gap-1 flex items-center">
+          <input
+            type="text"
+            aria-labelledby="usage-header"
+            class="input"
+            [placeholder]="'data.energyConsumption' | translate"
+            [ngModel]="data.machine.usage"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="data.machine.usage = toNullableNumeric($event)"
+          />
+          <span>kW</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="drain-header">{{ 'data.energyDrain' | translate }}</td>
+      <td>
+        <div class="gap-1 flex items-center">
+          <input
+            type="text"
+            aria-labelledby="drain-header"
+            class="input"
+            [placeholder]="'data.energyDrain' | translate"
+            [ngModel]="data.machine.drain"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="data.machine.drain = toNullableNumeric($event)"
+          />
+          <span>kW</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="pollution-header">
+        {{ 'data.pollution' | translate }}
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="pollution-header"
+          class="input"
+          [placeholder]="'data.pollution' | translate"
+          [ngModel]="data.machine.pollution"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.machine.pollution = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="silo-header">
+        {{ 'data.rocketSilo' | translate }}
+      </td>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'editor.editRocketSilo' | translate"
+            [color]="data.machine.silo ? 'brand' : 'gray'"
+            [faIcon]="data.machine.silo ? faPencil : faPlus"
+            (click)="editSilo(data.machine)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="consumption-header">
+        {{ 'data.consumption' | translate }}
+      </td>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labQuantitiesButton
+            [edit]="data.edit"
+            [record]="data.machine.consumption"
+            [attr.aria-label]="'editor.editConsumption' | translate"
+            (click)="editConsumption(data.machine)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="complement"
+    [faIcon]="faTrash"
+    [text]="'delete' | translate"
+    (click)="dialogRef.close(null)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data.machine)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

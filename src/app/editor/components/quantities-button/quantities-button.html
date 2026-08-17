@@ -1,0 +1,13 @@
+@if (record(); as _record) {
+  @for (kv of _record | keyvalue; track kv.key) {
+    @if (edit().icons[kv.key]?.url; as url) {
+      <lab-icon
+        [value]="url"
+        iconType="img"
+        [text]="kv.value?.toString()"
+      ></lab-icon>
+    }
+  }
+} @else {
+  <fa-icon [icon]="faPlus"></fa-icon>
+}

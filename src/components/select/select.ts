@@ -48,7 +48,7 @@ const host = cva(
       rounded: roundedVariants,
       iconOnly: {
         true: 'min-w-9 grow-0 justify-center outline-brand-400',
-        false: 'px-1 bg-gray-950/75 outline-brand-400',
+        false: 'px-2 bg-gray-950/75 outline-brand-400',
       },
       disabled: {
         true: 'pointer-events-none',

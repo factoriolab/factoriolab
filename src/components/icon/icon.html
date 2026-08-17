@@ -1,15 +1,17 @@
-@if (icon(); as icon) {
+@let _faIcon = faIcon();
+@let _src = src();
+@if (icon(); as _icon) {
   <span
     class="size-16 absolute origin-top-left"
     [class.scale-50]="!full()"
     [style.zoom.%]="zoom"
-    [style.background-image]="icon.image"
-    [style.background-position]="icon.position"
-    [class.light:invert]="icon.color | isLight"
+    [style.background-image]="_icon.image"
+    [style.background-position]="_icon.position"
+    [class.light:invert]="_icon.color | isLight"
   >
   </span>
 
-  @if (icon.quality; as q) {
+  @if (_icon.quality; as q) {
     <lab-icon
       class="top-2 right-2"
       type="quality"
@@ -18,16 +20,16 @@
     ></lab-icon>
   }
 
-  @if (icon.text; as text) {
+  @if (_icon.text; as text) {
     <span
       class="top-0 left-0 text-sm/3.5 font-semibold text-white text-shadow-black pointer-events-none absolute select-none text-shadow-solid"
       >{{ text }}</span
     >
   }
-} @else {
-  @if (faIcon(); as faIcon) {
-    <fa-icon [icon]="faIcon" class="size-8" size="xl"></fa-icon>
-  }
+} @else if (_faIcon) {
+  <fa-icon [icon]="_faIcon" class="size-8" size="xl"></fa-icon>
+} @else if (_src) {
+  <img class="w-8" [src]="_src" [alt]="alt()" />
 }
 
 @if (alt(); as text) {
