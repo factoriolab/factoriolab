@@ -30,6 +30,7 @@ import { BeaconJson } from '~/data/schema/beacon';
 import { BeltJson } from '~/data/schema/belt';
 import { ItemJson } from '~/data/schema/item';
 import { MachineJson } from '~/data/schema/machine';
+import { ModuleJson } from '~/data/schema/module';
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
@@ -42,6 +43,7 @@ import {
   MachineDialog,
   MachineDialogData,
 } from './machine-dialog/machine-dialog';
+import { ModuleDialog, ModuleDialogData } from './module-dialog/module-dialog';
 
 @Component({
   selector: 'lab-items',
@@ -161,6 +163,38 @@ export class Items extends EditorTab {
         console.log(machine);
         if (machine === null) delete item.machine;
         else if (machine) item.machine = machine;
+        this.cd.detectChanges();
+      });
+  }
+
+  editModule(item: ItemJson): void {
+    const { data, icons } = this.edit();
+    const limitationOptions: Option<string | undefined>[] = [
+      { label: 'none', value: undefined },
+    ];
+    for (const limitation of Object.keys(coalesce(data.limitations, {}))) {
+      limitationOptions.push({ label: limitation, value: limitation });
+    }
+    const itemOptions: Option<string | undefined>[] = [
+      { label: 'none', value: undefined },
+    ];
+    for (const item of data.items) {
+      itemOptions.push({
+        label: item.name,
+        value: item.id,
+        icon: icons[item.icon ?? item.id]?.url,
+        iconType: 'img',
+      });
+    }
+    this.dialog
+      .open<
+        ModuleJson | null | undefined,
+        ModuleDialogData,
+        ModuleDialog
+      >(ModuleDialog, { data: { module: coalesce(item.module, {}), limitationOptions, itemOptions } })
+      .closed.subscribe((module) => {
+        if (module === null) delete item.module;
+        else if (module) item.module = module;
         this.cd.detectChanges();
       });
   }

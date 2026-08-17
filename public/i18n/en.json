@@ -163,6 +163,7 @@
     "download": "Load existing data",
     "upload": "Upload custom files",
     "icons": "Icons",
+    "limitation": "Limitation",
     "limitations": "Limitations",
     "qualities": "Qualities",
     "defaults": "Defaults",
@@ -194,7 +195,8 @@
     "editBaseEffect": "Edit base effect",
     "hideRate": "Hide rate",
     "totalRecipe": "Total recipe",
-    "ingredientUsage": "Ingredient usage"
+    "ingredientUsage": "Ingredient usage",
+    "editModule": "Edit module"
   },
   "error": {
     "deleteCustom": "Delete custom data",

@@ -155,7 +155,18 @@
             ></button>
           </div>
         </td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editModule' | translate"
+              [color]="model.module ? 'brand' : 'gray'"
+              [faIcon]="model.module ? faPencil : faPlus"
+              (click)="editModule(model)"
+            ></button>
+          </div>
+        </td>
         <td></td>
         <td></td>
         <td></td>
@@ -321,7 +332,18 @@
             ></button>
           </div>
         </td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editModule' | translate"
+              [color]="item.module ? 'brand' : 'gray'"
+              [faIcon]="item.module ? faPencil : faPlus"
+              (click)="editModule(item)"
+            ></button>
+          </div>
+        </td>
         <td></td>
         <td></td>
         <td></td>

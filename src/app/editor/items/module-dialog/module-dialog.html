@@ -1,0 +1,156 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <td id="consumption-header">
+        {{ 'data.energyConsumption' | translate }}
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="consumption-header"
+          class="input"
+          required
+          [placeholder]="'data.energyConsumption' | translate"
+          [ngModel]="data.module.consumption"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.module.consumption = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="pollution-header">
+        {{ 'data.pollution' | translate }}
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="pollution-header"
+          class="input"
+          required
+          [placeholder]="'data.pollution' | translate"
+          [ngModel]="data.module.pollution"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.module.pollution = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="productivity-header">
+        {{ 'data.productivity' | translate }}
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="productivity-header"
+          class="input"
+          required
+          [placeholder]="'data.productivity' | translate"
+          [ngModel]="data.module.productivity"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.module.productivity = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="quality-header">
+        {{ 'data.quality' | translate }}
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="quality-header"
+          class="input"
+          required
+          [placeholder]="'data.quality' | translate"
+          [ngModel]="data.module.quality"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.module.quality = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="speed-header">
+        {{ 'data.speed' | translate }}
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="speed-header"
+          class="input"
+          required
+          [placeholder]="'data.speed' | translate"
+          [ngModel]="data.module.speed"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.module.speed = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="limitation-header">
+        {{ 'editor.limitation' | translate }}
+      </td>
+      <td>
+        <lab-select
+          class="w-full"
+          labelledBy="limitation-header"
+          [options]="data.limitationOptions"
+          [(ngModel)]="data.module.limitation"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="sprays-header">
+        {{ 'data.sprays' | translate }}
+      </td>
+      <td>
+        <input
+          type="number"
+          aria-labelledby="sprays-header"
+          class="input"
+          required
+          [placeholder]="'data.sprays' | translate"
+          [(ngModel)]="data.module.sprays"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="proliferator-header">
+        {{ 'data.proliferator' | translate }}
+      </td>
+      <td>
+        <lab-select
+          class="w-full"
+          labelledBy="proliferator-header"
+          [options]="data.itemOptions"
+          [(ngModel)]="data.module.proliferator"
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="complement"
+    [faIcon]="faTrash"
+    [text]="'delete' | translate"
+    (click)="dialogRef.close(null)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data.module)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>
