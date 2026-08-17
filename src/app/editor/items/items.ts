@@ -103,7 +103,7 @@ export class Items extends EditorTab {
       .closed.subscribe((beacon) => {
         if (beacon === null) delete item.beacon;
         else if (beacon) item.beacon = beacon;
-        this.cd.detectChanges();
+        this.forceDetect();
       });
   }
 
@@ -117,7 +117,7 @@ export class Items extends EditorTab {
       .closed.subscribe((belt) => {
         if (belt === null) delete item.belt;
         else if (belt) item.belt = belt;
-        this.cd.detectChanges();
+        this.forceDetect();
       });
   }
 
@@ -131,7 +131,7 @@ export class Items extends EditorTab {
       .closed.subscribe((pipe) => {
         if (pipe === null) delete item.pipe;
         else if (pipe) item.pipe = pipe;
-        this.cd.detectChanges();
+        this.forceDetect();
       });
   }
 
@@ -168,7 +168,7 @@ export class Items extends EditorTab {
       .closed.subscribe((machine) => {
         if (machine === null) delete item.machine;
         else if (machine) item.machine = machine;
-        this.cd.detectChanges();
+        this.forceDetect();
       });
   }
 
@@ -200,7 +200,7 @@ export class Items extends EditorTab {
       .closed.subscribe((module) => {
         if (module === null) delete item.module;
         else if (module) item.module = module;
-        this.cd.detectChanges();
+        this.forceDetect();
       });
   }
 
@@ -226,7 +226,7 @@ export class Items extends EditorTab {
       .closed.subscribe((fuel) => {
         if (fuel === null) delete item.fuel;
         else if (fuel) item.fuel = fuel;
-        this.cd.detectChanges();
+        this.forceDetect();
       });
   }
 
@@ -240,7 +240,7 @@ export class Items extends EditorTab {
       .closed.subscribe((cargoWagon) => {
         if (cargoWagon === null) delete item.cargoWagon;
         else if (cargoWagon) item.cargoWagon = cargoWagon;
-        this.cd.detectChanges();
+        this.forceDetect();
       });
   }
 
@@ -254,7 +254,7 @@ export class Items extends EditorTab {
       .closed.subscribe((fluidWagon) => {
         if (fluidWagon === null) delete item.fluidWagon;
         else if (fluidWagon) item.fluidWagon = fluidWagon;
-        this.cd.detectChanges();
+        this.forceDetect();
       });
   }
 
@@ -264,6 +264,12 @@ export class Items extends EditorTab {
     items.push(this.model);
     data.items = items;
     this.model = emptyItem();
+    this.cd.detectChanges();
+  }
+
+  private forceDetect(): void {
+    const { data } = this.edit();
+    data.items = [...data.items];
     this.cd.detectChanges();
   }
 
