@@ -1,0 +1,93 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <td id="category-header">{{ 'data.category' | translate }}</td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="category-header"
+          class="input"
+          required
+          [placeholder]="'data.category' | translate"
+          [(ngModel)]="data.fuel.category"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="value-header">{{ 'data.fuelValue' | translate }}</td>
+      <td>
+        <div class="gap-1 flex items-center">
+          <input
+            type="text"
+            aria-labelledby="value-header"
+            class="input"
+            required
+            [placeholder]="'data.fuelValue' | translate"
+            [ngModel]="data.fuel.value"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="data.fuel.value = toNumeric($event)"
+          />
+          <span>MJ</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="result-header">
+        {{ 'data.burntResult' | translate }}
+      </td>
+      <td>
+        <lab-select
+          class="w-full"
+          labelledBy="result-header"
+          [options]="data.itemOptions"
+          [(ngModel)]="data.fuel.result"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="pollution-multiplier-header">
+        {{ 'data.pollutionMultiplier' | translate }}
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="pollution-multiplier-header"
+          class="input"
+          required
+          [placeholder]="'data.pollutionMultiplier' | translate"
+          [ngModel]="data.fuel.pollutionMultiplier"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="
+            data.fuel.pollutionMultiplier = toNullableNumeric($event)
+          "
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="complement"
+    [faIcon]="faTrash"
+    [text]="'delete' | translate"
+    (click)="dialogRef.close(null)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data.fuel)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

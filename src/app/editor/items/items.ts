@@ -28,6 +28,9 @@ import { Button } from '~/components/button/button';
 import { Select } from '~/components/select/select';
 import { BeaconJson } from '~/data/schema/beacon';
 import { BeltJson } from '~/data/schema/belt';
+import { CargoWagonJson } from '~/data/schema/cargo-wagon';
+import { FluidWagonJson } from '~/data/schema/fluid-wagon';
+import { FuelJson } from '~/data/schema/fuel';
 import { ItemJson } from '~/data/schema/item';
 import { MachineJson } from '~/data/schema/machine';
 import { ModuleJson } from '~/data/schema/module';
@@ -39,6 +42,9 @@ import { EditorTab } from '../editor-tab';
 import { emptyItem } from '../object-utils';
 import { BeaconDialog } from './beacon-dialog/beacon-dialog';
 import { BeltDialog, BeltDialogData } from './belt-dialog/belt-dialog';
+import { CargoWagonDialog } from './cargo-wagon-dialog/cargo-wagon-dialog';
+import { FluidWagonDialog } from './fluid-wagon-dialog/fluid-wagon-dialog';
+import { FuelDialog, FuelDialogData } from './fuel-dialog/fuel-dialog';
 import {
   MachineDialog,
   MachineDialogData,
@@ -160,7 +166,6 @@ export class Items extends EditorTab {
         MachineDialog
       >(MachineDialog, { data: { machine: coalesce(item.machine, {}), fuelOptions, locationOptions, edit } })
       .closed.subscribe((machine) => {
-        console.log(machine);
         if (machine === null) delete item.machine;
         else if (machine) item.machine = machine;
         this.cd.detectChanges();
@@ -195,6 +200,60 @@ export class Items extends EditorTab {
       .closed.subscribe((module) => {
         if (module === null) delete item.module;
         else if (module) item.module = module;
+        this.cd.detectChanges();
+      });
+  }
+
+  editFuel(item: ItemJson): void {
+    const { data, icons } = this.edit();
+    const itemOptions: Option<string | undefined>[] = [
+      { label: 'none', value: undefined },
+    ];
+    for (const item of data.items) {
+      itemOptions.push({
+        label: item.name,
+        value: item.id,
+        icon: icons[item.icon ?? item.id]?.url,
+        iconType: 'img',
+      });
+    }
+    this.dialog
+      .open<
+        FuelJson | null | undefined,
+        FuelDialogData,
+        FuelDialog
+      >(FuelDialog, { data: { fuel: coalesce(item.fuel, { category: '', value: 1 }), itemOptions } })
+      .closed.subscribe((fuel) => {
+        if (fuel === null) delete item.fuel;
+        else if (fuel) item.fuel = fuel;
+        this.cd.detectChanges();
+      });
+  }
+
+  editCargoWagon(item: ItemJson): void {
+    this.dialog
+      .open<
+        CargoWagonJson | null | undefined,
+        CargoWagonJson,
+        CargoWagonDialog
+      >(CargoWagonDialog, { data: coalesce(item.cargoWagon, { size: 1 }) })
+      .closed.subscribe((cargoWagon) => {
+        if (cargoWagon === null) delete item.cargoWagon;
+        else if (cargoWagon) item.cargoWagon = cargoWagon;
+        this.cd.detectChanges();
+      });
+  }
+
+  editFluidWagon(item: ItemJson): void {
+    this.dialog
+      .open<
+        FluidWagonJson | null | undefined,
+        FluidWagonJson,
+        FluidWagonDialog
+      >(FluidWagonDialog, { data: coalesce(item.fluidWagon, { capacity: 1 }) })
+      .closed.subscribe((fluidWagon) => {
+        if (fluidWagon === null) delete item.fluidWagon;
+        else if (fluidWagon) item.fluidWagon = fluidWagon;
         this.cd.detectChanges();
       });
   }

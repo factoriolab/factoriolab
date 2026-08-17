@@ -196,7 +196,10 @@
     "hideRate": "Hide rate",
     "totalRecipe": "Total recipe",
     "ingredientUsage": "Ingredient usage",
-    "editModule": "Edit module"
+    "editModule": "Edit module",
+    "editFuel": "Edit fuel",
+    "editCargoWagon": "Edit cargo wagon",
+    "editFluidWagon": "Edit fluid wagon"
   },
   "error": {
     "deleteCustom": "Delete custom data",

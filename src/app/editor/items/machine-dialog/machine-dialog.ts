@@ -37,8 +37,8 @@ import {
   toNullableNumeric,
   toSize,
 } from '../../object-utils';
-import { SiloDialog } from '../silo-dialog/silo-dialog';
 import { BaseEffectDialog } from './base-effect-dialog/base-effect-dialog';
+import { SiloDialog } from './silo-dialog/silo-dialog';
 
 export interface MachineDialogData {
   machine: MachineJson;

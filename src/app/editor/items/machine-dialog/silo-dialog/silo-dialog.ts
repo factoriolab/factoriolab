@@ -13,7 +13,7 @@ import { DialogData } from '~/components/dialog/dialog';
 import { SiloJson } from '~/data/schema/silo';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
-import { toNumeric } from '../../object-utils';
+import { toNumeric } from '../../../object-utils';
 
 @Component({
   selector: 'lab-silo-dialog',

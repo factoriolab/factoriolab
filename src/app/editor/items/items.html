@@ -167,9 +167,42 @@
             ></button>
           </div>
         </td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editFuel' | translate"
+              [color]="model.fuel ? 'brand' : 'gray'"
+              [faIcon]="model.fuel ? faPencil : faPlus"
+              (click)="editFuel(model)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editCargoWagon' | translate"
+              [color]="model.cargoWagon ? 'brand' : 'gray'"
+              [faIcon]="model.cargoWagon ? faPencil : faPlus"
+              (click)="editCargoWagon(model)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editFluidWagon' | translate"
+              [color]="model.fluidWagon ? 'brand' : 'gray'"
+              [faIcon]="model.fluidWagon ? faPencil : faPlus"
+              (click)="editFluidWagon(model)"
+            ></button>
+          </div>
+        </td>
         <td></td>
         <td></td>
         <td>
@@ -344,9 +377,42 @@
             ></button>
           </div>
         </td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editFuel' | translate"
+              [color]="item.fuel ? 'brand' : 'gray'"
+              [faIcon]="item.fuel ? faPencil : faPlus"
+              (click)="editFuel(item)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editCargoWagon' | translate"
+              [color]="item.cargoWagon ? 'brand' : 'gray'"
+              [faIcon]="item.cargoWagon ? faPencil : faPlus"
+              (click)="editCargoWagon(item)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editFluidWagon' | translate"
+              [color]="item.fluidWagon ? 'brand' : 'gray'"
+              [faIcon]="item.fluidWagon ? faPencil : faPlus"
+              (click)="editFluidWagon(item)"
+            ></button>
+          </div>
+        </td>
         <td></td>
         <td></td>
         <td>
