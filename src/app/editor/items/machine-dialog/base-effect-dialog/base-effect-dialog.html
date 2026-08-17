@@ -1,0 +1,104 @@
+<table class="lab-table">
+  <thead>
+    <tr>
+      <th id="effect-header">{{ 'editor.effect' | translate }}</th>
+      <th id="value-header">{{ 'data.value' | translate }}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="flex items-center">
+          <lab-select
+            labelledBy="effect-header"
+            class="w-full"
+            [options]="effectOptions"
+            [(ngModel)]="model.key"
+          />
+        </div>
+      </td>
+      <td>
+        <input
+          type="number"
+          aria-labelledby="value-header"
+          class="input"
+          size="3"
+          [placeholder]="'data.value' | translate"
+          [(ngModel)]="model.value"
+        />
+      </td>
+      <td>
+        <button
+          type="button"
+          labButton
+          [faIcon]="faFloppyDisk"
+          [aria-label]="'save' | translate"
+          (click)="data[model.key] = model.value"
+        ></button>
+      </td>
+    </tr>
+    @for (kv of data | keyvalue; track kv.key) {
+      <tr>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="item-header"
+              class="w-full"
+              [options]="effectOptions"
+              [ngModel]="kv.key"
+              (ngModelChange)="updateKey($any(kv.key), $event)"
+            />
+          </div>
+        </td>
+        <td>
+          <input
+            type="number"
+            aria-labelledby="quantity-header"
+            class="input"
+            size="3"
+            [placeholder]="'objectives.quantity' | translate"
+            [ngModel]="kv.value"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="$any(data)[kv.key] = $event"
+          />
+        </td>
+        <td>
+          <button
+            type="button"
+            labButton
+            [faIcon]="faTrash"
+            [aria-label]="'delete' | translate"
+            (click)="remove($any(kv.key))"
+          ></button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="complement"
+    [faIcon]="faTrash"
+    [text]="'delete' | translate"
+    (click)="dialogRef.close(null)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

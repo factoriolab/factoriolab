@@ -143,12 +143,20 @@ export class Items extends EditorTab {
         });
       }
     }
+    const locationOptions = coalesce(data.locations, []).map(
+      (l): Option => ({
+        label: l.name,
+        value: l.id,
+        icon: icons[l.icon ?? l.id]?.url,
+        iconType: 'img',
+      }),
+    );
     this.dialog
       .open<
         MachineJson | null | undefined,
         MachineDialogData,
         MachineDialog
-      >(MachineDialog, { data: { machine: coalesce(item.machine, {}), fuelOptions, edit } })
+      >(MachineDialog, { data: { machine: coalesce(item.machine, {}), fuelOptions, locationOptions, edit } })
       .closed.subscribe((machine) => {
         console.log(machine);
         if (machine === null) delete item.machine;

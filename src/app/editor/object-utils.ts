@@ -33,3 +33,16 @@ export function toNullableNumeric(value: string): string | number | undefined {
   if (isNaN(num)) return value;
   return num;
 }
+
+export function toSize(value: string): [number, number] | undefined {
+  try {
+    const size = value.split(',').map((v) => Number(v.trim()));
+    if (size.length === 2 && size.every((v) => !isNaN(v))) {
+      return size as [number, number];
+    }
+  } catch {
+    // Do nothing
+  }
+
+  return undefined;
+}

@@ -19,6 +19,7 @@ import {
   moduleEffectOptions,
   toNullableNumeric,
   toNumeric,
+  toSize,
 } from '../../object-utils';
 
 @Component({
@@ -43,6 +44,7 @@ export class BeaconDialog implements DialogData {
   readonly header = 'editor.editBeacon';
   protected readonly toNumeric = toNumeric;
   protected readonly toNullableNumeric = toNullableNumeric;
+  protected readonly toSize = toSize;
 
   updateSize(value: string): void {
     try {

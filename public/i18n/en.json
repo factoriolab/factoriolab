@@ -188,7 +188,13 @@
     "burner": "Burner",
     "editRocketSilo": "Edit rocket silo",
     "rocketLaunchTime": "Rocket launch time (ticks)",
-    "item": "Item"
+    "item": "Item",
+    "effect": "Effect",
+    "baseEffect": "Base effect",
+    "editBaseEffect": "Edit base effect",
+    "hideRate": "Hide rate",
+    "totalRecipe": "Total recipe",
+    "ingredientUsage": "Ingredient usage"
   },
   "error": {
     "deleteCustom": "Delete custom data",

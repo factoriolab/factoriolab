@@ -190,6 +190,100 @@
         </div>
       </td>
     </tr>
+    <tr>
+      <td id="size-header">
+        {{ 'data.dimensions' | translate }}
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="size-header"
+          class="input"
+          [placeholder]="'data.dimensions' | translate"
+          [ngModel]="data.machine.size ? data.machine.size.join(', ') : ''"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.machine.size = toSize($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td id="base-effect-header">
+        {{ 'editor.baseEffect' | translate }}
+      </td>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'editor.editBaseEffect' | translate"
+            [color]="data.machine.baseEffect ? 'brand' : 'gray'"
+            [faIcon]="data.machine.baseEffect ? faPencil : faPlus"
+            (click)="editBaseEffect(data.machine)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="hide-rate-header">
+        {{ 'editor.hideRate' | translate }}
+      </td>
+      <td>
+        <div class="flex items-center">
+          <lab-checkbox
+            labelledBy="hide-rate-header"
+            [ngModel]="data.machine.hideRate === true"
+            (ngModelChange)="data.machine.hideRate = $event ? true : undefined"
+          />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="total-recipe-header">
+        {{ 'editor.totalRecipe' | translate }}
+      </td>
+      <td>
+        <div class="flex items-center">
+          <lab-checkbox
+            labelledBy="total-recipe-header"
+            [ngModel]="data.machine.totalRecipe === true"
+            (ngModelChange)="
+              data.machine.totalRecipe = $event ? true : undefined
+            "
+          />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="locations-header">
+        {{ 'data.locations' | translate }}
+      </td>
+      <td>
+        <div class="flex items-center">
+          <lab-select
+            labelledBy="locations-header"
+            [options]="data.locationOptions"
+            [ngModel]="data.machine.locations ?? []"
+            (ngModelChange)="
+              data.machine.locations = $event.length ? $event : undefined
+            "
+          />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="ingredient-usage-header">
+        {{ 'editor.ingredientUsage' | translate }}
+      </td>
+      <td>
+        <input
+          type="number"
+          aria-labelledby="ingredient-usage-header"
+          class="input"
+          [placeholder]="'editor.ingredientUsage' | translate"
+          [(ngModel)]="data.machine.ingredientUsage"
+        />
+      </td>
+    </tr>
   </tbody>
 </table>
 

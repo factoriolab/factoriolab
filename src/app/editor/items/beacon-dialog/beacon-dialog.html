@@ -111,7 +111,7 @@
           [placeholder]="'data.dimensions' | translate"
           [ngModel]="data.size ? data.size.join(', ') : ''"
           [ngModelOptions]="{ updateOn: 'blur' }"
-          (ngModelChange)="updateSize($event)"
+          (ngModelChange)="data.size = toSize($event)"
         />
       </td>
     </tr>

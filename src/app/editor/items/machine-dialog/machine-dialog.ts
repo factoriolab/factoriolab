@@ -20,6 +20,7 @@ import { DialogData } from '~/components/dialog/dialog';
 import { Select } from '~/components/select/select';
 import { EnergyType } from '~/data/schema/energy-type';
 import { MachineJson } from '~/data/schema/machine';
+import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
@@ -31,12 +32,18 @@ import {
   QuantitiesDialogData,
 } from '../../components/quantities-dialog/quantities-dialog';
 import { EditorData } from '../../editor.types';
-import { moduleEffectOptions, toNullableNumeric } from '../../object-utils';
+import {
+  moduleEffectOptions,
+  toNullableNumeric,
+  toSize,
+} from '../../object-utils';
 import { SiloDialog } from '../silo-dialog/silo-dialog';
+import { BaseEffectDialog } from './base-effect-dialog/base-effect-dialog';
 
 export interface MachineDialogData {
   machine: MachineJson;
   fuelOptions: Option<string | undefined>[];
+  locationOptions: Option[];
   edit: EditorData;
 }
 
@@ -76,6 +83,7 @@ export class MachineDialog implements DialogData {
   readonly header = 'editor.editMachine';
   protected readonly moduleEffectOptions = moduleEffectOptions;
   protected readonly toNullableNumeric = toNullableNumeric;
+  protected readonly toSize = toSize;
 
   updateFuelCategories(value: string): void {
     try {
@@ -124,6 +132,20 @@ export class MachineDialog implements DialogData {
       .closed.subscribe((record) => {
         if (record === null) delete machine.consumption;
         else if (record) machine.consumption = record;
+        this.cd.detectChanges();
+      });
+  }
+
+  editBaseEffect(machine: MachineJson): void {
+    this.dialog
+      .open<
+        Partial<Record<ModuleEffect, number>> | null | undefined,
+        Partial<Record<ModuleEffect, number>>,
+        BaseEffectDialog
+      >(BaseEffectDialog, { data: coalesce(machine.baseEffect, {}) })
+      .closed.subscribe((baseEffect) => {
+        if (baseEffect === null) delete machine.baseEffect;
+        else if (baseEffect) machine.baseEffect = baseEffect;
         this.cd.detectChanges();
       });
   }
