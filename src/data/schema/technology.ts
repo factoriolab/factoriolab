@@ -3,6 +3,8 @@ import { Rational, rational } from '~/rational/rational';
 export interface TechnologyJson {
   prerequisites?: string[];
 
+  /** Default to not reasearched rather than level 1. Unspecified means false */
+  isInfinite?: boolean;
   /** Belt stack size bonus */
   beltStack?: number;
   /** Inserter stack size bonuses */
@@ -24,6 +26,8 @@ export interface TechnologyJson {
 export interface Technology {
   prerequisites?: string[];
 
+  /** Default to not reasearched rather than level 1. Unspecified means false */
+  isInfinite?: boolean;
   /** Belt stack size bonus */
   beltStack?: Rational;
   /** Inserter stack size bonuses */
@@ -52,6 +56,7 @@ export function parseTechnology(
   if (json == null) return;
   return {
     prerequisites: json.prerequisites,
+    isInfinite: json.isInfinite,
     beltStack: rational(json.beltStack),
     inserterStack: json.inserterStack
       ? json.inserterStack.map((eff) => ({

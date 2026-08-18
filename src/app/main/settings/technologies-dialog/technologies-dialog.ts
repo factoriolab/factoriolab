@@ -69,7 +69,13 @@ export class TechnologiesDialog implements DialogData {
     const available: string[] = [];
     const locked: string[] = [];
 
-    let technologyIds = data.technologyIds;
+    // In a sense, infinite technologies cannot be completed. So skip them
+    // entirely from settings as long as we model “researched” as a boolean
+    // set membership rather than an integer level. The corresponding bonuses
+    // have dedicated settings.
+    let technologyIds = data.technologyIds.filter(
+      (i) => !data.technologyRecord[i].isInfinite,
+    );
     if (filter) {
       technologyIds = technologyIds.filter((t) =>
         data.itemRecord[t].name.toLowerCase().includes(filter),
