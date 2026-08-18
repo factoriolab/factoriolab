@@ -14,10 +14,14 @@ const appDataPath =
   process.env['AppData'] ||
   `${process.env['HOME'] ?? ''}/Library/Application Support`;
 const flatpakSteamPath = `${process.env['HOME'] ?? ''}/.var/app/com.valvesoftware.Steam`;
-export const factorioPath = fs.existsSync(flatpakSteamPath)
+const isFlatpak = fs.existsSync(flatpakSteamPath);
+export const factorioPath = isFlatpak
   ? `${flatpakSteamPath}/.factorio`
   : `${appDataPath}/Factorio`;
-export const steamPath = `${process.env['ProgramFiles(x86)'] ?? ''}/Steam/steamapps/common/Factorio`;
+const steamPathBase = isFlatpak
+  ? `${flatpakSteamPath}/data`
+  : (process.env['ProgramFiles(x86)'] ?? '');
+export const steamPath = `${steamPathBase}/Steam/steamapps/common/Factorio`;
 
 export function getLocale(file: string): Locale {
   const path = `${factorioPath}/script-output/${file}`;

@@ -650,9 +650,10 @@ export class SettingsStore extends Store<SettingsState> {
             itemData,
             recipe.flags.has('technology'),
           );
-          const qOut = recipe.flags.has('technology')
-            ? recipe.out
-            : this.qualityRecord(recipe.out, quality, itemData);
+          const qOut =
+            recipe.flags.has('technology') || recipe.flags.has('plant')
+              ? recipe.out
+              : this.qualityRecord(recipe.out, quality, itemData);
           let qCatalyst: Record<string, Rational> | undefined;
           if (recipe.catalyst)
             qCatalyst = this.qualityRecord(recipe.catalyst, quality, itemData);
