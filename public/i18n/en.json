@@ -202,7 +202,8 @@
     "editFluidWagon": "Edit fluid wagon",
     "editTechnology": "Edit technology",
     "editInserterStack": "Edit inserter stack",
-    "editRecipeProductivity": "Edit recipe productivity"
+    "editRecipeProductivity": "Edit recipe productivity",
+    "editInserter": "Edit inserter"
   },
   "error": {
     "deleteCustom": "Delete custom data",

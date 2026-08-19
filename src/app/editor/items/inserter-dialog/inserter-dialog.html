@@ -1,0 +1,91 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <th id="speed-header">{{ 'data.speed' | translate }}</th>
+      <td>
+        <div class="gap-1 flex items-center">
+          <input
+            type="text"
+            aria-labelledby="speed-header"
+            class="input"
+            required
+            [placeholder]="'data.speed' | translate"
+            [ngModel]="data.speed"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="data.speed = toNumeric($event)"
+          />
+          <span class="text-nowrap">°/s</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="stack-size-header">{{ 'data.stackSize' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="stack-size-header"
+          class="input"
+          [placeholder]="'data.stackSize' | translate"
+          [ngModel]="data.stack"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.stack = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="category-header">{{ 'data.category' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="category-header"
+          class="input"
+          [placeholder]="'data.category' | translate"
+          [ngModel]="data.category"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.category = $event || undefined"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="ignores-bonus-header">
+        {{ 'data.inserterIgnoresBonus' | translate }}
+      </th>
+      <td>
+        <div class="flex items-center">
+          <lab-checkbox
+            labelledBy="ignores-bonus-header"
+            [ngModel]="data.ignoresBonus === true"
+            (ngModelChange)="data.ignoresBonus = $event || undefined"
+          >
+          </lab-checkbox>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="complement"
+    [faIcon]="faTrash"
+    [text]="'delete' | translate"
+    (click)="dialogRef.close(null)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

@@ -215,7 +215,18 @@
             ></button>
           </div>
         </td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editInserter' | translate"
+              [color]="model.inserter ? 'brand' : 'gray'"
+              [faIcon]="model.inserter ? faPencil : faPlus"
+              (click)="editInserter(model)"
+            ></button>
+          </div>
+        </td>
         <td>
           <button
             type="button"
@@ -437,7 +448,18 @@
             ></button>
           </div>
         </td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editInserter' | translate"
+              [color]="item.inserter ? 'brand' : 'gray'"
+              [faIcon]="item.inserter ? faPencil : faPlus"
+              (click)="editInserter(item)"
+            ></button>
+          </div>
+        </td>
         <td>
           <button
             type="button"

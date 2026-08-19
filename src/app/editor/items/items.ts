@@ -31,6 +31,7 @@ import { BeltJson } from '~/data/schema/belt';
 import { CargoWagonJson } from '~/data/schema/cargo-wagon';
 import { FluidWagonJson } from '~/data/schema/fluid-wagon';
 import { FuelJson } from '~/data/schema/fuel';
+import { InserterJson } from '~/data/schema/inserter';
 import { ItemJson } from '~/data/schema/item';
 import { MachineJson } from '~/data/schema/machine';
 import { ModuleJson } from '~/data/schema/module';
@@ -46,6 +47,7 @@ import { BeltDialog, BeltDialogData } from './belt-dialog/belt-dialog';
 import { CargoWagonDialog } from './cargo-wagon-dialog/cargo-wagon-dialog';
 import { FluidWagonDialog } from './fluid-wagon-dialog/fluid-wagon-dialog';
 import { FuelDialog, FuelDialogData } from './fuel-dialog/fuel-dialog';
+import { InserterDialog } from './inserter-dialog/inserter-dialog';
 import {
   MachineDialog,
   MachineDialogData,
@@ -236,6 +238,20 @@ export class Items extends EditorTab {
       .closed.subscribe((technology) => {
         if (technology === null) delete item.technology;
         else if (technology) item.technology = technology;
+        this.forceDetect();
+      });
+  }
+
+  editInserter(item: ItemJson): void {
+    this.dialog
+      .open<
+        InserterJson | null | undefined,
+        InserterJson,
+        InserterDialog
+      >(InserterDialog, { data: coalesce(item.inserter, { speed: 1 }) })
+      .closed.subscribe((inserter) => {
+        if (inserter === null) delete item.inserter;
+        else if (inserter) item.inserter = inserter;
         this.forceDetect();
       });
   }
