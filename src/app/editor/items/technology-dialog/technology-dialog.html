@@ -1,0 +1,206 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <th id="prerequisites-header">{{ 'data.prerequisites' | translate }}</th>
+      <td>
+        <lab-select
+          class="w-full"
+          labelledBy="prerequisites-header"
+          [options]="data.prerequisiteOptions"
+          [ngModel]="data.technology.prerequisites ?? []"
+          (ngModelChange)="
+            data.technology.prerequisites = $event.length ? $event : undefined
+          "
+        >
+          @if (data.technology.prerequisites) {
+            @for (
+              prerequisite of data.technology.prerequisites;
+              track prerequisite
+            ) {
+              @let option = prerequisite | option: data.prerequisiteOptions;
+              @if (option && option.icon) {
+                <lab-icon
+                  [value]="option.icon"
+                  type="img"
+                  [class]="option.iconClass"
+                  [iconText]="option.iconText"
+                >
+                </lab-icon>
+              } @else {
+                <span>{{ prerequisite }}</span>
+              }
+            }
+          } @else {
+            —
+          }
+        </lab-select>
+      </td>
+    </tr>
+    <tr>
+      <th id="belt-stack-header">{{ 'data.beltStack' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="belt-stack-header"
+          class="input"
+          [placeholder]="'data.beltStack' | translate"
+          [ngModel]="data.technology.beltStack"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="
+            data.technology.beltStack = toNullableNumeric($event)
+          "
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="inserter-stack-header">{{ 'data.inserterStack' | translate }}</th>
+      <td>
+        <button
+          type="button"
+          labButton
+          [attr.aria-label]="'editor.editInserterStack' | translate"
+          [color]="data.technology.inserterStack ? 'brand' : 'gray'"
+          [faIcon]="data.technology.inserterStack ? faPencil : faPlus"
+          (click)="editInserterStack(data.technology)"
+        ></button>
+      </td>
+    </tr>
+    <tr>
+      <th id="mining-productivity-header">
+        {{ 'data.miningProductivity' | translate }}
+      </th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="mining-productivity-header"
+          class="input"
+          [placeholder]="'data.miningProductivity' | translate"
+          [ngModel]="data.technology.miningProductivity"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="
+            data.technology.miningProductivity = toNullableNumeric($event)
+          "
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="unlock-quality-header">{{ 'data.unlockQuality' | translate }}</th>
+      <td>
+        <lab-select
+          class="w-full"
+          labelledBy="unlock-quality-header"
+          [options]="data.qualityOptions"
+          [(ngModel)]="data.technology.qualityUnlock"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="recipe-productivity-header">
+        {{ 'data.recipeProductivity' | translate }}
+      </th>
+      <td>
+        <button
+          type="button"
+          labButton
+          [attr.aria-label]="'editor.editRecipeProductivity' | translate"
+          [color]="data.technology.recipeProductivity ? 'brand' : 'gray'"
+          [faIcon]="data.technology.recipeProductivity ? faPencil : faPlus"
+          (click)="editRecipeProductivity(data.technology)"
+        ></button>
+      </td>
+    </tr>
+    <tr>
+      <th id="unlock-recipe-header">{{ 'data.unlockRecipe' | translate }}</th>
+      <td>
+        <lab-select
+          class="w-full"
+          labelledBy="unlock-recipe-header"
+          [options]="data.recipeOptions"
+          [ngModel]="data.technology.recipeUnlock ?? []"
+          (ngModelChange)="
+            data.technology.recipeUnlock = $event.length ? $event : undefined
+          "
+        >
+          @if (data.technology.recipeUnlock) {
+            @for (unlock of data.technology.recipeUnlock; track unlock) {
+              @let option = unlock | option: data.recipeOptions;
+              @if (option && option.icon) {
+                <lab-icon
+                  [value]="option.icon"
+                  type="img"
+                  [class]="option.iconClass"
+                  [iconText]="option.iconText"
+                >
+                </lab-icon>
+              } @else {
+                <span>{{ unlock }}</span>
+              }
+            }
+          } @else {
+            —
+          }
+        </lab-select>
+      </td>
+    </tr>
+    <tr>
+      <th id="research-productivity-header">
+        {{ 'data.researchProductivity' | translate }}
+      </th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="research-productivity-header"
+          class="input"
+          [placeholder]="'data.researchProductivity' | translate"
+          [ngModel]="data.technology.researchProductivity"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="
+            data.technology.researchProductivity = toNullableNumeric($event)
+          "
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="research-speed-header">{{ 'data.researchSpeed' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="research-speed-header"
+          class="input"
+          [placeholder]="'data.researchSpeed' | translate"
+          [ngModel]="data.technology.researchSpeed"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="
+            data.technology.researchSpeed = toNullableNumeric($event)
+          "
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="complement"
+    [faIcon]="faTrash"
+    [text]="'delete' | translate"
+    (click)="dialogRef.close(null)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data.technology)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

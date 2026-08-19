@@ -199,7 +199,10 @@
     "editModule": "Edit module",
     "editFuel": "Edit fuel",
     "editCargoWagon": "Edit cargo wagon",
-    "editFluidWagon": "Edit fluid wagon"
+    "editFluidWagon": "Edit fluid wagon",
+    "editTechnology": "Edit technology",
+    "editInserterStack": "Edit inserter stack",
+    "editRecipeProductivity": "Edit recipe productivity"
   },
   "error": {
     "deleteCustom": "Delete custom data",

@@ -1,7 +1,7 @@
 <table class="lab-table">
   <tbody>
     <tr>
-      <td id="parts-header">{{ 'data.rocketPartsRequired' | translate }}</td>
+      <th id="parts-header">{{ 'data.rocketPartsRequired' | translate }}</th>
       <td>
         <input
           type="text"
@@ -16,7 +16,7 @@
       </td>
     </tr>
     <tr>
-      <td id="launch-header">{{ 'editor.rocketLaunchTime' | translate }}</td>
+      <th id="launch-header">{{ 'editor.rocketLaunchTime' | translate }}</th>
       <td>
         <input
           type="text"
@@ -31,7 +31,7 @@
       </td>
     </tr>
     <tr>
-      <td id="buffered-header">{{ 'data.buffered' | translate }}</td>
+      <th id="buffered-header">{{ 'data.buffered' | translate }}</th>
       <td>
         <lab-checkbox
           [ngModel]="data.buffered === true"

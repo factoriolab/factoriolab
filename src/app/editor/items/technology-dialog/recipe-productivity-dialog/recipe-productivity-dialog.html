@@ -1,7 +1,7 @@
 <table class="lab-table">
   <thead>
     <tr>
-      <th id="effect-header">{{ 'editor.effect' | translate }}</th>
+      <th id="recipe-header">{{ 'data.recipe' | translate }}</th>
       <th id="value-header">{{ 'data.value' | translate }}</th>
       <th></th>
     </tr>
@@ -9,14 +9,11 @@
   <tbody>
     <tr>
       <td>
-        <div class="flex items-center">
-          <lab-select
-            labelledBy="effect-header"
-            class="w-full"
-            [options]="effectOptions"
-            [(ngModel)]="model.key"
-          />
-        </div>
+        <lab-select
+          class="w-full"
+          [options]="data.recipeOptions"
+          [(ngModel)]="model.id"
+        />
       </td>
       <td>
         <input
@@ -35,22 +32,18 @@
           [faIcon]="faFloppyDisk"
           color="brand"
           [aria-label]="'save' | translate"
-          (click)="data[model.key] = model.value"
+          (click)="add()"
         ></button>
       </td>
     </tr>
-    @for (kv of data | keyvalue; track kv.key) {
+    @for (entry of data.recipeProductivity; track $index; let index = $index) {
       <tr>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="effect-header"
-              class="w-full"
-              [options]="effectOptions"
-              [ngModel]="kv.key"
-              (ngModelChange)="updateKey($any(kv.key), $event)"
-            />
-          </div>
+          <lab-select
+            class="w-full"
+            [options]="data.recipeOptions"
+            [(ngModel)]="entry.id"
+          />
         </td>
         <td>
           <input
@@ -59,9 +52,7 @@
             class="input"
             size="3"
             [placeholder]="'data.value' | translate"
-            [ngModel]="kv.value"
-            [ngModelOptions]="{ updateOn: 'blur' }"
-            (ngModelChange)="$any(data)[kv.key] = $event"
+            [(ngModel)]="entry.value"
           />
         </td>
         <td>
@@ -71,7 +62,7 @@
             [faIcon]="faTrash"
             color="complement"
             [aria-label]="'delete' | translate"
-            (click)="remove($any(kv.key))"
+            (click)="remove(index)"
           ></button>
         </td>
       </tr>
@@ -94,7 +85,7 @@
     color="brand"
     [faIcon]="faFloppyDisk"
     [text]="'save' | translate"
-    (click)="dialogRef.close(data)"
+    (click)="dialogRef.close(data.recipeProductivity)"
   ></button>
   <button
     type="button"

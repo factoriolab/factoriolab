@@ -44,6 +44,7 @@ export class Icon {
   readonly type = input<IconType>();
   readonly text = input<string>();
   readonly alt = input<string>();
+  readonly iconText = input<string>();
   readonly full = input<boolean>(false);
 
   protected readonly zoom = zoom;
@@ -67,7 +68,7 @@ export class Icon {
   protected readonly src = computed(() => {
     const value = this.value();
     const type = this.type();
-    if (typeof value === 'string' || type === 'img') return value;
+    if (typeof value === 'string' && type === 'img') return value;
     return undefined;
   });
 }

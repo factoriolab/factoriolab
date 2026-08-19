@@ -203,13 +203,25 @@
             ></button>
           </div>
         </td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editTechnology' | translate"
+              [color]="model.technology ? 'brand' : 'gray'"
+              [faIcon]="model.technology ? faPencil : faPlus"
+              (click)="editTechnology(model)"
+            ></button>
+          </div>
+        </td>
         <td></td>
         <td>
           <button
             type="button"
             labButton
             [faIcon]="faFloppyDisk"
+            color="brand"
             [aria-label]="'save' | translate"
             (click)="add()"
           ></button>
@@ -413,13 +425,25 @@
             ></button>
           </div>
         </td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labButton
+              [attr.aria-label]="'editor.editTechnology' | translate"
+              [color]="item.technology ? 'brand' : 'gray'"
+              [faIcon]="item.technology ? faPencil : faPlus"
+              (click)="editTechnology(item)"
+            ></button>
+          </div>
+        </td>
         <td></td>
         <td>
           <button
             type="button"
             labButton
             [faIcon]="faTrash"
+            color="complement"
             [aria-label]="'delete' | translate"
             (click)="remove(item.id)"
           ></button>

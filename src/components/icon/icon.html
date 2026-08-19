@@ -1,5 +1,6 @@
 @let _faIcon = faIcon();
 @let _src = src();
+@let _icon = icon();
 @if (icon(); as _icon) {
   <span
     class="size-16 absolute origin-top-left"
@@ -19,17 +20,17 @@
       [full]="full()"
     ></lab-icon>
   }
-
-  @if (_icon.text; as text) {
-    <span
-      class="top-0 left-0 text-sm/3.5 font-semibold text-white text-shadow-black pointer-events-none absolute select-none text-shadow-solid"
-      >{{ text }}</span
-    >
-  }
 } @else if (_faIcon) {
   <fa-icon [icon]="_faIcon" class="size-8" size="xl"></fa-icon>
 } @else if (_src) {
   <img class="w-8" [src]="_src" [alt]="alt()" />
+}
+
+@if (_icon?.text ?? iconText(); as text) {
+  <span
+    class="top-0 left-0 text-sm/3.5 font-semibold text-white text-shadow-black pointer-events-none absolute select-none text-shadow-solid"
+    >{{ text }}</span
+  >
 }
 
 @if (alt(); as text) {

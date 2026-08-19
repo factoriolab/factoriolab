@@ -34,12 +34,13 @@ import { FuelJson } from '~/data/schema/fuel';
 import { ItemJson } from '~/data/schema/item';
 import { MachineJson } from '~/data/schema/machine';
 import { ModuleJson } from '~/data/schema/module';
+import { TechnologyJson } from '~/data/schema/technology';
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
 import { EditorTab } from '../editor-tab';
-import { emptyItem } from '../object-utils';
+import { emptyItem, toOptions } from '../object-utils';
 import { BeaconDialog } from './beacon-dialog/beacon-dialog';
 import { BeltDialog, BeltDialogData } from './belt-dialog/belt-dialog';
 import { CargoWagonDialog } from './cargo-wagon-dialog/cargo-wagon-dialog';
@@ -50,6 +51,10 @@ import {
   MachineDialogData,
 } from './machine-dialog/machine-dialog';
 import { ModuleDialog, ModuleDialogData } from './module-dialog/module-dialog';
+import {
+  TechnologyDialog,
+  TechnologyDialogData,
+} from './technology-dialog/technology-dialog';
 
 @Component({
   selector: 'lab-items',
@@ -72,16 +77,7 @@ export class Items extends EditorTab {
 
   protected readonly categoryOptions = computed(() => {
     const { data, icons } = this.edit();
-    return data.categories
-      .map(
-        (c): Option => ({
-          label: c.name,
-          value: c.id,
-          icon: icons[c.icon ?? c.id]?.url,
-          iconType: 'img',
-        }),
-      )
-      .sort((a, b) => a.label.localeCompare(b.label));
+    return toOptions(data.categories, icons);
   });
 
   protected readonly faGrip = faGrip;
@@ -138,27 +134,12 @@ export class Items extends EditorTab {
   editMachine(item: ItemJson): void {
     const edit = this.edit();
     const { data, icons } = edit;
-    const fuelOptions: Option<string | undefined>[] = [
-      { label: 'none', value: undefined },
-    ];
-    for (const item of data.items) {
-      if (item.fuel) {
-        fuelOptions.push({
-          label: item.name,
-          value: item.id,
-          icon: icons[item.icon ?? item.id]?.url,
-          iconType: 'img',
-        });
-      }
-    }
-    const locationOptions = coalesce(data.locations, []).map(
-      (l): Option => ({
-        label: l.name,
-        value: l.id,
-        icon: icons[l.icon ?? l.id]?.url,
-        iconType: 'img',
-      }),
+    const fuelOptions = toOptions(
+      data.items.filter((i) => i.fuel),
+      icons,
+      true,
     );
+    const locationOptions = toOptions(coalesce(data.locations, []), icons);
     this.dialog
       .open<
         MachineJson | null | undefined,
@@ -180,17 +161,7 @@ export class Items extends EditorTab {
     for (const limitation of Object.keys(coalesce(data.limitations, {}))) {
       limitationOptions.push({ label: limitation, value: limitation });
     }
-    const itemOptions: Option<string | undefined>[] = [
-      { label: 'none', value: undefined },
-    ];
-    for (const item of data.items) {
-      itemOptions.push({
-        label: item.name,
-        value: item.id,
-        icon: icons[item.icon ?? item.id]?.url,
-        iconType: 'img',
-      });
-    }
+    const itemOptions = toOptions(data.items, icons, true);
     this.dialog
       .open<
         ModuleJson | null | undefined,
@@ -206,17 +177,7 @@ export class Items extends EditorTab {
 
   editFuel(item: ItemJson): void {
     const { data, icons } = this.edit();
-    const itemOptions: Option<string | undefined>[] = [
-      { label: 'none', value: undefined },
-    ];
-    for (const item of data.items) {
-      itemOptions.push({
-        label: item.name,
-        value: item.id,
-        icon: icons[item.icon ?? item.id]?.url,
-        iconType: 'img',
-      });
-    }
+    const itemOptions = toOptions(data.items, icons, true);
     this.dialog
       .open<
         FuelJson | null | undefined,
@@ -254,6 +215,27 @@ export class Items extends EditorTab {
       .closed.subscribe((fluidWagon) => {
         if (fluidWagon === null) delete item.fluidWagon;
         else if (fluidWagon) item.fluidWagon = fluidWagon;
+        this.forceDetect();
+      });
+  }
+
+  editTechnology(item: ItemJson): void {
+    const { data, icons } = this.edit();
+    const prerequisiteOptions = toOptions(
+      data.items.filter((i) => i.technology),
+      icons,
+    );
+    const qualityOptions = toOptions(coalesce(data.qualities, []), icons);
+    const recipeOptions = toOptions(data.recipes, icons);
+    this.dialog
+      .open<
+        TechnologyJson | null | undefined,
+        TechnologyDialogData,
+        TechnologyDialog
+      >(TechnologyDialog, { data: { technology: coalesce(item.technology, {}), prerequisiteOptions, qualityOptions, recipeOptions } })
+      .closed.subscribe((technology) => {
+        if (technology === null) delete item.technology;
+        else if (technology) item.technology = technology;
         this.forceDetect();
       });
   }

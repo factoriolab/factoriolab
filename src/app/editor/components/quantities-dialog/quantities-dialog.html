@@ -35,6 +35,7 @@
           type="button"
           labButton
           [faIcon]="faFloppyDisk"
+          color="brand"
           [aria-label]="'save' | translate"
           (click)="data.record[model.key] = model.value"
         ></button>
@@ -70,6 +71,7 @@
             type="button"
             labButton
             [faIcon]="faTrash"
+            color="complement"
             [aria-label]="'delete' | translate"
             (click)="remove(kv.key)"
           ></button>

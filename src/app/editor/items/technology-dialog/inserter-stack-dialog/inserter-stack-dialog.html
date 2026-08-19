@@ -1,23 +1,13 @@
 <table class="lab-table">
   <thead>
     <tr>
-      <th id="effect-header">{{ 'editor.effect' | translate }}</th>
       <th id="value-header">{{ 'data.value' | translate }}</th>
+      <th id="category-header">{{ 'data.category' | translate }}</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>
-        <div class="flex items-center">
-          <lab-select
-            labelledBy="effect-header"
-            class="w-full"
-            [options]="effectOptions"
-            [(ngModel)]="model.key"
-          />
-        </div>
-      </td>
       <td>
         <input
           type="number"
@@ -29,29 +19,29 @@
         />
       </td>
       <td>
+        <input
+          type="text"
+          aria-labelledby="category-header"
+          class="input"
+          [placeholder]="'data.category' | translate"
+          [ngModel]="model.category"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="model.category = $event || undefined"
+        />
+      </td>
+      <td>
         <button
           type="button"
           labButton
           [faIcon]="faFloppyDisk"
           color="brand"
           [aria-label]="'save' | translate"
-          (click)="data[model.key] = model.value"
+          (click)="add()"
         ></button>
       </td>
     </tr>
-    @for (kv of data | keyvalue; track kv.key) {
+    @for (entry of data; track $index; let index = $index) {
       <tr>
-        <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="effect-header"
-              class="w-full"
-              [options]="effectOptions"
-              [ngModel]="kv.key"
-              (ngModelChange)="updateKey($any(kv.key), $event)"
-            />
-          </div>
-        </td>
         <td>
           <input
             type="number"
@@ -59,9 +49,18 @@
             class="input"
             size="3"
             [placeholder]="'data.value' | translate"
-            [ngModel]="kv.value"
+            [(ngModel)]="entry.value"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="category-header"
+            class="input"
+            [placeholder]="'data.category' | translate"
+            [ngModel]="entry.category"
             [ngModelOptions]="{ updateOn: 'blur' }"
-            (ngModelChange)="$any(data)[kv.key] = $event"
+            (ngModelChange)="entry.category = $event || undefined"
           />
         </td>
         <td>
@@ -71,7 +70,7 @@
             [faIcon]="faTrash"
             color="complement"
             [aria-label]="'delete' | translate"
-            (click)="remove($any(kv.key))"
+            (click)="remove(index)"
           ></button>
         </td>
       </tr>

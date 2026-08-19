@@ -31,6 +31,7 @@
           type="button"
           labButton
           [faIcon]="faFloppyDisk"
+          color="brand"
           [aria-label]="'save' | translate"
           (click)="edit().data.version[model.mod] = model.version"
         ></button>
@@ -63,6 +64,7 @@
             type="button"
             labButton
             [faIcon]="faTrash"
+            color="complement"
             [aria-label]="'delete' | translate"
             (click)="remove(kv.key)"
           ></button>
