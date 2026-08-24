@@ -156,6 +156,13 @@ export class Editor {
       (blob) => {
         if (blob)
           saveAs(new Blob([blob], { type: 'image/webp' }), 'icons.webp');
+
+        const { data } = edit;
+        if (data.limitations && Object.keys(data.limitations).length === 0)
+          delete data.limitations;
+        if (data.locations?.length === 0) delete data.locations;
+        if (data.qualities?.length === 0) delete data.qualities;
+
         saveAs(
           new Blob([JSON.stringify(edit.data)], { type: 'application/json' }),
           'data.json',

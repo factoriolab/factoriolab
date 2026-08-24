@@ -1,0 +1,109 @@
+<table class="lab-table">
+  <thead>
+    <tr>
+      <th id="name-header">{{ 'data.name' | translate }}</th>
+      <th id="recipes-header">{{ 'data.recipes' | translate }}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="name-header"
+          class="input"
+          [placeholder]="'data.name' | translate"
+          [(ngModel)]="model.name"
+        />
+      </td>
+      <td>
+        <div class="flex items-center">
+          @let _recipeOptions = recipeOptions();
+          <lab-select
+            class="w-full"
+            labelledBy="recipes-header"
+            [options]="_recipeOptions"
+            [(ngModel)]="model.recipeIds"
+          >
+            @for (recipeId of model.recipeIds; track recipeId) {
+              @let option = recipeId | option: _recipeOptions;
+              @if (option && option.icon) {
+                <lab-icon
+                  [value]="option.icon"
+                  type="img"
+                  [class]="option.iconClass"
+                  [iconText]="option.iconText"
+                >
+                </lab-icon>
+              } @else {
+                <span>{{ recipeId }}</span>
+              }
+            }
+          </lab-select>
+        </div>
+      </td>
+      <td>
+        <button
+          type="button"
+          labButton
+          [faIcon]="faFloppyDisk"
+          color="brand"
+          [aria-label]="'save' | translate"
+          (click)="limitations()[model.name] = model.recipeIds"
+        ></button>
+      </td>
+    </tr>
+    @for (kv of limitations() | keyvalue; track kv.key) {
+      <tr>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="name-header"
+            class="input"
+            [ngModel]="kv.key"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="updateKey(kv.key, $event)"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            @let _recipeOptions = recipeOptions();
+            <lab-select
+              class="w-full"
+              labelledBy="recipes-header"
+              [options]="_recipeOptions"
+              [ngModel]="kv.value"
+              (ngModelChange)="limitations()[kv.key] = $event"
+            >
+              @for (recipeId of kv.value; track recipeId) {
+                @let option = recipeId | option: _recipeOptions;
+                @if (option && option.icon) {
+                  <lab-icon
+                    [value]="option.icon"
+                    type="img"
+                    [class]="option.iconClass"
+                    [iconText]="option.iconText"
+                  >
+                  </lab-icon>
+                } @else {
+                  <span>{{ recipeId }}</span>
+                }
+              }
+            </lab-select>
+          </div>
+        </td>
+        <td>
+          <button
+            type="button"
+            labButton
+            [faIcon]="faTrash"
+            color="complement"
+            [aria-label]="'delete' | translate"
+            (click)="remove(kv.key)"
+          ></button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
