@@ -19,7 +19,7 @@ const host = cva(
   {
     variants: {
       defined: {
-        true: 'z-1 border-brand-400/75 text-brand-400 outline-brand-400 focus-visible:border-brand-400',
+        true: 'z-1 border-brand-400/75 px-px text-brand-400 outline-brand-400 focus-visible:border-brand-400',
         false:
           'min-w-9 justify-center border-gray-700 text-gray-50 outline-brand-400 focus-visible:border-brand-400',
       },

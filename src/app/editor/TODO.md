@@ -2,8 +2,6 @@
 
 ## TODO
 
-- Items
-  - Inserter
 - Recipes
 - Limitations
 - Locations
@@ -16,3 +14,4 @@
 - Versions
 - Flags
 - Icons
+- Items

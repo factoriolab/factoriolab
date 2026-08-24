@@ -35,6 +35,7 @@ import { EditorData } from '../../editor.types';
 import {
   moduleEffectOptions,
   toNullableNumeric,
+  toOptions,
   toSize,
 } from '../../object-utils';
 import { BaseEffectDialog } from './base-effect-dialog/base-effect-dialog';
@@ -115,20 +116,13 @@ export class MachineDialog implements DialogData {
 
   editConsumption(machine: MachineJson): void {
     const { data, icons } = this.data.edit;
-    const options = data.items.map(
-      (i): Option => ({
-        label: i.name,
-        value: i.id,
-        icon: icons[i.icon ?? i.id]?.url,
-        iconType: 'img',
-      }),
-    );
+    const options = toOptions(data.items, icons);
     this.dialog
       .open<
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: coalesce(machine.consumption, {}), options, header: 'editor.editConsumption' } })
+      >(QuantitiesDialog, { data: { record: coalesce(machine.consumption, {}), options, header: 'editor.editConsumption', optional: true } })
       .closed.subscribe((record) => {
         if (record === null) delete machine.consumption;
         else if (record) machine.consumption = record;

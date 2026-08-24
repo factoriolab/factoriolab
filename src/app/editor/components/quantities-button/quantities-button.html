@@ -3,10 +3,12 @@
     @if (edit().icons[kv.key]?.url; as url) {
       <lab-icon
         [value]="url"
-        iconType="img"
+        type="img"
         [text]="kv.value?.toString()"
       ></lab-icon>
     }
+  } @empty {
+    <fa-icon class="px-1.5" [icon]="faPlus"></fa-icon>
   }
 } @else {
   <fa-icon [icon]="faPlus"></fa-icon>

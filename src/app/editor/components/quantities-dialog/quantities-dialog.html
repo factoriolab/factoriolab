@@ -82,14 +82,16 @@
 </table>
 
 <div class="gap-1 sm:gap-2 flex justify-end">
-  <button
-    type="button"
-    labButton
-    color="complement"
-    [faIcon]="faTrash"
-    [text]="'delete' | translate"
-    (click)="dialogRef.close(null)"
-  ></button>
+  @if (data.optional) {
+    <button
+      type="button"
+      labButton
+      color="complement"
+      [faIcon]="faTrash"
+      [text]="'delete' | translate"
+      (click)="dialogRef.close(null)"
+    ></button>
+  }
   <button
     type="button"
     labButton

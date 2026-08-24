@@ -203,7 +203,10 @@
     "editTechnology": "Edit technology",
     "editInserterStack": "Edit inserter stack",
     "editRecipeProductivity": "Edit recipe productivity",
-    "editInserter": "Edit inserter"
+    "editInserter": "Edit inserter",
+    "editIngredients": "Edit ingredients",
+    "editProducts": "Edit products",
+    "editCatalysts": "Edit catalysts"
   },
   "error": {
     "deleteCustom": "Delete custom data",

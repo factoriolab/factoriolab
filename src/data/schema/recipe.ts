@@ -25,9 +25,9 @@ export interface RecipeJson {
   category: string;
   row: number;
   time: number | string;
-  producers?: string[];
   in: Partial<Record<string, number | string>>;
   out: Partial<Record<string, number | string>>;
+  producers?: string[];
   /** Denotes amount of output that is not affected by productivity */
   catalyst?: Partial<Record<string, number | string>>;
   cost?: number | string;
@@ -50,9 +50,9 @@ export interface Recipe {
   category: string;
   row: number;
   time: Rational;
-  producers?: string[];
   in: Partial<Record<string, Rational>>;
   out: Partial<Record<string, Rational>>;
+  producers?: string[];
   /** Denotes amount of output that is not affected by productivity */
   catalyst?: Partial<Record<string, Rational>>;
   cost?: Rational;

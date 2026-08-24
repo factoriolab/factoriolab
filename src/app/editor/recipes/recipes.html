@@ -1,0 +1,561 @@
+<cdk-virtual-scroll-viewport itemSize="49" class="h-full">
+  <table class="lab-table lab-table-static">
+    <thead>
+      <tr>
+        <th></th>
+        <th id="id-header">{{ 'editor.id' | translate }}</th>
+        <th id="name-header">{{ 'data.name' | translate }}</th>
+        <th id="icon-header">{{ 'editor.icon' | translate }}</th>
+        <th id="icon-text-header">{{ 'editor.iconText' | translate }}</th>
+        <th id="category-header">{{ 'data.category' | translate }}</th>
+        <th id="row-header">{{ 'editor.row' | translate }}</th>
+        <th id="time-header">{{ 'data.time' | translate }}</th>
+        <th id="in-header">{{ 'data.ingredients' | translate }}</th>
+        <th id="out-header">{{ 'data.products' | translate }}</th>
+        <th id="producers-header">{{ 'data.producers' | translate }}</th>
+        <th id="catalyst-header">{{ 'data.catalysts' | translate }}</th>
+        <th id="cost-header">{{ 'data.cost' | translate }}</th>
+        <th id="part-header">{{ 'data.rocketPart' | translate }}</th>
+        <th id="usage-header">{{ 'data.energyConsumption' | translate }}</th>
+        <th id="disallowed-effects-header">
+          {{ 'data.disallowedEffects' | translate }}
+        </th>
+        <th id="locations-header">{{ 'data.locations' | translate }}</th>
+        <th id="flags-header">{{ 'data.flags' | translate }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+      <tr>
+        <td></td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="id-header"
+            class="input"
+            [placeholder]="'editor.id' | translate"
+            [(ngModel)]="model.id"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="name-header"
+            class="input"
+            [placeholder]="'data.name' | translate"
+            [(ngModel)]="model.name"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="icon-header"
+              [options]="iconOptions()"
+              [iconOnly]="true"
+              [(ngModel)]="model.icon"
+            ></lab-select>
+          </div>
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="icon-text-header"
+            class="input"
+            size="2"
+            [placeholder]="'editor.iconText' | translate"
+            [(ngModel)]="model.iconText"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="category-header"
+              [options]="categoryOptions()"
+              [iconOnly]="true"
+              [(ngModel)]="model.category"
+            ></lab-select>
+          </div>
+        </td>
+        <td>
+          <input
+            type="number"
+            aria-labelledby="row-header"
+            class="input"
+            size="2"
+            [placeholder]="'editor.row' | translate"
+            [(ngModel)]="model.row"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="time-header"
+            class="input"
+            size="3"
+            [placeholder]="'data.time' | translate"
+            [ngModel]="model.time"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="model.time = toNumeric($event)"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labQuantitiesButton
+              [edit]="edit()"
+              [record]="model.in"
+              [attr.aria-label]="'editor.editIngredients' | translate"
+              (click)="editIngredients(model)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labQuantitiesButton
+              [edit]="edit()"
+              [record]="model.out"
+              [attr.aria-label]="'editor.editProducts' | translate"
+              (click)="editProducts(model)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="producers-header"
+              [options]="producerOptions()"
+              [iconOnly]="true"
+              [ngModel]="model.producers ?? []"
+              (ngModelChange)="
+                model.producers = $event.length ? $event : undefined
+              "
+            >
+              @if (model.producers) {
+                @for (producer of model.producers; track producer) {
+                  @let option = producer | option: producerOptions();
+                  @if (option && option.icon) {
+                    <lab-icon
+                      [value]="option.icon"
+                      type="img"
+                      [class]="option.iconClass"
+                      [iconText]="option.iconText"
+                    >
+                    </lab-icon>
+                  } @else {
+                    <span>{{ producer }}</span>
+                  }
+                }
+              } @else {
+                —
+              }
+            </lab-select>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labQuantitiesButton
+              [edit]="edit()"
+              [record]="model.catalyst"
+              [attr.aria-label]="'editor.editCatalysts' | translate"
+              (click)="editCatalysts(model)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="cost-header"
+            class="input"
+            size="5"
+            [placeholder]="'data.cost' | translate"
+            [ngModel]="model.cost"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="model.cost = toNullableNumeric($event)"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="part-header"
+              [options]="recipeOptions()"
+              [iconOnly]="true"
+              [ngModel]="model.part"
+              (ngModelChange)="model.part = $event || undefined"
+            />
+          </div>
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="usage-header"
+            class="input"
+            size="4"
+            [placeholder]="'data.energyConsumption' | translate"
+            [ngModel]="model.usage"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="model.usage = toNullableNumeric($event)"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="disallowed-effects-header"
+              [options]="moduleEffectOptions"
+              [ngModel]="model.disallowedEffects ?? []"
+              (ngModelChange)="
+                model.disallowedEffects = $event.length ? $event : undefined
+              "
+            >
+              @if (model.disallowedEffects?.length) {
+                <span>{{ model.disallowedEffects.join(', ') }}</span>
+              } @else {
+                —
+              }
+            </lab-select>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="locations-header"
+              [options]="locationOptions()"
+              [ngModel]="model.locations ?? []"
+              (ngModelChange)="
+                model.locations = $event.length ? $event : undefined
+              "
+            >
+              @if (model.locations) {
+                @for (location of model.locations; track location) {
+                  @let option = location | option: locationOptions();
+                  @if (option && option.icon) {
+                    <lab-icon
+                      [value]="option.icon"
+                      type="img"
+                      [class]="option.iconClass"
+                      [iconText]="option.iconText"
+                    >
+                    </lab-icon>
+                  } @else {
+                    <span>{{ location }}</span>
+                  }
+                }
+              } @else {
+                —
+              }
+            </lab-select>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="flags-header"
+              [options]="recipeFlagOptions"
+              [ngModel]="model.flags ?? []"
+              (ngModelChange)="model.flags = $event.length ? $event : undefined"
+            >
+              @if (model.flags?.length) {
+                <span>{{ model.flags.join(', ') }}</span>
+              } @else {
+                —
+              }
+            </lab-select>
+          </div>
+        </td>
+        <td>
+          <button
+            type="button"
+            labButton
+            [faIcon]="faFloppyDisk"
+            color="brand"
+            [aria-label]="'save' | translate"
+            (click)="add()"
+          ></button>
+        </td>
+      </tr>
+      <tr
+        *cdkVirtualFor="let recipe of edit().data.recipes; trackBy: trackByFn"
+        cdkDrag
+        cdkDragLockAxis="y"
+      >
+        <td
+          cdkDragHandle
+          class="cursor-grab hover:bg-gray-800 active:cursor-grabbing"
+        >
+          <fa-icon [icon]="faGrip"></fa-icon>
+          <ng-container *cdkDragPreview>
+            <div
+              class="gap-2 rounded-xs p-2 flex items-center border border-gray-700 bg-gray-900"
+            >
+              <fa-icon [icon]="faGrip"></fa-icon>
+              <img
+                class="w-8"
+                [src]="edit().icons[recipe.icon ?? recipe.id]?.url"
+                [alt]="recipe.name"
+              />
+              <span>{{ recipe.name }}</span>
+            </div>
+          </ng-container>
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="id-header"
+            class="input"
+            [placeholder]="'editor.id' | translate"
+            [ngModel]="recipe.id"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="updateId(recipe, $event)"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="name-header"
+            class="input"
+            [placeholder]="'data.name' | translate"
+            [(ngModel)]="recipe.name"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="icon-header"
+              [options]="iconOptions()"
+              [iconOnly]="true"
+              [ngModel]="recipe.icon ?? recipe.id"
+              (ngModelChange)="
+                recipe.icon = $event === recipe.id ? undefined : $event
+              "
+            ></lab-select>
+          </div>
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="icon-text-header"
+            class="input"
+            size="2"
+            [placeholder]="'editor.iconText' | translate"
+            [(ngModel)]="recipe.iconText"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              [options]="categoryOptions()"
+              [iconOnly]="true"
+              [(ngModel)]="recipe.category"
+            ></lab-select>
+          </div>
+        </td>
+        <td>
+          <input
+            type="number"
+            aria-labelledby="row-header"
+            class="input"
+            size="2"
+            [placeholder]="'editor.row' | translate"
+            [(ngModel)]="recipe.row"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="time-header"
+            class="input"
+            size="4"
+            [placeholder]="'data.time' | translate"
+            [ngModel]="recipe.time"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="recipe.time = toNumeric($event)"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labQuantitiesButton
+              [edit]="edit()"
+              [record]="recipe.in"
+              [attr.aria-label]="'editor.editIngredients' | translate"
+              (click)="editIngredients(recipe)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labQuantitiesButton
+              [edit]="edit()"
+              [record]="recipe.out"
+              [attr.aria-label]="'editor.editProducts' | translate"
+              (click)="editProducts(recipe)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="producers-header"
+              [options]="producerOptions()"
+              [iconOnly]="true"
+              [ngModel]="recipe.producers ?? []"
+              (ngModelChange)="
+                recipe.producers = $event.length ? $event : undefined
+              "
+            >
+              @if (recipe.producers) {
+                @for (producer of recipe.producers; track producer) {
+                  @let option = producer | option: producerOptions();
+                  @if (option && option.icon) {
+                    <lab-icon
+                      [value]="option.icon"
+                      type="img"
+                      [class]="option.iconClass"
+                      [iconText]="option.iconText"
+                    >
+                    </lab-icon>
+                  } @else {
+                    <span>{{ producer }}</span>
+                  }
+                }
+              } @else {
+                —
+              }
+            </lab-select>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <button
+              type="button"
+              labQuantitiesButton
+              [edit]="edit()"
+              [record]="recipe.catalyst"
+              [attr.aria-label]="'editor.editCatalysts' | translate"
+              (click)="editCatalysts(recipe)"
+            ></button>
+          </div>
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="cost-header"
+            class="input"
+            size="5"
+            [placeholder]="'data.cost' | translate"
+            [ngModel]="recipe.cost"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="recipe.cost = toNullableNumeric($event)"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="part-header"
+              [options]="recipeOptions()"
+              [iconOnly]="true"
+              [ngModel]="recipe.part"
+              (ngModelChange)="recipe.part = $event || undefined"
+            />
+          </div>
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="usage-header"
+            class="input"
+            size="4"
+            [placeholder]="'data.energyConsumption' | translate"
+            [ngModel]="recipe.usage"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="recipe.usage = toNullableNumeric($event)"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="disallowed-effects-header"
+              [options]="moduleEffectOptions"
+              [ngModel]="recipe.disallowedEffects ?? []"
+              (ngModelChange)="
+                recipe.disallowedEffects = $event.length ? $event : undefined
+              "
+            >
+              @if (recipe.disallowedEffects?.length) {
+                <span>{{ recipe.disallowedEffects.join(', ') }}</span>
+              } @else {
+                —
+              }
+            </lab-select>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="locations-header"
+              [options]="locationOptions()"
+              [ngModel]="recipe.locations ?? []"
+              (ngModelChange)="
+                recipe.locations = $event.length ? $event : undefined
+              "
+            >
+              @if (recipe.locations) {
+                @for (location of recipe.locations; track location) {
+                  @let option = location | option: locationOptions();
+                  @if (option && option.icon) {
+                    <lab-icon
+                      [value]="option.icon"
+                      type="img"
+                      [class]="option.iconClass"
+                      [iconText]="option.iconText"
+                    >
+                    </lab-icon>
+                  } @else {
+                    <span>{{ location }}</span>
+                  }
+                }
+              } @else {
+                —
+              }
+            </lab-select>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="flags-header"
+              [options]="recipeFlagOptions"
+              [ngModel]="recipe.flags ?? []"
+              (ngModelChange)="
+                recipe.flags = $event.length ? $event : undefined
+              "
+            >
+              @if (recipe.flags?.length) {
+                <span>{{ recipe.flags.join(', ') }}</span>
+              } @else {
+                —
+              }
+            </lab-select>
+          </div>
+        </td>
+        <td>
+          <button
+            type="button"
+            labButton
+            [faIcon]="faTrash"
+            color="complement"
+            [aria-label]="'delete' | translate"
+            (click)="remove(recipe.id)"
+          ></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</cdk-virtual-scroll-viewport>

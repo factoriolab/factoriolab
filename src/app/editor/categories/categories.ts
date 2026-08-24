@@ -20,10 +20,11 @@ import {
 
 import { Button } from '~/components/button/button';
 import { Select } from '~/components/select/select';
-import { Category, CategoryJson } from '~/data/schema/category';
+import { CategoryJson } from '~/data/schema/category';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { EditorTab } from '../editor-tab';
+import { emptyBase } from '../object-utils';
 
 @Component({
   selector: 'lab-categories',
@@ -42,20 +43,15 @@ export class Categories extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
 
   protected readonly faGrip = faGrip;
-  protected readonly model: Category = {
-    id: '',
-    name: '',
-    icon: undefined,
-    iconText: undefined,
-  };
+  protected model = emptyBase();
 
   add(): void {
-    this.edit().data.categories.push({
-      id: this.model.id,
-      name: this.model.name,
-      icon: this.model.icon || undefined,
-      iconText: this.model.iconText || undefined,
-    });
+    const { data } = this.edit();
+    const categories = [...data.categories];
+    categories.push(this.model);
+    data.categories = categories;
+    this.model = emptyBase();
+    this.cd.detectChanges();
   }
 
   drop(event: CdkDragDrop<unknown>): void {

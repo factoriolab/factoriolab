@@ -23,6 +23,10 @@ export const routes: Routes = [
     loadComponent: () => import('./items/items').then((c) => c.Items),
   },
   {
+    path: 'recipes',
+    loadComponent: () => import('./recipes/recipes').then((c) => c.Recipes),
+  },
+  {
     path: '**',
     redirectTo: 'version',
   },

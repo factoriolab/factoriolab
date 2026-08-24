@@ -1,10 +1,20 @@
 import { BaseJson } from '~/data/schema/base';
 import { ItemJson } from '~/data/schema/item';
 import { ModuleEffect } from '~/data/schema/module';
+import { RecipeJson } from '~/data/schema/recipe';
 import { Option } from '~/option/option';
 import { coalesce } from '~/utils/nullish';
 
 import { IconFileInfo } from './editor.types';
+
+export function emptyBase(): BaseJson {
+  return {
+    id: '',
+    name: '',
+    icon: undefined,
+    iconText: undefined,
+  };
+}
 
 export function emptyItem(): ItemJson {
   return {
@@ -14,6 +24,20 @@ export function emptyItem(): ItemJson {
     iconText: undefined,
     category: '',
     row: 0,
+  };
+}
+
+export function emptyRecipe(): RecipeJson {
+  return {
+    id: '',
+    name: '',
+    icon: undefined,
+    iconText: undefined,
+    category: '',
+    row: 0,
+    time: 1,
+    in: {},
+    out: {},
   };
 }
 
