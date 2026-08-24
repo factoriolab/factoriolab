@@ -32,6 +32,11 @@ export const routes: Routes = [
       import('./limitations/limitations').then((c) => c.Limitations),
   },
   {
+    path: 'locations',
+    loadComponent: () =>
+      import('./locations/locations').then((c) => c.Locations),
+  },
+  {
     path: '**',
     redirectTo: 'version',
   },
