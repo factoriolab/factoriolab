@@ -206,7 +206,8 @@
     "editInserter": "Edit inserter",
     "editIngredients": "Edit ingredients",
     "editProducts": "Edit products",
-    "editCatalysts": "Edit catalysts"
+    "editCatalysts": "Edit catalysts",
+    "level": "Level"
   },
   "error": {
     "deleteCustom": "Delete custom data",

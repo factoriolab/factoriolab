@@ -1,0 +1,162 @@
+<table class="lab-table">
+  <thead>
+    <tr>
+      <th></th>
+      <th id="id-header">{{ 'editor.id' | translate }}</th>
+      <th id="name-header">{{ 'data.name' | translate }}</th>
+      <th id="icon-header">{{ 'editor.icon' | translate }}</th>
+      <th id="icon-text-header">{{ 'editor.iconText' | translate }}</th>
+      <th id="level-header">{{ 'editor.level' | translate }}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+    <tr>
+      <td></td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="id-header"
+          class="input"
+          [placeholder]="'editor.id' | translate"
+          [(ngModel)]="model.id"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="name-header"
+          class="input"
+          [placeholder]="'data.name' | translate"
+          [(ngModel)]="model.name"
+        />
+      </td>
+      <td>
+        <div class="flex items-center">
+          <lab-select
+            labelledBy="icon-header"
+            [options]="iconOptions()"
+            [iconOnly]="true"
+            [(ngModel)]="model.icon"
+          ></lab-select>
+        </div>
+      </td>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="icon-text-header"
+          class="input"
+          size="2"
+          [placeholder]="'editor.iconText' | translate"
+          [(ngModel)]="model.iconText"
+        />
+      </td>
+      <td>
+        <input
+          type="number"
+          aria-labelledby="level-header"
+          class="input"
+          size="3"
+          [placeholder]="'editor.level' | translate"
+          [(ngModel)]="model.level"
+        />
+      </td>
+      <td>
+        <button
+          type="button"
+          labButton
+          [faIcon]="faFloppyDisk"
+          color="brand"
+          [aria-label]="'save' | translate"
+          (click)="add()"
+        ></button>
+      </td>
+    </tr>
+    @for (quality of edit().data.qualities ?? []; track quality.id) {
+      <tr cdkDrag cdkDragLockAxis="y">
+        <td
+          cdkDragHandle
+          class="cursor-grab hover:bg-gray-800 active:cursor-grabbing"
+        >
+          <fa-icon [icon]="faGrip"></fa-icon>
+          <ng-container *cdkDragPreview>
+            <div
+              class="gap-2 rounded-xs p-2 flex items-center border border-gray-700 bg-gray-900"
+            >
+              <fa-icon [icon]="faGrip"></fa-icon>
+              <img
+                class="w-8"
+                [src]="edit().icons[quality.icon ?? quality.id]?.url"
+                [alt]="quality.name"
+              />
+              <span>{{ quality.name }}</span>
+            </div>
+          </ng-container>
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="id-header"
+            class="input"
+            [placeholder]="'editor.id' | translate"
+            [ngModel]="quality.id"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="updateId(quality, $event)"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="name-header"
+            class="input"
+            [placeholder]="'data.name' | translate"
+            [(ngModel)]="quality.name"
+          />
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="icon-header"
+              [options]="iconOptions()"
+              [iconOnly]="true"
+              [ngModel]="quality.icon ?? quality.id"
+              (ngModelChange)="
+                quality.icon = $event === quality.id ? undefined : $event
+              "
+            ></lab-select>
+          </div>
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="icon-text-header"
+            class="input"
+            size="2"
+            [placeholder]="'editor.iconText' | translate"
+            [(ngModel)]="quality.iconText"
+          />
+        </td>
+        <td>
+          <input
+            type="number"
+            aria-labelledby="level-header"
+            class="input"
+            size="3"
+            [placeholder]="'editor.level' | translate"
+            [(ngModel)]="quality.level"
+          />
+        </td>
+        <td>
+          <button
+            type="button"
+            labButton
+            [faIcon]="faTrash"
+            color="complement"
+            [aria-label]="'delete' | translate"
+            (click)="remove(quality.id)"
+          ></button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

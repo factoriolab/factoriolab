@@ -37,6 +37,11 @@ export const routes: Routes = [
       import('./locations/locations').then((c) => c.Locations),
   },
   {
+    path: 'qualities',
+    loadComponent: () =>
+      import('./qualities/qualities').then((c) => c.Qualities),
+  },
+  {
     path: '**',
     redirectTo: 'version',
   },
