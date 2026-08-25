@@ -2264,7 +2264,7 @@ async function processMod(): Promise<void> {
   for (const tech of technologies) {
     const technology: TechnologyJson = {};
     if (tech.max_level === 'infinite') {
-      technology.isInfinite = true;
+      technology.infinite = true;
     }
     const id = techId[tech.name];
     const prerequisites = coerceArray(tech.prerequisites);

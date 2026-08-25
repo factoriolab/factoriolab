@@ -74,7 +74,7 @@ export class TechnologiesDialog implements DialogData {
     // set membership rather than an integer level. The corresponding bonuses
     // have dedicated settings.
     let technologyIds = data.technologyIds.filter(
-      (i) => !data.technologyRecord[i].isInfinite,
+      (i) => !data.technologyRecord[i].infinite,
     );
     if (filter) {
       technologyIds = technologyIds.filter((t) =>
