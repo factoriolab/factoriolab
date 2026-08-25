@@ -924,7 +924,10 @@ export class SettingsStore extends Store<SettingsState> {
   ): Settings {
     const techIds =
       state.researchedTechnologyIds ?? defaults?.researchedTechnologyIds;
-    let researchedTechnologyIds = new Set(data.technologyIds);
+    // Default: non-infinite technologies
+    let researchedTechnologyIds = new Set(
+      data.technologyIds.filter((i) => !data.technologyRecord[i].infinite),
+    );
     if (techIds != null && researchedTechnologyIds.size > 0) {
       // Filter for only technologies that still exist in this data set
       const filteredTechs = Array.from(techIds).filter((i) =>
