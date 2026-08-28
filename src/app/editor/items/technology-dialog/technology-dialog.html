@@ -12,26 +12,26 @@
             data.technology.prerequisites = $event.length ? $event : undefined
           "
         >
-          @if (data.technology.prerequisites) {
-            @for (
-              prerequisite of data.technology.prerequisites;
-              track prerequisite
-            ) {
-              @let option = prerequisite | option: data.prerequisiteOptions;
-              @if (option && option.icon) {
-                <lab-icon
-                  [value]="option.icon"
-                  type="img"
-                  [class]="option.iconClass"
-                  [iconText]="option.iconText"
-                >
-                </lab-icon>
-              } @else {
-                <span>{{ prerequisite }}</span>
-              }
+          @for (
+            prerequisite of data.technology.prerequisites ?? [];
+            track prerequisite
+          ) {
+            @let option = prerequisite | option: data.prerequisiteOptions;
+            @if (option && option.icon) {
+              <lab-icon
+                [value]="option.icon"
+                type="img"
+                [class]="option.iconClass"
+                [iconText]="option.iconText"
+              >
+              </lab-icon>
+            } @else {
+              <span>{{ prerequisite }}</span>
             }
-          } @else {
-            —
+          } @empty {
+            <span class="mx-1 text-gray-400 italic">{{
+              'none' | translate
+            }}</span>
           }
         </lab-select>
       </td>
@@ -121,23 +121,23 @@
             data.technology.recipeUnlock = $event.length ? $event : undefined
           "
         >
-          @if (data.technology.recipeUnlock) {
-            @for (unlock of data.technology.recipeUnlock; track unlock) {
-              @let option = unlock | option: data.recipeOptions;
-              @if (option && option.icon) {
-                <lab-icon
-                  [value]="option.icon"
-                  type="img"
-                  [class]="option.iconClass"
-                  [iconText]="option.iconText"
-                >
-                </lab-icon>
-              } @else {
-                <span>{{ unlock }}</span>
-              }
+          @for (unlock of data.technology.recipeUnlock ?? []; track unlock) {
+            @let option = unlock | option: data.recipeOptions;
+            @if (option && option.icon) {
+              <lab-icon
+                [value]="option.icon"
+                type="img"
+                [class]="option.iconClass"
+                [iconText]="option.iconText"
+              >
+              </lab-icon>
+            } @else {
+              <span>{{ unlock }}</span>
             }
-          } @else {
-            —
+          } @empty {
+            <span class="mx-1 text-gray-400 italic">{{
+              'none' | translate
+            }}</span>
           }
         </lab-select>
       </td>

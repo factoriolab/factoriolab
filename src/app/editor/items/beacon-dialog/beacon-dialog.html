@@ -93,7 +93,9 @@
             @if (data.disallowedEffects?.length) {
               <span>{{ data.disallowedEffects.join(', ') }}</span>
             } @else {
-              —
+              <span class="mx-1 text-gray-400 italic">{{
+                'none' | translate
+              }}</span>
             }
           </lab-select>
         </div>

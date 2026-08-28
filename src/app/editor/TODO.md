@@ -2,10 +2,6 @@
 
 ## TODO
 
-- Recipes
-- Limitations
-- Locations
-- Qualities
 - Defaults
 
 ## DONE
@@ -15,3 +11,7 @@
 - Flags
 - Icons
 - Items
+- Recipes
+- Limitations
+- Locations
+- Qualities

@@ -1,0 +1,576 @@
+<div class="gap-2 flex flex-col self-start">
+  <lab-form-field label="editor.researchedTechnologies">
+    <lab-select
+      [options]="technologyOptions()"
+      [ngModel]="defaults.researchedTechnologies ?? []"
+      (ngModelChange)="
+        defaults.researchedTechnologies = $event.length ? $event : undefined
+      "
+    >
+      @for (techId of defaults.researchedTechnologies ?? []; track techId) {
+        @let option = techId | option: technologyOptions();
+        @if (option?.icon) {
+          <lab-icon
+            [value]="option.icon"
+            type="img"
+            [class]="option.iconClass"
+            [iconText]="option.iconText"
+          >
+          </lab-icon>
+        } @else {
+          <span>{{ techId }}</span>
+        }
+      } @empty {
+        <span class="mx-1 text-gray-400 italic">{{ 'none' | translate }}</span>
+      }
+    </lab-select>
+  </lab-form-field>
+
+  <lab-form-field label="editor.excludedRecipes">
+    <lab-select
+      [options]="recipeOptions()"
+      [ngModel]="defaults.excludedRecipes ?? []"
+      (ngModelChange)="
+        defaults.excludedRecipes = $event.length ? $event : undefined
+      "
+    >
+      @for (recipeId of defaults.excludedRecipes ?? []; track recipeId) {
+        @let option = recipeId | option: recipeOptions();
+        @if (option?.icon) {
+          <lab-icon
+            [value]="option.icon"
+            type="img"
+            [class]="option.iconClass"
+            [iconText]="option.iconText"
+          >
+          </lab-icon>
+        } @else {
+          <span>{{ recipeId }}</span>
+        }
+      } @empty {
+        <span class="mx-1 text-gray-400 italic">{{ 'none' | translate }}</span>
+      }
+    </lab-select>
+  </lab-form-field>
+
+  <lab-form-field label="settings.modifierRank">
+    <lab-rank-select
+      [options]="moduleOptions()"
+      [ngModel]="defaults.moduleRank"
+      (ngModelChange)="defaults.moduleRank = $event.length ? $event : undefined"
+    >
+      @for (id of defaults.moduleRank ?? []; track $index) {
+        @let opt = id | option: moduleOptions();
+        @if (opt?.icon) {
+          <lab-icon
+            [value]="opt.icon"
+            [type]="opt.iconType"
+            [text]="
+              (defaults.moduleRank?.length ?? 0) > 1
+                ? ($index + 1).toString()
+                : undefined
+            "
+          ></lab-icon>
+        } @else {
+          {{ id }}
+        }
+      } @empty {
+        <span class="mx-1 text-gray-400 italic">
+          {{ 'settings.modifierRankEmpty' | translate }}
+        </span>
+      }
+    </lab-rank-select>
+  </lab-form-field>
+
+  <lab-form-field label="settings.fuelRank">
+    <lab-rank-select
+      [options]="fuelOptions()"
+      [ngModel]="defaults.fuelRank"
+      (ngModelChange)="defaults.fuelRank = $event.length ? $event : undefined"
+    >
+      @for (id of defaults.fuelRank ?? []; track $index) {
+        @let opt = id | option: fuelOptions();
+        @if (opt?.icon) {
+          <lab-icon
+            [value]="opt.icon"
+            [type]="opt.iconType"
+            [text]="
+              (defaults.fuelRank?.length ?? 0) > 1
+                ? ($index + 1).toString()
+                : undefined
+            "
+          ></lab-icon>
+        } @else {
+          {{ id }}
+        }
+      } @empty {
+        <span class="mx-1 text-gray-400 italic">
+          {{ 'settings.fuelRankEmpty' | translate }}
+        </span>
+      }
+    </lab-rank-select>
+  </lab-form-field>
+
+  <lab-form-field label="data.beacon">
+    <lab-select
+      placeholder="none"
+      [options]="nullableBeaconOptions()"
+      [(ngModel)]="defaults.beacon"
+    >
+    </lab-select>
+  </lab-form-field>
+
+  <lab-form-field label="editor.beaconModule">
+    <lab-select
+      placeholder="none"
+      [options]="nullableModuleOptions()"
+      [(ngModel)]="defaults.beaconModule"
+    >
+    </lab-select>
+  </lab-form-field>
+
+  <lab-form-field label="data.cargoWagon">
+    <lab-select
+      placeholder="none"
+      [options]="nullableCargoWagonOptions()"
+      [(ngModel)]="defaults.cargoWagon"
+    >
+    </lab-select>
+  </lab-form-field>
+
+  <lab-form-field label="data.fluidWagon">
+    <lab-select
+      placeholder="none"
+      [options]="nullableFluidWagonOptions()"
+      [(ngModel)]="defaults.fluidWagon"
+    >
+    </lab-select>
+  </lab-form-field>
+
+  <div>
+    <label for="mining-productivity" class="text-sm mx-1 text-gray-300">{{
+      'settings.miningProductivity' | translate
+    }}</label>
+    <input
+      id="mining-productivity"
+      type="text"
+      class="input"
+      [placeholder]="'settings.miningProductivity' | translate"
+      [ngModel]="defaults.miningBonus"
+      [ngModelOptions]="{ updateOn: 'blur' }"
+      (ngModelChange)="defaults.miningBonus = toNumeric($event)"
+    />
+  </div>
+
+  <div>
+    <label for="research-bonus" class="text-sm mx-1 text-gray-300">{{
+      'settings.researchSpeed' | translate
+    }}</label>
+    <input
+      id="research-bonus"
+      type="text"
+      class="input"
+      [placeholder]="'settings.researchSpeed' | translate"
+      [ngModel]="defaults.researchBonus"
+      [ngModelOptions]="{ updateOn: 'blur' }"
+      (ngModelChange)="defaults.researchBonus = toNumeric($event)"
+    />
+  </div>
+
+  <div>
+    <label for="research-productivity" class="text-sm mx-1 text-gray-300">{{
+      'settings.researchProductivity' | translate
+    }}</label>
+    <input
+      id="research-productivity"
+      type="text"
+      class="input"
+      [placeholder]="'settings.researchProductivity' | translate"
+      [ngModel]="defaults.researchProductivity"
+      [ngModelOptions]="{ updateOn: 'blur' }"
+      (ngModelChange)="defaults.researchProductivity = toNumeric($event)"
+    />
+  </div>
+
+  <div class="flex flex-col">
+    <label for="recipe-productivity" class="text-sm mx-1 text-gray-300">{{
+      'data.recipeProductivity' | translate
+    }}</label>
+    <button
+      id="recipe-productivity"
+      type="button"
+      labQuantitiesButton
+      [edit]="edit()"
+      [record]="defaults.recipeProductivity"
+      [attr.aria-label]="'editor.editRecipeProductivity' | translate"
+      (click)="editRecipeProductivity(defaults)"
+    ></button>
+  </div>
+</div>
+
+<div class="gap-2 flex items-center self-start">
+  <lab-checkbox
+    [iconMap]="radioIconMap"
+    label="editor.hardCodedPresets"
+    [ngModel]="hardCodedPresets != null"
+    (ngModelChange)="switchType(!$event)"
+  ></lab-checkbox>
+  <lab-checkbox
+    [iconMap]="radioIconMap"
+    label="editor.customPresets"
+    [ngModel]="customPresets != null"
+    (ngModelChange)="switchType($event)"
+  ></lab-checkbox>
+</div>
+
+@if (hardCodedPresets) {
+  <div class="gap-2 flex flex-col self-start">
+    <lab-form-field label="editor.minBelt">
+      <lab-select
+        placeholder="none"
+        [options]="nullableBeltOptions()"
+        [(ngModel)]="hardCodedPresets.minBelt"
+      >
+      </lab-select>
+    </lab-form-field>
+
+    <lab-form-field label="editor.maxBelt">
+      <lab-select
+        placeholder="none"
+        [options]="nullableBeltOptions()"
+        [(ngModel)]="hardCodedPresets.maxBelt"
+      >
+      </lab-select>
+    </lab-form-field>
+
+    <lab-form-field label="editor.minPipe">
+      <lab-select
+        placeholder="none"
+        [options]="nullablePipeOptions()"
+        [(ngModel)]="hardCodedPresets.minPipe"
+      >
+      </lab-select>
+    </lab-form-field>
+
+    <lab-form-field label="editor.maxPipe">
+      <lab-select
+        placeholder="none"
+        [options]="nullablePipeOptions()"
+        [(ngModel)]="hardCodedPresets.maxPipe"
+      >
+      </lab-select>
+    </lab-form-field>
+
+    <lab-form-field label="editor.minMachineRank">
+      <lab-rank-select
+        [options]="machineOptions()"
+        [(ngModel)]="hardCodedPresets.minMachineRank"
+      >
+        @for (id of hardCodedPresets.minMachineRank ?? []; track $index) {
+          @let opt = id | option: machineOptions();
+          @if (opt?.icon) {
+            <lab-icon
+              [value]="opt.icon"
+              [type]="opt.iconType"
+              [text]="
+                (hardCodedPresets.minMachineRank?.length ?? 0) > 1
+                  ? ($index + 1).toString()
+                  : undefined
+              "
+            ></lab-icon>
+          } @else {
+            {{ id }}
+          }
+        } @empty {
+          <span class="mx-1 text-gray-400 italic">
+            {{ 'none' | translate }}
+          </span>
+        }
+      </lab-rank-select>
+    </lab-form-field>
+
+    <lab-form-field label="editor.maxMachineRank">
+      <lab-rank-select
+        [options]="machineOptions()"
+        [(ngModel)]="hardCodedPresets.maxMachineRank"
+      >
+        @for (id of hardCodedPresets.maxMachineRank ?? []; track $index) {
+          @let opt = id | option: machineOptions();
+          @if (opt?.icon) {
+            <lab-icon
+              [value]="opt.icon"
+              [type]="opt.iconType"
+              [text]="
+                (hardCodedPresets.maxMachineRank?.length ?? 0) > 1
+                  ? ($index + 1).toString()
+                  : undefined
+              "
+            ></lab-icon>
+          } @else {
+            {{ id }}
+          }
+        } @empty {
+          <span class="mx-1 text-gray-400 italic">
+            {{ 'none' | translate }}
+          </span>
+        }
+      </lab-rank-select>
+    </lab-form-field>
+  </div>
+} @else if (customPresets) {
+  <div class="gap-2 flex flex-col self-start">
+    <lab-form-field label="settings.locations">
+      <lab-select
+        [options]="locationOptions()"
+        [ngModel]="customPresets.locations ?? []"
+        (ngModelChange)="customPresets.locations = $event"
+      >
+        @for (locationId of customPresets.locations ?? []; track locationId) {
+          @let option = locationId | option: locationOptions();
+          @if (option?.icon) {
+            <lab-icon
+              [value]="option.icon"
+              type="img"
+              [class]="option.iconClass"
+              [iconText]="option.iconText"
+            >
+            </lab-icon>
+          } @else {
+            <span>{{ locationId }}</span>
+          }
+        } @empty {
+          <span class="mx-1 text-gray-400 italic">{{
+            'none' | translate
+          }}</span>
+        }
+      </lab-select>
+    </lab-form-field>
+
+    <lab-form-field label="data.belt">
+      <lab-select
+        placeholder="none"
+        [options]="nullableBeltOptions()"
+        [(ngModel)]="customPresets.belt"
+      >
+      </lab-select>
+    </lab-form-field>
+
+    <div>
+      <label for="belt-stack" class="text-sm mx-1 text-gray-300">{{
+        'data.beltStack' | translate
+      }}</label>
+      <input
+        id="belt-stack"
+        type="text"
+        class="input"
+        [placeholder]="'data.beltStack' | translate"
+        [ngModel]="customPresets.beltStack"
+        [ngModelOptions]="{ updateOn: 'blur' }"
+        (ngModelChange)="customPresets.beltStack = toNumeric($event)"
+      />
+    </div>
+
+    <lab-form-field label="data.pipe">
+      <lab-select
+        placeholder="none"
+        [options]="nullablePipeOptions()"
+        [(ngModel)]="customPresets.pipe"
+      >
+      </lab-select>
+    </lab-form-field>
+
+    <lab-form-field label="settings.machineRank">
+      <lab-rank-select
+        [options]="machineOptions()"
+        [(ngModel)]="customPresets.machineRank"
+      >
+        @for (id of customPresets.machineRank ?? []; track $index) {
+          @let opt = id | option: machineOptions();
+          @if (opt?.icon) {
+            <lab-icon
+              [value]="opt.icon"
+              [type]="opt.iconType"
+              [text]="
+                (customPresets.machineRank?.length ?? 0) > 1
+                  ? ($index + 1).toString()
+                  : undefined
+              "
+            ></lab-icon>
+          } @else {
+            {{ id }}
+          }
+        } @empty {
+          <span class="mx-1 text-gray-400 italic">
+            {{ 'none' | translate }}
+          </span>
+        }
+      </lab-rank-select>
+    </lab-form-field>
+
+    <div>
+      <label for="beacon-count" class="text-sm mx-1 text-gray-300">{{
+        'editor.beaconCount' | translate
+      }}</label>
+      <input
+        id="beacon-count"
+        type="text"
+        class="input"
+        [placeholder]="'editor.beaconCount' | translate"
+        [ngModel]="customPresets.beaconCount"
+        [ngModelOptions]="{ updateOn: 'blur' }"
+        (ngModelChange)="customPresets.beaconCount = toNumeric($event)"
+      />
+    </div>
+  </div>
+
+  <table class="lab-table">
+    <thead>
+      <tr>
+        <th colspan="21">Custom presets</th>
+      </tr>
+      <tr>
+        <th id="id-header">{{ 'editor.id' | translate }}</th>
+        <th id="name-header">{{ 'data.name' | translate }}</th>
+        <th id="researched-technologies-header">
+          {{ 'editor.researchedTechnologies' | translate }}
+        </th>
+        <th id="excluded-recipes-header">
+          {{ 'editor.excludedRecipes' | translate }}
+        </th>
+        <th id="locations-header">{{ 'data.locations' | translate }}</th>
+        <th id="module-rank-header">
+          {{ 'settings.modifierRank' | translate }}
+        </th>
+        <th id="fuel-rank-header">{{ 'settings.fuelRank' | translate }}</th>
+        <th id="beacon-count-header">{{ 'editor.beaconCount' | translate }}</th>
+        <th id="beacon-header">{{ 'data.beacon' | translate }}</th>
+        <th id="beacon-module-header">
+          {{ 'editor.beaconModule' | translate }}
+        </th>
+        <th id="machine-rank-header">
+          {{ 'settings.machineRank' | translate }}
+        </th>
+        <th id="belt-header">{{ 'data.belt' | translate }}</th>
+        <th id="belt-stack-header">{{ 'data.beltStack' | translate }}</th>
+        <th id="pipe-header">{{ 'data.pipe' | translate }}</th>
+        <th id="cargo-wagon-header">{{ 'data.cargoWagon' | translate }}</th>
+        <th id="fluid-wagon-header">{{ 'data.fluidWagon' | translate }}</th>
+        <th id="mining-bonus-header">
+          {{ 'settings.miningProductivity' | translate }}
+        </th>
+        <th id="research-bonus-header">
+          {{ 'settings.researchSpeed' | translate }}
+        </th>
+        <th id="research-productivity-header">
+          {{ 'settings.researchProductivity' | translate }}
+        </th>
+        <th id="recipe-productivity-header">
+          {{ 'data.recipeProductivity' | translate }}
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <input
+            type="number"
+            aria-labelledby="id-header"
+            class="input"
+            size="3"
+            [placeholder]="'editor.id' | translate"
+            [(ngModel)]="model.id"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            aria-labelledby="name-header"
+            class="input"
+            [placeholder]="'data.name' | translate"
+            [(ngModel)]="model.label"
+          />
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+          <button
+            type="button"
+            labButton
+            [faIcon]="faFloppyDisk"
+            color="brand"
+            [aria-label]="'save' | translate"
+            (click)="addPreset(customPresets)"
+          ></button>
+        </td>
+      </tr>
+      @for (preset of customPresets.presets; track preset.id) {
+        <tr>
+          <td>
+            <input
+              type="number"
+              aria-labelledby="id-header"
+              class="input"
+              size="3"
+              [placeholder]="'editor.id' | translate"
+              [(ngModel)]="preset.id"
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              aria-labelledby="name-header"
+              class="input"
+              [placeholder]="'data.name' | translate"
+              [(ngModel)]="preset.label"
+            />
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>
+            <button
+              type="button"
+              labButton
+              [faIcon]="faTrash"
+              color="complement"
+              [aria-label]="'delete' | translate"
+              (click)="removePreset(customPresets, preset.id)"
+            ></button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

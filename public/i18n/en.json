@@ -207,7 +207,19 @@
     "editIngredients": "Edit ingredients",
     "editProducts": "Edit products",
     "editCatalysts": "Edit catalysts",
-    "level": "Level"
+    "level": "Level",
+    "hardCodedPresets": "Hard-coded presets (legacy)",
+    "customPresets": "Custom presets",
+    "beaconModule": "Beacon module",
+    "excludedRecipes": "Excluded recipes",
+    "researchedTechnologies": "Researched technologies",
+    "minBelt": "Minimum belt",
+    "maxBelt": "Maximum belt",
+    "minPipe": "Minimum pipe",
+    "maxPipe": "Maximum pipe",
+    "minMachineRank": "Minimum machine rank",
+    "maxMachineRank": "Maximum machine rank",
+    "beaconCount": "Beacon count"
   },
   "error": {
     "deleteCustom": "Delete custom data",

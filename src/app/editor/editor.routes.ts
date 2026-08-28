@@ -42,6 +42,10 @@ export const routes: Routes = [
       import('./qualities/qualities').then((c) => c.Qualities),
   },
   {
+    path: 'defaults',
+    loadComponent: () => import('./defaults/defaults').then((c) => c.Defaults),
+  },
+  {
     path: '**',
     redirectTo: 'version',
   },

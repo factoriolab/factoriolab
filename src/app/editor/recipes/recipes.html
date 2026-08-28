@@ -133,23 +133,23 @@
                 model.producers = $event.length ? $event : undefined
               "
             >
-              @if (model.producers) {
-                @for (producer of model.producers; track producer) {
-                  @let option = producer | option: producerOptions();
-                  @if (option && option.icon) {
-                    <lab-icon
-                      [value]="option.icon"
-                      type="img"
-                      [class]="option.iconClass"
-                      [iconText]="option.iconText"
-                    >
-                    </lab-icon>
-                  } @else {
-                    <span>{{ producer }}</span>
-                  }
+              @for (producer of model.producers ?? []; track producer) {
+                @let option = producer | option: producerOptions();
+                @if (option && option.icon) {
+                  <lab-icon
+                    [value]="option.icon"
+                    type="img"
+                    [class]="option.iconClass"
+                    [iconText]="option.iconText"
+                  >
+                  </lab-icon>
+                } @else {
+                  <span>{{ producer }}</span>
                 }
-              } @else {
-                —
+              } @empty {
+                <span class="mx-1 text-gray-400 italic">{{
+                  'none' | translate
+                }}</span>
               }
             </lab-select>
           </div>
@@ -214,7 +214,9 @@
               @if (model.disallowedEffects?.length) {
                 <span>{{ model.disallowedEffects.join(', ') }}</span>
               } @else {
-                —
+                <span class="mx-1 text-gray-400 italic">{{
+                  'none' | translate
+                }}</span>
               }
             </lab-select>
           </div>
@@ -229,23 +231,23 @@
                 model.locations = $event.length ? $event : undefined
               "
             >
-              @if (model.locations) {
-                @for (location of model.locations; track location) {
-                  @let option = location | option: locationOptions();
-                  @if (option && option.icon) {
-                    <lab-icon
-                      [value]="option.icon"
-                      type="img"
-                      [class]="option.iconClass"
-                      [iconText]="option.iconText"
-                    >
-                    </lab-icon>
-                  } @else {
-                    <span>{{ location }}</span>
-                  }
+              @for (location of model.locations ?? []; track location) {
+                @let option = location | option: locationOptions();
+                @if (option && option.icon) {
+                  <lab-icon
+                    [value]="option.icon"
+                    type="img"
+                    [class]="option.iconClass"
+                    [iconText]="option.iconText"
+                  >
+                  </lab-icon>
+                } @else {
+                  <span>{{ location }}</span>
                 }
-              } @else {
-                —
+              } @empty {
+                <span class="mx-1 text-gray-400 italic">{{
+                  'none' | translate
+                }}</span>
               }
             </lab-select>
           </div>
@@ -261,7 +263,9 @@
               @if (model.flags?.length) {
                 <span>{{ model.flags.join(', ') }}</span>
               } @else {
-                —
+                <span class="mx-1 text-gray-400 italic">{{
+                  'none' | translate
+                }}</span>
               }
             </lab-select>
           </div>
@@ -410,23 +414,23 @@
                 recipe.producers = $event.length ? $event : undefined
               "
             >
-              @if (recipe.producers) {
-                @for (producer of recipe.producers; track producer) {
-                  @let option = producer | option: producerOptions();
-                  @if (option && option.icon) {
-                    <lab-icon
-                      [value]="option.icon"
-                      type="img"
-                      [class]="option.iconClass"
-                      [iconText]="option.iconText"
-                    >
-                    </lab-icon>
-                  } @else {
-                    <span>{{ producer }}</span>
-                  }
+              @for (producer of recipe.producers ?? []; track producer) {
+                @let option = producer | option: producerOptions();
+                @if (option && option.icon) {
+                  <lab-icon
+                    [value]="option.icon"
+                    type="img"
+                    [class]="option.iconClass"
+                    [iconText]="option.iconText"
+                  >
+                  </lab-icon>
+                } @else {
+                  <span>{{ producer }}</span>
                 }
-              } @else {
-                —
+              } @empty {
+                <span class="mx-1 text-gray-400 italic">{{
+                  'none' | translate
+                }}</span>
               }
             </lab-select>
           </div>
@@ -491,7 +495,9 @@
               @if (recipe.disallowedEffects?.length) {
                 <span>{{ recipe.disallowedEffects.join(', ') }}</span>
               } @else {
-                —
+                <span class="mx-1 text-gray-400 italic">{{
+                  'none' | translate
+                }}</span>
               }
             </lab-select>
           </div>
@@ -506,23 +512,23 @@
                 recipe.locations = $event.length ? $event : undefined
               "
             >
-              @if (recipe.locations) {
-                @for (location of recipe.locations; track location) {
-                  @let option = location | option: locationOptions();
-                  @if (option && option.icon) {
-                    <lab-icon
-                      [value]="option.icon"
-                      type="img"
-                      [class]="option.iconClass"
-                      [iconText]="option.iconText"
-                    >
-                    </lab-icon>
-                  } @else {
-                    <span>{{ location }}</span>
-                  }
+              @for (location of recipe.locations ?? []; track location) {
+                @let option = location | option: locationOptions();
+                @if (option && option.icon) {
+                  <lab-icon
+                    [value]="option.icon"
+                    type="img"
+                    [class]="option.iconClass"
+                    [iconText]="option.iconText"
+                  >
+                  </lab-icon>
+                } @else {
+                  <span>{{ location }}</span>
                 }
-              } @else {
-                —
+              } @empty {
+                <span class="mx-1 text-gray-400 italic">{{
+                  'none' | translate
+                }}</span>
               }
             </lab-select>
           </div>
@@ -540,7 +546,9 @@
               @if (recipe.flags?.length) {
                 <span>{{ recipe.flags.join(', ') }}</span>
               } @else {
-                —
+                <span class="mx-1 text-gray-400 italic">{{
+                  'none' | translate
+                }}</span>
               }
             </lab-select>
           </div>

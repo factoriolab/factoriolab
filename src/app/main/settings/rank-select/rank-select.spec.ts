@@ -48,45 +48,45 @@ describe('RankSelect', () => {
 
   describe('toggle', () => {
     it('should open the overlay', () => {
-      spyOn(component['opened'], 'set');
+      spyOn(component.opened, 'set');
       spyOn(component['filterText'], 'set');
       spyOn(component['editValue'], 'set');
       spyOn<any>(component, 'focusAfterOpen');
       component.toggle();
-      expect(component['opened'].set).toHaveBeenCalledWith(true);
+      expect(component.opened.set).toHaveBeenCalledWith(true);
       expect(component['filterText'].set).toHaveBeenCalledWith('');
       expect(component['editValue'].set).toHaveBeenCalledWith([]);
       expect(component['focusAfterOpen']).toHaveBeenCalled();
     });
 
     it('should close the overlay and save the value', () => {
-      component['opened'].set(true);
+      component.opened.set(true);
       component['editValue'].set(['id']);
-      spyOn(component['opened'], 'set');
+      spyOn(component.opened, 'set');
       spyOn(component, 'setValue');
       component.toggle();
-      expect(component['opened'].set).toHaveBeenCalledWith(false);
+      expect(component.opened.set).toHaveBeenCalledWith(false);
       expect(component.setValue).toHaveBeenCalledWith(['id']);
     });
 
     it('should not open the overlay if disabled', () => {
       component.disabled.set(true);
-      spyOn(component['opened'], 'set');
+      spyOn(component.opened, 'set');
       component.toggle();
-      expect(component['opened'].set).not.toHaveBeenCalled();
+      expect(component.opened.set).not.toHaveBeenCalled();
     });
 
     it('should not open the overlay if dragging', () => {
       component['dragging'].set(true);
-      spyOn(component['opened'], 'set');
+      spyOn(component.opened, 'set');
       component.toggle();
-      expect(component['opened'].set).not.toHaveBeenCalled();
+      expect(component.opened.set).not.toHaveBeenCalled();
     });
 
     it('should not open the overlay on unmatched keyboard events', () => {
-      spyOn(component['opened'], 'set');
+      spyOn(component.opened, 'set');
       component.toggle(new KeyboardEvent(''));
-      expect(component['opened'].set).not.toHaveBeenCalled();
+      expect(component.opened.set).not.toHaveBeenCalled();
     });
   });
 

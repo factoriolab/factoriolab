@@ -68,7 +68,8 @@
             {{ placeholder() | translate }}
           </span>
         }
-        @for (opt of editValue(); track opt) {
+        @for (id of editValue(); track id) {
+          @let opt = id | option: options();
           <div
             class="rounded-xs p-0.5 flex cursor-grab items-center justify-center hover:bg-gray-600"
             cdkDrag
@@ -77,11 +78,21 @@
             (cdkDragStarted)="dragging.set(true)"
             (cdkDragEnded)="dragging.set(false)"
           >
-            <lab-icon
-              [value]="opt"
-              type="item"
-              [text]="($index + 1).toString()"
-            ></lab-icon>
+            @if (opt?.icon) {
+              <lab-icon
+                [value]="opt.icon"
+                [text]="($index + 1).toString()"
+                [type]="opt.iconType"
+                [class]="opt.iconClass"
+                [iconText]="opt.iconText"
+              ></lab-icon>
+            } @else {
+              <lab-icon
+                [value]="id"
+                [text]="($index + 1).toString()"
+                type="item"
+              ></lab-icon>
+            }
           </div>
         }
       </div>
@@ -124,7 +135,16 @@
                 class="pointer-events-none"
                 [ngModel]="checked"
               ></lab-checkbox>
-              <lab-icon [value]="opt.value" type="item"></lab-icon>
+              @if (opt.icon) {
+                <lab-icon
+                  [value]="opt.icon"
+                  [type]="opt.iconType"
+                  [class]="opt.iconClass"
+                  [iconText]="opt.iconText"
+                ></lab-icon>
+              } @else {
+                <lab-icon [value]="opt.value" type="item"></lab-icon>
+              }
               <span class="ms-1 line-clamp-1 grow">{{ label }}</span>
             </div>
           </li>

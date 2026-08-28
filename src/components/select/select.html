@@ -20,7 +20,9 @@
       @if (_selectedOption) {
         {{ _selectedOption.label | translate }}{{ dirty() ? '*' : '' }}
       } @else if (placeholder()) {
-        <span class="text-gray-400">{{ placeholder() | translate }}</span>
+        <span class="text-gray-400 italic">{{
+          placeholder() | translate
+        }}</span>
       }
     </div>
     <fa-icon

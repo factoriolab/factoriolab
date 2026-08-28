@@ -40,7 +40,7 @@ const check = cva(
 
 let nextUniqueId = 0;
 
-const iconMap = new Map<boolean | null | undefined, IconDefinition>([
+const DEFAULT_ICON_MAP = new Map<boolean | null | undefined, IconDefinition>([
   [true, faSquareCheck],
   [false, faSquare],
   [undefined, faSquareMinus],
@@ -72,10 +72,12 @@ export class Checkbox extends Control<boolean | undefined> {
   readonly labelledBy = input<string>();
   readonly label = input<string>();
   readonly labelParams = input<TranslateParams>();
+  readonly iconMap =
+    input<Map<boolean | null | undefined, IconDefinition>>(DEFAULT_ICON_MAP);
 
   readonly checkClass = computed(() =>
     check({ value: this.value() ?? 'null', disabled: this.disabled() }),
   );
 
-  readonly icon = computed(() => iconMap.get(this.value()));
+  readonly icon = computed(() => this.iconMap().get(this.value()));
 }
