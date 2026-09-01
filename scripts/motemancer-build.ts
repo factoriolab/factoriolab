@@ -1,11 +1,14 @@
 /**
  * MoteMancer wiki scraper - builds FactorioLab game data from the community wiki
  *
- * Usage: npx ts-node -r tsconfig-paths/register scripts/motemancer-build.ts
+ * Usage: bun scripts/motemancer-build.ts [--refresh]
  *
  * Fetches data from https://motemancer.miraheze.org/ via the MediaWiki API,
  * parses {{StructureInfo}} and {{ItemInfo}} templates, downloads icons,
- * and outputs data.json, defaults.json, and icons.webp to src/data/mtm/.
+ * and outputs data.json, defaults.json, and icons.webp to public/data/mtm/.
+ *
+ * Raw wiki responses are cached under scripts/cache/motemancer/ (gitignored)
+ * so re-runs don't hit the wiki. Pass --refresh to re-fetch everything.
  *
  * For icon overrides ctrl+f ICON_OVERRIDES
  */
@@ -14,28 +17,33 @@ import fs from 'fs';
 import path from 'path';
 
 import { getAverageColor } from 'fast-average-color-node';
+import prettier from 'prettier';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
-import { CategoryJson } from '~/models/data/category';
-import { IconJson } from '~/models/data/icon';
-import { ItemJson } from '~/models/data/item';
-import { MachineJson } from '~/models/data/machine';
-import { ModData } from '~/models/data/mod-data';
-import { RecipeJson } from '~/models/data/recipe';
-import { EnergyType } from '~/models/enum/energy-type';
+import { CategoryJson } from '~/data/schema/category';
+import { DefaultsJson } from '~/data/schema/defaults';
+import { IconJson } from '~/data/schema/icon-data';
+import { ItemJson } from '~/data/schema/item';
+import { MachineJson } from '~/data/schema/machine';
+import { ModData } from '~/data/schema/mod-data';
+import { RecipeJson } from '~/data/schema/recipe';
+import { EnergyType } from '~/data/schema/energy-type';
 
 // #region Config
 
 const WIKI_API = 'https://motemancer.miraheze.org/w/api.php';
-const OUTPUT_DIR = './src/data/mtm';
+const WIKI_URL = 'https://motemancer.miraheze.org/wiki/';
+const OUTPUT_DIR = './public/data/mtm';
+const CACHE_DIR = './scripts/cache/motemancer';
+const REPORT_PATH = './scripts/temp/motemancer-research-report.md';
 const ICON_SIZE = 64;
 const ICON_PADDING = 2;
 
 // Belt speeds (items/sec) - currently needs to be hardcoded
 const BELT_SPEEDS: Record<string, number> = {
-  'shifting-slab': 4,
-  'underground-slab': 4,
+  saltway: 4,
+  'underground-saltway': 4,
   streamway: 16,
   'verdant-stream': 16,
   'underground-stream': 16,
@@ -44,6 +52,33 @@ const BELT_SPEEDS: Record<string, number> = {
   'enchanted-delta': 16,
   'torrential-streamway': 24,
   'ichor-slick': 1000, // effectively instantaneous - no actual infinity option
+};
+
+// Mote harvesting rates - the wiki only describes these in prose ("base rate of
+// 2 Motes per 4 seconds"), so like belt speeds they need to be hardcoded.
+// A collector's motes per cycle becomes its machine speed, and the harvest
+// recipe for an element takes one cycle of its collectors.
+interface CollectorRate {
+  /** Mote elements this collector can harvest */
+  elements: string[];
+  /** Motes produced per cycle */
+  motes: number;
+  /** Seconds per cycle */
+  seconds: number;
+}
+
+const MOTE_ELEMENTS = ['water', 'life', 'earth', 'fire', 'shadow', 'air'];
+
+const COLLECTORS: Record<string, CollectorRate> = {
+  'simple-collector': { elements: MOTE_ELEMENTS, motes: 1, seconds: 4 },
+  'tidal-collector': { elements: ['water'], motes: 2, seconds: 4 },
+  'verdant-collector': { elements: ['life'], motes: 2, seconds: 4 },
+  'quarry-collector': { elements: ['earth'], motes: 2, seconds: 4 },
+  'ember-collector': { elements: ['fire'], motes: 2, seconds: 4 },
+  'shade-collector': { elements: ['shadow'], motes: 2, seconds: 4 },
+  'tempest-collector': { elements: ['air'], motes: 2, seconds: 4 },
+  // Entropic shards can only be drawn from entropy by the alembic
+  'entropic-alembic': { elements: ['entropy'], motes: 1, seconds: 3 },
 };
 
 // Research pages to parse
@@ -55,17 +90,95 @@ const RESEARCH_PAGES = [
   'Fire_Research',
   'Shadow_Research',
   'Air_Research',
-  'Entropy_Research',
+  'Entropic_Research',
 ];
+
+// Belt range for the presets - Saltway is the first belt, Torrential Streamway
+// the fastest
+const MIN_BELT = 'saltway';
+const MAX_BELT = 'torrential-streamway';
+
+// #endregion
+
+// #region Cache
+
+/**
+ * Local cache of raw wiki responses, so iterating on the wiki -> FactorioLab
+ * transformation doesn't require a full re-scrape. Layout under CACHE_DIR:
+ *
+ *   titles.json             all page titles
+ *   pages/<Title>.wikitext  raw wikitext per page
+ *   image-urls.json         File: name -> image URL (null if the file doesn't exist)
+ *   images/<Filename>       original image bytes (pre-resize)
+ *
+ * Entries are only written on fetch; --refresh bypasses reads so everything
+ * is re-fetched and overwritten entry by entry.
+ */
+
+type ImageUrlMap = Record<string, string | null>;
+
+const REFRESH = process.argv.includes('--refresh');
+const IMAGE_URLS_FILE = 'image-urls.json';
+const cacheStats = { hits: 0, fetches: 0 };
+
+/** Convert a wiki title or filename into a filesystem-safe cache name */
+function cacheKey(name: string): string {
+  return encodeURIComponent(name.replace(/ /g, '_')).replace(/\*/g, '%2A');
+}
+
+function cachePath(file: string): string {
+  return path.join(CACHE_DIR, file);
+}
+
+/** Read a cache entry, or null if missing (or if --refresh was passed) */
+function readCache(file: string): Buffer | null {
+  if (REFRESH) return null;
+  const p = cachePath(file);
+  if (!fs.existsSync(p)) return null;
+  cacheStats.hits++;
+  return fs.readFileSync(p);
+}
+
+function writeCache(file: string, data: string | Buffer): void {
+  const p = cachePath(file);
+  fs.mkdirSync(path.dirname(p), { recursive: true });
+  fs.writeFileSync(p, data);
+  cacheStats.fetches++;
+}
+
+let imageUrlCache: ImageUrlMap | null = null;
+
+/** Lazily load the image URL map (even under --refresh, so untouched entries survive) */
+function loadImageUrlCache(): ImageUrlMap {
+  if (imageUrlCache) return imageUrlCache;
+  const p = cachePath(IMAGE_URLS_FILE);
+  imageUrlCache = fs.existsSync(p)
+    ? (JSON.parse(fs.readFileSync(p).toString()) as ImageUrlMap)
+    : {};
+  return imageUrlCache;
+}
 
 // #endregion
 
 // #region API
 
-async function fetchJson(url: string, retries = 3): Promise<any> {
+interface AllPagesResponse {
+  query?: { allpages?: { title: string }[] };
+  continue?: { apcontinue?: string };
+}
+
+interface ParseResponse {
+  parse?: { wikitext?: string };
+}
+
+interface ImageInfoResponse {
+  query?: { pages?: Record<string, { imageinfo?: { url?: string }[] }> };
+}
+
+async function fetchJson<T>(url: string, retries = 3): Promise<T> {
   for (let attempt = 1; attempt <= retries; attempt++) {
     const res = await fetch(url);
-    if (res.ok) return res.json();
+    if (res.ok) return (await res.json()) as T;
     if (attempt < retries && res.status >= 500) {
       console.warn(`  Retry ${attempt}/${retries} for ${res.status}: ${url}`);
       await new Promise((r) => setTimeout(r, 2000 * attempt));
@@ -73,9 +186,14 @@ async function fetchJson(url: string, retries = 3): Promise<any> {
     }
     throw new Error(`HTTP ${res.status}: ${url}`);
   }
+  throw new Error(`Failed after ${retries} attempts: ${url}`);
 }
 
 async function getAllPageTitles(): Promise<string[]> {
+  const cacheFile = 'titles.json';
+  const hit = readCache(cacheFile);
+  if (hit !== null) return JSON.parse(hit.toString()) as string[];
+
   const titles: string[] = [];
   let continueToken: string | undefined;
 
@@ -88,18 +206,23 @@ async function getAllPageTitles(): Promise<string[]> {
     });
     if (continueToken) params.set('apcontinue', continueToken);
 
-    const data = await fetchJson(`${WIKI_API}?${params}`);
+    const data = await fetchJson<AllPagesResponse>(`${WIKI_API}?${params}`);
     const pages = data.query?.allpages ?? [];
     for (const p of pages) {
-      titles.push(p.title as string);
+      titles.push(p.title);
     }
     continueToken = data.continue?.apcontinue;
   } while (continueToken);
 
+  writeCache(cacheFile, JSON.stringify(titles, null, 2));
   return titles;
 }
 
 async function getPageWikitext(title: string): Promise<string> {
+  const cacheFile = `pages/${cacheKey(title)}.wikitext`;
+  const hit = readCache(cacheFile);
+  if (hit !== null) return hit.toString();
+
   const params = new URLSearchParams({
     action: 'parse',
     page: title,
@@ -107,11 +230,28 @@ async function getPageWikitext(title: string): Promise<string> {
     formatversion: '2',
     format: 'json',
   });
-  const data = await fetchJson(`${WIKI_API}?${params}`);
-  return data.parse?.wikitext ?? '';
+  const data = await fetchJson<ParseResponse>(`${WIKI_API}?${params}`);
+  const wikitext = data.parse?.wikitext ?? '';
+  writeCache(cacheFile, wikitext);
+  return wikitext;
+}
+
+async function getLatestVersion(): Promise<string> {
+  const wikitext = await getPageWikitext('Template:Changelog');
+  const match = wikitext.match(/v?\.?(\d+\.\d+\.\d+)/);
+  if (match) return match[1];
+  console.warn('Warning: Could not find version in changelog, using 0.0.0');
+  return '0.0.0';
 }
 
 async function getImageUrl(filename: string): Promise<string | null> {
+  // Misses are cached too, since most icon filename guesses don't exist
+  const urls = loadImageUrlCache();
+  if (!REFRESH && filename in urls) {
+    cacheStats.hits++;
+    return urls[filename];
+  }
+
   const params = new URLSearchParams({
     action: 'query',
     titles: `File:${filename}`,
@@ -119,19 +259,32 @@ async function getImageUrl(filename: string): Promise<string | null> {
     iiprop: 'url',
     format: 'json',
   });
-  const data = await fetchJson(`${WIKI_API}?${params}`);
+  const data = await fetchJson<ImageInfoResponse>(`${WIKI_API}?${params}`);
   const pages = data.query?.pages ?? {};
-  for (const page of Object.values(pages) as any[]) {
-    const url = page.imageinfo?.[0]?.url;
-    if (url) return url;
+  let url: string | null = null;
+  for (const page of Object.values(pages)) {
+    const pageUrl = page.imageinfo?.[0]?.url;
+    if (pageUrl) {
+      url = pageUrl;
+      break;
+    }
   }
-  return null;
+
+  urls[filename] = url;
+  writeCache(IMAGE_URLS_FILE, JSON.stringify(urls, null, 2));
+  return url;
 }
 
-async function downloadImage(url: string): Promise<Buffer> {
+async function downloadImage(filename: string, url: string): Promise<Buffer> {
+  const cacheFile = `images/${cacheKey(filename)}`;
+  const hit = readCache(cacheFile);
+  if (hit !== null) return hit;
+
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to download image: ${url}`);
-  return Buffer.from(await res.arrayBuffer());
+  const buf = Buffer.from(await res.arrayBuffer());
+  writeCache(cacheFile, buf);
+  return buf;
 }
 
 // #endregion
@@ -143,68 +296,106 @@ interface TemplateFields {
   [key: string]: string;
 }
 
-function parseTemplate(
-  wikitext: string,
-  templateName: string,
-): TemplateFields | null {
-  // Find the start of the template
+/**
+ * Find every occurrence of {{templateName ...}} and return the raw body of
+ * each (the text between the template name and its closing braces). Nested
+ * {{ }} are matched by depth, so bodies containing other templates (e.g.
+ * Ingredient1 = 3x {{Salt Prism}}) are captured in full.
+ */
+function findTemplateBodies(wikitext: string, templateName: string): string[] {
+  const bodies: string[] = [];
   const startPattern = `{{${templateName}`;
-  const startIdx = wikitext.indexOf(startPattern);
-  if (startIdx === -1) return null;
+  let searchFrom = 0;
 
-  // Walk forward matching nested {{ }} to find the correct closing }}
-  let depth = 0;
-  let endIdx = -1;
-  for (let i = startIdx; i < wikitext.length - 1; i++) {
-    if (wikitext[i] === '{' && wikitext[i + 1] === '{') {
-      depth++;
-      i++; // skip next char
-    } else if (wikitext[i] === '}' && wikitext[i + 1] === '}') {
-      depth--;
-      if (depth === 0) {
-        endIdx = i;
-        break;
+  for (;;) {
+    const startIdx = wikitext.indexOf(startPattern, searchFrom);
+    if (startIdx === -1) break;
+    const bodyStart = startIdx + startPattern.length;
+    searchFrom = bodyStart;
+
+    // Require a boundary so that {{Foo}} doesn't match {{FooBar}}
+    const next = wikitext[bodyStart];
+    if (next !== undefined && !/[\s|}]/.test(next)) continue;
+
+    // Walk forward matching nested {{ }} to find the correct closing }}
+    let depth = 0;
+    let endIdx = -1;
+    for (let i = startIdx; i < wikitext.length - 1; i++) {
+      if (wikitext[i] === '{' && wikitext[i + 1] === '{') {
+        depth++;
+        i++; // skip next char
+      } else if (wikitext[i] === '}' && wikitext[i + 1] === '}') {
+        depth--;
+        if (depth === 0) {
+          endIdx = i;
+          break;
+        }
+        i++; // skip next char
       }
-      i++; // skip next char
     }
+    if (endIdx === -1) break;
+
+    bodies.push(wikitext.substring(bodyStart, endIdx));
+    searchFrom = endIdx + 2;
   }
 
-  if (endIdx === -1) return null;
+  return bodies;
+}
 
-  const body = wikitext.substring(startIdx + startPattern.length, endIdx);
+/** Parse the | key = value fields of a template body */
+function parseTemplateFields(
+  body: string,
+  templateName: string,
+): TemplateFields {
   const fields: TemplateFields = { templateName };
-
-  // Split by top-level | characters (not inside nested {{ }})
-  const params = splitTopLevel(body, '|');
-  for (const param of params) {
+  for (const param of splitTopLevel(body, '|')) {
     const eqIdx = param.indexOf('=');
     if (eqIdx === -1) continue;
     const key = param.substring(0, eqIdx).trim();
     const value = param.substring(eqIdx + 1).trim();
-    if (key && value) {
-      fields[key] = value;
-    }
+    if (key && value) fields[key] = value;
   }
-
   return fields;
 }
 
-/** Split a string by a delimiter, but only at the top level (not inside {{ }}) */
+/** Parse every occurrence of a template in the wikitext */
+function parseTemplates(
+  wikitext: string,
+  templateName: string,
+): TemplateFields[] {
+  return findTemplateBodies(wikitext, templateName).map((body) =>
+    parseTemplateFields(body, templateName),
+  );
+}
+
+/** Parse the first occurrence of a template, or null if it isn't present */
+function parseTemplate(
+  wikitext: string,
+  templateName: string,
+): TemplateFields | null {
+  return parseTemplates(wikitext, templateName)[0] ?? null;
+}
+
+/**
+ * Split a string by a delimiter, but only at the top level (not inside
+ * {{ }} templates or [[ ]] links)
+ */
 function splitTopLevel(s: string, delimiter: string): string[] {
   const parts: string[] = [];
-  let depth = 0;
+  let templateDepth = 0;
+  let linkDepth = 0;
   let current = '';
 
   for (let i = 0; i < s.length; i++) {
-    if (s[i] === '{' && i + 1 < s.length && s[i + 1] === '{') {
-      depth++;
-      current += '{{';
+    const pair = s.substring(i, i + 2);
+    if (pair === '{{' || pair === '}}' || pair === '[[' || pair === ']]') {
+      if (pair === '{{') templateDepth++;
+      else if (pair === '}}') templateDepth = Math.max(0, templateDepth - 1);
+      else if (pair === '[[') linkDepth++;
+      else linkDepth = Math.max(0, linkDepth - 1);
+      current += pair;
       i++;
-    } else if (s[i] === '}' && i + 1 < s.length && s[i + 1] === '}') {
-      depth--;
-      current += '}}';
-      i++;
-    } else if (s[i] === delimiter && depth === 0) {
+    } else if (s[i] === delimiter && templateDepth === 0 && linkDepth === 0) {
       parts.push(current);
       current = '';
     } else {
@@ -216,142 +407,116 @@ function splitTopLevel(s: string, delimiter: string): string[] {
   return parts;
 }
 
-/**
- * Parse all RecipeTableItem entries from a page's wikitext.
- * These appear in machine pages and list what the machine can produce.
- */
-function parseRecipeTableItems(wikitext: string): Array<{
+interface MachineRecipe {
   name: string;
   ingredients: Record<string, number>;
   craftTime: number;
   produced: number;
-}> {
-  const results: Array<{
-    name: string;
-    ingredients: Record<string, number>;
-    craftTime: number;
-    produced: number;
-  }> = [];
+}
 
-  // Match both RecipeTableItem and AltRecipeTableItem
-  const regex = /\{\{(?:Alt)?RecipeTableItem\s*\n?([\s\S]*?)\}\}/g;
-  let match;
+/**
+ * Parse the recipes a machine can produce from its page's RecipeTableItem
+ * entries. AltRecipeTableItem is deliberately excluded: the wiki uses it for
+ * "Used in Recipes" tables, which list recipes that consume the item.
+ */
+function parseRecipeTableItems(wikitext: string): MachineRecipe[] {
+  const results: MachineRecipe[] = [];
 
-  while ((match = regex.exec(wikitext)) !== null) {
-    const body = match[1];
-    const fields: Record<string, string> = {};
-    const lines = body.split('|');
-    for (const line of lines) {
-      const eqIdx = line.indexOf('=');
-      if (eqIdx === -1) continue;
-      const key = line.substring(0, eqIdx).trim();
-      const value = line.substring(eqIdx + 1).trim();
-      if (key && value) fields[key] = value;
-    }
-
+  for (const fields of parseTemplates(wikitext, 'RecipeTableItem')) {
     const name = extractLinkText(fields['Name'] ?? '');
     if (!name) continue;
 
-    const ingredients: Record<string, number> = {};
-    for (let i = 1; i <= 6; i++) {
-      const ing = fields[`Ingredient${i}`];
-      if (!ing) continue;
-      const parsed = parseIngredient(ing);
-      if (parsed) {
-        for (const [item, qty] of parsed) {
-          ingredients[item] = (ingredients[item] ?? 0) + qty;
-        }
-      }
-    }
+    const craftTime = parseFloat(fields['CraftTime'] ?? '1') || 1;
+    const produced = parseFloat(fields['Produced'] ?? '1') || 1;
 
-    results.push({
-      name,
-      ingredients,
-      craftTime: parseFloat(fields['CraftTime'] ?? '1') || 1,
-      produced: parseFloat(fields['Produced'] ?? '1') || 1,
-    });
+    // Each "or" alternative is its own recipe
+    const { ingredients, alternatives } = parseIngredientFields(fields);
+    for (const alt of [ingredients, ...alternatives]) {
+      results.push({ name, ingredients: alt, craftTime, produced });
+    }
   }
 
   return results;
 }
 
+/** Strip {{ }} and [[ ]] markup from a field value for display */
+function stripWikiMarkup(s: string): string {
+  return s.replace(/\{\{|\}\}|\[\[|\]\]/g, '').trim();
+}
+
+/** Collect the values of numbered fields (e.g. Before1..Before4) in order */
+function numberedFields(
+  fields: TemplateFields,
+  prefix: string,
+  max: number,
+): string[] {
+  const values: string[] = [];
+  for (let i = 1; i <= max; i++) {
+    const value = fields[`${prefix}${i}`];
+    if (value) values.push(value);
+  }
+  return values;
+}
+
 /**
- * Parse research entries from a research page.
+ * Parse a research from either an ElementalResearchTableItem (a row of a
+ * research table) or an ElementResearchInfo (the research's own page); both
+ * templates use the same field names.
  */
-function parseResearchEntries(wikitext: string): Array<{
-  name: string;
-  cycles: number;
-  ingredients: Record<string, number>;
-  prerequisites: string[];
-  unlocks: string[];
-  imageFilename: string | null;
-}> {
-  const results: Array<{
-    name: string;
-    cycles: number;
-    ingredients: Record<string, number>;
-    prerequisites: string[];
-    unlocks: string[];
-    imageFilename: string | null;
-  }> = [];
+function parseResearchFields(fields: TemplateFields): ResearchEntry | null {
+  const name = extractLinkText(fields['Name'] ?? '');
+  if (!name) return null;
 
-  const regex = /\{\{ElementalResearchTableItem\s*\n?([\s\S]*?)\}\}/g;
-  let match;
+  const { ingredients } = parseIngredientFields(fields);
 
-  while ((match = regex.exec(wikitext)) !== null) {
-    const body = match[1];
-    const fields: Record<string, string> = {};
-    const lines = body.split('|');
-    for (const line of lines) {
-      const eqIdx = line.indexOf('=');
-      if (eqIdx === -1) continue;
-      const key = line.substring(0, eqIdx).trim();
-      const value = line.substring(eqIdx + 1).trim();
-      if (key && value) fields[key] = value;
-    }
-
-    const name = extractLinkText(fields['Name'] ?? '');
-    if (!name) continue;
-
-    const ingredients: Record<string, number> = {};
-    for (let i = 1; i <= 6; i++) {
-      const ing = fields[`Ingredient${i}`];
-      if (!ing) continue;
-      const parsed = parseIngredient(ing);
-      if (parsed) {
-        for (const [item, qty] of parsed) {
-          ingredients[item] = qty;
-        }
-      }
-    }
-
-    const prerequisites: string[] = [];
-    for (let i = 1; i <= 4; i++) {
-      const before = fields[`Before${i}`];
-      if (!before) continue;
-      const t = extractTemplateRef(before);
-      if (t) prerequisites.push(toId(t));
-    }
-
-    const unlocks: string[] = [];
-    for (let i = 1; i <= 6; i++) {
-      const unlock = fields[`Unlock${i}`];
-      if (!unlock) continue;
-      const t = extractTemplateRef(unlock);
-      if (t) unlocks.push(toId(t));
-    }
-
-    results.push({
-      name,
-      cycles: parseInt(fields['Cycles'] ?? '1', 10) || 1,
-      ingredients,
-      prerequisites,
-      unlocks,
-      imageFilename: fields['Img'] ? extractImageFilename(fields['Img']) : null,
-    });
+  const before = numberedFields(fields, 'Before', 4);
+  const prerequisites: string[] = [];
+  for (const value of before) {
+    const t = extractTemplateRef(value);
+    if (t) prerequisites.push(toId(t));
   }
 
-  return results;
+  const unlockValues = numberedFields(fields, 'Unlock', 6);
+  const unlocks: string[] = [];
+  for (const value of unlockValues) {
+    const t = extractTemplateRef(value);
+    if (t) unlocks.push(toId(t));
+  }
+
+  // Repeatable researches list their cycles as "500+" or "Varies"
+  const cyclesRaw = fields['Cycles'] ?? '';
+  const infinite = /\+\s*$/.test(cyclesRaw) || /varies/i.test(cyclesRaw);
+
+  return {
+    name,
+    id: toId(name),
+    cycles: parseInt(cyclesRaw, 10) || 1,
+    infinite,
+    ingredients,
+    prerequisites,
+    unlocks,
+    imageFilename: fields['Img'] ? extractImageFilename(fields['Img']) : null,
+    element: extractTemplateRef(fields['Element'] ?? '') ?? '',
+    raw: {
+      cycles: cyclesRaw,
+      ingredients: numberedFields(fields, 'Ingredient', 6).map(stripWikiMarkup),
+      before: before.map(stripWikiMarkup),
+      unlocks: unlockValues.map(stripWikiMarkup),
+    },
+  };
+}
+
+/** Parse every research table row on a research page */
+function parseResearchEntries(wikitext: string): ResearchEntry[] {
+  return parseTemplates(wikitext, 'ElementalResearchTableItem')
+    .map(parseResearchFields)
+    .filter((entry): entry is ResearchEntry => entry !== null);
+}
+
+/** Parse the ElementResearchInfo on a research's own page, if it has one */
+function parseResearchPage(wikitext: string): ResearchEntry | null {
+  const fields = parseTemplate(wikitext, 'ElementResearchInfo');
+  return fields ? parseResearchFields(fields) : null;
 }
 
 // #endregion
@@ -408,9 +573,83 @@ function parseIngredient(s: string): Array<[string, number]> | null {
   return results.length > 0 ? results : null;
 }
 
-/** Convert a display name to a kebab-case ID */
+/**
+ * Parse the Ingredient1..6 fields of a template. A field starting with "or"
+ * is an alternative to the previous ingredient, and yields a separate
+ * alternative ingredient set.
+ */
+function parseIngredientFields(fields: TemplateFields): {
+  ingredients: Record<string, number>;
+  alternatives: Record<string, number>[];
+} {
+  const ingredients: Record<string, number> = {};
+  const alternatives: Record<string, number>[] = [];
+  let lastIngredientId: string | null = null;
+
+  for (let i = 1; i <= 6; i++) {
+    const ing = fields[`Ingredient${i}`];
+    if (!ing) continue;
+
+    const trimmed = ing.trim();
+    if (trimmed.toLowerCase().startsWith('or ')) {
+      const parsed = parseIngredient(trimmed.replace(/^or\s+/i, ''));
+      if (parsed) {
+        for (const [itemId, qty] of parsed) {
+          const alt = { ...ingredients };
+          // Replace the previous ingredient with this alternative
+          if (lastIngredientId) delete alt[lastIngredientId];
+          alt[itemId] = qty;
+          alternatives.push(alt);
+        }
+      }
+    } else {
+      const parsed = parseIngredient(trimmed);
+      if (parsed) {
+        for (const [itemId, qty] of parsed) {
+          ingredients[itemId] = qty;
+          lastIngredientId = itemId;
+        }
+      }
+    }
+  }
+
+  return { ingredients, alternatives };
+}
+
+/** Normalize a wiki title for lookup: underscores to spaces, capitalized */
+function normalizeTitle(title: string): string {
+  const t = title.replace(/_/g, ' ').trim();
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
+
+/** Redirect page title -> target title, for pages renamed on the wiki */
+const redirects = new Map<string, string>();
+
+function collectRedirects(pageWikitext: Record<string, string>): void {
+  for (const [title, text] of Object.entries(pageWikitext)) {
+    const m = /^#REDIRECT\s*\[\[([^\]|]+)/i.exec(text);
+    if (m) redirects.set(normalizeTitle(title), normalizeTitle(m[1]));
+  }
+}
+
+/** Follow wiki redirects to the canonical page title */
+function resolveTitle(title: string): string {
+  let current = normalizeTitle(title);
+  for (let hops = 0; hops < 5; hops++) {
+    const next = redirects.get(current);
+    if (next === undefined || next === current) break;
+    current = next;
+  }
+  return current;
+}
+
+/**
+ * Convert a wiki name to a kebab-case ID. Follows page redirects, so
+ * references to a renamed page (e.g. {{Shifting Slab}} -> Saltway) resolve to
+ * the current item's id.
+ */
 function toId(name: string): string {
-  return name
+  return resolveTitle(name)
     .toLowerCase()
     .replace(/['':/()]/g, '')
     .replace(/\s+/g, '-')
@@ -422,6 +661,292 @@ function toId(name: string): string {
 function extractImageFilename(imgField: string): string | null {
   const m = /\[\[File:([^|[\]]+)/.exec(imgField);
   return m ? m[1].trim() : null;
+}
+
+/** Check whether an existing recipe matches a machine recipe's details */
+function recipesMatch(
+  existing: RecipeJson,
+  ingredients: Record<string, number>,
+  craftTime: number,
+  produced: number,
+  outputId: string,
+): boolean {
+  if (existing.time !== craftTime) return false;
+  if (existing.out[outputId] !== produced) return false;
+  const existingInKeys = Object.keys(existing.in);
+  const newInKeys = Object.keys(ingredients);
+  if (existingInKeys.length !== newInKeys.length) return false;
+  for (const key of newInKeys) {
+    if (existing.in[key] !== ingredients[key]) return false;
+  }
+  return true;
+}
+
+/** Add a machine to a recipe's producers if it isn't already listed */
+function addProducer(recipe: RecipeJson, producerId: string): void {
+  recipe.producers ??= [];
+  if (!recipe.producers.includes(producerId)) {
+    recipe.producers.push(producerId);
+  }
+}
+
+/** Fallback display name for an id with no item: "mote-of-fire" -> "Mote Of Fire" */
+function idToName(id: string): string {
+  return id
+    .split('-')
+    .map((w) => w[0].toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+/**
+ * Name variant recipes by how they differ from their siblings. Recipes that
+ * produce the same item are grouped by producer; within a group each recipe
+ * is qualified by the inputs its siblings don't all share, and a group with
+ * different producers than the base recipe is qualified by the machine too:
+ *
+ *   Aether (Mote of Life)              the base recipe, when it has "or"
+ *   Aether (Mote of Fire)              alternatives on the same machine
+ *   Elemental Water (Foundry)          a machine's own recipe
+ *   Aether (Pyrolyzer, Mote of Fire)   one of several on that machine
+ *
+ * A base recipe (craft-<item>) that is alone on its machine keeps its name.
+ */
+function nameVariantRecipes(
+  recipes: RecipeJson[],
+  itemName: (id: string) => string,
+): void {
+  const byOutput = new Map<string, RecipeJson[]>();
+  for (const recipe of recipes) {
+    if (!recipe.id.startsWith('craft-')) continue;
+    const outputs = Object.keys(recipe.out);
+    if (outputs.length !== 1) continue;
+    byOutput.set(outputs[0], [...(byOutput.get(outputs[0]) ?? []), recipe]);
+  }
+
+  const producersKey = (recipe: RecipeJson): string =>
+    [...(recipe.producers ?? [])].sort().join(',');
+
+  for (const [outputId, group] of byOutput) {
+    if (group.length < 2) continue;
+    const base = group.find((r) => r.id === `craft-${outputId}`);
+    const baseKey = base ? producersKey(base) : undefined;
+
+    const byProducers = new Map<string, RecipeJson[]>();
+    for (const recipe of group) {
+      const key = producersKey(recipe);
+      byProducers.set(key, [...(byProducers.get(key) ?? []), recipe]);
+    }
+
+    for (const [key, siblings] of byProducers) {
+      // Inputs every sibling shares don't distinguish anything
+      const common = new Set(Object.keys(siblings[0].in));
+      for (const sibling of siblings.slice(1)) {
+        for (const id of common) if (!(id in sibling.in)) common.delete(id);
+      }
+
+      const machine =
+        key !== baseKey
+          ? (siblings[0].producers ?? []).map(itemName).join(' / ')
+          : '';
+      const qualify = (recipe: RecipeJson, withQuantities: boolean): string => {
+        const inputs = Object.entries(recipe.in)
+          .filter(([id]) => withQuantities || !common.has(id))
+          .map(([id, qty]) =>
+            withQuantities ? `${qty}x ${itemName(id)}` : itemName(id),
+          );
+        const parts = [machine, inputs.join(' + ')].filter((p) => p);
+        return parts.length > 0
+          ? `${itemName(outputId)} (${parts.join(', ')})`
+          : recipe.name;
+      };
+
+      const names = siblings.map((r) => qualify(r, false));
+      for (const [i, recipe] of siblings.entries()) {
+        // Siblings that differ only in quantities need them spelled out
+        const collides = names.some((n, j) => j !== i && n === names[i]);
+        recipe.name = qualify(recipe, collides);
+      }
+    }
+  }
+}
+
+// #endregion
+
+// #region Research Report
+
+interface ResearchSource {
+  entry: ResearchEntry;
+  /** Title of the wiki page the entry was read from */
+  page: string;
+}
+
+interface ResearchDiff {
+  field: string;
+  table: string;
+  page: string;
+}
+
+function wikiLink(title: string): string {
+  return `[${title}](${WIKI_URL}${encodeURI(title.replace(/ /g, '_'))})`;
+}
+
+function sameRecord(
+  a: Record<string, number>,
+  b: Record<string, number>,
+): boolean {
+  const keys = Object.keys(a);
+  return (
+    keys.length === Object.keys(b).length && keys.every((k) => a[k] === b[k])
+  );
+}
+
+function sameList(a: string[], b: string[]): boolean {
+  const sa = [...a].sort();
+  const sb = [...b].sort();
+  return sa.length === sb.length && sa.every((v, i) => v === sb[i]);
+}
+
+function formatList(values: string[]): string {
+  return values.length > 0 ? values.join(', ') : '(none)';
+}
+
+function byName(a: ResearchSource, b: ResearchSource): number {
+  return a.entry.name.localeCompare(b.entry.name);
+}
+
+/**
+ * Compare each research's table row against its own page, and write a
+ * markdown report of the disagreements and of researches missing from the
+ * tables, grouped by the research table page to edit. Returns the counts
+ * for the console summary.
+ */
+function writeResearchReport(
+  tableResearch: Map<string, ResearchSource>,
+  pageResearch: Map<string, ResearchSource>,
+  version: string,
+): { disagreements: number; missing: number } {
+  const disagreements = new Map<
+    string,
+    { source: ResearchSource; diffs: ResearchDiff[] }[]
+  >();
+  const missing = new Map<string, ResearchSource[]>();
+  let skipped = 0;
+
+  for (const [id, source] of pageResearch) {
+    const page = source.entry;
+    const table = tableResearch.get(id);
+    if (!table) {
+      const key = page.element || 'Unknown';
+      missing.set(key, [...(missing.get(key) ?? []), source]);
+      continue;
+    }
+
+    // Per-element researches list "Varies" on their page; nothing to reconcile
+    if (/varies/i.test(page.raw.cycles)) {
+      skipped++;
+      continue;
+    }
+
+    const row = table.entry;
+    const diffs: ResearchDiff[] = [];
+    if (row.cycles !== page.cycles || row.infinite !== page.infinite) {
+      diffs.push({
+        field: 'Cycles',
+        table: row.raw.cycles,
+        page: page.raw.cycles,
+      });
+    }
+    if (!sameRecord(row.ingredients, page.ingredients)) {
+      diffs.push({
+        field: 'Ingredients',
+        table: formatList(row.raw.ingredients),
+        page: formatList(page.raw.ingredients),
+      });
+    }
+    if (!sameList(row.prerequisites, page.prerequisites)) {
+      diffs.push({
+        field: 'Before',
+        table: formatList(row.raw.before),
+        page: formatList(page.raw.before),
+      });
+    }
+    if (!sameList(row.unlocks, page.unlocks)) {
+      diffs.push({
+        field: 'Unlock',
+        table: formatList(row.raw.unlocks),
+        page: formatList(page.raw.unlocks),
+      });
+    }
+    if (diffs.length > 0) {
+      disagreements.set(table.page, [
+        ...(disagreements.get(table.page) ?? []),
+        { source, diffs },
+      ]);
+    }
+  }
+
+  const count = (groups: Map<string, unknown[]>): number =>
+    [...groups.values()].reduce((n, list) => n + list.length, 0);
+  const totals = {
+    disagreements: count(disagreements),
+    missing: count(missing),
+  };
+
+  const lines = [
+    '# MoteMancer research wiki report',
+    '',
+    `Generated by motemancer-build from the wiki cache (MoteMancer ${version}). ` +
+      `${totals.disagreements} researches disagree between their research-table row and their own page; ` +
+      `${totals.missing} researches have a page but no table row. ` +
+      `Skipped ${skipped} per-element researches whose page lists cycles as "Varies".`,
+    '',
+  ];
+
+  const tables = [...new Set([...disagreements.keys(), ...missing.keys()])];
+  for (const table of tables.sort()) {
+    lines.push(`## ${wikiLink(table)}`, '');
+
+    const missingRows = (missing.get(table) ?? []).sort(byName);
+    if (missingRows.length > 0) {
+      lines.push(
+        `**Missing rows** (${missingRows.length}) - values from each research's own page:`,
+        '',
+      );
+      for (const { entry, page } of missingRows) {
+        const unlocks =
+          entry.raw.unlocks.length > 0
+            ? `; Unlocks: ${formatList(entry.raw.unlocks)}`
+            : '';
+        lines.push(
+          `- ${wikiLink(page)} - Cycles ${entry.raw.cycles || '?'}; ${formatList(entry.raw.ingredients)}; Before: ${formatList(entry.raw.before)}${unlocks}`,
+        );
+      }
+      lines.push('');
+    }
+
+    const rows = (disagreements.get(table) ?? []).sort((a, b) =>
+      byName(a.source, b.source),
+    );
+    if (rows.length > 0) {
+      lines.push(
+        `**Disagreements** (${rows.length}) - table row vs the research's own page:`,
+        '',
+      );
+      for (const { source, diffs } of rows) {
+        lines.push(`- ${wikiLink(source.page)}`);
+        for (const diff of diffs) {
+          lines.push(
+            `  - ${diff.field}: table \`${diff.table}\` · page \`${diff.page}\``,
+          );
+        }
+      }
+      lines.push('');
+    }
+  }
+
+  fs.mkdirSync(path.dirname(REPORT_PATH), { recursive: true });
+  fs.writeFileSync(REPORT_PATH, lines.join('\n'));
+  return totals;
 }
 
 // #endregion
@@ -443,28 +968,42 @@ interface WikiItem {
   stack: number;
   imageFilename: string | null;
   // Recipes this machine can produce (only for Production/machines)
-  machineRecipes: Array<{
-    name: string;
-    ingredients: Record<string, number>;
-    craftTime: number;
-    produced: number;
-  }>;
+  machineRecipes: MachineRecipe[];
 }
 
 interface ResearchEntry {
   name: string;
   id: string;
   cycles: number;
+  /** Repeatable research (the wiki lists cycles as "500+" or "Varies") */
+  infinite: boolean;
   ingredients: Record<string, number>;
   prerequisites: string[];
   unlocks: string[];
   imageFilename: string | null;
+  /** Research table this belongs to, e.g. "Fire Research" */
+  element: string;
+  /** Field values as written on the wiki, for the research report */
+  raw: {
+    cycles: string;
+    ingredients: string[];
+    before: string[];
+    unlocks: string[];
+  };
 }
 
 async function main(): Promise<void> {
-  console.log('Fetching all page titles...');
-  const allTitles = await getAllPageTitles();
-  console.log(`Found ${allTitles.length} pages`);
+  console.log(
+    REFRESH
+      ? `Refreshing wiki cache at ${CACHE_DIR}`
+      : `Using wiki cache at ${CACHE_DIR} (pass --refresh to re-fetch)`,
+  );
+  console.log('Fetching all page titles and version...');
+  const [allTitles, version] = await Promise.all([
+    getAllPageTitles(),
+    getLatestVersion(),
+  ]);
+  console.log(`Found ${allTitles.length} pages, version ${version}`);
 
   // Filter to content pages (skip templates, WIP, nav pages, etc.)
   const contentTitles = allTitles.filter(
@@ -485,7 +1024,6 @@ async function main(): Promise<void> {
   // Phase 1: Fetch and parse all pages
   // ---------------------------------------------------------------------------
   console.log('Fetching page content...');
-  const wikiItems: WikiItem[] = [];
   const pageWikitext: Record<string, string> = {};
 
   // Batch fetches to avoid overwhelming the API
@@ -498,100 +1036,80 @@ async function main(): Promise<void> {
         return { title, text };
       }),
     );
-
-    for (const { title, text } of results) {
-      pageWikitext[title] = text;
-
-      // Parse StructureInfo or ItemInfo
-      const structInfo = parseTemplate(text, 'StructureInfo');
-      const itemInfo = parseTemplate(text, 'ItemInfo');
-      const info = structInfo ?? itemInfo;
-
-      if (!info) continue;
-
-      const name = info['Name'] ?? title;
-      const id = toId(name);
-
-      // Parse element - extract from template ref like {{Water}} or {{Salt Group}}
-      const elementRaw = info['Element'] ?? '';
-      const elementRef = extractTemplateRef(elementRaw) ?? elementRaw;
-      const element = toId(
-        elementRef.replace(' Group', '').replace(' Research', ''),
-      );
-
-      // Parse type
-      const typeRaw = info['Type'] ?? '';
-      const type = extractLinkText(typeRaw) || 'Unknown';
-
-      // Parse unlocked by
-      const unlockedByRaw = info['UnlockedBy'] ?? '';
-      const unlockedBy = extractTemplateRef(unlockedByRaw) ?? unlockedByRaw;
-
-      // Parse crafted in
-      const craftedInRaw = info['CraftedIn'] ?? '';
-      const craftedIn = extractTemplateRef(craftedInRaw) ?? craftedInRaw;
-
-      // Parse ingredients - handle "or" alternatives
-      const mainIngredients: Record<string, number> = {};
-      const orAlternatives: Record<string, number>[] = [];
-      let lastIngredientId: string | null = null;
-
-      for (let j = 1; j <= 6; j++) {
-        const ing = info[`Ingredient${j}`];
-        if (!ing) continue;
-
-        const trimmed = ing.trim();
-        if (trimmed.toLowerCase().startsWith('or ')) {
-          // This is an "or" alternative for the previous ingredient
-          const parsed = parseIngredient(trimmed.replace(/^or\s+/i, ''));
-          if (parsed) {
-            for (const [itemId, qty] of parsed) {
-              const alt = { ...mainIngredients };
-              // Remove the previous ingredient and replace with this alternative
-              if (lastIngredientId) delete alt[lastIngredientId];
-              alt[itemId] = qty;
-              orAlternatives.push(alt);
-            }
-          }
-        } else {
-          const parsed = parseIngredient(trimmed);
-          if (parsed) {
-            for (const [itemId, qty] of parsed) {
-              mainIngredients[itemId] = qty;
-              lastIngredientId = itemId;
-            }
-          }
-        }
-      }
-
-      // Parse machine recipes from the page
-      const machineRecipes = parseRecipeTableItems(text);
-
-      const imageFilename = info['Img']
-        ? extractImageFilename(info['Img'])
-        : null;
-
-      wikiItems.push({
-        name,
-        id,
-        element,
-        type,
-        unlockedBy,
-        craftedIn,
-        ingredients: mainIngredients,
-        altIngredients: orAlternatives.length > 0 ? orAlternatives : undefined,
-        craftTime: parseFloat(info['CraftTime'] ?? '1') || 1,
-        produced: parseFloat(info['Produced'] ?? '1') || 1,
-        power: parseFloat(info['Power'] ?? '0') || 0,
-        stack: parseInt(info['Stack'] ?? '50', 10) || 50,
-        imageFilename,
-        machineRecipes,
-      });
-    }
+    for (const { title, text } of results) pageWikitext[title] = text;
 
     if (i % 50 === 0 && i > 0) {
       console.log(`  Processed ${i}/${contentTitles.length} pages...`);
     }
+  }
+
+  // Renamed pages leave redirects behind; toId() resolves references through
+  // them, so the map has to exist before anything is parsed
+  collectRedirects(pageWikitext);
+  console.log(
+    `Fetched ${contentTitles.length} pages, ${redirects.size} redirects`,
+  );
+
+  console.log('Parsing page content...');
+  const wikiItems: WikiItem[] = [];
+
+  for (const [title, text] of Object.entries(pageWikitext)) {
+    // Parse StructureInfo or ItemInfo
+    const structInfo = parseTemplate(text, 'StructureInfo');
+    const itemInfo = parseTemplate(text, 'ItemInfo');
+    const info = structInfo ?? itemInfo;
+
+    if (!info) continue;
+
+    const name = info['Name'] ?? title;
+    const id = toId(name);
+
+    // Parse element - extract from template ref like {{Water}} or {{Salt Group}}
+    const elementRaw = info['Element'] ?? '';
+    const elementRef = extractTemplateRef(elementRaw) ?? elementRaw;
+    const element = toId(
+      elementRef.replace(' Group', '').replace(' Research', ''),
+    );
+
+    // Parse type
+    const typeRaw = info['Type'] ?? '';
+    const type = extractLinkText(typeRaw) || 'Unknown';
+
+    // Parse unlocked by
+    const unlockedByRaw = info['UnlockedBy'] ?? '';
+    const unlockedBy = extractTemplateRef(unlockedByRaw) ?? unlockedByRaw;
+
+    // Parse crafted in
+    const craftedInRaw = info['CraftedIn'] ?? '';
+    const craftedIn = extractTemplateRef(craftedInRaw) ?? craftedInRaw;
+
+    // Parse ingredients - handle "or" alternatives
+    const { ingredients: mainIngredients, alternatives: orAlternatives } =
+      parseIngredientFields(info);
+
+    // Parse machine recipes from the page
+    const machineRecipes = parseRecipeTableItems(text);
+
+    const imageFilename = info['Img']
+      ? extractImageFilename(info['Img'])
+      : null;
+
+    wikiItems.push({
+      name,
+      id,
+      element,
+      type,
+      unlockedBy,
+      craftedIn,
+      ingredients: mainIngredients,
+      altIngredients: orAlternatives.length > 0 ? orAlternatives : undefined,
+      craftTime: parseFloat(info['CraftTime'] ?? '1') || 1,
+      produced: parseFloat(info['Produced'] ?? '1') || 1,
+      power: parseFloat(info['Power'] ?? '0') || 0,
+      stack: parseInt(info['Stack'] ?? '50', 10) || 50,
+      imageFilename,
+      machineRecipes,
+    });
   }
 
   console.log(`Parsed ${wikiItems.length} items from wiki`);
@@ -601,24 +1119,45 @@ async function main(): Promise<void> {
   // ---------------------------------------------------------------------------
   console.log('Parsing research pages...');
   const researchEntries: ResearchEntry[] = [];
+  const tableResearch = new Map<string, ResearchSource>();
 
   for (const researchPage of RESEARCH_PAGES) {
-    const text = pageWikitext[researchPage.replace(/_/g, ' ')];
+    const title = resolveTitle(researchPage);
+    const text = pageWikitext[title];
     if (!text) {
       console.warn(`  Warning: research page "${researchPage}" not found`);
       continue;
     }
 
-    const entries = parseResearchEntries(text);
-    for (const entry of entries) {
-      researchEntries.push({
-        ...entry,
-        id: toId(entry.name),
-      });
+    for (const entry of parseResearchEntries(text)) {
+      researchEntries.push(entry);
+      if (!tableResearch.has(entry.id)) {
+        tableResearch.set(entry.id, { entry, page: title });
+      }
     }
   }
 
-  console.log(`Parsed ${researchEntries.length} research entries`);
+  // Each research also has its own page with an ElementResearchInfo. The
+  // tables are authoritative, but some researches only exist on their page.
+  const pageResearch = new Map<string, ResearchSource>();
+  for (const [title, text] of Object.entries(pageWikitext)) {
+    const entry = parseResearchPage(text);
+    if (entry && !pageResearch.has(entry.id)) {
+      pageResearch.set(entry.id, { entry, page: title });
+    }
+  }
+  let pageOnlyCount = 0;
+  for (const [id, source] of pageResearch) {
+    if (!tableResearch.has(id)) {
+      researchEntries.push(source.entry);
+      pageOnlyCount++;
+    }
+  }
+
+  console.log(
+    `Parsed ${researchEntries.length} research entries (${pageOnlyCount} only on their own page)`,
+  );
+  const report = writeResearchReport(tableResearch, pageResearch, version);
 
   // ---------------------------------------------------------------------------
   // Phase 3: Build categories
@@ -634,7 +1173,7 @@ async function main(): Promise<void> {
     shadow: { name: 'Shadow', icon: 'elemental-shadow' },
     air: { name: 'Air', icon: 'elemental-air' },
     entropy: { name: 'Entropy', icon: 'entropic-shard' },
-    logistics: { name: 'Logistics', icon: 'shifting-slab' },
+    logistics: { name: 'Logistics', icon: 'saltway' },
     artifice: { name: 'Artifice', icon: 'infusion-altar' },
     research: { name: 'Research', icon: 'infusion-altar' },
   };
@@ -655,6 +1194,10 @@ async function main(): Promise<void> {
   const recipes: RecipeJson[] = [];
   const seenItemIds = new Set<string>();
   const seenRecipeIds = new Set<string>();
+  const variantCount: Record<string, number> = {};
+  // Machine variants are later-game alternatives to an item's base recipe;
+  // they're excluded by default so the solver doesn't prefer them
+  const machineVariantIds: string[] = [];
 
   // Track which machines exist (to validate recipe producers)
   const machineIds = new Set<string>();
@@ -702,7 +1245,7 @@ async function main(): Promise<void> {
     // Is this a machine?
     if (machineIds.has(wi.id)) {
       const machine: MachineJson = {
-        speed: 1,
+        speed: COLLECTORS[wi.id]?.motes ?? 1,
         type: EnergyType.Electric,
         usage: wi.power || undefined,
       };
@@ -819,7 +1362,7 @@ async function main(): Promise<void> {
 
         recipes.push({
           id: altId,
-          name: `${wi.name} (Alt ${altIdx + 1})`,
+          name: `${wi.name} (Alt ${altIdx + 1})`, // renamed by nameVariantRecipes
           category: wi.element || 'salt',
           row: 0,
           time: wi.craftTime,
@@ -853,10 +1396,61 @@ async function main(): Promise<void> {
       }
 
       if (seenRecipeIds.has(recipeId)) {
-        // Recipe already exists - make sure this machine is listed as a producer
+        // Recipe already exists - check if the recipe details match
         const existing = recipes.find((r) => r.id === recipeId);
-        if (existing && !existing.producers.includes(wi.id)) {
-          existing.producers.push(wi.id);
+        if (
+          existing &&
+          recipesMatch(
+            existing,
+            mr.ingredients,
+            mr.craftTime,
+            mr.produced,
+            outputId,
+          )
+        ) {
+          // Same recipe data — just add this machine as a producer
+          addProducer(existing, wi.id);
+        } else {
+          // Check existing alt/variant recipes for a match
+          const matchingVariant = recipes.find(
+            (r) =>
+              r.id.startsWith(`craft-${outputId}-`) &&
+              recipesMatch(
+                r,
+                mr.ingredients,
+                mr.craftTime,
+                mr.produced,
+                outputId,
+              ),
+          );
+          if (matchingVariant) {
+            addProducer(matchingVariant, wi.id);
+          } else {
+            // Different recipe data — create a variant
+            const count = (variantCount[outputId] =
+              (variantCount[outputId] || 0) + 1);
+            const variantId = `craft-${outputId}-${wi.id}`;
+            const finalId = seenRecipeIds.has(variantId)
+              ? `${variantId}-${count}`
+              : variantId;
+
+            const outMap: Record<string, number> = {};
+            outMap[outputId] = mr.produced;
+
+            recipes.push({
+              id: finalId,
+              name: `${mr.name} (${wi.name})`, // renamed by nameVariantRecipes
+              category: wi.element || 'salt',
+              row: 0,
+              time: mr.craftTime,
+              producers: [wi.id],
+              in: mr.ingredients,
+              out: outMap,
+              icon: outputId,
+            });
+            seenRecipeIds.add(finalId);
+            machineVariantIds.push(finalId);
+          }
         }
       } else {
         const outMap: Record<string, number> = {};
@@ -877,6 +1471,10 @@ async function main(): Promise<void> {
     }
   }
 
+  // Name variant recipes by how they differ from their siblings
+  const itemNames = new Map(items.map((i) => [i.id, i.name]));
+  nameVariantRecipes(recipes, (id) => itemNames.get(id) ?? idToName(id));
+
   // Add mining/harvesting recipes for motes (raw resources)
   for (const moteId of moteItems) {
     const recipeId = `harvest-${moteId}`;
@@ -887,52 +1485,46 @@ async function main(): Promise<void> {
       .replace('mote-of-', '')
       .replace('entropic-shard', 'entropy');
 
-    // Motes are harvested from collectors
-    const collectorMap: Record<string, string> = {
-      water: 'tidal-collector',
-      life: 'verdant-collector',
-      earth: 'quarry-collector',
-      fire: 'ember-collector',
-      shadow: 'shade-collector',
-      air: 'tempest-collector',
-    };
+    // Collectors that can harvest this element (see COLLECTORS)
+    const collectors = Object.entries(COLLECTORS).filter(
+      ([id, rate]) => rate.elements.includes(element) && machineIds.has(id),
+    );
+    if (collectors.length === 0) continue;
 
-    const producers: string[] = [];
-    // Simple collector can harvest any mote
-    if (machineIds.has('simple-collector')) {
-      producers.push('simple-collector');
-    }
-    // Specialized collector for this element
-    const specialCollector = collectorMap[element];
-    if (specialCollector && machineIds.has(specialCollector)) {
-      producers.push(specialCollector);
+    // The shared recipe time assumes all producers have the same cycle time
+    const seconds = collectors[0][1].seconds;
+    if (collectors.some(([, rate]) => rate.seconds !== seconds)) {
+      console.warn(
+        `  Warning: ${element} collectors have differing cycle times, using ${seconds}s`,
+      );
     }
 
-    if (producers.length > 0) {
-      const outMap: Record<string, number> = {};
-      outMap[moteId] = 1;
+    const outMap: Record<string, number> = {};
+    outMap[moteId] = 1;
 
-      recipes.push({
-        id: recipeId,
-        name: `Harvest ${moteId
-          .split('-')
-          .map((w) => w[0].toUpperCase() + w.slice(1))
-          .join(' ')}`,
-        category: element,
-        row: 0,
-        time: 1,
-        producers,
-        in: {},
-        out: outMap,
-        flags: ['mining'],
-      });
-    }
+    recipes.push({
+      id: recipeId,
+      name: `Harvest ${moteId
+        .split('-')
+        .map((w) => w[0].toUpperCase() + w.slice(1))
+        .join(' ')}`,
+      category: element,
+      row: 0,
+      time: seconds,
+      producers: collectors.map(([id]) => id),
+      in: {},
+      out: outMap,
+      flags: ['mining'],
+    });
   }
 
   // Build research/technology items and recipes
   for (const re of researchEntries) {
     // Create research item if not already present
     if (!seenItemIds.has(re.id)) {
+      const recipeUnlock = re.unlocks
+        .map((u) => `craft-${u}`)
+        .filter((r) => seenRecipeIds.has(r));
       items.push({
         id: re.id,
         name: re.name,
@@ -941,9 +1533,8 @@ async function main(): Promise<void> {
         technology: {
           prerequisites:
             re.prerequisites.length > 0 ? re.prerequisites : undefined,
-          unlockedRecipes: re.unlocks
-            .map((u) => `craft-${u}`)
-            .filter((r) => seenRecipeIds.has(r)),
+          recipeUnlock: recipeUnlock.length > 0 ? recipeUnlock : undefined,
+          infinite: re.infinite ? true : undefined,
         },
       });
       seenItemIds.add(re.id);
@@ -994,6 +1585,28 @@ async function main(): Promise<void> {
     }
   }
 
+  // Drop prerequisites that don't resolve to a research item - the app treats
+  // a technology with an unmet prerequisite as never researchable
+  const researchIds = new Set(
+    items.filter((i) => i.technology).map((i) => i.id),
+  );
+  const danglingPrereqs = new Set<string>();
+  for (const item of items) {
+    const tech = item.technology;
+    if (!tech?.prerequisites) continue;
+    const resolved = tech.prerequisites.filter((p) => {
+      if (researchIds.has(p)) return true;
+      danglingPrereqs.add(p);
+      return false;
+    });
+    tech.prerequisites = resolved.length > 0 ? resolved : undefined;
+  }
+  if (danglingPrereqs.size > 0) {
+    console.warn(
+      `  Warning: dropped prerequisites that match no research item: ${[...danglingPrereqs].sort().join(', ')}`,
+    );
+  }
+
   // Assign row numbers — all items in same category share row 0
   // so they wrap horizontally in the picker's flex container
   for (const item of items) {
@@ -1007,6 +1620,21 @@ async function main(): Promise<void> {
   // ---------------------------------------------------------------------------
   // Phase 5: Download icons and build sprite sheet
   // ---------------------------------------------------------------------------
+  // Hardcoded config refers to wiki items by id; a wiki rename breaks that
+  const configIds = new Set([
+    ...Object.keys(BELT_SPEEDS),
+    ...Object.keys(COLLECTORS),
+    ...Object.values(categoryMap).map((c) => c.icon),
+    MIN_BELT,
+    MAX_BELT,
+  ]);
+  const missingConfigIds = [...configIds].filter((id) => !seenItemIds.has(id));
+  if (missingConfigIds.length > 0) {
+    console.warn(
+      `  Warning: config refers to items that don't exist (renamed on the wiki?): ${missingConfigIds.join(', ')}`,
+    );
+  }
+
   console.log('Downloading icons...');
   const iconDir = path.join(OUTPUT_DIR, 'icons_tmp');
   if (!fs.existsSync(iconDir)) fs.mkdirSync(iconDir, { recursive: true });
@@ -1041,7 +1669,7 @@ async function main(): Promise<void> {
         if (baseId !== item.id && seenItemIds.has(baseId)) {
           item.icon = baseId;
         } else {
-          const unlocked = item.technology.unlockedRecipes;
+          const unlocked = item.technology.recipeUnlock;
           if (unlocked) {
             for (const recId of unlocked) {
               const itemId = recId.replace(/^craft-/, '');
@@ -1093,13 +1721,15 @@ async function main(): Promise<void> {
 
     if (!fs.existsSync(localPath)) {
       try {
-        let url: string | null = null;
+        let buf: Buffer | null = null;
         for (const filename of filenamesToTry) {
-          url = await getImageUrl(filename);
-          if (url) break;
+          const url = await getImageUrl(filename);
+          if (url) {
+            buf = await downloadImage(filename, url);
+            break;
+          }
         }
-        if (url) {
-          const buf = await downloadImage(url);
+        if (buf) {
           // Resize to 64x64
           const resized = await sharp(buf)
             .resize(ICON_SIZE, ICON_SIZE, {
@@ -1188,8 +1818,6 @@ async function main(): Promise<void> {
     const spriteCoord = spritesheetResult.coordinates[localPath];
     if (!spriteCoord) continue;
 
-    const position = `-${spriteCoord.x}px -${spriteCoord.y}px`;
-
     // Compute average color
     let color = '#808080';
     try {
@@ -1205,7 +1833,7 @@ async function main(): Promise<void> {
       // Use default
     }
 
-    icons.push({ id: iconId, position, color });
+    icons.push({ id: iconId, x: spriteCoord.x, y: spriteCoord.y, color });
   }
 
   // ---------------------------------------------------------------------------
@@ -1213,25 +1841,51 @@ async function main(): Promise<void> {
   // ---------------------------------------------------------------------------
   console.log('Writing output files...');
 
+  // The app reads defaults from data.json; defaults.json is the readable copy.
+  // "Minimum" hides the later-game machine variants and uses the basic
+  // collector; "Upgraded" enables everything and prefers faster collectors.
+  const collectorsByRate = Object.entries(COLLECTORS)
+    .sort(([, a], [, b]) => b.motes / b.seconds - a.motes / a.seconds)
+    .map(([id]) => id);
+  const defaults: DefaultsJson = {
+    presets: [
+      {
+        id: 0,
+        label: 'options.preset.minimum',
+        belt: MIN_BELT,
+        machineRank: ['simple-collector'],
+        excludedRecipes: [...machineVariantIds].sort(),
+      },
+      {
+        id: 1,
+        label: 'options.preset.upgraded',
+        belt: MAX_BELT,
+        machineRank: collectorsByRate,
+        excludedRecipes: [],
+      },
+    ],
+  };
+
   const modData: ModData = {
-    version: { MoteMancer: '1.0.0' },
+    version: { MoteMancer: version },
+    flags: ['power'],
     categories,
     icons,
     items,
     recipes,
+    defaults,
   };
 
   fs.writeFileSync(path.join(OUTPUT_DIR, 'data.json'), JSON.stringify(modData));
 
-  // Defaults - use Shifting Slab as min belt, Torrential Streamway as max
-  const defaults = {
-    minBelt: 'shifting-slab',
-    maxBelt: 'torrential-streamway',
-  };
-
+  // defaults.json is checked by the repo's prettier config, so format it
+  const defaultsPath = path.join(OUTPUT_DIR, 'defaults.json');
   fs.writeFileSync(
-    path.join(OUTPUT_DIR, 'defaults.json'),
-    JSON.stringify(defaults, null, 4),
+    defaultsPath,
+    await prettier.format(JSON.stringify(defaults), {
+      ...(await prettier.resolveConfig(defaultsPath)),
+      filepath: defaultsPath,
+    }),
   );
 
   // Clean up temp icon directory
@@ -1246,7 +1900,13 @@ async function main(): Promise<void> {
   console.log(`  Recipes: ${recipes.length}`);
   console.log(`  Icons: ${icons.length}`);
   console.log(`  Categories: ${categories.length}`);
+  console.log(
+    `\nResearch wiki report: ${report.disagreements} disagreements, ${report.missing} missing table rows -> ${REPORT_PATH}`,
+  );
   console.log(`\nOutput written to ${OUTPUT_DIR}/`);
+  console.log(
+    `Wiki cache: ${cacheStats.hits} hits, ${cacheStats.fetches} fetched from wiki`,
+  );
   console.log(`\nNext steps:`);
   console.log(`  1. npm run update-hash -- mtm`);
   console.log(`  2. Review data.json for correctness`);
