@@ -1,0 +1,23 @@
+<lab-rank-select
+  [labelledBy]="labelledBy()"
+  [options]="options()"
+  [ngModel]="editValue()"
+  (ngModelChange)="value.set($event.length ? $event : undefined)"
+>
+  @for (id of editValue(); track id) {
+    @let option = id | option: options();
+    @if (option?.icon) {
+      <lab-icon
+        [value]="option.icon"
+        [type]="option.iconType"
+        [text]="editValue().length > 1 ? ($index + 1).toString() : undefined"
+      ></lab-icon>
+    } @else {
+      <span>{{ id }}</span>
+    }
+  } @empty {
+    <span class="mx-1 text-gray-400 italic">{{
+      emptyMessage() ?? 'none' | translate
+    }}</span>
+  }
+</lab-rank-select>

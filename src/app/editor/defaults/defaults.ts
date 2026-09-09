@@ -32,6 +32,8 @@ import { OptionPipe } from '~/option/option-pipe';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
+import { EditorMultiselect } from '../components/editor-multiselect/editor-multiselect';
+import { EditorRankSelect } from '../components/editor-rank-select/editor-rank-select';
 import { QuantitiesButton } from '../components/quantities-button/quantities-button';
 import {
   QuantitiesDialog,
@@ -60,6 +62,8 @@ const RADIO_ICON_MAP = new Map<boolean | null | undefined, IconDefinition>([
     Select,
     TranslatePipe,
     QuantitiesButton,
+    EditorMultiselect,
+    EditorRankSelect,
   ],
   templateUrl: './defaults.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

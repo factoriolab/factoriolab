@@ -1,114 +1,32 @@
 <div class="gap-2 flex flex-col self-start">
   <lab-form-field label="editor.researchedTechnologies">
-    <lab-select
+    <lab-editor-multiselect
       [options]="technologyOptions()"
-      [ngModel]="defaults.researchedTechnologies ?? []"
-      (ngModelChange)="
-        defaults.researchedTechnologies = $event.length ? $event : undefined
-      "
-    >
-      @for (techId of defaults.researchedTechnologies ?? []; track techId) {
-        @let option = techId | option: technologyOptions();
-        @if (option?.icon) {
-          <lab-icon
-            [value]="option.icon"
-            type="img"
-            [class]="option.iconClass"
-            [iconText]="option.iconText"
-          >
-          </lab-icon>
-        } @else {
-          <span>{{ techId }}</span>
-        }
-      } @empty {
-        <span class="mx-1 text-gray-400 italic">{{ 'none' | translate }}</span>
-      }
-    </lab-select>
+      [(value)]="defaults.researchedTechnologies"
+    />
   </lab-form-field>
 
   <lab-form-field label="editor.excludedRecipes">
-    <lab-select
+    <lab-editor-multiselect
       [options]="recipeOptions()"
-      [ngModel]="defaults.excludedRecipes ?? []"
-      (ngModelChange)="
-        defaults.excludedRecipes = $event.length ? $event : undefined
-      "
-    >
-      @for (recipeId of defaults.excludedRecipes ?? []; track recipeId) {
-        @let option = recipeId | option: recipeOptions();
-        @if (option?.icon) {
-          <lab-icon
-            [value]="option.icon"
-            type="img"
-            [class]="option.iconClass"
-            [iconText]="option.iconText"
-          >
-          </lab-icon>
-        } @else {
-          <span>{{ recipeId }}</span>
-        }
-      } @empty {
-        <span class="mx-1 text-gray-400 italic">{{ 'none' | translate }}</span>
-      }
-    </lab-select>
+      [(value)]="defaults.excludedRecipes"
+    />
   </lab-form-field>
 
   <lab-form-field label="settings.modifierRank">
-    <lab-rank-select
+    <lab-editor-rank-select
       [options]="moduleOptions()"
-      [ngModel]="defaults.moduleRank"
-      (ngModelChange)="defaults.moduleRank = $event.length ? $event : undefined"
-    >
-      @for (id of defaults.moduleRank ?? []; track $index) {
-        @let opt = id | option: moduleOptions();
-        @if (opt?.icon) {
-          <lab-icon
-            [value]="opt.icon"
-            [type]="opt.iconType"
-            [text]="
-              (defaults.moduleRank?.length ?? 0) > 1
-                ? ($index + 1).toString()
-                : undefined
-            "
-          ></lab-icon>
-        } @else {
-          {{ id }}
-        }
-      } @empty {
-        <span class="mx-1 text-gray-400 italic">
-          {{ 'settings.modifierRankEmpty' | translate }}
-        </span>
-      }
-    </lab-rank-select>
+      emptyMessage="settings.modifierRankEmpty"
+      [(value)]="defaults.moduleRank"
+    />
   </lab-form-field>
 
   <lab-form-field label="settings.fuelRank">
-    <lab-rank-select
+    <lab-editor-rank-select
       [options]="fuelOptions()"
-      [ngModel]="defaults.fuelRank"
-      (ngModelChange)="defaults.fuelRank = $event.length ? $event : undefined"
-    >
-      @for (id of defaults.fuelRank ?? []; track $index) {
-        @let opt = id | option: fuelOptions();
-        @if (opt?.icon) {
-          <lab-icon
-            [value]="opt.icon"
-            [type]="opt.iconType"
-            [text]="
-              (defaults.fuelRank?.length ?? 0) > 1
-                ? ($index + 1).toString()
-                : undefined
-            "
-          ></lab-icon>
-        } @else {
-          {{ id }}
-        }
-      } @empty {
-        <span class="mx-1 text-gray-400 italic">
-          {{ 'settings.fuelRankEmpty' | translate }}
-        </span>
-      }
-    </lab-rank-select>
+      emptyMessage="settings.fuelRankEmpty"
+      [(value)]="defaults.fuelRank"
+    />
   </lab-form-field>
 
   <lab-form-field label="data.beacon">
@@ -491,8 +409,73 @@
             [(ngModel)]="model.label"
           />
         </td>
-        <td></td>
-        <td></td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="researched-technologies-header"
+              [options]="technologyOptions()"
+              [ngModel]="model.researchedTechnologies ?? []"
+              (ngModelChange)="
+                model.researchedTechnologies = $event.length
+                  ? $event
+                  : undefined
+              "
+            >
+              @for (
+                techId of model.researchedTechnologies ?? [];
+                track techId
+              ) {
+                @let option = techId | option: technologyOptions();
+                @if (option?.icon) {
+                  <lab-icon
+                    [value]="option.icon"
+                    type="img"
+                    [class]="option.iconClass"
+                    [iconText]="option.iconText"
+                  >
+                  </lab-icon>
+                } @else {
+                  <span>{{ techId }}</span>
+                }
+              } @empty {
+                <span class="mx-1 text-gray-400 italic">{{
+                  'none' | translate
+                }}</span>
+              }
+            </lab-select>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <lab-select
+              labelledBy="excluded-recipes-header"
+              [options]="recipeOptions()"
+              [ngModel]="model.excludedRecipes ?? []"
+              (ngModelChange)="
+                model.excludedRecipes = $event.length ? $event : undefined
+              "
+            >
+              @for (recipeId of model.excludedRecipes ?? []; track recipeId) {
+                @let option = recipeId | option: recipeOptions();
+                @if (option?.icon) {
+                  <lab-icon
+                    [value]="option.icon"
+                    type="img"
+                    [class]="option.iconClass"
+                    [iconText]="option.iconText"
+                  >
+                  </lab-icon>
+                } @else {
+                  <span>{{ recipeId }}</span>
+                }
+              } @empty {
+                <span class="mx-1 text-gray-400 italic">{{
+                  'none' | translate
+                }}</span>
+              }
+            </lab-select>
+          </div>
+        </td>
         <td></td>
         <td></td>
         <td></td>
@@ -541,8 +524,76 @@
               [(ngModel)]="preset.label"
             />
           </td>
-          <td></td>
-          <td></td>
+          <td>
+            <div class="flex items-center">
+              <lab-select
+                labelledBy="researched-technologies-header"
+                [options]="technologyOptions()"
+                [ngModel]="preset.researchedTechnologies ?? []"
+                (ngModelChange)="
+                  preset.researchedTechnologies = $event.length
+                    ? $event
+                    : undefined
+                "
+              >
+                @for (
+                  techId of preset.researchedTechnologies ?? [];
+                  track techId
+                ) {
+                  @let option = techId | option: technologyOptions();
+                  @if (option?.icon) {
+                    <lab-icon
+                      [value]="option.icon"
+                      type="img"
+                      [class]="option.iconClass"
+                      [iconText]="option.iconText"
+                    >
+                    </lab-icon>
+                  } @else {
+                    <span>{{ techId }}</span>
+                  }
+                } @empty {
+                  <span class="mx-1 text-gray-400 italic">{{
+                    'none' | translate
+                  }}</span>
+                }
+              </lab-select>
+            </div>
+          </td>
+          <td>
+            <div class="flex items-center">
+              <lab-select
+                labelledBy="excluded-recipes-header"
+                [options]="recipeOptions()"
+                [ngModel]="preset.excludedRecipes ?? []"
+                (ngModelChange)="
+                  preset.excludedRecipes = $event.length ? $event : undefined
+                "
+              >
+                @for (
+                  recipeId of preset.excludedRecipes ?? [];
+                  track recipeId
+                ) {
+                  @let option = recipeId | option: recipeOptions();
+                  @if (option?.icon) {
+                    <lab-icon
+                      [value]="option.icon"
+                      type="img"
+                      [class]="option.iconClass"
+                      [iconText]="option.iconText"
+                    >
+                    </lab-icon>
+                  } @else {
+                    <span>{{ recipeId }}</span>
+                  }
+                } @empty {
+                  <span class="mx-1 text-gray-400 italic">{{
+                    'none' | translate
+                  }}</span>
+                }
+              </lab-select>
+            </div>
+          </td>
           <td></td>
           <td></td>
           <td></td>
