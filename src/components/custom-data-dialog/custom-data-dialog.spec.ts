@@ -84,7 +84,7 @@ describe('CustomDataDialog', () => {
       const data = { icons: [{ id: 'id', color: '' }] };
       await component['updateColors'](data as any, 'icons');
       expect(fac.getColorAsync).toHaveBeenCalled();
-      expect(data.icons[0].color).toEqual('#000');
+      expect(data.icons[0].color).toEqual('#200001');
     });
   });
 });
