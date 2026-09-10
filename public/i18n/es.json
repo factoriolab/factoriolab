@@ -410,18 +410,11 @@
       "beacon12": "12 Faros",
       "beacon2": "2 Faros",
       "beacon8": "8 Faros",
+      "legendary": "Legendary",
       "minimum": "Mínimo",
       "modules": "Módulos",
       "proliferated": "Proliferado",
       "upgraded": "Mejorado"
-    },
-    "quality": {
-      "any": "Cualquiera",
-      "epic": "Épico",
-      "legendary": "Legendario",
-      "normal": "Normal",
-      "rare": "Raro",
-      "uncommon": "Poco común"
     },
     "researchBonus": {
       "speed0": "Sin bonificación de investigación",

@@ -2,13 +2,15 @@ import { Rational, rational } from '~/rational/rational';
 import { spread } from '~/utils/object';
 import { cloneRecord, toRationalRecord, toRecordEntries } from '~/utils/record';
 
-import { ItemJson } from './item';
+import { itemHasQuality, ItemJson } from './item';
 import { ModuleEffect } from './module';
 import { Quality } from './quality';
 
 export type RecipeFlag =
   | 'mining'
   | 'technology'
+  /** Factorio: quality seed grows a normal tree */
+  | 'plant'
   | 'burn'
   | 'recycling'
   | 'locked'
@@ -138,6 +140,6 @@ export function recipeHasQuality(
     !flags.has('mining') &&
     (!flags.has('technology') || Object.keys(recipe.in).length > 0) &&
     !flags.has('burn') &&
-    Object.keys(recipe.in).some((k) => itemData[k].stack)
+    Object.keys(recipe.in).some((k) => itemHasQuality(itemData[k]))
   );
 }

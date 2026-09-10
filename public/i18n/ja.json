@@ -410,18 +410,11 @@
       "beacon12": "ビーコン12台",
       "beacon2": "ビーコン2台",
       "beacon8": "ビーコン8台",
+      "legendary": "Legendary",
       "minimum": "最小限",
       "modules": "モジュール",
       "proliferated": "Proliferated",
       "upgraded": "アップグレード済"
-    },
-    "quality": {
-      "any": "Any",
-      "epic": "Epic",
-      "legendary": "Legendary",
-      "normal": "Normal",
-      "rare": "Rare",
-      "uncommon": "Uncommon"
     },
     "researchBonus": {
       "speed0": "研究速度ボーナスなし",

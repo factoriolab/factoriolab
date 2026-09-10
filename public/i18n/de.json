@@ -410,18 +410,11 @@
       "beacon12": "12 Effektverteiler",
       "beacon2": "2 Effektverteiler",
       "beacon8": "8 Effektverteiler",
+      "legendary": "Legendary",
       "minimum": "Minimum",
       "modules": "Module",
       "proliferated": "Vermehrt",
       "upgraded": "mit Upgrade"
-    },
-    "quality": {
-      "any": "Any",
-      "epic": "Epic",
-      "legendary": "Legendary",
-      "normal": "Normal",
-      "rare": "Rare",
-      "uncommon": "Uncommon"
     },
     "researchBonus": {
       "speed0": "Kein Forschungsbonus",

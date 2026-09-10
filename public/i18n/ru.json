@@ -410,18 +410,11 @@
       "beacon12": "12 Маяков",
       "beacon2": "2 Маяков",
       "beacon8": "8 Маяков",
+      "legendary": "Legendary",
       "minimum": "Минимум",
       "modules": "Модули",
       "proliferated": "Распространенный",
       "upgraded": "Улучшено"
-    },
-    "quality": {
-      "any": "Any",
-      "epic": "Epic",
-      "legendary": "Legendary",
-      "normal": "Normal",
-      "rare": "Rare",
-      "uncommon": "Uncommon"
     },
     "researchBonus": {
       "speed0": "Без бонуса иследований",

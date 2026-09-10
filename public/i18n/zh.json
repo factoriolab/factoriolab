@@ -410,18 +410,11 @@
       "beacon12": "12 个插件效果分享塔",
       "beacon2": "2 个插件效果分享塔",
       "beacon8": "8 个插件效果分享塔",
+      "legendary": "Legendary",
       "minimum": "最小化",
       "modules": "插件",
       "proliferated": "已增产",
       "upgraded": "已升级"
-    },
-    "quality": {
-      "any": "任意",
-      "epic": "史诗",
-      "legendary": "传说",
-      "normal": "基础",
-      "rare": "稀有",
-      "uncommon": "精良"
     },
     "researchBonus": {
       "speed0": "无科技研究速度加成",

@@ -650,9 +650,10 @@ export class SettingsStore extends Store<SettingsState> {
             itemData,
             recipe.flags.has('technology'),
           );
-          const qOut = recipe.flags.has('technology')
-            ? recipe.out
-            : this.qualityRecord(recipe.out, quality, itemData);
+          const qOut =
+            recipe.flags.has('technology') || recipe.flags.has('plant')
+              ? recipe.out
+              : this.qualityRecord(recipe.out, quality, itemData);
           let qCatalyst: Record<string, Rational> | undefined;
           if (recipe.catalyst)
             qCatalyst = this.qualityRecord(recipe.catalyst, quality, itemData);
@@ -926,7 +927,10 @@ export class SettingsStore extends Store<SettingsState> {
   ): Settings {
     const techIds =
       state.researchedTechnologyIds ?? defaults?.researchedTechnologyIds;
-    let researchedTechnologyIds = new Set(data.technologyIds);
+    // Default: non-infinite technologies
+    let researchedTechnologyIds = new Set(
+      data.technologyIds.filter((i) => !data.technologyRecord[i].infinite),
+    );
     if (techIds != null && researchedTechnologyIds.size > 0) {
       // Filter for only technologies that still exist in this data set
       const filteredTechs = Array.from(techIds).filter((i) =>

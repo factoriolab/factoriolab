@@ -410,18 +410,11 @@
       "beacon12": "12 Transmissores",
       "beacon2": "2 Transmissores",
       "beacon8": "8 Transmissores",
+      "legendary": "Legendary",
       "minimum": "Mínimo",
       "modules": "Módulos",
       "proliferated": "Proliferado",
       "upgraded": "Aprimorado"
-    },
-    "quality": {
-      "any": "Qualquer",
-      "epic": "Épico",
-      "legendary": "Lendário",
-      "normal": "Normal",
-      "rare": "Raro",
-      "uncommon": "Incomum"
     },
     "researchBonus": {
       "speed0": "Sem bônus de pesquisa",

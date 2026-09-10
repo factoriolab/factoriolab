@@ -410,18 +410,11 @@
       "beacon12": "12 Balises",
       "beacon2": "2 Balises",
       "beacon8": "8 Balises",
+      "legendary": "Legendary",
       "minimum": "Minimum",
       "modules": "Modules",
       "proliferated": "Proliféré",
       "upgraded": "Amélioré"
-    },
-    "quality": {
-      "any": "Tout",
-      "epic": "Epique",
-      "legendary": "Legendaire",
-      "normal": "Normal",
-      "rare": "Rare",
-      "uncommon": "Noncommun"
     },
     "researchBonus": {
       "speed0": "Pas de bonus de vitesse de recherhce",
