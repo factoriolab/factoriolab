@@ -3,6 +3,7 @@
 ## TODO
 
 - Defaults
+  - Handle selecting quality items / recipes?
 
 ## DONE
 
