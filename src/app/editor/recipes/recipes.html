@@ -53,7 +53,7 @@
               [options]="iconOptions()"
               [iconOnly]="true"
               [(ngModel)]="model.icon"
-            ></lab-select>
+            />
           </div>
         </td>
         <td>
@@ -73,7 +73,7 @@
               [options]="categoryOptions()"
               [iconOnly]="true"
               [(ngModel)]="model.category"
-            ></lab-select>
+            />
           </div>
         </td>
         <td>
@@ -123,36 +123,11 @@
           </div>
         </td>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="producers-header"
-              [options]="producerOptions()"
-              [iconOnly]="true"
-              [ngModel]="model.producers ?? []"
-              (ngModelChange)="
-                model.producers = $event.length ? $event : undefined
-              "
-            >
-              @for (producer of model.producers ?? []; track producer) {
-                @let option = producer | option: producerOptions();
-                @if (option && option.icon) {
-                  <lab-icon
-                    [value]="option.icon"
-                    type="img"
-                    [class]="option.iconClass"
-                    [iconText]="option.iconText"
-                  >
-                  </lab-icon>
-                } @else {
-                  <span>{{ producer }}</span>
-                }
-              } @empty {
-                <span class="mx-1 text-gray-400 italic">{{
-                  'none' | translate
-                }}</span>
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="producerOptions()"
+            labelledBy="producers-header"
+            [(value)]="model.producers"
+          />
         </td>
         <td>
           <div class="flex items-center">
@@ -222,35 +197,11 @@
           </div>
         </td>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="locations-header"
-              [options]="locationOptions()"
-              [ngModel]="model.locations ?? []"
-              (ngModelChange)="
-                model.locations = $event.length ? $event : undefined
-              "
-            >
-              @for (location of model.locations ?? []; track location) {
-                @let option = location | option: locationOptions();
-                @if (option && option.icon) {
-                  <lab-icon
-                    [value]="option.icon"
-                    type="img"
-                    [class]="option.iconClass"
-                    [iconText]="option.iconText"
-                  >
-                  </lab-icon>
-                } @else {
-                  <span>{{ location }}</span>
-                }
-              } @empty {
-                <span class="mx-1 text-gray-400 italic">{{
-                  'none' | translate
-                }}</span>
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="locationOptions()"
+            labelledBy="locations-header"
+            [(value)]="model.locations"
+          />
         </td>
         <td>
           <div class="flex items-center">
@@ -335,7 +286,7 @@
               (ngModelChange)="
                 recipe.icon = $event === recipe.id ? undefined : $event
               "
-            ></lab-select>
+            />
           </div>
         </td>
         <td>
@@ -354,7 +305,7 @@
               [options]="categoryOptions()"
               [iconOnly]="true"
               [(ngModel)]="recipe.category"
-            ></lab-select>
+            />
           </div>
         </td>
         <td>
@@ -404,36 +355,11 @@
           </div>
         </td>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="producers-header"
-              [options]="producerOptions()"
-              [iconOnly]="true"
-              [ngModel]="recipe.producers ?? []"
-              (ngModelChange)="
-                recipe.producers = $event.length ? $event : undefined
-              "
-            >
-              @for (producer of recipe.producers ?? []; track producer) {
-                @let option = producer | option: producerOptions();
-                @if (option && option.icon) {
-                  <lab-icon
-                    [value]="option.icon"
-                    type="img"
-                    [class]="option.iconClass"
-                    [iconText]="option.iconText"
-                  >
-                  </lab-icon>
-                } @else {
-                  <span>{{ producer }}</span>
-                }
-              } @empty {
-                <span class="mx-1 text-gray-400 italic">{{
-                  'none' | translate
-                }}</span>
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="producerOptions()"
+            labelledBy="producers-header"
+            [(value)]="recipe.producers"
+          />
         </td>
         <td>
           <div class="flex items-center">
@@ -503,35 +429,11 @@
           </div>
         </td>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="locations-header"
-              [options]="locationOptions()"
-              [ngModel]="recipe.locations ?? []"
-              (ngModelChange)="
-                recipe.locations = $event.length ? $event : undefined
-              "
-            >
-              @for (location of recipe.locations ?? []; track location) {
-                @let option = location | option: locationOptions();
-                @if (option && option.icon) {
-                  <lab-icon
-                    [value]="option.icon"
-                    type="img"
-                    [class]="option.iconClass"
-                    [iconText]="option.iconText"
-                  >
-                  </lab-icon>
-                } @else {
-                  <span>{{ location }}</span>
-                }
-              } @empty {
-                <span class="mx-1 text-gray-400 italic">{{
-                  'none' | translate
-                }}</span>
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="locationOptions()"
+            labelledBy="locations-header"
+            [(value)]="recipe.locations"
+          />
         </td>
         <td>
           <div class="flex items-center">

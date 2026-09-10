@@ -12,7 +12,6 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { RankSelect } from '~/app/main/settings/rank-select/rank-select';
 import { Control } from '~/components/control';
 import { Icon } from '~/components/icon/icon';
-import { Select } from '~/components/select/select';
 import { Option } from '~/option/option';
 import { OptionPipe } from '~/option/option-pipe';
 import { TranslatePipe } from '~/translate/translate-pipe';
@@ -27,11 +26,13 @@ import { TranslatePipe } from '~/translate/translate-pipe';
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useFactory: (): Control => inject(EditorRankSelect).select(),
+      useFactory: (): Control<string[]> =>
+        inject(EditorRankSelect).rankSelect(),
     },
     {
       provide: Control,
-      useFactory: (): Control => inject(EditorRankSelect).select(),
+      useFactory: (): Control<string[]> =>
+        inject(EditorRankSelect).rankSelect(),
     },
   ],
 })
@@ -41,6 +42,6 @@ export class EditorRankSelect {
   readonly value = model<string[]>();
   readonly emptyMessage = input<string>();
 
-  readonly select = viewChild.required(Select);
+  readonly rankSelect = viewChild.required(RankSelect);
   protected readonly editValue = linkedSignal(() => this.value() ?? []);
 }

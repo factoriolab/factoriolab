@@ -15,11 +15,9 @@ import {
   faCircleMinus,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { RankSelect } from '~/app/main/settings/rank-select/rank-select';
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
 import { FormField } from '~/components/form-field/form-field';
-import { Icon } from '~/components/icon/icon';
 import { Select } from '~/components/select/select';
 import {
   BaseDefaultsJson,
@@ -28,7 +26,6 @@ import {
   HardCodedPresetsJson,
   PresetJson,
 } from '~/data/schema/defaults';
-import { OptionPipe } from '~/option/option-pipe';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
@@ -56,9 +53,6 @@ const RADIO_ICON_MAP = new Map<boolean | null | undefined, IconDefinition>([
     Button,
     Checkbox,
     FormField,
-    Icon,
-    OptionPipe,
-    RankSelect,
     Select,
     TranslatePipe,
     QuantitiesButton,

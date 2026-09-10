@@ -34,8 +34,7 @@
       placeholder="none"
       [options]="nullableBeaconOptions()"
       [(ngModel)]="defaults.beacon"
-    >
-    </lab-select>
+    />
   </lab-form-field>
 
   <lab-form-field label="editor.beaconModule">
@@ -43,8 +42,7 @@
       placeholder="none"
       [options]="nullableModuleOptions()"
       [(ngModel)]="defaults.beaconModule"
-    >
-    </lab-select>
+    />
   </lab-form-field>
 
   <lab-form-field label="data.cargoWagon">
@@ -52,8 +50,7 @@
       placeholder="none"
       [options]="nullableCargoWagonOptions()"
       [(ngModel)]="defaults.cargoWagon"
-    >
-    </lab-select>
+    />
   </lab-form-field>
 
   <lab-form-field label="data.fluidWagon">
@@ -61,8 +58,7 @@
       placeholder="none"
       [options]="nullableFluidWagonOptions()"
       [(ngModel)]="defaults.fluidWagon"
-    >
-    </lab-select>
+    />
   </lab-form-field>
 
   <div>
@@ -132,13 +128,13 @@
     label="editor.hardCodedPresets"
     [ngModel]="hardCodedPresets != null"
     (ngModelChange)="switchType(!$event)"
-  ></lab-checkbox>
+  />
   <lab-checkbox
     [iconMap]="radioIconMap"
     label="editor.customPresets"
     [ngModel]="customPresets != null"
     (ngModelChange)="switchType($event)"
-  ></lab-checkbox>
+  />
 </div>
 
 @if (hardCodedPresets) {
@@ -148,8 +144,7 @@
         placeholder="none"
         [options]="nullableBeltOptions()"
         [(ngModel)]="hardCodedPresets.minBelt"
-      >
-      </lab-select>
+      />
     </lab-form-field>
 
     <lab-form-field label="editor.maxBelt">
@@ -157,8 +152,7 @@
         placeholder="none"
         [options]="nullableBeltOptions()"
         [(ngModel)]="hardCodedPresets.maxBelt"
-      >
-      </lab-select>
+      />
     </lab-form-field>
 
     <lab-form-field label="editor.minPipe">
@@ -166,8 +160,7 @@
         placeholder="none"
         [options]="nullablePipeOptions()"
         [(ngModel)]="hardCodedPresets.minPipe"
-      >
-      </lab-select>
+      />
     </lab-form-field>
 
     <lab-form-field label="editor.maxPipe">
@@ -175,93 +168,30 @@
         placeholder="none"
         [options]="nullablePipeOptions()"
         [(ngModel)]="hardCodedPresets.maxPipe"
-      >
-      </lab-select>
+      />
     </lab-form-field>
 
     <lab-form-field label="editor.minMachineRank">
-      <lab-rank-select
+      <lab-editor-rank-select
         [options]="machineOptions()"
-        [(ngModel)]="hardCodedPresets.minMachineRank"
-      >
-        @for (id of hardCodedPresets.minMachineRank ?? []; track $index) {
-          @let opt = id | option: machineOptions();
-          @if (opt?.icon) {
-            <lab-icon
-              [value]="opt.icon"
-              [type]="opt.iconType"
-              [text]="
-                (hardCodedPresets.minMachineRank?.length ?? 0) > 1
-                  ? ($index + 1).toString()
-                  : undefined
-              "
-            ></lab-icon>
-          } @else {
-            {{ id }}
-          }
-        } @empty {
-          <span class="mx-1 text-gray-400 italic">
-            {{ 'none' | translate }}
-          </span>
-        }
-      </lab-rank-select>
+        [(value)]="hardCodedPresets.minMachineRank"
+      />
     </lab-form-field>
 
     <lab-form-field label="editor.maxMachineRank">
-      <lab-rank-select
+      <lab-editor-rank-select
         [options]="machineOptions()"
-        [(ngModel)]="hardCodedPresets.maxMachineRank"
-      >
-        @for (id of hardCodedPresets.maxMachineRank ?? []; track $index) {
-          @let opt = id | option: machineOptions();
-          @if (opt?.icon) {
-            <lab-icon
-              [value]="opt.icon"
-              [type]="opt.iconType"
-              [text]="
-                (hardCodedPresets.maxMachineRank?.length ?? 0) > 1
-                  ? ($index + 1).toString()
-                  : undefined
-              "
-            ></lab-icon>
-          } @else {
-            {{ id }}
-          }
-        } @empty {
-          <span class="mx-1 text-gray-400 italic">
-            {{ 'none' | translate }}
-          </span>
-        }
-      </lab-rank-select>
+        [(value)]="hardCodedPresets.maxMachineRank"
+      />
     </lab-form-field>
   </div>
 } @else if (customPresets) {
   <div class="gap-2 flex flex-col self-start">
     <lab-form-field label="settings.locations">
-      <lab-select
+      <lab-editor-multiselect
         [options]="locationOptions()"
-        [ngModel]="customPresets.locations ?? []"
-        (ngModelChange)="customPresets.locations = $event"
-      >
-        @for (locationId of customPresets.locations ?? []; track locationId) {
-          @let option = locationId | option: locationOptions();
-          @if (option?.icon) {
-            <lab-icon
-              [value]="option.icon"
-              type="img"
-              [class]="option.iconClass"
-              [iconText]="option.iconText"
-            >
-            </lab-icon>
-          } @else {
-            <span>{{ locationId }}</span>
-          }
-        } @empty {
-          <span class="mx-1 text-gray-400 italic">{{
-            'none' | translate
-          }}</span>
-        }
-      </lab-select>
+        [(value)]="customPresets.locations"
+      />
     </lab-form-field>
 
     <lab-form-field label="data.belt">
@@ -269,8 +199,7 @@
         placeholder="none"
         [options]="nullableBeltOptions()"
         [(ngModel)]="customPresets.belt"
-      >
-      </lab-select>
+      />
     </lab-form-field>
 
     <div>
@@ -293,36 +222,14 @@
         placeholder="none"
         [options]="nullablePipeOptions()"
         [(ngModel)]="customPresets.pipe"
-      >
-      </lab-select>
+      />
     </lab-form-field>
 
     <lab-form-field label="settings.machineRank">
-      <lab-rank-select
+      <lab-editor-rank-select
         [options]="machineOptions()"
-        [(ngModel)]="customPresets.machineRank"
-      >
-        @for (id of customPresets.machineRank ?? []; track $index) {
-          @let opt = id | option: machineOptions();
-          @if (opt?.icon) {
-            <lab-icon
-              [value]="opt.icon"
-              [type]="opt.iconType"
-              [text]="
-                (customPresets.machineRank?.length ?? 0) > 1
-                  ? ($index + 1).toString()
-                  : undefined
-              "
-            ></lab-icon>
-          } @else {
-            {{ id }}
-          }
-        } @empty {
-          <span class="mx-1 text-gray-400 italic">
-            {{ 'none' | translate }}
-          </span>
-        }
-      </lab-rank-select>
+        [(value)]="customPresets.machineRank"
+      />
     </lab-form-field>
 
     <div>
@@ -410,71 +317,18 @@
           />
         </td>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="researched-technologies-header"
-              [options]="technologyOptions()"
-              [ngModel]="model.researchedTechnologies ?? []"
-              (ngModelChange)="
-                model.researchedTechnologies = $event.length
-                  ? $event
-                  : undefined
-              "
-            >
-              @for (
-                techId of model.researchedTechnologies ?? [];
-                track techId
-              ) {
-                @let option = techId | option: technologyOptions();
-                @if (option?.icon) {
-                  <lab-icon
-                    [value]="option.icon"
-                    type="img"
-                    [class]="option.iconClass"
-                    [iconText]="option.iconText"
-                  >
-                  </lab-icon>
-                } @else {
-                  <span>{{ techId }}</span>
-                }
-              } @empty {
-                <span class="mx-1 text-gray-400 italic">{{
-                  'none' | translate
-                }}</span>
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="technologyOptions()"
+            labelledBy="researched-technologies-header"
+            [(value)]="model.researchedTechnologies"
+          />
         </td>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="excluded-recipes-header"
-              [options]="recipeOptions()"
-              [ngModel]="model.excludedRecipes ?? []"
-              (ngModelChange)="
-                model.excludedRecipes = $event.length ? $event : undefined
-              "
-            >
-              @for (recipeId of model.excludedRecipes ?? []; track recipeId) {
-                @let option = recipeId | option: recipeOptions();
-                @if (option?.icon) {
-                  <lab-icon
-                    [value]="option.icon"
-                    type="img"
-                    [class]="option.iconClass"
-                    [iconText]="option.iconText"
-                  >
-                  </lab-icon>
-                } @else {
-                  <span>{{ recipeId }}</span>
-                }
-              } @empty {
-                <span class="mx-1 text-gray-400 italic">{{
-                  'none' | translate
-                }}</span>
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="recipeOptions()"
+            labelledBy="excluded-recipes-header"
+            [(value)]="model.excludedRecipes"
+          />
         </td>
         <td></td>
         <td></td>
@@ -525,74 +379,18 @@
             />
           </td>
           <td>
-            <div class="flex items-center">
-              <lab-select
-                labelledBy="researched-technologies-header"
-                [options]="technologyOptions()"
-                [ngModel]="preset.researchedTechnologies ?? []"
-                (ngModelChange)="
-                  preset.researchedTechnologies = $event.length
-                    ? $event
-                    : undefined
-                "
-              >
-                @for (
-                  techId of preset.researchedTechnologies ?? [];
-                  track techId
-                ) {
-                  @let option = techId | option: technologyOptions();
-                  @if (option?.icon) {
-                    <lab-icon
-                      [value]="option.icon"
-                      type="img"
-                      [class]="option.iconClass"
-                      [iconText]="option.iconText"
-                    >
-                    </lab-icon>
-                  } @else {
-                    <span>{{ techId }}</span>
-                  }
-                } @empty {
-                  <span class="mx-1 text-gray-400 italic">{{
-                    'none' | translate
-                  }}</span>
-                }
-              </lab-select>
-            </div>
+            <lab-editor-multiselect
+              [options]="technologyOptions()"
+              labelledBy="researched-technologies-header"
+              [(value)]="preset.researchedTechnologies"
+            />
           </td>
           <td>
-            <div class="flex items-center">
-              <lab-select
-                labelledBy="excluded-recipes-header"
-                [options]="recipeOptions()"
-                [ngModel]="preset.excludedRecipes ?? []"
-                (ngModelChange)="
-                  preset.excludedRecipes = $event.length ? $event : undefined
-                "
-              >
-                @for (
-                  recipeId of preset.excludedRecipes ?? [];
-                  track recipeId
-                ) {
-                  @let option = recipeId | option: recipeOptions();
-                  @if (option?.icon) {
-                    <lab-icon
-                      [value]="option.icon"
-                      type="img"
-                      [class]="option.iconClass"
-                      [iconText]="option.iconText"
-                    >
-                    </lab-icon>
-                  } @else {
-                    <span>{{ recipeId }}</span>
-                  }
-                } @empty {
-                  <span class="mx-1 text-gray-400 italic">{{
-                    'none' | translate
-                  }}</span>
-                }
-              </lab-select>
-            </div>
+            <lab-editor-multiselect
+              [options]="recipeOptions()"
+              labelledBy="excluded-recipes-header"
+              [(value)]="preset.excludedRecipes"
+            />
           </td>
           <td></td>
           <td></td>

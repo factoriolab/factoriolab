@@ -37,7 +37,7 @@
             [options]="iconOptions()"
             [iconOnly]="true"
             [(ngModel)]="model.icon"
-          ></lab-select>
+          />
         </div>
       </td>
       <td>
@@ -67,12 +67,12 @@
           cdkDragHandle
           class="cursor-grab hover:bg-gray-800 active:cursor-grabbing"
         >
-          <fa-icon [icon]="faGrip"></fa-icon>
+          <fa-icon [icon]="faGrip" />
           <ng-container *cdkDragPreview>
             <div
               class="gap-2 rounded-xs p-2 flex items-center border border-gray-700 bg-gray-900"
             >
-              <fa-icon [icon]="faGrip"></fa-icon>
+              <fa-icon [icon]="faGrip" />
               <img
                 class="w-8"
                 [src]="edit().icons[location.icon ?? location.id]?.url"
@@ -112,7 +112,7 @@
               (ngModelChange)="
                 location.icon = $event === location.id ? undefined : $event
               "
-            ></lab-select>
+            />
           </div>
         </td>
         <td>

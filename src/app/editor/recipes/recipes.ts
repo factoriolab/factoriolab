@@ -23,15 +23,14 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
-import { Icon } from '~/components/icon/icon';
 import { Select } from '~/components/select/select';
 import { CategoryJson } from '~/data/schema/category';
 import { RecipeFlag, RecipeJson } from '~/data/schema/recipe';
 import { Option } from '~/option/option';
-import { OptionPipe } from '~/option/option-pipe';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
+import { EditorMultiselect } from '../components/editor-multiselect/editor-multiselect';
 import { QuantitiesButton } from '../components/quantities-button/quantities-button';
 import {
   QuantitiesDialog,
@@ -54,10 +53,9 @@ import {
     ScrollingModule,
     FaIconComponent,
     Button,
-    Icon,
-    OptionPipe,
     Select,
     TranslatePipe,
+    EditorMultiselect,
     QuantitiesButton,
   ],
   templateUrl: './recipes.html',
