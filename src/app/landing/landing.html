@@ -98,5 +98,8 @@
     ></lab-checkbox>
   }
 
-  <span class="mb-4 mt-auto text-center">{{ release.version() }} </span>
+  <div class="mb-4 gap-2 mt-auto flex justify-center">
+    {{ release.version() }}
+    <a routerLink="/editor" class="link">{{ 'header.editor' | translate }}</a>
+  </div>
 </main>

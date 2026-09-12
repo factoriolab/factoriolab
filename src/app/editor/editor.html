@@ -1,0 +1,48 @@
+<div class="gap-2 flex items-center">
+  <a
+    routerLink="/"
+    labButton
+    [faIcon]="faHome"
+    [attr.aria-label]="'home' | translate"
+  ></a>
+  <h2 class="text-2xl font-light">{{ 'editor.header' | translate }}</h2>
+</div>
+
+<div class="gap-2 flex items-center">
+  <button
+    type="button"
+    labButton
+    [faIcon]="faDownload"
+    text="editor.download"
+    (click)="download()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faUpload"
+    text="editor.upload"
+    (click)="upload()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faRotateLeft"
+    text="reset"
+    (click)="reset()"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faFileExport"
+    color="brand"
+    text="editor.export"
+    (click)="export()"
+  ></button>
+</div>
+
+<div class="flex grow flex-col">
+  <div class="mb-1 sm:mb-2">
+    <lab-tabs [tabs]="tabs" />
+  </div>
+  <router-outlet [routerOutletData]="edit()" />
+</div>

@@ -11,6 +11,11 @@ export const routes: Routes = [
     loadComponent: () => import('./error/error').then((c) => c.Error),
   },
   {
+    path: 'editor',
+    loadComponent: () => import('./editor/editor').then((c) => c.Editor),
+    loadChildren: () => import('./editor/editor.routes').then((c) => c.routes),
+  },
+  {
     path: ':id',
     canActivate: [idGuard],
     loadComponent: () => import('./id/id').then((c) => c.Id),

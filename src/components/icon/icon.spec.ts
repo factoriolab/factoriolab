@@ -44,4 +44,11 @@ describe('Icon', () => {
       expect(component['faIcon']()).toEqual(faXmark);
     });
   });
+
+  describe('src', () => {
+    it('should return a url src attribute if type is img', () => {
+      setInputs(fixture, { value: 'url', type: 'img' });
+      expect(component['src']()).toEqual('url');
+    });
+  });
 });

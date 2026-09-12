@@ -62,6 +62,7 @@
     "label": "JSON 데이터 파일과 이미지 스프라이트 시트를 선택하세요"
   },
   "data": {
+    "baseEffect": "Base effect",
     "beacon": "신호기",
     "beacons": "신호기",
     "belt": "벨트",
@@ -99,6 +100,7 @@
     "fuelCategory": "연료 카테고리",
     "fuelValue": "연료 가치",
     "fuels": "연료",
+    "ingredientUsage": "Ingredient usage",
     "ingredients": "재료",
     "inserter": "투입기",
     "inserterIgnoresBonus": "묶음 크기 보너스 무시",
@@ -138,6 +140,7 @@
     "recipes": "제작법",
     "researchProductivity": "연구 생산성",
     "researchSpeed": "연구 속도",
+    "rocketCapacity": "Rocket capacity",
     "rocketLaunchTime": "로켓 발사 시간 (초)",
     "rocketPart": "로켓 부품",
     "rocketPartsRequired": "필요한 로켓 부품 수",
@@ -156,6 +159,49 @@
     "unlockedBy": "잠금 해제 조건",
     "unlockedRecipes": "잠금 해제된 제작법",
     "value": "값"
+  },
+  "delete": "삭제",
+  "edit": "Edit",
+  "editor": {
+    "beaconCount": "Beacon count",
+    "beaconModule": "Beacon module",
+    "chooseImages": "Choose images",
+    "color": "Color",
+    "customPresets": "Custom presets",
+    "defaults": "Defaults",
+    "download": "Load existing data",
+    "effect": "Effect",
+    "excludedRecipes": "Excluded recipes",
+    "export": "Export",
+    "hardCodedPresets": "Hard-coded presets (legacy)",
+    "header": "Game data editor",
+    "hideRate": "Hide rate",
+    "home": "Home",
+    "icon": "Icon",
+    "iconText": "Icon text",
+    "icons": "Icons",
+    "id": "Id",
+    "image": "Image",
+    "item": "Item",
+    "level": "Level",
+    "limitation": "Limitation",
+    "limitations": "Limitations",
+    "loadExistingData": "Load existing data",
+    "maxBelt": "Maximum belt",
+    "maxMachineRank": "Maximum machine rank",
+    "maxPipe": "Maximum pipe",
+    "minBelt": "Minimum belt",
+    "minMachineRank": "Minimum machine rank",
+    "minPipe": "Minimum pipe",
+    "profile": "Profile",
+    "qualities": "Qualities",
+    "researchedTechnologies": "Researched technologies",
+    "resetColors": "Reset colors",
+    "rocketLaunchTime": "Rocket launch time (ticks)",
+    "row": "Row",
+    "totalRecipe": "Total recipe",
+    "unlimited": "Unlimited",
+    "upload": "Upload custom files"
   },
   "error": {
     "deleteCustom": "사용자 지정 데이터 삭제",
@@ -185,6 +231,7 @@
   "game": "게임",
   "header": {
     "discord": "Discord",
+    "editor": "Editor",
     "resetTooltip": "클릭하여 초기화",
     "selectGame": "게임 선택",
     "source": "소스",
@@ -270,6 +317,10 @@
       "force": "Force",
       "layered": "Layered",
       "stress": "Stress"
+    },
+    "energyType": {
+      "burner": "Burner",
+      "electric": "Electric"
     },
     "flowDiagram": {
       "boxLine": "박스-라인",
@@ -401,7 +452,6 @@
     "convertObjectiveValues": "목표 값 변환",
     "convertObjectiveValuesTooltip": "체크하면 유형이 변경될 때 아이템 수량을 유지하도록 목표 값이 변환됩니다.",
     "createSavedState": "새로 만들기",
-    "deleteSavedState": "삭제",
     "editSavedState": "이름 바꾸기",
     "glpkAlgorithm": "GLPK 알고리즘",
     "header": "환경설정",
@@ -427,6 +477,7 @@
   },
   "remove": "삭제",
   "reset": "초기화",
+  "save": "Save",
   "select": {
     "noMatches": "일치하는 항목이 없습니다"
   },

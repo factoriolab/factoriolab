@@ -1,0 +1,148 @@
+import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+  faFloppyDisk,
+  faPencil,
+  faPlus,
+  faTrash,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
+
+import { Button } from '~/components/button/button';
+import { Checkbox } from '~/components/checkbox/checkbox';
+import { DialogData } from '~/components/dialog/dialog';
+import { Select } from '~/components/select/select';
+import { EnergyType } from '~/data/schema/energy-type';
+import { MachineJson } from '~/data/schema/machine';
+import { ModuleEffect } from '~/data/schema/module';
+import { SiloJson } from '~/data/schema/silo';
+import { Option } from '~/option/option';
+import { TranslatePipe } from '~/translate/translate-pipe';
+import { coalesce } from '~/utils/nullish';
+
+import { EditorMultiselect } from '../../components/editor-multiselect/editor-multiselect';
+import { QuantitiesButton } from '../../components/quantities-button/quantities-button';
+import {
+  QuantitiesDialog,
+  QuantitiesDialogData,
+} from '../../components/quantities-dialog/quantities-dialog';
+import { EditorData } from '../../editor.types';
+import {
+  moduleEffectOptions,
+  toNullableNumeric,
+  toOptions,
+  toSize,
+} from '../../object-utils';
+import { BaseEffectDialog } from './base-effect-dialog/base-effect-dialog';
+import { SiloDialog } from './silo-dialog/silo-dialog';
+
+export interface MachineDialogData {
+  machine: MachineJson;
+  fuelOptions: Option<string | undefined>[];
+  locationOptions: Option[];
+  edit: EditorData;
+}
+
+@Component({
+  selector: 'lab-machine-dialog',
+  imports: [
+    FormsModule,
+    Button,
+    Checkbox,
+    TranslatePipe,
+    Select,
+    QuantitiesButton,
+    EditorMultiselect,
+  ],
+  templateUrl: './machine-dialog.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'flex flex-col gap-3 p-3 pt-0 sm:gap-6 sm:p-6 sm:pt-0 lg:max-w-3xl',
+  },
+})
+export class MachineDialog implements DialogData {
+  private readonly cd = inject(ChangeDetectorRef);
+  private readonly dialog = inject(Dialog);
+  protected readonly data = inject<MachineDialogData>(DIALOG_DATA);
+  protected readonly dialogRef =
+    inject<DialogRef<MachineJson | null | undefined>>(DialogRef);
+
+  protected readonly energySourceOptions: Option<EnergyType | undefined>[] = [
+    { label: 'none', value: undefined },
+    { label: 'options.energyType.burner', value: EnergyType.Burner },
+    { label: 'options.energyType.electric', value: EnergyType.Electric },
+  ];
+  protected readonly faFloppyDisk = faFloppyDisk;
+  protected readonly faPencil = faPencil;
+  protected readonly faPlus = faPlus;
+  protected readonly faTrash = faTrash;
+  protected readonly faXmark = faXmark;
+  readonly header = 'data.machine';
+  protected readonly moduleEffectOptions = moduleEffectOptions;
+  protected readonly toNullableNumeric = toNullableNumeric;
+  protected readonly toSize = toSize;
+
+  updateFuelCategories(value: string): void {
+    try {
+      const fuelCategories = value.split(',').map((v) => v.trim());
+      if (fuelCategories.length) {
+        this.data.machine.fuelCategories = fuelCategories;
+        return;
+      }
+    } catch {
+      // Do nothing
+    }
+
+    this.data.machine.fuelCategories = undefined;
+  }
+
+  editSilo(machine: MachineJson): void {
+    this.dialog
+      .open<
+        SiloJson | null | undefined,
+        SiloJson,
+        SiloDialog
+      >(SiloDialog, { data: coalesce(machine.silo, { parts: 1, launch: 1 }) })
+      .closed.subscribe((silo) => {
+        if (silo === null) delete machine.silo;
+        else if (silo) machine.silo = silo;
+        this.cd.detectChanges();
+      });
+  }
+
+  editConsumption(machine: MachineJson): void {
+    const { data, icons } = this.data.edit;
+    const options = toOptions(data.items, icons);
+    this.dialog
+      .open<
+        Partial<Record<string, string | number>> | null | undefined,
+        QuantitiesDialogData,
+        QuantitiesDialog
+      >(QuantitiesDialog, { data: { record: coalesce(machine.consumption, {}), options, header: 'data.consumption', optional: true } })
+      .closed.subscribe((record) => {
+        if (record === null) delete machine.consumption;
+        else if (record) machine.consumption = record;
+        this.cd.detectChanges();
+      });
+  }
+
+  editBaseEffect(machine: MachineJson): void {
+    this.dialog
+      .open<
+        Partial<Record<ModuleEffect, number>> | null | undefined,
+        Partial<Record<ModuleEffect, number>>,
+        BaseEffectDialog
+      >(BaseEffectDialog, { data: coalesce(machine.baseEffect, {}) })
+      .closed.subscribe((baseEffect) => {
+        if (baseEffect === null) delete machine.baseEffect;
+        else if (baseEffect) machine.baseEffect = baseEffect;
+        this.cd.detectChanges();
+      });
+  }
+}

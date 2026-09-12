@@ -62,6 +62,7 @@
     "label": "Select JSON data file and image sprite sheet"
   },
   "data": {
+    "baseEffect": "Base effect",
     "beacon": "Beacon",
     "beacons": "Beacons",
     "belt": "Belt",
@@ -99,6 +100,7 @@
     "fuelCategory": "Fuel category",
     "fuelValue": "Fuel value",
     "fuels": "Fuels",
+    "ingredientUsage": "Ingredient usage",
     "ingredients": "Ingredients",
     "inserter": "Inserter",
     "inserterIgnoresBonus": "Ignores stack size bonus",
@@ -138,6 +140,7 @@
     "recipes": "Recipes",
     "researchProductivity": "Research productivity",
     "researchSpeed": "Research speed",
+    "rocketCapacity": "Rocket capacity",
     "rocketLaunchTime": "Rocket launch time (s)",
     "rocketPart": "Rocket part",
     "rocketPartsRequired": "Rocket parts required",
@@ -156,6 +159,49 @@
     "unlockedBy": "Unlocked by",
     "unlockedRecipes": "Unlocked recipes",
     "value": "Value"
+  },
+  "delete": "Delete",
+  "edit": "Edit",
+  "editor": {
+    "beaconCount": "Beacon count",
+    "beaconModule": "Beacon module",
+    "chooseImages": "Choose images",
+    "color": "Color",
+    "customPresets": "Custom presets",
+    "defaults": "Defaults",
+    "download": "Load existing data",
+    "effect": "Effect",
+    "excludedRecipes": "Excluded recipes",
+    "export": "Export",
+    "hardCodedPresets": "Hard-coded presets (legacy)",
+    "header": "Game data editor",
+    "hideRate": "Hide rate",
+    "home": "Home",
+    "icon": "Icon",
+    "iconText": "Icon text",
+    "icons": "Icons",
+    "id": "Id",
+    "image": "Image",
+    "item": "Item",
+    "level": "Level",
+    "limitation": "Limitation",
+    "limitations": "Limitations",
+    "loadExistingData": "Load existing data",
+    "maxBelt": "Maximum belt",
+    "maxMachineRank": "Maximum machine rank",
+    "maxPipe": "Maximum pipe",
+    "minBelt": "Minimum belt",
+    "minMachineRank": "Minimum machine rank",
+    "minPipe": "Minimum pipe",
+    "profile": "Profile",
+    "qualities": "Qualities",
+    "researchedTechnologies": "Researched technologies",
+    "resetColors": "Reset colors",
+    "rocketLaunchTime": "Rocket launch time (ticks)",
+    "row": "Row",
+    "totalRecipe": "Total recipe",
+    "unlimited": "Unlimited",
+    "upload": "Upload custom files"
   },
   "error": {
     "deleteCustom": "Delete custom data",
@@ -185,6 +231,7 @@
   "game": "Game",
   "header": {
     "discord": "Discord",
+    "editor": "Editor",
     "resetTooltip": "Click to reset",
     "selectGame": "Select game",
     "source": "Source",
@@ -270,6 +317,10 @@
       "force": "Force",
       "layered": "Layered",
       "stress": "Stress"
+    },
+    "energyType": {
+      "burner": "Burner",
+      "electric": "Electric"
     },
     "flowDiagram": {
       "boxLine": "Box-line",
@@ -401,7 +452,6 @@
     "convertObjectiveValues": "Convert objective values",
     "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity.",
     "createSavedState": "Create new",
-    "deleteSavedState": "Delete",
     "editSavedState": "Rename",
     "glpkAlgorithm": "GLPK Algorithm",
     "header": "Preferences",
@@ -427,6 +477,7 @@
   },
   "remove": "Remove",
   "reset": "Reset",
+  "save": "Save",
   "select": {
     "noMatches": "No matches found"
   },

@@ -1,4 +1,5 @@
 export type IconType =
+  | 'img'
   | 'system'
   | 'game'
   | 'category'

@@ -62,6 +62,7 @@
     "label": "Select JSON data file and image sprite sheet"
   },
   "data": {
+    "baseEffect": "Base effect",
     "beacon": "插件效果分享塔",
     "beacons": "插件效果分享塔",
     "belt": "传送带",
@@ -99,6 +100,7 @@
     "fuelCategory": "燃料分类",
     "fuelValue": "燃料数值",
     "fuels": "燃料",
+    "ingredientUsage": "Ingredient usage",
     "ingredients": "原料",
     "inserter": "Inserter",
     "inserterIgnoresBonus": "Ignores stack size bonus",
@@ -138,6 +140,7 @@
     "recipes": "配方",
     "researchProductivity": "Research productivity",
     "researchSpeed": "Research speed",
+    "rocketCapacity": "Rocket capacity",
     "rocketLaunchTime": "火箭发射时间 (秒)",
     "rocketPart": "火箭组件",
     "rocketPartsRequired": "需要火箭组件",
@@ -156,6 +159,49 @@
     "unlockedBy": "解锁自",
     "unlockedRecipes": "成果",
     "value": "Value"
+  },
+  "delete": "删除此状态",
+  "edit": "Edit",
+  "editor": {
+    "beaconCount": "Beacon count",
+    "beaconModule": "Beacon module",
+    "chooseImages": "Choose images",
+    "color": "Color",
+    "customPresets": "Custom presets",
+    "defaults": "Defaults",
+    "download": "Load existing data",
+    "effect": "Effect",
+    "excludedRecipes": "Excluded recipes",
+    "export": "Export",
+    "hardCodedPresets": "Hard-coded presets (legacy)",
+    "header": "Game data editor",
+    "hideRate": "Hide rate",
+    "home": "Home",
+    "icon": "Icon",
+    "iconText": "Icon text",
+    "icons": "Icons",
+    "id": "Id",
+    "image": "Image",
+    "item": "Item",
+    "level": "Level",
+    "limitation": "Limitation",
+    "limitations": "Limitations",
+    "loadExistingData": "Load existing data",
+    "maxBelt": "Maximum belt",
+    "maxMachineRank": "Maximum machine rank",
+    "maxPipe": "Maximum pipe",
+    "minBelt": "Minimum belt",
+    "minMachineRank": "Minimum machine rank",
+    "minPipe": "Minimum pipe",
+    "profile": "Profile",
+    "qualities": "Qualities",
+    "researchedTechnologies": "Researched technologies",
+    "resetColors": "Reset colors",
+    "rocketLaunchTime": "Rocket launch time (ticks)",
+    "row": "Row",
+    "totalRecipe": "Total recipe",
+    "unlimited": "Unlimited",
+    "upload": "Upload custom files"
   },
   "error": {
     "deleteCustom": "Delete custom data",
@@ -185,6 +231,7 @@
   "game": "游戏",
   "header": {
     "discord": "Discord",
+    "editor": "Editor",
     "resetTooltip": "点击重置目标",
     "selectGame": "Select game",
     "source": "源码",
@@ -270,6 +317,10 @@
       "force": "Force",
       "layered": "Layered",
       "stress": "Stress"
+    },
+    "energyType": {
+      "burner": "Burner",
+      "electric": "Electric"
     },
     "flowDiagram": {
       "boxLine": "工序图",
@@ -401,7 +452,6 @@
     "convertObjectiveValues": "转换目标值",
     "convertObjectiveValuesTooltip": "如果勾选，当类型改变时，目标值将被转换以保留物品数量",
     "createSavedState": "新建状态",
-    "deleteSavedState": "删除此状态",
     "editSavedState": "重命名",
     "glpkAlgorithm": "GLPK Algorithm",
     "header": "偏好设置",
@@ -427,6 +477,7 @@
   },
   "remove": "Remove",
   "reset": "重置",
+  "save": "Save",
   "select": {
     "noMatches": "No matches found"
   },

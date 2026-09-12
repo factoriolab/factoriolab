@@ -23,7 +23,7 @@ describe('IsLightPipe', () => {
 
     it('should handle an invalid icon', () => {
       expect(pipe.transform(undefined)).toBeFalse();
-      expect(pipe.transform('123')).toBeFalse();
+      expect(pipe.transform('xyz')).toBeFalse();
     });
   });
 });

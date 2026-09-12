@@ -15,25 +15,25 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
-import { Ripple } from '~/components/ripple/ripple';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { TableState } from '~/state/table/table-state';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { updateApply } from '~/utils/signal';
 
+import { Ripple } from '../ripple/ripple';
+
 @Component({
   selector: 'th[lab-sort-header], th[labSortHeader]',
   exportAs: 'labSortHeader',
-  imports: [FaIconComponent, Button, Tooltip, TranslatePipe],
+  imports: [FaIconComponent, Button, Tooltip, TranslatePipe, Ripple],
   templateUrl: './sort-header.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'cursor-pointer overflow-hidden select-none hover:bg-gray-800 has-[button:hover]:bg-transparent',
+      'cursor-pointer overflow-hidden select-none hover:bg-gray-800 has-[button:hover]:bg-transparent p-0',
     '[class.text-brand-400]': 'state().sort === column()',
     '(click)': 'updateApply(state, nextSort())',
   },
-  hostDirectives: [Ripple],
 })
 export class SortHeader {
   readonly text = input.required<string>();

@@ -36,6 +36,7 @@ import { Ripple } from '~/components/ripple/ripple';
 import { Rounded, roundedVariants } from '~/components/rounding';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { Option } from '~/option/option';
+import { OptionPipe } from '~/option/option-pipe';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areArraysEqual } from '~/utils/equality';
 
@@ -43,7 +44,7 @@ let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
 
 const host = cva(
-  'group min-h-9 px-1 inline-flex grow cursor-pointer items-center overflow-hidden bg-gray-950/75 outline-brand-400 select-none hover:z-2 hover:border-brand-400 focus:z-2 focus-visible:border-brand-400 focus-visible:outline',
+  'group min-h-9 px-2 inline-flex grow cursor-pointer items-center overflow-hidden bg-gray-950/75 outline-brand-400 select-none hover:z-2 hover:border-brand-400 focus:z-2 focus-visible:border-brand-400 focus-visible:outline',
   {
     variants: {
       opened: {
@@ -77,6 +78,7 @@ const host = cva(
     FaIconComponent,
     Checkbox,
     Icon,
+    OptionPipe,
     Ripple,
     Tooltip,
     TranslatePipe,
@@ -127,7 +129,7 @@ export class RankSelect extends Control<string[]> {
 
   protected readonly filterText = signal('');
   protected readonly dragging = signal(false);
-  protected readonly opened = signal(false);
+  readonly opened = signal(false);
   protected readonly editValue = linkedSignal(() => this.value() ?? []);
   protected readonly hostClass = computed(() =>
     host({

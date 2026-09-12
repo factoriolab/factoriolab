@@ -2,6 +2,7 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+import chroma from 'chroma-js';
 import { FastAverageColor } from 'fast-average-color';
 
 import { ModData } from '~/data/schema/mod-data';
@@ -88,13 +89,14 @@ export class CustomDataDialog implements DialogData {
 
     await Promise.all(
       data.icons.map(async (icon) => {
-        const result = await this.fac.getColorAsync(img, {
+        const average = await this.fac.getColorAsync(img, {
           top: icon.y,
           left: icon.x,
           width: 64,
           height: 64,
         });
-        icon.color = result.hex;
+        const color = chroma(average.hex).saturate().hex();
+        icon.color = color;
       }),
     );
   }

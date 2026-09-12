@@ -34,7 +34,6 @@
             "styles": ["src/styles.css"],
             "allowedCommonJsDependencies": [
               "@sideway/formula",
-              "color-bits",
               "elkjs",
               "file-saver",
               "glpk-ts",

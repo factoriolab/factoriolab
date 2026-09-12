@@ -10,6 +10,8 @@
         [value]="_selectedOption.icon"
         [type]="_selectedOption.iconType"
         [class]="_selectedOption.iconClass"
+        [iconText]="_selectedOption.iconText"
+        [qualityUrl]="_selectedOption.qualityUrl"
       ></lab-icon>
     </span>
   }
@@ -19,7 +21,9 @@
       @if (_selectedOption) {
         {{ _selectedOption.label | translate }}{{ dirty() ? '*' : '' }}
       } @else if (placeholder()) {
-        <span class="text-gray-400">{{ placeholder() | translate }}</span>
+        <span class="text-gray-400 italic">{{
+          placeholder() | translate
+        }}</span>
       }
     </div>
     <fa-icon
@@ -116,6 +120,8 @@
                 [value]="opt.icon"
                 [type]="opt.iconType"
                 [class]="opt.iconClass"
+                [iconText]="opt.iconText"
+                [qualityUrl]="opt.qualityUrl"
               ></lab-icon>
             }
             <span class="ms-1 line-clamp-1">{{ label }}</span>

@@ -6,21 +6,21 @@ export interface TechnologyJson {
   /** Default to not reasearched rather than level 1. Unspecified means false */
   infinite?: boolean;
   /** Belt stack size bonus */
-  beltStack?: number;
+  beltStack?: number | string;
   /** Inserter stack size bonuses */
-  inserterStack?: { value: number; category?: string }[];
+  inserterStack?: { value: number | string; category?: string }[];
   /** Mining productivity bonus (%) */
-  miningProductivity?: number;
+  miningProductivity?: number | string;
   /** Qualities unlocked */
   qualityUnlock?: string[];
   /** Recipe productivity bonuses (%) */
-  recipeProductivity?: { id: string; value: number }[];
+  recipeProductivity?: { id: string; value: number | string }[];
   /** Recipes unlocked */
   recipeUnlock?: string[];
   /** Research productivity bonus (%) */
-  researchProductivity?: number;
+  researchProductivity?: number | string;
   /** Research speed bonus (%) */
-  researchSpeed?: number;
+  researchSpeed?: number | string;
 }
 
 export interface Technology {

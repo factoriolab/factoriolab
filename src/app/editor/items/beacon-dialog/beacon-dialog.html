@@ -1,0 +1,151 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <th id="efficiency-header">{{ 'data.efficiency' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="efficiency-header"
+          class="input"
+          required
+          [placeholder]="'data.efficiency' | translate"
+          [ngModel]="data.effectivity"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.effectivity = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="modules-header">{{ 'data.modules' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="modules-header"
+          class="input"
+          required
+          [placeholder]="'data.modules' | translate"
+          [ngModel]="data.modules"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.modules = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="range-header">{{ 'data.range' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="range-header"
+          class="input"
+          [placeholder]="'data.range' | translate"
+          [ngModel]="data.range"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.range = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="type-header">{{ 'data.energySource' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <lab-checkbox
+            labelledBy="type-header"
+            label="editor.electric"
+            [ngModel]="data.type != null"
+            (ngModelChange)="
+              data.type = $event ? EnergyType.Electric : undefined
+            "
+          />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="usage-header">{{ 'data.energyConsumption' | translate }}</th>
+      <td>
+        <div class="gap-1 flex items-center">
+          <input
+            type="text"
+            aria-labelledby="usage-header"
+            class="input"
+            [placeholder]="'data.energyConsumption' | translate"
+            [ngModel]="data.usage"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="data.usage = toNullableNumeric($event)"
+          />
+          <span>kW</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="disallowed-effects-header">
+        {{ 'data.disallowedEffects' | translate }}
+      </th>
+      <td>
+        <lab-editor-multiselect
+          [options]="moduleEffectOptions"
+          labelledBy="disallowed-effects-header"
+          [asCsv]="true"
+          [(value)]="data.disallowedEffects"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="size-header">
+        {{ 'data.dimensions' | translate }}
+      </th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="size-header"
+          class="input"
+          [placeholder]="'data.dimensions' | translate"
+          [ngModel]="data.size ? data.size.join(', ') : ''"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.size = toSize($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="profile-header">
+        {{ 'editor.profile' | translate }}
+      </th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="profile-header"
+          class="input"
+          [placeholder]="'editor.profile' | translate"
+          [ngModel]="data.profile ? data.profile.join(', ') : ''"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="updateProfile($event)"
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="complement"
+    [faIcon]="faTrash"
+    [text]="'delete' | translate"
+    (click)="dialogRef.close(null)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

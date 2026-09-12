@@ -14,8 +14,19 @@ export interface ModData {
   icons: IconJson[];
   items: ItemJson[];
   recipes: RecipeJson[];
-  limitations?: Record<string, string[]>;
+  limitations?: Partial<Record<string, string[]>>;
   locations?: CategoryJson[];
   qualities?: QualityJson[];
   defaults?: DefaultsJson;
+}
+
+export function emptyModData(): ModData {
+  return {
+    version: {},
+    categories: [],
+    icons: [],
+    items: [],
+    recipes: [],
+    flags: [],
+  };
 }

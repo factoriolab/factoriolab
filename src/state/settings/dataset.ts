@@ -29,7 +29,7 @@ export interface Dataset {
   itemCategoryRows: Record<string, string[][]>;
   recipeCategoryRows: Record<string, string[][]>;
   iconIds: string[];
-  iconRecord: Record<IconType, Record<string, IconData>>;
+  iconRecord: Record<Exclude<IconType, 'img'>, Record<string, IconData>>;
   itemIds: string[];
   itemQIds: Set<string>;
   itemRecord: Record<string, Item>;

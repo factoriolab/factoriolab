@@ -9,9 +9,11 @@ export interface Option<T = string> {
   icon?: string | IconDefinition;
   iconType?: IconType;
   iconClass?: string;
+  iconText?: string;
   tooltip?: string;
   tooltipType?: TooltipType;
   disabled?: boolean;
+  qualityUrl?: string;
 }
 
 export interface OptionParams {

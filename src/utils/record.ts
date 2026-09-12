@@ -2,6 +2,7 @@ import { isDevMode } from '@angular/core';
 
 import { Rational, rational } from '~/rational/rational';
 
+import { coalesce } from './nullish';
 import { spread } from './object';
 
 export function cloneRecord<T>(value: Record<string, T>): Record<string, T>;
@@ -20,12 +21,12 @@ export function contains<T>(record: Record<string, T>, value: T): boolean {
 }
 
 export function reduceRecord(
-  value: Record<string, string[]>,
+  value: Partial<Record<string, string[]>>,
   init: Record<string, Record<string, boolean>> = {},
 ): Record<string, Record<string, boolean>> {
   return Object.keys(value).reduce(
     (e: Record<string, Record<string, boolean>>, x) => {
-      e[x] = toBoolRecord(value[x], init[x]);
+      e[x] = toBoolRecord(coalesce(value[x], []), init[x]);
       return e;
     },
     init,

@@ -1,3 +1,4 @@
+import chroma from 'chroma-js';
 import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 import sharp from 'sharp';
@@ -336,10 +337,11 @@ async function processMod(): Promise<void> {
 
   async function resizeIcon(path: string, iconId: string): Promise<void> {
     const outPath = `${tempIconsPath}/${iconId}.png`;
-    const color = await getAverageColor(path, { mode: 'precision' });
+    const average = await getAverageColor(path, { mode: 'precision' });
+    const color = chroma(average.hex).saturate().hex();
     await sharp(path).resize(64, 64).png().toFile(outPath);
     iconFiles[outPath] = iconId;
-    iconColors[outPath] = color.hex;
+    iconColors[outPath] = color;
   }
 
   async function getIcon(
@@ -2278,7 +2280,7 @@ async function processMod(): Promise<void> {
     for (const effect of coerceArray(tech.effects)) {
       if (isBeltStackSizeBonusModifier(effect)) {
         technology.beltStack ??= 0;
-        technology.beltStack += effect.modifier;
+        (technology.beltStack as number) += effect.modifier;
       } else if (isInserterStackSizeBonusModifier(effect)) {
         technology.inserterStack ??= [];
         technology.inserterStack.push({ value: effect.modifier });
@@ -2290,7 +2292,7 @@ async function processMod(): Promise<void> {
         });
       } else if (isMiningDrillProductivityBonusModifier(effect)) {
         technology.miningProductivity ??= 0;
-        technology.miningProductivity += effect.modifier;
+        (technology.miningProductivity as number) += effect.modifier;
       } else if (isUnlockQualityModifier(effect)) {
         technology.qualityUnlock ??= [];
         technology.qualityUnlock.push(effect.quality);
@@ -2315,10 +2317,10 @@ async function processMod(): Promise<void> {
         if (aliases) technology.recipeUnlock.push(...aliases);
       } else if (isLaboratoryProductivityModifier(effect)) {
         technology.researchProductivity ??= 0;
-        technology.researchProductivity += effect.modifier;
+        (technology.researchProductivity as number) += effect.modifier;
       } else if (isLaboratorySpeedModifier(effect)) {
         technology.researchSpeed ??= 0;
-        technology.researchSpeed += effect.modifier;
+        (technology.researchSpeed as number) += effect.modifier;
       }
     }
 
