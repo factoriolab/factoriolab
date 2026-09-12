@@ -84,12 +84,16 @@ export class Defaults extends EditorTab {
     toOptions(
       this.edit().data.items.filter((i) => i.machine),
       this.edit().icons,
+      false,
+      this.edit().data.qualities,
     ),
   );
   protected readonly moduleOptions = computed(() =>
     toOptions(
       this.edit().data.items.filter((i) => i.module),
       this.edit().icons,
+      false,
+      this.edit().data.qualities,
     ),
   );
   protected readonly nullableBeaconOptions = computed(() =>
@@ -97,6 +101,7 @@ export class Defaults extends EditorTab {
       this.edit().data.items.filter((i) => i.beacon),
       this.edit().icons,
       true,
+      this.edit().data.qualities,
     ),
   );
   protected readonly nullableBeltOptions = computed(() =>
@@ -125,6 +130,7 @@ export class Defaults extends EditorTab {
       this.edit().data.items.filter((i) => i.module),
       this.edit().icons,
       true,
+      this.edit().data.qualities,
     ),
   );
   protected readonly nullablePipeOptions = computed(() =>
@@ -132,6 +138,7 @@ export class Defaults extends EditorTab {
       this.edit().data.items.filter((i) => i.pipe),
       this.edit().icons,
       true,
+      this.edit().data.qualities,
     ),
   );
   protected readonly recipeOptions = computed(() =>

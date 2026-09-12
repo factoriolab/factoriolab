@@ -53,6 +53,7 @@
     th {
       background-color: var(--color-gray-900);
       text-align: start;
+      white-space: nowrap;
       font-weight: var(--font-weight-semibold);
     }
 

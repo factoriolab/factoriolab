@@ -11,6 +11,8 @@
         [value]="option.icon"
         [type]="option.iconType"
         [text]="editValue().length > 1 ? ($index + 1).toString() : undefined"
+        [iconText]="option.iconText"
+        [qualityUrl]="option.qualityUrl"
       />
     } @else {
       <span>{{ id }}</span>

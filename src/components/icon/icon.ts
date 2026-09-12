@@ -46,6 +46,7 @@ export class Icon {
   readonly alt = input<string>();
   readonly iconText = input<string>();
   readonly full = input<boolean>(false);
+  readonly qualityUrl = input<string>();
 
   protected readonly zoom = zoom;
   protected readonly hostClass = computed(() => host({ full: this.full() }));

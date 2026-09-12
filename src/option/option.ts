@@ -13,6 +13,7 @@ export interface Option<T = string> {
   tooltip?: string;
   tooltipType?: TooltipType;
   disabled?: boolean;
+  qualityUrl?: string;
 }
 
 export interface OptionParams {

@@ -1,6 +1,7 @@
 import { BaseJson } from '~/data/schema/base';
 import { ItemJson } from '~/data/schema/item';
 import { ModuleEffect } from '~/data/schema/module';
+import { qualityId, QualityJson } from '~/data/schema/quality';
 import { RecipeJson } from '~/data/schema/recipe';
 import { Option } from '~/option/option';
 import { coalesce } from '~/utils/nullish';
@@ -78,17 +79,23 @@ export function toSize(value: string): [number, number] | undefined {
 export function toOptions(
   objects: BaseJson[],
   icons: Partial<Record<string, IconFileInfo>>,
+  includeNone?: boolean,
+  qualities?: QualityJson[],
 ): Option[];
 export function toOptions(
   objects: BaseJson[],
   icons: Partial<Record<string, IconFileInfo>>,
   includeNone: true,
+  qualities?: QualityJson[],
 ): Option<string | undefined>[];
 export function toOptions(
   objects: BaseJson[],
   icons: Partial<Record<string, IconFileInfo>>,
-  includeNone?: true,
+  includeNone?: boolean,
+  qualities?: QualityJson[],
 ): Option<string | undefined>[] {
+  objects = [...objects];
+  objects.sort((a, b) => a.name.localeCompare(b.name));
   const result = objects.map(
     (o): Option<string | undefined> => ({
       label: o.name,
@@ -98,9 +105,22 @@ export function toOptions(
       iconText: o.iconText,
     }),
   );
-  result.sort((a, b) => a.label.localeCompare(b.label));
-  if (includeNone) {
-    result.unshift({ label: 'none', value: undefined });
-  }
+  qualities?.forEach((q) => {
+    if (!q.level) return;
+    result.push(
+      ...objects.map(
+        (o): Option<string | undefined> => ({
+          label: o.name,
+          value: qualityId(o.id, q),
+          icon: icons[coalesce(o.icon, o.id)]?.url,
+          iconType: 'img',
+          iconText: o.iconText,
+          qualityUrl: icons[coalesce(q.icon, q.id)]?.url,
+        }),
+      ),
+    );
+  });
+
+  if (includeNone) result.unshift({ label: 'none', value: undefined });
   return result;
 }
