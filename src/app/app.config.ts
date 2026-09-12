@@ -31,7 +31,8 @@ export const APP_DIALOG_CONFIG: DialogConfig = {
   /** Hacky workaround to animate leaving all dialogs */
   closePredicate: (result, _, component): boolean => {
     // Find the dialogRef reference on the component
-    const dialogRef = (component as { dialogRef: DialogRef }).dialogRef;
+    const dialogRef = (component as { dialogRef: DialogRef } | undefined)
+      ?.dialogRef;
     // If not found, just allow the dialog to close, we can't animate it
     if (dialogRef?.containerInstance == null) {
       if (isDevMode())
