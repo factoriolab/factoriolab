@@ -38,6 +38,7 @@ export class EditorMultiselect {
   readonly labelledBy = input<string>();
   readonly options = input.required<Option[]>();
   readonly value = model<string[]>();
+  readonly asCsv = input<boolean>();
 
   readonly select = viewChild.required(Select);
   protected readonly editValue = linkedSignal(() => this.value() ?? []);

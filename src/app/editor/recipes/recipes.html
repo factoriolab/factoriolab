@@ -177,24 +177,12 @@
           />
         </td>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="disallowed-effects-header"
-              [options]="moduleEffectOptions"
-              [ngModel]="model.disallowedEffects ?? []"
-              (ngModelChange)="
-                model.disallowedEffects = $event.length ? $event : undefined
-              "
-            >
-              @if (model.disallowedEffects?.length) {
-                <span>{{ model.disallowedEffects.join(', ') }}</span>
-              } @else {
-                <span class="mx-1 text-gray-400 italic">{{
-                  'none' | translate
-                }}</span>
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="moduleEffectOptions"
+            labelledBy="disallowed-effects-header"
+            [asCsv]="true"
+            [(value)]="model.disallowedEffects"
+          />
         </td>
         <td>
           <lab-editor-multiselect
@@ -204,22 +192,12 @@
           />
         </td>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="flags-header"
-              [options]="recipeFlagOptions"
-              [ngModel]="model.flags ?? []"
-              (ngModelChange)="model.flags = $event.length ? $event : undefined"
-            >
-              @if (model.flags?.length) {
-                <span>{{ model.flags.join(', ') }}</span>
-              } @else {
-                <span class="mx-1 text-gray-400 italic">{{
-                  'none' | translate
-                }}</span>
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="recipeFlagOptions"
+            labelledBy="flags-header"
+            [asCsv]="true"
+            [(value)]="model.flags"
+          />
         </td>
         <td>
           <button
@@ -409,24 +387,12 @@
           />
         </td>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="disallowed-effects-header"
-              [options]="moduleEffectOptions"
-              [ngModel]="recipe.disallowedEffects ?? []"
-              (ngModelChange)="
-                recipe.disallowedEffects = $event.length ? $event : undefined
-              "
-            >
-              @if (recipe.disallowedEffects?.length) {
-                <span>{{ recipe.disallowedEffects.join(', ') }}</span>
-              } @else {
-                <span class="mx-1 text-gray-400 italic">{{
-                  'none' | translate
-                }}</span>
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="moduleEffectOptions"
+            labelledBy="disallowed-effects-header"
+            [asCsv]="true"
+            [(value)]="recipe.disallowedEffects"
+          />
         </td>
         <td>
           <lab-editor-multiselect
@@ -436,24 +402,12 @@
           />
         </td>
         <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="flags-header"
-              [options]="recipeFlagOptions"
-              [ngModel]="recipe.flags ?? []"
-              (ngModelChange)="
-                recipe.flags = $event.length ? $event : undefined
-              "
-            >
-              @if (recipe.flags?.length) {
-                <span>{{ recipe.flags.join(', ') }}</span>
-              } @else {
-                <span class="mx-1 text-gray-400 italic">{{
-                  'none' | translate
-                }}</span>
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="recipeFlagOptions"
+            labelledBy="flags-header"
+            [asCsv]="true"
+            [(value)]="recipe.flags"
+          />
         </td>
         <td>
           <button

@@ -4,11 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
-import { Icon } from '~/components/icon/icon';
-import { Select } from '~/components/select/select';
-import { OptionPipe } from '~/option/option-pipe';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
+import { EditorMultiselect } from '../components/editor-multiselect/editor-multiselect';
 import { EditorTab } from '../editor-tab';
 import { toOptions } from '../object-utils';
 
@@ -18,10 +16,8 @@ import { toOptions } from '../object-utils';
     FormsModule,
     KeyValuePipe,
     Button,
-    Icon,
-    OptionPipe,
-    Select,
     TranslatePipe,
+    EditorMultiselect,
   ],
   templateUrl: './limitations.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

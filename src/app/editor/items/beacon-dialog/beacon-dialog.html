@@ -81,24 +81,12 @@
         {{ 'data.disallowedEffects' | translate }}
       </th>
       <td>
-        <div class="flex items-center">
-          <lab-select
-            labelledBy="disallowed-effects-header"
-            [options]="moduleEffectOptions"
-            [ngModel]="data.disallowedEffects ?? []"
-            (ngModelChange)="
-              data.disallowedEffects = $event.length ? $event : undefined
-            "
-          >
-            @if (data.disallowedEffects?.length) {
-              <span>{{ data.disallowedEffects.join(', ') }}</span>
-            } @else {
-              <span class="mx-1 text-gray-400 italic">{{
-                'none' | translate
-              }}</span>
-            }
-          </lab-select>
-        </div>
+        <lab-editor-multiselect
+          [options]="moduleEffectOptions"
+          labelledBy="disallowed-effects-header"
+          [asCsv]="true"
+          [(value)]="data.disallowedEffects"
+        />
       </td>
     </tr>
     <tr>

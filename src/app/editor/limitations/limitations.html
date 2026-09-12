@@ -18,29 +18,10 @@
         />
       </td>
       <td>
-        <div class="flex items-center">
-          @let _recipeOptions = recipeOptions();
-          <lab-select
-            class="w-full"
-            labelledBy="recipes-header"
-            [options]="_recipeOptions"
-            [(ngModel)]="model.recipeIds"
-          >
-            @for (recipeId of model.recipeIds; track recipeId) {
-              @let option = recipeId | option: _recipeOptions;
-              @if (option && option.icon) {
-                <lab-icon
-                  [value]="option.icon"
-                  type="img"
-                  [class]="option.iconClass"
-                  [iconText]="option.iconText"
-                />
-              } @else {
-                <span>{{ recipeId }}</span>
-              }
-            }
-          </lab-select>
-        </div>
+        <lab-editor-multiselect
+          [options]="recipeOptions()"
+          [(value)]="model.recipeIds"
+        />
       </td>
       <td>
         <button
@@ -66,30 +47,11 @@
           />
         </td>
         <td>
-          <div class="flex items-center">
-            @let _recipeOptions = recipeOptions();
-            <lab-select
-              class="w-full"
-              labelledBy="recipes-header"
-              [options]="_recipeOptions"
-              [ngModel]="kv.value"
-              (ngModelChange)="limitations()[kv.key] = $event"
-            >
-              @for (recipeId of kv.value; track recipeId) {
-                @let option = recipeId | option: _recipeOptions;
-                @if (option && option.icon) {
-                  <lab-icon
-                    [value]="option.icon"
-                    type="img"
-                    [class]="option.iconClass"
-                    [iconText]="option.iconText"
-                  />
-                } @else {
-                  <span>{{ recipeId }}</span>
-                }
-              }
-            </lab-select>
-          </div>
+          <lab-editor-multiselect
+            [options]="recipeOptions()"
+            [value]="kv.value"
+            (valueChange)="limitations()[kv.key] = $event"
+          />
         </td>
         <td>
           <button

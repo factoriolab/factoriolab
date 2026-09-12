@@ -26,6 +26,7 @@ import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
+import { EditorMultiselect } from '../../components/editor-multiselect/editor-multiselect';
 import { QuantitiesButton } from '../../components/quantities-button/quantities-button';
 import {
   QuantitiesDialog,
@@ -57,6 +58,7 @@ export interface MachineDialogData {
     TranslatePipe,
     Select,
     QuantitiesButton,
+    EditorMultiselect,
   ],
   templateUrl: './machine-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

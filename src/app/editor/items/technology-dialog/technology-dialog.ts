@@ -17,14 +17,13 @@ import {
 import { toNullableNumeric } from '~/app/editor/object-utils';
 import { Button } from '~/components/button/button';
 import { DialogData } from '~/components/dialog/dialog';
-import { Icon } from '~/components/icon/icon';
 import { Select } from '~/components/select/select';
 import { TechnologyJson } from '~/data/schema/technology';
 import { Option } from '~/option/option';
-import { OptionPipe } from '~/option/option-pipe';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
+import { EditorMultiselect } from '../../components/editor-multiselect/editor-multiselect';
 import { InserterStackDialog } from './inserter-stack-dialog/inserter-stack-dialog';
 import {
   RecipeProductivityDialog,
@@ -40,7 +39,7 @@ export interface TechnologyDialogData {
 
 @Component({
   selector: 'lab-technology-dialog',
-  imports: [FormsModule, Button, Icon, OptionPipe, Select, TranslatePipe],
+  imports: [FormsModule, Button, Select, TranslatePipe, EditorMultiselect],
   templateUrl: './technology-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -60,7 +59,6 @@ export class TechnologyDialog implements DialogData {
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   readonly header = 'data.technology';
-  // protected readonly toNumeric = toNumeric;
   protected readonly toNullableNumeric = toNullableNumeric;
 
   editInserterStack(technology: TechnologyJson): void {

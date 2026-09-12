@@ -10,11 +10,11 @@ import {
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
 import { DialogData } from '~/components/dialog/dialog';
-import { Select } from '~/components/select/select';
 import { BeaconJson } from '~/data/schema/beacon';
 import { EnergyType } from '~/data/schema/energy-type';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
+import { EditorMultiselect } from '../../components/editor-multiselect/editor-multiselect';
 import {
   moduleEffectOptions,
   toNullableNumeric,
@@ -24,7 +24,7 @@ import {
 
 @Component({
   selector: 'lab-beacon-dialog',
-  imports: [FormsModule, Button, Checkbox, TranslatePipe, Select],
+  imports: [FormsModule, Button, Checkbox, TranslatePipe, EditorMultiselect],
   templateUrl: './beacon-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
