@@ -73,15 +73,15 @@ export class MachineDialog implements DialogData {
 
   protected readonly energySourceOptions: Option<EnergyType | undefined>[] = [
     { label: 'none', value: undefined },
-    { label: 'editor.burner', value: EnergyType.Burner },
-    { label: 'editor.electric', value: EnergyType.Electric },
+    { label: 'options.energyType.burner', value: EnergyType.Burner },
+    { label: 'options.energyType.electric', value: EnergyType.Electric },
   ];
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editMachine';
+  readonly header = 'data.machine';
   protected readonly moduleEffectOptions = moduleEffectOptions;
   protected readonly toNullableNumeric = toNullableNumeric;
   protected readonly toSize = toSize;
@@ -122,7 +122,7 @@ export class MachineDialog implements DialogData {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: coalesce(machine.consumption, {}), options, header: 'editor.editConsumption', optional: true } })
+      >(QuantitiesDialog, { data: { record: coalesce(machine.consumption, {}), options, header: 'data.consumption', optional: true } })
       .closed.subscribe((record) => {
         if (record === null) delete machine.consumption;
         else if (record) machine.consumption = record;

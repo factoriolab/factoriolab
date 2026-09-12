@@ -175,7 +175,7 @@ export class Defaults extends EditorTab {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: coalesce(defaults.recipeProductivity, {}), options, header: 'editor.editRecipeProductivity', optional: true } })
+      >(QuantitiesDialog, { data: { record: coalesce(defaults.recipeProductivity, {}), options, header: 'data.recipeProductivity', optional: true } })
       .closed.subscribe((record) => {
         if (record === null) delete defaults.recipeProductivity;
         else if (record) defaults.recipeProductivity = record;

@@ -32,6 +32,6 @@ export class SiloDialog implements DialogData {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editMachine';
+  readonly header = 'data.rocketSilo';
   protected readonly toNumeric = toNumeric;
 }

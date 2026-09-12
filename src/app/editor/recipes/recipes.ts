@@ -113,7 +113,7 @@ export class Recipes extends EditorTab {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: recipe.in, options, header: 'editor.editIngredients' } })
+      >(QuantitiesDialog, { data: { record: recipe.in, options, header: 'data.ingredients' } })
       .closed.subscribe((record) => {
         if (record) recipe.in = record;
         this.cd.detectChanges();
@@ -128,7 +128,7 @@ export class Recipes extends EditorTab {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: recipe.out, options, header: 'editor.editProducts' } })
+      >(QuantitiesDialog, { data: { record: recipe.out, options, header: 'data.products' } })
       .closed.subscribe((record) => {
         if (record) recipe.out = record;
         this.cd.detectChanges();
@@ -143,7 +143,7 @@ export class Recipes extends EditorTab {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: coalesce(recipe.catalyst, {}), options, header: 'editor.editCatalysts', optional: true } })
+      >(QuantitiesDialog, { data: { record: coalesce(recipe.catalyst, {}), options, header: 'data.catalysts', optional: true } })
       .closed.subscribe((record) => {
         if (record === null) delete recipe.catalyst;
         else if (record) recipe.catalyst = record;

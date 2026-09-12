@@ -59,7 +59,7 @@ export class TechnologyDialog implements DialogData {
   protected readonly faPlus = faPlus;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editTechnology';
+  readonly header = 'data.technology';
   // protected readonly toNumeric = toNumeric;
   protected readonly toNullableNumeric = toNullableNumeric;
 

@@ -41,7 +41,7 @@ export class BeaconDialog implements DialogData {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editBeacon';
+  readonly header = 'data.beacon';
   protected readonly toNumeric = toNumeric;
   protected readonly toNullableNumeric = toNullableNumeric;
   protected readonly toSize = toSize;

@@ -111,7 +111,7 @@ export class Items extends EditorTab {
         BeltJson | null | undefined,
         BeltDialogData,
         BeltDialog
-      >(BeltDialog, { data: { belt: coalesce(item.belt, { speed: 1 }), header: 'editor.editBelt' } })
+      >(BeltDialog, { data: { belt: coalesce(item.belt, { speed: 1 }), header: 'data.belt' } })
       .closed.subscribe((belt) => {
         if (belt === null) delete item.belt;
         else if (belt) item.belt = belt;
@@ -125,7 +125,7 @@ export class Items extends EditorTab {
         BeltJson | null | undefined,
         BeltDialogData,
         BeltDialog
-      >(BeltDialog, { data: { belt: coalesce(item.pipe, { speed: 1 }), header: 'editor.editPipe' } })
+      >(BeltDialog, { data: { belt: coalesce(item.pipe, { speed: 1 }), header: 'data.pipe' } })
       .closed.subscribe((pipe) => {
         if (pipe === null) delete item.pipe;
         else if (pipe) item.pipe = pipe;

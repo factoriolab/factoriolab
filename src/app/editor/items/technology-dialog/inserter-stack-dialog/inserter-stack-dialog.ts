@@ -33,7 +33,7 @@ export class InserterStackDialog implements DialogData {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editInserterStack';
+  readonly header = 'data.inserterStack';
   protected model: { value: number | string; category?: string } = {
     value: 1,
   };

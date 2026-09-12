@@ -39,6 +39,6 @@ export class ModuleDialog implements DialogData {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editModule';
+  readonly header = 'data.module';
   protected readonly toNullableNumeric = toNullableNumeric;
 }

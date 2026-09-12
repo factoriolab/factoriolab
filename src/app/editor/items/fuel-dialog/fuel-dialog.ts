@@ -38,7 +38,7 @@ export class FuelDialog implements DialogData {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editFuel';
+  readonly header = 'data.fuel';
   protected readonly toNullableNumeric = toNullableNumeric;
   protected readonly toNumeric = toNumeric;
 }

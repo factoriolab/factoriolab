@@ -30,6 +30,6 @@ export class CargoWagonDialog {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editCargoWagon';
+  readonly header = 'data.cargoWagon';
   protected readonly toNumeric = toNumeric;
 }

@@ -32,7 +32,7 @@ export class InserterDialog implements DialogData {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editInserter';
+  readonly header = 'data.inserter';
   protected readonly toNullableNumeric = toNullableNumeric;
   protected readonly toNumeric = toNumeric;
 }

@@ -30,6 +30,6 @@ export class FluidWagonDialog {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editFluidWagon';
+  readonly header = 'data.fluidWagon';
   protected readonly toNumeric = toNumeric;
 }

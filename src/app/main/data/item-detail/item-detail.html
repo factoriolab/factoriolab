@@ -55,7 +55,7 @@
         @if (beacon.type) {
           <tr>
             <th>{{ 'data.energySource' | translate }}</th>
-            <td>{{ beacon.type }}</td>
+            <td>{{ 'options.energyType.' + beacon.type | translate }}</td>
           </tr>
         }
         @if (beacon.usage) {
@@ -177,7 +177,7 @@
         @if (machine.type) {
           <tr>
             <th>{{ 'data.energySource' | translate }}</th>
-            <td>{{ machine.type }}</td>
+            <td>{{ 'options.energyType.' + machine.type | translate }}</td>
           </tr>
         }
         @if (machine.fuelCategories) {
@@ -232,6 +232,49 @@
           <tr>
             <th>{{ 'data.dimensions' | translate }}</th>
             <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
+          </tr>
+        }
+        @if (machine.baseEffect; as baseEffect) {
+          <tr>
+            <th colspan="2" class="text-lg/9 font-semibold">
+              {{ 'data.baseEffect' | translate }}
+            </th>
+            @if (baseEffect.consumption) {
+              <tr>
+                <th>{{ 'data.energyConsumption' | translate }}</th>
+                <td>{{ baseEffect.consumption | bonusPercent }}</td>
+              </tr>
+            }
+            @if (baseEffect.speed) {
+              <tr>
+                <th>{{ 'data.speed' | translate }}</th>
+                <td>{{ baseEffect.speed | bonusPercent }}</td>
+              </tr>
+            }
+            @if (baseEffect.productivity) {
+              <tr>
+                <th>{{ 'data.productivity' | translate }}</th>
+                <td>{{ baseEffect.productivity | bonusPercent }}</td>
+              </tr>
+            }
+            @if (baseEffect.pollution) {
+              <tr>
+                <th>{{ 'data.pollution' | translate }}</th>
+                <td>{{ baseEffect.pollution | bonusPercent }}</td>
+              </tr>
+            }
+            @if (baseEffect.quality) {
+              <tr>
+                <th>{{ 'data.quality' | translate }}</th>
+                <td>{{ baseEffect.quality | bonusPercent }}</td>
+              </tr>
+            }
+          </tr>
+        }
+        @if (machine.ingredientUsage) {
+          <tr>
+            <th>{{ 'data.ingredientUsage' | translate }}</th>
+            <td>{{ machine.ingredientUsage | bonusPercent }}</td>
           </tr>
         }
         @if (machine.silo; as silo) {

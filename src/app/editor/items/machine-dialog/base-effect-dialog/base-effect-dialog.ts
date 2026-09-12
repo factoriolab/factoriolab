@@ -35,7 +35,7 @@ export class BaseEffectDialog implements DialogData {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  readonly header = 'editor.editBaseEffect';
+  readonly header = 'data.baseEffect';
   protected readonly model: { key: ModuleEffect; value: number } = {
     key: 'consumption',
     value: 1,

@@ -167,7 +167,7 @@
           <button
             type="button"
             labButton
-            [attr.aria-label]="'editor.editRocketSilo' | translate"
+            [attr.aria-label]="'data.rocketSilo' | translate"
             [color]="data.machine.silo ? 'brand' : 'gray'"
             [faIcon]="data.machine.silo ? faPencil : faPlus"
             (click)="editSilo(data.machine)"
@@ -186,7 +186,7 @@
             labQuantitiesButton
             [edit]="data.edit"
             [record]="data.machine.consumption"
-            [attr.aria-label]="'editor.editConsumption' | translate"
+            [attr.aria-label]="'data.consumption' | translate"
             (click)="editConsumption(data.machine)"
           ></button>
         </div>
@@ -210,14 +210,14 @@
     </tr>
     <tr>
       <th id="base-effect-header">
-        {{ 'editor.baseEffect' | translate }}
+        {{ 'data.baseEffect' | translate }}
       </th>
       <td>
         <div class="flex items-center">
           <button
             type="button"
             labButton
-            [attr.aria-label]="'editor.editBaseEffect' | translate"
+            [attr.aria-label]="'edit' | translate"
             [color]="data.machine.baseEffect ? 'brand' : 'gray'"
             [faIcon]="data.machine.baseEffect ? faPencil : faPlus"
             (click)="editBaseEffect(data.machine)"
@@ -274,14 +274,14 @@
     </tr>
     <tr>
       <th id="ingredient-usage-header">
-        {{ 'editor.ingredientUsage' | translate }}
+        {{ 'data.ingredientUsage' | translate }}
       </th>
       <td>
         <input
           type="number"
           aria-labelledby="ingredient-usage-header"
           class="input"
-          [placeholder]="'editor.ingredientUsage' | translate"
+          [placeholder]="'data.ingredientUsage' | translate"
           [(ngModel)]="data.machine.ingredientUsage"
         />
       </td>
