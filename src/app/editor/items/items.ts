@@ -4,14 +4,12 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
   inject,
-  TrackByFunction,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -63,7 +61,6 @@ import {
   imports: [
     FormsModule,
     DragDropModule,
-    ScrollingModule,
     FaIconComponent,
     Button,
     Select,
@@ -77,19 +74,15 @@ export class Items extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
   private readonly dialog = inject(Dialog);
 
-  protected readonly categoryOptions = computed(() => {
-    const { data, icons } = this.edit();
-    return toOptions(data.categories, icons);
-  });
-
   protected readonly faGrip = faGrip;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
   protected model = emptyItem();
-  protected readonly trackByFn: TrackByFunction<ItemJson> = (
-    _,
-    item: ItemJson,
-  ): string => item.id;
+
+  protected readonly categoryOptions = computed(() => {
+    const { data, icons } = this.edit();
+    return toOptions(data.categories, icons);
+  });
 
   editBeacon(item: ItemJson): void {
     this.dialog

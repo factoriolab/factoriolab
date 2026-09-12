@@ -163,6 +163,16 @@ export class Editor {
         if (data.locations?.length === 0) delete data.locations;
         if (data.qualities?.length === 0) delete data.qualities;
 
+        [
+          ...data.categories,
+          ...data.items,
+          ...data.recipes,
+          ...(data.locations ?? []),
+          ...(data.qualities ?? []),
+        ].forEach((obj) => {
+          if (obj.icon && obj.icon === obj.id) delete obj.icon;
+        });
+
         saveAs(
           new Blob([JSON.stringify(edit.data)], { type: 'application/json' }),
           'data.json',

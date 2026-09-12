@@ -4,15 +4,7 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  computed,
-  inject,
-  TrackByFunction,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
@@ -50,7 +42,6 @@ import {
   imports: [
     FormsModule,
     DragDropModule,
-    ScrollingModule,
     FaIconComponent,
     Button,
     Select,
@@ -59,7 +50,7 @@ import {
     QuantitiesButton,
   ],
   templateUrl: './recipes.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'grow' },
 })
 export class Recipes extends EditorTab {
@@ -100,10 +91,6 @@ export class Recipes extends EditorTab {
   ];
   protected readonly toNullableNumeric = toNullableNumeric;
   protected readonly toNumeric = toNumeric;
-  protected readonly trackByFn: TrackByFunction<RecipeJson> = (
-    _,
-    recipe: RecipeJson,
-  ): string => recipe.id;
 
   editIngredients(recipe: RecipeJson): void {
     const { data, icons } = this.edit();
