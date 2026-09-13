@@ -1,0 +1,200 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <th id="stack-header">{{ 'data.stackSize' | translate }}</th>
+      <td>
+        <input
+          type="number"
+          aria-labelledby="stack-header"
+          class="input"
+          size="3"
+          [placeholder]="'data.stackSize' | translate"
+          [(ngModel)]="data.item.stack"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="rocket-capacity-header">
+        {{ 'data.rocketCapacity' | translate }}
+      </th>
+      <td>
+        <input
+          type="number"
+          aria-labelledby="rocket-capacity-header"
+          class="input"
+          size="4"
+          [placeholder]="'data.rocketCapacity' | translate"
+          [(ngModel)]="data.item.rocketCapacity"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="beacon-header">{{ 'data.beacon' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'data.beacon' | translate"
+            [color]="data.item.beacon ? 'brand' : 'gray'"
+            [faIcon]="data.item.beacon ? faPencil : faPlus"
+            (click)="editBeacon(data.item)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="belt-header">{{ 'data.belt' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'data.belt' | translate"
+            [color]="data.item.belt ? 'brand' : 'gray'"
+            [faIcon]="data.item.belt ? faPencil : faPlus"
+            (click)="editBelt(data.item)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="pipe-header">{{ 'data.pipe' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'data.pipe' | translate"
+            [color]="data.item.pipe ? 'brand' : 'gray'"
+            [faIcon]="data.item.pipe ? faPencil : faPlus"
+            (click)="editPipe(data.item)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="machine-header">{{ 'data.machine' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'data.machine' | translate"
+            [color]="data.item.machine ? 'brand' : 'gray'"
+            [faIcon]="data.item.machine ? faPencil : faPlus"
+            (click)="editMachine(data.item)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="module-header">{{ 'data.module' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'data.module' | translate"
+            [color]="data.item.module ? 'brand' : 'gray'"
+            [faIcon]="data.item.module ? faPencil : faPlus"
+            (click)="editModule(data.item)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="fuel-header">{{ 'data.fuel' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'data.fuel' | translate"
+            [color]="data.item.fuel ? 'brand' : 'gray'"
+            [faIcon]="data.item.fuel ? faPencil : faPlus"
+            (click)="editFuel(data.item)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="cargo-wagon-header">{{ 'data.cargoWagon' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'data.cargoWagon' | translate"
+            [color]="data.item.cargoWagon ? 'brand' : 'gray'"
+            [faIcon]="data.item.cargoWagon ? faPencil : faPlus"
+            (click)="editCargoWagon(data.item)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="fluid-wagon-header">{{ 'data.fluidWagon' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'data.fluidWagon' | translate"
+            [color]="data.item.fluidWagon ? 'brand' : 'gray'"
+            [faIcon]="data.item.fluidWagon ? faPencil : faPlus"
+            (click)="editFluidWagon(data.item)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="technology-header">{{ 'data.technology' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'data.technology' | translate"
+            [color]="data.item.technology ? 'brand' : 'gray'"
+            [faIcon]="data.item.technology ? faPencil : faPlus"
+            (click)="editTechnology(data.item)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="inserter-header">{{ 'data.inserter' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <button
+            type="button"
+            labButton
+            [attr.aria-label]="'data.inserter' | translate"
+            [color]="data.item.inserter ? 'brand' : 'gray'"
+            [faIcon]="data.item.inserter ? faPencil : faPlus"
+            (click)="editInserter(data.item)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data.item)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

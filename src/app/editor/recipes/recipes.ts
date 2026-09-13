@@ -4,38 +4,32 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ChangeDetectorRef, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
   faExclamationTriangle,
   faGrip,
+  faPencil,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { Select } from '~/components/select/select';
 import { CategoryJson } from '~/data/schema/category';
-import { RecipeFlag, RecipeJson } from '~/data/schema/recipe';
-import { Option } from '~/option/option';
+import { RecipeJson } from '~/data/schema/recipe';
 import { TranslatePipe } from '~/translate/translate-pipe';
-import { coalesce } from '~/utils/nullish';
 
-import { EditorMultiselect } from '../components/editor-multiselect/editor-multiselect';
-import { QuantitiesButton } from '../components/quantities-button/quantities-button';
-import {
-  QuantitiesDialog,
-  QuantitiesDialogData,
-} from '../components/quantities-dialog/quantities-dialog';
 import { EditorTab } from '../editor-tab';
-import {
-  emptyRecipe,
-  moduleEffectOptions,
-  toNullableNumeric,
-  toNumeric,
-  toOptions,
-} from '../object-utils';
+import { emptyRecipe, toOptions } from '../object-utils';
+import { RecipeDialog, RecipeDialogData } from './recipe-dialog/recipe-dialog';
 
 @Component({
   selector: 'lab-recipes',
@@ -46,94 +40,37 @@ import {
     Button,
     Select,
     TranslatePipe,
-    EditorMultiselect,
-    QuantitiesButton,
   ],
   templateUrl: './recipes.html',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'grow' },
 })
 export class Recipes extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
   private readonly dialog = inject(Dialog);
 
+  protected readonly faGrip = faGrip;
+  protected readonly faPencil = faPencil;
+  protected model = emptyRecipe();
+
   protected readonly categoryOptions = computed(() => {
     const { data, icons } = this.edit();
     return toOptions(data.categories, icons);
   });
-  protected readonly producerOptions = computed(() => {
-    const { data, icons } = this.edit();
-    return toOptions(
-      data.items.filter((i) => i.machine),
-      icons,
-    );
-  });
-  protected readonly recipeOptions = computed(() => {
-    const { data, icons } = this.edit();
-    return toOptions(data.recipes, icons, true);
-  });
-  protected readonly locationOptions = computed(() => {
-    const { data, icons } = this.edit();
-    return toOptions(coalesce(data.locations, []), icons);
-  });
-  protected readonly faGrip = faGrip;
-  protected model = emptyRecipe();
-  protected readonly moduleEffectOptions = moduleEffectOptions;
-  protected readonly recipeFlagOptions: Option<RecipeFlag>[] = [
-    { label: 'burn', value: 'burn' },
-    { label: 'infinite', value: 'infinite' },
-    { label: 'locked', value: 'locked' },
-    { label: 'mining', value: 'mining' },
-    { label: 'noCostMultiplier', value: 'noCostMultiplier' },
-    { label: 'recycling', value: 'recycling' },
-    { label: 'showCount', value: 'showCount' },
-    { label: 'technology', value: 'technology' },
-  ];
-  protected readonly toNullableNumeric = toNullableNumeric;
-  protected readonly toNumeric = toNumeric;
 
-  editIngredients(recipe: RecipeJson): void {
-    const { data, icons } = this.edit();
-    const options = toOptions(data.items, icons);
+  editRecipe(recipe: RecipeJson, index?: number): void {
+    recipe = JSON.parse(JSON.stringify(recipe)) as RecipeJson;
     this.dialog
       .open<
-        Partial<Record<string, string | number>> | null | undefined,
-        QuantitiesDialogData,
-        QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: recipe.in, options, header: 'data.ingredients' } })
-      .closed.subscribe((record) => {
-        if (record) recipe.in = record;
-        this.cd.detectChanges();
-      });
-  }
-
-  editProducts(recipe: RecipeJson): void {
-    const { data, icons } = this.edit();
-    const options = toOptions(data.items, icons);
-    this.dialog
-      .open<
-        Partial<Record<string, string | number>> | null | undefined,
-        QuantitiesDialogData,
-        QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: recipe.out, options, header: 'data.products' } })
-      .closed.subscribe((record) => {
-        if (record) recipe.out = record;
-        this.cd.detectChanges();
-      });
-  }
-
-  editCatalysts(recipe: RecipeJson): void {
-    const { data, icons } = this.edit();
-    const options = toOptions(data.items, icons);
-    this.dialog
-      .open<
-        Partial<Record<string, string | number>> | null | undefined,
-        QuantitiesDialogData,
-        QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: coalesce(recipe.catalyst, {}), options, header: 'data.catalysts', optional: true } })
-      .closed.subscribe((record) => {
-        if (record === null) delete recipe.catalyst;
-        else if (record) recipe.catalyst = record;
+        RecipeJson | undefined,
+        RecipeDialogData,
+        RecipeDialog
+      >(RecipeDialog, { data: { recipe, edit: this.edit() } })
+      .closed.subscribe((result) => {
+        if (result) {
+          if (index == null) this.model = result;
+          else this.edit().data.recipes[index] = result;
+        }
         this.cd.detectChanges();
       });
   }

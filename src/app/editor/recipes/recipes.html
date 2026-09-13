@@ -8,20 +8,7 @@
       <th id="icon-text-header">{{ 'editor.iconText' | translate }}</th>
       <th id="category-header">{{ 'data.category' | translate }}</th>
       <th id="row-header">{{ 'editor.row' | translate }}</th>
-      <th id="time-header">{{ 'data.time' | translate }}</th>
-      <th id="in-header">{{ 'data.ingredients' | translate }}</th>
-      <th id="out-header">{{ 'data.products' | translate }}</th>
-      <th id="producers-header">{{ 'data.producers' | translate }}</th>
-      <th id="catalyst-header">{{ 'data.catalysts' | translate }}</th>
-      <th id="cost-header">{{ 'data.cost' | translate }}</th>
-      <th id="part-header">{{ 'data.rocketPart' | translate }}</th>
-      <th id="usage-header">{{ 'data.energyConsumption' | translate }}</th>
-      <th id="disallowed-effects-header">
-        {{ 'data.disallowedEffects' | translate }}
-      </th>
-      <th id="locations-header">{{ 'data.locations' | translate }}</th>
-      <th id="flags-header">{{ 'data.flags' | translate }}</th>
-      <th></th>
+      <th colspan="2"></th>
     </tr>
   </thead>
   <tbody cdkDropList (cdkDropListDropped)="drop($event)">
@@ -86,117 +73,13 @@
         />
       </td>
       <td>
-        <input
-          type="text"
-          aria-labelledby="time-header"
-          class="input"
-          size="3"
-          [placeholder]="'data.time' | translate"
-          [ngModel]="model.time"
-          [ngModelOptions]="{ updateOn: 'blur' }"
-          (ngModelChange)="model.time = toNumeric($event)"
-        />
-      </td>
-      <td>
-        <div class="flex items-center">
-          <button
-            type="button"
-            labQuantitiesButton
-            [edit]="edit()"
-            [record]="model.in"
-            [attr.aria-label]="'data.ingredients' | translate"
-            (click)="editIngredients(model)"
-          ></button>
-        </div>
-      </td>
-      <td>
-        <div class="flex items-center">
-          <button
-            type="button"
-            labQuantitiesButton
-            [edit]="edit()"
-            [record]="model.out"
-            [attr.aria-label]="'data.products' | translate"
-            (click)="editProducts(model)"
-          ></button>
-        </div>
-      </td>
-      <td>
-        <lab-editor-multiselect
-          [options]="producerOptions()"
-          labelledBy="producers-header"
-          [(value)]="model.producers"
-        />
-      </td>
-      <td>
-        <div class="flex items-center">
-          <button
-            type="button"
-            labQuantitiesButton
-            [edit]="edit()"
-            [record]="model.catalyst"
-            [attr.aria-label]="'data.catalysts' | translate"
-            (click)="editCatalysts(model)"
-          ></button>
-        </div>
-      </td>
-      <td>
-        <input
-          type="text"
-          aria-labelledby="cost-header"
-          class="input"
-          size="5"
-          [placeholder]="'data.cost' | translate"
-          [ngModel]="model.cost"
-          [ngModelOptions]="{ updateOn: 'blur' }"
-          (ngModelChange)="model.cost = toNullableNumeric($event)"
-        />
-      </td>
-      <td>
-        <div class="flex items-center">
-          <lab-select
-            labelledBy="part-header"
-            [options]="recipeOptions()"
-            [iconOnly]="true"
-            [ngModel]="model.part"
-            (ngModelChange)="model.part = $event || undefined"
-          />
-        </div>
-      </td>
-      <td>
-        <input
-          type="text"
-          aria-labelledby="usage-header"
-          class="input"
-          size="4"
-          [placeholder]="'data.energyConsumption' | translate"
-          [ngModel]="model.usage"
-          [ngModelOptions]="{ updateOn: 'blur' }"
-          (ngModelChange)="model.usage = toNullableNumeric($event)"
-        />
-      </td>
-      <td>
-        <lab-editor-multiselect
-          [options]="moduleEffectOptions"
-          labelledBy="disallowed-effects-header"
-          [asCsv]="true"
-          [(value)]="model.disallowedEffects"
-        />
-      </td>
-      <td>
-        <lab-editor-multiselect
-          [options]="locationOptions()"
-          labelledBy="locations-header"
-          [(value)]="model.locations"
-        />
-      </td>
-      <td>
-        <lab-editor-multiselect
-          [options]="recipeFlagOptions"
-          labelledBy="flags-header"
-          [asCsv]="true"
-          [(value)]="model.flags"
-        />
+        <button
+          type="button"
+          labButton
+          [faIcon]="faPencil"
+          [aria-label]="'edit' | translate"
+          (click)="editRecipe(model)"
+        ></button>
       </td>
       <td>
         <button
@@ -209,7 +92,7 @@
         ></button>
       </td>
     </tr>
-    @for (recipe of edit().data.recipes; track recipe.id) {
+    @for (recipe of edit().data.recipes; track recipe.id; let index = $index) {
       <tr cdkDrag cdkDragLockAxis="y">
         <td
           cdkDragHandle
@@ -293,117 +176,13 @@
           />
         </td>
         <td>
-          <input
-            type="text"
-            aria-labelledby="time-header"
-            class="input"
-            size="4"
-            [placeholder]="'data.time' | translate"
-            [ngModel]="recipe.time"
-            [ngModelOptions]="{ updateOn: 'blur' }"
-            (ngModelChange)="recipe.time = toNumeric($event)"
-          />
-        </td>
-        <td>
-          <div class="flex items-center">
-            <button
-              type="button"
-              labQuantitiesButton
-              [edit]="edit()"
-              [record]="recipe.in"
-              [attr.aria-label]="'data.ingredients' | translate"
-              (click)="editIngredients(recipe)"
-            ></button>
-          </div>
-        </td>
-        <td>
-          <div class="flex items-center">
-            <button
-              type="button"
-              labQuantitiesButton
-              [edit]="edit()"
-              [record]="recipe.out"
-              [attr.aria-label]="'data.products' | translate"
-              (click)="editProducts(recipe)"
-            ></button>
-          </div>
-        </td>
-        <td>
-          <lab-editor-multiselect
-            [options]="producerOptions()"
-            labelledBy="producers-header"
-            [(value)]="recipe.producers"
-          />
-        </td>
-        <td>
-          <div class="flex items-center">
-            <button
-              type="button"
-              labQuantitiesButton
-              [edit]="edit()"
-              [record]="recipe.catalyst"
-              [attr.aria-label]="'data.catalysts' | translate"
-              (click)="editCatalysts(recipe)"
-            ></button>
-          </div>
-        </td>
-        <td>
-          <input
-            type="text"
-            aria-labelledby="cost-header"
-            class="input"
-            size="5"
-            [placeholder]="'data.cost' | translate"
-            [ngModel]="recipe.cost"
-            [ngModelOptions]="{ updateOn: 'blur' }"
-            (ngModelChange)="recipe.cost = toNullableNumeric($event)"
-          />
-        </td>
-        <td>
-          <div class="flex items-center">
-            <lab-select
-              labelledBy="part-header"
-              [options]="recipeOptions()"
-              [iconOnly]="true"
-              [ngModel]="recipe.part"
-              (ngModelChange)="recipe.part = $event || undefined"
-            />
-          </div>
-        </td>
-        <td>
-          <input
-            type="text"
-            aria-labelledby="usage-header"
-            class="input"
-            size="4"
-            [placeholder]="'data.energyConsumption' | translate"
-            [ngModel]="recipe.usage"
-            [ngModelOptions]="{ updateOn: 'blur' }"
-            (ngModelChange)="recipe.usage = toNullableNumeric($event)"
-          />
-        </td>
-        <td>
-          <lab-editor-multiselect
-            [options]="moduleEffectOptions"
-            labelledBy="disallowed-effects-header"
-            [asCsv]="true"
-            [(value)]="recipe.disallowedEffects"
-          />
-        </td>
-        <td>
-          <lab-editor-multiselect
-            [options]="locationOptions()"
-            labelledBy="locations-header"
-            [(value)]="recipe.locations"
-          />
-        </td>
-        <td>
-          <lab-editor-multiselect
-            [options]="recipeFlagOptions"
-            labelledBy="flags-header"
-            [asCsv]="true"
-            [(value)]="recipe.flags"
-          />
+          <button
+            type="button"
+            labButton
+            [faIcon]="faPencil"
+            [aria-label]="'edit' | translate"
+            (click)="editRecipe(recipe, index)"
+          ></button>
         </td>
         <td>
           <button
