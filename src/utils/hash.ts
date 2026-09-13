@@ -60,7 +60,7 @@ export function updateHashItem(
 ): void {
   addIfMissing(hash, hashSet, 'items', id);
   if (i.beacon) addIfMissing(hash, hashSet, 'beacons', id);
-  if (i.belt) addIfMissing(hash, hashSet, 'belts', id);
+  if (i.belt || i.pipe) addIfMissing(hash, hashSet, 'belts', id);
   if (i.fuel) addIfMissing(hash, hashSet, 'fuels', id);
   if (i.cargoWagon || i.fluidWagon) addIfMissing(hash, hashSet, 'wagons', id);
   if (i.machine) addIfMissing(hash, hashSet, 'machines', id);
