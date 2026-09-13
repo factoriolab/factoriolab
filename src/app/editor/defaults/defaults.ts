@@ -1,5 +1,10 @@
 import { Dialog } from '@angular/cdk/dialog';
 import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -7,12 +12,16 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IconDefinition } from '@fortawesome/angular-fontawesome';
 import {
-  faChevronDown,
+  FaIconComponent,
+  IconDefinition,
+} from '@fortawesome/angular-fontawesome';
+import {
   faCircle,
   faCircleDot,
   faCircleMinus,
+  faGrip,
+  faPencil,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
@@ -38,6 +47,7 @@ import {
 } from '../components/quantities-dialog/quantities-dialog';
 import { EditorTab } from '../editor-tab';
 import { toNumeric, toOptions } from '../object-utils';
+import { PresetDialog, PresetDialogData } from './preset-dialog/preset-dialog';
 
 const RADIO_ICON_MAP = new Map<boolean | null | undefined, IconDefinition>([
   [true, faCircleDot],
@@ -50,6 +60,8 @@ const RADIO_ICON_MAP = new Map<boolean | null | undefined, IconDefinition>([
   selector: 'lab-defaults',
   imports: [
     FormsModule,
+    DragDropModule,
+    FaIconComponent,
     Button,
     Checkbox,
     FormField,
@@ -67,9 +79,11 @@ export class Defaults extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
   private readonly dialog = inject(Dialog);
 
-  protected readonly faChevronDown = faChevronDown;
+  protected readonly faGrip = faGrip;
+  protected readonly faPencil = faPencil;
   protected model: PresetJson = { id: 0, label: '' };
   protected readonly radioIconMap = RADIO_ICON_MAP;
+  protected readonly toNumeric = toNumeric;
 
   protected readonly fuelOptions = computed(() =>
     toOptions(
@@ -168,8 +182,6 @@ export class Defaults extends EditorTab {
     return undefined;
   }
 
-  protected readonly toNumeric = toNumeric;
-
   switchType(custom: boolean): void {
     this.edit().data.defaults = custom ? { presets: [] } : {};
   }
@@ -193,6 +205,47 @@ export class Defaults extends EditorTab {
   addPreset(defaults: CustomPresetsJson): void {
     defaults.presets.push(this.model);
     this.model = { id: 0, label: '' };
+  }
+
+  drop(defaults: CustomPresetsJson, event: CdkDragDrop<unknown>): void {
+    moveItemInArray(defaults.presets, event.previousIndex, event.currentIndex);
+  }
+
+  editPreset(
+    defaults: CustomPresetsJson,
+    preset: PresetJson,
+    index?: number,
+  ): void {
+    preset = JSON.parse(JSON.stringify(preset)) as PresetJson;
+    const data: PresetDialogData = {
+      preset,
+      edit: this.edit(),
+      fuelOptions: this.fuelOptions(),
+      locationOptions: this.locationOptions(),
+      machineOptions: this.machineOptions(),
+      moduleOptions: this.moduleOptions(),
+      nullableBeaconOptions: this.nullableBeaconOptions(),
+      nullableBeltOptions: this.nullableBeltOptions(),
+      nullableCargoWagonOptions: this.nullableCargoWagonOptions(),
+      nullableFluidWagonOptions: this.nullableFluidWagonOptions(),
+      nullableModuleOptions: this.nullableModuleOptions(),
+      nullablePipeOptions: this.nullablePipeOptions(),
+      recipeOptions: this.recipeOptions(),
+      technologyOptions: this.technologyOptions(),
+    };
+    this.dialog
+      .open<
+        PresetJson | undefined,
+        PresetDialogData,
+        PresetDialog
+      >(PresetDialog, { data })
+      .closed.subscribe((result) => {
+        if (result) {
+          if (index == null) this.model = result;
+          else defaults.presets[index] = result;
+        }
+        this.cd.detectChanges();
+      });
   }
 
   removePreset(defaults: CustomPresetsJson, id: number): void {

@@ -18,31 +18,27 @@
     <tr>
       <th id="in-header">{{ 'data.ingredients' | translate }}</th>
       <td>
-        <div class="flex items-center">
-          <button
-            type="button"
-            labQuantitiesButton
-            [edit]="data.edit"
-            [record]="data.recipe.in"
-            [attr.aria-label]="'data.ingredients' | translate"
-            (click)="editIngredients(data.recipe)"
-          ></button>
-        </div>
+        <button
+          type="button"
+          labQuantitiesButton
+          [edit]="data.edit"
+          [record]="data.recipe.in"
+          [attr.aria-label]="'data.ingredients' | translate"
+          (click)="editIngredients(data.recipe)"
+        ></button>
       </td>
     </tr>
     <tr>
       <th id="out-header">{{ 'data.products' | translate }}</th>
       <td>
-        <div class="flex items-center">
-          <button
-            type="button"
-            labQuantitiesButton
-            [edit]="data.edit"
-            [record]="data.recipe.out"
-            [attr.aria-label]="'data.products' | translate"
-            (click)="editProducts(data.recipe)"
-          ></button>
-        </div>
+        <button
+          type="button"
+          labQuantitiesButton
+          [edit]="data.edit"
+          [record]="data.recipe.out"
+          [attr.aria-label]="'data.products' | translate"
+          (click)="editProducts(data.recipe)"
+        ></button>
       </td>
     </tr>
     <tr>
@@ -58,16 +54,14 @@
     <tr>
       <th id="catalyst-header">{{ 'data.catalysts' | translate }}</th>
       <td>
-        <div class="flex items-center">
-          <button
-            type="button"
-            labQuantitiesButton
-            [edit]="data.edit"
-            [record]="data.recipe.catalyst"
-            [attr.aria-label]="'data.catalysts' | translate"
-            (click)="editCatalysts(data.recipe)"
-          ></button>
-        </div>
+        <button
+          type="button"
+          labQuantitiesButton
+          [edit]="data.edit"
+          [record]="data.recipe.catalyst"
+          [attr.aria-label]="'data.catalysts' | translate"
+          (click)="editCatalysts(data.recipe)"
+        ></button>
       </td>
     </tr>
     <tr>
@@ -88,15 +82,13 @@
     <tr>
       <th id="part-header">{{ 'data.rocketPart' | translate }}</th>
       <td>
-        <div class="flex items-center">
-          <lab-select
-            labelledBy="part-header"
-            [options]="recipeOptions"
-            [iconOnly]="true"
-            [ngModel]="data.recipe.part"
-            (ngModelChange)="data.recipe.part = $event || undefined"
-          />
-        </div>
+        <lab-select
+          labelledBy="part-header"
+          [options]="recipeOptions"
+          [iconOnly]="true"
+          [ngModel]="data.recipe.part"
+          (ngModelChange)="data.recipe.part = $event || undefined"
+        />
       </td>
     </tr>
     <tr>

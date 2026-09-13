@@ -6,11 +6,7 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  faFloppyDisk,
-  faTrash,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
+import { faFloppyDisk, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
 import { DialogData } from '~/components/dialog/dialog';
@@ -63,7 +59,6 @@ export class RecipeDialog {
     inject<DialogRef<RecipeJson | undefined>>(DialogRef);
 
   protected readonly faFloppyDisk = faFloppyDisk;
-  protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   protected readonly locationOptions = toOptions(
     coalesce(this.data.edit.data.locations, []),

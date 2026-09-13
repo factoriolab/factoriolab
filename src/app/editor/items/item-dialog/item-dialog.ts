@@ -10,7 +10,6 @@ import {
   faFloppyDisk,
   faPencil,
   faPlus,
-  faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -31,7 +30,7 @@ import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
 
 import { EditorData } from '../../editor.types';
-import { toNumeric, toOptions } from '../../object-utils';
+import { toOptions } from '../../object-utils';
 import { BeaconDialog } from '../beacon-dialog/beacon-dialog';
 import { BeltDialog, BeltDialogData } from '../belt-dialog/belt-dialog';
 import { CargoWagonDialog } from '../cargo-wagon-dialog/cargo-wagon-dialog';
@@ -72,9 +71,7 @@ export class ItemDialog {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
-  protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
-  protected readonly toNumeric = toNumeric;
 
   editBeacon(item: ItemJson): void {
     this.dialog
