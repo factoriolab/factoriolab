@@ -90,14 +90,15 @@ export class RecipeDialog {
   editIngredients(recipe: RecipeJson): void {
     const { data, icons } = this.data.edit;
     const options = toOptions(data.items, icons);
+    const record = { ...recipe.in };
     this.dialog
       .open<
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: recipe.in, options, header: 'data.ingredients' } })
-      .closed.subscribe((record) => {
-        if (record) recipe.in = record;
+      >(QuantitiesDialog, { data: { record, options, header: 'data.ingredients' } })
+      .closed.subscribe((result) => {
+        if (result) recipe.in = result;
         this.cd.detectChanges();
       });
   }
@@ -105,30 +106,32 @@ export class RecipeDialog {
   editProducts(recipe: RecipeJson): void {
     const { data, icons } = this.data.edit;
     const options = toOptions(data.items, icons);
+    const record = { ...recipe.out };
     this.dialog
       .open<
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: recipe.out, options, header: 'data.products' } })
-      .closed.subscribe((record) => {
-        if (record) recipe.out = record;
+      >(QuantitiesDialog, { data: { record, options, header: 'data.products' } })
+      .closed.subscribe((result) => {
+        if (result) recipe.out = result;
         this.cd.detectChanges();
       });
   }
 
   editCatalysts(recipe: RecipeJson): void {
     const { data, icons } = this.data.edit;
+    const record = { ...recipe.catalyst };
     const options = toOptions(data.items, icons);
     this.dialog
       .open<
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: coalesce(recipe.catalyst, {}), options, header: 'data.catalysts', optional: true } })
-      .closed.subscribe((record) => {
-        if (record === null) delete recipe.catalyst;
-        else if (record) recipe.catalyst = record;
+      >(QuantitiesDialog, { data: { record, options, header: 'data.catalysts', optional: true } })
+      .closed.subscribe((result) => {
+        if (result === null) delete recipe.catalyst;
+        else if (result) recipe.catalyst = result;
         this.cd.detectChanges();
       });
   }

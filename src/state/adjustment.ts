@@ -419,8 +419,9 @@ export class Adjustment {
       // Add machine consumption
       if (machine.consumption) {
         const consumption = machine.consumption;
+        const factor = recipe.time.div(rational(60n));
         for (const [id, val] of toRecordEntries(consumption)) {
-          const amount = recipe.time.div(rational(60n)).mul(val);
+          const amount = factor.mul(val);
           recipe.in[id] = (recipe.in[id] ?? rational.zero).add(amount);
         }
       }

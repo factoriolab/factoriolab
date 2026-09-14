@@ -54,7 +54,7 @@ export class Items extends EditorTab {
 
   protected readonly categoryOptions = computed(() => {
     const { data, icons } = this.edit();
-    return toOptions(data.categories, icons);
+    return toOptions(data.categories, icons, true);
   });
 
   editItem(item: ItemJson, index?: number): void {
