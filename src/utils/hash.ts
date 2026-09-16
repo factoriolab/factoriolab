@@ -53,7 +53,7 @@ export function addIfMissing(
 export function updateHashItem(hash: ModHash, i: ItemJson, id: string): void {
   addIfMissing(hash, 'items', id);
   if (i.beacon) addIfMissing(hash, 'beacons', id);
-  if (i.belt) addIfMissing(hash, 'belts', id);
+  if (i.belt || i.pipe) addIfMissing(hash, 'belts', id);
   if (i.fuel) addIfMissing(hash, 'fuels', id);
   if (i.cargoWagon || i.fluidWagon) addIfMissing(hash, 'wagons', id);
   if (i.machine) addIfMissing(hash, 'machines', id);
