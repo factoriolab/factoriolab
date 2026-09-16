@@ -4,6 +4,7 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -15,9 +16,11 @@ import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
+  faEllipsis,
   faExclamationTriangle,
   faGrip,
   faPencil,
+  faPlus,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -34,6 +37,7 @@ import { ItemDialog, ItemDialogData } from './item-dialog/item-dialog';
   selector: 'lab-items',
   imports: [
     FormsModule,
+    CdkMenuModule,
     DragDropModule,
     FaIconComponent,
     Button,
@@ -48,8 +52,10 @@ export class Items extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
   private readonly dialog = inject(Dialog);
 
+  protected readonly faEllipsis = faEllipsis;
   protected readonly faGrip = faGrip;
   protected readonly faPencil = faPencil;
+  protected readonly faPlus = faPlus;
   protected model = emptyItem();
 
   protected readonly categoryOptions = computed(() => {
@@ -64,7 +70,7 @@ export class Items extends EditorTab {
         ItemJson | undefined,
         ItemDialogData,
         ItemDialog
-      >(ItemDialog, { data: { item, edit: this.edit() } })
+      >(ItemDialog, { data: { item, edit: this.edit(), header: item.name } })
       .closed.subscribe((result) => {
         if (result) {
           if (index == null) this.model = result;
@@ -197,6 +203,11 @@ export class Items extends EditorTab {
     }
 
     item.id = id;
+  }
+
+  clone(item: ItemJson, index: number): void {
+    item = JSON.parse(JSON.stringify(item)) as ItemJson;
+    this.edit().data.items.splice(index + 1, 0, item);
   }
 
   remove(id: string): void {

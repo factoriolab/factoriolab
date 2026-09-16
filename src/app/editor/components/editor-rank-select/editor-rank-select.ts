@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { RankSelect } from '~/app/main/settings/rank-select/rank-select';
 import { Control } from '~/components/control';
 import { Icon } from '~/components/icon/icon';
+import { RankSelect } from '~/components/rank-select/rank-select';
 import { Option } from '~/option/option';
 import { OptionPipe } from '~/option/option-pipe';
 import { TranslatePipe } from '~/translate/translate-pipe';

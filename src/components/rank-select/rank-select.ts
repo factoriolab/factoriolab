@@ -17,6 +17,7 @@ import {
   linkedSignal,
   model,
   signal,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -37,6 +38,7 @@ import { Rounded, roundedVariants } from '~/components/rounding';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { Option } from '~/option/option';
 import { OptionPipe } from '~/option/option-pipe';
+import { Translate } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areArraysEqual } from '~/utils/equality';
 
@@ -112,9 +114,12 @@ export class RankSelect extends Control<string[]> {
   protected readonly overlayOrigin = inject(CdkOverlayOrigin);
   protected readonly formField = inject(FormField, { optional: true });
   private readonly injector = inject(Injector);
+  private readonly translate = inject(Translate);
 
   protected readonly listItems =
     viewChildren<ElementRef<HTMLLIElement>>('option');
+  protected readonly filterInput =
+    viewChild<ElementRef<HTMLInputElement>>('filterInput');
 
   private readonly uniqueId = (nextUniqueId++).toString();
 
@@ -139,14 +144,27 @@ export class RankSelect extends Control<string[]> {
       disabled: this.disabled(),
     }),
   );
+  protected readonly filterLower = computed(() =>
+    this.filterText().toLocaleLowerCase(),
+  );
+  protected readonly filteredOptions = computed(() => {
+    const options = this.options();
+    const filterLower = this.filterLower();
+    if (!filterLower) return options;
+    return options.filter((o) =>
+      this.translate.get(o.label).toLocaleLowerCase().includes(filterLower),
+    );
+  });
   protected readonly allSelected = computed(() => {
-    if (this.options().length === this.editValue().length) return true;
-    if (this.editValue().length === 0) return false;
+    const value = this.editValue();
+    const filteredOptions = this.filteredOptions();
+    const filteredSelection = filteredOptions.filter((o) =>
+      value.includes(o.value),
+    );
+    if (filteredSelection.length === 0) return false;
+    if (filteredSelection.length === filteredOptions.length) return true;
     return undefined;
   });
-  protected readonly filterLower = computed(() =>
-    this.filterText().toLowerCase(),
-  );
 
   protected readonly faChevronDown = faChevronDown;
   protected readonly faGrip = faGrip;
@@ -183,8 +201,37 @@ export class RankSelect extends Control<string[]> {
   }
 
   selectAll(value: boolean | undefined): void {
-    if (value) this.editValue.set(this.options().map((o) => o.value));
+    if (value) this.editValue.set(this.filteredOptions().map((o) => o.value));
     else this.editValue.set([]);
+  }
+
+  keydown(opt: Option, el: HTMLLIElement, event: KeyboardEvent): void {
+    switch (event.key) {
+      case 'Enter': {
+        this.select(opt.value);
+        break;
+      }
+      case 'ArrowUp': {
+        this.focusMove(el, -1, event);
+        break;
+      }
+      case 'ArrowDown': {
+        this.focusMove(el, 1, event);
+        break;
+      }
+      case 'Home': {
+        this.focusFirst(event);
+        break;
+      }
+      case 'End': {
+        this.focusLast(event);
+        break;
+      }
+      default: {
+        this.filterInput()?.nativeElement.focus();
+        break;
+      }
+    }
   }
 
   drop(event: CdkDragDrop<string[]>): void {

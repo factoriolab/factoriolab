@@ -97,7 +97,7 @@
         ></button>
       </td>
     </tr>
-    @for (icon of edit().data.icons; track icon.id) {
+    @for (icon of edit().data.icons; track icon.id; let index = $index) {
       <tr cdkDrag cdkDragLockAxis="y">
         <td
           cdkDragHandle
@@ -184,11 +184,38 @@
           <button
             type="button"
             labButton
-            [faIcon]="faTrash"
-            color="complement"
-            [aria-label]="'delete' | translate"
-            (click)="remove(icon.id)"
+            [cdkMenuTriggerFor]="editMenu"
+            [faIcon]="faEllipsis"
+            [aria-label]="'edit' | translate"
           ></button>
+          <ng-template #editMenu>
+            <div
+              class="rounded-xs py-1 flex flex-col border border-gray-600 bg-ground-950"
+              cdkMenu
+            >
+              <button
+                type="button"
+                labButton
+                cdkMenuItem
+                [border]="false"
+                [faIcon]="faPlus"
+                text="editor.clone"
+                textAlign="left"
+                (click)="clone(icon, index)"
+              ></button>
+              <button
+                type="button"
+                labButton
+                cdkMenuItem
+                [border]="false"
+                [faIcon]="faTrash"
+                color="complement"
+                text="delete"
+                textAlign="left"
+                (click)="remove(icon.id)"
+              ></button>
+            </div>
+          </ng-template>
         </td>
       </tr>
     }

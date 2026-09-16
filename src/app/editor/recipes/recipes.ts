@@ -4,6 +4,7 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -15,9 +16,11 @@ import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
+  faEllipsis,
   faExclamationTriangle,
   faGrip,
   faPencil,
+  faPlus,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -35,6 +38,7 @@ import { RecipeDialog, RecipeDialogData } from './recipe-dialog/recipe-dialog';
   selector: 'lab-recipes',
   imports: [
     FormsModule,
+    CdkMenuModule,
     DragDropModule,
     FaIconComponent,
     Button,
@@ -49,8 +53,10 @@ export class Recipes extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
   private readonly dialog = inject(Dialog);
 
+  protected readonly faEllipsis = faEllipsis;
   protected readonly faGrip = faGrip;
   protected readonly faPencil = faPencil;
+  protected readonly faPlus = faPlus;
   protected model = emptyRecipe();
 
   protected readonly categoryOptions = computed(() => {
@@ -98,6 +104,11 @@ export class Recipes extends EditorTab {
       .filter((e) => e.category === category.id)
       .forEach((e) => (e.category = id));
     category.id = id;
+  }
+
+  clone(recipe: RecipeJson, index: number): void {
+    recipe = JSON.parse(JSON.stringify(recipe)) as RecipeJson;
+    this.edit().data.recipes.splice(index + 1, 0, recipe);
   }
 
   remove(id: string): void {

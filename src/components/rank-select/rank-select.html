@@ -41,6 +41,7 @@
         ></lab-checkbox>
         <div class="relative flex grow">
           <input
+            #filterInput
             class="input w-0"
             [placeholder]="'filter' | translate"
             [(ngModel)]="filterText"
@@ -105,56 +106,50 @@
       aria-multiselectable="true"
       tabindex="-1"
     >
-      @for (opt of options(); track opt.value) {
-        @let label = opt.label | translate;
+      @for (opt of filteredOptions(); track opt.value) {
         @let checked = editValue().includes(opt.value);
-        @if (label.toLowerCase().includes(filterLower())) {
-          <li
-            #option
-            role="option"
-            class="cursor-pointer overflow-hidden outline-none select-none focus-visible:bg-gray-800"
-            [attr.tabindex]="opt.disabled ? -1 : 0"
-            [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
-            [attr.aria-selected]="checked"
-            [attr.aria-checked]="checked"
-            [labTooltip]="opt.tooltip"
-            [labTooltipType]="opt.tooltipType"
-            labTooltipPosition="adjacent"
-            (click)="select(opt.value)"
-            (keydown.enter)="select(opt.value)"
-            (keydown.arrowup)="focusMove(option, -1, $event)"
-            (keydown.arrowdown)="focusMove(option, 1, $event)"
-            (keydown.home)="focusFirst($event)"
-            (keydown.end)="focusLast($event)"
+        <li
+          #option
+          role="option"
+          class="cursor-pointer overflow-hidden outline-none select-none focus-visible:bg-gray-800"
+          [attr.tabindex]="opt.disabled ? -1 : 0"
+          [attr.aria-disabled]="opt.disabled ? 'true' : 'false'"
+          [attr.aria-selected]="checked"
+          [attr.aria-checked]="checked"
+          [labTooltip]="opt.tooltip"
+          [labTooltipType]="opt.tooltipType"
+          labTooltipPosition="adjacent"
+          (click)="select(opt.value)"
+          (keydown)="keydown(opt, option, $event)"
+        >
+          <div
+            class="min-h-9 ps-2 pe-4 flex items-center overflow-hidden"
+            labRipple
+            [class.hover:bg-gray-800]="!dragging()"
           >
-            <div
-              class="min-h-9 ps-2 pe-4 flex items-center overflow-hidden"
-              labRipple
-              [class.hover:bg-gray-800]="!dragging()"
-            >
-              <lab-checkbox
-                class="pointer-events-none"
-                [ngModel]="checked"
-              ></lab-checkbox>
-              @if (opt.icon) {
-                <lab-icon
-                  [value]="opt.icon"
-                  [type]="opt.iconType"
-                  [class]="opt.iconClass"
-                  [iconText]="opt.iconText"
-                  [qualityUrl]="opt.qualityUrl"
-                ></lab-icon>
-              } @else {
-                <lab-icon [value]="opt.value" type="item"></lab-icon>
-              }
-              <span class="ms-1 line-clamp-1 grow">{{ label }}</span>
-            </div>
-          </li>
-        }
-      }
-      @if (filterText() && !listItems().length) {
+            <lab-checkbox
+              class="pointer-events-none"
+              [ngModel]="checked"
+            ></lab-checkbox>
+            @if (opt.icon) {
+              <lab-icon
+                [value]="opt.icon"
+                [type]="opt.iconType"
+                [class]="opt.iconClass"
+                [iconText]="opt.iconText"
+                [qualityUrl]="opt.qualityUrl"
+              ></lab-icon>
+            } @else {
+              <lab-icon [value]="opt.value" type="item"></lab-icon>
+            }
+            <span class="ms-1 line-clamp-1 grow">{{
+              opt.label | translate
+            }}</span>
+          </div>
+        </li>
+      } @empty {
         <li class="min-h-9 px-2 flex items-center">
-          {{ 'select.noMatches' | translate }}
+          {{ (options().length ? 'select.noMatches' : 'none') | translate }}
         </li>
       }
     </ul>
