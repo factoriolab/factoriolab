@@ -201,8 +201,15 @@ export class RankSelect extends Control<string[]> {
   }
 
   selectAll(value: boolean | undefined): void {
-    if (value) this.editValue.set(this.filteredOptions().map((o) => o.value));
-    else this.editValue.set([]);
+    this.editValue.update((edit) => {
+      edit = [...edit];
+      this.filteredOptions().forEach((o) => {
+        if (value && !edit.includes(o.value)) edit.push(o.value);
+        if (!value && edit.includes(o.value))
+          edit = edit.filter((e) => e !== o.value);
+      });
+      return edit;
+    });
   }
 
   keydown(opt: Option, el: HTMLLIElement, event: KeyboardEvent): void {

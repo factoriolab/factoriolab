@@ -221,9 +221,14 @@ export class Select<T = unknown> extends Control<T> {
 
   selectAll(value: boolean | undefined): void {
     if (!this.multi() || value == null) return;
-    if (value)
-      this.selection.set(new Set(this.filteredOptions().map((o) => o.value)));
-    else this.selection.set(new Set());
+    this.selection.update((set) => {
+      set = new Set(set);
+      this.filteredOptions().forEach((o) => {
+        if (value) set.add(o.value);
+        else set.delete(o.value);
+      });
+      return set;
+    });
   }
 
   keydown(opt: Option<T>, el: HTMLLIElement, event: KeyboardEvent): void {
