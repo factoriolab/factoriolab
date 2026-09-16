@@ -38,7 +38,6 @@ export function emptyModHashSet(): ModHashSet {
 
 export function addIfMissing(
   hash: ModHash,
-  hashSet: ModHashSet,
   key: keyof ModHash,
   id: string,
 ): void {
@@ -49,23 +48,32 @@ export function addIfMissing(
     if (index !== -1) arr[index] = id;
     else arr.push(id);
   }
-  hashSet[key].add(id);
 }
 
-export function updateHashItem(
-  hash: ModHash,
+export function updateHashItem(hash: ModHash, i: ItemJson, id: string): void {
+  addIfMissing(hash, 'items', id);
+  if (i.beacon) addIfMissing(hash, 'beacons', id);
+  if (i.belt) addIfMissing(hash, 'belts', id);
+  if (i.fuel) addIfMissing(hash, 'fuels', id);
+  if (i.cargoWagon || i.fluidWagon) addIfMissing(hash, 'wagons', id);
+  if (i.machine) addIfMissing(hash, 'machines', id);
+  if (i.module) addIfMissing(hash, 'modules', id);
+  if (i.technology) addIfMissing(hash, 'technologies', id);
+}
+
+export function updateHashSetItem(
   hashSet: ModHashSet,
   i: ItemJson,
   id: string,
 ): void {
-  addIfMissing(hash, hashSet, 'items', id);
-  if (i.beacon) addIfMissing(hash, hashSet, 'beacons', id);
-  if (i.belt) addIfMissing(hash, hashSet, 'belts', id);
-  if (i.fuel) addIfMissing(hash, hashSet, 'fuels', id);
-  if (i.cargoWagon || i.fluidWagon) addIfMissing(hash, hashSet, 'wagons', id);
-  if (i.machine) addIfMissing(hash, hashSet, 'machines', id);
-  if (i.module) addIfMissing(hash, hashSet, 'modules', id);
-  if (i.technology) addIfMissing(hash, hashSet, 'technologies', id);
+  hashSet.items.add(id);
+  if (i.beacon) hashSet.beacons.add(id);
+  if (i.belt || i.pipe) hashSet.belts.add(id);
+  if (i.fuel) hashSet.fuels.add(id);
+  if (i.cargoWagon || i.fluidWagon) hashSet.wagons.add(id);
+  if (i.machine) hashSet.machines.add(id);
+  if (i.module) hashSet.modules.add(id);
+  if (i.technology) hashSet.technologies.add(id);
 }
 
 export function updateHash(data: ModData, hash: ModHash): void {
@@ -73,33 +81,34 @@ export function updateHash(data: ModData, hash: ModHash): void {
 
   const abnormalQualities = data.qualities?.filter((q) => q.level);
 
-  data.items.forEach((i) => {
-    updateHashItem(hash, hashSet, i, i.id);
-    if (abnormalQualities?.length && itemHasQuality(i)) {
-      abnormalQualities
-        .filter((q) => q.level)
-        .forEach((q) => {
-          updateHashItem(hash, hashSet, i, qualityId(i.id, q));
-        });
-    }
-  });
-
   const itemData = data.items.reduce((e: Record<string, ItemJson>, i) => {
     e[i.id] = i;
     return e;
   }, {});
 
+  // Set up hash set
+  data.items.forEach((i) => {
+    updateHashSetItem(hashSet, i, i.id);
+    if (abnormalQualities?.length && itemHasQuality(i)) {
+      abnormalQualities
+        .filter((q) => q.level)
+        .forEach((q) => {
+          updateHashSetItem(hashSet, i, qualityId(i.id, q));
+        });
+    }
+  });
+
   data.recipes.forEach((r) => {
-    addIfMissing(hash, hashSet, 'recipes', r.id);
+    hashSet.recipes.add(r.id);
     if (abnormalQualities?.length && recipeHasQuality(r, itemData)) {
       abnormalQualities.forEach((q) => {
-        addIfMissing(hash, hashSet, 'recipes', qualityId(r.id, q));
+        hashSet.recipes.add(qualityId(r.id, q));
       });
     }
   });
 
   data.locations?.forEach((l) => {
-    addIfMissing(hash, hashSet, 'locations', l.id);
+    hashSet.locations.add(l.id);
   });
 
   // Clean up existing hash data
@@ -112,4 +121,29 @@ export function updateHash(data: ModData, hash: ModHash): void {
       i != null && hashSet[key].has(i) ? i : null,
     );
   }
+
+  // Add missing ids
+  data.items.forEach((i) => {
+    updateHashItem(hash, i, i.id);
+    if (abnormalQualities?.length && itemHasQuality(i)) {
+      abnormalQualities
+        .filter((q) => q.level)
+        .forEach((q) => {
+          updateHashItem(hash, i, qualityId(i.id, q));
+        });
+    }
+  });
+
+  data.recipes.forEach((r) => {
+    addIfMissing(hash, 'recipes', r.id);
+    if (abnormalQualities?.length && recipeHasQuality(r, itemData)) {
+      abnormalQualities.forEach((q) => {
+        addIfMissing(hash, 'recipes', qualityId(r.id, q));
+      });
+    }
+  });
+
+  data.locations?.forEach((l) => {
+    addIfMissing(hash, 'locations', l.id);
+  });
 }
