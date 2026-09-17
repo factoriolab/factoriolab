@@ -25,6 +25,7 @@ import { Dataset } from '~/state/settings/dataset';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areSetsEqual } from '~/utils/equality';
+import { SKIP_FOCUS_KEYS } from '~/utils/keyboard';
 import { coalesce } from '~/utils/nullish';
 
 import { Button } from '../button/button';
@@ -52,7 +53,7 @@ import { PickerData } from './picker-data';
   host: {
     class:
       'flex h-[90dvh] max-h-[50rem] w-dvw max-w-5xl flex-col gap-2 p-3 pt-0 sm:h-[80dvh] md:w-3xl xl:w-[80dvw] 2xl:w-[70dvw]',
-    '(keydown)': 'keydown()',
+    '(keydown)': 'keydown($event)',
   },
 })
 export class PickerDialog implements AfterViewInit {
@@ -69,10 +70,12 @@ export class PickerDialog implements AfterViewInit {
   protected readonly tabs = viewChild.required(Tabs);
 
   protected readonly data = this.settingsStore.dataset;
-
   protected readonly allIds = new Set(this.dialogData.allIds);
   protected readonly multi = this.dialogData.selection instanceof Set;
   protected readonly selectedId?: string;
+  protected readonly rowsKey = `${this.dialogData.type}CategoryRows` as const;
+  protected readonly recordKey = `${this.dialogData.type}Record` as const;
+  private readonly allCategoryRows: Record<string, string[][]> = {};
   /**
    * Note: Selected items are in the excluded set, so selection is inverted in
    * the UI so that selected ids appear as deselected.
@@ -111,10 +114,6 @@ export class PickerDialog implements AfterViewInit {
   protected readonly isDefault = computed(() =>
     areSetsEqual(this.selection(), new Set(this.dialogData.default)),
   );
-
-  protected readonly rowsKey = `${this.dialogData.type}CategoryRows` as const;
-  protected readonly recordKey = `${this.dialogData.type}Record` as const;
-  private readonly allCategoryRows: Record<string, string[][]> = {};
 
   protected readonly categoryRows = computed(() => {
     const filter = this.filter();
@@ -288,8 +287,8 @@ export class PickerDialog implements AfterViewInit {
     this.selection.set(new Set(this.dialogData.default));
   }
 
-  keydown(): void {
-    console.log('test');
+  keydown(event: KeyboardEvent): void {
+    if (SKIP_FOCUS_KEYS.has(event.key)) return;
     this.filterInput().nativeElement.focus();
   }
 }

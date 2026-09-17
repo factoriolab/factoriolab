@@ -1,3 +1,4 @@
+import { ItemId } from '~/tests/item-id';
 import { mockModData } from '~/tests/mocks/data';
 
 import { addIfMissing, emptyModHash, updateHash } from './hash';
@@ -21,7 +22,7 @@ describe('updateHash', () => {
       ],
     };
     const hash = emptyModHash();
-    hash.items.push('nonsense');
+    hash.items.push('nonsense', ItemId.WoodenChest);
     updateHash(data, hash);
     expect(hash.items.length).toBeGreaterThan(data.items.length);
     expect(hash.recipes.length).toBeGreaterThan(data.recipes.length);

@@ -26,6 +26,7 @@ import { Option } from '~/option/option';
 import { Translate } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areSetsEqual } from '~/utils/equality';
+import { SKIP_FOCUS_KEYS } from '~/utils/keyboard';
 
 import { Checkbox } from '../checkbox/checkbox';
 import { Control } from '../control';
@@ -253,12 +254,8 @@ export class Select<T = unknown> extends Control<T> {
         this.focusLast(event);
         break;
       }
-      case 'Ctrl':
-      case 'Shift':
-      case 'Tab': {
-        break;
-      }
       default: {
+        if (SKIP_FOCUS_KEYS.has(event.key)) return;
         this.filterInput()?.nativeElement.focus();
         break;
       }

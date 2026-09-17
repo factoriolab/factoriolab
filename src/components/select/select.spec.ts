@@ -47,6 +47,13 @@ describe('Select', () => {
     });
   });
 
+  describe('filteredOptions', () => {
+    it('should filter available options', () => {
+      component['filterText'].set('1');
+      expect(component['filteredOptions']().length).toEqual(1);
+    });
+  });
+
   describe('allSelected', () => {
     it('should determine whether all items are selected', () => {
       expect(component['allSelected']()).toBeFalse();
@@ -141,6 +148,64 @@ describe('Select', () => {
       setInputs(fixture, { value: [] });
       component.selectAll(undefined);
       expect(component['selection'].set).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('keydown', () => {
+    it('should call the appropriate function', () => {
+      spyOn(component, 'select');
+      spyOn<any>(component, 'focusMove');
+      spyOn<any>(component, 'focusFirst');
+      spyOn<any>(component, 'focusLast');
+      const el = { nativeElement: { focus: (): void => {} } };
+      spyOn(el.nativeElement, 'focus');
+      spyOn<any>(component, 'filterInput').and.returnValue(el);
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'Enter' }),
+      );
+      expect(component.select).toHaveBeenCalledWith('id');
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'ArrowUp' }),
+      );
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+      );
+      expect(component['focusMove']).toHaveBeenCalledTimes(2);
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'Home' }),
+      );
+      expect(component['focusFirst']).toHaveBeenCalled();
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'End' }),
+      );
+      expect(component['focusLast']).toHaveBeenCalled();
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'A' }),
+      );
+      expect(el.nativeElement.focus).toHaveBeenCalled();
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'Tab' }),
+      );
+      expect(el.nativeElement.focus).toHaveBeenCalledTimes(1);
     });
   });
 

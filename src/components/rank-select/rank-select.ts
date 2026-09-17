@@ -41,6 +41,7 @@ import { OptionPipe } from '~/option/option-pipe';
 import { Translate } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areArraysEqual } from '~/utils/equality';
+import { SKIP_FOCUS_KEYS } from '~/utils/keyboard';
 
 let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
@@ -235,6 +236,7 @@ export class RankSelect extends Control<string[]> {
         break;
       }
       default: {
+        if (SKIP_FOCUS_KEYS.has(event.key)) return;
         this.filterInput()?.nativeElement.focus();
         break;
       }
@@ -249,14 +251,14 @@ export class RankSelect extends Control<string[]> {
     });
   }
 
-  focusFirst(event: Event): void {
+  private focusFirst(event: Event): void {
     const el = this.listItems()[0]?.nativeElement;
     if (el == null) return;
     el.focus();
     event.preventDefault();
   }
 
-  focusLast(event: Event): void {
+  private focusLast(event: Event): void {
     const items = this.listItems();
     const el = items[items.length - 1]?.nativeElement;
     if (el == null) return;
@@ -264,7 +266,7 @@ export class RankSelect extends Control<string[]> {
     event.preventDefault();
   }
 
-  focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
+  private focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
     const index = this.listItems().findIndex((i) => i.nativeElement === option);
     const el = this.listItems()[index + dir]?.nativeElement;
     if (el == null) return;
