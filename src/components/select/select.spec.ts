@@ -151,7 +151,7 @@ describe('Select', () => {
       spyOn(event, 'preventDefault');
       spyOn(el.nativeElement, 'focus');
       spyOn<any>(component, 'listItems').and.returnValue([el, {}]);
-      component.focusFirst(event as any);
+      component['focusFirst'](event as any);
       expect(el.nativeElement.focus).toHaveBeenCalled();
       expect(event.preventDefault).toHaveBeenCalled();
     });
@@ -160,7 +160,7 @@ describe('Select', () => {
       const event = { preventDefault: (): void => {} };
       spyOn(event, 'preventDefault');
       spyOn<any>(component, 'listItems').and.returnValue([]);
-      component.focusFirst(event as any);
+      component['focusFirst'](event as any);
       expect(event.preventDefault).not.toHaveBeenCalled();
     });
   });
@@ -172,7 +172,7 @@ describe('Select', () => {
       spyOn(event, 'preventDefault');
       spyOn(el.nativeElement, 'focus');
       spyOn<any>(component, 'listItems').and.returnValue([{}, el]);
-      component.focusLast(event as any);
+      component['focusLast'](event as any);
       expect(el.nativeElement.focus).toHaveBeenCalled();
       expect(event.preventDefault).toHaveBeenCalled();
     });
@@ -181,7 +181,7 @@ describe('Select', () => {
       const event = { preventDefault: (): void => {} };
       spyOn(event, 'preventDefault');
       spyOn<any>(component, 'listItems').and.returnValue([]);
-      component.focusLast(event as any);
+      component['focusLast'](event as any);
       expect(event.preventDefault).not.toHaveBeenCalled();
     });
   });
@@ -194,7 +194,7 @@ describe('Select', () => {
       spyOn(event, 'preventDefault');
       spyOn(next.nativeElement, 'focus');
       spyOn<any>(component, 'listItems').and.returnValue([current, next]);
-      component.focusMove(current.nativeElement as any, 1, event as any);
+      component['focusMove'](current.nativeElement as any, 1, event as any);
       expect(next.nativeElement.focus).toHaveBeenCalled();
       expect(event.preventDefault).toHaveBeenCalled();
     });
@@ -203,7 +203,7 @@ describe('Select', () => {
       const event = { preventDefault: (): void => {} };
       spyOn(event, 'preventDefault');
       spyOn<any>(component, 'listItems').and.returnValue([]);
-      component.focusMove({} as any, 1, event as any);
+      component['focusMove']({} as any, 1, event as any);
       expect(event.preventDefault).not.toHaveBeenCalled();
     });
   });

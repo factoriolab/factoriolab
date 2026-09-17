@@ -110,7 +110,7 @@ describe('RankSelect', () => {
     });
 
     it('should deselect all options', () => {
-      component['editValue'].set(['id']);
+      component['editValue'].set(['1']);
       component.selectAll(false);
       expect(component['editValue']()).toEqual([]);
     });

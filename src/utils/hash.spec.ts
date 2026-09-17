@@ -1,17 +1,12 @@
 import { mockModData } from '~/tests/mocks/data';
 
-import {
-  addIfMissing,
-  emptyModHash,
-  emptyModHashSet,
-  updateHash,
-} from './hash';
+import { addIfMissing, emptyModHash, updateHash } from './hash';
 
 describe('addIfMissing', () => {
   it('should fill in null gaps', () => {
     const hash = emptyModHash();
     hash.items.push('a', null, 'c');
-    addIfMissing(hash, emptyModHashSet(), 'items', 'b');
+    addIfMissing(hash, 'items', 'b');
     expect(hash.items).toEqual(['a', 'b', 'c']);
   });
 });
@@ -30,6 +25,6 @@ describe('updateHash', () => {
     updateHash(data, hash);
     expect(hash.items.length).toBeGreaterThan(data.items.length);
     expect(hash.recipes.length).toBeGreaterThan(data.recipes.length);
-    expect(hash.items[0]).toBeNull();
+    expect(hash.items.includes('nonsense')).toBeFalse();
   });
 });
