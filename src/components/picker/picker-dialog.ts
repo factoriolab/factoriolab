@@ -1,12 +1,15 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
+  ElementRef,
   inject,
   linkedSignal,
   signal,
+  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -22,6 +25,8 @@ import { Dataset } from '~/state/settings/dataset';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areSetsEqual } from '~/utils/equality';
+import { SKIP_FOCUS_KEYS } from '~/utils/keyboard';
+import { coalesce } from '~/utils/nullish';
 
 import { Button } from '../button/button';
 import { Checkbox } from '../checkbox/checkbox';
@@ -48,9 +53,10 @@ import { PickerData } from './picker-data';
   host: {
     class:
       'flex h-[90dvh] max-h-[50rem] w-dvw max-w-5xl flex-col gap-2 p-3 pt-0 sm:h-[80dvh] md:w-3xl xl:w-[80dvw] 2xl:w-[70dvw]',
+    '(keydown)': 'keydown($event)',
   },
 })
-export class PickerDialog {
+export class PickerDialog implements AfterViewInit {
   private static lastCategory: string | null = null;
   private static lastQuality: string | null = null;
 
@@ -59,11 +65,17 @@ export class PickerDialog {
   protected readonly dialogRef =
     inject<DialogRef<boolean | string, PickerDialog>>(DialogRef);
 
-  protected readonly data = this.settingsStore.dataset;
+  protected readonly filterInput =
+    viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
+  protected readonly tabs = viewChild.required(Tabs);
 
+  protected readonly data = this.settingsStore.dataset;
   protected readonly allIds = new Set(this.dialogData.allIds);
   protected readonly multi = this.dialogData.selection instanceof Set;
   protected readonly selectedId?: string;
+  protected readonly rowsKey = `${this.dialogData.type}CategoryRows` as const;
+  protected readonly recordKey = `${this.dialogData.type}Record` as const;
+  private readonly allCategoryRows: Record<string, string[][]> = {};
   /**
    * Note: Selected items are in the excluded set, so selection is inverted in
    * the UI so that selected ids appear as deselected.
@@ -103,10 +115,6 @@ export class PickerDialog {
     areSetsEqual(this.selection(), new Set(this.dialogData.default)),
   );
 
-  protected readonly rowsKey = `${this.dialogData.type}CategoryRows` as const;
-  protected readonly recordKey = `${this.dialogData.type}Record` as const;
-  private readonly allCategoryRows: Record<string, string[][]> = {};
-
   protected readonly categoryRows = computed(() => {
     const filter = this.filter();
     const qualityId = this.selectedQuality();
@@ -143,6 +151,23 @@ export class PickerDialog {
     }
 
     return result;
+  });
+
+  protected readonly visibleSet = computed(() => {
+    const rows = coalesce(this.categoryRows()[this.selectedCategory()], []);
+    const visible = rows.flatMap((o) => o);
+    return new Set(visible);
+  });
+
+  protected readonly allVisibleSelected = computed(() => {
+    const selection = this.selection();
+    const visibleSet = this.visibleSet();
+    const visibleSelection = Array.from(visibleSet).filter((r) =>
+      selection.has(r),
+    );
+    if (visibleSelection.length === 0) return true;
+    if (visibleSelection.length === visibleSet.size) return false;
+    return undefined;
   });
 
   protected readonly categoryTabs = computed(() =>
@@ -214,6 +239,10 @@ export class PickerDialog {
     effect(() => (PickerDialog.lastQuality = this.selectedQuality()));
   }
 
+  ngAfterViewInit(): void {
+    this.tabs().elementRef.nativeElement.focus();
+  }
+
   selectAll(value: boolean): void {
     if (value) this.selection.set(new Set());
     else this.selection.set(new Set(this.allIds));
@@ -223,6 +252,18 @@ export class PickerDialog {
     this.selection.update((s) => {
       s = new Set(s);
       for (const recipeId of Array.from(this.recyclingSet())) {
+        if (value) s.delete(recipeId);
+        else s.add(recipeId);
+      }
+
+      return s;
+    });
+  }
+
+  selectAllVisible(value: boolean): void {
+    this.selection.update((s) => {
+      s = new Set(s);
+      for (const recipeId of Array.from(this.visibleSet())) {
         if (value) s.delete(recipeId);
         else s.add(recipeId);
       }
@@ -244,5 +285,10 @@ export class PickerDialog {
 
   reset(): void {
     this.selection.set(new Set(this.dialogData.default));
+  }
+
+  keydown(event: KeyboardEvent): void {
+    if (SKIP_FOCUS_KEYS.has(event.key)) return;
+    this.filterInput().nativeElement.focus();
   }
 }

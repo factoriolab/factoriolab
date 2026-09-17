@@ -166,6 +166,7 @@
     "beaconCount": "Beacon count",
     "beaconModule": "Beacon module",
     "chooseImages": "Choose images",
+    "clone": "Clone",
     "color": "Color",
     "customPresets": "Custom presets",
     "defaults": "Defaults",
@@ -439,6 +440,7 @@
   "picker": {
     "includeAll": "Включить все",
     "includeAllRecycling": "Include all recycling",
+    "includeVisible": "Include visible",
     "includedItems": "Set included items",
     "includedRecipes": "Set included recipes",
     "qualityFilter": "Quality filter",

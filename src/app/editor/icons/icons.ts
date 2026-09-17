@@ -3,22 +3,23 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   inject,
   signal,
-  TrackByFunction,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faArrowRotateLeft,
   faCheck,
+  faEllipsis,
   faExclamationTriangle,
   faGrip,
+  faPlus,
   faUpload,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
@@ -32,12 +33,21 @@ import { IconFileInfo } from '../editor.types';
 import { EditorTab } from '../editor-tab';
 import { normalizeIcon } from '../image.utils';
 
+function emptyIcon(): IconJson {
+  return {
+    id: '',
+    x: 0,
+    y: 0,
+    color: '',
+  };
+}
+
 @Component({
   selector: 'lab-icons',
   imports: [
     FormsModule,
+    CdkMenuModule,
     DragDropModule,
-    ScrollingModule,
     FaIconComponent,
     Button,
     TranslatePipe,
@@ -50,19 +60,12 @@ export class Icons extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
 
   protected readonly faArrowRotateLeft = faArrowRotateLeft;
+  protected readonly faEllipsis = faEllipsis;
   protected readonly faGrip = faGrip;
+  protected readonly faPlus = faPlus;
   protected readonly faUpload = faUpload;
   protected readonly fileInfo = signal<IconFileInfo | undefined>(undefined);
-  protected readonly model: IconJson = {
-    id: '',
-    x: 0,
-    y: 0,
-    color: '',
-  };
-  protected readonly trackByFn: TrackByFunction<IconJson> = (
-    _,
-    item: IconJson,
-  ): string => item.id;
+  protected model = emptyIcon();
 
   selectFiles(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
@@ -111,6 +114,8 @@ export class Icons extends EditorTab {
   add(id: string, info: IconFileInfo | undefined): void {
     this.edit().data.icons.push({ id, x: 0, y: 0, color: info?.color ?? '' });
     this.edit().icons[id] = info;
+    this.model = emptyIcon();
+    this.fileInfo.set(undefined);
   }
 
   drop(event: CdkDragDrop<unknown>): void {
@@ -151,13 +156,18 @@ export class Icons extends EditorTab {
     );
   }
 
+  clone(icon: IconJson, index: number): void {
+    icon = JSON.parse(JSON.stringify(icon)) as IconJson;
+    this.edit().data.icons.splice(index + 1, 0, icon);
+  }
+
   remove(id: string): void {
     const { data } = this.edit();
     this.confirm
       .open({
-        header: 'Delete item?',
+        header: 'Delete icon?',
         message:
-          'If this item is in use, deleting it will invalidate some entities. Continue?',
+          'If this icon is in use, deleting it will invalidate some entities. Continue?',
         icon: faExclamationTriangle,
         actions: [
           { text: 'yes', value: 1, icon: faCheck },
@@ -166,7 +176,7 @@ export class Icons extends EditorTab {
       })
       .subscribe((res) => {
         if (res === 1) {
-          data.categories = data.categories.filter((c) => c.id !== id);
+          data.icons = data.icons.filter((c) => c.id !== id);
           this.cd.detectChanges();
         }
       });

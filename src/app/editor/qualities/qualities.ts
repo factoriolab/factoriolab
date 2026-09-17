@@ -3,6 +3,7 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -13,8 +14,10 @@ import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
+  faEllipsis,
   faExclamationTriangle,
   faGrip,
+  faPlus,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -39,6 +42,7 @@ function emptyQuality(): QualityJson {
   selector: 'lab-qualities',
   imports: [
     FormsModule,
+    CdkMenuModule,
     DragDropModule,
     FaIconComponent,
     Button,
@@ -51,7 +55,9 @@ function emptyQuality(): QualityJson {
 export class Qualities extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
 
+  protected readonly faEllipsis = faEllipsis;
   protected readonly faGrip = faGrip;
+  protected readonly faPlus = faPlus;
   protected model = emptyQuality();
 
   add(): void {
@@ -81,6 +87,13 @@ export class Qualities extends EditorTab {
     }
 
     quality.id = id;
+  }
+
+  clone(quality: QualityJson, index: number): void {
+    quality = JSON.parse(JSON.stringify(quality)) as QualityJson;
+    const { data } = this.edit();
+    data.qualities ??= [];
+    data.qualities.splice(index + 1, 0, quality);
   }
 
   remove(id: string): void {

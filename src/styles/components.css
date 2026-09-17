@@ -51,16 +51,13 @@
     }
 
     th {
+      position: sticky;
+      top: 0;
+      z-index: 3;
       background-color: var(--color-gray-900);
       text-align: start;
       white-space: nowrap;
       font-weight: var(--font-weight-semibold);
-    }
-
-    &:not(.lab-table-static) th {
-      position: sticky;
-      top: 0;
-      z-index: 3;
     }
 
     tr:not(:last-child) {

@@ -4,19 +4,19 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
   inject,
-  TrackByFunction,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
+  faEllipsis,
   faExclamationTriangle,
   faGrip,
   faPencil,
@@ -26,44 +26,19 @@ import {
 
 import { Button } from '~/components/button/button';
 import { Select } from '~/components/select/select';
-import { BeaconJson } from '~/data/schema/beacon';
-import { BeltJson } from '~/data/schema/belt';
-import { CargoWagonJson } from '~/data/schema/cargo-wagon';
-import { FluidWagonJson } from '~/data/schema/fluid-wagon';
-import { FuelJson } from '~/data/schema/fuel';
-import { InserterJson } from '~/data/schema/inserter';
 import { ItemJson } from '~/data/schema/item';
-import { MachineJson } from '~/data/schema/machine';
-import { ModuleJson } from '~/data/schema/module';
-import { TechnologyJson } from '~/data/schema/technology';
-import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
-import { coalesce } from '~/utils/nullish';
 
 import { EditorTab } from '../editor-tab';
 import { emptyItem, toOptions } from '../object-utils';
-import { BeaconDialog } from './beacon-dialog/beacon-dialog';
-import { BeltDialog, BeltDialogData } from './belt-dialog/belt-dialog';
-import { CargoWagonDialog } from './cargo-wagon-dialog/cargo-wagon-dialog';
-import { FluidWagonDialog } from './fluid-wagon-dialog/fluid-wagon-dialog';
-import { FuelDialog, FuelDialogData } from './fuel-dialog/fuel-dialog';
-import { InserterDialog } from './inserter-dialog/inserter-dialog';
-import {
-  MachineDialog,
-  MachineDialogData,
-} from './machine-dialog/machine-dialog';
-import { ModuleDialog, ModuleDialogData } from './module-dialog/module-dialog';
-import {
-  TechnologyDialog,
-  TechnologyDialogData,
-} from './technology-dialog/technology-dialog';
+import { ItemDialog, ItemDialogData } from './item-dialog/item-dialog';
 
 @Component({
   selector: 'lab-items',
   imports: [
     FormsModule,
+    CdkMenuModule,
     DragDropModule,
-    ScrollingModule,
     FaIconComponent,
     Button,
     Select,
@@ -77,204 +52,45 @@ export class Items extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
   private readonly dialog = inject(Dialog);
 
-  protected readonly categoryOptions = computed(() => {
-    const { data, icons } = this.edit();
-    return toOptions(data.categories, icons);
-  });
-
+  protected readonly faEllipsis = faEllipsis;
   protected readonly faGrip = faGrip;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
   protected model = emptyItem();
-  protected readonly trackByFn: TrackByFunction<ItemJson> = (
-    _,
-    item: ItemJson,
-  ): string => item.id;
 
-  editBeacon(item: ItemJson): void {
-    this.dialog
-      .open<
-        BeaconJson | null | undefined,
-        BeaconJson,
-        BeaconDialog
-      >(BeaconDialog, { data: coalesce(item.beacon, { effectivity: 1, modules: 1 }) })
-      .closed.subscribe((beacon) => {
-        if (beacon === null) delete item.beacon;
-        else if (beacon) item.beacon = beacon;
-        this.forceDetect();
-      });
-  }
-
-  editBelt(item: ItemJson): void {
-    this.dialog
-      .open<
-        BeltJson | null | undefined,
-        BeltDialogData,
-        BeltDialog
-      >(BeltDialog, { data: { belt: coalesce(item.belt, { speed: 1 }), header: 'data.belt' } })
-      .closed.subscribe((belt) => {
-        if (belt === null) delete item.belt;
-        else if (belt) item.belt = belt;
-        this.forceDetect();
-      });
-  }
-
-  editPipe(item: ItemJson): void {
-    this.dialog
-      .open<
-        BeltJson | null | undefined,
-        BeltDialogData,
-        BeltDialog
-      >(BeltDialog, { data: { belt: coalesce(item.pipe, { speed: 1 }), header: 'data.pipe' } })
-      .closed.subscribe((pipe) => {
-        if (pipe === null) delete item.pipe;
-        else if (pipe) item.pipe = pipe;
-        this.forceDetect();
-      });
-  }
-
-  editMachine(item: ItemJson): void {
-    const edit = this.edit();
-    const { data, icons } = edit;
-    const fuelOptions = toOptions(
-      data.items.filter((i) => i.fuel),
-      icons,
-      true,
-    );
-    const locationOptions = toOptions(coalesce(data.locations, []), icons);
-    this.dialog
-      .open<
-        MachineJson | null | undefined,
-        MachineDialogData,
-        MachineDialog
-      >(MachineDialog, { data: { machine: coalesce(item.machine, {}), fuelOptions, locationOptions, edit } })
-      .closed.subscribe((machine) => {
-        if (machine === null) delete item.machine;
-        else if (machine) item.machine = machine;
-        this.forceDetect();
-      });
-  }
-
-  editModule(item: ItemJson): void {
+  protected readonly categoryOptions = computed(() => {
     const { data, icons } = this.edit();
-    const limitationOptions: Option<string | undefined>[] = [
-      { label: 'none', value: undefined },
-    ];
-    for (const limitation of Object.keys(coalesce(data.limitations, {}))) {
-      limitationOptions.push({ label: limitation, value: limitation });
-    }
-    const itemOptions = toOptions(data.items, icons, true);
-    this.dialog
-      .open<
-        ModuleJson | null | undefined,
-        ModuleDialogData,
-        ModuleDialog
-      >(ModuleDialog, { data: { module: coalesce(item.module, {}), limitationOptions, itemOptions } })
-      .closed.subscribe((module) => {
-        if (module === null) delete item.module;
-        else if (module) item.module = module;
-        this.forceDetect();
-      });
-  }
+    return toOptions(data.categories, icons, true);
+  });
 
-  editFuel(item: ItemJson): void {
-    const { data, icons } = this.edit();
-    const itemOptions = toOptions(data.items, icons, true);
+  editItem(item: ItemJson, index?: number): void {
+    item = JSON.parse(JSON.stringify(item)) as ItemJson;
     this.dialog
       .open<
-        FuelJson | null | undefined,
-        FuelDialogData,
-        FuelDialog
-      >(FuelDialog, { data: { fuel: coalesce(item.fuel, { category: '', value: 1 }), itemOptions } })
-      .closed.subscribe((fuel) => {
-        if (fuel === null) delete item.fuel;
-        else if (fuel) item.fuel = fuel;
-        this.forceDetect();
-      });
-  }
-
-  editCargoWagon(item: ItemJson): void {
-    this.dialog
-      .open<
-        CargoWagonJson | null | undefined,
-        CargoWagonJson,
-        CargoWagonDialog
-      >(CargoWagonDialog, { data: coalesce(item.cargoWagon, { size: 1 }) })
-      .closed.subscribe((cargoWagon) => {
-        if (cargoWagon === null) delete item.cargoWagon;
-        else if (cargoWagon) item.cargoWagon = cargoWagon;
-        this.forceDetect();
-      });
-  }
-
-  editFluidWagon(item: ItemJson): void {
-    this.dialog
-      .open<
-        FluidWagonJson | null | undefined,
-        FluidWagonJson,
-        FluidWagonDialog
-      >(FluidWagonDialog, { data: coalesce(item.fluidWagon, { capacity: 1 }) })
-      .closed.subscribe((fluidWagon) => {
-        if (fluidWagon === null) delete item.fluidWagon;
-        else if (fluidWagon) item.fluidWagon = fluidWagon;
-        this.forceDetect();
-      });
-  }
-
-  editTechnology(item: ItemJson): void {
-    const { data, icons } = this.edit();
-    const prerequisiteOptions = toOptions(
-      data.items.filter((i) => i.technology),
-      icons,
-    );
-    const qualityOptions = toOptions(coalesce(data.qualities, []), icons);
-    const recipeOptions = toOptions(data.recipes, icons);
-    this.dialog
-      .open<
-        TechnologyJson | null | undefined,
-        TechnologyDialogData,
-        TechnologyDialog
-      >(TechnologyDialog, { data: { technology: coalesce(item.technology, {}), prerequisiteOptions, qualityOptions, recipeOptions } })
-      .closed.subscribe((technology) => {
-        if (technology === null) delete item.technology;
-        else if (technology) item.technology = technology;
-        this.forceDetect();
-      });
-  }
-
-  editInserter(item: ItemJson): void {
-    this.dialog
-      .open<
-        InserterJson | null | undefined,
-        InserterJson,
-        InserterDialog
-      >(InserterDialog, { data: coalesce(item.inserter, { speed: 1 }) })
-      .closed.subscribe((inserter) => {
-        if (inserter === null) delete item.inserter;
-        else if (inserter) item.inserter = inserter;
-        this.forceDetect();
+        ItemJson | undefined,
+        ItemDialogData,
+        ItemDialog
+      >(ItemDialog, { data: { item, edit: this.edit(), header: item.name } })
+      .closed.subscribe((result) => {
+        if (result) {
+          if (index == null) this.model = result;
+          else this.edit().data.items[index] = result;
+        }
+        this.cd.detectChanges();
       });
   }
 
   add(): void {
-    const { data } = this.edit();
-    const items = [...data.items];
-    items.push(this.model);
-    data.items = items;
+    this.edit().data.items.push(this.model);
     this.model = emptyItem();
-    this.cd.detectChanges();
-  }
-
-  private forceDetect(): void {
-    const { data } = this.edit();
-    data.items = [...data.items];
-    this.cd.detectChanges();
   }
 
   drop(event: CdkDragDrop<unknown>): void {
-    const items = [...this.edit().data.items];
-    moveItemInArray(items, event.previousIndex, event.currentIndex);
-    this.edit().data.items = items;
+    moveItemInArray(
+      this.edit().data.items,
+      event.previousIndex,
+      event.currentIndex,
+    );
   }
 
   changeId(item: ItemJson, id: string): void {
@@ -387,6 +203,11 @@ export class Items extends EditorTab {
     }
 
     item.id = id;
+  }
+
+  clone(item: ItemJson, index: number): void {
+    item = JSON.parse(JSON.stringify(item)) as ItemJson;
+    this.edit().data.items.splice(index + 1, 0, item);
   }
 
   remove(id: string): void {

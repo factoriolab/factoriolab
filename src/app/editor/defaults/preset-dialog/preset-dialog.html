@@ -1,0 +1,253 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <th id="researched-technologies-header">
+        {{ 'editor.researchedTechnologies' | translate }}
+      </th>
+      <td>
+        <lab-editor-multiselect
+          [options]="data.technologyOptions"
+          labelledBy="researched-technologies-header"
+          [(value)]="data.preset.researchedTechnologies"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="excluded-recipes-header">
+        {{ 'editor.excludedRecipes' | translate }}
+      </th>
+      <td>
+        <lab-editor-multiselect
+          [options]="data.recipeOptions"
+          labelledBy="excludedf-recipes-header"
+          [(value)]="data.preset.excludedRecipes"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="locations-header">{{ 'data.locations' | translate }}</th>
+      <td>
+        <lab-editor-multiselect
+          [options]="data.locationOptions"
+          labelledBy="locations-header"
+          [(value)]="data.preset.locations"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="module-rank-header">
+        {{ 'settings.modifierRank' | translate }}
+      </th>
+      <td>
+        <lab-editor-rank-select
+          [options]="data.moduleOptions"
+          labelledBy="module-rank-header"
+          emptyMessage="settings.modifierRankEmpty"
+          [(value)]="data.preset.moduleRank"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="fuel-rank-header">{{ 'settings.fuelRank' | translate }}</th>
+      <td>
+        <lab-editor-rank-select
+          [options]="data.fuelOptions"
+          labelledBy="fuel-rank-header"
+          emptyMessage="settings.fuelRankEmpty"
+          [(value)]="data.preset.fuelRank"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="beacon-count-header">{{ 'editor.beaconCount' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="beacon-count-header"
+          class="input"
+          size="3"
+          [placeholder]="'editor.beaconCount' | translate"
+          [ngModel]="data.preset.beaconCount"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.preset.beaconCount = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="beacon-header">{{ 'data.beacon' | translate }}</th>
+      <td>
+        <lab-select
+          placeholder="none"
+          aria-labelledby="beacon-header"
+          [options]="data.nullableBeaconOptions"
+          [(ngModel)]="data.preset.beacon"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="beacon-module-header">
+        {{ 'editor.beaconModule' | translate }}
+      </th>
+      <td>
+        <lab-select
+          placeholder="none"
+          aria-labelledby="beacon-module-header"
+          [options]="data.nullableModuleOptions"
+          [(ngModel)]="data.preset.beaconModule"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="machine-rank-header">
+        {{ 'settings.machineRank' | translate }}
+      </th>
+      <td>
+        <lab-editor-rank-select
+          [options]="data.machineOptions"
+          labelledBy="machine-rank-header"
+          [(value)]="data.preset.machineRank"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="belt-header">{{ 'data.belt' | translate }}</th>
+      <td>
+        <lab-select
+          placeholder="none"
+          labelledBy="belt-header"
+          [options]="data.nullableBeltOptions"
+          [(ngModel)]="data.preset.belt"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="belt-stack-header">{{ 'data.beltStack' | translate }}</th>
+      <td>
+        <input
+          aria-labelledby="belt-stack-header"
+          type="text"
+          class="input"
+          [placeholder]="'data.beltStack' | translate"
+          [ngModel]="data.preset.beltStack"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.preset.beltStack = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="pipe-header">{{ 'data.pipe' | translate }}</th>
+      <td>
+        <lab-select
+          placeholder="none"
+          labelledBy="pipe-header"
+          [options]="data.nullablePipeOptions"
+          [(ngModel)]="data.preset.pipe"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="cargo-wagon-header">{{ 'data.cargoWagon' | translate }}</th>
+      <td>
+        <lab-select
+          placeholder="none"
+          labelledBy="cargo-wagon-header"
+          [options]="data.nullableCargoWagonOptions"
+          [(ngModel)]="data.preset.cargoWagon"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="fluid-wagon-header">{{ 'data.fluidWagon' | translate }}</th>
+      <td>
+        <lab-select
+          placeholder="none"
+          labelledBy="fluid-wagon-header"
+          [options]="data.nullableFluidWagonOptions"
+          [(ngModel)]="data.preset.fluidWagon"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="mining-bonus-header">
+        {{ 'settings.miningProductivity' | translate }}
+      </th>
+      <td>
+        <input
+          aria-labelledby="mining-bonus-header"
+          type="text"
+          class="input"
+          [placeholder]="'settings.miningProductivity' | translate"
+          [ngModel]="data.preset.miningBonus"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.preset.miningBonus = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="research-bonus-header">
+        {{ 'settings.researchSpeed' | translate }}
+      </th>
+      <td>
+        <input
+          aria-labelledby="research-bonus-header"
+          type="text"
+          class="input"
+          [placeholder]="'settings.researchSpeed' | translate"
+          [ngModel]="data.preset.researchBonus"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.preset.researchBonus = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="research-productivity-header">
+        {{ 'settings.researchProductivity' | translate }}
+      </th>
+      <td>
+        <input
+          aria-labelledby="research-productivity-header"
+          type="text"
+          class="input"
+          [placeholder]="'settings.researchProductivity' | translate"
+          [ngModel]="data.preset.researchProductivity"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.preset.researchProductivity = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="recipe-productivity-header">
+        {{ 'data.recipeProductivity' | translate }}
+      </th>
+      <td>
+        <button
+          aria-labelledby="recipe-productivity-header"
+          type="button"
+          labQuantitiesButton
+          [edit]="data.edit"
+          [record]="data.preset.recipeProductivity"
+          [attr.aria-label]="'data.recipeProductivity' | translate"
+          (click)="editRecipeProductivity(data.preset)"
+        ></button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data.preset)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

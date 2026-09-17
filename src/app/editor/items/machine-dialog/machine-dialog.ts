@@ -119,15 +119,16 @@ export class MachineDialog implements DialogData {
   editConsumption(machine: MachineJson): void {
     const { data, icons } = this.data.edit;
     const options = toOptions(data.items, icons);
+    const record = { ...machine.consumption };
     this.dialog
       .open<
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: coalesce(machine.consumption, {}), options, header: 'data.consumption', optional: true } })
-      .closed.subscribe((record) => {
-        if (record === null) delete machine.consumption;
-        else if (record) machine.consumption = record;
+      >(QuantitiesDialog, { data: { record, options, header: 'data.consumption', optional: true } })
+      .closed.subscribe((result) => {
+        if (result === null) delete machine.consumption;
+        else if (result) machine.consumption = result;
         this.cd.detectChanges();
       });
   }

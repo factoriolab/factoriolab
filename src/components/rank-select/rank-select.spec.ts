@@ -29,6 +29,13 @@ describe('RankSelect', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('filteredOptions', () => {
+    it('should filter available options', () => {
+      component['filterText'].set('1');
+      expect(component['filteredOptions']().length).toEqual(1);
+    });
+  });
+
   describe('allSelected', () => {
     it('should determine checkbox value based on editValue', () => {
       expect(component['allSelected']()).toBeFalse();
@@ -110,9 +117,67 @@ describe('RankSelect', () => {
     });
 
     it('should deselect all options', () => {
-      component['editValue'].set(['id']);
+      component['editValue'].set(['1']);
       component.selectAll(false);
       expect(component['editValue']()).toEqual([]);
+    });
+  });
+
+  describe('keydown', () => {
+    it('should call the appropriate function', () => {
+      spyOn(component, 'select');
+      spyOn<any>(component, 'focusMove');
+      spyOn<any>(component, 'focusFirst');
+      spyOn<any>(component, 'focusLast');
+      const el = { nativeElement: { focus: (): void => {} } };
+      spyOn(el.nativeElement, 'focus');
+      spyOn<any>(component, 'filterInput').and.returnValue(el);
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'Enter' }),
+      );
+      expect(component.select).toHaveBeenCalledWith('id');
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'ArrowUp' }),
+      );
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+      );
+      expect(component['focusMove']).toHaveBeenCalledTimes(2);
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'Home' }),
+      );
+      expect(component['focusFirst']).toHaveBeenCalled();
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'End' }),
+      );
+      expect(component['focusLast']).toHaveBeenCalled();
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'A' }),
+      );
+      expect(el.nativeElement.focus).toHaveBeenCalled();
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'Tab' }),
+      );
+      expect(el.nativeElement.focus).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -131,7 +196,7 @@ describe('RankSelect', () => {
       spyOn<any>(component, 'listItems').and.returnValue([el]);
       const evt = new Event('click');
       spyOn(evt, 'preventDefault');
-      component.focusFirst(evt);
+      component['focusFirst'](evt);
       expect(el.nativeElement.focus).toHaveBeenCalled();
       expect(evt.preventDefault).toHaveBeenCalled();
     });
@@ -139,7 +204,7 @@ describe('RankSelect', () => {
     it('should return if no list items are found', () => {
       const evt = new Event('click');
       spyOn(evt, 'preventDefault');
-      component.focusFirst(evt);
+      component['focusFirst'](evt);
       expect(evt.preventDefault).not.toHaveBeenCalled();
     });
   });
@@ -151,7 +216,7 @@ describe('RankSelect', () => {
       spyOn<any>(component, 'listItems').and.returnValue([el]);
       const evt = new Event('click');
       spyOn(evt, 'preventDefault');
-      component.focusLast(evt);
+      component['focusLast'](evt);
       expect(el.nativeElement.focus).toHaveBeenCalled();
       expect(evt.preventDefault).toHaveBeenCalled();
     });
@@ -159,7 +224,7 @@ describe('RankSelect', () => {
     it('should return if no list items are found', () => {
       const evt = new Event('click');
       spyOn(evt, 'preventDefault');
-      component.focusLast(evt);
+      component['focusLast'](evt);
       expect(evt.preventDefault).not.toHaveBeenCalled();
     });
   });
@@ -172,7 +237,7 @@ describe('RankSelect', () => {
       spyOn<any>(component, 'listItems').and.returnValue([first, second]);
       const evt = new Event('click');
       spyOn(evt, 'preventDefault');
-      component.focusMove(first.nativeElement as any, 1, evt);
+      component['focusMove'](first.nativeElement as any, 1, evt);
       expect(second.nativeElement.focus).toHaveBeenCalled();
       expect(evt.preventDefault).toHaveBeenCalled();
     });
@@ -180,7 +245,7 @@ describe('RankSelect', () => {
     it('should return if no list items are found', () => {
       const evt = new Event('click');
       spyOn(evt, 'preventDefault');
-      component.focusMove(null as any, 1, evt);
+      component['focusMove'](null as any, 1, evt);
       expect(evt.preventDefault).not.toHaveBeenCalled();
     });
   });

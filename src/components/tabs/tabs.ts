@@ -66,6 +66,7 @@ export class Tabs<T extends string = string>
 {
   private readonly ref = inject(ChangeDetectorRef);
   private readonly injector = inject(Injector);
+  readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly tabElements =
     viewChildren<ElementRef<HTMLAnchorElement>>('tab');
 

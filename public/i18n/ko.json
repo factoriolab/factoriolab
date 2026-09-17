@@ -166,6 +166,7 @@
     "beaconCount": "Beacon count",
     "beaconModule": "Beacon module",
     "chooseImages": "Choose images",
+    "clone": "Clone",
     "color": "Color",
     "customPresets": "Custom presets",
     "defaults": "Defaults",
@@ -439,6 +440,7 @@
   "picker": {
     "includeAll": "모두 포함",
     "includeAllRecycling": "모든 재활용 포함",
+    "includeVisible": "Include visible",
     "includedItems": "포함된 아이템 설정",
     "includedRecipes": "포함된 제작법 설정",
     "qualityFilter": "품질 필터",

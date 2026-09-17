@@ -47,6 +47,13 @@ describe('Select', () => {
     });
   });
 
+  describe('filteredOptions', () => {
+    it('should filter available options', () => {
+      component['filterText'].set('1');
+      expect(component['filteredOptions']().length).toEqual(1);
+    });
+  });
+
   describe('allSelected', () => {
     it('should determine whether all items are selected', () => {
       expect(component['allSelected']()).toBeFalse();
@@ -144,6 +151,64 @@ describe('Select', () => {
     });
   });
 
+  describe('keydown', () => {
+    it('should call the appropriate function', () => {
+      spyOn(component, 'select');
+      spyOn<any>(component, 'focusMove');
+      spyOn<any>(component, 'focusFirst');
+      spyOn<any>(component, 'focusLast');
+      const el = { nativeElement: { focus: (): void => {} } };
+      spyOn(el.nativeElement, 'focus');
+      spyOn<any>(component, 'filterInput').and.returnValue(el);
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'Enter' }),
+      );
+      expect(component.select).toHaveBeenCalledWith('id');
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'ArrowUp' }),
+      );
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+      );
+      expect(component['focusMove']).toHaveBeenCalledTimes(2);
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'Home' }),
+      );
+      expect(component['focusFirst']).toHaveBeenCalled();
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'End' }),
+      );
+      expect(component['focusLast']).toHaveBeenCalled();
+
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'A' }),
+      );
+      expect(el.nativeElement.focus).toHaveBeenCalled();
+      component.keydown(
+        { value: 'id' } as any,
+        null as any,
+        new KeyboardEvent('keydown', { key: 'Tab' }),
+      );
+      expect(el.nativeElement.focus).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('focusFirst', () => {
     it('should focus the first list item', () => {
       const event = { preventDefault: (): void => {} };
@@ -151,7 +216,7 @@ describe('Select', () => {
       spyOn(event, 'preventDefault');
       spyOn(el.nativeElement, 'focus');
       spyOn<any>(component, 'listItems').and.returnValue([el, {}]);
-      component.focusFirst(event as any);
+      component['focusFirst'](event as any);
       expect(el.nativeElement.focus).toHaveBeenCalled();
       expect(event.preventDefault).toHaveBeenCalled();
     });
@@ -160,7 +225,7 @@ describe('Select', () => {
       const event = { preventDefault: (): void => {} };
       spyOn(event, 'preventDefault');
       spyOn<any>(component, 'listItems').and.returnValue([]);
-      component.focusFirst(event as any);
+      component['focusFirst'](event as any);
       expect(event.preventDefault).not.toHaveBeenCalled();
     });
   });
@@ -172,7 +237,7 @@ describe('Select', () => {
       spyOn(event, 'preventDefault');
       spyOn(el.nativeElement, 'focus');
       spyOn<any>(component, 'listItems').and.returnValue([{}, el]);
-      component.focusLast(event as any);
+      component['focusLast'](event as any);
       expect(el.nativeElement.focus).toHaveBeenCalled();
       expect(event.preventDefault).toHaveBeenCalled();
     });
@@ -181,7 +246,7 @@ describe('Select', () => {
       const event = { preventDefault: (): void => {} };
       spyOn(event, 'preventDefault');
       spyOn<any>(component, 'listItems').and.returnValue([]);
-      component.focusLast(event as any);
+      component['focusLast'](event as any);
       expect(event.preventDefault).not.toHaveBeenCalled();
     });
   });
@@ -194,7 +259,7 @@ describe('Select', () => {
       spyOn(event, 'preventDefault');
       spyOn(next.nativeElement, 'focus');
       spyOn<any>(component, 'listItems').and.returnValue([current, next]);
-      component.focusMove(current.nativeElement as any, 1, event as any);
+      component['focusMove'](current.nativeElement as any, 1, event as any);
       expect(next.nativeElement.focus).toHaveBeenCalled();
       expect(event.preventDefault).toHaveBeenCalled();
     });
@@ -203,7 +268,7 @@ describe('Select', () => {
       const event = { preventDefault: (): void => {} };
       spyOn(event, 'preventDefault');
       spyOn<any>(component, 'listItems').and.returnValue([]);
-      component.focusMove({} as any, 1, event as any);
+      component['focusMove']({} as any, 1, event as any);
       expect(event.preventDefault).not.toHaveBeenCalled();
     });
   });

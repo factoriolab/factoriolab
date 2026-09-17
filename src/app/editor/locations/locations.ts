@@ -3,6 +3,7 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -13,8 +14,10 @@ import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
+  faEllipsis,
   faExclamationTriangle,
   faGrip,
+  faPlus,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -30,6 +33,7 @@ import { emptyBase } from '../object-utils';
   selector: 'lab-locations',
   imports: [
     FormsModule,
+    CdkMenuModule,
     DragDropModule,
     FaIconComponent,
     Button,
@@ -42,7 +46,9 @@ import { emptyBase } from '../object-utils';
 export class Locations extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
 
+  protected readonly faEllipsis = faEllipsis;
   protected readonly faGrip = faGrip;
+  protected readonly faPlus = faPlus;
   protected model = emptyBase();
 
   add(): void {
@@ -79,6 +85,13 @@ export class Locations extends EditorTab {
     }
 
     location.id = id;
+  }
+
+  clone(location: CategoryJson, index: number): void {
+    location = JSON.parse(JSON.stringify(location)) as CategoryJson;
+    const { data } = this.edit();
+    data.locations ??= [];
+    data.locations.splice(index + 1, 0, location);
   }
 
   remove(id: string): void {

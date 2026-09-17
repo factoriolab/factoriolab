@@ -1,0 +1,17 @@
+export const SKIP_FOCUS_KEYS = new Set([
+  ' ',
+  'Alt',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUp',
+  'Backspace',
+  'Control',
+  'Delete',
+  'End',
+  'Enter',
+  'Escape',
+  'Home',
+  'Shift',
+  'Tab',
+]);

@@ -1,6 +1,7 @@
 <div class="gap-y-1 flex flex-wrap">
   <div class="relative flex grow">
     <input
+      #filterInput
       class="input square rounded-s-xs pe-9"
       [class.rounded-e-xs]="!data().abnormalQualities.length && !multi"
       [placeholder]="'filter' | translate"
@@ -61,6 +62,11 @@
   [tabs]="categoryTabs()"
 ></lab-tabs>
 <div class="flex grow scrollbar-thin flex-col overflow-y-auto">
+  <lab-checkbox
+    label="picker.includeVisible"
+    [ngModel]="allVisibleSelected()"
+    (ngModelChange)="selectAllVisible($event)"
+  ></lab-checkbox>
   @for (ids of categoryRows()[selectedCategory()]; track $index) {
     <div class="flex flex-wrap">
       @for (id of ids; track $index) {

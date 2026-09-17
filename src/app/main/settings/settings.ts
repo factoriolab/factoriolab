@@ -48,6 +48,7 @@ import { Icon } from '~/components/icon/icon';
 import { InputNumber } from '~/components/input-number/input-number';
 import { ModulesSelect } from '~/components/modules-select/modules-select';
 import { Picker } from '~/components/picker/picker';
+import { RankSelect } from '~/components/rank-select/rank-select';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { CUSTOM_MOD, gameOptions } from '~/data/game';
@@ -67,7 +68,6 @@ import { coalesce } from '~/utils/nullish';
 import { WindowClient } from '~/utils/window-client';
 
 import { CostSettingsDialog } from './cost-settings-dialog/cost-settings-dialog';
-import { RankSelect } from './rank-select/rank-select';
 import { RecipeProductivityDialog } from './recipe-productivity-dialog/recipe-productivity-dialog';
 import { TechnologiesDialog } from './technologies-dialog/technologies-dialog';
 import { VersionsDialog } from './versions-dialog/versions-dialog';

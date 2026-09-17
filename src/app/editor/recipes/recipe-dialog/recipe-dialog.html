@@ -1,0 +1,162 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <th id="time-header">{{ 'data.time' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="time-header"
+          class="input"
+          size="3"
+          [placeholder]="'data.time' | translate"
+          [ngModel]="data.recipe.time"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.recipe.time = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="in-header">{{ 'data.ingredients' | translate }}</th>
+      <td>
+        <button
+          type="button"
+          labQuantitiesButton
+          [edit]="data.edit"
+          [record]="data.recipe.in"
+          [attr.aria-label]="'data.ingredients' | translate"
+          (click)="editIngredients(data.recipe)"
+        ></button>
+      </td>
+    </tr>
+    <tr>
+      <th id="out-header">{{ 'data.products' | translate }}</th>
+      <td>
+        <button
+          type="button"
+          labQuantitiesButton
+          [edit]="data.edit"
+          [record]="data.recipe.out"
+          [attr.aria-label]="'data.products' | translate"
+          (click)="editProducts(data.recipe)"
+        ></button>
+      </td>
+    </tr>
+    <tr>
+      <th id="producers-header">{{ 'data.producers' | translate }}</th>
+      <td>
+        <lab-editor-multiselect
+          [options]="producerOptions"
+          labelledBy="producers-header"
+          [(value)]="data.recipe.producers"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="catalyst-header">{{ 'data.catalysts' | translate }}</th>
+      <td>
+        <button
+          type="button"
+          labQuantitiesButton
+          [edit]="data.edit"
+          [record]="data.recipe.catalyst"
+          [attr.aria-label]="'data.catalysts' | translate"
+          (click)="editCatalysts(data.recipe)"
+        ></button>
+      </td>
+    </tr>
+    <tr>
+      <th id="cost-header">{{ 'data.cost' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="cost-header"
+          class="input"
+          size="5"
+          [placeholder]="'data.cost' | translate"
+          [ngModel]="data.recipe.cost"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.recipe.cost = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="part-header">{{ 'data.rocketPart' | translate }}</th>
+      <td>
+        <lab-select
+          labelledBy="part-header"
+          [options]="recipeOptions"
+          [iconOnly]="true"
+          [ngModel]="data.recipe.part"
+          (ngModelChange)="data.recipe.part = $event || undefined"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="usage-header">{{ 'data.energyConsumption' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="usage-header"
+          class="input"
+          size="4"
+          [placeholder]="'data.energyConsumption' | translate"
+          [ngModel]="data.recipe.usage"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.recipe.usage = toNullableNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="disallowed-effects-header">
+        {{ 'data.disallowedEffects' | translate }}
+      </th>
+      <td>
+        <lab-editor-multiselect
+          [options]="moduleEffectOptions"
+          labelledBy="disallowed-effects-header"
+          [asCsv]="true"
+          [(value)]="data.recipe.disallowedEffects"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="locations-header">{{ 'data.locations' | translate }}</th>
+      <td>
+        <lab-editor-multiselect
+          [options]="locationOptions"
+          labelledBy="locations-header"
+          [(value)]="data.recipe.locations"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="flags-header">{{ 'data.flags' | translate }}</th>
+      <td>
+        <lab-editor-multiselect
+          [options]="recipeFlagOptions"
+          labelledBy="flags-header"
+          [asCsv]="true"
+          [(value)]="data.recipe.flags"
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data.recipe)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

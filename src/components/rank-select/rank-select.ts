@@ -17,6 +17,7 @@ import {
   linkedSignal,
   model,
   signal,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -37,8 +38,10 @@ import { Rounded, roundedVariants } from '~/components/rounding';
 import { Tooltip } from '~/components/tooltip/tooltip';
 import { Option } from '~/option/option';
 import { OptionPipe } from '~/option/option-pipe';
+import { Translate } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areArraysEqual } from '~/utils/equality';
+import { SKIP_FOCUS_KEYS } from '~/utils/keyboard';
 
 let nextUniqueId = 0;
 const TOGGLE_KEYS = new Set(['Enter', 'ArrowDown', 'ArrowUp', 'Home', 'End']);
@@ -112,9 +115,12 @@ export class RankSelect extends Control<string[]> {
   protected readonly overlayOrigin = inject(CdkOverlayOrigin);
   protected readonly formField = inject(FormField, { optional: true });
   private readonly injector = inject(Injector);
+  private readonly translate = inject(Translate);
 
   protected readonly listItems =
     viewChildren<ElementRef<HTMLLIElement>>('option');
+  protected readonly filterInput =
+    viewChild<ElementRef<HTMLInputElement>>('filterInput');
 
   private readonly uniqueId = (nextUniqueId++).toString();
 
@@ -139,14 +145,27 @@ export class RankSelect extends Control<string[]> {
       disabled: this.disabled(),
     }),
   );
+  protected readonly filterLower = computed(() =>
+    this.filterText().toLocaleLowerCase(),
+  );
+  protected readonly filteredOptions = computed(() => {
+    const options = this.options();
+    const filterLower = this.filterLower();
+    if (!filterLower) return options;
+    return options.filter((o) =>
+      this.translate.get(o.label).toLocaleLowerCase().includes(filterLower),
+    );
+  });
   protected readonly allSelected = computed(() => {
-    if (this.options().length === this.editValue().length) return true;
-    if (this.editValue().length === 0) return false;
+    const value = this.editValue();
+    const filteredOptions = this.filteredOptions();
+    const filteredSelection = filteredOptions.filter((o) =>
+      value.includes(o.value),
+    );
+    if (filteredSelection.length === 0) return false;
+    if (filteredSelection.length === filteredOptions.length) return true;
     return undefined;
   });
-  protected readonly filterLower = computed(() =>
-    this.filterText().toLowerCase(),
-  );
 
   protected readonly faChevronDown = faChevronDown;
   protected readonly faGrip = faGrip;
@@ -183,8 +202,45 @@ export class RankSelect extends Control<string[]> {
   }
 
   selectAll(value: boolean | undefined): void {
-    if (value) this.editValue.set(this.options().map((o) => o.value));
-    else this.editValue.set([]);
+    this.editValue.update((edit) => {
+      edit = [...edit];
+      this.filteredOptions().forEach((o) => {
+        if (value && !edit.includes(o.value)) edit.push(o.value);
+        if (!value && edit.includes(o.value))
+          edit = edit.filter((e) => e !== o.value);
+      });
+      return edit;
+    });
+  }
+
+  keydown(opt: Option, el: HTMLLIElement, event: KeyboardEvent): void {
+    switch (event.key) {
+      case 'Enter': {
+        this.select(opt.value);
+        break;
+      }
+      case 'ArrowUp': {
+        this.focusMove(el, -1, event);
+        break;
+      }
+      case 'ArrowDown': {
+        this.focusMove(el, 1, event);
+        break;
+      }
+      case 'Home': {
+        this.focusFirst(event);
+        break;
+      }
+      case 'End': {
+        this.focusLast(event);
+        break;
+      }
+      default: {
+        if (SKIP_FOCUS_KEYS.has(event.key)) return;
+        this.filterInput()?.nativeElement.focus();
+        break;
+      }
+    }
   }
 
   drop(event: CdkDragDrop<string[]>): void {
@@ -195,14 +251,14 @@ export class RankSelect extends Control<string[]> {
     });
   }
 
-  focusFirst(event: Event): void {
+  private focusFirst(event: Event): void {
     const el = this.listItems()[0]?.nativeElement;
     if (el == null) return;
     el.focus();
     event.preventDefault();
   }
 
-  focusLast(event: Event): void {
+  private focusLast(event: Event): void {
     const items = this.listItems();
     const el = items[items.length - 1]?.nativeElement;
     if (el == null) return;
@@ -210,7 +266,7 @@ export class RankSelect extends Control<string[]> {
     event.preventDefault();
   }
 
-  focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
+  private focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
     const index = this.listItems().findIndex((i) => i.nativeElement === option);
     const el = this.listItems()[index + dir]?.nativeElement;
     if (el == null) return;

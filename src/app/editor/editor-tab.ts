@@ -15,9 +15,9 @@ export abstract class EditorTab {
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly iconOptions = computed(() => {
     const { data, icons } = this.edit();
-    return data.icons
+    const result = data.icons
       .map(
-        (i): Option => ({
+        (i): Option<string | undefined> => ({
           label: i.id,
           value: i.id,
           icon: icons[i.id]?.url,
@@ -25,5 +25,7 @@ export abstract class EditorTab {
         }),
       )
       .sort((a, b) => a.label.localeCompare(b.label));
+    result.unshift({ label: 'none', value: undefined });
+    return result;
   });
 }

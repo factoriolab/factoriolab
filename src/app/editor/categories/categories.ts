@@ -3,6 +3,7 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { CdkMenuModule } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -13,8 +14,10 @@ import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
+  faEllipsis,
   faExclamationTriangle,
   faGrip,
+  faPlus,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -30,6 +33,7 @@ import { emptyBase } from '../object-utils';
   selector: 'lab-categories',
   imports: [
     FormsModule,
+    CdkMenuModule,
     DragDropModule,
     FaIconComponent,
     Button,
@@ -42,16 +46,14 @@ import { emptyBase } from '../object-utils';
 export class Categories extends EditorTab {
   private readonly cd = inject(ChangeDetectorRef);
 
+  protected readonly faEllipsis = faEllipsis;
   protected readonly faGrip = faGrip;
+  protected readonly faPlus = faPlus;
   protected model = emptyBase();
 
   add(): void {
-    const { data } = this.edit();
-    const categories = [...data.categories];
-    categories.push(this.model);
-    data.categories = categories;
+    this.edit().data.categories.push(this.model);
     this.model = emptyBase();
-    this.cd.detectChanges();
   }
 
   drop(event: CdkDragDrop<unknown>): void {
@@ -68,6 +70,11 @@ export class Categories extends EditorTab {
       .filter((e) => e.category === category.id)
       .forEach((e) => (e.category = id));
     category.id = id;
+  }
+
+  clone(category: CategoryJson, index: number): void {
+    category = JSON.parse(JSON.stringify(category)) as CategoryJson;
+    this.edit().data.categories.splice(index + 1, 0, category);
   }
 
   remove(id: string): void {

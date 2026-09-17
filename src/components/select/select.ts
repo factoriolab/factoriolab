@@ -11,6 +11,7 @@ import {
   linkedSignal,
   model,
   signal,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -22,8 +23,10 @@ import {
 import { cva } from 'class-variance-authority';
 
 import { Option } from '~/option/option';
+import { Translate } from '~/translate/translate';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { areSetsEqual } from '~/utils/equality';
+import { SKIP_FOCUS_KEYS } from '~/utils/keyboard';
 
 import { Checkbox } from '../checkbox/checkbox';
 import { Control } from '../control';
@@ -105,9 +108,12 @@ export class Select<T = unknown> extends Control<T> {
   protected readonly overlayOrigin = inject(CdkOverlayOrigin);
   protected readonly formField = inject(FormField, { optional: true });
   private readonly injector = inject(Injector);
+  private readonly translate = inject(Translate);
 
   protected readonly listItems =
     viewChildren<ElementRef<HTMLLIElement>>('option');
+  protected readonly filterInput =
+    viewChild<ElementRef<HTMLInputElement>>('filterInput');
 
   private readonly uniqueId = (nextUniqueId++).toString();
 
@@ -142,17 +148,30 @@ export class Select<T = unknown> extends Control<T> {
     const value = this.value();
     return Array.isArray(value) || value instanceof Set;
   });
-  protected readonly allSelected = computed(() => {
-    if (this.options().length === this.selection().size) return true;
-    if (this.selection().size === 0) return false;
-    return undefined;
-  });
   protected readonly selectedOption = computed(() =>
     this.options()?.find((o) => o.value === this.value()),
   );
   protected readonly filterLower = computed(() =>
-    this.filterText().toLowerCase(),
+    this.filterText().toLocaleLowerCase(),
   );
+  protected readonly filteredOptions = computed(() => {
+    const options = this.options();
+    const filterLower = this.filterLower();
+    if (!filterLower) return options;
+    return options.filter((o) =>
+      this.translate.get(o.label).toLocaleLowerCase().includes(filterLower),
+    );
+  });
+  protected readonly allSelected = computed(() => {
+    const selection = this.selection();
+    const filteredOptions = this.filteredOptions();
+    const filteredSelection = filteredOptions.filter((o) =>
+      selection.has(o.value),
+    );
+    if (filteredSelection.length === 0) return false;
+    if (filteredSelection.length === filteredOptions.length) return true;
+    return undefined;
+  });
 
   protected readonly faChevronDown = faChevronDown;
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
@@ -203,18 +222,54 @@ export class Select<T = unknown> extends Control<T> {
 
   selectAll(value: boolean | undefined): void {
     if (!this.multi() || value == null) return;
-    if (value) this.selection.set(new Set(this.options().map((o) => o.value)));
-    else this.selection.set(new Set());
+    this.selection.update((set) => {
+      set = new Set(set);
+      this.filteredOptions().forEach((o) => {
+        if (value) set.add(o.value);
+        else set.delete(o.value);
+      });
+      return set;
+    });
   }
 
-  focusFirst(event: Event): void {
+  keydown(opt: Option<T>, el: HTMLLIElement, event: KeyboardEvent): void {
+    switch (event.key) {
+      case 'Enter': {
+        this.select(opt.value);
+        break;
+      }
+      case 'ArrowUp': {
+        this.focusMove(el, -1, event);
+        break;
+      }
+      case 'ArrowDown': {
+        this.focusMove(el, 1, event);
+        break;
+      }
+      case 'Home': {
+        this.focusFirst(event);
+        break;
+      }
+      case 'End': {
+        this.focusLast(event);
+        break;
+      }
+      default: {
+        if (SKIP_FOCUS_KEYS.has(event.key)) return;
+        this.filterInput()?.nativeElement.focus();
+        break;
+      }
+    }
+  }
+
+  private focusFirst(event: Event): void {
     const el = this.listItems()[0]?.nativeElement;
     if (el == null) return;
     el.focus();
     event.preventDefault();
   }
 
-  focusLast(event: Event): void {
+  private focusLast(event: Event): void {
     const items = this.listItems();
     const el = items[items.length - 1]?.nativeElement;
     if (el == null) return;
@@ -222,7 +277,7 @@ export class Select<T = unknown> extends Control<T> {
     event.preventDefault();
   }
 
-  focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
+  private focusMove(option: HTMLLIElement, dir: -1 | 1, event: Event): void {
     const index = this.listItems().findIndex((i) => i.nativeElement === option);
     const el = this.listItems()[index + dir]?.nativeElement;
     if (el == null) return;
@@ -241,7 +296,7 @@ export class Select<T = unknown> extends Control<T> {
     // Don't need to worry about filter, none can be applied yet
     const options = this.options();
     let index = options.findIndex((o) => o.value === this.value());
-    if (this.multi()) index = 0;
+    if (this.multi() || index === -1) index = 0;
     if (event instanceof KeyboardEvent) {
       switch (event.key) {
         case 'ArrowUp':
@@ -259,15 +314,14 @@ export class Select<T = unknown> extends Control<T> {
       }
     }
 
-    if (index !== -1)
-      afterNextRender(
-        () => {
-          const el = this.listItems().at(index)?.nativeElement;
-          if (el == null) return;
-          el.scrollIntoView();
-          el.focus();
-        },
-        { injector: this.injector },
-      );
+    afterNextRender(
+      () => {
+        const el = this.listItems().at(index)?.nativeElement;
+        if (el == null) return;
+        el.scrollIntoView();
+        el.focus();
+      },
+      { injector: this.injector },
+    );
   }
 }

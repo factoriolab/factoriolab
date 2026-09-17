@@ -21,6 +21,9 @@ describe('PickerDialog', () => {
   let mocks: Mocks;
 
   beforeEach(async () => {
+    PickerDialog['lastCategory'] = null;
+    PickerDialog['lastQuality'] = null;
+
     await TestBed.configureTestingModule({
       imports: [TestModule, PickerDialog],
       providers: [
@@ -122,6 +125,20 @@ describe('PickerDialog', () => {
     });
   });
 
+  describe('allVisibleSelected', () => {
+    it('should determine whether all visible recipes are selected', () => {
+      const data = mocks.getDataset();
+      component['dialogData'].type = 'recipe';
+      component['dialogData'].allIds = data.recipeIds;
+      (component as any).multi = true;
+      expect(component['allVisibleSelected']()).toBeTrue();
+      component.selection.set(new Set(data.recipeIds));
+      expect(component['allVisibleSelected']()).toBeFalse();
+      component.selection.set(new Set([RecipeId.WoodenChest]));
+      expect(component['allVisibleSelected']()).toBeUndefined();
+    });
+  });
+
   describe('selectedQuality', () => {
     const modData: ModData = {
       ...mockModData,
@@ -176,6 +193,16 @@ describe('PickerDialog', () => {
     });
   });
 
+  describe('selectAllVisible', () => {
+    it('should select and deselect all recycling ids', () => {
+      spyOn<any>(component, 'visibleSet').and.returnValue(new Set(['id']));
+      component.selectAllVisible(false);
+      expect(component.selection().size).toEqual(1);
+      component.selectAllVisible(true);
+      expect(component.selection().size).toEqual(0);
+    });
+  });
+
   describe('selectId', () => {
     it('should select and deselect in multi mode', () => {
       (component as any).multi = true;
@@ -197,6 +224,18 @@ describe('PickerDialog', () => {
       spyOn(component.selection, 'set');
       component.reset();
       expect(component.selection.set).toHaveBeenCalledWith(new Set());
+    });
+  });
+
+  describe('keydown', () => {
+    it('should focus the filter input on appropriate keys', () => {
+      const element = { nativeElement: { focus: (): void => {} } };
+      spyOn(element.nativeElement, 'focus');
+      spyOn<any>(component, 'filterInput').and.returnValue(element);
+      component.keydown(new KeyboardEvent('keydown', { key: 'a' }));
+      expect(element.nativeElement.focus).toHaveBeenCalled();
+      component.keydown(new KeyboardEvent('keydown', { key: 'Enter' }));
+      expect(element.nativeElement.focus).toHaveBeenCalledTimes(1);
     });
   });
 });
