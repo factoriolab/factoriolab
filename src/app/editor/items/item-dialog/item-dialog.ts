@@ -17,14 +17,13 @@ import { Button } from '~/components/button/button';
 import { DialogData } from '~/components/dialog/dialog';
 import { BeaconJson } from '~/data/schema/beacon';
 import { BeltJson } from '~/data/schema/belt';
-import { CargoWagonJson } from '~/data/schema/cargo-wagon';
-import { FluidWagonJson } from '~/data/schema/fluid-wagon';
 import { FuelJson } from '~/data/schema/fuel';
 import { InserterJson } from '~/data/schema/inserter';
 import { ItemJson } from '~/data/schema/item';
 import { MachineJson } from '~/data/schema/machine';
 import { ModuleJson } from '~/data/schema/module';
 import { TechnologyJson } from '~/data/schema/technology';
+import { WagonJson } from '~/data/schema/wagon';
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
@@ -33,8 +32,6 @@ import { EditorData } from '../../editor.types';
 import { toOptions } from '../../object-utils';
 import { BeaconDialog } from '../beacon-dialog/beacon-dialog';
 import { BeltDialog, BeltDialogData } from '../belt-dialog/belt-dialog';
-import { CargoWagonDialog } from '../cargo-wagon-dialog/cargo-wagon-dialog';
-import { FluidWagonDialog } from '../fluid-wagon-dialog/fluid-wagon-dialog';
 import { FuelDialog, FuelDialogData } from '../fuel-dialog/fuel-dialog';
 import { InserterDialog } from '../inserter-dialog/inserter-dialog';
 import {
@@ -46,6 +43,7 @@ import {
   TechnologyDialog,
   TechnologyDialogData,
 } from '../technology-dialog/technology-dialog';
+import { WagonDialog } from '../wagon-dialog/wagon-dialog';
 
 export interface ItemDialogData extends DialogData {
   item: ItemJson;
@@ -93,24 +91,10 @@ export class ItemDialog {
         BeltJson | null | undefined,
         BeltDialogData,
         BeltDialog
-      >(BeltDialog, { data: { belt: coalesce(item.belt, { speed: 1 }), header: 'data.belt' } })
+      >(BeltDialog, { data: { belt: coalesce(item.belt, { itemTypes: [], speed: 1 }), header: 'data.belt' } })
       .closed.subscribe((belt) => {
         if (belt === null) delete item.belt;
         else if (belt) item.belt = belt;
-        this.cd.detectChanges();
-      });
-  }
-
-  editPipe(item: ItemJson): void {
-    this.dialog
-      .open<
-        BeltJson | null | undefined,
-        BeltDialogData,
-        BeltDialog
-      >(BeltDialog, { data: { belt: coalesce(item.pipe, { speed: 1 }), header: 'data.pipe' } })
-      .closed.subscribe((pipe) => {
-        if (pipe === null) delete item.pipe;
-        else if (pipe) item.pipe = pipe;
         this.cd.detectChanges();
       });
   }
@@ -167,7 +151,7 @@ export class ItemDialog {
         FuelJson | null | undefined,
         FuelDialogData,
         FuelDialog
-      >(FuelDialog, { data: { fuel: coalesce(item.fuel, { category: '', value: 1 }), itemOptions } })
+      >(FuelDialog, { data: { fuel: coalesce(item.fuel, { types: [], value: 1 }), itemOptions } })
       .closed.subscribe((fuel) => {
         if (fuel === null) delete item.fuel;
         else if (fuel) item.fuel = fuel;
@@ -175,30 +159,16 @@ export class ItemDialog {
       });
   }
 
-  editCargoWagon(item: ItemJson): void {
+  editWagon(item: ItemJson): void {
     this.dialog
       .open<
-        CargoWagonJson | null | undefined,
-        CargoWagonJson,
-        CargoWagonDialog
-      >(CargoWagonDialog, { data: coalesce(item.cargoWagon, { size: 1 }) })
-      .closed.subscribe((cargoWagon) => {
-        if (cargoWagon === null) delete item.cargoWagon;
-        else if (cargoWagon) item.cargoWagon = cargoWagon;
-        this.cd.detectChanges();
-      });
-  }
-
-  editFluidWagon(item: ItemJson): void {
-    this.dialog
-      .open<
-        FluidWagonJson | null | undefined,
-        FluidWagonJson,
-        FluidWagonDialog
-      >(FluidWagonDialog, { data: coalesce(item.fluidWagon, { capacity: 1 }) })
-      .closed.subscribe((fluidWagon) => {
-        if (fluidWagon === null) delete item.fluidWagon;
-        else if (fluidWagon) item.fluidWagon = fluidWagon;
+        WagonJson | null | undefined,
+        WagonJson,
+        WagonDialog
+      >(WagonDialog, { data: coalesce(item.wagon, { itemTypes: [], capacity: 1 }) })
+      .closed.subscribe((wagon) => {
+        if (wagon === null) delete item.wagon;
+        else if (wagon) item.wagon = wagon;
         this.cd.detectChanges();
       });
   }

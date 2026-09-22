@@ -22,7 +22,7 @@ export interface MachineJson {
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
-  fuelCategories?: string[];
+  fuelTypes?: string[];
   /** Indicates a specific fuel that must be used */
   fuel?: string;
   /** Energy consumption in kW */
@@ -54,7 +54,7 @@ export interface Machine {
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
-  fuelCategories?: string[];
+  fuelTypes: Set<string>;
   /** Indicates a specific fuel that must be used */
   fuel?: string;
   /** Energy consumption in kW */
@@ -94,7 +94,7 @@ export function parseMachine(
           : rational(json.modules),
     disallowedEffects: json.disallowedEffects,
     type: json.type,
-    fuelCategories: json.fuelCategories,
+    fuelTypes: new Set(json.fuelTypes),
     fuel: json.fuel,
     usage: rational(json.usage),
     drain: rational(json.drain),

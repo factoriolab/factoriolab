@@ -13,8 +13,9 @@ import { Select } from '~/components/select/select';
 import { FuelJson } from '~/data/schema/fuel';
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { SetJoinPipe } from '~/utils/set';
 
-import { toNullableNumeric, toNumeric } from '../../object-utils';
+import { toArray, toNullableNumeric, toNumeric } from '../../object-utils';
 
 export interface FuelDialogData {
   fuel: FuelJson;
@@ -23,7 +24,7 @@ export interface FuelDialogData {
 
 @Component({
   selector: 'lab-fuel-dialog',
-  imports: [FormsModule, Button, Select, TranslatePipe],
+  imports: [FormsModule, Button, Select, TranslatePipe, SetJoinPipe],
   templateUrl: './fuel-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -39,6 +40,7 @@ export class FuelDialog implements DialogData {
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   readonly header = 'data.fuel';
+  protected readonly toArray = toArray;
   protected readonly toNullableNumeric = toNullableNumeric;
   protected readonly toNumeric = toNumeric;
 }

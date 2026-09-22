@@ -3,9 +3,7 @@ import { GameInfo } from '~/data/game-info';
 import { IconType } from '~/data/icon-type';
 import { Beacon } from '~/data/schema/beacon';
 import { Belt } from '~/data/schema/belt';
-import { CargoWagon } from '~/data/schema/cargo-wagon';
 import { Category } from '~/data/schema/category';
-import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
 import { IconData } from '~/data/schema/icon-data';
 import { AdjustedInserter, Inserter } from '~/data/schema/inserter';
@@ -16,6 +14,7 @@ import { Module } from '~/data/schema/module';
 import { Quality } from '~/data/schema/quality';
 import { AdjustedRecipe, Recipe } from '~/data/schema/recipe';
 import { Technology } from '~/data/schema/technology';
+import { Wagon } from '~/data/schema/wagon';
 import { Flag } from '~/state/flags';
 
 export interface Dataset {
@@ -37,12 +36,9 @@ export interface Dataset {
   beaconIds: string[];
   beaconRecord: Record<string, Beacon>;
   beltIds: string[];
-  pipeIds: string[];
   beltRecord: Record<string, Belt>;
-  cargoWagonIds: string[];
-  cargoWagonRecord: Record<string, CargoWagon>;
-  fluidWagonIds: string[];
-  fluidWagonRecord: Record<string, FluidWagon>;
+  wagonIds: string[];
+  wagonRecord: Record<string, Wagon>;
   machineIds: string[];
   machineRecord: Record<string, Machine>;
   moduleIds: string[];

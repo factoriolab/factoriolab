@@ -70,13 +70,9 @@
           aria-labelledby="fuel-categories-header"
           class="input"
           [placeholder]="'data.fuelCategories' | translate"
-          [ngModel]="
-            data.machine.fuelCategories
-              ? data.machine.fuelCategories.join(', ')
-              : ''
-          "
+          [ngModel]="data.machine.fuelTypes | setJoin"
           [ngModelOptions]="{ updateOn: 'blur' }"
-          (ngModelChange)="updateFuelCategories($event)"
+          (ngModelChange)="data.machine.fuelTypes = toNullableArray($event)"
         />
       </td>
     </tr>

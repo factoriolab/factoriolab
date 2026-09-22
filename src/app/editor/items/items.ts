@@ -106,17 +106,11 @@ export class Items extends EditorTab {
 
       if (i.module?.proliferator === item.id) i.module.proliferator = id;
       if (i.fuel?.result === item.id) i.fuel.result = id;
-      if (i.technology?.prerequisites?.includes(item.id)) {
-        const index = i.technology.prerequisites.indexOf(item.id);
-        i.technology.prerequisites[index] = id;
-      }
+      this.replaceId(i.technology?.prerequisites, item.id, id);
     }
 
     for (const r of data.recipes) {
-      if (r.producers?.includes(item.id)) {
-        const index = r.producers.indexOf(item.id);
-        r.producers[index] = id;
-      }
+      this.replaceId(r.producers, item.id, id);
 
       if (r.in[item.id]) {
         r.in[id] = r.in[item.id];
@@ -140,69 +134,42 @@ export class Items extends EditorTab {
       if (data.defaults.beacon === item.id) data.defaults.beacon = id;
       if (data.defaults.beaconModule === item.id)
         data.defaults.beaconModule = id;
-      if (data.defaults.cargoWagon === item.id) data.defaults.cargoWagon = id;
-      if (data.defaults.fluidWagon === item.id) data.defaults.fluidWagon = id;
-      if (data.defaults.fuelRank?.includes(item.id)) {
-        const index = data.defaults?.fuelRank.indexOf(item.id);
-        data.defaults.fuelRank[index] = id;
-      }
 
-      if (data.defaults.moduleRank?.includes(item.id)) {
-        const index = data.defaults?.moduleRank.indexOf(item.id);
-        data.defaults.moduleRank[index] = id;
-      }
-
-      if (data.defaults.researchedTechnologies?.includes(item.id)) {
-        const index = data.defaults?.researchedTechnologies.indexOf(item.id);
-        data.defaults.researchedTechnologies[index] = item.id;
-      }
+      this.replaceId(data.defaults?.wagonRank, item.id, id);
+      this.replaceId(data.defaults?.fuelRank, item.id, id);
+      this.replaceId(data.defaults?.moduleRank, item.id, id);
+      this.replaceId(data.defaults?.researchedTechnologies, item.id, id);
 
       if ('presets' in data.defaults) {
         for (const preset of data.defaults.presets) {
           if (preset.beacon === item.id) preset.beacon = id;
           if (preset.beaconModule === item.id) preset.beaconModule = id;
-          if (preset.belt === item.id) preset.belt = id;
-          if (preset.cargoWagon === item.id) preset.cargoWagon = id;
-          if (preset.fluidWagon === item.id) preset.fluidWagon = id;
-          if (preset.fuelRank?.includes(item.id)) {
-            const index = preset.fuelRank.indexOf(item.id);
-            preset.fuelRank[index] = id;
-          }
-
-          if (preset.machineRank?.includes(item.id)) {
-            const index = preset.machineRank.indexOf(item.id);
-            preset.machineRank[index] = id;
-          }
-
-          if (preset.moduleRank?.includes(item.id)) {
-            const index = preset.moduleRank.indexOf(item.id);
-            preset.moduleRank[index] = id;
-          }
-
-          if (preset.pipe === item.id) preset.pipe = id;
-          if (preset.researchedTechnologies?.includes(item.id)) {
-            const index = preset.researchedTechnologies.indexOf(item.id);
-            preset.researchedTechnologies[index] = id;
-          }
+          this.replaceId(preset.beltRank, item.id, id);
+          this.replaceId(preset.wagonRank, item.id, id);
+          this.replaceId(preset.fuelRank, item.id, id);
+          this.replaceId(preset.machineRank, item.id, id);
+          this.replaceId(preset.moduleRank, item.id, id);
+          this.replaceId(preset.researchedTechnologies, item.id, id);
         }
       } else {
-        if (data.defaults.minBelt === item.id) data.defaults.minBelt = id;
-        if (data.defaults.maxBelt === item.id) data.defaults.maxBelt = id;
-        if (data.defaults.minPipe === item.id) data.defaults.minPipe = id;
-        if (data.defaults.maxPipe === item.id) data.defaults.maxPipe = id;
-        if (data.defaults.minMachineRank?.includes(item.id)) {
-          const index = data.defaults.minMachineRank.indexOf(item.id);
-          data.defaults.minMachineRank[index] = id;
-        }
-
-        if (data.defaults.maxMachineRank?.includes(item.id)) {
-          const index = data.defaults.maxMachineRank.indexOf(item.id);
-          data.defaults.maxMachineRank[index] = id;
-        }
+        this.replaceId(data.defaults.minBeltRank, item.id, id);
+        this.replaceId(data.defaults.maxBeltRank, item.id, id);
+        this.replaceId(data.defaults.minMachineRank, item.id, id);
+        this.replaceId(data.defaults.maxMachineRank, item.id, id);
       }
     }
 
     item.id = id;
+  }
+
+  private replaceId(
+    collection: string[] | undefined,
+    oldId: string,
+    newId: string,
+  ): void {
+    if (!collection?.length) return;
+    const index = collection.indexOf(oldId);
+    if (index >= 0) collection[index] = newId;
   }
 
   clone(item: ItemJson, index: number): void {

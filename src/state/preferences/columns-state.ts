@@ -38,8 +38,7 @@ export const columnsInfo: ColumnsInfo = {
   belts: { hasPrecision: true, exclude: (data) => data.beltIds.length === 0 },
   wagons: {
     hasPrecision: true,
-    exclude: (data) =>
-      data.cargoWagonIds.length + data.fluidWagonIds.length === 0,
+    exclude: (data) => data.wagonIds.length === 0,
   },
   rockets: {
     hasPrecision: true,

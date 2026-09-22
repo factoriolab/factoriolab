@@ -1,12 +1,6 @@
 {
   "beacon": "kr-singularity-beacon",
-  "minBelt": "transport-belt",
-  "maxBelt": "kr-superior-transport-belt",
-  "minPipe": "pump",
-  "maxPipe": "kr-steel-pump",
   "fuelRank": ["coal"],
-  "cargoWagon": "cargo-wagon",
-  "fluidWagon": "fluid-wagon",
   "excludedRecipes": [
     "kr-crush-burner-inserter",
     "kr-crush-fast-inserter",
@@ -63,5 +57,8 @@
     "kr-electric-mining-drill-mk3"
   ],
   "moduleRank": ["productivity-module-3", "speed-module-3"],
-  "beaconModule": "speed-module-3"
+  "beaconModule": "speed-module-3",
+  "minBeltRank": ["transport-belt", "pump"],
+  "maxBeltRank": ["kr-superior-transport-belt", "kr-steel-pump"],
+  "wagonRank": ["cargo-wagon", "fluid-wagon"]
 }

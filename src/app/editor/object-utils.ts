@@ -63,6 +63,28 @@ export function toNullableNumeric(value: string): string | number | undefined {
   return num;
 }
 
+export function toArray(value: string): string[] {
+  try {
+    const values = value.split(',').map((v) => v.trim());
+    if (values.length) return values;
+  } catch {
+    // Do nothing
+  }
+
+  return [];
+}
+
+export function toNullableArray(value: string): string[] | undefined {
+  try {
+    const values = value.split(',').map((v) => v.trim());
+    if (values.length) return values;
+  } catch {
+    // Do nothing
+  }
+
+  return undefined;
+}
+
 export function toSize(value: string): [number, number] | undefined {
   try {
     const size = value.split(',').map((v) => Number(v.trim()));

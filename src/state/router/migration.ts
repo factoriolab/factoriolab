@@ -132,6 +132,9 @@ export class Migration {
         return this.migrateV9(state);
       case ZipVersion.Version10:
         return this.migrateV10(state);
+      case ZipVersion.Version11:
+        // TODO: #1976 migrate v11 states
+        return state;
       default:
         return state;
     }

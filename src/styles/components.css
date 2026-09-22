@@ -54,17 +54,19 @@
       position: sticky;
       top: 0;
       z-index: 3;
+      border-bottom: 1px solid var(--color-gray-600);
       background-color: var(--color-gray-900);
       text-align: start;
       white-space: nowrap;
       font-weight: var(--font-weight-semibold);
     }
 
-    tr:not(:last-child) {
-      td,
-      th {
-        border-bottom: 1px solid var(--color-gray-600);
-      }
+    tfoot td {
+      border-top: 1px solid var(--color-gray-600);
+    }
+
+    tr:not(:last-child) td {
+      border-bottom: 1px solid var(--color-gray-600);
     }
 
     tr.detail {

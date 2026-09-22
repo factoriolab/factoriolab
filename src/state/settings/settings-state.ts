@@ -14,10 +14,8 @@ export interface SettingsState {
   displayRate: DisplayRate;
   excludedItemIds: Set<string>;
   checkedItemIds: Set<string>;
-  beltId?: string;
-  pipeId?: string;
-  cargoWagonId?: string;
-  fluidWagonId?: string;
+  beltRankIds?: string[];
+  wagonRankIds?: string[];
   flowRate: Rational;
   stack?: Rational;
   excludedRecipeIds?: Set<string>;

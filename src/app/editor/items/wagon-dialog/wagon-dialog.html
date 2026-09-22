@@ -1,19 +1,20 @@
 <table class="lab-table">
   <tbody>
     <tr>
-      <th id="capacity-header">{{ 'data.fluidCapacity' | translate }}</th>
+      <th id="capacity-header">{{ 'data.capacity' | translate }}</th>
       <td>
         <input
           type="text"
           aria-labelledby="capacity-header"
           class="input"
           required
-          [placeholder]="'data.fluidCapacity' | translate"
+          [placeholder]="'data.capacity' | translate"
           [ngModel]="data.capacity"
           [ngModelOptions]="{ updateOn: 'blur' }"
           (ngModelChange)="data.capacity = toNumeric($event)"
         />
       </td>
+      <!-- TODO: #1976 Update with extra fields - item types, capacity type -->
     </tr>
   </tbody>
 </table>

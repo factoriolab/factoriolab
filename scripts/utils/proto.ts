@@ -1,11 +1,10 @@
 import { BeaconJson } from '~/data/schema/beacon';
 import { BeltJson } from '~/data/schema/belt';
-import { CargoWagonJson } from '~/data/schema/cargo-wagon';
 import { EnergyType } from '~/data/schema/energy-type';
-import { FluidWagonJson } from '~/data/schema/fluid-wagon';
 import { InserterJson } from '~/data/schema/inserter';
 import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
+import { WagonJson } from '~/data/schema/wagon';
 import { rational } from '~/rational/rational';
 import { clamp } from '~/utils/number';
 
@@ -74,7 +73,7 @@ export function getBeacon(
 }
 
 export function getBelt(proto: M.TransportBeltPrototype): BeltJson {
-  return { speed: proto.speed * 480 };
+  return { itemTypes: [D.ITEM_TYPE], speed: proto.speed * 480 };
 }
 
 export function getPipe(
@@ -82,7 +81,7 @@ export function getPipe(
   abnormalQualities: M.QualityPrototype[],
 ): BeltJson {
   const speed = proto.pumping_speed * 60;
-  const belt: BeltJson = { speed };
+  const belt: BeltJson = { itemTypes: [D.FLUID_TYPE], speed };
 
   if (abnormalQualities.length) {
     const qualityRecord: Record<string, Partial<BeltJson>> = {};
@@ -102,12 +101,16 @@ export function getPipe(
   return belt;
 }
 
-export function getCargoWagon(proto: M.CargoWagonPrototype): CargoWagonJson {
-  return { size: proto.inventory_size };
+export function getCargoWagon(proto: M.CargoWagonPrototype): WagonJson {
+  return {
+    itemTypes: [D.ITEM_TYPE],
+    capacity: proto.inventory_size,
+    capacityType: 'stacks',
+  };
 }
 
-export function getFluidWagon(proto: M.FluidWagonPrototype): FluidWagonJson {
-  return { capacity: proto.capacity };
+export function getFluidWagon(proto: M.FluidWagonPrototype): WagonJson {
+  return { itemTypes: [D.FLUID_TYPE], capacity: proto.capacity };
 }
 
 export function getInserter(

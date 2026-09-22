@@ -20,6 +20,7 @@
           </td>
         </tr>
       }
+      <!-- TODO: #1976 Item types -->
       @if (obj.stack) {
         <tr>
           <th>{{ 'data.stackSize' | translate }}</th>
@@ -67,7 +68,7 @@
         @if (beacon.disallowedEffects) {
           <tr>
             <th>{{ 'data.disallowedEffects' | translate }}</th>
-            <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+            <td>{{ beacon.disallowedEffects | setJoin }}</td>
           </tr>
         }
         @if (beacon.size) {
@@ -87,28 +88,19 @@
           <th>{{ 'data.beltSpeed' | translate }}</th>
           <td>{{ belt.speed }}</td>
         </tr>
+        <!-- TODO: #1976 belt item types -->
       }
-      @if (obj.cargoWagon; as cargoWagon) {
+      @if (obj.wagon; as wagon) {
         <tr>
           <th colspan="2" class="text-lg/9 font-semibold">
-            {{ 'data.cargoWagon' | translate }}
+            {{ 'data.wagon' | translate }}
           </th>
         </tr>
         <tr>
-          <th>{{ 'data.storageSize' | translate }}</th>
-          <td>{{ cargoWagon.size }}</td>
+          <th>{{ 'data.capacity' | translate }}</th>
+          <td>{{ wagon.capacity }}</td>
         </tr>
-      }
-      @if (obj.fluidWagon; as fluidWagon) {
-        <tr>
-          <th colspan="2" class="text-lg/9 font-semibold">
-            {{ 'data.fluidWagon' | translate }}
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.fluidCapacity' | translate }}</th>
-          <td>{{ fluidWagon.capacity }}</td>
-        </tr>
+        <!-- TODO: #1976 Wagon item types, capacity type -->
       }
       @if (obj.fuel; as fuel) {
         <tr>
@@ -116,10 +108,11 @@
             {{ 'data.fuel' | translate }}
           </th>
         </tr>
-        <tr>
+        <!-- TODO: #1976 Fuel types -->
+        <!-- <tr>
           <th>{{ 'data.fuelCategory' | translate }}</th>
           <td>{{ fuel.category }}</td>
-        </tr>
+        </tr> -->
         <tr>
           <th>{{ 'data.fuelValue' | translate }}</th>
           <td>{{ fuel.value | round }} MJ</td>
@@ -171,7 +164,7 @@
         @if (machine.disallowedEffects) {
           <tr>
             <th>{{ 'data.disallowedEffects' | translate }}</th>
-            <td>{{ machine.disallowedEffects.join(', ') }}</td>
+            <td>{{ machine.disallowedEffects | setJoin }}</td>
           </tr>
         }
         @if (machine.type) {
@@ -180,10 +173,10 @@
             <td>{{ 'options.energyType.' + machine.type | translate }}</td>
           </tr>
         }
-        @if (machine.fuelCategories) {
+        @if (machine.fuelTypes) {
           <tr>
-            <th>{{ 'data.fuelCategories' | translate }}</th>
-            <td>{{ machine.fuelCategories.join(', ') }}</td>
+            <th>{{ 'data.fuelTypes' | translate }}</th>
+            <td>{{ machine.fuelTypes | setJoin }}</td>
           </tr>
         }
         @if (machine.fuel) {
@@ -385,17 +378,6 @@
             </td>
           </tr>
         }
-      }
-      @if (obj.pipe; as pipe) {
-        <tr>
-          <th colspan="2" class="text-lg/9 font-semibold">
-            {{ 'data.pipe' | translate }}
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.flowRate' | translate }}</th>
-          <td>{{ pipe.speed }}</td>
-        </tr>
       }
       @if (obj.technology; as technology) {
         <tr>

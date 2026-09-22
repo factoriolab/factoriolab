@@ -4,10 +4,10 @@ import { Rational } from '~/rational/rational';
 import { SettingsState } from './settings-state';
 
 export interface Settings extends SettingsState {
-  defaultBeltId: string;
-  defaultPipeId: string;
-  defaultCargoWagonId: string;
-  defaultFluidWagonId: string;
+  beltRankIds: string[];
+  defaultBeltRankIds: string[];
+  wagonRankIds: string[];
+  defaultWagonRankIds: string[];
   stack: Rational;
   excludedRecipeIds: Set<string>;
   defaultExcludedRecipeIds: Set<string>;
