@@ -105,7 +105,7 @@
             @if (beacon.disallowedEffects) {
               <tr>
                 <td>{{ 'data.disallowedEffects' | translate }}</td>
-                <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+                <td>{{ beacon.disallowedEffects | setJoin }}</td>
               </tr>
             }
             @if (beacon.size) {

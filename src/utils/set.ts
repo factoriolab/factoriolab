@@ -16,7 +16,9 @@ export function updateSetIds(
 
 @Pipe({ name: 'setJoin' })
 export class SetJoinPipe implements PipeTransform {
-  transform(value: Set<string> | string[] | null | undefined): string {
+  transform(
+    value: Set<string | number> | string[] | number[] | null | undefined,
+  ): string {
     if (value == null) return '';
     return Array.from(value).join(', ');
   }

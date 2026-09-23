@@ -13,6 +13,7 @@ import { DialogData } from '~/components/dialog/dialog';
 import { BeaconJson } from '~/data/schema/beacon';
 import { EnergyType } from '~/data/schema/energy-type';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { SetJoinPipe } from '~/utils/set';
 
 import { EditorMultiselect } from '../../components/editor-multiselect/editor-multiselect';
 import {
@@ -24,7 +25,14 @@ import {
 
 @Component({
   selector: 'lab-beacon-dialog',
-  imports: [FormsModule, Button, Checkbox, TranslatePipe, EditorMultiselect],
+  imports: [
+    FormsModule,
+    Button,
+    Checkbox,
+    TranslatePipe,
+    SetJoinPipe,
+    EditorMultiselect,
+  ],
   templateUrl: './beacon-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
