@@ -803,12 +803,13 @@ export class Adjustment {
   }
 
   computeRecipeSettings(
-    s: RecipeState,
+    s: RecipeState | undefined,
     recipe: Recipe,
     machines: Record<string, MachineSettings>,
     settings: Settings,
     data: Dataset,
   ): RecipeSettings {
+    s = coalesce(s, {});
     const { cost } = s;
     let { machineId, fuelId, modules, beacons, overclock, productivity } = s;
     const machineOptions = this.options.machineOptions(recipe, settings, data);

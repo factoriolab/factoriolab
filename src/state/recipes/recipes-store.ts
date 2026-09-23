@@ -71,7 +71,7 @@ export class RecipesStore extends RecordStore<RecipeState> {
   });
 
   private computeRecipesSettings(
-    state: Record<string, RecipeState>,
+    state: Partial<Record<string, RecipeState>>,
     machines: Record<string, MachineState>,
     settings: Settings,
     data: Dataset,
@@ -86,6 +86,7 @@ export class RecipesStore extends RecordStore<RecipeState> {
           settings,
           data,
         );
+
         return rec;
       }, {});
   }

@@ -1,14 +1,14 @@
 <table class="lab-table">
   <tbody>
     <tr>
-      <th id="fuel-types-header">{{ 'data.fuelTypes' | translate }}</th>
+      <th id="types-header">{{ 'data.types' | translate }}</th>
       <td>
         <input
           type="text"
-          aria-labelledby="fuel-types-header"
+          aria-labelledby="types-header"
           class="input"
           required
-          [placeholder]="'data.fuelTypes' | translate"
+          [placeholder]="'data.types' | translate"
           [ngModel]="data.fuel.types | setJoin"
           [ngModelOptions]="{ updateOn: 'blur' }"
           (ngModelChange)="data.fuel.types = toArray($event)"

@@ -82,8 +82,10 @@ import {
   AnyItemPrototype,
   AnyLocationPrototype,
   DataRawDump,
+  FLUID_TYPE,
   isAnyItemPrototype,
   isFluidProduct,
+  ITEM_TYPE,
   Locale,
   MachineProto,
   ModDataReport,
@@ -1126,6 +1128,7 @@ async function processMod(): Promise<void> {
         const itemTemp: ItemJson = {
           id,
           name: fluidLocale.names[proto.name],
+          types: [FLUID_TYPE],
           category: group.name,
           row: getItemRow(proto),
           icon,
@@ -1153,6 +1156,7 @@ async function processMod(): Promise<void> {
               modData.items.push({
                 id: `${id}-heat-fuel`,
                 name: itemTemp.name,
+                types: [FLUID_TYPE],
                 category: itemTemp.category,
                 icon: icon ?? proto.name,
                 row: getItemRow(proto),
@@ -1256,6 +1260,7 @@ async function processMod(): Promise<void> {
 
       const item: ItemJson = {
         id: proto.name,
+        types: [ITEM_TYPE],
         name: itemLocale.names[proto.name],
         category: group.name,
         stack: proto.stack_size,
@@ -2366,13 +2371,6 @@ async function processMod(): Promise<void> {
         iconText: item.iconText,
       };
       modData.recipes.push(recipe);
-    }
-
-    if (inputs.length) {
-      const firstInput = itemMap[inputs[0]];
-      if (!isFluidPrototype(firstInput)) {
-        item.stack = firstInput.stack_size;
-      }
     }
 
     modData.items.push(item);

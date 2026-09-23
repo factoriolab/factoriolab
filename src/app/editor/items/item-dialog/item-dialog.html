@@ -1,15 +1,15 @@
 <table class="lab-table">
   <tbody>
     <tr>
-      <th id="item-types-header">
-        {{ 'editor.itemTypes' | translate }}
+      <th id="types-header">
+        {{ 'data.types' | translate }}
       </th>
       <td>
         <input
           type="text"
-          aria-labelledby="item-types-header"
+          aria-labelledby="types-header"
           class="input"
-          [placeholder]="'editor.itemTypes' | translate"
+          [placeholder]="'data.types' | translate"
           [ngModel]="data.item.types | setJoin"
           [ngModelOptions]="{ updateOn: 'blur' }"
           (ngModelChange)="data.item.types = toArray($event)"

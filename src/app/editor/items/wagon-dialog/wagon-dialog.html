@@ -2,14 +2,14 @@
   <tbody>
     <tr>
       <th id="item-types-header">
-        {{ 'editor.itemTypes' | translate }}
+        {{ 'data.itemTypes' | translate }}
       </th>
       <td>
         <input
           type="text"
           aria-labelledby="item-types-header"
           class="input"
-          [placeholder]="'editor.itemTypes' | translate"
+          [placeholder]="'data.itemTypes' | translate"
           [ngModel]="data.itemTypes | setJoin"
           [ngModelOptions]="{ updateOn: 'blur' }"
           (ngModelChange)="data.itemTypes = toArray($event)"
