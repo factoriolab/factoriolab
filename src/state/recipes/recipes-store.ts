@@ -1,7 +1,6 @@
 import { computed, inject, Service } from '@angular/core';
 
 import { Rational, rational } from '~/rational/rational';
-import { spread } from '~/utils/object';
 
 import { Adjustment } from '../adjustment';
 import { ItemsStore } from '../items/items-store';
@@ -77,19 +76,17 @@ export class RecipesStore extends RecordStore<RecipeState> {
     settings: Settings,
     data: Dataset,
   ): Record<string, RecipeSettings> {
-    const value: Record<string, RecipeSettings> = {};
-    for (const recipe of data.recipeIds.map((i) => data.recipeRecord[i])) {
-      const s: RecipeSettings = spread(state[recipe.id]);
-      this.adjustment.computeRecipeSettings(
-        s,
-        recipe,
-        machines,
-        settings,
-        data,
-      );
-      value[recipe.id] = s;
-    }
-
-    return value;
+    return data.recipeIds
+      .map((i) => data.recipeRecord[i])
+      .reduce<Record<string, RecipeSettings>>((rec, recipe) => {
+        rec[recipe.id] = this.adjustment.computeRecipeSettings(
+          state[recipe.id],
+          recipe,
+          machines,
+          settings,
+          data,
+        );
+        return rec;
+      }, {});
   }
 }

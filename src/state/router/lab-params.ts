@@ -31,9 +31,9 @@ export interface LabParams {
   v10iex?: string;
   /** V10 Legacy checked items */
   v10ich?: string;
-  /** `string` Belt rank */
+  /** `string[]` Belt rank */
   ibe?: string;
-  /** `string` Wagon rank */
+  /** `string[]` Wagon rank */
   icw?: string;
   /** `Rational` Flow rate */
   ifr?: string;

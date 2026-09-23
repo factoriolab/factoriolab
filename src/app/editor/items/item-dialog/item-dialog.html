@@ -1,6 +1,21 @@
 <table class="lab-table">
   <tbody>
-    <!-- TODO: #1976 item types editor -->
+    <tr>
+      <th id="item-types-header">
+        {{ 'editor.itemTypes' | translate }}
+      </th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="item-types-header"
+          class="input"
+          [placeholder]="'editor.itemTypes' | translate"
+          [ngModel]="data.item.types | setJoin"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.item.types = toArray($event)"
+        />
+      </td>
+    </tr>
     <tr>
       <th id="stack-header">{{ 'data.stackSize' | translate }}</th>
       <td>

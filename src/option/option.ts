@@ -20,7 +20,7 @@ export interface OptionParams {
   iconType?: IconType;
   tooltipType?: TooltipType;
   include?: Set<string>;
-  exclude?: Set<string>;
+  exclude?: (id: string) => boolean;
   emptyOption?: Option;
   firstAsEmpty?: boolean;
 }
@@ -36,7 +36,7 @@ export function getIdOptions(
     };
 
   if (include) ids = ids.filter((i) => include.has(i));
-  if (exclude) ids = ids.filter((i) => !exclude.has(i));
+  if (exclude) ids = ids.filter((i) => !exclude(i));
 
   const list = ids.map((i): Option => {
     const opt: Option = { label: record[i].name, value: i };

@@ -16,7 +16,7 @@ import { Settings } from './settings/settings';
 @Service()
 export class Options {
   /** Determines what option to use based on preferred rank */
-  bestMatch(options: Option[], rank: string[]): string {
+  bestMatch(options: Option[], rank: string[]): string | undefined {
     const ids = options.map((o) => o.value);
     if (ids.length > 1) {
       for (const r of rank) {

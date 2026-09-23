@@ -244,21 +244,28 @@ export class SettingsStore extends Store<SettingsState> {
       });
     }
 
-    // TODO: #1976 Exclusion should likely be determined automatically by presense of qualityRecord...
     return {
       categories: getIdOptions(data.categoryIds, data.categoryRecord),
       beacons: itemOptions(data.beaconIds, { tooltipType: 'beacon' }),
       belts: itemOptions(data.beltIds, {
-        exclude: data.itemQIds,
+        /** Filter out quality belt items where belt is unaffected by quality */
+        exclude: (itemId: string): boolean => {
+          const item = data.itemRecord[itemId];
+          return item.quality != null && item.belt?.quality == null;
+        },
         tooltipType: 'belt',
       }),
       wagons: itemOptions(data.wagonIds, {
-        exclude: data.itemQIds,
+        /** Wagons are not currently affected by quality */
+        exclude: (itemId: string): boolean =>
+          data.itemRecord[itemId].quality != null,
         tooltipType: 'wagon',
       }),
       inserters: itemOptions(data.inserterIds, { tooltipType: 'inserter' }),
       fuels: itemOptions(data.fuelIds, {
-        exclude: data.itemQIds,
+        /** Fuels are not currently affected by quality */
+        exclude: (itemId: string): boolean =>
+          data.itemRecord[itemId].quality != null,
         tooltipType: 'fuel',
       }),
       modules: itemOptions(data.moduleIds, { tooltipType: 'module' }),
@@ -542,7 +549,6 @@ export class SettingsStore extends Store<SettingsState> {
         r.icon = firstOutItem.icon ?? firstOutId;
       });
 
-    const itemQIds = new Set<string>();
     const recipeQIds = new Set<string>();
     const abnormalQualities = data?.qualities?.filter((q) => q.level) ?? [];
     if (abnormalQualities.length) {
@@ -565,7 +571,6 @@ export class SettingsStore extends Store<SettingsState> {
 
           const itemJson = itemData[item.id];
           const id = qualityId(item.id, quality);
-          itemQIds.add(id);
           itemIds.push(id);
           const qItem = spread(item, {
             id,
@@ -582,7 +587,7 @@ export class SettingsStore extends Store<SettingsState> {
           if (itemJson.belt?.qualityRecord) {
             const qBeltJson = itemJson.belt.qualityRecord[quality.id];
             if (qBeltJson)
-              qItem.belt = parseBelt(spread(itemJson.belt, qBeltJson));
+              qItem.belt = parseBelt(spread(itemJson.belt, qBeltJson), quality);
           }
 
           if (itemJson.inserter?.qualityRecord) {
@@ -832,7 +837,6 @@ export class SettingsStore extends Store<SettingsState> {
       iconIds,
       iconRecord,
       itemIds,
-      itemQIds,
       itemRecord,
       noRecipeItemIds,
       beaconIds,

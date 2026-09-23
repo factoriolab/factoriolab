@@ -8,14 +8,17 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
+import { Select } from '~/components/select/select';
 import { WagonJson } from '~/data/schema/wagon';
+import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { SetJoinPipe } from '~/utils/set';
 
-import { toNumeric } from '../../object-utils';
+import { toArray, toNumeric } from '../../object-utils';
 
 @Component({
   selector: 'lab-wagon-dialog',
-  imports: [FormsModule, Button, TranslatePipe],
+  imports: [FormsModule, Button, Select, TranslatePipe, SetJoinPipe],
   templateUrl: './wagon-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -27,9 +30,14 @@ export class WagonDialog {
   protected readonly dialogRef =
     inject<DialogRef<WagonJson | null | undefined>>(DialogRef);
 
+  protected readonly capacityTypeOptions: Option<'stacks' | undefined>[] = [
+    { label: 'data.items', value: undefined },
+    { label: 'editor.stacks', value: 'stacks' },
+  ];
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   readonly header = 'data.wagon';
+  protected readonly toArray = toArray;
   protected readonly toNumeric = toNumeric;
 }

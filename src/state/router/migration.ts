@@ -133,8 +133,7 @@ export class Migration {
       case ZipVersion.Version10:
         return this.migrateV10(state);
       case ZipVersion.Version11:
-        // TODO: #1976 migrate v11 states
-        return state;
+        return this.migrateV11(state);
       default:
         return state;
     }
@@ -1001,7 +1000,7 @@ export class Migration {
       else if (value) params[k] = replaceDeprecated(value);
     });
 
-    return state;
+    return this.migrateV11(state);
   }
 
   restoreV10ResearchedTechnologies(
@@ -1037,6 +1036,23 @@ export class Migration {
 
     if (selection.size === technologyIds.length) return undefined;
     return selection;
+  }
+
+  private migrateV11(state: MigrationState): MigrationState {
+    const { params } = state;
+
+    // Convert distinct belt/pipe, cargo/fluid wagon settings into rank arrays
+    const beltRank = [params['ibe'], params['ipi']].filter(
+      (value): value is string => typeof value === 'string',
+    );
+    params['ibe'] = beltRank.join(ZARRAYSEP);
+
+    const wagonRank = [params['icw'], params['ifw']].filter(
+      (value): value is string => typeof value === 'string',
+    );
+    params['icw'] = wagonRank.join(ZARRAYSEP);
+
+    return state;
   }
 
   /** V11: Deprecated */

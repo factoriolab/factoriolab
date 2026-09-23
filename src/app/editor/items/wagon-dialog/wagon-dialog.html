@@ -1,6 +1,22 @@
 <table class="lab-table">
   <tbody>
     <tr>
+      <th id="item-types-header">
+        {{ 'editor.itemTypes' | translate }}
+      </th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="item-types-header"
+          class="input"
+          [placeholder]="'editor.itemTypes' | translate"
+          [ngModel]="data.itemTypes | setJoin"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.itemTypes = toArray($event)"
+        />
+      </td>
+    </tr>
+    <tr>
       <th id="capacity-header">{{ 'data.capacity' | translate }}</th>
       <td>
         <input
@@ -14,7 +30,18 @@
           (ngModelChange)="data.capacity = toNumeric($event)"
         />
       </td>
-      <!-- TODO: #1976 Update with extra fields - item types, capacity type -->
+    </tr>
+    <tr>
+      <th id="capacity-type-header">{{ 'editor.capacityType' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <lab-select
+            labelledBy="capacity-type-header"
+            [options]="capacityTypeOptions"
+            [(ngModel)]="data.capacityType"
+          />
+        </div>
+      </td>
     </tr>
   </tbody>
 </table>

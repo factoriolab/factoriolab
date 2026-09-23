@@ -27,9 +27,10 @@ import { WagonJson } from '~/data/schema/wagon';
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
+import { SetJoinPipe } from '~/utils/set';
 
 import { EditorData } from '../../editor.types';
-import { toOptions } from '../../object-utils';
+import { toArray, toOptions } from '../../object-utils';
 import { BeaconDialog } from '../beacon-dialog/beacon-dialog';
 import { BeltDialog, BeltDialogData } from '../belt-dialog/belt-dialog';
 import { FuelDialog, FuelDialogData } from '../fuel-dialog/fuel-dialog';
@@ -52,7 +53,7 @@ export interface ItemDialogData extends DialogData {
 
 @Component({
   selector: 'lab-item-dialog',
-  imports: [FormsModule, Button, TranslatePipe],
+  imports: [FormsModule, Button, TranslatePipe, SetJoinPipe],
   templateUrl: './item-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -70,6 +71,7 @@ export class ItemDialog {
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
   protected readonly faXmark = faXmark;
+  protected readonly toArray = toArray;
 
   editBeacon(item: ItemJson): void {
     this.dialog

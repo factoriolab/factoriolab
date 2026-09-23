@@ -19,6 +19,7 @@ import {
   Recipe,
   RecipeJson,
 } from '~/data/schema/recipe';
+import { Option } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 import { coalesce, notNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
@@ -802,57 +803,66 @@ export class Adjustment {
   }
 
   computeRecipeSettings(
-    s: RecipeSettings,
+    s: RecipeState,
     recipe: Recipe,
     machines: Record<string, MachineSettings>,
     settings: Settings,
     data: Dataset,
-  ): void {
-    s.machineOptions = this.options.machineOptions(recipe, settings, data);
-    s.defaultMachineId = this.options.bestMatch(
-      s.machineOptions,
+  ): RecipeSettings {
+    const { cost } = s;
+    let { machineId, fuelId, modules, beacons, overclock, productivity } = s;
+    const machineOptions = this.options.machineOptions(recipe, settings, data);
+    const defaultMachineId = this.options.bestMatch(
+      machineOptions,
       settings.machineRankIds,
     );
-    s.machineId = coalesce(s.machineId, s.defaultMachineId);
+    machineId ??= defaultMachineId;
 
-    const machine = data.machineRecord[s.machineId] as Machine | undefined;
-    const def = machines[s.machineId];
-
-    if (recipe.flags.has('burn')) {
-      s.defaultFuelId = Object.keys(recipe.in)[0];
-      s.fuelId = s.defaultFuelId;
-    } else if (machine?.type === EnergyType.Burner) {
-      s.defaultFuelId = def?.fuelId;
-      s.fuelId = coalesce(s.fuelId, s.defaultFuelId);
-      s.fuelOptions = def?.fuelOptions;
-    } else {
-      // Machine doesn't support fuel, remove any
-      delete s.fuelId;
+    let machine: Machine | undefined;
+    let def: MachineSettings | undefined;
+    if (machineId) {
+      machine = data.machineRecord[machineId];
+      def = machines[machineId];
     }
 
+    let defaultFuelId: string | undefined;
+    let fuelOptions: Option[] | undefined;
+    if (recipe.flags.has('burn')) {
+      defaultFuelId = Object.keys(recipe.in)[0];
+      fuelId = defaultFuelId;
+    } else if (machine?.type === EnergyType.Burner) {
+      defaultFuelId = def?.fuelId;
+      fuelId ??= defaultFuelId;
+      fuelOptions = def?.fuelOptions;
+    } else {
+      // Machine doesn't support fuel, remove any
+      fuelId = undefined;
+    }
+
+    let moduleOptions: Option[] | undefined;
     if (machine != null && this.allowsModules(recipe, machine)) {
-      s.moduleOptions = this.options.moduleOptions(
+      moduleOptions = this.options.moduleOptions(
         machine,
         settings,
         data,
         recipe.id,
       );
-      s.modules = this.hydration.hydrateModules(
-        s.modules,
-        s.moduleOptions,
+      modules = this.hydration.hydrateModules(
+        modules,
+        moduleOptions,
         settings.moduleRankIds,
         machine.modules,
-        def.modules,
+        def?.modules,
       );
-      s.beacons = this.hydration.hydrateBeacons(s.beacons, def.beacons);
+      beacons = this.hydration.hydrateBeacons(beacons, def?.beacons);
     } else {
       // Machine doesn't support modules, remove any
-      delete s.modules;
-      delete s.beacons;
+      modules = undefined;
+      beacons = undefined;
     }
 
-    if (s.beacons) {
-      for (const beaconSettings of s.beacons) {
+    if (beacons) {
+      for (const beaconSettings of beacons) {
         if (
           beaconSettings.total != null &&
           (beaconSettings.count == null || beaconSettings.count.isZero())
@@ -862,9 +872,25 @@ export class Adjustment {
       }
     }
 
-    s.defaultOverclock = def?.overclock;
-    s.overclock = coalesce(s.overclock, s.defaultOverclock);
-    s.productivity ??= settings.recipeBonus[recipe.id];
+    const defaultOverclock = def?.overclock;
+    overclock ??= defaultOverclock;
+    productivity ??= settings.recipeBonus[recipe.id];
+
+    return {
+      machineId,
+      fuelId,
+      modules,
+      beacons,
+      overclock,
+      cost,
+      productivity,
+      defaultMachineId,
+      defaultFuelId,
+      machineOptions,
+      fuelOptions,
+      moduleOptions,
+      defaultOverclock,
+    };
   }
 
   adjustObjective(

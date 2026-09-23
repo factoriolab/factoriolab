@@ -30,7 +30,6 @@ export interface Dataset {
   iconIds: string[];
   iconRecord: Record<Exclude<IconType, 'img'>, Record<string, IconData>>;
   itemIds: string[];
-  itemQIds: Set<string>;
   itemRecord: Record<string, Item>;
   noRecipeItemIds: Set<string>;
   beaconIds: string[];
