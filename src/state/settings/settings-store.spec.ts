@@ -531,8 +531,13 @@ describe('SettingsStore', () => {
         ItemId.TransportBelt,
         'fast-transport-belt',
         'express-transport-belt',
+        'pump',
       ]);
-      expect(result.wagonIds).toEqual(['id', ItemId.CargoWagon]);
+      expect(result.wagonIds).toEqual([
+        ItemId.CargoWagon,
+        ItemId.FluidWagon,
+        'id',
+      ]);
       expect(result.fuelIds).toEqual([
         'steam',
         'steam-500',

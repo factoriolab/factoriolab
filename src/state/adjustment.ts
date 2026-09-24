@@ -19,7 +19,6 @@ import {
   Recipe,
   RecipeJson,
 } from '~/data/schema/recipe';
-import { Option } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
 import { coalesce, notNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
@@ -803,67 +802,61 @@ export class Adjustment {
   }
 
   computeRecipeSettings(
-    s: RecipeState | undefined,
+    s: RecipeSettings,
     recipe: Recipe,
     machines: Record<string, MachineSettings>,
     settings: Settings,
     data: Dataset,
-  ): RecipeSettings {
-    s = coalesce(s, {});
-    const { cost } = s;
-    let { machineId, fuelId, modules, beacons, overclock, productivity } = s;
-    const machineOptions = this.options.machineOptions(recipe, settings, data);
-    const defaultMachineId = this.options.bestMatch(
-      machineOptions,
+  ): void {
+    s.machineOptions = this.options.machineOptions(recipe, settings, data);
+    s.defaultMachineId = this.options.bestMatch(
+      s.machineOptions,
       settings.machineRankIds,
     );
-    machineId ??= defaultMachineId;
+    s.machineId = coalesce(s.machineId, s.defaultMachineId);
 
     let machine: Machine | undefined;
     let def: MachineSettings | undefined;
-    if (machineId) {
-      machine = data.machineRecord[machineId];
-      def = machines[machineId];
+    if (s.machineId) {
+      machine = data.machineRecord[s.machineId];
+      def = machines[s.machineId];
     }
 
-    let defaultFuelId: string | undefined;
-    let fuelOptions: Option[] | undefined;
     if (recipe.flags.has('burn')) {
-      defaultFuelId = Object.keys(recipe.in)[0];
-      fuelId = defaultFuelId;
+      s.defaultFuelId = Object.keys(recipe.in)[0];
+      s.fuelId = s.defaultFuelId;
     } else if (machine?.type === EnergyType.Burner) {
-      defaultFuelId = def?.fuelId;
-      fuelId ??= defaultFuelId;
-      fuelOptions = def?.fuelOptions;
+      s.defaultFuelId = def?.fuelId;
+      s.fuelId = coalesce(s.fuelId, s.defaultFuelId);
+      s.fuelOptions = def?.fuelOptions;
     } else {
       // Machine doesn't support fuel, remove any
-      fuelId = undefined;
+      delete s.fuelId;
     }
 
-    let moduleOptions: Option[] | undefined;
     if (machine != null && this.allowsModules(recipe, machine)) {
-      moduleOptions = this.options.moduleOptions(
+      s.moduleOptions = this.options.moduleOptions(
         machine,
         settings,
         data,
         recipe.id,
       );
-      modules = this.hydration.hydrateModules(
-        modules,
-        moduleOptions,
+      s.modules = this.hydration.hydrateModules(
+        s.modules,
+        s.moduleOptions,
         settings.moduleRankIds,
         machine.modules,
         def?.modules,
       );
-      beacons = this.hydration.hydrateBeacons(beacons, def?.beacons);
+      s.beacons = this.hydration.hydrateBeacons(s.beacons, def?.beacons);
     } else {
       // Machine doesn't support modules, remove any
-      modules = undefined;
-      beacons = undefined;
+      delete s.modules;
+      delete s.beacons;
     }
 
-    if (beacons) {
-      for (const beaconSettings of beacons) {
+    if (s.beacons) {
+      for (const beaconSettings of s.beacons) {
         if (
           beaconSettings.total != null &&
           (beaconSettings.count == null || beaconSettings.count.isZero())
@@ -873,25 +866,9 @@ export class Adjustment {
       }
     }
 
-    const defaultOverclock = def?.overclock;
-    overclock ??= defaultOverclock;
-    productivity ??= settings.recipeBonus[recipe.id];
-
-    return {
-      machineId,
-      fuelId,
-      modules,
-      beacons,
-      overclock,
-      cost,
-      productivity,
-      defaultMachineId,
-      defaultFuelId,
-      machineOptions,
-      fuelOptions,
-      moduleOptions,
-      defaultOverclock,
-    };
+    s.defaultOverclock = def?.overclock;
+    s.overclock = coalesce(s.overclock, s.defaultOverclock);
+    s.productivity ??= settings.recipeBonus[recipe.id];
   }
 
   adjustObjective(
@@ -905,7 +882,7 @@ export class Adjustment {
     if (!isRecipeObjective(objective)) return objective;
 
     const result: ObjectiveSettings = spread(objective);
-    const recipe = data.recipeRecord[result.targetId];
+    const recipe = data.recipeRecord[objective.targetId];
     // Apply productivity bonus, this cannot be adjusted on individual objectives
     result.productivity = recipes[result.targetId].productivity;
     this.computeRecipeSettings(result, recipe, machines, settings, data);

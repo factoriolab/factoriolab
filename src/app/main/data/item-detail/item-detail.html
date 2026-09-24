@@ -20,7 +20,7 @@
           </td>
         </tr>
       }
-      @if (obj.types.size) {
+      @if (obj.types?.size) {
         <tr>
           <th>{{ 'data.types' | translate }}</th>
           <td>{{ obj.types | setJoin }}</td>
@@ -192,7 +192,7 @@
             <td>{{ 'options.energyType.' + machine.type | translate }}</td>
           </tr>
         }
-        @if (machine.fuelTypes) {
+        @if (machine.fuelTypes?.size) {
           <tr>
             <th>{{ 'data.fuelTypes' | translate }}</th>
             <td>{{ machine.fuelTypes | setJoin }}</td>

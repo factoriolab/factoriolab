@@ -1043,15 +1043,17 @@ export class Migration {
 
     // Convert distinct belt/pipe, cargo/fluid wagon settings into rank arrays
     const beltRank = [params['ibe'], params['ipi']].filter(
-      (value): value is string => typeof value === 'string',
+      (value): value is string => Boolean(value),
     );
-    params['ibe'] = beltRank.join(ZARRAYSEP);
+
+    if (beltRank.length) params['ibe'] = beltRank.join(ZARRAYSEP);
 
     const wagonRank = [params['icw'], params['ifw']].filter(
-      (value): value is string => typeof value === 'string',
+      (value): value is string => Boolean(value),
     );
-    params['icw'] = wagonRank.join(ZARRAYSEP);
+    if (wagonRank.length) params['icw'] = wagonRank.join(ZARRAYSEP);
 
+    params['v'] = ZipVersion.Version12;
     return state;
   }
 
