@@ -34,13 +34,14 @@ export class Options {
     data: Dataset,
     type: 'wagon' | 'belt',
   ): Option[] {
-    if (!item.types.size) return [];
+    if (!item.types?.size) return [];
 
+    const types = item.types;
     const collection = `${type}Ids` as const;
     let allowedIds = data[collection]
       .map((b) => data.itemRecord[b])
       .filter(fnPropsNotNullish(type))
-      .filter((b) => !item.types.isDisjointFrom(b[type].itemTypes));
+      .filter((b) => !types.isDisjointFrom(b[type].itemTypes));
     if (allowedIds.some((f) => settings.availableItemIds.has(f.id)))
       allowedIds = allowedIds.filter((f) =>
         settings.availableItemIds.has(f.id),
@@ -84,12 +85,13 @@ export class Options {
       return [{ value: fuel.id, label: fuel.name }];
     }
 
-    if (!entity.fuelTypes.size) return [];
+    if (!entity.fuelTypes?.size) return [];
 
+    const fuelTypes = entity.fuelTypes;
     let allowedIds = data.fuelIds
       .map((f) => data.itemRecord[f])
       .filter(fnPropsNotNullish('fuel'))
-      .filter((f) => !entity.fuelTypes.isDisjointFrom(f.fuel.types));
+      .filter((f) => !fuelTypes.isDisjointFrom(f.fuel.types));
     if (allowedIds.some((f) => settings.availableItemIds.has(f.id)))
       allowedIds = allowedIds.filter((f) =>
         settings.availableItemIds.has(f.id),

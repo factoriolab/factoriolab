@@ -1,4 +1,5 @@
 import { Rational, rational } from '~/rational/rational';
+import { asSet } from '~/utils/coercion';
 import { coalesce } from '~/utils/nullish';
 
 import { BaseJson } from './base';
@@ -29,7 +30,7 @@ export interface ItemJson extends BaseJson {
 }
 
 export interface Item extends BaseJson {
-  types: Set<string>;
+  types?: Set<string>;
   category?: string;
   row: number;
   stack?: Rational;
@@ -49,7 +50,7 @@ export function parseItem(json: ItemJson): Item {
   return {
     id: json.id,
     name: json.name,
-    types: new Set(json.types),
+    types: asSet(json.types),
     category: json.category,
     row: coalesce(json.row, 0),
     stack: rational(json.stack),

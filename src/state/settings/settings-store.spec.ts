@@ -289,7 +289,7 @@ describe('SettingsStore', () => {
         Preset.Minimum,
       );
       assert(result != null);
-      expect(result.beltId).toEqual(mockDefaults11.minBelt);
+      expect(result.beltRankIds).toEqual(mockDefaults11.minBeltRank);
       expect(result.machineRankIds).toEqual(mockDefaults11.minMachineRank!);
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beacons).toEqual([
@@ -514,8 +514,7 @@ describe('SettingsStore', () => {
               type: EnergyType.Electric as const,
               usage: 1,
             },
-            cargoWagon: { size: 1 },
-            fluidWagon: { capacity: 1 },
+            wagon: { itemTypes: ['item'], capacity: 1 },
             pipe: { speed: 1 },
           },
         ],
@@ -533,8 +532,7 @@ describe('SettingsStore', () => {
         'fast-transport-belt',
         'express-transport-belt',
       ]);
-      expect(result.cargoWagonIds).toEqual(['id', ItemId.CargoWagon]);
-      expect(result.fluidWagonIds).toEqual(['id', ItemId.FluidWagon]);
+      expect(result.wagonIds).toEqual(['id', ItemId.CargoWagon]);
       expect(result.fuelIds).toEqual([
         'steam',
         'steam-500',
@@ -584,7 +582,11 @@ describe('SettingsStore', () => {
               usage: 1,
               qualityRecord: { uncommon: { effectivity: 2 } },
             },
-            belt: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
+            belt: {
+              itemTypes: ['item'],
+              speed: 1,
+              qualityRecord: { uncommon: { speed: 2 } },
+            },
             inserter: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
             machine: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
             module: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
@@ -754,7 +756,7 @@ describe('SettingsStore', () => {
       const result = service['computeSettings'](
         settings,
         {
-          beltId: 'nonsense',
+          beltRankIds: ['nonsense'],
           fuelRankIds: [],
           excludedRecipeIds: [],
           machineRankIds: [],
@@ -763,7 +765,7 @@ describe('SettingsStore', () => {
         },
         data,
       );
-      expect(result.beltId).toEqual('');
+      expect(result.beltRankIds).toEqual([]);
     });
 
     it('should use default bonus values if greater than calculated values', () => {

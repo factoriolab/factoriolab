@@ -15,8 +15,7 @@ describe('gameColumnsState', () => {
 
   it('should automatically hide columns invalid for the passed game', () => {
     const data = mocks.getDataset();
-    data.cargoWagonIds = [];
-    data.fluidWagonIds = [];
+    data.wagonIds = [];
     data.beaconIds = [];
     data.flags = new Set();
 

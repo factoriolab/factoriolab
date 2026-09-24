@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PIPE } from '~/data/schema/belt';
 import { rational } from '~/rational/rational';
 import { ItemId } from '~/tests/item-id';
 import { TestModule } from '~/tests/test-module';
@@ -28,7 +27,6 @@ describe('ItemsStore', () => {
       const adjustedDataset = recipesStore.adjustedDataset();
       spyOn(service['settingsStore'], 'settings').and.returnValue(
         spread(service['settingsStore'].settings(), {
-          pipeId: ItemId.Pipe,
           stack: rational(4n),
         }),
       );
@@ -50,16 +48,6 @@ describe('ItemsStore', () => {
       const result = service.itemsModified();
       expect(result.belts).toBeTrue();
       expect(result.wagons).toBeTrue();
-    });
-  });
-
-  describe('defaultBelt', () => {
-    it('should fall back to the hard-coded pipe option if none are available', () => {
-      expect(service['defaultBelt']({} as any, {} as any, 0)).toEqual(PIPE);
-    });
-
-    it('should return an empty string if no default belt can be found', () => {
-      expect(service['defaultBelt']({} as any, {} as any, 1)).toEqual('');
     });
   });
 
