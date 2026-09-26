@@ -245,6 +245,22 @@ describe('SettingsStore', () => {
     });
   });
 
+  describe('options', () => {
+    it('should filter out belt options that are unaffected by quality', () => {
+      const data = mocks.getDataset();
+      data.beltIds.push(ItemId.Car);
+      data.itemRecord[ItemId.Car].quality = {
+        id: 'uncommon',
+        level: 2,
+        name: 'Uncommon',
+      };
+      data.beltRecord[ItemId.Car] = data.beltRecord[ItemId.TransportBelt];
+      spyOn(service, 'dataset').and.returnValue(data);
+      const options = service.options();
+      expect(options.belts.find((o) => o.value === ItemId.Car)).toBeUndefined();
+    });
+  });
+
   describe('beltSpeed', () => {
     it('should return the map of belt speeds', () => {
       const flowRate = rational(2000n);

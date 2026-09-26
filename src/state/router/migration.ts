@@ -1003,6 +1003,25 @@ export class Migration {
     return this.migrateV11(state);
   }
 
+  private migrateV11(state: MigrationState): MigrationState {
+    const { params } = state;
+
+    // Convert distinct belt/pipe, cargo/fluid wagon settings into rank arrays
+    const beltRank = [params['ibe'], params['ipi']].filter(
+      (value): value is string => Boolean(value),
+    );
+
+    if (beltRank.length) params['ibe'] = beltRank.join(ZARRAYSEP);
+
+    const wagonRank = [params['icw'], params['ifw']].filter(
+      (value): value is string => Boolean(value),
+    );
+    if (wagonRank.length) params['icw'] = wagonRank.join(ZARRAYSEP);
+
+    params['v'] = ZipVersion.Version12;
+    return state;
+  }
+
   restoreV10ResearchedTechnologies(
     value: Set<string> | undefined,
     data: ModData,
@@ -1036,25 +1055,6 @@ export class Migration {
 
     if (selection.size === technologyIds.length) return undefined;
     return selection;
-  }
-
-  private migrateV11(state: MigrationState): MigrationState {
-    const { params } = state;
-
-    // Convert distinct belt/pipe, cargo/fluid wagon settings into rank arrays
-    const beltRank = [params['ibe'], params['ipi']].filter(
-      (value): value is string => Boolean(value),
-    );
-
-    if (beltRank.length) params['ibe'] = beltRank.join(ZARRAYSEP);
-
-    const wagonRank = [params['icw'], params['ifw']].filter(
-      (value): value is string => Boolean(value),
-    );
-    if (wagonRank.length) params['icw'] = wagonRank.join(ZARRAYSEP);
-
-    params['v'] = ZipVersion.Version12;
-    return state;
   }
 
   /** V11: Deprecated */

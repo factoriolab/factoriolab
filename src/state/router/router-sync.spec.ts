@@ -778,7 +778,29 @@ describe('RouterSync', () => {
         {},
         {
           z: 'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
-          v: '9',
+          v: '10',
+        },
+      );
+    });
+
+    it('should unzip empty v11', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { z: 'eJyrsjU0AAADNQEZ', v: '11' });
+    });
+
+    it('should unzip v11', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV10);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
+          v: '11',
         },
       );
     });
