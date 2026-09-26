@@ -21,7 +21,7 @@ export function linkValueOptions(data: Dataset): Option<LinkValue>[] {
     { label: 'options.linkValue.machines', value: LinkValue.Machines },
   ];
 
-  if (data.cargoWagonIds.length === 0 && data.fluidWagonIds.length === 0)
+  if (data.wagonIds.length === 0)
     return result.filter((i) => i.value !== LinkValue.Wagons);
 
   return result;

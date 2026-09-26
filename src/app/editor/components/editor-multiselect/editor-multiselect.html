@@ -6,7 +6,7 @@
 >
   @if (asCsv()) {
     @if (editValue().length) {
-      <span>{{ editValue().join(', ') }}</span>
+      <span>{{ editValue() | setJoin }}</span>
     } @else {
       <span class="mx-1 text-gray-400 italic">{{ 'none' | translate }}</span>
     }

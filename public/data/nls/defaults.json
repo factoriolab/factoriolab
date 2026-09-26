@@ -1,9 +1,5 @@
 {
   "beacon": "nullius-beacon-1",
-  "minBelt": "transport-belt",
-  "maxBelt": "ultimate-transport-belt",
-  "cargoWagon": "nullius-cargo-wagon-1",
-  "fluidWagon": "nullius-fluid-wagon-1",
   "excludedRecipes": [
     "nullius-unbox-iron-ore",
     "nullius-unbox-crushed-iron-ore",
@@ -273,5 +269,8 @@
     "nullius-lab-3"
   ],
   "moduleRank": ["nullius-productivity-module-3", "nullius-speed-module-3"],
-  "beaconModule": "nullius-speed-module-3"
+  "beaconModule": "nullius-speed-module-3",
+  "minBeltRank": ["transport-belt"],
+  "maxBeltRank": ["ultimate-transport-belt"],
+  "wagonRank": ["nullius-cargo-wagon-1", "nullius-fluid-wagon-1"]
 }

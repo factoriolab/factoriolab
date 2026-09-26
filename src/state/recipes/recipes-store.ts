@@ -77,19 +77,20 @@ export class RecipesStore extends RecordStore<RecipeState> {
     settings: Settings,
     data: Dataset,
   ): Record<string, RecipeSettings> {
-    const value: Record<string, RecipeSettings> = {};
-    for (const recipe of data.recipeIds.map((i) => data.recipeRecord[i])) {
-      const s: RecipeSettings = spread(state[recipe.id]);
-      this.adjustment.computeRecipeSettings(
-        s,
-        recipe,
-        machines,
-        settings,
-        data,
-      );
-      value[recipe.id] = s;
-    }
+    return data.recipeIds
+      .map((i) => data.recipeRecord[i])
+      .reduce<Record<string, RecipeSettings>>((rec, recipe) => {
+        const s: RecipeSettings = spread(state[recipe.id]);
+        this.adjustment.computeRecipeSettings(
+          s,
+          recipe,
+          machines,
+          settings,
+          data,
+        );
 
-    return value;
+        rec[recipe.id] = s;
+        return rec;
+      }, {});
   }
 }

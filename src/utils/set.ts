@@ -1,3 +1,5 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
 export function updateSetIds(
   ids: string | string[],
   value: boolean,
@@ -10,4 +12,14 @@ export function updateSetIds(
     else set.delete(id);
   });
   return set;
+}
+
+@Pipe({ name: 'setJoin' })
+export class SetJoinPipe implements PipeTransform {
+  transform(
+    value: Set<string | number> | string[] | number[] | null | undefined,
+  ): string {
+    if (value == null) return '';
+    return Array.from(value).join(', ');
+  }
 }

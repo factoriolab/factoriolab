@@ -1,7 +1,8 @@
 import { Service } from '@angular/core';
 
 import { Beacon } from '~/data/schema/beacon';
-import { Machine, MachineJson } from '~/data/schema/machine';
+import { Item } from '~/data/schema/item';
+import { Machine } from '~/data/schema/machine';
 import { filterEffect } from '~/data/schema/module';
 import { Recipe } from '~/data/schema/recipe';
 import { Option } from '~/option/option';
@@ -15,7 +16,7 @@ import { Settings } from './settings/settings';
 @Service()
 export class Options {
   /** Determines what option to use based on preferred rank */
-  bestMatch(options: Option[], rank: string[]): string {
+  bestMatch(options: Option[], rank: string[]): string | undefined {
     const ids = options.map((o) => o.value);
     if (ids.length > 1) {
       for (const r of rank) {
@@ -25,6 +26,36 @@ export class Options {
     }
 
     return ids[0];
+  }
+
+  logisticsOptions(
+    item: Item,
+    settings: Settings,
+    data: Dataset,
+    type: 'wagon' | 'belt',
+  ): Option[] {
+    if (!item.types?.size) return [];
+
+    const types = item.types;
+    const collection = `${type}Ids` as const;
+    let allowedIds = data[collection]
+      .map((b) => data.itemRecord[b])
+      .filter(fnPropsNotNullish(type))
+      .filter((b) => !types.isDisjointFrom(b[type].itemTypes));
+    if (allowedIds.some((f) => settings.availableItemIds.has(f.id)))
+      allowedIds = allowedIds.filter((f) =>
+        settings.availableItemIds.has(f.id),
+      );
+    return allowedIds.map(
+      (f): Option => ({
+        value: f.id,
+        label: f.name,
+        icon: f.id,
+        iconType: 'item',
+        tooltip: f.id,
+        tooltipType: type,
+      }),
+    );
   }
 
   machineOptions(recipe: Recipe, settings: Settings, data: Dataset): Option[] {
@@ -48,26 +79,24 @@ export class Options {
     }));
   }
 
-  fuelOptions(
-    entity: MachineJson | Machine,
-    settings: Settings,
-    data: Dataset,
-  ): Option[] {
+  fuelOptions(entity: Machine, settings: Settings, data: Dataset): Option[] {
     if (entity.fuel) {
       const fuel = data.itemRecord[entity.fuel];
       return [{ value: fuel.id, label: fuel.name }];
     }
 
-    if (entity.fuelCategories == null) return [];
+    if (!entity.fuelTypes?.size) return [];
 
-    const fuelCategories = entity.fuelCategories;
-    let allowed = data.fuelIds
+    const fuelTypes = entity.fuelTypes;
+    let allowedIds = data.fuelIds
       .map((f) => data.itemRecord[f])
       .filter(fnPropsNotNullish('fuel'))
-      .filter((f) => fuelCategories.includes(f.fuel.category));
-    if (allowed.some((f) => settings.availableItemIds.has(f.id)))
-      allowed = allowed.filter((f) => settings.availableItemIds.has(f.id));
-    return allowed.map(
+      .filter((f) => !fuelTypes.isDisjointFrom(f.fuel.types));
+    if (allowedIds.some((f) => settings.availableItemIds.has(f.id)))
+      allowedIds = allowedIds.filter((f) =>
+        settings.availableItemIds.has(f.id),
+      );
+    return allowedIds.map(
       (f): Option => ({
         value: f.id,
         label: f.name,

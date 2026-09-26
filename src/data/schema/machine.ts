@@ -1,4 +1,5 @@
 import { Rational, rational } from '~/rational/rational';
+import { asSet } from '~/utils/coercion';
 import { toRationalRecord } from '~/utils/record';
 
 import { EnergyType } from './energy-type';
@@ -22,7 +23,7 @@ export interface MachineJson {
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
-  fuelCategories?: string[];
+  fuelTypes?: string[];
   /** Indicates a specific fuel that must be used */
   fuel?: string;
   /** Energy consumption in kW */
@@ -54,7 +55,7 @@ export interface Machine {
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
-  fuelCategories?: string[];
+  fuelTypes?: Set<string>;
   /** Indicates a specific fuel that must be used */
   fuel?: string;
   /** Energy consumption in kW */
@@ -94,7 +95,7 @@ export function parseMachine(
           : rational(json.modules),
     disallowedEffects: json.disallowedEffects,
     type: json.type,
-    fuelCategories: json.fuelCategories,
+    fuelTypes: asSet(json.fuelTypes),
     fuel: json.fuel,
     usage: rational(json.usage),
     drain: rational(json.drain),

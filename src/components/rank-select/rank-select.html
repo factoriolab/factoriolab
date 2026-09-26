@@ -73,6 +73,9 @@
           @let opt = id | option: options();
           <div
             class="rounded-xs p-0.5 flex cursor-grab items-center justify-center hover:bg-gray-600"
+            [labTooltip]="opt?.tooltip"
+            [labTooltipType]="opt?.tooltipType"
+            labTooltipPosition="adjacent"
             cdkDrag
             cdkDragLockAxis="x"
             cdkDragBoundary=".border-y"

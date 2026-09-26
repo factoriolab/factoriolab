@@ -105,7 +105,7 @@
             @if (beacon.disallowedEffects) {
               <tr>
                 <td>{{ 'data.disallowedEffects' | translate }}</td>
-                <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+                <td>{{ beacon.disallowedEffects | setJoin }}</td>
               </tr>
             }
             @if (beacon.size) {
@@ -118,22 +118,28 @@
         }
       }
       @case ('belt') {
-        <table>
-          <tr>
-            <td>{{ 'data.speed' | translate }}</td>
-            <td>
-              {{ settingsStore.beltSpeedTxt()[tooltipData.value]
-              }}{{ settingsStore.displayRateInfo().suffix | translate }}
-            </td>
-          </tr>
-        </table>
+        @if (item.belt; as belt) {
+          <table>
+            <tr>
+              <td>{{ 'data.itemTypes' | translate }}</td>
+              <td>{{ belt.itemTypes | setJoin }}</td>
+            </tr>
+            <tr>
+              <td>{{ 'data.speed' | translate }}</td>
+              <td>
+                {{ settingsStore.beltSpeedTxt()[tooltipData.value]
+                }}{{ settingsStore.displayRateInfo().suffix | translate }}
+              </td>
+            </tr>
+          </table>
+        }
       }
       @case ('fuel') {
         @if (item.fuel; as fuel) {
           <table>
             <tr>
-              <td>{{ 'data.fuelCategory' | translate }}</td>
-              <td>{{ fuel.category }}</td>
+              <td>{{ 'data.types' | translate }}</td>
+              <td>{{ fuel.types | setJoin }}</td>
             </tr>
             <tr>
               <td>{{ 'data.fuelValue' | translate }}</td>
@@ -219,7 +225,7 @@
             @if (machine.disallowedEffects) {
               <tr>
                 <td>{{ 'data.disallowedEffects' | translate }}</td>
-                <td>{{ machine.disallowedEffects.join(', ') }}</td>
+                <td>{{ machine.disallowedEffects | setJoin }}</td>
               </tr>
             }
             @if (machine.type) {
@@ -228,10 +234,10 @@
                 <td>{{ machine.type }}</td>
               </tr>
             }
-            @if (machine.fuelCategories) {
+            @if (machine.fuelTypes) {
               <tr>
-                <td>{{ 'data.fuelCategories' | translate }}</td>
-                <td>{{ machine.fuelCategories.join(', ') }}</td>
+                <td>{{ 'data.fuelTypes' | translate }}</td>
+                <td>{{ machine.fuelTypes | setJoin }}</td>
               </tr>
             }
             @if (machine.fuel) {
@@ -342,34 +348,28 @@
           </table>
         }
       }
-      @case ('pipe') {
-        @if (item.pipe; as pipe) {
+      @case ('wagon') {
+        @if (item.wagon; as wagon) {
           <table>
             <tr>
-              <td>{{ 'data.flowRate' | translate }}</td>
+              <td>{{ 'data.itemTypes' | translate }}</td>
+              <td>{{ wagon.itemTypes | setJoin }}</td>
+            </tr>
+            <tr>
+              <td>{{ 'data.capacity' | translate }}</td>
               <td>
-                {{ settingsStore.beltSpeedTxt()[tooltipData.value]
-                }}{{ settingsStore.displayRateInfo().suffix | translate }}
+                @if (wagon.capacityType === 'stacks') {
+                  {{
+                    'data.numberStacks'
+                      | translate: { value: wagon.capacity | round }
+                  }}
+                } @else {
+                  {{ wagon.capacity | round }}
+                }
               </td>
             </tr>
           </table>
         }
-      }
-      @case ('wagon') {
-        <table>
-          @if (item.cargoWagon; as wagon) {
-            <tr>
-              <td>{{ 'data.storageSize' | translate }}</td>
-              <td>{{ wagon.size }}</td>
-            </tr>
-          }
-          @if (item.fluidWagon; as wagon) {
-            <tr>
-              <td>{{ 'data.fluidCapacity' | translate }}</td>
-              <td>{{ wagon.capacity }}</td>
-            </tr>
-          }
-        </table>
       }
       @case ('technology') {
         @if (item.technology; as technology) {
@@ -474,6 +474,28 @@
             </table>
           }
         }
+      }
+      @default {
+        <table>
+          @if (item.types.size) {
+            <tr>
+              <td>{{ 'data.types' | translate }}</td>
+              <td>{{ item.types | setJoin }}</td>
+            </tr>
+          }
+          @if (item.stack) {
+            <tr>
+              <td>{{ 'data.stackSize' | translate }}</td>
+              <td>{{ item.stack.toLocaleString() }}</td>
+            </tr>
+          }
+          @if (item.rocketCapacity) {
+            <tr>
+              <td>{{ 'data.rocketCapacity' | translate }}</td>
+              <td>{{ item.rocketCapacity.toLocaleString() }}</td>
+            </tr>
+          }
+        </table>
       }
     }
   }

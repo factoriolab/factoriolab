@@ -1,4 +1,4 @@
 {
-  "minBelt": "belt-i",
-  "maxBelt": "belt-iii"
+  "minBeltRank": ["belt-i"],
+  "maxBeltRank": ["belt-iii"]
 }

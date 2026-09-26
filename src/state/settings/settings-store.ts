@@ -9,9 +9,7 @@ import { IconType } from '~/data/icon-type';
 import { ModInfo } from '~/data/mod';
 import { Beacon, parseBeacon } from '~/data/schema/beacon';
 import { Belt, parseBelt, PIPE } from '~/data/schema/belt';
-import { CargoWagon } from '~/data/schema/cargo-wagon';
 import { Category } from '~/data/schema/category';
-import { FluidWagon } from '~/data/schema/fluid-wagon';
 import { Fuel } from '~/data/schema/fuel';
 import {
   IconBase,
@@ -29,6 +27,7 @@ import { Module, parseModule } from '~/data/schema/module';
 import { baseId, Quality, qualityId } from '~/data/schema/quality';
 import { parseRecipe, Recipe, recipeHasQuality } from '~/data/schema/recipe';
 import { Technology } from '~/data/schema/technology';
+import { Wagon } from '~/data/schema/wagon';
 import { LinkOption } from '~/option/link-option';
 import { getIdOptions, Option, OptionParams } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
@@ -249,27 +248,24 @@ export class SettingsStore extends Store<SettingsState> {
       categories: getIdOptions(data.categoryIds, data.categoryRecord),
       beacons: itemOptions(data.beaconIds, { tooltipType: 'beacon' }),
       belts: itemOptions(data.beltIds, {
-        exclude: data.itemQIds,
+        /** Filter out quality belt items where belt is unaffected by quality */
+        exclude: (itemId: string): boolean => {
+          const item = data.itemRecord[itemId];
+          return item.quality != null && item.belt?.quality == null;
+        },
         tooltipType: 'belt',
-        firstAsEmpty: true,
       }),
-      pipes: itemOptions(data.pipeIds, {
-        tooltipType: 'pipe',
-        firstAsEmpty: true,
-      }),
-      cargoWagons: itemOptions(data.cargoWagonIds, {
-        exclude: data.itemQIds,
+      wagons: itemOptions(data.wagonIds, {
+        /** Wagons are not currently affected by quality */
+        exclude: (itemId: string): boolean =>
+          data.itemRecord[itemId].quality != null,
         tooltipType: 'wagon',
-        firstAsEmpty: true,
-      }),
-      fluidWagons: itemOptions(data.fluidWagonIds, {
-        exclude: data.itemQIds,
-        tooltipType: 'wagon',
-        firstAsEmpty: true,
       }),
       inserters: itemOptions(data.inserterIds, { tooltipType: 'inserter' }),
       fuels: itemOptions(data.fuelIds, {
-        exclude: data.itemQIds,
+        /** Fuels are not currently affected by quality */
+        exclude: (itemId: string): boolean =>
+          data.itemRecord[itemId].quality != null,
         tooltipType: 'fuel',
       }),
       modules: itemOptions(data.moduleIds, { tooltipType: 'module' }),
@@ -305,10 +301,6 @@ export class SettingsStore extends Store<SettingsState> {
     const value: Record<string, Rational> = { [PIPE]: flowRate };
     if (data.beltIds) {
       for (const id of data.beltIds) value[id] = data.beltRecord[id].speed;
-    }
-
-    if (data.pipeIds) {
-      for (const id of data.pipeIds) value[id] = data.beltRecord[id].speed;
     }
 
     return value;
@@ -389,12 +381,10 @@ export class SettingsStore extends Store<SettingsState> {
 
       return {
         locations: coalesce(p.locations, m.locations),
-        beltId: coalesce(p.belt, m.belt),
+        beltRankIds: coalesce(p.beltRank, m.beltRank),
         beltStack: rational(coalesce(p.beltStack, m.beltStack)),
-        pipeId: coalesce(p.pipe, m.pipe),
         fuelRankIds: coalesce(coalesce(p.fuelRank, m.fuelRank), []),
-        cargoWagonId: coalesce(p.cargoWagon, m.cargoWagon),
-        fluidWagonId: coalesce(p.fluidWagon, m.fluidWagon),
+        wagonRankIds: coalesce(p.wagonRank, m.wagonRank),
         excludedRecipeIds: coalesce(
           coalesce(p.excludedRecipes, m.excludedRecipes),
           [],
@@ -459,10 +449,8 @@ export class SettingsStore extends Store<SettingsState> {
     }
 
     return {
-      beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
-      pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
-      cargoWagonId: m.cargoWagon,
-      fluidWagonId: m.fluidWagon,
+      beltRankIds: preset === Preset.Minimum ? m.minBeltRank : m.maxBeltRank,
+      wagonRankIds: m.wagonRank,
       excludedRecipeIds: coalesce(m.excludedRecipes, []),
       machineRankIds: coalesce(
         preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
@@ -561,7 +549,6 @@ export class SettingsStore extends Store<SettingsState> {
         r.icon = firstOutItem.icon ?? firstOutId;
       });
 
-    const itemQIds = new Set<string>();
     const recipeQIds = new Set<string>();
     const abnormalQualities = data?.qualities?.filter((q) => q.level) ?? [];
     if (abnormalQualities.length) {
@@ -584,7 +571,6 @@ export class SettingsStore extends Store<SettingsState> {
 
           const itemJson = itemData[item.id];
           const id = qualityId(item.id, quality);
-          itemQIds.add(id);
           itemIds.push(id);
           const qItem = spread(item, {
             id,
@@ -598,11 +584,10 @@ export class SettingsStore extends Store<SettingsState> {
               qItem.beacon = parseBeacon(spread(itemJson.beacon, qBeaconJson));
           }
 
-          /** Unused in Space Age data, quality does not affect belt speed */
           if (itemJson.belt?.qualityRecord) {
             const qBeltJson = itemJson.belt.qualityRecord[quality.id];
             if (qBeltJson)
-              qItem.belt = parseBelt(spread(itemJson.belt, qBeltJson));
+              qItem.belt = parseBelt(spread(itemJson.belt, qBeltJson), quality);
           }
 
           if (itemJson.inserter?.qualityRecord) {
@@ -625,12 +610,6 @@ export class SettingsStore extends Store<SettingsState> {
             const qModuleJson = itemJson.module.qualityRecord[quality.id];
             if (qModuleJson)
               qItem.module = parseModule(spread(itemJson.module, qModuleJson));
-          }
-
-          if (itemJson.pipe?.qualityRecord) {
-            const qPipeJson = itemJson.pipe.qualityRecord[quality.id];
-            if (qPipeJson)
-              qItem.pipe = parseBelt(spread(itemJson.pipe, qPipeJson));
           }
 
           items.push(qItem);
@@ -689,29 +668,9 @@ export class SettingsStore extends Store<SettingsState> {
           a.belt.speed.sub(b.belt.speed).toNumber(),
       )
       .map((i) => i.id);
-    const pipeIds = items
-      .filter(fnPropsNotNullish('pipe'))
-      .sort(
-        (a, b) =>
-          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
-          a.pipe.speed.sub(b.pipe.speed).toNumber(),
-      )
-      .map((i) => i.id);
-    const cargoWagonIds = items
-      .filter(fnPropsNotNullish('cargoWagon'))
-      .sort(
-        (a, b) =>
-          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
-          a.cargoWagon.size.sub(b.cargoWagon.size).toNumber(),
-      )
-      .map((i) => i.id);
-    const fluidWagonIds = items
-      .filter(fnPropsNotNullish('fluidWagon'))
-      .sort(
-        (a, b) =>
-          (a.quality?.level ?? 0) - (b.quality?.level ?? 0) ||
-          a.fluidWagon.capacity.sub(b.fluidWagon.capacity).toNumber(),
-      )
+    const wagonIds = items
+      .filter(fnPropsNotNullish('wagon'))
+      .sort((a, b) => (a.quality?.level ?? 0) - (b.quality?.level ?? 0))
       .map((i) => i.id);
     const machineIds = items
       .filter(fnPropsNotNullish('machine'))
@@ -784,8 +743,7 @@ export class SettingsStore extends Store<SettingsState> {
     // Convert to rationals
     const beaconRecord: Record<string, Beacon> = {};
     const beltRecord: Record<string, Belt> = {};
-    const cargoWagonRecord: Record<string, CargoWagon> = {};
-    const fluidWagonRecord: Record<string, FluidWagon> = {};
+    const wagonRecord: Record<string, Wagon> = {};
     const machineRecord: Record<string, Machine> = {};
     const moduleRecord: Record<string, Module> = {};
     const fuelRecord: Record<string, Fuel> = {};
@@ -793,12 +751,8 @@ export class SettingsStore extends Store<SettingsState> {
     const inserterRecord: Record<string, Inserter> = {};
     const itemRecord = items.reduce((e: Record<string, Item>, i) => {
       if (i.beacon) beaconRecord[i.id] = i.beacon;
-
       if (i.belt) beltRecord[i.id] = i.belt;
-      else if (i.pipe) beltRecord[i.id] = i.pipe;
-
-      if (i.cargoWagon) cargoWagonRecord[i.id] = i.cargoWagon;
-      if (i.fluidWagon) fluidWagonRecord[i.id] = i.fluidWagon;
+      if (i.wagon) wagonRecord[i.id] = i.wagon;
       if (i.machine) machineRecord[i.id] = i.machine;
       if (i.module) moduleRecord[i.id] = i.module;
       if (i.fuel) fuelRecord[i.id] = i.fuel;
@@ -883,18 +837,14 @@ export class SettingsStore extends Store<SettingsState> {
       iconIds,
       iconRecord,
       itemIds,
-      itemQIds,
       itemRecord,
       noRecipeItemIds,
       beaconIds,
       beaconRecord,
       beltIds,
-      pipeIds,
       beltRecord,
-      cargoWagonIds,
-      cargoWagonRecord,
-      fluidWagonIds,
-      fluidWagonRecord,
+      wagonIds,
+      wagonRecord,
       machineIds,
       machineRecord,
       moduleIds,
@@ -1062,13 +1012,6 @@ export class SettingsStore extends Store<SettingsState> {
     );
     const availableRecipeIds = new Set(availableRecipes.map((r) => r.id));
 
-    function pickItemId(itemId: string | undefined, defaultId: string): string {
-      itemId = coalesce(itemId, defaultId);
-      if (itemId === '') return itemId;
-      if (!itemId || !availableItemIds.has(itemId)) return '';
-      return itemId;
-    }
-
     function pickItemIds(
       itemIds: string[] | undefined,
       defaultIds: string[],
@@ -1077,14 +1020,10 @@ export class SettingsStore extends Store<SettingsState> {
       return itemIds.filter((i) => availableItemIds.has(i));
     }
 
-    const defaultBeltId = coalesce(defaults?.beltId, '');
-    const beltId = pickItemId(state.beltId, defaultBeltId);
-    const defaultPipeId = coalesce(defaults?.pipeId, '');
-    const pipeId = pickItemId(state.pipeId, defaultPipeId);
-    const defaultCargoWagonId = coalesce(defaults?.cargoWagonId, '');
-    const cargoWagonId = pickItemId(state.cargoWagonId, defaultCargoWagonId);
-    const defaultFluidWagonId = coalesce(defaults?.fluidWagonId, '');
-    const fluidWagonId = pickItemId(state.fluidWagonId, defaultFluidWagonId);
+    const defaultBeltRankIds = coalesce(defaults?.beltRankIds, []);
+    const beltRankIds = pickItemIds(state.beltRankIds, defaultBeltRankIds);
+    const defaultWagonRankIds = coalesce(defaults?.wagonRankIds, []);
+    const wagonRankIds = pickItemIds(state.wagonRankIds, defaultWagonRankIds);
     const defaultMachineRankIds = coalesce(defaults?.machineRankIds, []);
     const machineRankIds = pickItemIds(
       state.machineRankIds,
@@ -1128,15 +1067,11 @@ export class SettingsStore extends Store<SettingsState> {
     );
 
     return spread(state as Settings, {
-      beltId,
-      defaultBeltId,
+      beltRankIds,
+      defaultBeltRankIds,
       stack: coalesce(state.stack, coalesce(defaults?.beltStack, stack)),
-      pipeId,
-      defaultPipeId,
-      cargoWagonId,
-      defaultCargoWagonId,
-      fluidWagonId,
-      defaultFluidWagonId,
+      wagonRankIds,
+      defaultWagonRankIds,
       excludedRecipeIds,
       defaultExcludedRecipeIds,
       recipeBonus,

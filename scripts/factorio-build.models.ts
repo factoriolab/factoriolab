@@ -4,15 +4,6 @@ export interface ModList {
   mods: { name: string; enabled: boolean }[];
 }
 
-// export interface PlayerData {
-//   'last-played-version': {
-//     game_version: string;
-//     build_version: number;
-//     build_mode: string;
-//     platform: string;
-//   };
-// }
-
 export interface ModInfo {
   name: string;
   version: string;
@@ -211,3 +202,6 @@ export const anyItemKeys = [
 ] as const;
 
 export const anyLocationKeys = ['surface', 'planet'] as const;
+
+export const ITEM_TYPE = 'item';
+export const FLUID_TYPE = 'fluid';

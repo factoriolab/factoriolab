@@ -86,9 +86,8 @@ const mockSettingsState: SettingsState = {
   displayRate: DisplayRate.PerHour,
   excludedItemIds: new Set([ItemId.SteelChest]),
   checkedItemIds: new Set([ItemId.SteelChest]),
-  beltId: ItemId.TransportBelt,
-  cargoWagonId: ItemId.CargoWagon,
-  fluidWagonId: ItemId.FluidWagon,
+  beltRankIds: [ItemId.TransportBelt],
+  wagonRankIds: [ItemId.CargoWagon, ItemId.FluidWagon],
   flowRate: rational(1200n),
   excludedRecipeIds: new Set([RecipeId.SteelChest]),
   checkedRecipeIds: new Set([RecipeId.SteelChest]),
@@ -140,8 +139,7 @@ const mockZipPartial: ZipData<LabParams> = {
     ibe: 'transport-belt',
     bmi: '100',
     bre: '0',
-    icw: 'cargo-wagon',
-    ifw: 'fluid-wagon',
+    icw: 'cargo-wagon~fluid-wagon',
     mbr: '1',
     mps: 'productivity-module',
     rnp: '1',
@@ -172,8 +170,7 @@ const mockZipPartial: ZipData<LabParams> = {
     ibe: 'A',
     bmi: '100',
     bre: '0',
-    icw: 'A',
-    ifw: 'B',
+    icw: 'A~B',
     mbr: '1',
     mps: 'G',
     rnp: '1',
@@ -781,7 +778,29 @@ describe('RouterSync', () => {
         {},
         {
           z: 'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
-          v: '9',
+          v: '10',
+        },
+      );
+    });
+
+    it('should unzip empty v11', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { z: 'eJyrsjU0AAADNQEZ', v: '11' });
+    });
+
+    it('should unzip v11', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV10);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
+          v: '11',
         },
       );
     });

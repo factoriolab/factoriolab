@@ -2,7 +2,7 @@
 
 /**
  * Application: factorio
- * Version: 2.1.7
+ * Version: 2.1.20
  * API Version: 6
  */
 
@@ -733,7 +733,7 @@ interface _AssemblingMachinePrototype {
   /** The preset recipe of this machine. This machine does not show a recipe selection if this is set. The base game uses this for the [rocket silo](https://wiki.factorio.com/Rocket_silo). */
   fixed_recipe?: RecipeID;
   fluid_boxes_off_when_no_fluid_recipe?: boolean;
-  /** The locale key of the title of the GUI that is shown when the player opens the assembling machine. May not be longer than 200 characters. */
+  /** The locale key of the title of the recipe selection GUI that is shown when the player opens the assembling machine. May not be longer than 200 characters. */
   gui_title_key?: string;
   /** Sets the maximum number of item ingredients this machine can craft with. Any recipe with more item ingredients than this will be unavailable in this machine.
 
@@ -1060,13 +1060,13 @@ Note that `fire` and `fire_glow` alpha is set to the light intensity of the ener
 
 If `mode` is `"heat-fluid-inside"`, the fluid is heated up directly in this fluidbox. */
   fluid_box: FluidBox;
-  /** In the `"output-to-separate-pipe"` mode, fluid is transferred from the `fluid_box` to the `output_fluid_box` when enough energy is available to [heat](prototype:FluidPrototype::heat_capacity) the input fluid to the `target_temperature`. Setting a filter on the `output_fluid_box` means that instead of the heated input fluid getting moved to the output, it is converted to the filtered fluid in a ratio based on the heat capacity of the fluids: `output_fluid_amount = input_fluid_amount * (output_fluid_heat_capacity / input_fluid_heat_capacity)`
+  /** In the `"output-to-separate-pipe"` mode, fluid is transferred from the `fluid_box` to the `output_fluid_box` when enough energy is available to [heat](prototype:FluidPrototype::heat_capacity) the input fluid to the `target_temperature`. Setting a filter on the `output_fluid_box` means that instead of the heated input fluid getting moved to the output, it is converted to the filtered fluid in a ratio based on the heat capacity of the fluids: `output_fluid_amount = input_fluid_amount * (input_fluid_heat_capacity / output_fluid_heat_capacity)`
 
 In the `"heat-fluid-inside"` mode, fluid in the `fluid_box` is continuously heated from the input temperature up to its [FluidPrototype::max_temperature](prototype:FluidPrototype::max_temperature). */
   mode?: 'heat-fluid-inside' | 'output-to-separate-pipe';
   /** The output fluid box.
 
-If `mode` is `"output-to-separate-pipe"` and this has a [filter](prototype:FluidBox::filter), the heated input fluid is converted to the output fluid that is set in the filter. The conversion ratio is based on the [heat capacity](prototype:FluidPrototype::heat_capacity) of the fluids: `output_fluid_amount = input_fluid_amount * (output_fluid_heat_capacity / input_fluid_heat_capacity)`
+If `mode` is `"output-to-separate-pipe"` and this has a [filter](prototype:FluidBox::filter), the heated input fluid is converted to the output fluid that is set in the filter. The conversion ratio is based on the [heat capacity](prototype:FluidPrototype::heat_capacity) of the fluids: `output_fluid_amount = input_fluid_amount * (input_fluid_heat_capacity / output_fluid_heat_capacity)`
 
 If `mode` is `"heat-fluid-inside"`, this fluidbox is unused. */
   output_fluid_box: FluidBox;
@@ -2817,6 +2817,7 @@ Entities with the same fast replaceable group can be configured as upgrades for 
   fast_replaceable_group?: string;
   flags?: EntityPrototypeFlags;
   friendly_map_color?: Color;
+  ghost_build_sound?: Sound;
   /** This entity can freeze if heating_energy is larger than zero. */
   heating_energy?: Energy;
   /** Where beams should hit the entity. Useful if the bounding box only covers part of the entity (e.g. feet of the character) and beams only hitting there would look weird. */
@@ -2888,7 +2889,9 @@ The value `0` will be treated the same as `nil`. */
   /** Used to specify the area where the [sticker](prototype:StickerPrototype) animation can appear for entities that can have stickers on them. */
   sticker_box?: BoundingBox;
   surface_conditions?: SurfaceCondition[];
-  /** When this is true, this entity prototype will be translucent and unselectable when "Hide tall entities" mode is active. */
+  /** When this is true, this entity prototype will be translucent and unselectable when "Hide tall entities" mode is active.
+
+Rail signals are always treated as 'tall' when built attached to elevated rails. */
   tall?: boolean;
   tile_buildability_rules?: TileBuildabilityRule[];
   tile_height?: number;
@@ -4091,8 +4094,8 @@ This overrides the [TilePrototype::default_destroyed_dropped_item_trigger](proto
 
 Must be 0 or positive. */
   fuel_acceleration_multiplier_quality_bonus?: number;
-  /** Must exist when a nonzero fuel_value is defined. */
-  fuel_category?: FuelCategoryID;
+  /** Mandatory with at least one fuel category when a nonzero fuel_value is defined. */
+  fuel_categories?: FuelCategoryID[];
   fuel_emissions_multiplier?: number;
   /** Colors the glow of the burner energy source when this fuel is burned. Can also be used to color the glow of reactors burning the fuel, see [ReactorPrototype::use_fuel_glow_color](prototype:ReactorPrototype::use_fuel_glow_color). */
   fuel_glow_color?: Color;
@@ -4137,9 +4140,17 @@ When using sprites of size `64` (same as base game icons), the `scale` should be
 The localised name of the entity will be used as the in-game item name. This behavior can be overwritten by specifying `localised_name` on this item, it will be used instead. */
   place_result?: EntityID;
   plant_result?: EntityID;
+  /** Only loaded if `spoil_ticks` is larger than 0.
+
+If set, [QualityPrototype::spoil_ticks_multiplier](prototype:QualityPrototype::spoil_ticks_multiplier) will be applied to spoil_tick value. */
+  quality_affects_spoil_ticks?: boolean;
   /** Randomly tints item instances on belts and in the world. 0 no tinting. 1 full tint. */
   random_tint_color?: Color;
   rocket_launch_products?: ItemProductPrototype[];
+  /** Used by labs. Not relevant for [tools](prototype:ToolPrototype) where [durability](prototype:ToolPrototype::durability) is used.
+
+Must be >= 0.01. */
+  science_capacity?: number;
   /** The way this item works when we try to send it to the orbit on its own.
 
 When "manual" is set, it can only be launched by pressing the launch button in the rocket silo.
@@ -4150,11 +4161,22 @@ When "automated" is set, it will force the existence of "launch to orbit automat
   space_platform_request_priority?: boolean;
   /** Used by Inserters with spoil priority. Item with higher spoil level is considered more spoiled than item with lower spoil level regardless of progress of spoiling. */
   spoil_level?: number;
+  /** Only loaded if `spoil_ticks` is larger than 0.
+
+Defines how many levels the item's quality will go up (positive integer) or down (negative integer) when spoiling. */
   spoil_quality_change?: number;
+  /** Only loaded if `spoil_ticks` is larger than 0.
+
+The maximum quality level that can be reached when [spoil_quality_change](prototype:ItemPrototype::spoil_quality_change) is used. */
   spoil_quality_max?: QualityID;
+  /** Only loaded if `spoil_ticks` is larger than 0.
+
+The minimum quality level that can be reached when [spoil_quality_change](prototype:ItemPrototype::spoil_quality_change) is used. */
   spoil_quality_min?: QualityID;
+  /** Only loaded if `spoil_ticks` is larger than 0. */
   spoil_result?: ItemID;
   spoil_ticks?: number;
+  /** Only loaded if `spoil_ticks` is larger than 0. */
   spoil_to_trigger_result?: SpoilToTriggerResult;
   /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: ItemCountType;
@@ -4672,8 +4694,6 @@ interface _LoaderPrototype {
   belt_length?: number;
   /** First the four cardinal directions for `direction_out`, followed by the four directions for `direction_in`. */
   circuit_connector?: CircuitConnectorDefinition[];
-  /** Render layer for all directions of the circuit connectors. */
-  circuit_connector_layer?: RenderLayer;
   /** The maximum circuit wire distance for this entity. */
   circuit_wire_max_distance?: number;
   /** The distance between the position of this loader and the tile of the loader's container target. */
@@ -5821,15 +5841,23 @@ Affects the range of [attack parameters](prototype:AttackParameters), e.g. those
   range_multiplier?: number;
   /** Must be >= 0.01. */
   rolling_stock_max_speed_multiplier?: number;
+  /** Must be >= 0.01.
+
+Affects how much research will lab be able to do using item of that quality.
+
+Only used for items that are not a [tool](prototype:ToolPrototype). */
+  science_capacity_multiplier?: number;
   /** Must be in range `[0, 1]`.
 
 Only affects labs with [LabPrototype::uses_quality_drain_modifier](prototype:LabPrototype::uses_quality_drain_modifier) set. */
   science_pack_drain_multiplier?: number;
-  /** Must be >= 0.01. */
+  /** Must be >= 0.01.
+
+Only affects items with [ItemPrototype::quality_affects_spoil_ticks](prototype:ItemPrototype::quality_affects_spoil_ticks) set. */
   spoil_ticks_multiplier?: number;
   /** Must be >= 0.01.
 
-Affects the durability of [tool items](prototype:ToolPrototype) like science packs, repair tools and armor. */
+Affects the durability of [tool items](prototype:ToolPrototype) like repair tools and armor. */
   tool_durability_multiplier?: number;
 }
 
@@ -6116,7 +6144,7 @@ export function isReactorPrototype(value: unknown): value is ReactorPrototype {
   return (value as { type: string }).type === 'reactor';
 }
 
-/** A recipe category. The built-in categories can be found [here](https://wiki.factorio.com/Data.raw#recipe-category). See [RecipePrototype::category](prototype:RecipePrototype::category). Recipe categories can be used to specify which [machine](prototype:CraftingMachinePrototype::crafting_categories) can craft which [recipes](prototype:RecipePrototype).
+/** A recipe category. The built-in categories can be found [here](https://wiki.factorio.com/Data.raw#recipe-category). See [RecipePrototype::categories](prototype:RecipePrototype::categories). Recipe categories can be used to specify which [machine](prototype:CraftingMachinePrototype::crafting_categories) can craft which [recipes](prototype:RecipePrototype).
 
 The recipe category with the name "crafting" cannot contain recipes with fluid ingredients or products. */
 
@@ -6221,6 +6249,10 @@ If 1) there are multiple products and this property is nil, 2) this property is 
 If set to `0`, it instead uses the following formula: `1.166 / (energy_required / the assembler's crafting_speed)`, rounded up, and clamped to be between`2` and `100`. The numbers used in this formula can be changed by the [UtilityConstants](prototype:UtilityConstants) properties `dynamic_recipe_overload_factor`, `minimum_recipe_overload_multiplier`, and `maximum_recipe_overload_multiplier`. */
   overload_multiplier?: number;
   preserve_products_in_machine_output?: boolean;
+  /** If set to true, an event with identifier of [LuaRecipePrototype::on_crafted_event](runtime:LuaRecipePrototype::on_crafted_event) will be raised when this recipe is crafted. Currently this is only raised when recipe is crafted by a crafting machine.
+
+Event raised will be given data as described by [RecipeCraftedEvent](runtime:RecipeCraftedEvent). */
+  raise_on_crafted?: boolean;
   requester_paste_multiplier?: number;
   /** Whether enabling this recipe requires the ingredients be unlocked before the products are marked as unlocked. */
   requires_ingredients_to_unlock_results?: boolean;
@@ -6652,7 +6684,7 @@ Additional energy used during the night, that is when [LuaSurface::darkness](run
   rocket_glow_overlay_sprite?: Sprite;
   /** The number of crafts that must complete to produce a rocket. This includes bonus crafts from productivity. Recipe products are ignored. */
   rocket_parts_required: number;
-  /** Must be at least `rocket_parts_required`. */
+  /** All values down to 0 are allowed, however it is suggested to avoid values from 1 up to `rocket_parts_required - 1` to avoid second progress bar stopping before reaching 100%. When set to 0, second progress bar is hidden. */
   rocket_parts_storage_cap?: number;
   rocket_quick_relaunch_start_offset: number;
   /** The time to wait in the [doors_opened](runtime:defines.rocket_silo_status.doors_opened) state before switching to [rocket_rising](runtime:defines.rocket_silo_status.rocket_rising). */
@@ -7328,6 +7360,8 @@ Only loaded if `icons` is not defined. */
 
 Cannot be 0. */
   length?: number;
+  origin?: MapPosition;
+  shape?: 'arc' | 'line';
   to: SpaceLocationID;
 }
 
@@ -7373,6 +7407,7 @@ Only loaded if `icons` is not defined. */
   magnitude?: number;
   /** Angle in relation to the sun. */
   orientation: RealOrientation;
+  origin?: MapPosition;
   /** The orientation where parked space platforms will be drawn. */
   parked_platforms_orientation?: RealOrientation;
   /** These transitions are used for anything traveling from the surface associated with this location. */
@@ -7424,7 +7459,7 @@ interface _SpacePlatformHubPrototype {
   persistent_ambient_sounds?: PersistentWorldAmbientSoundsDefinition;
   /** Repair speed of entities is multiplied by this value when they are on a space platform with this hub prototype. */
   platform_repair_speed_modifier?: number;
-  /** Weight which this entity adds to total space platform weight when placed. */
+  /** Mass which this entity adds to total space platform mass when placed. */
   weight?: Weight;
 }
 
@@ -7997,7 +8032,9 @@ Only loaded if `icons` is not defined. */
 
 Defaults to the same level as the technology, which is `0` for non-upgrades, and the level of the upgrade for upgrades. */
   max_level?: number | 'infinite';
-  /** If this name ends with `-<number>`, that number is ignored for localization purposes. E.g. if the name is `technology-3`, the game looks for the `technology-name.technology` localization. The technology tree will also show the number on the technology icon. */
+  /** If this name ends with `-<number>`, that number is ignored for localization purposes. E.g. if the name is `technology-3`, the game looks for the `technology-name.technology` localization. The technology tree will also show the number on the technology icon.
+
+The number is considered the level of the technology. There can't be technologies with noncontiguous levels, e.g. `technology-1` and `technology-3` without `technology-2` will cause a startup error. */
   name: string;
   /** List of technologies needed to be researched before this one can be researched. */
   prerequisites?: TechnologyID[];
@@ -8194,6 +8231,7 @@ Only loaded if `icons` is not defined. */
   vehicle_friction_modifier?: number;
   walking_sound?: Sound;
   walking_speed_modifier?: number;
+  /** Mass which this tile adds to total space platform mass when placed. */
   weight?: Weight;
 }
 
@@ -8404,7 +8442,7 @@ export function isTransportBeltPrototype(
 /** A [tree](https://wiki.factorio.com/Tree). */
 interface _TreePrototype {
   type: 'tree';
-  /** Mandatory if `variations` is defined. */
+  /** Mandatory if `variations` is defined. Can't be empty. */
   colors?: Color[];
   darkness_of_burnt_tree?: number;
   /** The amount of health automatically regenerated. */
@@ -8805,8 +8843,11 @@ interface _UtilityConstants {
   asteroid_collector_static_head_swing_segment_count: number;
   asteroid_collector_static_head_swing_strength_scale: number;
   asteroid_fading_range: number;
+  /** Asteroid damage will be multiplied by this value when space platform speed is zero and will linearly increase until asteroid_spawning_with_random_orientation_max_speed is reached. */
+  asteroid_min_damage_modifier: number;
   asteroid_position_offset_to_speed_coefficient: number;
   asteroid_spawning_offset: SimpleBoundingBox;
+  /** In km per tick. */
   asteroid_spawning_with_random_orientation_max_speed: number;
   /** Will be clamped to the range [2, 100]. */
   blueprint_big_slots_per_row: number;
@@ -9039,9 +9080,6 @@ interface _UtilityConstants {
   water_collision_mask: TileCollisionMaskConnector;
   weapons_in_simulation_volume_modifier: number;
   zero_count_value_tint: Color;
-  zoom_to_world_can_use_nightvision: boolean;
-  zoom_to_world_daytime_color_lookup: DaytimeColorLookupTable;
-  zoom_to_world_effect_strength: number;
 }
 
 export type UtilityConstants = _UtilityConstants &
@@ -9060,6 +9098,8 @@ interface _UtilitySounds {
   adjust_blueprint_snapping: Sound;
   /** Sound category `"alert"`. */
   alert_destroyed: Sound;
+  /** Sound category `"alert"`. */
+  alert_expansion_base_built: Sound;
   /** Sound category `"gui-effect"`. */
   armor_insert: Sound;
   /** Sound category `"gui-effect"`. */
@@ -9186,6 +9226,10 @@ interface _UtilitySounds {
   item_spawned: Sound;
   /** Sound category `"gui-effect"`. */
   list_box_click: Sound;
+  /** Sound category `"gui-effect"`. */
+  machine_gui_close: Sound;
+  /** Sound category `"gui-effect"`. */
+  machine_gui_open: Sound;
   /** Sound category `"walking"`. */
   metal_walking_sound: Sound;
   /** Sound category `"game-effect"`. */
@@ -9551,6 +9595,7 @@ interface _UtilitySprites {
   equipment_slot: Sprite;
   expand: Sprite;
   expand_dots: Sprite;
+  expansion_base_built_icon: Sprite;
   explosion_chart_visualization: Animation;
   export: Sprite;
   export_slot: Sprite;
@@ -9736,6 +9781,7 @@ interface _UtilitySprites {
   show_worker_robots_in_map_view: Sprite;
   shuffle: Sprite;
   side_menu_achievements_icon: Sprite;
+  side_menu_alerts_config_icon: Sprite;
   side_menu_blueprint_library_icon: Sprite;
   side_menu_bonus_icon: Sprite;
   side_menu_factoriopedia_icon: Sprite;
@@ -10095,6 +10141,7 @@ export interface AgriculturalCraneSpeedGrappler {
   /** May not be 0. */
   vertical_turn_rate?: number;
 }
+/** Triggered when using the "build ghost" hotkey to build something. */
 interface _AlternativeBuildTipTrigger {
   type: 'alternative-build';
 }
@@ -10278,6 +10325,7 @@ interface _AnimationVariations {
   /** Only loaded if `sheet` is not defined. */
   sheets?: AnimationSheet[];
 }
+/** Triggered when a [space platform starter pack](prototype:SpacePlatformStarterPackPrototype) is used to create a space platform. */
 interface _ApplyStarterPackTipTrigger {
   type: 'apply-starter-pack';
 }
@@ -10904,6 +10952,8 @@ interface _BurnerEnergySource {
   /** The energy source can be used with fuel from these [fuel categories](prototype:FuelCategory). */
   fuel_categories?: FuelCategoryID[];
   fuel_inventory_size: ItemStackIndex;
+  /** When set, items consumed and produced by this burner will not appear in item production statistics. */
+  hide_from_stats?: boolean;
   initial_fuel?: ItemID;
   initial_fuel_percent?: number;
   light_flicker?: LightFlickeringDefinition;
@@ -11479,18 +11529,6 @@ export interface CircuitConnectorDefinition {
   /** The pictures displayed for circuit connector. */
   sprites?: CircuitConnectorSprites;
 }
-export interface CircuitConnectorLayer {
-  east?: RenderLayer;
-  north?: RenderLayer;
-  south?: RenderLayer;
-  west?: RenderLayer;
-}
-export interface CircuitConnectorSecondaryDrawOrder {
-  east?: number;
-  north?: number;
-  south?: number;
-  west?: number;
-}
 export interface CircuitConnectorSprites {
   blue_led_light_offset?: Vector;
   /** Drawn when the entity is connected to a circuit network or a logistic network. */
@@ -11503,6 +11541,8 @@ export interface CircuitConnectorSprites {
   led_light: LightDefinition;
   led_red: Sprite;
   red_green_led_light_offset?: Vector;
+  render_layer?: RenderLayer;
+  secondary_draw_order?: number;
   /** Drawn when the entity is connected to a circuit network. */
   wire_pins?: Sprite;
   /** Drawn when the entity is connected to a circuit network. */
@@ -11893,12 +11933,6 @@ export function isCraftItemTipTrigger(
 
 interface _CraftingMachineGraphicsSet {
   animation_progress?: number;
-  /** Render layer(s) for all directions of the circuit connectors. */
-  circuit_connector_layer?: RenderLayer | CircuitConnectorLayer;
-  /** Secondary draw order(s) for all directions of the circuit connectors. */
-  circuit_connector_secondary_draw_order?:
-    | number
-    | CircuitConnectorSecondaryDrawOrder;
   frozen_patch?: Sprite4Way;
   reset_animation_when_frozen?: boolean;
   /** Only loaded if this graphics set is used in a property called `graphics_set`, refer to [EntityPrototype::water_reflection](prototype:EntityPrototype::water_reflection). */
@@ -12416,7 +12450,7 @@ export function isDestroyDecorativesTriggerEffectItem(
 export interface DifficultySettings {
   /** Must be >= 0.01 and <= 100. */
   spoil_time_modifier?: number;
-  /** Must be >= 0.001 and <= 1000. */
+  /** Must be >= 0.001 and <= 100000. */
   technology_price_multiplier?: number;
 }
 interface _DirectTriggerItem {
@@ -12511,15 +12545,15 @@ export interface EditorUtilityConstants {
 }
 /** When applied to [modules](prototype:ModulePrototype), the resulting effect is a sum of all module effects, multiplied through calculations: `(1 + sum module effects)`, or `(0 + sum)` for productivity. */
 export interface Effect {
-  /** Multiplier to energy used during operation (not idle/drain use). The minimum possible sum is -80%. */
+  /** Multiplier to energy used during operation (not idle/drain use). The minimum possible sum defaults to -80% and can be changed through [EffectReceiver::consumption_limits](prototype:EffectReceiver::consumption_limits) on the machine. */
   consumption?: EffectValue;
-  /** Multiplier to the pollution factor of an entity's pollution during use. The minimum possible sum is -80%. */
+  /** Multiplier to the pollution factor of an entity's pollution during use. The minimum possible sum defaults to -80% and can be changed through [EffectReceiver::pollution_limits](prototype:EffectReceiver::pollution_limits) on the machine. */
   pollution?: EffectValue;
-  /** Multiplied against work completed, adds to the bonus results of operating. E.g. an extra crafted recipe or immediate research bonus. The minimum possible sum is 0%. */
+  /** Multiplied against work completed, adds to the bonus results of operating. E.g. an extra crafted recipe or immediate research bonus. The minimum possible sum defaults to -80% and can be changed through [EffectReceiver::productivity_limits](prototype:EffectReceiver::productivity_limits) on the machine. */
   productivity?: EffectValue;
-  /** Adds a bonus chance to increase a product's quality. The minimum possible sum is 0%. */
+  /** Adds a bonus chance to increase a product's quality. The minimum possible sum defaults to 0% and can be changed through [EffectReceiver::quality_limits](prototype:EffectReceiver::quality_limits) on the machine. If negative values are allowed on the effect receiver, the product's quality can be [decreased](prototype:QualityPrototype::previous_probability). */
   quality?: EffectValue;
-  /** Modifier to crafting speed, research speed, etc. The minimum possible sum is -80%. */
+  /** Modifier to crafting speed, research speed, etc. The minimum possible sum defaults to -80% and can be changed through [EffectReceiver::speed_limits](prototype:EffectReceiver::speed_limits) on the machine. */
   speed?: EffectValue;
 }
 export interface EffectReceiver {
@@ -12545,6 +12579,8 @@ Low limit cannot be less than `-1000`. High limit cannot be greater than `1000`.
 Low limit cannot be less than `-0.9999`. High limit cannot be greater than `1000`. */
   speed_limits?: EffectValueRange;
   uses_beacon_effects?: boolean;
+  /** Controls whether [LuaEntity::local_effect](runtime:LuaEntity::local_effect) affects this receiver. */
+  uses_local_effects?: boolean;
   uses_module_effects?: boolean;
   /** Controls whether [LuaSurface::global_effect](runtime:LuaSurface::global_effect) affects this receiver. */
   uses_surface_effects?: boolean;
@@ -12698,6 +12734,8 @@ export interface EnemyEvolutionSettings {
   time_factor: number;
 }
 export interface EnemyExpansionSettings {
+  /** Cooldown in ticks for dispatching units when building bases. */
+  build_base_unit_dispatch_cooldown: number;
   building_coefficient: number;
   enabled: boolean;
   enemy_building_influence_radius: number;
@@ -12781,7 +12819,9 @@ export interface EntityRendererSearchBoxLimits {
   /** Min value 3, max value 15. */
   top: number;
 }
+/** Triggered when a player fast-transfers something to or from an entity, similar to the [on_player_fast_transferred](runtime:on_player_fast_transferred) event. */
 interface _EntityTransferTipTrigger {
+  /** Whether the transfer should be into or out of the player. */
   transfer?: 'in' | 'out';
   type: 'entity-transfer';
 }
@@ -12961,6 +13001,8 @@ In those cases, this property determines whether the fluid should be destroyed, 
   fluid_box: FluidBox;
   /** The number of fluid units the energy source uses per tick. If used with `scale_fluid_usage`, this specifies the maximum. If this value is not set, `scale_energy_usage` is `false` and a fluid box filter is set, the game will attempt to calculate this value from the fluid box filter's fluid's `fuel_value` or `heat_capacity` and the entity's `energy_usage`. If `burns_fluid` is `false`, `maximum_temperature` will also be used. If the attempt of the game to calculate this value fails (`scale_energy_usage` is `false` and a fluid box filter is set), then `scale_energy_usage` will be forced to `true`, to prevent the energy source from being an infinite fluid sink. More context [on the forums](https://forums.factorio.com/90613). */
   fluid_usage_per_tick?: FluidAmount;
+  /** When set, fluids consumed and produced by this energy source will not appear in fluid production statistics. */
+  hide_from_stats?: boolean;
   light_flicker?: LightFlickeringDefinition;
   /** `0` means unlimited maximum temperature. If this is non-zero while `scale_fluid_usage` is `false` and `fluid_usage_per_tick` is not specified, the game will use this value to calculate `fluid_usage_per_tick`. To do that, the filter on the `fluid_box` must be set.
 
@@ -14142,6 +14184,7 @@ Unused when [WorkingSound::persistent](prototype:WorkingSound::persistent) is `t
   /** Only used if [WorkingSound::persistent](prototype:WorkingSound::persistent) is `true`. */
   volume_smoothing_window_size?: number;
 }
+/** Triggered when the player manually moves item with the cursor, *without* using shortcuts such as entity transfer or stack split. */
 interface _ManualTransferTipTrigger {
   type: 'manual-transfer';
 }
@@ -14201,6 +14244,8 @@ export interface MapGenPresetEnemyEvolutionSettings {
   time_factor?: number;
 }
 export interface MapGenPresetEnemyExpansionSettings {
+  /** Cooldown in ticks for dispatching units when building bases. */
+  build_base_unit_dispatch_cooldown?: number;
   enabled?: boolean;
   /** Factor by which the evolution factor influences the size of the settler group */
   evolution_group_size_factor?: number;
@@ -14428,12 +14473,6 @@ export function isMinimapStyleSpecification(
 /** Used by [MiningDrillPrototype](prototype:MiningDrillPrototype). */
 interface _MiningDrillGraphicsSet {
   animation_progress?: number;
-  /** Render layer(s) for all directions of the circuit connectors. */
-  circuit_connector_layer?: RenderLayer | CircuitConnectorLayer;
-  /** Secondary draw order(s) for all directions of the circuit connectors. */
-  circuit_connector_secondary_draw_order?:
-    | number
-    | CircuitConnectorSecondaryDrawOrder;
   drilling_vertical_movement_duration?: number;
   frozen_patch?: Sprite4Way;
   reset_animation_when_frozen?: boolean;
@@ -15188,7 +15227,6 @@ export interface PollutionSettings {
   enemy_attack_pollution_consumption_modifier: number;
   /** Anything bigger than this is visualized as this value. */
   expected_max_per_chunk: number;
-  max_pollution_to_restore_trees: number;
   min_pollution_to_damage_trees: number;
   /** This much pollution units must be on the chunk to start diffusing. */
   min_to_diffuse: number;
@@ -15641,7 +15679,6 @@ export interface RailSignalLights {
 }
 export interface RailSignalPictureSet {
   circuit_connector?: CircuitConnectorDefinition[];
-  circuit_connector_render_layer?: RenderLayer;
   lights: RailSignalLights;
   rail_piece?: RailSignalStaticSpriteLayer;
   selection_box_shift?: Vector[];
@@ -15893,6 +15930,8 @@ export interface RotatedSpriteFrame {
   y?: SpriteSizeType;
 }
 interface _ScriptTriggerEffectItem {
+  /** Event to be raised. When set, that event will be raised instead of [on_script_trigger_effect](runtime:on_script_trigger_effect). */
+  custom_event?: CustomEventID;
   /** The effect ID that will be provided in [on_script_trigger_effect](runtime:on_script_trigger_effect). */
   effect_id: string;
   type: 'script';
@@ -16038,6 +16077,7 @@ export function isSendSpidertronTipTrigger(
   return (value as { type: string }).type === 'send-spidertron';
 }
 
+/** Triggered when the triggers listed in `triggers` are triggered in order. */
 export interface SequenceTipTrigger {
   /** List of triggers to fulfill. */
   triggers: TipTrigger[];
@@ -17397,6 +17437,8 @@ export function isThrowCapsuleAction(
 }
 
 interface _ThrusterGraphicsSet {
+  /** If true the starting frame will be randomized upon placement. */
+  animation_random_start_frame?: boolean;
   flame?: Sprite;
   flame_effect?: EffectTexture;
   flame_effect_height?: number;
@@ -17806,6 +17848,7 @@ export function isToggleRailLayerTipTrigger(
   return (value as { type: string }).type === 'toggle-rail-layer';
 }
 
+/** Triggered when the player turns "alt-mode" on or off. */
 interface _ToggleShowEntityInfoTipTrigger {
   type: 'toggle-show-entity-info';
 }
@@ -18359,6 +18402,7 @@ export function isUnlockSpaceLocationModifier(
   return (value as { type: string }).type === 'unlock-space-location';
 }
 
+/** Triggered when using E to confirm a GUI that allows to pick from a certain kind of prototype. */
 interface _UseConfirmTipTrigger {
   type: 'use-confirm';
 }
@@ -18705,25 +18749,40 @@ export interface WaterReflectionDefinition {
   rotate?: boolean;
 }
 export interface WaterTileEffectParameters {
+  /** Affects animation scale for `"water"` `shader_variation`. Affects warp effect intensity for `"lava"` `shader_variation`. Affects depth contrast for `"wetland-water"` `shader_variation`. Affects thin film effect intensity for `"oil"` `shader_variation`. */
   animation_scale: number | [number, number];
+  /** Affects distortion speed for `"water"` `shader_variation`. Affects panning/warping speed for all other `shader_variation`s. */
   animation_speed: number;
+  /** Affects dark threshold for `"water"` `shader_variation`. Affects brightness of the shoreline lava for `"lava"` `shader_variation`. Affects water depth for `"wetland-water"` `shader_variation`. Affects thin film effect noise scale for `"oil"` `shader_variation`. */
   dark_threshold: number | [number, number];
+  /** If they are set to a tuple, the properties `animation_scale`, `dark_threshold`, `reflection_threshold` and `specular_threshold` are linearly interpolated between each of their two values based on the current zoom level expressed as a ratio between `near_zoom` and `far_zoom`. E.g. if current zoom level is equal to `far_zoom`, the second tuple value is picked. */
   far_zoom?: number;
+  /** Affects foam color for `"water"` `shader_variation`. Affects panning/warping vector for all other `shader_variation`s.
+
+Any alpha value set here is ignored and will always be `1` in the shader. */
   foam_color: Color;
+  /** Multiplies the rgb values of `foam_color` before they are passed to the shader. */
   foam_color_multiplier: number;
   /** Value 0 makes water appear as water in water mask, but does not occlude lights, and doesn't overwrite lightmap alpha drawn to pixel previously (by background layer of tile transition, or underwater sprite). Light emitted by water-like-tile (for example lava) will blend additively with previously rendered light. Value 1 makes water occlude lights, but won't be recognized as water in water mask used for masking decals by water. */
   lightmap_alpha?: number;
+  /** If they are set to a tuple, the properties `animation_scale`, `dark_threshold`, `reflection_threshold` and `specular_threshold` are linearly interpolated between each of their two values based on the current zoom level expressed as a ratio between `near_zoom` and `far_zoom`. E.g. if current zoom level is equal to `near_zoom`, the first tuple value is picked. */
   near_zoom?: number;
+  /** Affects reflection threshold for `"water"` `shader_variation`. Affects distortion scale for `"lava"` `shader_variation`. Affects distortion tiling for `"wetland-water"` `shader_variation`. Affects distortion map scale for `"oil"` `shader_variation`. */
   reflection_threshold: number | [number, number];
   secondary_texture_variations_columns?: number;
   secondary_texture_variations_rows?: number;
   shader_variation?: EffectVariation;
+  /** Affects specular lightness for `"water"` `shader_variation`. Affects panning/warping vector for all other `shader_variation`s.
+
+Any alpha value set here is ignored and will always be `1` in the shader. */
   specular_lightness: Color;
+  /** Affects specular threshold for `"water"` and `"wetland-water"` `shader_variation`s. Affects shoreline lava for `"lava"` `shader_variation`. Affects nothing for `"oil"` `shader_variation`. */
   specular_threshold: number | [number, number];
   texture_variations_columns?: number;
   texture_variations_rows?: number;
   /** Texture size must be 512x512. Shader variant `"water"` must have 1 texture, `"lava"` and `"wetland-water"` must have 2 textures and `"oil"` must have 4 textures. */
   textures: EffectTexture[];
+  /** Affects distortion speed for `"water"` `shader_variation`. Affects panning/warping speed for all other `shader_variation`s. */
   tick_scale: number;
 }
 /** Definition of a point where circuit network wires can be connected to an entity. */
@@ -18871,6 +18930,7 @@ If defined, animation in this visualisation layer will be used only as mask for 
   frame_based_on_shift_animation_progress?: boolean;
   light?: LightDefinition;
   mining_drill_scorch_mark?: boolean;
+  /** Used by [MainSound::play_for_working_visualisations](prototype:MainSound::play_for_working_visualisations), [SoundAccent::play_for_working_visualisation](prototype:SoundAccent::play_for_working_visualisation), [FluidBox::enable_working_visualisations](prototype:FluidBox::enable_working_visualisations), and [PipeConnectionDefinition::enable_working_visualisations](prototype:PipeConnectionDefinition::enable_working_visualisations). */
   name?: string;
   north_animation?: Animation;
   /** If defined, animation in this visualisation layer will be used only as mask for fog effect and will not render in world. */
@@ -19371,6 +19431,9 @@ export type CursorBoxType =
   | 'spidertron-remote-selected'
   | 'spidertron-remote-to-be-selected';
 
+/** The name of an [CustomEventPrototype](prototype:CustomEventPrototype). */
+export type CustomEventID = string;
+
 export type DamageTypeFilters =
   | _DamageTypeFilters
   | DamageTypeID
@@ -19672,6 +19735,7 @@ export type ItemPrototypeFlags = (
   | 'ignore-spoil-time-modifier'
   | 'hide-health-bar-in-world'
   | 'hide-spoilage-bar-in-world'
+  | 'no-item-on-ground-merging'
 )[];
 
 export type ItemStackIndex = number;
@@ -20301,6 +20365,7 @@ export type RenderLayer =
   | 'elevated-rail-tie'
   | 'elevated-rail-screw'
   | 'elevated-rail-metal'
+  | 'elevated-rail-above-metal'
   | 'elevated-lower-object'
   | 'elevated-object'
   | 'elevated-higher-object'
@@ -20320,7 +20385,7 @@ export type RenderLayer =
   | 'arrow'
   | 'cursor';
 
-/** Defines the amount of an item required to research one unit of a [technology](prototype:TechnologyPrototype). The first member of the tuple is the name of a [ToolPrototype](prototype:ToolPrototype) and the second is the amount. Amount must not be 0. */
+/** Defines the amount of an item required to research one unit of a [technology](prototype:TechnologyPrototype). The first member of the tuple is the name of a [ItemPrototype](prototype:ItemPrototype) and the second is the amount. Amount must not be 0. */
 export type ResearchIngredient = [ItemID, number];
 
 /** The name of a [ResourceCategory](prototype:ResourceCategory). */

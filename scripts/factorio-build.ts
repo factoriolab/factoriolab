@@ -82,8 +82,10 @@ import {
   AnyItemPrototype,
   AnyLocationPrototype,
   DataRawDump,
+  FLUID_TYPE,
   isAnyItemPrototype,
   isFluidProduct,
+  ITEM_TYPE,
   Locale,
   MachineProto,
   ModDataReport,
@@ -617,7 +619,7 @@ async function processMod(): Promise<void> {
       modules: getMachineModules(proto),
       disallowedEffects: getMachineDisallowedEffects(proto),
       type: getMachineType(proto),
-      fuelCategories: getMachineCategory(proto),
+      fuelTypes: getMachineCategory(proto),
       usage: getMachineUsage(proto),
       drain: getMachineDrain(proto),
       pollution: getMachinePollution(proto),
@@ -743,9 +745,7 @@ async function processMod(): Promise<void> {
         beacons: modData.items.filter((i) => i.beacon).map((i) => i.id),
         belts: modData.items.filter((i) => i.belt).map((i) => i.id),
         fuels: modData.items.filter((i) => i.fuel).map((i) => i.id),
-        wagons: modData.items
-          .filter((i) => i.cargoWagon ?? i.fluidWagon)
-          .map((i) => i.id),
+        wagons: modData.items.filter((i) => i.wagon).map((i) => i.id),
         machines: modData.items.filter((i) => i.machine).map((i) => i.id),
         modules: modData.items.filter((i) => i.module).map((i) => i.id),
         technologies: modData.items
@@ -1103,7 +1103,7 @@ async function processMod(): Promise<void> {
       let fuel: FuelJson | undefined;
       if (proto.fuel_value) {
         fuel = {
-          category: ANY_FLUID_BURN,
+          types: [ANY_FLUID_BURN],
           value: getEnergyInMJ(proto.fuel_value),
           pollutionMultiplier: proto.emissions_multiplier,
         };
@@ -1128,6 +1128,7 @@ async function processMod(): Promise<void> {
         const itemTemp: ItemJson = {
           id,
           name: fluidLocale.names[proto.name],
+          types: [FLUID_TYPE],
           category: group.name,
           row: getItemRow(proto),
           icon,
@@ -1146,7 +1147,7 @@ async function processMod(): Promise<void> {
             const energyGenerated =
               tempDiff * getEnergyInMJ(proto.heat_capacity ?? '1KJ');
             const heatFuel: FuelJson = {
-              category: ANY_FLUID_HEAT,
+              types: [ANY_FLUID_HEAT],
               value: round(energyGenerated, 10),
             };
             if (itemTemp.fuel == null) itemTemp.fuel = heatFuel;
@@ -1155,6 +1156,7 @@ async function processMod(): Promise<void> {
               modData.items.push({
                 id: `${id}-heat-fuel`,
                 name: itemTemp.name,
+                types: [FLUID_TYPE],
                 category: itemTemp.category,
                 icon: icon ?? proto.name,
                 row: getItemRow(proto),
@@ -1213,7 +1215,7 @@ async function processMod(): Promise<void> {
         stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
-        pipe: getPipe(proto, abnormalQualities),
+        belt: getPipe(proto, abnormalQualities),
       });
     } else if (isCargoWagonPrototype(proto)) {
       modData.items.push({
@@ -1223,7 +1225,7 @@ async function processMod(): Promise<void> {
         stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
-        cargoWagon: getCargoWagon(proto),
+        wagon: getCargoWagon(proto),
       });
     } else if (isFluidWagonPrototype(proto)) {
       modData.items.push({
@@ -1233,7 +1235,7 @@ async function processMod(): Promise<void> {
         stack: 1,
         row: getItemRow(proto),
         icon: await getIcon(proto),
-        fluidWagon: getFluidWagon(proto),
+        wagon: getFluidWagon(proto),
       });
     } else if (isInserterPrototype(proto)) {
       modData.items.push({
@@ -1258,6 +1260,7 @@ async function processMod(): Promise<void> {
 
       const item: ItemJson = {
         id: proto.name,
+        types: [ITEM_TYPE],
         name: itemLocale.names[proto.name],
         category: group.name,
         stack: proto.stack_size,
@@ -1319,19 +1322,19 @@ async function processMod(): Promise<void> {
         // Parse pipe
         if (dataRaw.pump[result]) {
           const entity = dataRaw.pump[result];
-          item.pipe = getPipe(entity, abnormalQualities);
+          item.belt = getPipe(entity, abnormalQualities);
         }
 
         // Parse cargo wagon
         if (dataRaw['cargo-wagon'][result]) {
           const entity = dataRaw['cargo-wagon'][result];
-          item.cargoWagon = getCargoWagon(entity);
+          item.wagon = getCargoWagon(entity);
         }
 
         // Parse fluid wagon
         if (dataRaw['fluid-wagon'][result]) {
           const entity = dataRaw['fluid-wagon'][result];
-          item.fluidWagon = getFluidWagon(entity);
+          item.wagon = getFluidWagon(entity);
         }
 
         // Parse inserter
@@ -1390,9 +1393,9 @@ async function processMod(): Promise<void> {
       }
 
       // Parse fuel
-      if (proto.fuel_category != null && proto.fuel_value != null) {
+      if (proto.fuel_categories != null && proto.fuel_value != null) {
         item.fuel = {
-          category: proto.fuel_category,
+          types: proto.fuel_categories,
           value: getEnergyInMJ(proto.fuel_value),
           result: proto.burnt_result,
           pollutionMultiplier: proto.fuel_emissions_multiplier,
@@ -1676,7 +1679,9 @@ async function processMod(): Promise<void> {
         const boiler = dataRaw.boiler[entityName];
         if (
           boiler.output_fluid_box.filter === proto.name &&
-          boiler.target_temperature
+          boiler.target_temperature &&
+          /** TODO: Support for heat-fluid-inside boilers */
+          boiler.mode === 'output-to-separate-pipe'
         ) {
           if (boiler.fluid_box.filter == null) continue;
           const inputProto = dataRaw.fluid[boiler.fluid_box.filter];
@@ -1692,8 +1697,10 @@ async function processMod(): Promise<void> {
 
           const tempDiff =
             boiler.target_temperature - inputProto.default_temperature;
-          const energyReqd =
-            tempDiff * getEnergyInMJ(inputProto.heat_capacity ?? '1KJ') * 1000;
+          const inputMJ = getEnergyInMJ(inputProto.heat_capacity ?? '1KJ');
+          const outputMJ = getEnergyInMJ(proto.heat_capacity ?? '1KJ');
+          const energyReqd = tempDiff * inputMJ * 1000;
+          const outputFluid = inputMJ / outputMJ;
 
           const recipe: RecipeJson = {
             id,
@@ -1704,7 +1711,7 @@ async function processMod(): Promise<void> {
             row: getRecipeRow(proto),
             time: round(energyReqd, 10),
             in: { [inputProto.name]: 1 },
-            out: { [outputId]: 10 },
+            out: { [outputId]: outputFluid },
             producers: [boilerName],
           };
           modData.recipes.push(recipe);
@@ -1801,10 +1808,17 @@ async function processMod(): Promise<void> {
       if (
         isAnyItemPrototype(proto) &&
         proto.burnt_result &&
-        proto.fuel_category
+        proto.fuel_categories
       ) {
         // Found burn recipe
         const id = getFakeRecipeId(proto.burnt_result, `${proto.name}-burn`);
+
+        const producerSet = new Set<string>();
+        for (const fuelCategory of proto.fuel_categories) {
+          for (const producer of producersMap.burner[fuelCategory])
+            producerSet.add(producer);
+        }
+
         const recipe: RecipeJson = {
           id,
           name: `${itemLocale.names[proto.name]} : ${
@@ -1815,7 +1829,7 @@ async function processMod(): Promise<void> {
           time: 1,
           in: { [proto.name]: 0 },
           out: { [proto.burnt_result]: 0 },
-          producers: producersMap.burner[proto.fuel_category],
+          producers: Array.from(producerSet),
           flags: ['burn'],
         };
         modData.recipes.push(recipe);
@@ -2357,13 +2371,6 @@ async function processMod(): Promise<void> {
         iconText: item.iconText,
       };
       modData.recipes.push(recipe);
-    }
-
-    if (inputs.length) {
-      const firstInput = itemMap[inputs[0]];
-      if (!isFluidPrototype(firstInput)) {
-        item.stack = firstInput.stack_size;
-      }
     }
 
     modData.items.push(item);

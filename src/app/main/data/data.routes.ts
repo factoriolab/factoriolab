@@ -74,38 +74,6 @@ export const routes: DataRoute[] = [
     },
   },
   {
-    path: 'cargo-wagons/:id',
-    loadComponent: () =>
-      import('./item-detail/item-detail').then((c) => c.ItemDetail),
-    data: { collectionLabel: 'data.cargoWagons' },
-  },
-  {
-    path: 'cargo-wagons',
-    loadComponent: () =>
-      import('./collection/collection').then((c) => c.Collection),
-    data: {
-      label: 'data.cargoWagons',
-      iconType: 'item',
-      key: 'cargoWagonIds',
-    },
-  },
-  {
-    path: 'fluid-wagons/:id',
-    loadComponent: () =>
-      import('./item-detail/item-detail').then((c) => c.ItemDetail),
-    data: { collectionLabel: 'data.fluidWagons' },
-  },
-  {
-    path: 'fluid-wagons',
-    loadComponent: () =>
-      import('./collection/collection').then((c) => c.Collection),
-    data: {
-      label: 'data.fluidWagons',
-      iconType: 'item',
-      key: 'fluidWagonIds',
-    },
-  },
-  {
     path: 'fuels/:id',
     loadComponent: () =>
       import('./item-detail/item-detail').then((c) => c.ItemDetail),
@@ -151,22 +119,6 @@ export const routes: DataRoute[] = [
       label: 'data.modules',
       iconType: 'item',
       key: 'moduleIds',
-    },
-  },
-  {
-    path: 'pumps/:id',
-    loadComponent: () =>
-      import('./item-detail/item-detail').then((c) => c.ItemDetail),
-    data: { collectionLabel: 'data.pumps' },
-  },
-  {
-    path: 'pumps',
-    loadComponent: () =>
-      import('./collection/collection').then((c) => c.Collection),
-    data: {
-      label: 'data.pumps',
-      iconType: 'item',
-      key: 'pipeIds',
     },
   },
   {
@@ -231,6 +183,22 @@ export const routes: DataRoute[] = [
       label: 'data.locations',
       iconType: 'location',
       key: 'locationIds',
+    },
+  },
+  {
+    path: 'wagons/:id',
+    loadComponent: () =>
+      import('./item-detail/item-detail').then((c) => c.ItemDetail),
+    data: { collectionLabel: 'data.wagons' },
+  },
+  {
+    path: 'wagons',
+    loadComponent: () =>
+      import('./collection/collection').then((c) => c.Collection),
+    data: {
+      label: 'data.wagons',
+      iconType: 'item',
+      key: 'wagonIds',
     },
   },
   {

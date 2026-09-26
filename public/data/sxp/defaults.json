@@ -1,10 +1,6 @@
 {
   "beacon": "beacon",
-  "minBelt": "transport-belt",
-  "maxBelt": "se-deep-space-transport-belt-black",
   "fuelRank": ["coal"],
-  "cargoWagon": "cargo-wagon",
-  "fluidWagon": "fluid-wagon",
   "excludedRecipes": [
     "se-recycle-big-electric-pole",
     "se-recycle-medium-electric-pole",
@@ -63,5 +59,8 @@
     "area-mining-drill"
   ],
   "moduleRank": ["productivity-module-3", "speed-module-3"],
-  "beaconModule": "speed-module-3"
+  "beaconModule": "speed-module-3",
+  "minBeltRank": ["transport-belt"],
+  "maxBeltRank": ["se-deep-space-transport-belt-black"],
+  "wagonRank": ["cargo-wagon", "fluid-wagon"]
 }
