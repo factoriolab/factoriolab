@@ -49,6 +49,29 @@ describe('Options', () => {
     });
   });
 
+  describe('logisticsOptions', () => {
+    it('should filter out quality items unaffected by quality', () => {
+      const data = mocks.getDataset();
+      data.beltIds.push(ItemId.Car);
+      data.itemRecord[ItemId.Car].quality = {
+        name: 'Uncommon',
+        level: 2,
+        id: 'uncommon',
+      };
+      data.itemRecord[ItemId.Car].belt = {
+        itemTypes: new Set(['item']),
+        speed: rational.one,
+      };
+      const options = service.logisticsOptions(
+        data.itemRecord[ItemId.IronOre],
+        settingsStore.settings(),
+        data,
+        'belt',
+      );
+      expect(options.find((o) => o.value === ItemId.Car)).toBeUndefined();
+    });
+  });
+
   describe('machineOptions', () => {
     it('should filter the list of producers', () => {
       const result = service.machineOptions(
