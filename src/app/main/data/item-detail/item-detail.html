@@ -20,6 +20,12 @@
           </td>
         </tr>
       }
+      @if (obj.types?.size) {
+        <tr>
+          <th>{{ 'data.types' | translate }}</th>
+          <td>{{ obj.types | setJoin }}</td>
+        </tr>
+      }
       @if (obj.stack) {
         <tr>
           <th>{{ 'data.stackSize' | translate }}</th>
@@ -67,7 +73,7 @@
         @if (beacon.disallowedEffects) {
           <tr>
             <th>{{ 'data.disallowedEffects' | translate }}</th>
-            <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+            <td>{{ beacon.disallowedEffects | setJoin }}</td>
           </tr>
         }
         @if (beacon.size) {
@@ -84,30 +90,36 @@
           </th>
         </tr>
         <tr>
+          <th>{{ 'data.itemTypes' | translate }}</th>
+          <td>{{ belt.itemTypes | setJoin }}</td>
+        </tr>
+        <tr>
           <th>{{ 'data.beltSpeed' | translate }}</th>
           <td>{{ belt.speed }}</td>
         </tr>
       }
-      @if (obj.cargoWagon; as cargoWagon) {
+      @if (obj.wagon; as wagon) {
         <tr>
           <th colspan="2" class="text-lg/9 font-semibold">
-            {{ 'data.cargoWagon' | translate }}
+            {{ 'data.wagon' | translate }}
           </th>
         </tr>
         <tr>
-          <th>{{ 'data.storageSize' | translate }}</th>
-          <td>{{ cargoWagon.size }}</td>
-        </tr>
-      }
-      @if (obj.fluidWagon; as fluidWagon) {
-        <tr>
-          <th colspan="2" class="text-lg/9 font-semibold">
-            {{ 'data.fluidWagon' | translate }}
-          </th>
+          <th>{{ 'data.itemTypes' | translate }}</th>
+          <td>{{ wagon.itemTypes | setJoin }}</td>
         </tr>
         <tr>
-          <th>{{ 'data.fluidCapacity' | translate }}</th>
-          <td>{{ fluidWagon.capacity }}</td>
+          <th>{{ 'data.capacity' | translate }}</th>
+          <td>
+            @if (wagon.capacityType === 'stacks') {
+              {{
+                'data.numberStacks'
+                  | translate: { value: wagon.capacity | round }
+              }}
+            } @else {
+              {{ wagon.capacity | round }}
+            }
+          </td>
         </tr>
       }
       @if (obj.fuel; as fuel) {
@@ -117,8 +129,8 @@
           </th>
         </tr>
         <tr>
-          <th>{{ 'data.fuelCategory' | translate }}</th>
-          <td>{{ fuel.category }}</td>
+          <th>{{ 'data.types' | translate }}</th>
+          <td>{{ fuel.types | setJoin }}</td>
         </tr>
         <tr>
           <th>{{ 'data.fuelValue' | translate }}</th>
@@ -171,7 +183,7 @@
         @if (machine.disallowedEffects) {
           <tr>
             <th>{{ 'data.disallowedEffects' | translate }}</th>
-            <td>{{ machine.disallowedEffects.join(', ') }}</td>
+            <td>{{ machine.disallowedEffects | setJoin }}</td>
           </tr>
         }
         @if (machine.type) {
@@ -180,10 +192,10 @@
             <td>{{ 'options.energyType.' + machine.type | translate }}</td>
           </tr>
         }
-        @if (machine.fuelCategories) {
+        @if (machine.fuelTypes?.size) {
           <tr>
-            <th>{{ 'data.fuelCategories' | translate }}</th>
-            <td>{{ machine.fuelCategories.join(', ') }}</td>
+            <th>{{ 'data.fuelTypes' | translate }}</th>
+            <td>{{ machine.fuelTypes | setJoin }}</td>
           </tr>
         }
         @if (machine.fuel) {
@@ -386,17 +398,6 @@
           </tr>
         }
       }
-      @if (obj.pipe; as pipe) {
-        <tr>
-          <th colspan="2" class="text-lg/9 font-semibold">
-            {{ 'data.pipe' | translate }}
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.flowRate' | translate }}</th>
-          <td>{{ pipe.speed }}</td>
-        </tr>
-      }
       @if (obj.technology; as technology) {
         <tr>
           <th colspan="2" class="text-lg/9 font-semibold">
@@ -579,7 +580,7 @@
             @if (itemSettings.beltId; as beltId) {
               <div class="flex justify-end">
                 <a
-                  [routerLink]="['../../items', beltId]"
+                  [routerLink]="['../../belts', beltId]"
                   queryParamsHandling="preserve"
                   labButton
                   [border]="false"
@@ -595,47 +596,25 @@
           </td>
         </tr>
         <tr>
-          @if (obj.stack) {
-            <th>{{ 'data.cargoWagon' | translate }}</th>
-            <td>
-              @if (itemSettings.wagonId; as wagonId) {
-                <div class="flex justify-end">
-                  <a
-                    [routerLink]="['../../cargo-wagons/', wagonId]"
-                    queryParamsHandling="preserve"
-                    labButton
-                    [border]="false"
-                    [text]="data().itemRecord[wagonId].name"
-                    [icon]="wagonId"
-                    iconType="item"
-                  >
-                  </a>
-                </div>
-              } @else {
-                {{ 'none' | translate }}
-              }
-            </td>
-          } @else {
-            <th>{{ 'data.fluidWagon' | translate }}</th>
-            <td>
-              @if (itemSettings.wagonId; as wagonId) {
-                <div class="flex justify-end">
-                  <a
-                    [routerLink]="['../../fluid-wagons/', wagonId]"
-                    queryParamsHandling="preserve"
-                    labButton
-                    [border]="false"
-                    [text]="data().itemRecord[wagonId].name"
-                    [icon]="wagonId"
-                    iconType="item"
-                  >
-                  </a>
-                </div>
-              } @else {
-                {{ 'none' | translate }}
-              }
-            </td>
-          }
+          <th>{{ 'data.wagon' | translate }}</th>
+          <td>
+            @if (itemSettings.wagonId; as wagonId) {
+              <div class="flex justify-end">
+                <a
+                  [routerLink]="['../../wagons/', wagonId]"
+                  queryParamsHandling="preserve"
+                  labButton
+                  [border]="false"
+                  [text]="data().itemRecord[wagonId].name"
+                  [icon]="wagonId"
+                  iconType="item"
+                >
+                </a>
+              </div>
+            } @else {
+              {{ 'none' | translate }}
+            }
+          </td>
         </tr>
       }
       @if (obj.machine && machineSettings(); as machineSettings) {

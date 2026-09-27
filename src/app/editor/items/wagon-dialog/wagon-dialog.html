@@ -1,0 +1,73 @@
+<table class="lab-table">
+  <tbody>
+    <tr>
+      <th id="item-types-header">
+        {{ 'data.itemTypes' | translate }}
+      </th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="item-types-header"
+          class="input"
+          [placeholder]="'data.itemTypes' | translate"
+          [ngModel]="data.itemTypes | setJoin"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.itemTypes = toArray($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="capacity-header">{{ 'data.capacity' | translate }}</th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="capacity-header"
+          class="input"
+          required
+          [placeholder]="'data.capacity' | translate"
+          [ngModel]="data.capacity"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.capacity = toNumeric($event)"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="capacity-type-header">{{ 'editor.capacityType' | translate }}</th>
+      <td>
+        <div class="flex items-center">
+          <lab-select
+            labelledBy="capacity-type-header"
+            [options]="capacityTypeOptions"
+            [(ngModel)]="data.capacityType"
+          />
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="gap-1 sm:gap-2 flex justify-end">
+  <button
+    type="button"
+    labButton
+    color="complement"
+    [faIcon]="faTrash"
+    [text]="'delete' | translate"
+    (click)="dialogRef.close(null)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    color="brand"
+    [faIcon]="faFloppyDisk"
+    [text]="'save' | translate"
+    (click)="dialogRef.close(data)"
+  ></button>
+  <button
+    type="button"
+    labButton
+    [faIcon]="faXmark"
+    [text]="'cancel' | translate"
+    (click)="dialogRef.close()"
+  ></button>
+</div>

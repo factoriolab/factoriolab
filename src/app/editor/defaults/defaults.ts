@@ -85,6 +85,12 @@ export class Defaults extends EditorTab {
   protected readonly radioIconMap = RADIO_ICON_MAP;
   protected readonly toNumeric = toNumeric;
 
+  protected readonly beltOptions = computed(() =>
+    toOptions(
+      this.edit().data.items.filter((i) => i.belt),
+      this.edit().icons,
+    ),
+  );
   protected readonly fuelOptions = computed(() =>
     toOptions(
       this.edit().data.items.filter((i) => i.fuel),
@@ -118,38 +124,15 @@ export class Defaults extends EditorTab {
       this.edit().data.qualities,
     ),
   );
-  protected readonly nullableBeltOptions = computed(() =>
+  protected readonly wagonOptions = computed(() =>
     toOptions(
-      this.edit().data.items.filter((i) => i.belt),
+      this.edit().data.items.filter((i) => i.wagon),
       this.edit().icons,
-      true,
-    ),
-  );
-  protected readonly nullableCargoWagonOptions = computed(() =>
-    toOptions(
-      this.edit().data.items.filter((i) => i.cargoWagon),
-      this.edit().icons,
-      true,
-    ),
-  );
-  protected readonly nullableFluidWagonOptions = computed(() =>
-    toOptions(
-      this.edit().data.items.filter((i) => i.fluidWagon),
-      this.edit().icons,
-      true,
     ),
   );
   protected readonly nullableModuleOptions = computed(() =>
     toOptions(
       this.edit().data.items.filter((i) => i.module),
-      this.edit().icons,
-      true,
-      this.edit().data.qualities,
-    ),
-  );
-  protected readonly nullablePipeOptions = computed(() =>
-    toOptions(
-      this.edit().data.items.filter((i) => i.pipe),
       this.edit().icons,
       true,
       this.edit().data.qualities,
@@ -220,18 +203,16 @@ export class Defaults extends EditorTab {
     const data: PresetDialogData = {
       preset,
       edit: this.edit(),
+      beltOptions: this.beltOptions(),
       fuelOptions: this.fuelOptions(),
       locationOptions: this.locationOptions(),
       machineOptions: this.machineOptions(),
       moduleOptions: this.moduleOptions(),
       nullableBeaconOptions: this.nullableBeaconOptions(),
-      nullableBeltOptions: this.nullableBeltOptions(),
-      nullableCargoWagonOptions: this.nullableCargoWagonOptions(),
-      nullableFluidWagonOptions: this.nullableFluidWagonOptions(),
       nullableModuleOptions: this.nullableModuleOptions(),
-      nullablePipeOptions: this.nullablePipeOptions(),
       recipeOptions: this.recipeOptions(),
       technologyOptions: this.technologyOptions(),
+      wagonOptions: this.wagonOptions(),
     };
     this.dialog
       .open<

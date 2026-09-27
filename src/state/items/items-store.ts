@@ -1,10 +1,10 @@
 import { computed, inject, Service } from '@angular/core';
 
-import { PIPE } from '~/data/schema/belt';
 import { Item } from '~/data/schema/item';
 import { Rational, rational } from '~/rational/rational';
 import { coalesce } from '~/utils/nullish';
 
+import { Options } from '../options';
 import { Dataset } from '../settings/dataset';
 import { Settings } from '../settings/settings';
 import { SettingsStore } from '../settings/settings-store';
@@ -14,6 +14,7 @@ import { ItemState } from './item-state';
 
 @Service()
 export class ItemsStore extends RecordStore<ItemState> {
+  private readonly options = inject(Options);
   private readonly settingsStore = inject(SettingsStore);
 
   readonly settings = computed(() =>
@@ -44,23 +45,39 @@ export class ItemsStore extends RecordStore<ItemState> {
     const value: Record<string, ItemSettings> = {};
     for (const item of data.itemIds.map((i) => data.itemRecord[i])) {
       const s = state[item.id];
-      const defaultBeltId = this.defaultBelt(
+      const beltOptions = this.options.logisticsOptions(
         item,
         settings,
-        data.pipeIds.length,
+        data,
+        'belt',
       );
-      const defaultStack = this.defaultStack(item, settings);
-      const defaultWagonId = this.defaultWagon(item, settings);
+      const defaultBeltId = this.options.bestMatch(
+        beltOptions,
+        settings.beltRankIds,
+      );
       const beltId = coalesce(s?.beltId, defaultBeltId);
-      const stack = coalesce(s?.stack, defaultStack);
+      const defaultStack = this.defaultStack(item, settings);
+      const wagonOptions = this.options.logisticsOptions(
+        item,
+        settings,
+        data,
+        'wagon',
+      );
+      const defaultWagonId = this.options.bestMatch(
+        wagonOptions,
+        settings.wagonRankIds,
+      );
       const wagonId = coalesce(s?.wagonId, defaultWagonId);
+      const stack = coalesce(s?.stack, defaultStack);
       const excludeRockets = s?.excludeRockets;
 
       value[item.id] = {
+        beltOptions,
         beltId,
         defaultBeltId,
         stack,
         defaultStack,
+        wagonOptions,
         wagonId,
         defaultWagonId,
         excludeRockets,
@@ -70,26 +87,8 @@ export class ItemsStore extends RecordStore<ItemState> {
     return value;
   }
 
-  private defaultBelt(
-    item: Item,
-    settings: Settings,
-    pipeCount: number,
-  ): string {
-    if (item.stack) return coalesce(settings.beltId, '');
-    else if (settings.pipeId != null) return settings.pipeId;
-    else if (pipeCount === 0) return PIPE;
-    return '';
-  }
-
   private defaultStack(item: Item, settings: Settings): Rational {
     if (item.stack == null || settings.stack == null) return rational.one;
     return item.stack.lt(settings.stack) ? item.stack : settings.stack;
-  }
-
-  private defaultWagon(item: Item, settings: Settings): string {
-    return coalesce(
-      item.stack ? settings.cargoWagonId : settings.fluidWagonId,
-      '',
-    );
   }
 }

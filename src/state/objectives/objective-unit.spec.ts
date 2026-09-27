@@ -7,19 +7,13 @@ describe('ObjectiveUnit', () => {
 
     it('should return the correct options with wagons', () => {
       expect(
-        objectiveUnitOptions(dispRateInfo, {
-          cargoWagonIds: [],
-          fluidWagonIds: ['id'],
-        } as any),
+        objectiveUnitOptions(dispRateInfo, { wagonIds: ['id'] } as any),
       ).toHaveSize(4);
     });
 
     it('should return the correct options for Captain of Industry', () => {
       expect(
-        objectiveUnitOptions(dispRateInfo, {
-          cargoWagonIds: [],
-          fluidWagonIds: [],
-        } as any),
+        objectiveUnitOptions(dispRateInfo, { wagonIds: [] } as any),
       ).toHaveSize(3);
     });
   });

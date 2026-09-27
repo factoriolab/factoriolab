@@ -44,7 +44,7 @@ export class RecipeDetail extends DetailBase<Recipe> {
 
   protected readonly category = computed(() => {
     const obj = this.obj();
-    if (obj == null) return;
+    if (obj?.category == null) return;
     return this.settingsStore.dataset().categoryRecord[obj.category];
   });
 

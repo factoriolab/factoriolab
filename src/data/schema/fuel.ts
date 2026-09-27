@@ -1,7 +1,7 @@
 import { Rational, rational } from '~/rational/rational';
 
 export interface FuelJson {
-  category: string;
+  types: string[];
   /** Fuel value in MJ */
   value: number | string;
   result?: string;
@@ -9,7 +9,7 @@ export interface FuelJson {
 }
 
 export interface Fuel {
-  category: string;
+  types: Set<string>;
   /** Fuel value in MJ */
   value: Rational;
   result?: string;
@@ -21,7 +21,7 @@ export function parseFuel(json: FuelJson | undefined): Fuel | undefined;
 export function parseFuel(json: FuelJson | undefined): Fuel | undefined {
   if (json == null) return;
   return {
-    category: json.category,
+    types: new Set(json.types),
     value: rational(json.value),
     result: json.result,
     pollutionMultiplier: rational(json.pollutionMultiplier),

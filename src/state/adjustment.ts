@@ -815,8 +815,12 @@ export class Adjustment {
     );
     s.machineId = coalesce(s.machineId, s.defaultMachineId);
 
-    const machine = data.machineRecord[s.machineId] as Machine | undefined;
-    const def = machines[s.machineId];
+    let machine: Machine | undefined;
+    let def: MachineSettings | undefined;
+    if (s.machineId) {
+      machine = data.machineRecord[s.machineId];
+      def = machines[s.machineId];
+    }
 
     if (recipe.flags.has('burn')) {
       s.defaultFuelId = Object.keys(recipe.in)[0];
@@ -842,9 +846,9 @@ export class Adjustment {
         s.moduleOptions,
         settings.moduleRankIds,
         machine.modules,
-        def.modules,
+        def?.modules,
       );
-      s.beacons = this.hydration.hydrateBeacons(s.beacons, def.beacons);
+      s.beacons = this.hydration.hydrateBeacons(s.beacons, def?.beacons);
     } else {
       // Machine doesn't support modules, remove any
       delete s.modules;
@@ -878,7 +882,7 @@ export class Adjustment {
     if (!isRecipeObjective(objective)) return objective;
 
     const result: ObjectiveSettings = spread(objective);
-    const recipe = data.recipeRecord[result.targetId];
+    const recipe = data.recipeRecord[objective.targetId];
     // Apply productivity bonus, this cannot be adjusted on individual objectives
     result.productivity = recipes[result.targetId].productivity;
     this.computeRecipeSettings(result, recipe, machines, settings, data);

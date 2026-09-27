@@ -1,4 +1,5 @@
 import { Rational, rational } from '~/rational/rational';
+import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 import { cloneRecord, toRationalRecord, toRecordEntries } from '~/utils/record';
 
@@ -24,8 +25,8 @@ export type RecipeFlag =
 export interface RecipeJson {
   id: string;
   name: string;
-  category: string;
-  row: number;
+  category?: string;
+  row?: number;
   time: number | string;
   in: Partial<Record<string, number | string>>;
   out: Partial<Record<string, number | string>>;
@@ -49,7 +50,7 @@ export interface RecipeJson {
 export interface Recipe {
   id: string;
   name: string;
-  category: string;
+  category?: string;
   row: number;
   time: Rational;
   in: Partial<Record<string, Rational>>;
@@ -79,7 +80,7 @@ export function parseRecipe(json: RecipeJson): Recipe {
     id: json.id,
     name: json.name,
     category: json.category,
-    row: json.row,
+    row: coalesce(json.row, 0),
     time: rational(json.time),
     producers: json.producers,
     in: toRationalRecord(json.in),

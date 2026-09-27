@@ -53,9 +53,9 @@ export function addIfMissing(
 export function updateHashItem(hash: ModHash, i: ItemJson, id: string): void {
   addIfMissing(hash, 'items', id);
   if (i.beacon) addIfMissing(hash, 'beacons', id);
-  if (i.belt || i.pipe) addIfMissing(hash, 'belts', id);
+  if (i.belt) addIfMissing(hash, 'belts', id);
   if (i.fuel) addIfMissing(hash, 'fuels', id);
-  if (i.cargoWagon || i.fluidWagon) addIfMissing(hash, 'wagons', id);
+  if (i.wagon) addIfMissing(hash, 'wagons', id);
   if (i.machine) addIfMissing(hash, 'machines', id);
   if (i.module) addIfMissing(hash, 'modules', id);
   if (i.technology) addIfMissing(hash, 'technologies', id);
@@ -68,9 +68,9 @@ export function updateHashSetItem(
 ): void {
   hashSet.items.add(id);
   if (i.beacon) hashSet.beacons.add(id);
-  if (i.belt || i.pipe) hashSet.belts.add(id);
+  if (i.belt) hashSet.belts.add(id);
   if (i.fuel) hashSet.fuels.add(id);
-  if (i.cargoWagon || i.fluidWagon) hashSet.wagons.add(id);
+  if (i.wagon) hashSet.wagons.add(id);
   if (i.machine) hashSet.machines.add(id);
   if (i.module) hashSet.modules.add(id);
   if (i.technology) hashSet.technologies.add(id);

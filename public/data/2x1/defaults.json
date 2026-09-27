@@ -1,10 +1,6 @@
 {
   "beacon": "beacon",
-  "belt": "transport-belt",
   "fuelRank": ["coal"],
-  "cargoWagon": "cargo-wagon",
-  "fluidWagon": "fluid-wagon",
-  "pipe": "pump",
   "presets": [
     {
       "id": 0,
@@ -77,5 +73,7 @@
       "beaconModule": "speed-module-3(5)",
       "pipe": "pump(5)"
     }
-  ]
+  ],
+  "beltRank": ["transport-belt", "pump"],
+  "wagonRank": ["cargo-wagon", "fluid-wagon"]
 }

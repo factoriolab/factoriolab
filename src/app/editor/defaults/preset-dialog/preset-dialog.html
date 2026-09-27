@@ -110,13 +110,12 @@
       </td>
     </tr>
     <tr>
-      <th id="belt-header">{{ 'data.belt' | translate }}</th>
+      <th id="belt-rank-header">{{ 'settings.beltRank' | translate }}</th>
       <td>
-        <lab-select
-          placeholder="none"
-          labelledBy="belt-header"
-          [options]="data.nullableBeltOptions"
-          [(ngModel)]="data.preset.belt"
+        <lab-editor-rank-select
+          [options]="data.beltOptions"
+          labelledBy="belt-rank-header"
+          [(value)]="data.preset.beltRank"
         />
       </td>
     </tr>
@@ -135,35 +134,12 @@
       </td>
     </tr>
     <tr>
-      <th id="pipe-header">{{ 'data.pipe' | translate }}</th>
+      <th id="wagon-rank-header">{{ 'settings.wagonRank' | translate }}</th>
       <td>
-        <lab-select
-          placeholder="none"
-          labelledBy="pipe-header"
-          [options]="data.nullablePipeOptions"
-          [(ngModel)]="data.preset.pipe"
-        />
-      </td>
-    </tr>
-    <tr>
-      <th id="cargo-wagon-header">{{ 'data.cargoWagon' | translate }}</th>
-      <td>
-        <lab-select
-          placeholder="none"
-          labelledBy="cargo-wagon-header"
-          [options]="data.nullableCargoWagonOptions"
-          [(ngModel)]="data.preset.cargoWagon"
-        />
-      </td>
-    </tr>
-    <tr>
-      <th id="fluid-wagon-header">{{ 'data.fluidWagon' | translate }}</th>
-      <td>
-        <lab-select
-          placeholder="none"
-          labelledBy="fluid-wagon-header"
-          [options]="data.nullableFluidWagonOptions"
-          [(ngModel)]="data.preset.fluidWagon"
+        <lab-editor-rank-select
+          labelledBy="wagon-rank-header"
+          [options]="data.wagonOptions"
+          [(ngModel)]="data.preset.wagonRank"
         />
       </td>
     </tr>

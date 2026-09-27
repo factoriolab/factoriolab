@@ -6,7 +6,6 @@ export type TooltipType =
   | 'inserter'
   | 'machine'
   | 'module'
-  | 'pipe'
   | 'wagon'
   | 'technology'
   | 'recipe';

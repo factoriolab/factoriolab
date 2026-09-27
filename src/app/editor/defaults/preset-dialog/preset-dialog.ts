@@ -29,18 +29,16 @@ import { toNumeric, toOptions } from '../../object-utils';
 export interface PresetDialogData extends DialogData {
   preset: PresetJson;
   edit: EditorData;
+  beltOptions: Option[];
   fuelOptions: Option[];
   locationOptions: Option[];
   machineOptions: Option[];
   moduleOptions: Option[];
   nullableBeaconOptions: Option<string | undefined>[];
-  nullableBeltOptions: Option<string | undefined>[];
-  nullableCargoWagonOptions: Option<string | undefined>[];
-  nullableFluidWagonOptions: Option<string | undefined>[];
   nullableModuleOptions: Option<string | undefined>[];
-  nullablePipeOptions: Option<string | undefined>[];
   recipeOptions: Option[];
   technologyOptions: Option[];
+  wagonOptions: Option[];
 }
 
 @Component({

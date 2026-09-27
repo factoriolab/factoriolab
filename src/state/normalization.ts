@@ -59,11 +59,12 @@ export class Normalization {
         const wagonId = this.itemsStore.settings()[objective.targetId].wagonId;
         if (wagonId) {
           const item = data.itemRecord[objective.targetId];
-          const wagon = data.itemRecord[wagonId];
-          if (item.stack && wagon.cargoWagon) {
-            factor = item.stack.mul(wagon.cargoWagon.size).div(dispRateVal);
-          } else if (wagon.fluidWagon) {
-            factor = wagon.fluidWagon.capacity.div(dispRateVal);
+          const wagon = data.itemRecord[wagonId]?.wagon;
+          if (wagon) {
+            if (wagon.capacityType === 'stacks') {
+              const stack = coalesce(item.stack, rational.zero);
+              factor = stack.mul(wagon.capacity).div(dispRateVal);
+            } else factor = wagon.capacity.div(dispRateVal);
           }
         }
         break;
@@ -175,15 +176,16 @@ export class Normalization {
           step.belts = step.belts.div(itemSettings.stack);
       }
 
-      const wagon = itemSettings.wagonId;
-      if (step.items != null && wagon) {
+      const wagonId = itemSettings.wagonId;
+      if (step.items != null && wagonId) {
         const item = data.itemRecord[step.itemId];
-        if (item.stack) {
-          step.wagons = step.items.div(
-            data.cargoWagonRecord[wagon].size.mul(item.stack),
-          );
-        } else
-          step.wagons = step.items.div(data.fluidWagonRecord[wagon].capacity);
+        const wagon = data.itemRecord[wagonId]?.wagon;
+        if (wagon) {
+          if (wagon.capacityType === 'stacks') {
+            const stack = coalesce(item.stack, rational.zero);
+            step.wagons = step.items.div(stack.mul(wagon.capacity));
+          } else step.wagons = step.items.div(wagon.capacity);
+        }
       }
 
       if (step.items != null && !itemSettings.excludeRockets) {

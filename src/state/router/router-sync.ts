@@ -112,7 +112,7 @@ export class RouterSync {
   private readonly state = new Subject<State>();
   readonly zipConfig = signal(this.empty);
   // Current hashing algorithm version
-  private readonly version = ZipVersion.Version11;
+  private readonly version = ZipVersion.Version12;
   private readonly zipTail: LabParams = { v: this.version };
   readonly route$ = new Subject<ActivatedRoute>();
   private readonly ready = signal(false);
@@ -972,10 +972,8 @@ export class RouterSync {
     num('odr', (s) => s.displayRate);
     sub('iex', (s) => s.excludedItemIds, data.itemIds, hash.items);
     sub('ich', (s) => s.checkedItemIds, data.itemIds, hash.items);
-    str('ibe', (s) => s.beltId, hash.belts);
-    str('ipi', (s) => s.pipeId, hash.belts);
-    str('icw', (s) => s.cargoWagonId, hash.wagons);
-    str('ifw', (s) => s.fluidWagonId, hash.wagons);
+    rnk('ibe', (s) => s.beltRankIds, hash.belts);
+    rnk('icw', (s) => s.wagonRankIds, hash.wagons);
     rat('ifr', (s) => s.flowRate);
     rat('ist', (s) => s.stack);
     sub('rex', (s) => s.excludedRecipeIds, data.recipeIds, hash.recipes);
@@ -1042,10 +1040,8 @@ export class RouterSync {
       displayRate: num('odr'),
       excludedItemIds: sub('iex', modHash.items),
       checkedItemIds: sub('ich', modHash.items),
-      beltId: str('ibe', hash?.belts),
-      pipeId: str('ipi', hash?.belts),
-      cargoWagonId: str('icw', hash?.wagons),
-      fluidWagonId: str('ifw', hash?.wagons),
+      beltRankIds: rnk('ibe', hash?.belts),
+      wagonRankIds: rnk('icw', hash?.wagons),
       flowRate: rat('ifr'),
       stack: rat('ist'),
       excludedRecipeIds: sub('rex', modHash.recipes),

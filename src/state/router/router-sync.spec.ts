@@ -86,9 +86,8 @@ const mockSettingsState: SettingsState = {
   displayRate: DisplayRate.PerHour,
   excludedItemIds: new Set([ItemId.SteelChest]),
   checkedItemIds: new Set([ItemId.SteelChest]),
-  beltId: ItemId.TransportBelt,
-  cargoWagonId: ItemId.CargoWagon,
-  fluidWagonId: ItemId.FluidWagon,
+  beltRankIds: [ItemId.TransportBelt],
+  wagonRankIds: [ItemId.CargoWagon, ItemId.FluidWagon],
   flowRate: rational(1200n),
   excludedRecipeIds: new Set([RecipeId.SteelChest]),
   checkedRecipeIds: new Set([RecipeId.SteelChest]),
@@ -140,8 +139,7 @@ const mockZipPartial: ZipData<LabParams> = {
     ibe: 'transport-belt',
     bmi: '100',
     bre: '0',
-    icw: 'cargo-wagon',
-    ifw: 'fluid-wagon',
+    icw: 'cargo-wagon~fluid-wagon',
     mbr: '1',
     mps: 'productivity-module',
     rnp: '1',
@@ -172,8 +170,7 @@ const mockZipPartial: ZipData<LabParams> = {
     ibe: 'A',
     bmi: '100',
     bre: '0',
-    icw: 'A',
-    ifw: 'B',
+    icw: 'A~B',
     mbr: '1',
     mps: 'G',
     rnp: '1',
@@ -197,7 +194,7 @@ const mockEmpty: PartialState = {
   itemsState: undefined,
   recipesState: undefined,
   machinesState: undefined,
-  settingsState: undefined,
+  settingsState: { modId: '1.0' },
   tableState: undefined,
 };
 
@@ -456,6 +453,10 @@ describe('RouterSync', () => {
   describe('updateState', () => {
     let dispatch: jasmine.Spy;
 
+    const mockEmptyV10 = spread(mockEmpty, {
+      settingsState: undefined,
+    });
+
     const mockStateV10 = spread(mockState, {
       settingsState: spread(mockState.settingsState, {
         costs: spread(mockState.settingsState!.costs),
@@ -518,7 +519,7 @@ describe('RouterSync', () => {
 
     it('should unzip empty v0', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { z: 'eJwrsAUAAR8Arg==' });
@@ -539,7 +540,7 @@ describe('RouterSync', () => {
 
     it('should unzip empty v1', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { p: '', v: '1' });
@@ -571,7 +572,7 @@ describe('RouterSync', () => {
 
     it('should unzip empty v2', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCszAgADVAE.' });
@@ -592,7 +593,7 @@ describe('RouterSync', () => {
 
     it('should unzip empty v3', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCszBgADVQFA' });
@@ -613,7 +614,7 @@ describe('RouterSync', () => {
 
     it('should unzip empty v4', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { p: '', v: '4' });
@@ -644,7 +645,7 @@ describe('RouterSync', () => {
 
     it('should unzip empty v5', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCszBQADVwFC', v: '5' });
@@ -666,7 +667,7 @@ describe('RouterSync', () => {
 
     it('should unzip empty v6', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { p: '', v: '6' });
@@ -700,7 +701,7 @@ describe('RouterSync', () => {
 
     it('should unzip empty v7', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCszBwADWQFE', v: '7' });
@@ -722,7 +723,7 @@ describe('RouterSync', () => {
 
     it('should unzip empty v8', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCuzAAADWgFF', v: '8' });
@@ -744,7 +745,7 @@ describe('RouterSync', () => {
 
     it('should unzip empty v9', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCuzBAADWwFG', v: '9' });
@@ -766,13 +767,20 @@ describe('RouterSync', () => {
 
     it('should unzip empty v10', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual(mockEmpty);
+        expect(v).toEqual(mockEmptyV10);
         done();
       });
       mockRoute.next({}, { z: 'eJyrsjU0AAADNQEZ', v: '10' });
     });
 
     it('should unzip v10', (done) => {
+      // void service['compression']
+      //   .inflate(
+      //     'eJw1j82KQzEIhd.GhVDQrGZzFpkMlIG-RJPJpVnYe7F.d9VnLwbGhRz184hPqNKKwsrKEbS2CzINFM6c6aky-o4yRbugkKPwiZWFkwirSIz8n.HJmDlO71-yxfFN1h3HdyarHRrQ3TvKgdY.RyLbHEqj9ri6ODSJULWBsK7eIVRHg5CNO4RGe03wFcY1Vm274Uh-3aC0WjBtOSNRszNUqD2u0er7NGy3R1S246AiQh2J88w.1MGZKuK1zF9TJc4fagVRSA__',
+      //   )
+      //   .then((x) => {
+      //     console.log(x);
+      //   });
       dispatch.and.callFake((v) => {
         expect(v).toEqual(mockStateV10);
         done();
@@ -781,7 +789,43 @@ describe('RouterSync', () => {
         {},
         {
           z: 'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
-          v: '9',
+          v: '10',
+        },
+      );
+    });
+
+    it('should unzip empty v11', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({ id: '1.0' }, { z: 'eJyrsjU0BAADNgEa', v: '11' });
+    });
+
+    it('should unzip v11', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV10);
+        done();
+      });
+      // void service['compression']
+      //   .inflate(
+      //     'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
+      //   )
+      //   .then((x) => {
+      //     console.log(x);
+      //   });
+      // void service['compression']
+      //   .inflate(
+      //     'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
+      //   )
+      //   .then((x) => {
+      //     console.log(x);
+      //   });
+      mockRoute.next(
+        { id: '1.0' },
+        {
+          z: 'eJw1j82KQzEIhd.GhVDQrGZzFpkMlIG-RJPJpVnYe7F.d9VnLwbGhRz184hPqNKKwsrKEbS2CzINFM6c6aky-o4yRbugkKPwiZWFkwirSIz8n.HJmDlO71-yxfFN1h3HdyarHRrQ3TvKgdY.RyLbHEqj9ri6ODSJULWBsK7eIVRHg5CNO4RGe03wFcY1Vm274Uh-3aC0WjBtOSNRszNUqD2u0er7NGy3R1S246AiQh2J88w.1MGZKuK1zF9TJc4fagVRSA__',
+          v: '11',
         },
       );
     });
@@ -789,16 +833,16 @@ describe('RouterSync', () => {
 
   describe('dispatch', () => {
     it('should dispatch a state', () => {
-      const load: jasmine.Spy[] = [];
-      load.push(spyOn(service['objectivesStore'], 'load'));
-      load.push(spyOn(service['itemsStore'], 'load'));
-      load.push(spyOn(service['recipesStore'], 'load'));
-      load.push(spyOn(service['machinesStore'], 'load'));
-      load.push(spyOn(service['settingsStore'], 'load'));
+      const load: [jasmine.Spy, any][] = [];
+      load.push([spyOn(service['objectivesStore'], 'load'), undefined]);
+      load.push([spyOn(service['itemsStore'], 'load'), undefined]);
+      load.push([spyOn(service['recipesStore'], 'load'), undefined]);
+      load.push([spyOn(service['machinesStore'], 'load'), undefined]);
+      load.push([spyOn(service['settingsStore'], 'load'), { modId: '1.0' }]);
       spyOn(service['ready'], 'set');
       service.dispatch(mockEmpty);
-      load.forEach((s) => {
-        expect(s).toHaveBeenCalledWith(undefined);
+      load.forEach(([spy, value]) => {
+        expect(spy).toHaveBeenCalledWith(value);
       });
       expect(service['ready'].set).toHaveBeenCalledWith(true);
     });

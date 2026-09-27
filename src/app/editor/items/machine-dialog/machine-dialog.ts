@@ -25,6 +25,7 @@ import { SiloJson } from '~/data/schema/silo';
 import { Option } from '~/option/option';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { coalesce } from '~/utils/nullish';
+import { SetJoinPipe } from '~/utils/set';
 
 import { EditorMultiselect } from '../../components/editor-multiselect/editor-multiselect';
 import { QuantitiesButton } from '../../components/quantities-button/quantities-button';
@@ -35,6 +36,7 @@ import {
 import { EditorData } from '../../editor.types';
 import {
   moduleEffectOptions,
+  toNullableArray,
   toNullableNumeric,
   toOptions,
   toSize,
@@ -59,6 +61,7 @@ export interface MachineDialogData {
     Select,
     QuantitiesButton,
     EditorMultiselect,
+    SetJoinPipe,
   ],
   templateUrl: './machine-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,22 +88,9 @@ export class MachineDialog implements DialogData {
   protected readonly faXmark = faXmark;
   readonly header = 'data.machine';
   protected readonly moduleEffectOptions = moduleEffectOptions;
+  protected readonly toNullableArray = toNullableArray;
   protected readonly toNullableNumeric = toNullableNumeric;
   protected readonly toSize = toSize;
-
-  updateFuelCategories(value: string): void {
-    try {
-      const fuelCategories = value.split(',').map((v) => v.trim());
-      if (fuelCategories.length) {
-        this.data.machine.fuelCategories = fuelCategories;
-        return;
-      }
-    } catch {
-      // Do nothing
-    }
-
-    this.data.machine.fuelCategories = undefined;
-  }
 
   editSilo(machine: MachineJson): void {
     this.dialog

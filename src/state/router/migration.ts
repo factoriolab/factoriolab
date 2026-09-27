@@ -132,6 +132,8 @@ export class Migration {
         return this.migrateV9(state);
       case ZipVersion.Version10:
         return this.migrateV10(state);
+      case ZipVersion.Version11:
+        return this.migrateV11(state);
       default:
         return state;
     }
@@ -998,6 +1000,25 @@ export class Migration {
       else if (value) params[k] = replaceDeprecated(value);
     });
 
+    return this.migrateV11(state);
+  }
+
+  private migrateV11(state: MigrationState): MigrationState {
+    const { params } = state;
+
+    // Convert distinct belt/pipe, cargo/fluid wagon settings into rank arrays
+    const beltRank = [params['ibe'], params['ipi']].filter(
+      (value): value is string => Boolean(value),
+    );
+
+    if (beltRank.length) params['ibe'] = beltRank.join(ZARRAYSEP);
+
+    const wagonRank = [params['icw'], params['ifw']].filter(
+      (value): value is string => Boolean(value),
+    );
+    if (wagonRank.length) params['icw'] = wagonRank.join(ZARRAYSEP);
+
+    params['v'] = ZipVersion.Version12;
     return state;
   }
 

@@ -301,17 +301,12 @@
               @let beltId = itemSettings.beltId;
               @if (beltId != null) {
                 <div class="flex items-center">
-                  @if (
-                    beltId !== '' &&
-                    !data().beltIds.includes(beltId) &&
-                    !data().pipeIds.includes(beltId)
-                  ) {
+                  @if (beltId && !data().beltRecord[beltId]) {
                     <lab-icon
                       [value]="beltId"
                       type="item"
                       [labTooltip]="beltId"
-                      labTooltipType="pipe"
-                    ></lab-icon>
+                    />
                   } @else {
                     @let stack = data().itemRecord[step.itemId].stack;
                     @let type = stack ? 'belt' : 'pipe';
@@ -333,16 +328,12 @@
                         "
                         [value]="itemSettings"
                         (valueChange)="changeBelts(step.itemId, $event)"
-                      ></lab-belt-select>
+                      />
                     } @else {
                       @let tooltip = 'steps.' + type + 'Tooltip';
                       <lab-select
                         [iconOnly]="true"
-                        [options]="
-                          settingsStore.options()[
-                            type === 'belt' ? 'belts' : 'pipes'
-                          ]
-                        "
+                        [options]="itemSettings.beltOptions"
                         [labTooltip]="beltId || tooltip"
                         [labTooltipType]="beltId ? 'belt' : undefined"
                         [labTooltipAction]="beltId ? tooltip : undefined"
@@ -357,7 +348,7 @@
                             itemSettings.defaultBeltId
                           )
                         "
-                      ></lab-select>
+                      />
                     }
                   }
                 </div>
@@ -382,17 +373,9 @@
               @let wagonId = itemSettings.wagonId;
               @if (wagonId != null) {
                 <div class="flex items-center">
-                  @let type =
-                    data().itemRecord[step.itemId].stack
-                      ? 'cargo-wagon'
-                      : 'fluid-wagon';
                   <lab-select
                     [iconOnly]="true"
-                    [options]="
-                      settingsStore.options()[
-                        type === 'cargo-wagon' ? 'cargoWagons' : 'fluidWagons'
-                      ]
-                    "
+                    [options]="itemSettings.wagonOptions"
                     [labTooltip]="wagonId || 'steps.wagonTooltip'"
                     [labTooltipType]="wagonId ? 'wagon' : undefined"
                     [labTooltipAction]="
@@ -409,7 +392,7 @@
                         itemSettings.defaultWagonId
                       )
                     "
-                  ></lab-select>
+                  />
                 </div>
               }
             }

@@ -1,10 +1,8 @@
 export type DefaultsJson = HardCodedPresetsJson | CustomPresetsJson;
 
 export interface HardCodedPresetsJson extends BaseDefaultsJson {
-  minBelt?: string;
-  maxBelt?: string;
-  minPipe?: string;
-  maxPipe?: string;
+  minBeltRank?: string[];
+  maxBeltRank?: string[];
   minMachineRank?: string[];
   maxMachineRank?: string[];
 }
@@ -24,9 +22,8 @@ export interface PresetJson extends BaseCustomJson {
 
 export interface BaseCustomJson extends BaseDefaultsJson {
   locations?: string[];
-  belt?: string;
+  beltRank?: string[];
   beltStack?: number | string;
-  pipe?: string;
   machineRank?: string[];
   /** Defaults to zero */
   beaconCount?: number | string;
@@ -35,8 +32,7 @@ export interface BaseCustomJson extends BaseDefaultsJson {
 export interface BaseDefaultsJson {
   beacon?: string;
   fuelRank?: string[];
-  cargoWagon?: string;
-  fluidWagon?: string;
+  wagonRank?: string[];
   excludedRecipes?: string[];
   moduleRank?: string[];
   beaconModule?: string;

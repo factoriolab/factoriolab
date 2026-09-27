@@ -6,8 +6,12 @@ export function getJsonData(file: string): unknown {
   return JSON.parse(fs.readFileSync(file).toString());
 }
 
-export function writeJsonData(file: string, data: unknown): void {
-  fs.writeFileSync(file, JSON.stringify(data));
+export function writeJsonData(
+  file: string,
+  data: unknown,
+  space?: string | number,
+): void {
+  fs.writeFileSync(file, JSON.stringify(data, undefined, space));
 }
 
 const appDataPath =

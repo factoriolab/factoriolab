@@ -20,8 +20,7 @@ describe('LinkValue', () => {
 
     it('should exclude wagons if there are none', () => {
       const data = mocks.getDataset();
-      data.cargoWagonIds = [];
-      data.fluidWagonIds = [];
+      data.wagonIds = [];
       expect(linkValueOptions(data).length).toEqual(5);
     });
   });

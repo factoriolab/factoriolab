@@ -245,6 +245,22 @@ describe('SettingsStore', () => {
     });
   });
 
+  describe('options', () => {
+    it('should filter out belt options that are unaffected by quality', () => {
+      const data = mocks.getDataset();
+      data.beltIds.push(ItemId.Car);
+      data.itemRecord[ItemId.Car].quality = {
+        id: 'uncommon',
+        level: 2,
+        name: 'Uncommon',
+      };
+      data.beltRecord[ItemId.Car] = data.beltRecord[ItemId.TransportBelt];
+      spyOn(service, 'dataset').and.returnValue(data);
+      const options = service.options();
+      expect(options.belts.find((o) => o.value === ItemId.Car)).toBeUndefined();
+    });
+  });
+
   describe('beltSpeed', () => {
     it('should return the map of belt speeds', () => {
       const flowRate = rational(2000n);
@@ -289,7 +305,7 @@ describe('SettingsStore', () => {
         Preset.Minimum,
       );
       assert(result != null);
-      expect(result.beltId).toEqual(mockDefaults11.minBelt);
+      expect(result.beltRankIds).toEqual(mockDefaults11.minBeltRank);
       expect(result.machineRankIds).toEqual(mockDefaults11.minMachineRank!);
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beacons).toEqual([
@@ -514,8 +530,7 @@ describe('SettingsStore', () => {
               type: EnergyType.Electric as const,
               usage: 1,
             },
-            cargoWagon: { size: 1 },
-            fluidWagon: { capacity: 1 },
+            wagon: { itemTypes: ['item'], capacity: 1 },
             pipe: { speed: 1 },
           },
         ],
@@ -532,9 +547,13 @@ describe('SettingsStore', () => {
         ItemId.TransportBelt,
         'fast-transport-belt',
         'express-transport-belt',
+        'pump',
       ]);
-      expect(result.cargoWagonIds).toEqual(['id', ItemId.CargoWagon]);
-      expect(result.fluidWagonIds).toEqual(['id', ItemId.FluidWagon]);
+      expect(result.wagonIds).toEqual([
+        ItemId.CargoWagon,
+        ItemId.FluidWagon,
+        'id',
+      ]);
       expect(result.fuelIds).toEqual([
         'steam',
         'steam-500',
@@ -584,7 +603,11 @@ describe('SettingsStore', () => {
               usage: 1,
               qualityRecord: { uncommon: { effectivity: 2 } },
             },
-            belt: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
+            belt: {
+              itemTypes: ['item'],
+              speed: 1,
+              qualityRecord: { uncommon: { speed: 2 } },
+            },
             inserter: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
             machine: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
             module: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
@@ -754,7 +777,7 @@ describe('SettingsStore', () => {
       const result = service['computeSettings'](
         settings,
         {
-          beltId: 'nonsense',
+          beltRankIds: ['nonsense'],
           fuelRankIds: [],
           excludedRecipeIds: [],
           machineRankIds: [],
@@ -763,7 +786,7 @@ describe('SettingsStore', () => {
         },
         data,
       );
-      expect(result.beltId).toEqual('');
+      expect(result.beltRankIds).toEqual([]);
     });
 
     it('should use default bonus values if greater than calculated values', () => {

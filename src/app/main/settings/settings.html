@@ -518,21 +518,23 @@
         </lab-form-field>
       }
 
-      @if (data().beltIds.length) {
-        <lab-form-field label="settings.defaultTransportBelt">
-          <lab-select
-            [options]="options().belts"
-            labTooltip="settings.defaultTransportBeltTooltip"
+      @if (options().belts.length) {
+        <lab-form-field label="settings.beltRank">
+          <lab-rank-select
+            placeholder="settings.beltRankEmpty"
+            labTooltip="settings.beltRankTooltip"
             labTooltipPosition="adjacent"
-            [ngModel]="settings().beltId"
+            [options]="options().belts"
+            [ngModel]="settings().beltRankIds"
             (ngModelChange)="
               settingsStore.updateField(
-                'beltId',
+                'beltRankIds',
                 $event,
-                settings().defaultBeltId
+                settings().defaultBeltRankIds
               )
             "
-          ></lab-select>
+          >
+          </lab-rank-select>
         </lab-form-field>
       }
 
@@ -549,57 +551,23 @@
         </lab-form-field>
       }
 
-      @if (options().pipes.length > 1) {
-        <lab-form-field label="settings.defaultPipe">
-          <lab-select
-            [options]="options().pipes"
-            labTooltip="settings.defaultPipeTooltip"
+      @if (options().wagons.length) {
+        <lab-form-field label="settings.wagonRank">
+          <lab-rank-select
+            placeholder="settings.wagonRankEmpty"
+            labTooltip="settings.wagonRankTooltip"
             labTooltipPosition="adjacent"
-            [ngModel]="settings().pipeId"
+            [options]="options().wagons"
+            [ngModel]="settings().wagonRankIds"
             (ngModelChange)="
               settingsStore.updateField(
-                'pipeId',
+                'wagonRankIds',
                 $event,
-                settings().defaultPipeId
+                settings().defaultWagonRankIds
               )
             "
-          ></lab-select>
-        </lab-form-field>
-      }
-
-      @if (options().cargoWagons.length > 1) {
-        <lab-form-field label="settings.defaultCargoWagon">
-          <lab-select
-            [options]="options().cargoWagons"
-            labTooltip="settings.defaultCargoWagonTooltip"
-            labTooltipPosition="adjacent"
-            [ngModel]="settings().cargoWagonId"
-            (ngModelChange)="
-              settingsStore.updateField(
-                'cargoWagonId',
-                $event,
-                settings().defaultCargoWagonId
-              )
-            "
-          ></lab-select>
-        </lab-form-field>
-      }
-
-      @if (options().fluidWagons.length > 1) {
-        <lab-form-field label="settings.defaultFluidWagon">
-          <lab-select
-            [options]="options().fluidWagons"
-            labTooltip="settings.defaultFluidWagonTooltip"
-            labTooltipPosition="adjacent"
-            [ngModel]="settings().fluidWagonId"
-            (ngModelChange)="
-              settingsStore.updateField(
-                'fluidWagonId',
-                $event,
-                settings().defaultFluidWagonId
-              )
-            "
-          ></lab-select>
+          >
+          </lab-rank-select>
         </lab-form-field>
       }
 

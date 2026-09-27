@@ -99,7 +99,7 @@
           aria-labelledby="size-header"
           class="input"
           [placeholder]="'data.dimensions' | translate"
-          [ngModel]="data.size ? data.size.join(', ') : ''"
+          [ngModel]="data.size | setJoin"
           [ngModelOptions]="{ updateOn: 'blur' }"
           (ngModelChange)="data.size = toSize($event)"
         />
@@ -115,7 +115,7 @@
           aria-labelledby="profile-header"
           class="input"
           [placeholder]="'editor.profile' | translate"
-          [ngModel]="data.profile ? data.profile.join(', ') : ''"
+          [ngModel]="data.profile | setJoin"
           [ngModelOptions]="{ updateOn: 'blur' }"
           (ngModelChange)="updateProfile($event)"
         />

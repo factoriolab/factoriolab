@@ -1,6 +1,22 @@
 <table class="lab-table">
   <tbody>
     <tr>
+      <th id="types-header">
+        {{ 'data.types' | translate }}
+      </th>
+      <td>
+        <input
+          type="text"
+          aria-labelledby="types-header"
+          class="input"
+          [placeholder]="'data.types' | translate"
+          [ngModel]="data.item.types | setJoin"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          (ngModelChange)="data.item.types = toArray($event)"
+        />
+      </td>
+    </tr>
+    <tr>
       <th id="stack-header">{{ 'data.stackSize' | translate }}</th>
       <td>
         <input
@@ -55,19 +71,6 @@
       </td>
     </tr>
     <tr>
-      <th id="pipe-header">{{ 'data.pipe' | translate }}</th>
-      <td>
-        <button
-          type="button"
-          labButton
-          [attr.aria-label]="'data.pipe' | translate"
-          [color]="data.item.pipe ? 'brand' : 'gray'"
-          [faIcon]="data.item.pipe ? faPencil : faPlus"
-          (click)="editPipe(data.item)"
-        ></button>
-      </td>
-    </tr>
-    <tr>
       <th id="machine-header">{{ 'data.machine' | translate }}</th>
       <td>
         <button
@@ -107,28 +110,15 @@
       </td>
     </tr>
     <tr>
-      <th id="cargo-wagon-header">{{ 'data.cargoWagon' | translate }}</th>
+      <th id="wagon-header">{{ 'data.wagon' | translate }}</th>
       <td>
         <button
           type="button"
           labButton
-          [attr.aria-label]="'data.cargoWagon' | translate"
-          [color]="data.item.cargoWagon ? 'brand' : 'gray'"
-          [faIcon]="data.item.cargoWagon ? faPencil : faPlus"
-          (click)="editCargoWagon(data.item)"
-        ></button>
-      </td>
-    </tr>
-    <tr>
-      <th id="fluid-wagon-header">{{ 'data.fluidWagon' | translate }}</th>
-      <td>
-        <button
-          type="button"
-          labButton
-          [attr.aria-label]="'data.fluidWagon' | translate"
-          [color]="data.item.fluidWagon ? 'brand' : 'gray'"
-          [faIcon]="data.item.fluidWagon ? faPencil : faPlus"
-          (click)="editFluidWagon(data.item)"
+          [attr.aria-label]="'data.wagon' | translate"
+          [color]="data.item.wagon ? 'brand' : 'gray'"
+          [faIcon]="data.item.wagon ? faPencil : faPlus"
+          (click)="editWagon(data.item)"
         ></button>
       </td>
     </tr>

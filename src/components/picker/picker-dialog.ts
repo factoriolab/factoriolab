@@ -231,7 +231,7 @@ export class PickerDialog implements AfterViewInit {
 
     if (selectedId != null) {
       const obj = data[this.recordKey][selectedId];
-      this.selectedCategory.set(obj.category);
+      if (obj.category) this.selectedCategory.set(obj.category);
       if (obj.quality) this.selectedQuality.set(obj.quality.id);
     }
 

@@ -30,7 +30,7 @@
         class="-ms-px"
         rounded="end"
         [iconOnly]="true"
-        [options]="settingsStore.options().belts"
+        [options]="value()?.beltOptions ?? []"
         [ngModel]="editValue()?.beltId"
         (ngModelChange)="setBelt($event)"
       ></lab-select>

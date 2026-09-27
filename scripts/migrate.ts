@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import { datasets } from '~/data/datasets';
 import { ModData } from '~/data/schema/mod-data';
 

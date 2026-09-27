@@ -1,17 +1,15 @@
 import { Option } from '~/option/option';
 
 export interface Options {
-  categories: Option[];
   beacons: Option[];
   belts: Option[];
-  pipes: Option[];
-  cargoWagons: Option[];
-  fluidWagons: Option[];
-  inserters: Option[];
+  categories: Option[];
   fuels: Option[];
+  inserters: Option[];
+  locations: Option[];
+  machines: Option[];
   modules: Option[];
   proliferatorModules: Option[];
-  machines: Option[];
-  locations: Option[];
   qualities: Option[];
+  wagons: Option[];
 }

@@ -1,7 +1,6 @@
 import { computed, inject, Service } from '@angular/core';
 
 import { EnergyType } from '~/data/schema/energy-type';
-import { coalesce } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 
 import { Hydration } from '../hydration';
@@ -43,7 +42,7 @@ export class MachinesStore extends RecordStore<MachineState> {
           s.fuelOptions,
           settings.fuelRankIds,
         );
-        s.fuelId = coalesce(s?.fuelId, s.defaultFuelId);
+        s.fuelId ??= s.defaultFuelId;
       } else {
         // Machine doesn't support fuel, remove any
         delete s.fuelId;
@@ -65,7 +64,7 @@ export class MachinesStore extends RecordStore<MachineState> {
       }
 
       s.defaultOverclock = settings.overclock;
-      s.overclock = coalesce(s.overclock, s.defaultOverclock);
+      s.overclock ??= s.defaultOverclock;
 
       value[id] = s;
     }

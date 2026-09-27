@@ -11,4 +11,5 @@ export enum ZipVersion {
   Version9 = '9',
   Version10 = '10',
   Version11 = '11',
+  Version12 = '12',
 }

@@ -19,6 +19,7 @@ import { Adjustment } from '~/state/adjustment';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { SetJoinPipe } from '~/utils/set';
 
 import { Icon } from '../icon/icon';
 import { RecipeProcess } from '../recipe-process/recipe-process';
@@ -99,6 +100,7 @@ const nub = cva(
     TranslatePipe,
     UsagePipe,
     InserterStackPipe,
+    SetJoinPipe,
   ],
   templateUrl: './tooltip-overlay.html',
   styleUrl: './tooltip-overlay.css',

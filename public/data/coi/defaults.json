@@ -1,8 +1,4 @@
 {
-  "minBelt": "flat-conveyor",
-  "maxBelt": "flat-conveyor-3",
-  "minPipe": "pipe",
-  "maxPipe": "pipe-3",
   "excludedRecipes": [
     "contract-cement-coal",
     "contract-coal-quartz",
@@ -73,5 +69,7 @@
   ],
   "minMachineRank": [],
   "maxMachineRank": [],
-  "moduleRank": []
+  "moduleRank": [],
+  "minBeltRank": ["flat-conveyor", "pipe"],
+  "maxBeltRank": ["flat-conveyor-3", "pipe-3"]
 }

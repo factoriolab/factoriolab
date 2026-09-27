@@ -15,10 +15,11 @@ import { Select } from '~/components/select/select';
 import { Option } from '~/option/option';
 import { OptionPipe } from '~/option/option-pipe';
 import { TranslatePipe } from '~/translate/translate-pipe';
+import { SetJoinPipe } from '~/utils/set';
 
 @Component({
   selector: 'lab-editor-multiselect',
-  imports: [FormsModule, Icon, OptionPipe, Select, TranslatePipe],
+  imports: [FormsModule, Icon, OptionPipe, Select, TranslatePipe, SetJoinPipe],
   templateUrl: './editor-multiselect.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex items-center' },

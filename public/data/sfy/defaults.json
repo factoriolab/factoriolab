@@ -1,10 +1,4 @@
 {
-  "minBelt": "conveyor-belt-mk1",
-  "maxBelt": "conveyor-belt-mk5",
-  "minPipe": "pipeline-mk1",
-  "maxPipe": "pipeline-mk2",
-  "cargoWagon": "freight-car",
-  "fluidWagon": "freight-car",
   "excludedRecipes": [
     "cable-coated",
     "cable-insulated",
@@ -132,5 +126,8 @@
   "minMachineRank": ["miner-mk1"],
   "maxMachineRank": ["miner-mk3"],
   "moduleRank": ["purity-1"],
-  "fuelRank": ["coal"]
+  "fuelRank": ["coal"],
+  "minBeltRank": ["conveyor-belt-mk1", "pipeline-mk1"],
+  "maxBeltRank": ["conveyor-belt-mk5", "pipeline-mk2"],
+  "wagonRank": ["freight-car", "freight-car"]
 }

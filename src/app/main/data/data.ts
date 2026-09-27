@@ -33,24 +33,10 @@ export class Data {
     },
     {
       faIcon: faXmark,
-      label: 'data.cargoWagons',
-      routerLink: 'cargo-wagons',
-      key: 'cargoWagonIds',
-      iconType: 'item',
-    },
-    {
-      faIcon: faXmark,
       label: 'data.categories',
       routerLink: 'categories',
       key: 'categoryIds',
       iconType: 'category',
-    },
-    {
-      faIcon: faXmark,
-      label: 'data.fluidWagons',
-      routerLink: 'fluid-wagons',
-      key: 'fluidWagonIds',
-      iconType: 'item',
     },
     {
       faIcon: faXmark,
@@ -96,13 +82,6 @@ export class Data {
     },
     {
       faIcon: faXmark,
-      label: 'data.pumps',
-      routerLink: 'pumps',
-      key: 'pipeIds',
-      iconType: 'item',
-    },
-    {
-      faIcon: faXmark,
       label: 'data.recipes',
       routerLink: 'recipes',
       key: 'recipeIds',
@@ -113,6 +92,13 @@ export class Data {
       label: 'data.technologies',
       routerLink: 'technologies',
       key: 'technologyIds',
+      iconType: 'item',
+    },
+    {
+      faIcon: faXmark,
+      label: 'data.wagons',
+      routerLink: 'wagons',
+      key: 'wagonIds',
       iconType: 'item',
     },
   ];

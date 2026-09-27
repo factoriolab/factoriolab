@@ -45,19 +45,11 @@
     />
   </lab-form-field>
 
-  <lab-form-field label="data.cargoWagon">
-    <lab-select
-      placeholder="none"
-      [options]="nullableCargoWagonOptions()"
-      [(ngModel)]="defaults.cargoWagon"
-    />
-  </lab-form-field>
-
-  <lab-form-field label="data.fluidWagon">
-    <lab-select
-      placeholder="none"
-      [options]="nullableFluidWagonOptions()"
-      [(ngModel)]="defaults.fluidWagon"
+  <lab-form-field label="settings.wagonRank">
+    <lab-editor-rank-select
+      placeholder="settings.wagonRankEmpty"
+      [options]="wagonOptions()"
+      [(ngModel)]="defaults.wagonRank"
     />
   </lab-form-field>
 
@@ -139,35 +131,19 @@
 
 @if (hardCodedPresets) {
   <div class="gap-2 flex flex-col self-start">
-    <lab-form-field label="editor.minBelt">
-      <lab-select
-        placeholder="none"
-        [options]="nullableBeltOptions()"
-        [(ngModel)]="hardCodedPresets.minBelt"
+    <lab-form-field label="editor.minBeltRank">
+      <lab-editor-rank-select
+        placeholder="settings.beltRankEmpty"
+        [options]="beltOptions()"
+        [(ngModel)]="hardCodedPresets.minBeltRank"
       />
     </lab-form-field>
 
-    <lab-form-field label="editor.maxBelt">
-      <lab-select
-        placeholder="none"
-        [options]="nullableBeltOptions()"
-        [(ngModel)]="hardCodedPresets.maxBelt"
-      />
-    </lab-form-field>
-
-    <lab-form-field label="editor.minPipe">
-      <lab-select
-        placeholder="none"
-        [options]="nullablePipeOptions()"
-        [(ngModel)]="hardCodedPresets.minPipe"
-      />
-    </lab-form-field>
-
-    <lab-form-field label="editor.maxPipe">
-      <lab-select
-        placeholder="none"
-        [options]="nullablePipeOptions()"
-        [(ngModel)]="hardCodedPresets.maxPipe"
+    <lab-form-field label="editor.maxBeltRank">
+      <lab-editor-rank-select
+        placeholder="settings.beltRankEmpty"
+        [options]="beltOptions()"
+        [(ngModel)]="hardCodedPresets.maxBeltRank"
       />
     </lab-form-field>
 
@@ -194,11 +170,11 @@
       />
     </lab-form-field>
 
-    <lab-form-field label="data.belt">
-      <lab-select
-        placeholder="none"
-        [options]="nullableBeltOptions()"
-        [(ngModel)]="customPresets.belt"
+    <lab-form-field label="settings.beltRank">
+      <lab-editor-rank-select
+        placeholder="settings.beltRankEmpty"
+        [options]="beltOptions()"
+        [(ngModel)]="customPresets.beltRank"
       />
     </lab-form-field>
 
@@ -216,14 +192,6 @@
         (ngModelChange)="customPresets.beltStack = toNumeric($event)"
       />
     </div>
-
-    <lab-form-field label="data.pipe">
-      <lab-select
-        placeholder="none"
-        [options]="nullablePipeOptions()"
-        [(ngModel)]="customPresets.pipe"
-      />
-    </lab-form-field>
 
     <lab-form-field label="settings.machineRank">
       <lab-editor-rank-select

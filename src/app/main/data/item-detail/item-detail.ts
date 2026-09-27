@@ -21,7 +21,7 @@ import { UsagePipe } from '~/rational/usage-pipe';
 import { ItemsStore } from '~/state/items/items-store';
 import { MachinesStore } from '~/state/machines/machines-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
-import { updateSetIds } from '~/utils/set';
+import { SetJoinPipe, updateSetIds } from '~/utils/set';
 
 import { Detail } from '../detail/detail';
 import { DetailBase } from '../detail-base';
@@ -42,6 +42,7 @@ import { DetailBase } from '../detail-base';
     UsagePipe,
     CollectionTable,
     Detail,
+    SetJoinPipe,
   ],
   templateUrl: './item-detail.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +60,7 @@ export class ItemDetail extends DetailBase<Item> {
 
   protected readonly category = computed(() => {
     const obj = this.obj();
-    if (obj == null) return;
+    if (obj?.category == null) return;
     return this.settingsStore.dataset().categoryRecord[obj.category];
   });
 
