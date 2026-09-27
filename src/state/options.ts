@@ -38,15 +38,19 @@ export class Options {
 
     const types = item.types;
     const collection = `${type}Ids` as const;
-    let allowedIds = data[collection]
+    let allowedEntities = data[collection]
       .map((b) => data.itemRecord[b])
       .filter(fnPropsNotNullish(type))
-      .filter((b) => !types.isDisjointFrom(b[type].itemTypes));
-    if (allowedIds.some((f) => settings.availableItemIds.has(f.id)))
-      allowedIds = allowedIds.filter((f) =>
+      .filter(
+        (b) =>
+          !types.isDisjointFrom(b[type].itemTypes) &&
+          (b.quality == null || (type === 'belt' && b[type]?.quality != null)),
+      );
+    if (allowedEntities.some((f) => settings.availableItemIds.has(f.id)))
+      allowedEntities = allowedEntities.filter((f) =>
         settings.availableItemIds.has(f.id),
       );
-    return allowedIds.map(
+    return allowedEntities.map(
       (f): Option => ({
         value: f.id,
         label: f.name,
