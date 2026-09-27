@@ -477,7 +477,7 @@
       }
       @default {
         <table>
-          @if (item.types.size) {
+          @if (item.types?.size) {
             <tr>
               <td>{{ 'data.types' | translate }}</td>
               <td>{{ item.types | setJoin }}</td>
