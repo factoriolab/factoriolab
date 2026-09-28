@@ -1815,8 +1815,11 @@ async function processMod(): Promise<void> {
 
         const producerSet = new Set<string>();
         for (const fuelCategory of proto.fuel_categories) {
-          for (const producer of producersMap.burner[fuelCategory])
-            producerSet.add(producer);
+          const producers = producersMap.burner[fuelCategory];
+          if (producers) {
+            for (const producer of producersMap.burner[fuelCategory])
+              producerSet.add(producer);
+          }
         }
 
         const recipe: RecipeJson = {
