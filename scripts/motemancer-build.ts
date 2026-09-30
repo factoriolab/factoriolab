@@ -13,10 +13,9 @@
  * For icon overrides ctrl+f ICON_OVERRIDES
  */
 
+import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 import path from 'path';
-
-import { getAverageColor } from 'fast-average-color-node';
 import prettier from 'prettier';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
@@ -28,7 +27,6 @@ import { ItemJson } from '~/data/schema/item';
 import { MachineJson } from '~/data/schema/machine';
 import { ModData } from '~/data/schema/mod-data';
 import { RecipeJson } from '~/data/schema/recipe';
-import { EnergyType } from '~/data/schema/energy-type';
 
 // #region Config
 
@@ -238,7 +236,7 @@ async function getPageWikitext(title: string): Promise<string> {
 
 async function getLatestVersion(): Promise<string> {
   const wikitext = await getPageWikitext('Template:Changelog');
-  const match = wikitext.match(/v?\.?(\d+\.\d+\.\d+)/);
+  const match = /v?\.?(\d+\.\d+\.\d+)/.exec(wikitext);
   if (match) return match[1];
   console.warn('Warning: Could not find version in changelog, using 0.0.0');
   return '0.0.0';
@@ -548,8 +546,8 @@ function extractTemplateRef(s: string): string | null {
  * Parse an ingredient string like "3x {{Salt Prism}}" or "or 1x {{Mote of Water}}"
  * Returns array of [itemId, quantity] pairs (multiple for "or" ingredients)
  */
-function parseIngredient(s: string): Array<[string, number]> | null {
-  const results: Array<[string, number]> = [];
+function parseIngredient(s: string): [string, number][] | null {
+  const results: [string, number][] = [];
 
   // Split by "or" to handle alternate ingredients
   // But only if they're separate ingredients, not part of a name
@@ -1246,7 +1244,7 @@ async function main(): Promise<void> {
     if (machineIds.has(wi.id)) {
       const machine: MachineJson = {
         speed: COLLECTORS[wi.id]?.motes ?? 1,
-        type: EnergyType.Electric,
+        type: 'electric',
         usage: wi.power || undefined,
       };
       item.machine = machine;

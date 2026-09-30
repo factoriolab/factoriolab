@@ -19,7 +19,7 @@ import { Checkbox } from '~/components/checkbox/checkbox';
 import { DialogData } from '~/components/dialog/dialog';
 import { Select } from '~/components/select/select';
 import { EnergyType } from '~/data/schema/energy-type';
-import { MachineJson } from '~/data/schema/machine';
+import { MachineFlag, MachineJson } from '~/data/schema/machine';
 import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
 import { Option } from '~/option/option';
@@ -78,8 +78,9 @@ export class MachineDialog implements DialogData {
 
   protected readonly energySourceOptions: Option<EnergyType | undefined>[] = [
     { label: 'none', value: undefined },
-    { label: 'options.energyType.burner', value: EnergyType.Burner },
-    { label: 'options.energyType.electric', value: EnergyType.Electric },
+    { label: 'options.energyType.burner', value: 'burner' },
+    { label: 'options.energyType.electric', value: 'electric' },
+    { label: 'options.energyType.heat', value: 'heat' },
   ];
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faPencil = faPencil;
@@ -87,6 +88,10 @@ export class MachineDialog implements DialogData {
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   readonly header = 'data.machine';
+  protected readonly machineFlagOptions: Option<MachineFlag>[] = [
+    { label: 'hideRate', value: 'hideRate' },
+    { label: 'totalRecipe', value: 'totalRecipe' },
+  ];
   protected readonly moduleEffectOptions = moduleEffectOptions;
   protected readonly toNullableArray = toNullableArray;
   protected readonly toNullableNumeric = toNullableNumeric;

@@ -1,3 +1,5 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
 import { Rational, rational } from '~/rational/rational';
 import { asSet } from '~/utils/coercion';
 import { coalesce } from '~/utils/nullish';
@@ -12,6 +14,10 @@ import { Module, ModuleJson, parseModule } from './module';
 import { Quality } from './quality';
 import { parseTechnology, Technology, TechnologyJson } from './technology';
 import { parseWagon, Wagon, WagonJson } from './wagon';
+
+export const HEAT_ID = 'heat';
+export const ELECTRICITY_ID = 'electricity';
+export const POLLUTION_ID = 'pollution';
 
 export interface ItemJson extends BaseJson {
   types?: string[];
@@ -70,4 +76,15 @@ export function parseItem(json: ItemJson): Item {
 
 export function itemHasQuality(item: Item | ItemJson): boolean {
   return item.technology == null && item.stack != null;
+}
+
+@Pipe({ name: 'isPower' })
+export class IsPowerPipe implements PipeTransform {
+  static transform(itemId: string | undefined): boolean {
+    return itemId === HEAT_ID || itemId === ELECTRICITY_ID;
+  }
+
+  transform(itemId: string | undefined): boolean {
+    return IsPowerPipe.transform(itemId);
+  }
 }

@@ -16,12 +16,15 @@ import {
 import { Icon } from '~/components/icon/icon';
 import { Select } from '~/components/select/select';
 import { Tooltip } from '~/components/tooltip/tooltip';
+import { IsPowerPipe } from '~/data/schema/item';
 import { Rational, rational } from '~/rational/rational';
+import { ObjectivesStore } from '~/state/objectives/objectives-store';
 import { StepDetailRow } from '~/state/objectives/step-detail-row';
 import { RecipesStore } from '~/state/recipes/recipes-store';
 import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
+import { PowerPipe } from '../pipes/power-pipe';
 import { RatePipe } from '../pipes/rate-pipe';
 import { PercentPadPipe } from './percent-pad-pipe';
 
@@ -37,12 +40,15 @@ import { PercentPadPipe } from './percent-pad-pipe';
     TranslatePipe,
     RatePipe,
     PercentPadPipe,
+    IsPowerPipe,
+    PowerPipe,
   ],
   templateUrl: './detail-row.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: '*:bg-gray-950/75' },
 })
 export class DetailRow {
+  protected readonly objectivesStore = inject(ObjectivesStore);
   private readonly recipesStore = inject(RecipesStore);
   protected readonly settingsStore = inject(SettingsStore);
 

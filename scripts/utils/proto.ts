@@ -2,6 +2,7 @@ import { BeaconJson } from '~/data/schema/beacon';
 import { BeltJson } from '~/data/schema/belt';
 import { EnergyType } from '~/data/schema/energy-type';
 import { InserterJson } from '~/data/schema/inserter';
+import { MachineFlag } from '~/data/schema/machine';
 import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
 import { WagonJson } from '~/data/schema/wagon';
@@ -22,8 +23,7 @@ export function getBeacon(
     effectivity: proto.distribution_effectivity,
     modules: proto.module_slots,
     range: proto.supply_area_distance,
-    type:
-      proto.energy_source.type === 'electric' ? EnergyType.Electric : undefined,
+    type: proto.energy_source.type === 'electric' ? 'electric' : undefined,
     usage,
     disallowedEffects: getDisallowedEffects(proto.allowed_effects, true),
     size: getEntitySize(proto),
@@ -316,7 +316,7 @@ export function getMachineSpeed(
 
     if (quality) speed *= getDefaultMultiplier(quality);
   } else if (M.isBoilerPrototype(proto)) {
-    speed = getPowerInKw(proto.energy_consumption) ?? 1;
+    speed = 1;
 
     if (quality) speed *= getDefaultMultiplier(quality);
   } else if (M.isLabPrototype(proto)) {
@@ -352,9 +352,11 @@ export function getMachineType(proto: D.MachineProto): EnergyType | undefined {
   switch (proto.energy_source.type) {
     case 'burner':
     case 'fluid':
-      return EnergyType.Burner;
+      return 'burner';
     case 'electric':
-      return EnergyType.Electric;
+      return 'electric';
+    case 'heat':
+      return 'heat';
     default:
       return undefined;
   }
@@ -407,6 +409,16 @@ export function getMachineIngredientUsage(
     proto.science_pack_drain_rate_percent !== 100
   )
     return proto.science_pack_drain_rate_percent / 100;
+
+  return undefined;
+}
+
+export function getMachineFlags(
+  proto: D.MachineProto,
+): MachineFlag[] | undefined {
+  if (M.isReactorPrototype(proto) || M.isFusionReactorPrototype(proto)) {
+    if (proto.neighbour_bonus) return ['overclock'];
+  }
 
   return undefined;
 }

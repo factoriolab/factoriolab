@@ -208,36 +208,6 @@
       </td>
     </tr>
     <tr>
-      <th id="hide-rate-header">
-        {{ 'editor.hideRate' | translate }}
-      </th>
-      <td>
-        <div class="flex items-center">
-          <lab-checkbox
-            labelledBy="hide-rate-header"
-            [ngModel]="data.machine.hideRate === true"
-            (ngModelChange)="data.machine.hideRate = $event ? true : undefined"
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <th id="total-recipe-header">
-        {{ 'editor.totalRecipe' | translate }}
-      </th>
-      <td>
-        <div class="flex items-center">
-          <lab-checkbox
-            labelledBy="total-recipe-header"
-            [ngModel]="data.machine.totalRecipe === true"
-            (ngModelChange)="
-              data.machine.totalRecipe = $event ? true : undefined
-            "
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
       <th id="locations-header">
         {{ 'data.locations' | translate }}
       </th>
@@ -265,6 +235,17 @@
           class="input"
           [placeholder]="'data.ingredientUsage' | translate"
           [(ngModel)]="data.machine.ingredientUsage"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th id="flags-header">{{ 'data.flags' | translate }}</th>
+      <td>
+        <lab-editor-multiselect
+          [options]="machineFlagOptions"
+          labelledBy="flags-header"
+          [asCsv]="true"
+          [(value)]="data.machine.flags"
         />
       </td>
     </tr>

@@ -339,7 +339,13 @@
             </td>
           </tr>
         }
-        @if (data().flags.has('overclock')) {
+        @if (
+          data().flags.has('overclock') ||
+          (recipeSettings.machineId &&
+            data().machineRecord[recipeSettings.machineId].flags.has(
+              'overclock'
+            ))
+        ) {
           <tr>
             <th>{{ 'data.overclock' | translate }}</th>
             <td>{{ recipeSettings.overclock }}%</td>

@@ -6,15 +6,16 @@ import { EnergyType } from './energy-type';
 import { ModuleEffect } from './module';
 import { parseSilo, Silo, SiloJson } from './silo';
 
-// Should map to values in the machine `entityType` field
-export const typeHasCraftingSpeed = new Set([
-  'assembling-machine',
-  'furnace',
-  'lab',
-  'offshore-pump',
-  'rocket-silo',
-  'boiler',
-]);
+export type MachineFlag =
+  /** Whether to hide the calculated number of machines */
+  | 'hideRate'
+  /** Whether to tally totals by recipe instead of by machine */
+  | 'totalRecipe'
+  /**
+   * Whether this machine supports overclocking (currently only used for
+   * Factorio reactor neighbor bonus)
+   */
+  | 'overclock';
 
 export interface MachineJson {
   /** If undefined, speed is based on belt speed */
@@ -38,14 +39,11 @@ export interface MachineJson {
   size?: [number, number];
   /** Bonus effects that this machine always has */
   baseEffect?: Partial<Record<ModuleEffect, number>>;
-  /** If true, hide the calculated number of machines */
-  hideRate?: boolean;
-  /** If true, tally totals by recipe instead of machine */
-  totalRecipe?: boolean;
   locations?: string[];
   /** Percent of ingredients used (Space Age: Biolab) */
   ingredientUsage?: number;
   qualityRecord?: Record<string, Partial<MachineJson>>;
+  flags?: MachineFlag[];
 }
 
 export interface Machine {
@@ -68,13 +66,10 @@ export interface Machine {
   size?: [number, number];
   /** Bonus effects that this machine always has */
   baseEffect?: Partial<Record<ModuleEffect, Rational>>;
-  /** If true, hide the calculated number of machines */
-  hideRate?: boolean;
-  /** If true, tally totals by recipe instead of machine */
-  totalRecipe?: boolean;
   locations?: string[];
   /** Percent of ingredients used (Space Age: Biolab) */
   ingredientUsage?: Rational;
+  flags: Set<MachineFlag>;
 }
 
 export function parseMachine(json: MachineJson): Machine;
@@ -104,10 +99,9 @@ export function parseMachine(
     consumption: toRationalRecord(json.consumption),
     size: json.size,
     baseEffect: json.baseEffect ? parseBaseEffect(json.baseEffect) : undefined,
-    hideRate: json.hideRate,
-    totalRecipe: json.totalRecipe,
     locations: json.locations,
     ingredientUsage: rational(json.ingredientUsage),
+    flags: new Set(json.flags),
   };
 }
 

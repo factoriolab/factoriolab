@@ -72,7 +72,6 @@
     "buffered": "Buffered",
     "burntResult": "Burnt result",
     "capacity": "Capacity",
-    "numberStacks": "{{ value }} stacks",
     "catalysts": "Catalysts",
     "categories": "Categories",
     "category": "Category",
@@ -104,8 +103,8 @@
     "inserterStack": "Inserter stack",
     "inserters": "Inserters",
     "itemSettings": "Item settings",
-    "items": "Items",
     "itemTypes": "Item types",
+    "items": "Items",
     "locations": "Locations",
     "machine": "Machine",
     "machineSettings": "Machine settings",
@@ -118,6 +117,7 @@
     "modules": "Modules",
     "name": "Name",
     "notFound": "Not found",
+    "numberStacks": "{{ value }} stacks",
     "overclock": "Overclock",
     "pollution": "Pollution",
     "pollutionMultiplier": "Pollution multiplier",
@@ -162,6 +162,7 @@
   "editor": {
     "beaconCount": "Beacon count",
     "beaconModule": "Beacon module",
+    "capacityType": "Capacity type",
     "chooseImages": "Choose images",
     "clone": "Clone",
     "color": "Color",
@@ -173,14 +174,11 @@
     "export": "Export",
     "hardCodedPresets": "Hard-coded presets (legacy)",
     "header": "Game data editor",
-    "hideRate": "Hide rate",
     "home": "Home",
     "icon": "Icon",
     "iconText": "Icon text",
     "icons": "Icons",
     "id": "Id",
-    "capacityType": "Capacity type",
-    "stacks": "Stacks",
     "image": "Image",
     "item": "Item",
     "level": "Level",
@@ -197,7 +195,7 @@
     "resetColors": "Reset colors",
     "rocketLaunchTime": "Rocket launch time (ticks)",
     "row": "Row",
-    "totalRecipe": "Total recipe",
+    "stacks": "Stacks",
     "unlimited": "Unlimited",
     "upload": "Upload custom files"
   },
@@ -318,7 +316,8 @@
     },
     "energyType": {
       "burner": "Burner",
-      "electric": "Electric"
+      "electric": "Electric",
+      "heat": "Heat"
     },
     "flowDiagram": {
       "boxLine": "Box-line",
@@ -552,6 +551,7 @@
     "wagonRankTooltip": "Select the order of preferred wagons to be used where applicable"
   },
   "steps": {
+    "neighborBonus": "Neighbor bonus",
     "beaconsUndoTooltip": "Undo all beacon modifications",
     "beltSelectTooltip": "Click to select belt and stack size",
     "beltTooltip": "Click to select belt",

@@ -5,7 +5,7 @@ import {
   SankeyNodeExtraProperties,
 } from '~/d3/sankey/models';
 import { sankey } from '~/d3/sankey/sankey';
-import { EnergyType } from '~/data/schema/energy-type';
+import { ELECTRICITY_ID, HEAT_ID } from '~/data/schema/item';
 import { Rational, rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { coalesce } from '~/utils/nullish';
@@ -228,7 +228,7 @@ export class Normalization {
 
           const beacon = data.beaconRecord[b.id];
           if (
-            beacon.type === EnergyType.Electric &&
+            beacon.type === 'electric' &&
             beacon.usage != null &&
             total != null
           ) {
@@ -252,7 +252,8 @@ export class Normalization {
           step.parents[key] = step.parents[key].div(step.items);
       }
 
-      step.items = step.items.mul(dispRateVal);
+      if (step.itemId !== HEAT_ID && step.itemId !== ELECTRICITY_ID)
+        step.items = step.items.mul(dispRateVal);
     }
 
     if (step.surplus) step.surplus = step.surplus.mul(dispRateVal);

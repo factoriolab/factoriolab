@@ -52,9 +52,7 @@
             labelledBy="type-header"
             label="editor.electric"
             [ngModel]="data.type != null"
-            (ngModelChange)="
-              data.type = $event ? EnergyType.Electric : undefined
-            "
+            (ngModelChange)="data.type = $event ? 'electric' : undefined"
           />
         </div>
       </td>

@@ -1,6 +1,5 @@
 import { inject, Service } from '@angular/core';
 
-import { EnergyType } from '~/data/schema/energy-type';
 import { AdjustedInserter } from '~/data/schema/inserter';
 import { itemHasQuality } from '~/data/schema/item';
 import { Machine } from '~/data/schema/machine';
@@ -355,8 +354,7 @@ export class Adjustment {
       }
 
       usage = usage.mul(eff.consumption);
-      recipe.consumption =
-        machine.type === EnergyType.Electric ? usage : rational.zero;
+      recipe.consumption = machine.type === 'electric' ? usage : rational.zero;
 
       if (
         data.flags.has('consumptionAsDrain') &&
@@ -424,6 +422,11 @@ export class Adjustment {
           const amount = factor.mul(val);
           recipe.in[id] = (recipe.in[id] ?? rational.zero).add(amount);
         }
+      }
+
+      if (machine.type === 'heat') {
+        console.log(recipe.time, usage);
+        recipe.in['heat'] = usage;
       }
 
       // Calculate burner fuel inputs
@@ -825,7 +828,7 @@ export class Adjustment {
     if (recipe.flags.has('burn')) {
       s.defaultFuelId = Object.keys(recipe.in)[0];
       s.fuelId = s.defaultFuelId;
-    } else if (machine?.type === EnergyType.Burner) {
+    } else if (machine?.type === 'burner') {
       s.defaultFuelId = def?.fuelId;
       s.fuelId = coalesce(s.fuelId, s.defaultFuelId);
       s.fuelOptions = def?.fuelOptions;

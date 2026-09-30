@@ -7,7 +7,12 @@ import spritesmith from 'spritesmith';
 import { datasets } from '~/data/datasets';
 import { CategoryJson } from '~/data/schema/category';
 import { FuelJson } from '~/data/schema/fuel';
-import { ItemJson } from '~/data/schema/item';
+import {
+  ELECTRICITY_ID,
+  HEAT_ID,
+  ItemJson,
+  POLLUTION_ID,
+} from '~/data/schema/item';
 import { MachineJson } from '~/data/schema/machine';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
@@ -33,6 +38,7 @@ import {
   isBeltStackSizeBonusModifier,
   isBoilerPrototype,
   isBulkInserterCapacityBonusModifier,
+  isBurnerEnergySource,
   isCargoWagonPrototype,
   isChangeRecipeProductivityModifier,
   isCreateAsteroidChunkEffectItem,
@@ -111,7 +117,7 @@ import {
   tryGetLocale,
 } from './utils/file';
 import { logTime, logWarn } from './utils/log';
-import { getEnergyInMJ, round } from './utils/power';
+import { getEnergyInMJ, getPowerInKw, round } from './utils/power';
 import {
   getBeacon,
   getBelt,
@@ -123,6 +129,7 @@ import {
   getMachineBaseEffect,
   getMachineDisallowedEffects,
   getMachineDrain,
+  getMachineFlags,
   getMachineIngredientUsage,
   getMachineModules,
   getMachinePollution,
@@ -424,13 +431,14 @@ async function processMod(): Promise<void> {
   }
 
   const craftingFluidBoxes: Record<string, FluidBox[]> = {};
-  type EntityType = 'lab' | 'silo' | 'boiler' | 'offshorePump';
+  type EntityType = 'lab' | 'silo' | 'boiler' | 'offshorePump' | 'reactor';
   // For each machine type, a map of item name : entity name
   const machines: Record<EntityType, Record<string, string>> = {
     lab: {},
     silo: {},
     boiler: {},
     offshorePump: {},
+    reactor: {},
   };
 
   // Keep track of all used fluid temperatures
@@ -507,6 +515,8 @@ async function processMod(): Promise<void> {
       machines.lab[name] = proto.name;
     } else if (isOffshorePumpPrototype(proto)) {
       machines.offshorePump[name] = proto.name;
+    } else if (isReactorPrototype(proto)) {
+      machines.reactor[name] = proto.name;
     }
   }
 
@@ -630,6 +640,7 @@ async function processMod(): Promise<void> {
         (l) => l.name,
       ),
       ingredientUsage: getMachineIngredientUsage(proto),
+      flags: getMachineFlags(proto),
     };
 
     if (machine.speed === 0) {
@@ -1674,8 +1685,7 @@ async function processMod(): Promise<void> {
       }
 
       // Check for boiler recipes
-      for (const boilerName of Object.keys(machines.boiler)) {
-        const entityName = machines.boiler[boilerName];
+      for (const [boilerName, entityName] of Object.entries(machines.boiler)) {
         const boiler = dataRaw.boiler[entityName];
         if (
           boiler.output_fluid_box.filter === proto.name &&
@@ -1701,6 +1711,8 @@ async function processMod(): Promise<void> {
           const outputMJ = getEnergyInMJ(proto.heat_capacity ?? '1KJ');
           const energyReqd = tempDiff * inputMJ * 1000;
           const outputFluid = inputMJ / outputMJ;
+          const boilerPower = getPowerInKw(boiler.energy_consumption) ?? 1;
+          const speed = boilerPower / energyReqd;
 
           const recipe: RecipeJson = {
             id,
@@ -1709,9 +1721,9 @@ async function processMod(): Promise<void> {
             }`,
             category: group.name,
             row: getRecipeRow(proto),
-            time: round(energyReqd, 10),
-            in: { [inputProto.name]: 1 },
-            out: { [outputId]: outputFluid },
+            time: 1,
+            in: { [inputProto.name]: speed },
+            out: { [outputId]: outputFluid * speed },
             producers: [boilerName],
           };
           modData.recipes.push(recipe);
@@ -1908,6 +1920,30 @@ async function processMod(): Promise<void> {
         }
       }
     }
+  }
+
+  // Check for reactor recipes
+  for (const [reactorName, entityName] of Object.entries(machines.reactor)) {
+    const reactor = dataRaw.reactor[entityName];
+    console.log(reactorName);
+
+    let effectivity = 1;
+    if (isBurnerEnergySource(reactor.energy_source)) {
+      effectivity = reactor.energy_source.effectivity ?? 1;
+    }
+
+    const id = getFakeRecipeId(reactor.name, `${reactor.name}-reactor`);
+    const recipe: RecipeJson = {
+      id,
+      name: entityLocale.names[reactor.name],
+      category: 'other',
+      row: 2,
+      time: 1,
+      in: {},
+      out: { [HEAT_ID]: (getMachineUsage(reactor) ?? 0) * effectivity },
+      producers: [reactorName],
+    };
+    modData.recipes.push(recipe);
   }
 
   // https://lua-api.factorio.com/latest/auxiliary/item-weight.html
@@ -2277,6 +2313,45 @@ async function processMod(): Promise<void> {
     // Third, sort by prototype order field
     return coalesce(a.order, '').localeCompare(coalesce(b.order, ''));
   });
+
+  /**
+   * Note: These virtual signals are hard-coded, and would need to be adjusted
+   * by hand for alternate locales.
+   */
+
+  groupsUsed.add('other');
+  const pollution: ItemJson = {
+    id: POLLUTION_ID,
+    name: 'Pollution',
+    category: 'other',
+  };
+  await resizeIcon(
+    `${scriptOutputPath}/airborne-pollutant/pollution.png`,
+    POLLUTION_ID,
+  );
+  modData.items.push(pollution);
+
+  const electricity: ItemJson = {
+    id: ELECTRICITY_ID,
+    name: 'Electricity',
+    category: 'other',
+  };
+  await resizeIcon(
+    `${scriptOutputPath}/virtual-signal/signal-lightning.png`,
+    ELECTRICITY_ID,
+  );
+  modData.items.push(electricity);
+
+  const heat: ItemJson = {
+    id: HEAT_ID,
+    name: 'Heat',
+    category: 'other',
+  };
+  await resizeIcon(
+    `${scriptOutputPath}/virtual-signal/signal-thermometer-red.png`,
+    HEAT_ID,
+  );
+  modData.items.push(heat);
 
   const labs = Object.keys(machines.lab);
   const technologyIds = technologies.map((t) => t.name);

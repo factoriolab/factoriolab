@@ -1,6 +1,5 @@
 import { Rational, rational } from '~/rational/rational';
 
-import { EnergyType } from './energy-type';
 import { ModuleEffect } from './module';
 
 export interface BeaconJson {
@@ -8,7 +7,7 @@ export interface BeaconJson {
   modules: number | string;
   range?: number | string;
   /** Beacons must use electric energy source, if any */
-  type?: EnergyType.Electric;
+  type?: 'electric';
   /** Energy consumption in kW */
   usage?: number | string;
   disallowedEffects?: ModuleEffect[];
@@ -23,7 +22,7 @@ export interface Beacon {
   modules: Rational;
   range?: Rational;
   /** Beacons must use electric or void energy source */
-  type?: EnergyType.Electric;
+  type?: 'electric';
   /** Energy consumption in kW */
   usage?: Rational;
   disallowedEffects?: ModuleEffect[];

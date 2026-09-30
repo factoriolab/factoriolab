@@ -425,7 +425,10 @@
                         }
                       }
 
-                      @if (data().flags.has('overclock')) {
+                      @if (
+                        data().flags.has('overclock') ||
+                        machine.flags.has('overclock')
+                      ) {
                         <lab-input-number
                           class="w-16 -ms-px"
                           rounded="none"
@@ -442,7 +445,24 @@
                               ms.defaultOverclock
                             )
                           "
-                        ></lab-input-number>
+                        />
+                      } @else if (machine.flags.has('overclock')) {
+                        <lab-input-number
+                          class="w-16 -ms-px"
+                          rounded="none"
+                          [minimum]="rational(100)"
+                          [step]="rational(100)"
+                          [percent]="true"
+                          [ngModel]="ms.overclock"
+                          (ngModelChange)="
+                            machinesStore.updateRecordField(
+                              machineId,
+                              'overclock',
+                              $event,
+                              ms.defaultOverclock
+                            )
+                          "
+                        />
                       }
 
                       @if (ms.beacons && ms.beacons.length) {

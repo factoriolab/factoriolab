@@ -261,15 +261,34 @@
           @if (step.surplus) {
             <span
               class="flex justify-end font-mono whitespace-pre text-brand-400"
-              >(+{{ step.surplus | rate: cols().items?.precision }})</span
             >
+              @if (step.itemId | isPower) {
+                (+{{
+                  step.items
+                    | power
+                      : cols().power?.precision
+                      : objectivesStore.effectivePowerUnit()
+                }})
+              } @else {
+                (+{{ step.items | rate: cols().items?.precision }})
+              }
+            </span>
           }
         </td>
         <td class="w-0 px-0">
           @if (step.items) {
-            <span class="flex justify-end font-mono whitespace-pre">{{
-              step.items | rate: cols().items?.precision
-            }}</span>
+            <span class="flex justify-end font-mono whitespace-pre">
+              @if (step.itemId | isPower) {
+                {{
+                  step.items
+                    | power
+                      : cols().power?.precision
+                      : objectivesStore.effectivePowerUnit()
+                }}
+              } @else {
+                {{ step.items | rate: cols().items?.precision }}
+              }
+            </span>
           }
         </td>
         <td>
@@ -445,12 +464,13 @@
         <td colspan="2"></td>
         <!-- Machines (Value & Icon) -->
         @if (step.recipeSettings?.machineId; as machineId) {
+          @let machine = data().machineRecord[machineId];
           <td class="pe-0">
             @if (
               step.recipeId &&
               step.machines &&
               step.machines.nonzero() &&
-              !data().machineRecord[machineId].hideRate
+              !machine.flags.has('hideRate')
             ) {
               <span class="flex justify-end font-mono whitespace-pre">
                 @if (
@@ -511,7 +531,24 @@
                         step.recipeSettings.defaultOverclock
                       )
                     "
-                  ></lab-input-number>
+                  />
+                } @else if (machine.flags.has('overclock')) {
+                  <lab-input-number
+                    class="w-16"
+                    [minimum]="rational(100)"
+                    [step]="rational(100)"
+                    [percent]="true"
+                    labTooltip="steps.neighborBonus"
+                    [ngModel]="step.recipeSettings.overclock"
+                    (ngModelChange)="
+                      objectivesStore.updateRecipeField(
+                        step,
+                        'overclock',
+                        $event,
+                        step.recipeSettings.defaultOverclock
+                      )
+                    "
+                  />
                 }
 
                 @if (step.recipeSettings.fuelId; as fuelId) {
@@ -544,35 +581,31 @@
                 }
 
                 @if (step.recipeSettings.modules; as modules) {
-                  @if (data().machineRecord[machineId]; as machine) {
-                    @if (machine.modules !== true && machine.modules?.isOne()) {
-                      <lab-select
-                        [iconOnly]="true"
-                        [options]="step.recipeSettings.moduleOptions ?? []"
-                        [labTooltip]="
-                          modules[0].id || 'settings.modifierTooltip'
-                        "
-                        [labTooltipType]="modules[0].id ? 'module' : undefined"
-                        [labTooltipAction]="
-                          modules[0].id ? 'settings.modifierTooltip' : undefined
-                        "
-                        [ngModel]="modules[0].id"
-                        (ngModelChange)="
-                          changeModulesBeacons(step, {
-                            modules: [{ id: $event, count: rational.one }],
-                          })
-                        "
-                      ></lab-select>
-                    } @else if (machine.modules != null) {
-                      <lab-modules-select
-                        [machine]="machine"
-                        [recipeId]="step.recipeId"
-                        [ngModel]="modules"
-                        (ngModelChange)="
-                          changeModulesBeacons(step, { modules: $event })
-                        "
-                      ></lab-modules-select>
-                    }
+                  @if (machine.modules !== true && machine.modules?.isOne()) {
+                    <lab-select
+                      [iconOnly]="true"
+                      [options]="step.recipeSettings.moduleOptions ?? []"
+                      [labTooltip]="modules[0].id || 'settings.modifierTooltip'"
+                      [labTooltipType]="modules[0].id ? 'module' : undefined"
+                      [labTooltipAction]="
+                        modules[0].id ? 'settings.modifierTooltip' : undefined
+                      "
+                      [ngModel]="modules[0].id"
+                      (ngModelChange)="
+                        changeModulesBeacons(step, {
+                          modules: [{ id: $event, count: rational.one }],
+                        })
+                      "
+                    ></lab-select>
+                  } @else if (machine.modules != null) {
+                    <lab-modules-select
+                      [machine]="machine"
+                      [recipeId]="step.recipeId"
+                      [ngModel]="modules"
+                      (ngModelChange)="
+                        changeModulesBeacons(step, { modules: $event })
+                      "
+                    ></lab-modules-select>
                   }
                 }
               </div>

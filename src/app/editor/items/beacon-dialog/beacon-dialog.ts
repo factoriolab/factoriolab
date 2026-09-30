@@ -11,7 +11,6 @@ import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
 import { DialogData } from '~/components/dialog/dialog';
 import { BeaconJson } from '~/data/schema/beacon';
-import { EnergyType } from '~/data/schema/energy-type';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { SetJoinPipe } from '~/utils/set';
 
@@ -45,7 +44,6 @@ export class BeaconDialog implements DialogData {
     inject<DialogRef<BeaconJson | null | undefined>>(DialogRef);
 
   protected readonly moduleEffectOptions = moduleEffectOptions;
-  protected readonly EnergyType = EnergyType;
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;

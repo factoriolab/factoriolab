@@ -715,7 +715,9 @@
             </td>
           </tr>
         }
-        @if (data().flags.has('overclock')) {
+        @if (
+          data().flags.has('overclock') || obj.machine.flags.has('overclock')
+        ) {
           <tr>
             <th>{{ 'data.overclock' | translate }}</th>
             <td>{{ machineSettings.overclock }}%</td>

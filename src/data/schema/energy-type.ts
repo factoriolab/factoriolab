@@ -1,4 +1,1 @@
-export enum EnergyType {
-  Burner = 'burner',
-  Electric = 'electric',
-}
+export type EnergyType = 'burner' | 'electric' | 'heat';
