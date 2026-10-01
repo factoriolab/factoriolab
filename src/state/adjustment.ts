@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 
 import { AdjustedInserter } from '~/data/schema/inserter';
-import { itemHasQuality } from '~/data/schema/item';
+import { HEAT_ID, itemHasQuality } from '~/data/schema/item';
 import { Machine } from '~/data/schema/machine';
 import {
   effects,
@@ -346,22 +346,28 @@ export class Adjustment {
 
       // Power
       recipe.drain = machine.drain;
-      let usage = recipe.usage ?? machine.usage ?? rational.zero;
+      let usage = recipe.usage ?? machine.usage;
+      let burner = machine.burner;
+      let heat = machine.heat;
       if (oc) {
         // Polynomial effect only on production buildings, not power generation
         if (usage?.gt(rational.zero)) usage = usage.mul(oc.pow(1.321928));
-        else usage = usage.mul(oc);
+        else usage = usage?.mul(oc);
       }
 
-      usage = usage.mul(eff.consumption);
-      recipe.consumption = machine.type === 'electric' ? usage : rational.zero;
+      usage = usage?.mul(eff.consumption);
+      burner = burner?.mul(eff.consumption);
+      heat = heat?.mul(eff.consumption);
+      recipe.electricity = usage;
+      recipe.burner = burner;
+      recipe.heat = heat;
 
       if (
         data.flags.has('consumptionAsDrain') &&
-        recipe.consumption?.nonzero()
+        recipe.electricity?.nonzero()
       ) {
-        recipe.drain = recipe.consumption;
-        delete recipe.consumption;
+        recipe.drain = recipe.electricity;
+        delete recipe.electricity;
       }
 
       // Pollution
@@ -424,18 +430,15 @@ export class Adjustment {
         }
       }
 
-      if (machine.type === 'heat') {
-        console.log(recipe.time, usage);
-        recipe.in['heat'] = usage;
-      }
+      if (heat) recipe.in[HEAT_ID] = heat;
 
       // Calculate burner fuel inputs
       if (recipeState.fuelId) {
         const fuel = data.fuelRecord[recipeState.fuelId];
 
-        if (fuel) {
+        if (fuel && burner) {
           const fuelIn = recipe.time
-            .mul(usage)
+            .mul(burner)
             .div(fuel.value)
             .div(rational(1000n));
 
@@ -828,7 +831,7 @@ export class Adjustment {
     if (recipe.flags.has('burn')) {
       s.defaultFuelId = Object.keys(recipe.in)[0];
       s.fuelId = s.defaultFuelId;
-    } else if (machine?.type === 'burner') {
+    } else if (machine?.burner) {
       s.defaultFuelId = def?.fuelId;
       s.fuelId = coalesce(s.fuelId, s.defaultFuelId);
       s.fuelOptions = def?.fuelOptions;

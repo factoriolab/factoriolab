@@ -26,6 +26,21 @@ function updateMods(mods: string[]): void {
     const modData = getJsonData(modDataPath) as ModData;
 
     // modData.items.forEach((i) => {
+    //   if (i.machine) {
+    //     if (i.machine.type) {
+    //       if (i.machine.type === 'burner') {
+    //         i.machine.burner = i.machine.usage;
+    //         delete i.machine.type;
+    //         delete i.machine.usage;
+    //       } else if (i.machine.type === 'heat') {
+    //         i.machine.heat = i.machine.usage;
+    //         delete i.machine.heat;
+    //         delete i.machine.usage;
+    //       } else {
+    //         delete i.machine.type;
+    //       }
+    //     }
+    //   }
     // });
     // modData.recipes.forEach((i) => {
     //   if (i.name == null) console.log('recipe', i.id);

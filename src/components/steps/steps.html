@@ -532,11 +532,11 @@
                       )
                     "
                   />
-                } @else if (machine.flags.has('overclock')) {
+                } @else if (machine.neighborBonus) {
                   <lab-input-number
                     class="w-16"
                     [minimum]="rational(100)"
-                    [step]="rational(100)"
+                    [step]="machine.neighborBonus"
                     [percent]="true"
                     labTooltip="steps.neighborBonus"
                     [ngModel]="step.recipeSettings.overclock"

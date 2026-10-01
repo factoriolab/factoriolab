@@ -47,29 +47,66 @@
       </td>
     </tr>
     <tr>
-      <th id="type-header">
-        {{ 'data.energySource' | translate }}
-      </th>
+      <th id="usage-header">{{ 'data.powerUsage' | translate }}</th>
       <td>
-        <div class="flex items-center">
-          <lab-select
-            labelledBy="type-header"
-            [options]="energySourceOptions"
-            [(ngModel)]="data.machine.type"
+        <div class="gap-1 flex items-center">
+          <input
+            type="text"
+            aria-labelledby="usage-header"
+            class="input"
+            [placeholder]="'data.powerUsage' | translate"
+            [ngModel]="data.machine.usage"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="data.machine.usage = toNullableNumeric($event)"
           />
+          <span>kW</span>
         </div>
       </td>
     </tr>
     <tr>
-      <th id="fuel-categories-header">
-        {{ 'data.fuelCategories' | translate }}
+      <th id="drain-header">{{ 'data.powerDrain' | translate }}</th>
+      <td>
+        <div class="gap-1 flex items-center">
+          <input
+            type="text"
+            aria-labelledby="drain-header"
+            class="input"
+            [placeholder]="'data.powerDrain' | translate"
+            [ngModel]="data.machine.drain"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="data.machine.drain = toNullableNumeric($event)"
+          />
+          <span>kW</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="burner-header">{{ 'data.fuelUsage' | translate }}</th>
+      <td>
+        <div class="gap-1 flex items-center">
+          <input
+            type="text"
+            aria-labelledby="burner-header"
+            class="input"
+            [placeholder]="'data.fuelUsage' | translate"
+            [ngModel]="data.machine.burner"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            (ngModelChange)="data.machine.burner = toNullableNumeric($event)"
+          />
+          <span>kW</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th id="fuel-types-header">
+        {{ 'data.fuelTypes' | translate }}
       </th>
       <td>
         <input
           type="text"
-          aria-labelledby="fuel-categories-header"
+          aria-labelledby="fuel-types-header"
           class="input"
-          [placeholder]="'data.fuelCategories' | translate"
+          [placeholder]="'data.fuelTypes' | translate"
           [ngModel]="data.machine.fuelTypes | setJoin"
           [ngModelOptions]="{ updateOn: 'blur' }"
           (ngModelChange)="data.machine.fuelTypes = toNullableArray($event)"
@@ -91,34 +128,17 @@
       </td>
     </tr>
     <tr>
-      <th id="usage-header">{{ 'data.energyConsumption' | translate }}</th>
+      <th id="heat-header">{{ 'data.heatUsage' | translate }}</th>
       <td>
         <div class="gap-1 flex items-center">
           <input
             type="text"
-            aria-labelledby="usage-header"
+            aria-labelledby="heat-header"
             class="input"
-            [placeholder]="'data.energyConsumption' | translate"
-            [ngModel]="data.machine.usage"
+            [placeholder]="'data.heatUsage' | translate"
+            [ngModel]="data.machine.heat"
             [ngModelOptions]="{ updateOn: 'blur' }"
-            (ngModelChange)="data.machine.usage = toNullableNumeric($event)"
-          />
-          <span>kW</span>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <th id="drain-header">{{ 'data.energyDrain' | translate }}</th>
-      <td>
-        <div class="gap-1 flex items-center">
-          <input
-            type="text"
-            aria-labelledby="drain-header"
-            class="input"
-            [placeholder]="'data.energyDrain' | translate"
-            [ngModel]="data.machine.drain"
-            [ngModelOptions]="{ updateOn: 'blur' }"
-            (ngModelChange)="data.machine.drain = toNullableNumeric($event)"
+            (ngModelChange)="data.machine.heat = toNullableNumeric($event)"
           />
           <span>kW</span>
         </div>

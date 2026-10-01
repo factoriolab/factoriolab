@@ -26,7 +26,7 @@
           *ngTemplateOutlet="
             effectRow;
             context: {
-              label: 'data.energyConsumption',
+              label: 'data.consumption',
               value: effects.consumption,
             }
           "
@@ -90,15 +90,9 @@
               <td>{{ 'data.range' | translate }}</td>
               <td>{{ beacon.range }}</td>
             </tr>
-            @if (beacon.type) {
-              <tr>
-                <td>{{ 'data.energySource' | translate }}</td>
-                <td>{{ beacon.type }}</td>
-              </tr>
-            }
             @if (beacon.usage) {
               <tr>
-                <td>{{ 'data.energyConsumption' | translate }}</td>
+                <td>{{ 'data.powerUsage' | translate }}</td>
                 <td>{{ beacon.usage | usage }}</td>
               </tr>
             }
@@ -187,7 +181,7 @@
             @if (machine.baseEffect; as eff) {
               @if (eff.consumption && eff.consumption.nonzero()) {
                 <tr>
-                  <td>{{ 'data.energyConsumption' | translate }}</td>
+                  <td>{{ 'data.consumption' | translate }}</td>
                   <td>{{ eff.consumption | bonusPercent }}</td>
                 </tr>
               }
@@ -228,10 +222,22 @@
                 <td>{{ machine.disallowedEffects | setJoin }}</td>
               </tr>
             }
-            @if (machine.type) {
+            @if (machine.usage && machine.usage.nonzero()) {
               <tr>
-                <td>{{ 'data.energySource' | translate }}</td>
-                <td>{{ machine.type }}</td>
+                <td>{{ 'data.powerUsage' | translate }}</td>
+                <td>{{ machine.usage | usage }}</td>
+              </tr>
+            }
+            @if (machine.drain && machine.drain.nonzero()) {
+              <tr>
+                <td>{{ 'data.energyDrain' | translate }}</td>
+                <td>{{ machine.drain | usage }}</td>
+              </tr>
+            }
+            @if (machine.burner && machine.burner.nonzero()) {
+              <tr>
+                <td>{{ 'data.fuelUsage' | translate }}</td>
+                <td>{{ machine.burner | usage }}</td>
               </tr>
             }
             @if (machine.fuelTypes) {
@@ -246,16 +252,10 @@
                 <td>{{ machine.fuel }}</td>
               </tr>
             }
-            @if (machine.usage && machine.usage.nonzero()) {
+            @if (machine.heat && machine.heat.nonzero()) {
               <tr>
-                <td>{{ 'data.energyConsumption' | translate }}</td>
-                <td>{{ machine.usage | usage }}</td>
-              </tr>
-            }
-            @if (machine.drain && machine.drain.nonzero()) {
-              <tr>
-                <td>{{ 'data.energyDrain' | translate }}</td>
-                <td>{{ machine.drain | usage }}</td>
+                <td>{{ 'data.heatUsage' | translate }}</td>
+                <td>{{ machine.heat | usage }}</td>
               </tr>
             }
             @if (machine.pollution && machine.pollution.nonzero()) {
@@ -309,7 +309,7 @@
           <table>
             @if (module.consumption && module.consumption.nonzero()) {
               <tr>
-                <td>{{ 'data.energyConsumption' | translate }}</td>
+                <td>{{ 'data.consumption' | translate }}</td>
                 <td>{{ module.consumption | bonusPercent }}</td>
               </tr>
             }

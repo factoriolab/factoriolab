@@ -85,9 +85,10 @@
     "dimensions": "Dimensions",
     "disallowedEffects": "Disallowed effects",
     "efficiency": "Efficiency",
-    "energyConsumption": "Power",
-    "energyDrain": "Energy drain",
-    "energySource": "Energy source",
+    "powerUsage": "Power usage",
+    "fuelUsage": "Fuel usage",
+    "heatUsage": "Heat usage",
+    "powerDrain": "Power drain",
     "excluded": "Excluded",
     "flags": "Flags",
     "flowRate": "Flow rate",
@@ -150,6 +151,7 @@
     "time": "Time (s)",
     "types": "Types",
     "unlockQuality": "Unlock quality",
+    "neighborBonus": "Neighbor bonus",
     "unlockRecipe": "Unlock recipe",
     "unlockedBy": "Unlocked by",
     "unlockedRecipes": "Unlocked recipes",
@@ -313,11 +315,6 @@
       "force": "Force",
       "layered": "Layered",
       "stress": "Stress"
-    },
-    "energyType": {
-      "burner": "Burner",
-      "electric": "Electric",
-      "heat": "Heat"
     },
     "flowDiagram": {
       "boxLine": "Box-line",
@@ -551,7 +548,6 @@
     "wagonRankTooltip": "Select the order of preferred wagons to be used where applicable"
   },
   "steps": {
-    "neighborBonus": "Neighbor bonus",
     "beaconsUndoTooltip": "Undo all beacon modifications",
     "beltSelectTooltip": "Click to select belt and stack size",
     "beltTooltip": "Click to select belt",

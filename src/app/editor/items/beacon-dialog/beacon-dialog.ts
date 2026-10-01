@@ -8,7 +8,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
-import { Checkbox } from '~/components/checkbox/checkbox';
 import { DialogData } from '~/components/dialog/dialog';
 import { BeaconJson } from '~/data/schema/beacon';
 import { TranslatePipe } from '~/translate/translate-pipe';
@@ -24,14 +23,7 @@ import {
 
 @Component({
   selector: 'lab-beacon-dialog',
-  imports: [
-    FormsModule,
-    Button,
-    Checkbox,
-    TranslatePipe,
-    SetJoinPipe,
-    EditorMultiselect,
-  ],
+  imports: [FormsModule, Button, TranslatePipe, SetJoinPipe, EditorMultiselect],
   templateUrl: './beacon-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

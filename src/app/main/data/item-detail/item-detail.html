@@ -58,15 +58,9 @@
             <td>{{ beacon.range }}</td>
           </tr>
         }
-        @if (beacon.type) {
-          <tr>
-            <th>{{ 'data.energySource' | translate }}</th>
-            <td>{{ 'options.energyType.' + beacon.type | translate }}</td>
-          </tr>
-        }
         @if (beacon.usage) {
           <tr>
-            <th>{{ 'data.energyConsumption' | translate }}</th>
+            <th>{{ 'data.powerUsage' | translate }}</th>
             <td>{{ beacon.usage | usage }}</td>
           </tr>
         }
@@ -186,10 +180,22 @@
             <td>{{ machine.disallowedEffects | setJoin }}</td>
           </tr>
         }
-        @if (machine.type) {
+        @if (machine.usage) {
           <tr>
-            <th>{{ 'data.energySource' | translate }}</th>
-            <td>{{ 'options.energyType.' + machine.type | translate }}</td>
+            <th>{{ 'data.powerUsage' | translate }}</th>
+            <td>{{ machine.usage | usage }}</td>
+          </tr>
+        }
+        @if (machine.drain) {
+          <tr>
+            <th>{{ 'data.energyDrain' | translate }}</th>
+            <td>{{ machine.drain | usage }}</td>
+          </tr>
+        }
+        @if (machine.burner) {
+          <tr>
+            <th>{{ 'data.burnerUsage' | translate }}</th>
+            <td>{{ machine.burner | usage }}</td>
           </tr>
         }
         @if (machine.fuelTypes?.size) {
@@ -204,16 +210,10 @@
             <td>{{ machine.fuel }}</td>
           </tr>
         }
-        @if (machine.usage) {
+        @if (machine.heat) {
           <tr>
-            <th>{{ 'data.energyConsumption' | translate }}</th>
-            <td>{{ machine.usage | usage }}</td>
-          </tr>
-        }
-        @if (machine.drain) {
-          <tr>
-            <th>{{ 'data.energyDrain' | translate }}</th>
-            <td>{{ machine.drain | usage }}</td>
+            <th>{{ 'data.heatUsage' | translate }}</th>
+            <td>{{ machine.heat | usage }}</td>
           </tr>
         }
         @if (machine.pollution) {
@@ -253,7 +253,7 @@
             </th>
             @if (baseEffect.consumption) {
               <tr>
-                <th>{{ 'data.energyConsumption' | translate }}</th>
+                <th>{{ 'data.consumption' | translate }}</th>
                 <td>{{ baseEffect.consumption | bonusPercent }}</td>
               </tr>
             }
@@ -344,7 +344,7 @@
         </tr>
         @if (module.consumption) {
           <tr>
-            <th>{{ 'data.energyConsumption' | translate }}</th>
+            <th>{{ 'data.consumption' | translate }}</th>
             <td>{{ module.consumption | bonusPercent }}</td>
           </tr>
         }
@@ -715,11 +715,14 @@
             </td>
           </tr>
         }
-        @if (
-          data().flags.has('overclock') || obj.machine.flags.has('overclock')
-        ) {
+        @if (data().flags.has('overclock')) {
           <tr>
             <th>{{ 'data.overclock' | translate }}</th>
+            <td>{{ machineSettings.overclock }}%</td>
+          </tr>
+        } @else if (obj.machine.neighborBonus) {
+          <tr>
+            <th>{{ 'data.neighborBonus' | translate }}</th>
             <td>{{ machineSettings.overclock }}%</td>
           </tr>
         }

@@ -425,10 +425,7 @@
                         }
                       }
 
-                      @if (
-                        data().flags.has('overclock') ||
-                        machine.flags.has('overclock')
-                      ) {
+                      @if (data().flags.has('overclock')) {
                         <lab-input-number
                           class="w-16 -ms-px"
                           rounded="none"
@@ -446,12 +443,12 @@
                             )
                           "
                         />
-                      } @else if (machine.flags.has('overclock')) {
+                      } @else if (machine.neighborBonus) {
                         <lab-input-number
                           class="w-16 -ms-px"
                           rounded="none"
                           [minimum]="rational(100)"
-                          [step]="rational(100)"
+                          [step]="machine.neighborBonus"
                           [percent]="true"
                           [ngModel]="ms.overclock"
                           (ngModelChange)="

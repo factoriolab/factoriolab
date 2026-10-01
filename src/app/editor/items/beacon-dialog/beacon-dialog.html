@@ -45,27 +45,14 @@
       </td>
     </tr>
     <tr>
-      <th id="type-header">{{ 'data.energySource' | translate }}</th>
-      <td>
-        <div class="flex items-center">
-          <lab-checkbox
-            labelledBy="type-header"
-            label="editor.electric"
-            [ngModel]="data.type != null"
-            (ngModelChange)="data.type = $event ? 'electric' : undefined"
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <th id="usage-header">{{ 'data.energyConsumption' | translate }}</th>
+      <th id="usage-header">{{ 'data.powerUsage' | translate }}</th>
       <td>
         <div class="gap-1 flex items-center">
           <input
             type="text"
             aria-labelledby="usage-header"
             class="input"
-            [placeholder]="'data.energyConsumption' | translate"
+            [placeholder]="'data.powerUsage' | translate"
             [ngModel]="data.usage"
             [ngModelOptions]="{ updateOn: 'blur' }"
             (ngModelChange)="data.usage = toNullableNumeric($event)"

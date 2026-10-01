@@ -2,7 +2,6 @@ import { Rational, rational } from '~/rational/rational';
 import { asSet } from '~/utils/coercion';
 import { toRationalRecord } from '~/utils/record';
 
-import { EnergyType } from './energy-type';
 import { ModuleEffect } from './module';
 import { parseSilo, Silo, SiloJson } from './silo';
 
@@ -10,29 +9,28 @@ export type MachineFlag =
   /** Whether to hide the calculated number of machines */
   | 'hideRate'
   /** Whether to tally totals by recipe instead of by machine */
-  | 'totalRecipe'
-  /**
-   * Whether this machine supports overclocking (currently only used for
-   * Factorio reactor neighbor bonus)
-   */
-  | 'overclock';
+  | 'totalRecipe';
 
 export interface MachineJson {
   /** If undefined, speed is based on belt speed */
   speed?: number | string;
   modules?: number | true;
   disallowedEffects?: ModuleEffect[];
-  type?: EnergyType;
+  /** Electric energy consumption in kW */
+  usage?: number | string;
+  /** Electric drain in kW */
+  drain?: number | string;
+  /** Burner energy consumption in kW */
+  burner?: number | string;
+  /** Heat energy consumption in kW */
+  heat?: number | string;
+  /** Pollution in #/m */
+  pollution?: number | string;
   /** Fuel categories, e.g. chemical or nuclear */
   fuelTypes?: string[];
   /** Indicates a specific fuel that must be used */
   fuel?: string;
-  /** Energy consumption in kW */
-  usage?: number | string;
-  /** Drain in kW */
-  drain?: number | string;
-  /** Pollution in #/m */
-  pollution?: number | string;
+  neighborBonus?: number | string;
   silo?: SiloJson;
   consumption?: Partial<Record<string, number | string>>;
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
@@ -42,8 +40,8 @@ export interface MachineJson {
   locations?: string[];
   /** Percent of ingredients used (Space Age: Biolab) */
   ingredientUsage?: number;
-  qualityRecord?: Record<string, Partial<MachineJson>>;
   flags?: MachineFlag[];
+  qualityRecord?: Record<string, Partial<MachineJson>>;
 }
 
 export interface Machine {
@@ -51,15 +49,21 @@ export interface Machine {
   speed?: Rational;
   modules?: Rational | true;
   disallowedEffects?: ModuleEffect[];
-  type?: EnergyType;
+  /** Electric energy consumption in kW */
+  usage?: Rational;
+  /** Electric drain in kW */
+  drain?: Rational;
+  /** Burner energy consumption in kW */
+  burner?: Rational;
+  /** Heat energy consumption in kW */
+  heat?: Rational;
+  /** Pollution in #/m */
+  pollution?: Rational;
   /** Fuel categories, e.g. chemical or nuclear */
   fuelTypes?: Set<string>;
   /** Indicates a specific fuel that must be used */
   fuel?: string;
-  /** Energy consumption in kW */
-  usage?: Rational;
-  drain?: Rational;
-  pollution?: Rational;
+  neighborBonus?: Rational;
   silo?: Silo;
   consumption?: Partial<Record<string, Rational>>;
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
@@ -89,12 +93,14 @@ export function parseMachine(
           ? undefined
           : rational(json.modules),
     disallowedEffects: json.disallowedEffects,
-    type: json.type,
-    fuelTypes: asSet(json.fuelTypes),
-    fuel: json.fuel,
     usage: rational(json.usage),
     drain: rational(json.drain),
+    burner: rational(json.burner),
+    heat: rational(json.heat),
     pollution: rational(json.pollution),
+    fuelTypes: asSet(json.fuelTypes),
+    fuel: json.fuel,
+    neighborBonus: rational(json.neighborBonus),
     silo: parseSilo(json.silo),
     consumption: toRationalRecord(json.consumption),
     size: json.size,

@@ -2,7 +2,7 @@
   <tbody>
     <tr>
       <th id="consumption-header">
-        {{ 'data.energyConsumption' | translate }}
+        {{ 'data.consumption' | translate }}
       </th>
       <td>
         <input
@@ -10,7 +10,7 @@
           aria-labelledby="consumption-header"
           class="input"
           required
-          [placeholder]="'data.energyConsumption' | translate"
+          [placeholder]="'data.consumption' | translate"
           [ngModel]="data.module.consumption"
           [ngModelOptions]="{ updateOn: 'blur' }"
           (ngModelChange)="data.module.consumption = toNullableNumeric($event)"

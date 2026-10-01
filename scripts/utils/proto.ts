@@ -1,8 +1,6 @@
 import { BeaconJson } from '~/data/schema/beacon';
 import { BeltJson } from '~/data/schema/belt';
-import { EnergyType } from '~/data/schema/energy-type';
 import { InserterJson } from '~/data/schema/inserter';
-import { MachineFlag } from '~/data/schema/machine';
 import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
 import { WagonJson } from '~/data/schema/wagon';
@@ -23,7 +21,6 @@ export function getBeacon(
     effectivity: proto.distribution_effectivity,
     modules: proto.module_slots,
     range: proto.supply_area_distance,
-    type: proto.energy_source.type === 'electric' ? 'electric' : undefined,
     usage,
     disallowedEffects: getDisallowedEffects(proto.allowed_effects, true),
     size: getEntitySize(proto),
@@ -160,7 +157,8 @@ export function getMachineDisallowedEffects(
   if (
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
-    M.isReactorPrototype(proto)
+    M.isReactorPrototype(proto) ||
+    M.isFusionReactorPrototype(proto)
   )
     return undefined;
 
@@ -168,11 +166,7 @@ export function getMachineDisallowedEffects(
 }
 
 export function getMachineDrain(proto: D.MachineProto): number | undefined {
-  if (
-    M.isOffshorePumpPrototype(proto) ||
-    proto.energy_source.type !== 'electric'
-  )
-    return undefined;
+  if (proto.energy_source.type !== 'electric') return undefined;
 
   if (proto.energy_source.drain != null)
     return getPowerInKw(proto.energy_source.drain);
@@ -197,6 +191,7 @@ export function getMachineModules(
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
+    M.isFusionReactorPrototype(proto) ||
     proto.module_slots == null
   )
     return undefined;
@@ -239,7 +234,9 @@ export function getMachinePollution(
   if (
     pollution &&
     quality &&
-    (M.isBoilerPrototype(proto) || M.isReactorPrototype(proto))
+    (M.isBoilerPrototype(proto) ||
+      M.isReactorPrototype(proto) ||
+      M.isFusionReactorPrototype(proto))
   )
     pollution *= getDefaultMultiplier(quality);
 
@@ -311,7 +308,11 @@ export function getMachineSpeed(
   quality?: M.QualityPrototype,
 ): number {
   let speed: number;
-  if (M.isReactorPrototype(proto) || M.isOffshorePumpPrototype(proto)) {
+  if (
+    M.isReactorPrototype(proto) ||
+    M.isFusionReactorPrototype(proto) ||
+    M.isOffshorePumpPrototype(proto)
+  ) {
     speed = 1;
 
     if (quality) speed *= getDefaultMultiplier(quality);
@@ -346,35 +347,44 @@ export function getMachineSpeed(
   return speed;
 }
 
-export function getMachineType(proto: D.MachineProto): EnergyType | undefined {
-  if (M.isOffshorePumpPrototype(proto)) return undefined;
-
-  switch (proto.energy_source.type) {
-    case 'burner':
-    case 'fluid':
-      return 'burner';
-    case 'electric':
-      return 'electric';
-    case 'heat':
-      return 'heat';
-    default:
-      return undefined;
-  }
-}
-
 export function getMachineUsage(
   proto: D.MachineProto,
   quality?: M.QualityPrototype,
 ): number | undefined {
+  if (proto.energy_source.type !== 'electric') return undefined;
+  return getMachinePower(proto, quality);
+}
+
+export function getMachineBurner(
+  proto: D.MachineProto,
+  quality?: M.QualityPrototype,
+): number | undefined {
+  if (proto.energy_source.type !== 'burner') return undefined;
+  return getMachinePower(proto, quality);
+}
+
+export function getMachineHeat(
+  proto: D.MachineProto,
+  quality?: M.QualityPrototype,
+): number | undefined {
+  if (proto.energy_source.type !== 'heat') return undefined;
+  return getMachinePower(proto, quality);
+}
+
+export function getMachinePower(
+  proto: D.MachineProto,
+  quality?: M.QualityPrototype,
+): number | undefined {
   let usage: number | undefined;
-  if (M.isOffshorePumpPrototype(proto)) usage = undefined;
-  else if (M.isBoilerPrototype(proto)) {
+  if (M.isBoilerPrototype(proto)) {
     usage = getPowerInKw(proto.energy_consumption);
     if (usage && quality) usage *= getDefaultMultiplier(quality);
   } else if (M.isReactorPrototype(proto)) {
     usage = getPowerInKw(proto.consumption);
     if (usage && quality) usage *= getDefaultMultiplier(quality);
-  } else usage = getPowerInKw(proto.energy_usage);
+  } else if (M.isFusionReactorPrototype(proto))
+    usage = getPowerInKw(proto.power_input);
+  else usage = getPowerInKw(proto.energy_usage);
 
   return usage;
 }
@@ -386,6 +396,7 @@ export function getMachineBaseEffect(
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
+    M.isFusionReactorPrototype(proto) ||
     proto.effect_receiver?.base_effect == null
   )
     return undefined;
@@ -413,11 +424,11 @@ export function getMachineIngredientUsage(
   return undefined;
 }
 
-export function getMachineFlags(
+export function getMachineNeighborBonus(
   proto: D.MachineProto,
-): MachineFlag[] | undefined {
+): number | undefined {
   if (M.isReactorPrototype(proto) || M.isFusionReactorPrototype(proto)) {
-    if (proto.neighbour_bonus) return ['overclock'];
+    if (proto.neighbour_bonus) return proto.neighbour_bonus * 100;
   }
 
   return undefined;

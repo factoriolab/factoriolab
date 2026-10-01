@@ -18,7 +18,6 @@ import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
 import { DialogData } from '~/components/dialog/dialog';
 import { Select } from '~/components/select/select';
-import { EnergyType } from '~/data/schema/energy-type';
 import { MachineFlag, MachineJson } from '~/data/schema/machine';
 import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
@@ -76,12 +75,6 @@ export class MachineDialog implements DialogData {
   protected readonly dialogRef =
     inject<DialogRef<MachineJson | null | undefined>>(DialogRef);
 
-  protected readonly energySourceOptions: Option<EnergyType | undefined>[] = [
-    { label: 'none', value: undefined },
-    { label: 'options.energyType.burner', value: 'burner' },
-    { label: 'options.energyType.electric', value: 'electric' },
-    { label: 'options.energyType.heat', value: 'heat' },
-  ];
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;

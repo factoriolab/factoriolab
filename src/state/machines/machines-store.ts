@@ -36,7 +36,7 @@ export class MachinesStore extends RecordStore<MachineState> {
       const machine = data.machineRecord[id];
       const s: MachineSettings = spread(state[id]);
 
-      if (machine.type === 'burner') {
+      if (machine.burner) {
         s.fuelOptions = this.options.fuelOptions(machine, settings, data);
         s.defaultFuelId = this.options.bestMatch(
           s.fuelOptions,
@@ -64,7 +64,7 @@ export class MachinesStore extends RecordStore<MachineState> {
       }
 
       s.defaultOverclock = settings.overclock;
-      if (machine.flags.has('overclock')) s.defaultOverclock ??= rational(100n);
+      if (machine.neighborBonus) s.defaultOverclock ??= rational(100n);
       s.overclock ??= s.defaultOverclock;
 
       value[id] = s;

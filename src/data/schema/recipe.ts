@@ -67,7 +67,9 @@ export interface Recipe {
   iconText?: string;
   usage?: Rational;
   drain?: Rational;
-  consumption?: Rational;
+  electricity?: Rational;
+  burner?: Rational;
+  heat?: Rational;
   pollution?: Rational;
   quality?: Quality;
   disallowedEffects?: ModuleEffect[];

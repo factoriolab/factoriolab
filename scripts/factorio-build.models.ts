@@ -54,6 +54,7 @@ export interface DataRawDump {
   fluid: Record<string, M.FluidPrototype>;
   'fluid-wagon': Record<string, M.FluidWagonPrototype>;
   furnace: Record<string, M.FurnacePrototype>;
+  'fusion-reactor': Record<string, M.FusionReactorPrototype>;
   gun: Record<string, M.GunPrototype>;
   item: Record<string, M.ItemPrototype>;
   inserter: Record<string, M.InserterPrototype>;
@@ -165,7 +166,8 @@ export type MachineProto =
   | M.LabPrototype
   | M.MiningDrillPrototype
   | M.OffshorePumpPrototype
-  | M.ReactorPrototype;
+  | M.ReactorPrototype
+  | M.FusionReactorPrototype;
 
 export const anyEntityKeys = [
   'beacon',
