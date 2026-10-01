@@ -6,15 +6,20 @@ This is the repository for the [FactorioLab](https://factoriolab.github.io) proj
 
 | Supported games                                                   |                                                              |                                                                            |
 | ----------------------------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| [Factorio](https://factorio.com)                                  | [Calculator](https://factoriolab.github.io/factorio)         | [Steam](https://store.steampowered.com/app/427520/Factorio/)               |
+| [Factorio](https://factorio.com)                                  | [Calculator](https://factoriolab.github.io/factorio)         | [Steam](https://store.steampowered.com/app/427520/Factorio/)              |
 | Dyson Sphere Program                                              | [Calculator](https://factoriolab.github.io/dsp)              | [Steam](https://store.steampowered.com/app/1366540/Dyson_Sphere_Program/)  |
-| [Satisfactory](https://www.satisfactorygame.com/)                 | [Calculator](https://factoriolab.github.io/satisfactory)     | [Steam](https://store.steampowered.com/app/526870/Satisfactory/)           |
+| [Satisfactory](https://www.satisfactorygame.com/)                 | [Calculator](https://factoriolab.github.io/satisfactory)     | [Steam](https://store.steampowered.com/app/526870/Satisfactory/)          |
 | [Captain of Industry](https://www.captain-of-industry.com/)       | [Calculator](https://factoriolab.github.io/coi)              | [Steam](https://store.steampowered.com/app/1594320/Captain_of_Industry/)   |
 | [Techtonica](https://techtonicagame.com/)                         | [Calculator](https://factoriolab.github.io/techtonica)       | [Steam](https://store.steampowered.com/app/1457320/Techtonica/)            |
-| Final Factory                                                     | [Calculator](https://factoriolab.github.io/final-factory)    | [Steam](https://store.steampowered.com/app/1383150/Final_Factory/)         |
+| [Final Factory](https://www.nevergames.com/)                      | [Calculator](https://factoriolab.github.io/final-factory)    | [Steam](https://store.steampowered.com/app/1383150/Final_Factory/)         |
 | [Factor Y](https://buckmartin.de/products/factor-y.html)          | [Calculator](https://factoriolab.github.io/fay)              | [Steam](https://store.steampowered.com/app/2220850?utm_source=FactorioLab) |
-| [Foundry](https://www.paradoxinteractive.com/games/foundry/about) | [Calculator](https://factoriolab.github.io/foundry)          | [Steam](https://store.steampowered.com/app/983870/FOUNDRY/)                |
+| [Foundry](https://www.paradoxinteractive.com/games/foundry/about) | [Calculator](https://factoriolab.github.io/foundry)          | [Steam](https://store.steampowered.com/app/983870/FOUNDRY/)               |
 | Outworld Station                                                  | [Calculator](https://factoriolab.github.io/outworld-station) | [Steam](https://store.steampowered.com/app/3242950/Outworld_Station/)      |
+| [Belts of Iron](https://beltsofiron.com/)                         | [Calculator](https://factoriolab.github.io/boi)              | [Steam](https://store.steampowered.com/app/3427850/Belts_of_Iron/)         |
+| [Mindustry](https://mindustrygame.github.io/)                     | [Calculator](https://factoriolab.github.io/mds)              | [Steam](https://store.steampowered.com/app/1127400/Mindustry/)             |
+| [Motemancer](https://cyanavatarstudios.com/motemancer)            | [Calculator](https://factoriolab.github.io/mtm)              | [Steam](https://store.steampowered.com/app/3320980/MoteMancer/)            |
+| [SkyFormer](https://www.skyformer.com/)                           | [Calculator](https://factoriolab.github.io/sky)              | [Steam](https://store.steampowered.com/app/2305210/Skyformer/)             |
+| [StarRupture](https://starrupture-game.com/)                      | [Calculator](https://factoriolab.github.io/str)              | [Steam](https://store.steampowered.com/app/1631270/StarRupture/)           |
 
 This project is intended to build on the features of the Kirk McDonald [Factorio Calculator](https://kirkmcdonald.github.io) ([GitHub](https://github.com/KirkMcDonald/kirkmcdonald.github.io)). It is built from the ground up using Angular, Redux, and TypeScript.
 
