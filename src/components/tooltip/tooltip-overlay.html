@@ -221,12 +221,12 @@
                 <td>{{ 'data.modules' | translate }}</td>
                 <td>{{ machine.modules }}</td>
               </tr>
-            }
-            @if (machine.disallowedEffects) {
-              <tr>
-                <td>{{ 'data.disallowedEffects' | translate }}</td>
-                <td>{{ machine.disallowedEffects | setJoin }}</td>
-              </tr>
+              @if (machine.disallowedEffects) {
+                <tr>
+                  <td>{{ 'data.disallowedEffects' | translate }}</td>
+                  <td>{{ machine.disallowedEffects | setJoin }}</td>
+                </tr>
+              }
             }
             @if (machine.type) {
               <tr>
