@@ -173,12 +173,12 @@
             <th>{{ 'data.moduleSlots' | translate }}</th>
             <td>{{ machine.modules }}</td>
           </tr>
-        }
-        @if (machine.disallowedEffects) {
-          <tr>
-            <th>{{ 'data.disallowedEffects' | translate }}</th>
-            <td>{{ machine.disallowedEffects | setJoin }}</td>
-          </tr>
+          @if (machine.disallowedEffects) {
+            <tr>
+              <th>{{ 'data.disallowedEffects' | translate }}</th>
+              <td>{{ machine.disallowedEffects | setJoin }}</td>
+            </tr>
+          }
         }
         @if (machine.usage) {
           <tr>

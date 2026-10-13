@@ -8,6 +8,7 @@ table {
 
   td:first-child {
     padding-right: calc(var(--spacing) * 1);
+    white-space: nowrap;
   }
 
   tr:not(:first-child) td {

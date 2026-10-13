@@ -1292,7 +1292,7 @@ async function processMod(): Promise<void> {
       const item: ItemJson = {
         id: proto.name,
         types: [ITEM_TYPE],
-        name: itemLocale.names[proto.name],
+        name: coalesce(itemLocale.names[proto.name], proto.name),
         category: group.name,
         stack: proto.stack_size,
         row: getItemRow(proto),
@@ -1667,20 +1667,22 @@ async function processMod(): Promise<void> {
           offshorePump.fluid_box.filter == null ||
           offshorePump.fluid_box.filter === proto.name
         ) {
-          const locations: string[] = allLocations
-            .filter((l) => {
-              if (!isPlanetPrototype(l)) return false;
+          let locations: string[] | undefined;
+          if (offshorePump.fluid_box.filter == null) {
+            locations = allLocations
+              .filter((l) => {
+                if (!isPlanetPrototype(l)) return false;
 
-              const settings =
-                l.map_gen_settings?.autoplace_settings?.tile?.settings;
-              if (settings == null) return false;
+                const settings =
+                  l.map_gen_settings?.autoplace_settings?.tile?.settings;
+                if (settings == null) return false;
 
-              const keys = Object.keys(settings);
-              return keys.some((k) => dataRaw.tile[k].fluid === proto.name);
-            })
-            .map((l) => l.name);
-
-          if (locations.length === 0) continue;
+                const keys = Object.keys(settings);
+                return keys.some((k) => dataRaw.tile[k].fluid === proto.name);
+              })
+              .map((l) => l.name);
+            if (locations.length === 0) continue;
+          }
 
           const id = getFakeRecipeId(
             proto.name,
