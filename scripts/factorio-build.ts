@@ -1261,7 +1261,7 @@ async function processMod(): Promise<void> {
       const item: ItemJson = {
         id: proto.name,
         types: [ITEM_TYPE],
-        name: itemLocale.names[proto.name],
+        name: coalesce(itemLocale.names[proto.name], proto.name),
         category: group.name,
         stack: proto.stack_size,
         row: getItemRow(proto),
