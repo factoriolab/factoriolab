@@ -305,7 +305,7 @@
     },
     "displayRate": {
       "perHour": "시간당 단위",
-      "perHourSuffix": "/s",
+      "perHourSuffix": "/h",
       "perMinute": "분당 단위",
       "perMinuteSuffix": "/m",
       "perSecond": "초당 단위",
