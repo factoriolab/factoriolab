@@ -3,7 +3,6 @@
     {
       "id": 0,
       "label": "options.preset.minimum",
-      "belt": "saltway",
       "machineRank": ["simple-collector"],
       "excludedRecipes": [
         "craft-aether-pyrolyzer",
@@ -98,12 +97,12 @@
         "craft-wind-turbine-transmutation-engine",
         "craft-zephyrmill-transmutation-engine",
         "craft-zephyrmill-zephyrmill"
-      ]
+      ],
+      "beltRank": ["saltway"]
     },
     {
       "id": 1,
       "label": "options.preset.upgraded",
-      "belt": "torrential-streamway",
       "machineRank": [
         "tidal-collector",
         "verdant-collector",
@@ -114,7 +113,8 @@
         "entropic-alembic",
         "simple-collector"
       ],
-      "excludedRecipes": []
+      "excludedRecipes": [],
+      "beltRank": ["torrential-streamway"]
     }
   ]
 }
