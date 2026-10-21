@@ -1,5 +1,29 @@
 {
   "belt": "conveyor-4",
   "pipe": "pipe",
-  "fuelRank": "ignium-ore"
+  "fuelRank": ["ignium-ore"],
+  "presets": [
+    {
+      "id": 0,
+      "label": "options.preset.minimum",
+      "beltRank": ["conveyor-1"],
+      "machineRank": [
+        "drone-miner-1",
+        "assembler-1",
+        "lava-smelter-1",
+        "crusher-1"
+      ]
+    },
+    {
+      "id": 1,
+      "label": "options.preset.upgraded",
+      "beltRank": ["conveyor-4"],
+      "machineRank": [
+        "drone-miner-2",
+        "assembler-3",
+        "lava-smelter-2",
+        "crusher-2"
+      ]
+    }
+  ]
 }
