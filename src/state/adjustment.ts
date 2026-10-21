@@ -241,11 +241,12 @@ export class Adjustment {
 
           let scale = rational.one;
           if (beacon.profile != null) {
-            if (totalIsInteger) {
-              const profileIndex = total.toNumber() - 1;
-              if (beacon.profile[profileIndex] != null) {
-                scale = beacon.profile[profileIndex];
-              }
+            const profileIndex = total.toNumber() - 1;
+            if (
+              totalIsInteger &&
+              beacon.profile[profileIndex] != null
+            ) {
+              scale = beacon.profile[profileIndex];
             } else {
               scale = rational.one.div(total.pow(0.5));
             }
