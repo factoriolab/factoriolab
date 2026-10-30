@@ -1,7 +1,8 @@
 /**
  * MoteMancer wiki scraper - builds FactorioLab game data from the community wiki
  *
- * Usage: bun scripts/motemancer-build.ts [--refresh]
+ * Usage: bun scripts/motemancer-build.ts <version> [--refresh]
+ *   e.g. bun scripts/motemancer-build.ts 0.9.12
  *
  * Fetches data from https://motemancer.miraheze.org/ via the MediaWiki API,
  * parses {{StructureInfo}} and {{ItemInfo}} templates, downloads icons,
@@ -81,6 +82,25 @@ const COLLECTORS: Record<string, CollectorRate> = {
   'entropic-alembic': { elements: ['entropy'], motes: 1, seconds: 3 },
 };
 
+// Elemental Mastery halves the Elemental Binder's craft time for its element.
+// The wiki has no structured field for this (item pages list only the
+// mastered time), so like belt speeds it's hardcoded: each elemental gets a
+// base recipe and a faster variant unlocked by its Mastery research.
+const MASTERY_TIMES = { base: 2, mastered: 1 };
+const ELEMENTAL_MASTERY: Record<string, string> = {
+  'elemental-water': 'water-mastery',
+  'elemental-life': 'life-mastery',
+  'elemental-earth': 'earth-mastery',
+  'elemental-fire': 'fire-mastery',
+  'elemental-shadow': 'shadow-mastery',
+  'elemental-air': 'air-mastery',
+};
+
+/** Recipe id of the Mastery-unlocked variant of an elemental's recipe */
+function masteredRecipeId(itemId: string): string {
+  return `craft-${itemId}-mastered`;
+}
+
 // Research pages to parse
 const RESEARCH_PAGES = [
   'Salt_Research',
@@ -118,6 +138,21 @@ const MAX_BELT = 'torrential-streamway';
 type ImageUrlMap = Record<string, string | null>;
 
 const REFRESH = process.argv.includes('--refresh');
+
+/** Game version, passed as the first non-flag argument */
+function parseVersion(): string {
+  const arg = process.argv.slice(2).find((a) => !a.startsWith('--'));
+  const match = arg ? /^v?\.?(\d+\.\d+\.\d+)$/.exec(arg) : null;
+  if (!match) {
+    console.error(
+      'Usage: bun scripts/motemancer-build.ts <version> [--refresh]\n' +
+        '  <version> is the MoteMancer game version, e.g. 0.9.12',
+    );
+    process.exit(1);
+  }
+  return match[1];
+}
+
 const IMAGE_URLS_FILE = 'image-urls.json';
 const cacheStats = { hits: 0, fetches: 0 };
 
@@ -234,14 +269,6 @@ async function getPageWikitext(title: string): Promise<string> {
   const wikitext = data.parse?.wikitext ?? '';
   writeCache(cacheFile, wikitext);
   return wikitext;
-}
-
-async function getLatestVersion(): Promise<string> {
-  const wikitext = await getPageWikitext('Template:Changelog');
-  const match = wikitext.match(/v?\.?(\d+\.\d+\.\d+)/);
-  if (match) return match[1];
-  console.warn('Warning: Could not find version in changelog, using 0.0.0');
-  return '0.0.0';
 }
 
 async function getImageUrl(filename: string): Promise<string | null> {
@@ -632,11 +659,23 @@ function collectRedirects(pageWikitext: Record<string, string>): void {
   }
 }
 
+/**
+ * Look up a redirect for a title. References are usually written as
+ * {{Foo Research}} while the page itself is titled "Foo (Research)", so the
+ * parenthesized form is tried too.
+ */
+function lookupRedirect(title: string): string | undefined {
+  const direct = redirects.get(title);
+  if (direct !== undefined) return direct;
+  const m = /^(.*\S)\s+Research$/.exec(title);
+  return m ? redirects.get(`${m[1]} (Research)`) : undefined;
+}
+
 /** Follow wiki redirects to the canonical page title */
 function resolveTitle(title: string): string {
   let current = normalizeTitle(title);
   for (let hops = 0; hops < 5; hops++) {
-    const next = redirects.get(current);
+    const next = lookupRedirect(current);
     if (next === undefined || next === current) break;
     current = next;
   }
@@ -680,6 +719,30 @@ function recipesMatch(
     if (existing.in[key] !== ingredients[key]) return false;
   }
   return true;
+}
+
+/** Whether a recipe uses exactly the given set of ingredient items */
+function sameIngredientSet(
+  recipe: RecipeJson,
+  ingredients: Record<string, number>,
+): boolean {
+  const keys = Object.keys(recipe.in);
+  return (
+    keys.length === Object.keys(ingredients).length &&
+    keys.every((k) => k in ingredients)
+  );
+}
+
+/** Short "3x a + 1x b -> 2 in 6s" form of a recipe for warnings */
+function describeRecipe(
+  ingredients: RecipeJson['in'],
+  time: number | string,
+  produced: number | string | undefined,
+): string {
+  const inputs = Object.entries(ingredients)
+    .map(([id, qty]) => `${String(qty)}x ${id}`)
+    .join(' + ');
+  return `${inputs} -> ${String(produced)} in ${time}s`;
 }
 
 /** Add a machine to a recipe's producers if it isn't already listed */
@@ -993,17 +1056,16 @@ interface ResearchEntry {
 }
 
 async function main(): Promise<void> {
+  const version = parseVersion();
   console.log(
     REFRESH
       ? `Refreshing wiki cache at ${CACHE_DIR}`
       : `Using wiki cache at ${CACHE_DIR} (pass --refresh to re-fetch)`,
   );
-  console.log('Fetching all page titles and version...');
-  const [allTitles, version] = await Promise.all([
-    getAllPageTitles(),
-    getLatestVersion(),
-  ]);
-  console.log(`Found ${allTitles.length} pages, version ${version}`);
+  console.log(`Building MoteMancer version ${version}`);
+  console.log('Fetching all page titles...');
+  const allTitles = await getAllPageTitles();
+  console.log(`Found ${allTitles.length} pages`);
 
   // Filter to content pages (skip templates, WIP, nav pages, etc.)
   const contentTitles = allTitles.filter(
@@ -1198,6 +1260,10 @@ async function main(): Promise<void> {
   // Machine variants are later-game alternatives to an item's base recipe;
   // they're excluded by default so the solver doesn't prefer them
   const machineVariantIds: string[] = [];
+  /** Mastery-unlocked elemental recipes, hidden in the minimum preset */
+  const masteryVariantIds: string[] = [];
+  /** Unmastered elemental recipes, hidden in the upgraded preset */
+  const masteryBaseIds: string[] = [];
 
   // Track which machines exist (to validate recipe producers)
   const machineIds = new Set<string>();
@@ -1239,7 +1305,7 @@ async function main(): Promise<void> {
 
     // Is this a belt?
     if (BELT_SPEEDS[wi.id] != null) {
-      item.belt = { speed: BELT_SPEEDS[wi.id] };
+      item.belt = { itemTypes: ['item'], speed: BELT_SPEEDS[wi.id] };
     }
 
     // Is this a machine?
@@ -1329,6 +1395,31 @@ async function main(): Promise<void> {
 
       recipes.push(recipe);
       seenRecipeIds.add(recipeId);
+
+      if (wi.id in ELEMENTAL_MASTERY) {
+        const { base, mastered } = MASTERY_TIMES;
+        if (wi.craftTime !== base && wi.craftTime !== mastered) {
+          console.warn(
+            `  Warning: ${wi.name} craft time ${wi.craftTime} on the wiki matches neither the base (${base}) nor mastered (${mastered}) time`,
+          );
+        }
+        recipe.time = base;
+        masteryBaseIds.push(recipeId);
+
+        const masteredId = masteredRecipeId(wi.id);
+        recipes.push({
+          ...recipe,
+          id: masteredId,
+          name: `${wi.name} (Mastered)`,
+          time: mastered,
+          producers: [...producers],
+          in: { ...wi.ingredients },
+          out: { ...outMap },
+          icon: wi.id,
+        });
+        seenRecipeIds.add(masteredId);
+        masteryVariantIds.push(masteredId);
+      }
     }
 
     // Create alternate recipes for "or" ingredients
@@ -1377,6 +1468,7 @@ async function main(): Promise<void> {
 
   // Also create recipes from machine recipe tables (for recipes that might not
   // have their own wiki page, or to ensure completeness)
+  const staleRows: string[] = [];
   for (const wi of wikiItems) {
     if (!machineIds.has(wi.id)) continue;
 
@@ -1425,6 +1517,17 @@ async function main(): Promise<void> {
           );
           if (matchingVariant) {
             addProducer(matchingVariant, wi.id);
+          } else if (
+            existing &&
+            existing.producers?.includes(wi.id) &&
+            sameIngredientSet(existing, mr.ingredients)
+          ) {
+            // The machine's own page restates the item's recipe with different
+            // numbers. The item page is the maintained one, so treat the row as
+            // stale rather than inventing a variant
+            staleRows.push(
+              `${mr.name} on ${wi.name}: row ${describeRecipe(mr.ingredients, mr.craftTime, mr.produced)} vs page ${describeRecipe(existing.in, existing.time, existing.out[outputId])}`,
+            );
           } else {
             // Different recipe data — create a variant
             const count = (variantCount[outputId] =
@@ -1469,6 +1572,12 @@ async function main(): Promise<void> {
         seenRecipeIds.add(recipeId);
       }
     }
+  }
+
+  if (staleRows.length > 0) {
+    console.warn(
+      `  Warning: ignored ${staleRows.length} machine-page recipe rows that disagree with the item's own page:\n    ${staleRows.join('\n    ')}`,
+    );
   }
 
   // Name variant recipes by how they differ from their siblings
@@ -1585,16 +1694,38 @@ async function main(): Promise<void> {
     }
   }
 
+  // Mastery researches unlock the faster elemental recipes
+  for (const [itemId, masteryId] of Object.entries(ELEMENTAL_MASTERY)) {
+    const masteredId = masteredRecipeId(itemId);
+    const mastery = items.find((i) => i.id === masteryId);
+    if (!mastery?.technology || !seenRecipeIds.has(masteredId)) {
+      console.warn(
+        `  Warning: could not attach ${masteredId} to research ${masteryId}`,
+      );
+      continue;
+    }
+    mastery.technology.recipeUnlock = [
+      ...(mastery.technology.recipeUnlock ?? []),
+      masteredId,
+    ];
+  }
+
   // Drop prerequisites that don't resolve to a research item - the app treats
   // a technology with an unmet prerequisite as never researchable
   const researchIds = new Set(
     items.filter((i) => i.technology).map((i) => i.id),
   );
   const danglingPrereqs = new Set<string>();
+  const selfPrereqs = new Set<string>();
   for (const item of items) {
     const tech = item.technology;
     if (!tech?.prerequisites) continue;
     const resolved = tech.prerequisites.filter((p) => {
+      // A research listing itself as its own prerequisite is a wiki typo
+      if (p === item.id) {
+        selfPrereqs.add(p);
+        return false;
+      }
       if (researchIds.has(p)) return true;
       danglingPrereqs.add(p);
       return false;
@@ -1605,6 +1736,19 @@ async function main(): Promise<void> {
     console.warn(
       `  Warning: dropped prerequisites that match no research item: ${[...danglingPrereqs].sort().join(', ')}`,
     );
+  }
+  if (selfPrereqs.size > 0) {
+    console.warn(
+      `  Warning: dropped self-referencing prerequisites: ${[...selfPrereqs].sort().join(', ')}`,
+    );
+  }
+
+  // Item types drive belt/wagon options in the app. Everything stackable is
+  // an item; the stackless entries (tiles and decorations that only appear as
+  // machine outputs) are typed as fluids so they get no belt options.
+  for (const item of items) {
+    if (item.technology) continue;
+    item.types = item.stack ? ['item'] : ['fluid'];
   }
 
   // Assign row numbers — all items in same category share row 0
@@ -1842,8 +1986,9 @@ async function main(): Promise<void> {
   console.log('Writing output files...');
 
   // The app reads defaults from data.json; defaults.json is the readable copy.
-  // "Minimum" hides the later-game machine variants and uses the basic
-  // collector; "Upgraded" enables everything and prefers faster collectors.
+  // "Minimum" hides the later-game machine variants and Mastery recipes and
+  // uses the basic collector; "Upgraded" hides the unmastered elemental
+  // recipes, enables everything else and prefers faster collectors.
   const collectorsByRate = Object.entries(COLLECTORS)
     .sort(([, a], [, b]) => b.motes / b.seconds - a.motes / a.seconds)
     .map(([id]) => id);
@@ -1852,16 +1997,16 @@ async function main(): Promise<void> {
       {
         id: 0,
         label: 'options.preset.minimum',
-        belt: MIN_BELT,
+        beltRank: [MIN_BELT],
         machineRank: ['simple-collector'],
-        excludedRecipes: [...machineVariantIds].sort(),
+        excludedRecipes: [...machineVariantIds, ...masteryVariantIds].sort(),
       },
       {
         id: 1,
         label: 'options.preset.upgraded',
-        belt: MAX_BELT,
+        beltRank: [MAX_BELT],
         machineRank: collectorsByRate,
-        excludedRecipes: [],
+        excludedRecipes: [...masteryBaseIds].sort(),
       },
     ],
   };
