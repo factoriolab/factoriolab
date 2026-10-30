@@ -226,7 +226,7 @@ export class Adjustment {
           (t, b) => t.add(coalesce(b.count, rational.zero)),
           rational.zero,
         );
-        const profileIndex = Math.round(total.toNumber()) - 1;
+        const totalIsInteger = total.isInteger();
 
         for (const beaconSettings of recipeState.beacons) {
           if (
@@ -240,8 +240,17 @@ export class Adjustment {
           const beacon = data.beaconRecord[beaconSettings.id];
 
           let scale = rational.one;
-          if (beacon.profile?.[profileIndex] != null)
-            scale = beacon.profile[profileIndex];
+          if (beacon.profile != null) {
+            const profileIndex = total.toNumber() - 1;
+            if (
+              totalIsInteger &&
+              beacon.profile[profileIndex] != null
+            ) {
+              scale = beacon.profile[profileIndex];
+            } else {
+              scale = rational.one.div(total.pow(0.5));
+            }
+          }
 
           const factor = beaconSettings.count.mul(scale);
           const beaconEffects: Partial<Record<ModuleEffect, Rational>> = {};
