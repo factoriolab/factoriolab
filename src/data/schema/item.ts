@@ -16,8 +16,7 @@ import { parseTechnology, Technology, TechnologyJson } from './technology';
 import { parseWagon, Wagon, WagonJson } from './wagon';
 
 export const HEAT_ID = 'heat';
-export const ELECTRICITY_ID = 'electricity';
-export const POLLUTION_ID = 'pollution';
+export const POWER_ID = 'power';
 
 export interface ItemJson extends BaseJson {
   types?: string[];
@@ -81,7 +80,7 @@ export function itemHasQuality(item: Item | ItemJson): boolean {
 @Pipe({ name: 'isPower' })
 export class IsPowerPipe implements PipeTransform {
   static transform(itemId: string | undefined): boolean {
-    return itemId === HEAT_ID || itemId === ELECTRICITY_ID;
+    return itemId === HEAT_ID || itemId === POWER_ID;
   }
 
   transform(itemId: string | undefined): boolean {

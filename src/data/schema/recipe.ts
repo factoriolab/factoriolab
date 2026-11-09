@@ -67,7 +67,7 @@ export interface Recipe {
   iconText?: string;
   usage?: Rational;
   drain?: Rational;
-  electricity?: Rational;
+  power?: Rational;
   burner?: Rational;
   heat?: Rational;
   pollution?: Rational;

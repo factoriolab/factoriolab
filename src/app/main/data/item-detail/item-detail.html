@@ -180,11 +180,18 @@
             </tr>
           }
         }
-        @if (machine.usage) {
-          <tr>
-            <th>{{ 'data.powerUsage' | translate }}</th>
-            <td>{{ machine.usage | usage }}</td>
-          </tr>
+        @if (machine.usage && machine.usage.nonzero()) {
+          @if (machine.usage.gt(rational.zero)) {
+            <tr>
+              <th>{{ 'data.powerUsage' | translate }}</th>
+              <td>{{ machine.usage | usage }}</td>
+            </tr>
+          } @else {
+            <tr>
+              <th>{{ 'data.powerOutput' | translate }}</th>
+              <td>{{ machine.usage.inverse() | usage }}</td>
+            </tr>
+          }
         }
         @if (machine.drain) {
           <tr>
@@ -194,7 +201,7 @@
         }
         @if (machine.burner) {
           <tr>
-            <th>{{ 'data.burnerUsage' | translate }}</th>
+            <th>{{ 'data.fuelUsage' | translate }}</th>
             <td>{{ machine.burner | usage }}</td>
           </tr>
         }

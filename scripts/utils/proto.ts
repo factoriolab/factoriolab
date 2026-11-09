@@ -10,7 +10,7 @@ import { clamp } from '~/utils/number';
 import * as M from '../factorio.models';
 import * as D from '../factorio-build.models';
 import { getDisallowedEffects } from './data';
-import { getPowerInKw } from './power';
+import { getEnergyInMJ, getPowerInKw, round } from './power';
 
 export function getBeacon(
   proto: M.BeaconPrototype,
@@ -156,16 +156,21 @@ export function getMachineDisallowedEffects(
 ): ModuleEffect[] | undefined {
   if (
     M.isBoilerPrototype(proto) ||
+    M.isFusionGeneratorPrototype(proto) ||
+    M.isFusionReactorPrototype(proto) ||
+    M.isGeneratorPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
-    M.isReactorPrototype(proto) ||
-    M.isFusionReactorPrototype(proto)
+    M.isReactorPrototype(proto)
   )
     return undefined;
 
   return getDisallowedEffects(proto.allowed_effects);
 }
 
-export function getMachineDrain(proto: D.MachineProto): number | undefined {
+export function getMachineDrain(
+  proto: D.MachineProto,
+  data: D.DataRawDump,
+): number | undefined {
   if (proto.energy_source.type !== 'electric') return undefined;
 
   if (proto.energy_source.drain != null)
@@ -176,7 +181,7 @@ export function getMachineDrain(proto: D.MachineProto): number | undefined {
     M.isRocketSiloPrototype(proto) ||
     M.isFurnacePrototype(proto)
   ) {
-    const usage = getMachineUsage(proto);
+    const usage = getMachineUsage(proto, data);
     if (usage != null) return usage / 30;
   }
 
@@ -189,9 +194,11 @@ export function getMachineModules(
 ): number | undefined {
   if (
     M.isBoilerPrototype(proto) ||
+    M.isFusionGeneratorPrototype(proto) ||
+    M.isFusionReactorPrototype(proto) ||
+    M.isGeneratorPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto) ||
-    M.isFusionReactorPrototype(proto) ||
     proto.module_slots == null
   )
     return undefined;
@@ -309,9 +316,11 @@ export function getMachineSpeed(
 ): number {
   let speed: number;
   if (
-    M.isReactorPrototype(proto) ||
+    M.isFusionGeneratorPrototype(proto) ||
     M.isFusionReactorPrototype(proto) ||
-    M.isOffshorePumpPrototype(proto)
+    M.isGeneratorPrototype(proto) ||
+    M.isOffshorePumpPrototype(proto) ||
+    M.isReactorPrototype(proto)
   ) {
     speed = 1;
 
@@ -349,30 +358,45 @@ export function getMachineSpeed(
 
 export function getMachineUsage(
   proto: D.MachineProto,
+  data: D.DataRawDump,
   quality?: M.QualityPrototype,
 ): number | undefined {
   if (proto.energy_source.type !== 'electric') return undefined;
-  return getMachinePower(proto, quality);
+  return getMachinePower(proto, data, quality);
 }
 
 export function getMachineBurner(
   proto: D.MachineProto,
+  data: D.DataRawDump,
   quality?: M.QualityPrototype,
 ): number | undefined {
+  if (M.isFusionReactorPrototype(proto) && proto.output_fluid_box.filter) {
+    const fluid = data.fluid[proto.output_fluid_box.filter];
+    if (fluid.default_temperature && fluid.heat_capacity != null) {
+      const fluidPerSec = proto.max_fluid_usage * 60;
+      const kJEnergy = getEnergyInMJ(fluid.heat_capacity) * 1000;
+      let energy = fluidPerSec * fluid.default_temperature * kJEnergy;
+      if (energy && quality) energy *= getDefaultMultiplier(quality);
+      return energy;
+    }
+  }
+
   if (proto.energy_source.type !== 'burner') return undefined;
-  return getMachinePower(proto, quality);
+  return getMachinePower(proto, data, quality);
 }
 
 export function getMachineHeat(
   proto: D.MachineProto,
+  data: D.DataRawDump,
   quality?: M.QualityPrototype,
 ): number | undefined {
   if (proto.energy_source.type !== 'heat') return undefined;
-  return getMachinePower(proto, quality);
+  return getMachinePower(proto, data, quality);
 }
 
 export function getMachinePower(
   proto: D.MachineProto,
+  data: D.DataRawDump,
   quality?: M.QualityPrototype,
 ): number | undefined {
   let usage: number | undefined;
@@ -381,10 +405,29 @@ export function getMachinePower(
     if (usage && quality) usage *= getDefaultMultiplier(quality);
   } else if (M.isReactorPrototype(proto)) {
     usage = getPowerInKw(proto.consumption);
+    /**
+     * Where relevant, divide by effectivity - we are looking for power usage,
+     * not output. Treat effectivity bonus as a baseEffect on the machine.
+     */
+    if (usage && M.isBurnerEnergySource(proto.energy_source))
+      usage /= proto.energy_source.effectivity ?? 1;
     if (usage && quality) usage *= getDefaultMultiplier(quality);
   } else if (M.isFusionReactorPrototype(proto))
     usage = getPowerInKw(proto.power_input);
-  else usage = getPowerInKw(proto.energy_usage);
+  else if (M.isFusionGeneratorPrototype(proto)) {
+    usage = getPowerInKw(proto.energy_source.output_flow_limit ?? '');
+    if (usage != null) usage *= -(proto.effectivity ?? 1);
+    if (usage && quality) usage *= getDefaultMultiplier(quality);
+  } else if (M.isGeneratorPrototype(proto)) {
+    if (proto.fluid_box.filter) {
+      const fluid = data.fluid[proto.fluid_box.filter];
+      const tempDiff = proto.maximum_temperature - fluid.default_temperature;
+      const inputMJ = getEnergyInMJ(fluid.heat_capacity ?? '1KJ');
+      usage = round(tempDiff * inputMJ * 60000, 10);
+      usage *= -(proto.effectivity ?? 1);
+      if (quality) usage *= getDefaultMultiplier(quality);
+    }
+  } else usage = getPowerInKw(proto.energy_usage);
 
   return usage;
 }
@@ -392,11 +435,22 @@ export function getMachinePower(
 export function getMachineBaseEffect(
   proto: D.MachineProto,
 ): Partial<Record<ModuleEffect, number>> | undefined {
+  if (M.isReactorPrototype(proto)) {
+    if (M.isBurnerEnergySource(proto.energy_source)) {
+      const effectivity = proto.energy_source.effectivity ?? 1;
+      if (effectivity !== 1) return { productivity: effectivity - 1 };
+    }
+
+    return undefined;
+  }
+
   if (
     M.isBoilerPrototype(proto) ||
-    M.isOffshorePumpPrototype(proto) ||
-    M.isReactorPrototype(proto) ||
     M.isFusionReactorPrototype(proto) ||
+    M.isFusionGeneratorPrototype(proto) ||
+    M.isGeneratorPrototype(proto) ||
+    M.isOffshorePumpPrototype(proto) ||
+    // M.isReactorPrototype(proto) ||
     proto.effect_receiver?.base_effect == null
   )
     return undefined;
@@ -427,9 +481,8 @@ export function getMachineIngredientUsage(
 export function getMachineNeighborBonus(
   proto: D.MachineProto,
 ): number | undefined {
-  if (M.isReactorPrototype(proto) || M.isFusionReactorPrototype(proto)) {
-    if (proto.neighbour_bonus) return proto.neighbour_bonus * 100;
-  }
+  if (M.isReactorPrototype(proto) || M.isFusionReactorPrototype(proto))
+    return (proto.neighbour_bonus ?? 1) * 100 || undefined;
 
   return undefined;
 }

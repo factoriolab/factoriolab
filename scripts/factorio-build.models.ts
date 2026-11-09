@@ -54,7 +54,9 @@ export interface DataRawDump {
   fluid: Record<string, M.FluidPrototype>;
   'fluid-wagon': Record<string, M.FluidWagonPrototype>;
   furnace: Record<string, M.FurnacePrototype>;
+  'fusion-generator': Record<string, M.FusionGeneratorPrototype>;
   'fusion-reactor': Record<string, M.FusionReactorPrototype>;
+  generator: Record<string, M.GeneratorPrototype>;
   gun: Record<string, M.GunPrototype>;
   item: Record<string, M.ItemPrototype>;
   inserter: Record<string, M.InserterPrototype>;
@@ -134,20 +136,23 @@ export function isAnyItemPrototype(proto: unknown): proto is AnyItemPrototype {
 }
 
 export type AnyEntityPrototype =
-  | M.BeaconPrototype
   | M.AssemblingMachinePrototype
+  | M.BeaconPrototype
   | M.BoilerPrototype
+  | M.CargoWagonPrototype
+  | M.FluidWagonPrototype
   | M.FurnacePrototype
+  | M.FusionGeneratorPrototype
+  | M.FusionReactorPrototype
+  | M.GeneratorPrototype
+  | M.InserterPrototype
   | M.LabPrototype
   | M.MiningDrillPrototype
   | M.OffshorePumpPrototype
+  | M.PumpPrototype
   | M.ReactorPrototype
   | M.RocketSiloPrototype
-  | M.TransportBeltPrototype
-  | M.CargoWagonPrototype
-  | M.FluidWagonPrototype
-  | M.PumpPrototype
-  | M.InserterPrototype;
+  | M.TransportBeltPrototype;
 
 export type AnyLocationPrototype = M.PlanetPrototype | M.SurfacePrototype;
 
@@ -159,31 +164,36 @@ export interface ModDataReport {
 }
 
 export type MachineProto =
-  | M.BoilerPrototype
   | M.AssemblingMachinePrototype
-  | M.RocketSiloPrototype
+  | M.BoilerPrototype
   | M.FurnacePrototype
+  | M.FusionGeneratorPrototype
+  | M.FusionReactorPrototype
+  | M.GeneratorPrototype
   | M.LabPrototype
   | M.MiningDrillPrototype
   | M.OffshorePumpPrototype
   | M.ReactorPrototype
-  | M.FusionReactorPrototype;
+  | M.RocketSiloPrototype;
 
 export const anyEntityKeys = [
-  'beacon',
   'assembling-machine',
+  'beacon',
   'boiler',
+  'cargo-wagon',
+  'fluid-wagon',
   'furnace',
+  'fusion-generator',
+  'fusion-reactor',
+  'generator',
+  'inserter',
   'lab',
   'mining-drill',
   'offshore-pump',
+  'pump',
   'reactor',
   'rocket-silo',
   'transport-belt',
-  'cargo-wagon',
-  'fluid-wagon',
-  'pump',
-  'inserter',
 ] as const;
 
 export const anyItemKeys = [

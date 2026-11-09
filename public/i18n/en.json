@@ -85,6 +85,7 @@
     "dimensions": "Dimensions",
     "disallowedEffects": "Disallowed effects",
     "efficiency": "Efficiency",
+    "powerOutput": "Power output",
     "powerUsage": "Power usage",
     "fuelUsage": "Fuel usage",
     "heatUsage": "Heat usage",

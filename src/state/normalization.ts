@@ -31,7 +31,8 @@ export class Normalization {
     // Ignore unit entirely when maximizing, do not adjust if unit is Machines
     if (
       objective.unit === ObjectiveUnit.Machines ||
-      objective.type === ObjectiveType.Maximize
+      objective.type === ObjectiveType.Maximize ||
+      IsPowerPipe.transform(objective.targetId)
     )
       return objective.value;
 

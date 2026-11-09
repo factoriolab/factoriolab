@@ -917,7 +917,7 @@ export class Solver {
     data: Dataset,
   ): void {
     if (step.machines?.nonzero() && !recipe.part) {
-      if (recipe.drain?.nonzero() || recipe.electricity?.nonzero()) {
+      if (recipe.drain?.nonzero() || recipe.power?.nonzero()) {
         // Reset power
         step.power = rational.zero;
 
@@ -932,8 +932,8 @@ export class Solver {
           step.power = step.power.add(machines.mul(recipe.drain));
         }
         // Calculate consumption
-        if (recipe.electricity?.nonzero())
-          step.power = step.power.add(step.machines.mul(recipe.electricity));
+        if (recipe.power?.nonzero())
+          step.power = step.power.add(step.machines.mul(recipe.power));
       }
 
       // Calculate pollution

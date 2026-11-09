@@ -7,12 +7,7 @@ import spritesmith from 'spritesmith';
 import { datasets } from '~/data/datasets';
 import { CategoryJson } from '~/data/schema/category';
 import { FuelJson } from '~/data/schema/fuel';
-import {
-  ELECTRICITY_ID,
-  HEAT_ID,
-  ItemJson,
-  POLLUTION_ID,
-} from '~/data/schema/item';
+import { HEAT_ID, ItemJson, POWER_ID } from '~/data/schema/item';
 import { MachineJson } from '~/data/schema/machine';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
@@ -38,7 +33,6 @@ import {
   isBeltStackSizeBonusModifier,
   isBoilerPrototype,
   isBulkInserterCapacityBonusModifier,
-  isBurnerEnergySource,
   isCargoWagonPrototype,
   isChangeRecipeProductivityModifier,
   isCreateAsteroidChunkEffectItem,
@@ -46,7 +40,9 @@ import {
   isFluidPrototype,
   isFluidWagonPrototype,
   isFurnacePrototype,
+  isFusionGeneratorPrototype,
   isFusionReactorPrototype,
+  isGeneratorPrototype,
   isInserterPrototype,
   isInserterStackSizeBonusModifier,
   isItemGroup,
@@ -435,20 +431,24 @@ async function processMod(): Promise<void> {
 
   const craftingFluidBoxes: Record<string, FluidBox[]> = {};
   type EntityType =
-    | 'lab'
-    | 'silo'
     | 'boiler'
+    | 'fusionGenerator'
+    | 'fusionReactor'
+    | 'generator'
+    | 'lab'
     | 'offshorePump'
     | 'reactor'
-    | 'fusionReactor';
+    | 'silo';
   // For each machine type, a map of item name : entity name
   const machines: Record<EntityType, Record<string, string>> = {
-    lab: {},
-    silo: {},
     boiler: {},
+    fusionGenerator: {},
+    fusionReactor: {},
+    generator: {},
+    lab: {},
     offshorePump: {},
     reactor: {},
-    fusionReactor: {},
+    silo: {},
   };
 
   // Keep track of all used fluid temperatures
@@ -519,23 +519,29 @@ async function processMod(): Promise<void> {
 
     if (isBoilerPrototype(proto)) {
       machines.boiler[name] = proto.name;
-    } else if (isRocketSiloPrototype(proto)) {
-      machines.silo[name] = proto.name;
+    } else if (isFusionGeneratorPrototype(proto)) {
+      machines.fusionGenerator[name] = proto.name;
+    } else if (isFusionReactorPrototype(proto)) {
+      machines.fusionReactor[name] = proto.name;
+    } else if (isGeneratorPrototype(proto)) {
+      machines.generator[name] = proto.name;
     } else if (isLabPrototype(proto)) {
       machines.lab[name] = proto.name;
     } else if (isOffshorePumpPrototype(proto)) {
       machines.offshorePump[name] = proto.name;
     } else if (isReactorPrototype(proto)) {
       machines.reactor[name] = proto.name;
-    } else if (isFusionReactorPrototype(proto)) {
-      machines.fusionReactor[name] = proto.name;
+    } else if (isRocketSiloPrototype(proto)) {
+      machines.silo[name] = proto.name;
     }
   }
 
   const ANY_FLUID_BURN = 'fluid';
   const ANY_FLUID_HEAT = 'fluid-heat';
-  function getMachineCategory(proto: MachineProto): string[] | undefined {
+  function getMachineFuelTypes(proto: MachineProto): string[] | undefined {
     if (isOffshorePumpPrototype(proto)) return undefined;
+
+    if (isFusionReactorPrototype(proto)) return proto.burner.fuel_categories;
 
     if (
       proto.energy_source.type === 'burner' &&
@@ -640,12 +646,12 @@ async function processMod(): Promise<void> {
       speed: getMachineSpeed(proto),
       modules: getMachineModules(proto),
       disallowedEffects: getMachineDisallowedEffects(proto),
-      usage: getMachineUsage(proto),
-      drain: getMachineDrain(proto),
-      burner: getMachineBurner(proto),
-      heat: getMachineHeat(proto),
+      usage: getMachineUsage(proto, dataRaw),
+      drain: getMachineDrain(proto, dataRaw),
+      burner: getMachineBurner(proto, dataRaw),
+      heat: getMachineHeat(proto, dataRaw),
       pollution: getMachinePollution(proto),
-      fuelTypes: getMachineCategory(proto),
+      fuelTypes: getMachineFuelTypes(proto),
       neighborBonus: getMachineNeighborBonus(proto),
       silo: getMachineSilo(proto, dataRaw),
       size: getEntitySize(proto),
@@ -675,13 +681,13 @@ async function processMod(): Promise<void> {
         const modules = getMachineModules(proto, quality);
         if (modules !== machine.modules) variant.modules = modules;
 
-        const usage = getMachineUsage(proto, quality);
+        const usage = getMachineUsage(proto, dataRaw, quality);
         if (usage !== machine.usage) variant.usage = usage;
 
-        const burner = getMachineBurner(proto, quality);
+        const burner = getMachineBurner(proto, dataRaw, quality);
         if (burner !== machine.burner) variant.burner = burner;
 
-        const heat = getMachineHeat(proto, quality);
+        const heat = getMachineHeat(proto, dataRaw, quality);
         if (heat !== machine.heat) variant.heat = heat;
 
         const pollution = getMachinePollution(proto, quality);
@@ -916,6 +922,27 @@ async function processMod(): Promise<void> {
   }
 
   logTime('Processing data');
+
+  const power: ItemJson = {
+    id: POWER_ID,
+    name: 'Power',
+    category: 'other',
+  };
+  await resizeIcon(
+    `${scriptOutputPath}/virtual-signal/signal-lightning.png`,
+    POWER_ID,
+  );
+
+  const heat: ItemJson = {
+    id: HEAT_ID,
+    name: 'Heat',
+    category: 'other',
+  };
+  await resizeIcon(
+    `${scriptOutputPath}/virtual-signal/signal-thermometer-red.png`,
+    HEAT_ID,
+  );
+
   // Include all modules by default
   const itemsUsed = new Set<string>(Object.keys(dataRaw.module));
 
@@ -995,6 +1022,14 @@ async function processMod(): Promise<void> {
       itemsUsed.add(ingredient);
 
     techIngredientsMap[tech.name] = techIngredients;
+  }
+
+  // Check for use in fusion reactors
+  for (const reactor of Object.values(dataRaw['fusion-reactor'])) {
+    if (reactor.output_fluid_box.filter)
+      itemsUsed.add(reactor.output_fluid_box.filter);
+    if (reactor.input_fluid_box.filter)
+      itemsUsed.add(reactor.input_fluid_box.filter);
   }
 
   // Add relevant recycling recipes
@@ -1212,7 +1247,9 @@ async function processMod(): Promise<void> {
       isAssemblingMachinePrototype(proto) ||
       isBoilerPrototype(proto) ||
       isFurnacePrototype(proto) ||
+      isFusionGeneratorPrototype(proto) ||
       isFusionReactorPrototype(proto) ||
+      isGeneratorPrototype(proto) ||
       isLabPrototype(proto) ||
       isMiningDrillPrototype(proto) ||
       isOffshorePumpPrototype(proto) ||
@@ -1318,17 +1355,23 @@ async function processMod(): Promise<void> {
         }
 
         // Parse machine
-        if (dataRaw.boiler[result]) {
-          const entity = dataRaw.boiler[result];
-          item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['assembling-machine'][result]) {
+        if (dataRaw['assembling-machine'][result]) {
           const entity = dataRaw['assembling-machine'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['rocket-silo'][result]) {
-          const entity = dataRaw['rocket-silo'][result];
+        } else if (dataRaw.boiler[result]) {
+          const entity = dataRaw.boiler[result];
           item.machine = getMachine(entity, proto.name);
         } else if (dataRaw.furnace[result]) {
           const entity = dataRaw.furnace[result];
+          item.machine = getMachine(entity, proto.name);
+        } else if (dataRaw['fusion-generator'][result]) {
+          const entity = dataRaw['fusion-generator'][result];
+          item.machine = getMachine(entity, proto.name);
+        } else if (dataRaw['fusion-reactor'][result]) {
+          const entity = dataRaw['fusion-reactor'][result];
+          item.machine = getMachine(entity, proto.name);
+        } else if (dataRaw.generator[result]) {
+          const entity = dataRaw.generator[result];
           item.machine = getMachine(entity, proto.name);
         } else if (dataRaw.lab[result]) {
           const entity = dataRaw.lab[result];
@@ -1341,6 +1384,9 @@ async function processMod(): Promise<void> {
           item.machine = getMachine(entity, proto.name);
         } else if (dataRaw.reactor[result]) {
           const entity = dataRaw.reactor[result];
+          item.machine = getMachine(entity, proto.name);
+        } else if (dataRaw['rocket-silo'][result]) {
+          const entity = dataRaw['rocket-silo'][result];
           item.machine = getMachine(entity, proto.name);
         }
 
@@ -1948,13 +1994,9 @@ async function processMod(): Promise<void> {
   for (const [reactorName, entityName] of Object.entries(machines.reactor)) {
     const reactor = dataRaw.reactor[entityName];
 
-    let effectivity = 1;
-    if (isBurnerEnergySource(reactor.energy_source)) {
-      effectivity = reactor.energy_source.effectivity ?? 1;
-    }
-
     const id = getFakeRecipeId(reactor.name, `${reactor.name}-reactor`);
-    const consumption = getMachinePower(reactor) ?? 0;
+    const consumption = getMachinePower(reactor, dataRaw) ?? 0;
+
     const recipe: RecipeJson = {
       id,
       name: entityLocale.names[reactor.name],
@@ -1962,35 +2004,104 @@ async function processMod(): Promise<void> {
       row: 2,
       time: 1,
       in: {},
-      out: { [HEAT_ID]: consumption * effectivity },
+      out: { [HEAT_ID]: consumption },
       producers: [reactorName],
     };
     modData.recipes.push(recipe);
   }
 
   // Check for fusion reactor recipes
-  // for (const [reactorName, entityName] of Object.entries(machines.reactor)) {
-  //   const reactor = dataRaw.reactor[entityName];
-  //   console.log(reactorName);
+  for (const [reactorName, entityName] of Object.entries(
+    machines.fusionReactor,
+  )) {
+    const reactor = dataRaw['fusion-reactor'][entityName];
 
-  //   let effectivity = 1;
-  //   if (isBurnerEnergySource(reactor.energy_source)) {
-  //     effectivity = reactor.energy_source.effectivity ?? 1;
-  //   }
+    const recipeIn: Record<string, number> = {};
+    if (reactor.input_fluid_box.filter)
+      recipeIn[reactor.input_fluid_box.filter] = reactor.max_fluid_usage * 60;
 
-  //   const id = getFakeRecipeId(reactor.name, `${reactor.name}-reactor`);
-  //   const recipe: RecipeJson = {
-  //     id,
-  //     name: entityLocale.names[reactor.name],
-  //     category: 'other',
-  //     row: 2,
-  //     time: 1,
-  //     in: {},
-  //     out: { [HEAT_ID]: (getMachineUsage(reactor) ?? 0) * effectivity },
-  //     producers: [reactorName],
-  //   };
-  //   modData.recipes.push(recipe);
-  // }
+    const effectivity = reactor.burner.effectivity ?? 1;
+    const recipeOut: Record<string, number> = {};
+    if (reactor.output_fluid_box.filter) {
+      recipeOut[reactor.output_fluid_box.filter] =
+        reactor.max_fluid_usage * 60 * effectivity;
+    }
+
+    const id = getFakeRecipeId(reactor.name, `${reactor.name}-reactor`);
+    const recipe: RecipeJson = {
+      id,
+      name: entityLocale.names[reactor.name],
+      category: 'other',
+      row: 2,
+      time: 1,
+      in: recipeIn,
+      out: recipeOut,
+      producers: [reactorName],
+    };
+    modData.recipes.push(recipe);
+  }
+
+  // Check for fusion generator recipes
+  for (const [generatorName, entityName] of Object.entries(
+    machines.fusionGenerator,
+  )) {
+    const generator = dataRaw['fusion-generator'][entityName];
+
+    const recipeIn: Record<string, number> = {};
+    if (generator.input_fluid_box.filter)
+      recipeIn[generator.input_fluid_box.filter] =
+        generator.max_fluid_usage * 60;
+
+    const recipeOut: Record<string, number> = {};
+    if (generator.output_fluid_box.filter)
+      recipeOut[generator.output_fluid_box.filter] =
+        generator.max_fluid_usage * 60;
+
+    const id = getFakeRecipeId(generator.name, `${generator.name}-generator`);
+    const recipe: RecipeJson = {
+      id,
+      name: entityLocale.names[generator.name],
+      icon: coalesce(power.icon, power.id),
+      category: 'other',
+      row: 2,
+      time: 1,
+      in: recipeIn,
+      out: recipeOut,
+      producers: [generatorName],
+    };
+    modData.recipes.push(recipe);
+  }
+
+  // Check for generator recipes
+  for (const [generatorName, entityName] of Object.entries(
+    machines.generator,
+  )) {
+    const generator = dataRaw.generator[entityName];
+
+    const recipeIn: Record<string, number> = {};
+    if (generator.fluid_box.filter)
+      recipeIn[generator.fluid_box.filter] =
+        generator.fluid_usage_per_tick * 60;
+
+    const recipeOut: Record<string, number> = {};
+    if (generator.output_fluid_box?.filter)
+      recipeOut[generator.output_fluid_box.filter] =
+        generator.fluid_usage_per_tick * 60;
+
+    const id = getFakeRecipeId(generator.name, `${generator.name}-generator`);
+    const recipe: RecipeJson = {
+      id,
+      name: entityLocale.names[generator.name],
+      icon: coalesce(power.icon, power.id),
+      category: 'other',
+      row: 2,
+      time: 1,
+      in: recipeIn,
+      out: recipeOut,
+      producers: [generatorName],
+    };
+    modData.recipes.push(recipe);
+  }
 
   // https://lua-api.factorio.com/latest/auxiliary/item-weight.html
   const defaultItemWeight =
@@ -2366,37 +2477,7 @@ async function processMod(): Promise<void> {
    */
 
   groupsUsed.add('other');
-  const pollution: ItemJson = {
-    id: POLLUTION_ID,
-    name: 'Pollution',
-    category: 'other',
-  };
-  await resizeIcon(
-    `${scriptOutputPath}/airborne-pollutant/pollution.png`,
-    POLLUTION_ID,
-  );
-  modData.items.push(pollution);
-
-  const electricity: ItemJson = {
-    id: ELECTRICITY_ID,
-    name: 'Electricity',
-    category: 'other',
-  };
-  await resizeIcon(
-    `${scriptOutputPath}/virtual-signal/signal-lightning.png`,
-    ELECTRICITY_ID,
-  );
-  modData.items.push(electricity);
-
-  const heat: ItemJson = {
-    id: HEAT_ID,
-    name: 'Heat',
-    category: 'other',
-  };
-  await resizeIcon(
-    `${scriptOutputPath}/virtual-signal/signal-thermometer-red.png`,
-    HEAT_ID,
-  );
+  modData.items.push(power);
   modData.items.push(heat);
 
   const labs = Object.keys(machines.lab);

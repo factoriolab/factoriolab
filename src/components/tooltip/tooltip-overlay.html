@@ -223,10 +223,17 @@
               }
             }
             @if (machine.usage && machine.usage.nonzero()) {
-              <tr>
-                <td>{{ 'data.powerUsage' | translate }}</td>
-                <td>{{ machine.usage | usage }}</td>
-              </tr>
+              @if (machine.usage.gt(rational.zero)) {
+                <tr>
+                  <th>{{ 'data.powerUsage' | translate }}</th>
+                  <td>{{ machine.usage | usage }}</td>
+                </tr>
+              } @else {
+                <tr>
+                  <th>{{ 'data.powerOutput' | translate }}</th>
+                  <td>{{ machine.usage.inverse() | usage }}</td>
+                </tr>
+              }
             }
             @if (machine.drain && machine.drain.nonzero()) {
               <tr>
