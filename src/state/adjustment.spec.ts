@@ -271,6 +271,51 @@ describe('Adjustment', () => {
       expect(result).toEqual(expected);
     });
 
+    it('should handle fractional beacons', () => {
+      const settings = spread(mocks.recipeSettings()[RecipeId.SteelChest]);
+      settings.modules = undefined;
+      settings.beacons = [
+        {
+          id: ItemId.Beacon,
+          count: rational(1n, 2n),
+          modules: [{ count: rational(2n), id: ItemId.SpeedModule }],
+        },
+      ];
+      const data = mocks.getAdjustedDataset();
+      const result = service.adjustRecipe(
+        RecipeId.SteelChest,
+        settings,
+        itemsStore.settings(),
+        settingsStore.settings(),
+        data,
+      );
+      // 2 × 0.3 × 1.5 × 0.5 / sqrt(0.5)
+      expect(result.effects.speed.toNumber()).toBeCloseTo(0.636396, 5);
+    });
+
+    it('should fall back to 1/sqrt when profile entry is missing', () => {
+      const settings = spread(mocks.recipeSettings()[RecipeId.SteelChest]);
+      settings.modules = undefined;
+      settings.beacons = [
+        {
+          id: ItemId.Beacon,
+          count: rational(8n),
+          modules: [{ count: rational(2n), id: ItemId.SpeedModule }],
+        },
+      ];
+      const data = mocks.getAdjustedDataset();
+      data.beaconRecord[ItemId.Beacon].profile = [];
+      const result = service.adjustRecipe(
+        RecipeId.SteelChest,
+        settings,
+        itemsStore.settings(),
+        settingsStore.settings(),
+        data,
+      );
+      // 2 × 0.3 × 1.5 × 8 / sqrt(8)
+      expect(result.effects.speed.toNumber()).toBeCloseTo(2.545584, 5);
+    });
+
     it('should use minimum 20% effects', () => {
       const settings = spread(mocks.recipeSettings()[RecipeId.SteelChest]);
       settings.modules = [
