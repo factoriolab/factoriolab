@@ -813,7 +813,9 @@ function nameVariantRecipes(
         const inputs = Object.entries(recipe.in)
           .filter(([id]) => withQuantities || !common.has(id))
           .map(([id, qty]) =>
-            withQuantities ? `${qty}x ${itemName(id)}` : itemName(id),
+            withQuantities
+              ? `${(qty ?? 0).toString()}x ${itemName(id)}`
+              : itemName(id),
           );
         const parts = [machine, inputs.join(' + ')].filter((p) => p);
         return parts.length > 0
@@ -1310,7 +1312,6 @@ async function main(): Promise<void> {
     if (machineIds.has(wi.id)) {
       const machine: MachineJson = {
         speed: COLLECTORS[wi.id]?.motes ?? 1,
-        type: 'electric',
         usage: wi.power || undefined,
       };
       item.machine = machine;
@@ -1899,7 +1900,9 @@ async function main(): Promise<void> {
           iconPaths[iconId] = localPath;
         }
       } catch (err) {
-        console.warn(`  Failed to download icon for ${iconId}: ${err}`);
+        console.warn(
+          `  Failed to download icon for ${iconId}: ${err as string}`,
+        );
         // Create placeholder
         const placeholder = await sharp({
           create: {
@@ -2057,7 +2060,7 @@ async function main(): Promise<void> {
 
 // #endregion
 
-main().catch((err) => {
+main().catch((err: unknown) => {
   console.error('Build failed:', err);
   process.exit(1);
 });
