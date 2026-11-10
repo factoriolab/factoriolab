@@ -25,6 +25,7 @@ import {
 import { AdjustedDataset, Dataset } from '~/state/settings/dataset';
 import { MaximizeType } from '~/state/settings/maximize-type';
 import { Settings } from '~/state/settings/settings';
+import { fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 import { contains } from '~/utils/record';
 
@@ -835,16 +836,18 @@ export class Solver {
     }
 
     // Find best recipe match for remaining steps
-    const potentials: Record<string, string[]> = {};
-    for (const step of steps.filter((s) => s.recipeId == null)) {
-      if (step.itemId) {
+    const potentials = steps
+      .filter((s) => s.recipeId == null)
+      .filter(fnPropsNotNullish('itemId', 'items'))
+      .sort((a, b) => b.items.sub(a.items).toNumber())
+      .reduce<Record<string, string[]>>((res, step) => {
         const itemId = step.itemId;
-        potentials[itemId] = recipes
+        res[itemId] = recipes
           .filter((r) => r.output[itemId]?.gt(rational.zero))
           .sort((a, b) => b.output[itemId].sub(a.output[itemId]).toNumber())
           .map((r) => r.id);
-      }
-    }
+        return res;
+      }, {});
 
     // Sort only based on output recipes, ignore input recipes
     const order = Object.keys(potentials).sort(

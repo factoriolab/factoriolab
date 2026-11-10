@@ -5,22 +5,22 @@
     {
       "id": 0,
       "label": "options.preset.minimum",
-      "belt": "transport-belt",
       "machineRank": [
         "electric-mining-drill",
         "stone-furnace",
         "assembling-machine-1"
-      ]
+      ],
+      "beltRank": ["transport-belt"]
     },
     {
       "id": 1,
       "label": "options.preset.upgraded",
-      "belt": "express-transport-belt",
       "machineRank": [
         "electric-mining-drill",
         "electric-furnace",
         "assembling-machine-3"
-      ]
+      ],
+      "beltRank": ["express-transport-belt"]
     },
     {
       "id": 2,
@@ -33,7 +33,8 @@
       "moduleRank": ["productivity-module-3", "speed-module-3"],
       "beacon": "beacon",
       "beaconCount": 2,
-      "beaconModule": "speed-module-3"
+      "beaconModule": "speed-module-3",
+      "beltRank": ["express-transport-belt"]
     },
     {
       "id": 8,
@@ -46,7 +47,8 @@
       "moduleRank": ["productivity-module-3", "speed-module-3"],
       "beacon": "beacon",
       "beaconCount": 8,
-      "beaconModule": "speed-module-3"
+      "beaconModule": "speed-module-3",
+      "beltRank": ["express-transport-belt"]
     },
     {
       "id": 12,
@@ -59,9 +61,9 @@
       "moduleRank": ["productivity-module-3", "speed-module-3"],
       "beacon": "beacon",
       "beaconCount": 12,
-      "beaconModule": "speed-module-3"
+      "beaconModule": "speed-module-3",
+      "beltRank": ["express-transport-belt"]
     }
   ],
-  "beltRank": ["transport-belt", "pump"],
   "wagonRank": ["cargo-wagon", "fluid-wagon"]
 }
