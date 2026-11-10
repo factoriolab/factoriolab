@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 
 import { CUSTOM_MOD, Game } from '~/data/game';
 import { gameInfo } from '~/data/game-info';
-import { EnergyType } from '~/data/schema/energy-type';
 import { QualityJson } from '~/data/schema/quality';
 import { rational } from '~/rational/rational';
 import { ItemId } from '~/tests/item-id';
@@ -527,7 +526,6 @@ describe('SettingsStore', () => {
               effectivity: 1,
               modules: 1,
               range: 1,
-              type: EnergyType.Electric as const,
               usage: 1,
             },
             wagon: { itemTypes: ['item'], capacity: 1 },
@@ -599,7 +597,6 @@ describe('SettingsStore', () => {
               effectivity: 1,
               modules: 1,
               range: 1,
-              type: EnergyType.Electric as const,
               usage: 1,
               qualityRecord: { uncommon: { effectivity: 2 } },
             },

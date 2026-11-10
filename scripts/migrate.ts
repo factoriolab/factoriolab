@@ -2,7 +2,7 @@ import { datasets } from '~/data/datasets';
 import { CUSTOM_MOD } from '~/data/game';
 import { ModData } from '~/data/schema/mod-data';
 
-import { getJsonData, writeJsonData } from './utils/file';
+import { getJsonData } from './utils/file';
 import { logTime } from './utils/log';
 
 const CURRENT_FACTORIO_MODS = datasets.mods
@@ -45,10 +45,12 @@ function updateMods(mods: string[]): void {
       }
     });
     // modData.recipes.forEach((i) => {
-    //   if (i.name == null) console.log('recipe', i.id);
+    //   if (i.usage) {
+    //     console.log(mod, i.id);
+    //   }
     // });
 
-    writeJsonData(modDataPath, modData);
+    // writeJsonData(modDataPath, modData);
     logTime(
       `Migrated mod '${mod}' (${(i + 1).toString()} of ${mods.length.toString()})`,
     );

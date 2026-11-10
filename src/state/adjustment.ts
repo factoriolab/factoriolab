@@ -346,21 +346,21 @@ export class Adjustment {
 
       // Power
       recipe.drain = machine.drain;
-      let usage = recipe.usage ?? machine.usage;
+      let power = recipe.usage ?? machine.usage;
       let burner = machine.burner;
       let heat = machine.heat;
       if (oc && !machine.neighborBonus) {
         // Polynomial effect only on production buildings, not power generation
-        if (usage?.gt(rational.zero)) usage = usage.mul(oc.pow(1.321928));
-        else usage = usage?.mul(oc);
+        if (power?.gt(rational.zero)) power = power.mul(oc.pow(1.321928));
+        else power = power?.mul(oc);
       }
 
-      usage = usage?.mul(eff.consumption);
+      power = power?.mul(eff.consumption);
       burner = burner?.mul(eff.consumption);
       heat = heat?.mul(eff.consumption);
-      recipe.power = usage;
-      recipe.burner = burner;
-      recipe.heat = heat;
+      if (power) recipe.power = power;
+      if (burner) recipe.burner = burner;
+      if (heat) recipe.heat = heat;
 
       if (data.flags.has('consumptionAsDrain') && recipe.power?.nonzero()) {
         recipe.drain = recipe.power;
@@ -427,19 +427,19 @@ export class Adjustment {
         }
       }
 
+      if (recipe.power?.lt(rational.zero) && data.itemRecord[POWER_ID]) {
+        const value = recipe.power.abs().mul(recipe.time);
+        recipe.out[POWER_ID] = coalesce(
+          recipe.out[POWER_ID],
+          rational.zero,
+        ).add(value);
+      }
+
       if (recipe.heat?.nonzero() && data.itemRecord[HEAT_ID]) {
         const key = recipe.heat.gt(rational.zero) ? 'in' : 'out';
         const value = recipe.heat.abs().mul(recipe.time);
         recipe[key][HEAT_ID] = coalesce(
           recipe[key][HEAT_ID],
-          rational.zero,
-        ).add(value);
-      }
-
-      if (recipe.power?.lt(rational.zero) && data.itemRecord[POWER_ID]) {
-        const value = recipe.power.abs().mul(recipe.time);
-        recipe.out[POWER_ID] = coalesce(
-          recipe.out[POWER_ID],
           rational.zero,
         ).add(value);
       }

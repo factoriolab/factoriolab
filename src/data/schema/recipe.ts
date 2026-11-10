@@ -65,6 +65,7 @@ export interface Recipe {
   icon?: string;
   /** Used to add extra text to an already defined icon */
   iconText?: string;
+  /** Set machine power usage for this recipe; ignores machine power usage */
   usage?: Rational;
   drain?: Rational;
   power?: Rational;

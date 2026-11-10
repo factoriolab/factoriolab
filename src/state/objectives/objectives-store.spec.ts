@@ -213,7 +213,7 @@ describe('ObjectivesStore', () => {
           },
         },
       ]);
-      data.machineRecord[ItemId.ElectricMiningDrill].totalRecipe = true;
+      data.machineRecord[ItemId.ElectricMiningDrill].flags.add('totalRecipe');
       spyOn(service['recipesStore'], 'adjustedDataset').and.returnValue(data);
       const result = service.totals();
       expect(result).toEqual({

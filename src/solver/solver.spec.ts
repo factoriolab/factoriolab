@@ -916,7 +916,7 @@ describe('Solver', () => {
       const result = spread(step);
       const recipe: any = {
         drain: null,
-        consumption: rational(2n),
+        power: rational(2n),
         pollution: null,
       };
       service['adjustPowerPollution'](result, recipe, settingsStore.dataset());
@@ -930,7 +930,7 @@ describe('Solver', () => {
       const step: any = { machines: rational(3n, 2n) };
       const recipe: any = {
         drain: rational(3n),
-        consumption: rational(4n),
+        power: rational(4n),
         pollution: rational(5n),
       };
       service['adjustPowerPollution'](step, recipe, settingsStore.dataset());
