@@ -47,6 +47,7 @@ import { SettingsStore } from '~/state/settings/settings-store';
 import { TranslatePipe } from '~/translate/translate-pipe';
 
 import { Conversion } from './conversion';
+import { ItemUnitOptionsPipe } from './item-unit-options-pipe';
 import { Message } from './message';
 
 const host = cva(
@@ -74,6 +75,7 @@ const host = cva(
     Tooltip,
     Message,
     FormField,
+    ItemUnitOptionsPipe,
   ],
   templateUrl: './objectives.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

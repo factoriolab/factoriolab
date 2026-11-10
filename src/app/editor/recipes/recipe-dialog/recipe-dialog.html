@@ -92,14 +92,14 @@
       </td>
     </tr>
     <tr>
-      <th id="usage-header">{{ 'data.energyConsumption' | translate }}</th>
+      <th id="usage-header">{{ 'data.powerUsage' | translate }}</th>
       <td>
         <input
           type="text"
           aria-labelledby="usage-header"
           class="input"
           size="4"
-          [placeholder]="'data.energyConsumption' | translate"
+          [placeholder]="'data.powerUsage' | translate"
           [ngModel]="data.recipe.usage"
           [ngModelOptions]="{ updateOn: 'blur' }"
           (ngModelChange)="data.recipe.usage = toNullableNumeric($event)"

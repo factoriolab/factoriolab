@@ -25,6 +25,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { RatePipe } from '~/components/steps/pipes/rate-pipe';
+import { IsPowerPipe } from '~/data/schema/item';
 import { Exporter } from '~/exporter/exporter';
 import { rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
@@ -89,6 +90,7 @@ import { TotalCell } from './total-cell/total-cell';
     SortHeader,
     StepHrefPipe,
     TotalCell,
+    IsPowerPipe,
   ],
   templateUrl: './steps.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

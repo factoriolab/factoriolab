@@ -41,7 +41,7 @@ export class BaseEffectDialog implements DialogData {
     value: 1,
   };
   protected readonly effectOptions: Option<ModuleEffect>[] = [
-    { label: 'data.energyConsumption', value: 'consumption' },
+    { label: 'data.consumption', value: 'consumption' },
     { label: 'data.pollution', value: 'pollution' },
     { label: 'data.productivity', value: 'productivity' },
     { label: 'data.quality', value: 'quality' },

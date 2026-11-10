@@ -192,7 +192,7 @@
       }
       @if (obj.usage) {
         <tr>
-          <th>{{ 'data.energyConsumption' | translate }}</th>
+          <th>{{ 'data.powerUsage' | translate }}</th>
           <td>{{ obj.usage | usage }}</td>
         </tr>
       }
@@ -342,6 +342,14 @@
         @if (data().flags.has('overclock')) {
           <tr>
             <th>{{ 'data.overclock' | translate }}</th>
+            <td>{{ recipeSettings.overclock }}%</td>
+          </tr>
+        } @else if (
+          recipeSettings.machineId &&
+          data().machineRecord[recipeSettings.machineId].neighborBonus
+        ) {
+          <tr>
+            <th>{{ 'data.neighborBonus' | translate }}</th>
             <td>{{ recipeSettings.overclock }}%</td>
           </tr>
         }

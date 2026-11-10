@@ -1,8 +1,7 @@
 import { inject, Service } from '@angular/core';
 
-import { EnergyType } from '~/data/schema/energy-type';
 import { AdjustedInserter } from '~/data/schema/inserter';
-import { itemHasQuality } from '~/data/schema/item';
+import { HEAT_ID, itemHasQuality, POWER_ID } from '~/data/schema/item';
 import { Machine } from '~/data/schema/machine';
 import {
   effects,
@@ -347,23 +346,25 @@ export class Adjustment {
 
       // Power
       recipe.drain = machine.drain;
-      let usage = recipe.usage ?? machine.usage ?? rational.zero;
-      if (oc) {
+      let usage = recipe.usage ?? machine.usage;
+      let burner = machine.burner;
+      let heat = machine.heat;
+      if (oc && !machine.neighborBonus) {
         // Polynomial effect only on production buildings, not power generation
         if (usage?.gt(rational.zero)) usage = usage.mul(oc.pow(1.321928));
-        else usage = usage.mul(oc);
+        else usage = usage?.mul(oc);
       }
 
-      usage = usage.mul(eff.consumption);
-      recipe.consumption =
-        machine.type === EnergyType.Electric ? usage : rational.zero;
+      usage = usage?.mul(eff.consumption);
+      burner = burner?.mul(eff.consumption);
+      heat = heat?.mul(eff.consumption);
+      recipe.power = usage;
+      recipe.burner = burner;
+      recipe.heat = heat;
 
-      if (
-        data.flags.has('consumptionAsDrain') &&
-        recipe.consumption?.nonzero()
-      ) {
-        recipe.drain = recipe.consumption;
-        delete recipe.consumption;
+      if (data.flags.has('consumptionAsDrain') && recipe.power?.nonzero()) {
+        recipe.drain = recipe.power;
+        delete recipe.power;
       }
 
       // Pollution
@@ -426,15 +427,38 @@ export class Adjustment {
         }
       }
 
+      if (recipe.heat?.nonzero() && data.itemRecord[HEAT_ID]) {
+        const key = recipe.heat.gt(rational.zero) ? 'in' : 'out';
+        const value = recipe.heat.abs().mul(recipe.time);
+        recipe[key][HEAT_ID] = coalesce(
+          recipe[key][HEAT_ID],
+          rational.zero,
+        ).add(value);
+      }
+
+      if (recipe.power?.lt(rational.zero) && data.itemRecord[POWER_ID]) {
+        const value = recipe.power.abs().mul(recipe.time);
+        recipe.out[POWER_ID] = coalesce(
+          recipe.out[POWER_ID],
+          rational.zero,
+        ).add(value);
+      }
+
       // Calculate burner fuel inputs
       if (recipeState.fuelId) {
         const fuel = data.fuelRecord[recipeState.fuelId];
 
-        if (fuel) {
-          const fuelIn = recipe.time
-            .mul(usage)
+        if (fuel && burner) {
+          let fuelIn = recipe.time
+            .mul(burner)
             .div(fuel.value)
             .div(rational(1000n));
+
+          /**
+           * For machines with neighbor bonus, overclock does not increase
+           * fuel consumption, fuel consumption becomes more efficient.
+           */
+          if (oc && machine.neighborBonus) fuelIn = fuelIn.div(oc);
 
           recipe.in[recipeState.fuelId] = (
             recipe.in[recipeState.fuelId] ?? rational.zero
@@ -825,7 +849,7 @@ export class Adjustment {
     if (recipe.flags.has('burn')) {
       s.defaultFuelId = Object.keys(recipe.in)[0];
       s.fuelId = s.defaultFuelId;
-    } else if (machine?.type === EnergyType.Burner) {
+    } else if (machine?.burner) {
       s.defaultFuelId = def?.fuelId;
       s.fuelId = coalesce(s.fuelId, s.defaultFuelId);
       s.fuelOptions = def?.fuelOptions;

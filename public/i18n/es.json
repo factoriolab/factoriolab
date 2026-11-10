@@ -103,6 +103,7 @@
     "inserterStack": "Inserter stack",
     "inserters": "Inserters",
     "itemSettings": "Ajustes de objeto",
+    "itemTypes": "Item types",
     "items": "Objetos",
     "locations": "Ubicaciones",
     "machine": "Máquina",
@@ -116,6 +117,7 @@
     "modules": "Módulos",
     "name": "Nombre",
     "notFound": "No encontrado",
+    "numberStacks": "{{ value }} stacks",
     "overclock": "Overclock",
     "pollution": "Contaminación",
     "pollutionMultiplier": "Pollution multiplier",
@@ -146,7 +148,7 @@
     "technologies": "Tecnologías",
     "technology": "Tecnología",
     "time": "Tiempo (s)",
-    "type": "Type",
+    "types": "Types",
     "unlockQuality": "Unlock quality",
     "unlockRecipe": "Unlock recipe",
     "unlockedBy": "Desbloqueado por",
@@ -160,6 +162,7 @@
   "editor": {
     "beaconCount": "Beacon count",
     "beaconModule": "Beacon module",
+    "capacityType": "Capacity type",
     "chooseImages": "Choose images",
     "clone": "Clone",
     "color": "Color",
@@ -171,7 +174,6 @@
     "export": "Export",
     "hardCodedPresets": "Hard-coded presets (legacy)",
     "header": "Game data editor",
-    "hideRate": "Hide rate",
     "home": "Home",
     "icon": "Icon",
     "iconText": "Icon text",
@@ -193,7 +195,7 @@
     "resetColors": "Reset colors",
     "rocketLaunchTime": "Rocket launch time (ticks)",
     "row": "Row",
-    "totalRecipe": "Total recipe",
+    "stacks": "Stacks",
     "unlimited": "Unlimited",
     "upload": "Upload custom files"
   },
@@ -314,7 +316,8 @@
     },
     "energyType": {
       "burner": "Burner",
-      "electric": "Electric"
+      "electric": "Electric",
+      "heat": "Heat"
     },
     "flowDiagram": {
       "boxLine": "Cajas y líneas",
