@@ -44,8 +44,9 @@ export class Options {
       .filter(
         (b) =>
           !types.isDisjointFrom(b[type].itemTypes) &&
-          (b.quality == null || (type === 'belt' && b[type]?.quality != null)),
+          (b.quality == null || b[type]?.quality != null),
       );
+
     if (allowedEntities.some((f) => settings.availableItemIds.has(f.id)))
       allowedEntities = allowedEntities.filter((f) =>
         settings.availableItemIds.has(f.id),

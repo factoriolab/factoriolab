@@ -27,7 +27,7 @@ import { Module, parseModule } from '~/data/schema/module';
 import { baseId, Quality, qualityId } from '~/data/schema/quality';
 import { parseRecipe, Recipe, recipeHasQuality } from '~/data/schema/recipe';
 import { Technology } from '~/data/schema/technology';
-import { Wagon } from '~/data/schema/wagon';
+import { parseWagon, Wagon } from '~/data/schema/wagon';
 import { LinkOption } from '~/option/link-option';
 import { getIdOptions, Option, OptionParams } from '~/option/option';
 import { Rational, rational } from '~/rational/rational';
@@ -256,9 +256,11 @@ export class SettingsStore extends Store<SettingsState> {
         tooltipType: 'belt',
       }),
       wagons: itemOptions(data.wagonIds, {
-        /** Wagons are not currently affected by quality */
-        exclude: (itemId: string): boolean =>
-          data.itemRecord[itemId].quality != null,
+        /** Wagons are not affected by quality in 2.0 */
+        exclude: (itemId: string): boolean => {
+          const item = data.itemRecord[itemId];
+          return item.quality != null && item.wagon?.quality == null;
+        },
         tooltipType: 'wagon',
       }),
       inserters: itemOptions(data.inserterIds, { tooltipType: 'inserter' }),
@@ -568,7 +570,6 @@ export class SettingsStore extends Store<SettingsState> {
         for (let i = 0; i < itemsLen; i++) {
           const item = items[i];
           if (!itemHasQuality(item)) continue;
-
           const itemJson = itemData[item.id];
           const id = qualityId(item.id, quality);
           itemIds.push(id);
@@ -610,6 +611,15 @@ export class SettingsStore extends Store<SettingsState> {
             const qModuleJson = itemJson.module.qualityRecord[quality.id];
             if (qModuleJson)
               qItem.module = parseModule(spread(itemJson.module, qModuleJson));
+          }
+
+          if (itemJson.wagon?.qualityRecord) {
+            const qWagonJson = itemJson.wagon.qualityRecord[quality.id];
+            if (qWagonJson)
+              qItem.wagon = parseWagon(
+                spread(itemJson.wagon, qWagonJson),
+                quality,
+              );
           }
 
           items.push(qItem);
@@ -668,10 +678,12 @@ export class SettingsStore extends Store<SettingsState> {
           a.belt.speed.sub(b.belt.speed).toNumber(),
       )
       .map((i) => i.id);
+
     const wagonIds = items
       .filter(fnPropsNotNullish('wagon'))
       .sort((a, b) => (a.quality?.level ?? 0) - (b.quality?.level ?? 0))
       .map((i) => i.id);
+
     const machineIds = items
       .filter(fnPropsNotNullish('machine'))
       .sort((a, b) => (a.quality?.level ?? 0) - (b.quality?.level ?? 0))
