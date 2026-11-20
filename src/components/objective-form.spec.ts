@@ -32,7 +32,7 @@ describe('ObjectiveForm', () => {
       });
     });
 
-    it('should open the item picker and add an objective', () => {
+    it('should open the recipe picker and add an objective', () => {
       service.unit.set(ObjectiveUnit.Machines);
       spyOn(service['picker'], 'pickRecipe').and.returnValue(of('id'));
       let value: ObjectiveBase | undefined;
