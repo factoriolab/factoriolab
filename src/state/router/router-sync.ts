@@ -716,8 +716,8 @@ export class RouterSync {
         id: index.toString(),
         targetId: s[i++], // Convert to real id after determining unit, if hashed
         value: coalesce(this.zip.parseRational(s[i++]), rational.one),
-        unit: this.zip.parseNumber(s[i++]) ?? ObjectiveUnit.Items,
-        type: this.zip.parseNumber(s[i++]) ?? ObjectiveType.Output,
+        unit: coalesce(this.zip.parseNumber(s[i++]), ObjectiveUnit.Items),
+        type: coalesce(this.zip.parseNumber(s[i++]), ObjectiveType.Output),
         machineId: this.zip.parseString(s[i++], hash?.machines),
         modules: this.zip.parseIndices(s[i++], moduleSettings),
         beacons: this.zip.parseIndices(s[i++], beaconSettings),
