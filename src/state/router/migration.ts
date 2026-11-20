@@ -71,7 +71,10 @@ export class Migration {
       };
 
     params = spread(params);
-    const v = coalesce(params['v'] as ZipVersion, ZipVersion.Version0);
+    const v = coalesce(
+      params['v'] as unknown as ZipVersion,
+      ZipVersion.Version0,
+    );
     log('unzip_version', v);
 
     const isBare = params['z'] == null;

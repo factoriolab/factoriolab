@@ -4,7 +4,13 @@ import { Rational } from '~/rational/rational';
 import { areSetsEqual } from '~/utils/equality';
 import { prune, spread } from '~/utils/object';
 
-export type RecursivePartial<T> = { [P in keyof T]?: RecursivePartial<T[P]> };
+export type RecursivePartial<T> = {
+  [P in keyof T]?: T[P] extends (infer U)[]
+    ? RecursivePartial<U>[]
+    : T[P] extends object | undefined
+      ? RecursivePartial<T[P]>
+      : T[P];
+};
 
 /**
  * Compares an array with a default array. If it differs from the default,

@@ -406,7 +406,7 @@ export class SettingsStore extends Store<SettingsState> {
       };
     }
 
-    const preset: Preset = presetSetting;
+    const preset = presetSetting as unknown as Preset;
     let beacons: BeaconSettings[] = [];
     let moduleRank: string[] | undefined;
     let overclock: Rational | undefined;
