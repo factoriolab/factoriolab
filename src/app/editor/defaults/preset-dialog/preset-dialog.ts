@@ -1,9 +1,4 @@
-import {
-  Dialog,
-  DIALOG_DATA,
-  DialogConfig,
-  DialogRef,
-} from '@angular/cdk/dialog';
+import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -77,23 +72,23 @@ export class PresetDialog {
   editRecipeProductivity(preset: PresetJson): void {
     const { data, icons } = this.data.edit;
     const options = toOptions(data.items, icons);
-    const config = new DialogConfig<
-      QuantitiesDialogData,
-      DialogRef<
-        Partial<Record<string, string | number>> | null,
+    this.dialog
+      .open<
+        Partial<Record<string, string | number>> | null | undefined,
+        QuantitiesDialogData,
         QuantitiesDialog
-      >
-    >();
-    config.data = {
-      record: coalesce(preset.recipeProductivity, {}),
-      options,
-      header: 'data.recipeProductivity',
-      optional: true,
-    };
-    this.dialog.open(QuantitiesDialog, config).closed.subscribe((record) => {
-      if (record === null) delete preset.recipeProductivity;
-      else if (record) preset.recipeProductivity = record;
-      this.cd.detectChanges();
-    });
+      >(QuantitiesDialog, {
+        data: {
+          record: coalesce(preset.recipeProductivity, {}),
+          options,
+          header: 'data.recipeProductivity',
+          optional: true,
+        },
+      })
+      .closed.subscribe((record) => {
+        if (record === null) delete preset.recipeProductivity;
+        else if (record) preset.recipeProductivity = record;
+        this.cd.detectChanges();
+      });
   }
 }

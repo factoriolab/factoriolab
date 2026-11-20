@@ -1,9 +1,4 @@
-import {
-  Dialog,
-  DIALOG_DATA,
-  DialogConfig,
-  DialogRef,
-} from '@angular/cdk/dialog';
+import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -96,50 +91,43 @@ export class MachineDialog implements DialogData {
   protected readonly toSize = toSize;
 
   editSilo(machine: MachineJson): void {
-    const config = new DialogConfig<
-      SiloJson,
-      DialogRef<SiloJson | null, SiloDialog>
-    >();
-    config.data = coalesce(machine.silo, { parts: 1, launch: 1 });
-    this.dialog.open(SiloDialog, config).closed.subscribe((silo) => {
-      if (silo === null) delete machine.silo;
-      else if (silo) machine.silo = silo;
-      this.cd.detectChanges();
-    });
+    this.dialog
+      .open<SiloJson | null | undefined, SiloJson, SiloDialog>(SiloDialog, {
+        data: coalesce(machine.silo, { parts: 1, launch: 1 }),
+      })
+      .closed.subscribe((silo) => {
+        if (silo === null) delete machine.silo;
+        else if (silo) machine.silo = silo;
+        this.cd.detectChanges();
+      });
   }
 
   editConsumption(machine: MachineJson): void {
     const { data, icons } = this.data.edit;
     const options = toOptions(data.items, icons);
     const record = { ...machine.consumption };
-    const config = new DialogConfig<
-      QuantitiesDialogData,
-      DialogRef<
-        Partial<Record<string, string | number>> | null,
+    this.dialog
+      .open<
+        Partial<Record<string, string | number>> | null | undefined,
+        QuantitiesDialogData,
         QuantitiesDialog
-      >
-    >();
-    config.data = {
-      record,
-      options,
-      header: 'data.consumption',
-      optional: true,
-    };
-    this.dialog.open(QuantitiesDialog, config).closed.subscribe((result) => {
-      if (result === null) delete machine.consumption;
-      else if (result) machine.consumption = result;
-      this.cd.detectChanges();
-    });
+      >(QuantitiesDialog, {
+        data: { record, options, header: 'data.consumption', optional: true },
+      })
+      .closed.subscribe((result) => {
+        if (result === null) delete machine.consumption;
+        else if (result) machine.consumption = result;
+        this.cd.detectChanges();
+      });
   }
 
   editBaseEffect(machine: MachineJson): void {
-    const config = new DialogConfig<
-      Partial<Record<ModuleEffect, number>>,
-      DialogRef<Partial<Record<ModuleEffect, number>> | null, BaseEffectDialog>
-    >();
-    config.data = coalesce(machine.baseEffect, {});
     this.dialog
-      .open(BaseEffectDialog, config)
+      .open<
+        Partial<Record<ModuleEffect, number>> | null | undefined,
+        Partial<Record<ModuleEffect, number>>,
+        BaseEffectDialog
+      >(BaseEffectDialog, { data: coalesce(machine.baseEffect, {}) })
       .closed.subscribe((baseEffect) => {
         if (baseEffect === null) delete machine.baseEffect;
         else if (baseEffect) machine.baseEffect = baseEffect;

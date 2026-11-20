@@ -1,4 +1,4 @@
-import { Dialog, DialogConfig, DialogRef } from '@angular/cdk/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import { inject, Service } from '@angular/core';
 import { filter, map, Observable } from 'rxjs';
 
@@ -17,18 +17,10 @@ export class Picker {
     allIds?: string[] | Set<string>,
   ): Observable<string> {
     allIds ??= this.settingsStore.settings().availableItemIds;
-    const config = new DialogConfig<
-      PickerData,
-      DialogRef<boolean | string, PickerDialog>
-    >();
-    config.data = {
-      header: 'picker.selectItem',
-      type: 'item',
-      allIds,
-      selection,
-    };
     return this.dialog
-      .open(PickerDialog, config)
+      .open<boolean | string, PickerData>(PickerDialog, {
+        data: { header: 'picker.selectItem', type: 'item', allIds, selection },
+      })
       .closed.pipe(filter((result) => typeof result === 'string'));
   }
 
@@ -37,35 +29,32 @@ export class Picker {
     allIds?: string[] | Set<string>,
   ): Observable<string> {
     allIds ??= this.settingsStore.settings().availableRecipeIds;
-    const config = new DialogConfig<
-      PickerData,
-      DialogRef<boolean | string, PickerDialog>
-    >();
-    config.data = {
-      header: 'picker.selectRecipe',
-      type: 'recipe',
-      allIds,
-      selection,
-    };
     return this.dialog
-      .open(PickerDialog, config)
+      .open<boolean | string, PickerData>(PickerDialog, {
+        data: {
+          header: 'picker.selectRecipe',
+          type: 'recipe',
+          allIds,
+          selection,
+        },
+      })
       .closed.pipe(filter((result) => typeof result === 'string'));
   }
 
   pickExcludedRecipes(): void {
     const data = this.settingsStore.dataset();
-    const config = new DialogConfig<
-      PickerData,
-      DialogRef<boolean | string, PickerDialog>
-    >();
-    config.data = {
-      header: 'picker.includedRecipes',
-      type: 'recipe',
-      allIds: data.recipeIds,
-      selection: this.settingsStore.settings().excludedRecipeIds,
-      default: this.settingsStore.defaults()?.excludedRecipeIds,
-    };
-    const ref = this.dialog.open(PickerDialog, config);
+    const ref = this.dialog.open<boolean | string, PickerData, PickerDialog>(
+      PickerDialog,
+      {
+        data: {
+          header: 'picker.includedRecipes',
+          type: 'recipe',
+          allIds: data.recipeIds,
+          selection: this.settingsStore.settings().excludedRecipeIds,
+          default: this.settingsStore.defaults()?.excludedRecipeIds,
+        },
+      },
+    );
     ref.closed
       .pipe(
         filter((result) => result !== false),
@@ -78,17 +67,17 @@ export class Picker {
 
   pickExcludedItems(): void {
     const data = this.settingsStore.dataset();
-    const config = new DialogConfig<
-      PickerData,
-      DialogRef<boolean | string, PickerDialog>
-    >();
-    config.data = {
-      header: 'picker.includedItems',
-      type: 'item',
-      allIds: data.itemIds,
-      selection: this.settingsStore.settings().excludedItemIds,
-    };
-    const ref = this.dialog.open(PickerDialog, config);
+    const ref = this.dialog.open<boolean | string, PickerData, PickerDialog>(
+      PickerDialog,
+      {
+        data: {
+          header: 'picker.includedItems',
+          type: 'item',
+          allIds: data.itemIds,
+          selection: this.settingsStore.settings().excludedItemIds,
+        },
+      },
+    );
     ref.closed
       .pipe(
         filter((result) => result !== false),

@@ -1,9 +1,4 @@
-import {
-  Dialog,
-  DIALOG_DATA,
-  DialogConfig,
-  DialogRef,
-} from '@angular/cdk/dialog';
+import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -96,54 +91,54 @@ export class RecipeDialog {
     const { data, icons } = this.data.edit;
     const options = toOptions(data.items, icons);
     const record = { ...recipe.in };
-    const config = new DialogConfig<
-      QuantitiesDialogData,
-      DialogRef<
-        Partial<Record<string, string | number>> | null,
+    this.dialog
+      .open<
+        Partial<Record<string, string | number>> | null | undefined,
+        QuantitiesDialogData,
         QuantitiesDialog
-      >
-    >();
-    config.data = { record, options, header: 'data.ingredients' };
-    this.dialog.open(QuantitiesDialog, config).closed.subscribe((result) => {
-      if (result) recipe.in = result;
-      this.cd.detectChanges();
-    });
+      >(QuantitiesDialog, {
+        data: { record, options, header: 'data.ingredients' },
+      })
+      .closed.subscribe((result) => {
+        if (result) recipe.in = result;
+        this.cd.detectChanges();
+      });
   }
 
   editProducts(recipe: RecipeJson): void {
     const { data, icons } = this.data.edit;
     const options = toOptions(data.items, icons);
     const record = { ...recipe.out };
-    const config = new DialogConfig<
-      QuantitiesDialogData,
-      DialogRef<
-        Partial<Record<string, string | number>> | null,
+    this.dialog
+      .open<
+        Partial<Record<string, string | number>> | null | undefined,
+        QuantitiesDialogData,
         QuantitiesDialog
-      >
-    >();
-    config.data = { record, options, header: 'data.products' };
-    this.dialog.open(QuantitiesDialog, config).closed.subscribe((result) => {
-      if (result) recipe.out = result;
-      this.cd.detectChanges();
-    });
+      >(QuantitiesDialog, {
+        data: { record, options, header: 'data.products' },
+      })
+      .closed.subscribe((result) => {
+        if (result) recipe.out = result;
+        this.cd.detectChanges();
+      });
   }
 
   editCatalysts(recipe: RecipeJson): void {
     const { data, icons } = this.data.edit;
     const record = { ...recipe.catalyst };
     const options = toOptions(data.items, icons);
-    const config = new DialogConfig<
-      QuantitiesDialogData,
-      DialogRef<
-        Partial<Record<string, string | number>> | null,
+    this.dialog
+      .open<
+        Partial<Record<string, string | number>> | null | undefined,
+        QuantitiesDialogData,
         QuantitiesDialog
-      >
-    >();
-    config.data = { record, options, header: 'data.catalysts', optional: true };
-    this.dialog.open(QuantitiesDialog, config).closed.subscribe((result) => {
-      if (result === null) delete recipe.catalyst;
-      else if (result) recipe.catalyst = result;
-      this.cd.detectChanges();
-    });
+      >(QuantitiesDialog, {
+        data: { record, options, header: 'data.catalysts', optional: true },
+      })
+      .closed.subscribe((result) => {
+        if (result === null) delete recipe.catalyst;
+        else if (result) recipe.catalyst = result;
+        this.cd.detectChanges();
+      });
   }
 }
