@@ -1,7 +1,7 @@
 import modJson11 from '/public/data/1.1/data.json';
-import modJson from '/public/data/2.0/data.json';
-import hashJson from '/public/data/2.0/hash.json';
-import i18nJson from '/public/data/2.0/i18n/zh.json';
+import modJson from '/public/data/2.1/data.json';
+import hashJson from '/public/data/2.1/hash.json';
+import i18nJson from '/public/data/2.1/i18n/zh.json';
 import langJson from '/public/i18n/en.json';
 import { datasets } from '~/data/datasets';
 import { HardCodedPresetsJson } from '~/data/schema/defaults';

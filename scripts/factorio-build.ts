@@ -1,6 +1,7 @@
 import chroma from 'chroma-js';
 import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
+import path from 'path';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
@@ -176,9 +177,8 @@ async function processMod(): Promise<void> {
   logTime('Reading mod data');
 
   // Create directories
-  if (fs.existsSync(tempPath)) {
-    fs.rmSync(tempPath, { recursive: true });
-  }
+  if (fs.existsSync(tempPath))
+    fs.rmSync(path.resolve(tempPath), { recursive: true });
 
   fs.mkdirSync(tempPath);
   fs.mkdirSync(tempIconsPath);
@@ -1886,40 +1886,6 @@ async function processMod(): Promise<void> {
         }
       }
 
-      // Check for burn recipes
-      if (
-        isAnyItemPrototype(proto) &&
-        proto.burnt_result &&
-        proto.fuel_categories
-      ) {
-        // Found burn recipe
-        const id = getFakeRecipeId(proto.burnt_result, `${proto.name}-burn`);
-
-        const producerSet = new Set<string>();
-        for (const fuelCategory of proto.fuel_categories) {
-          const producers = producersMap.burner[fuelCategory];
-          if (producers) {
-            for (const producer of producersMap.burner[fuelCategory])
-              producerSet.add(producer);
-          }
-        }
-
-        const recipe: RecipeJson = {
-          id,
-          name: `${itemLocale.names[proto.name]} : ${
-            itemLocale.names[proto.burnt_result]
-          }`,
-          category: group.name,
-          row: getRecipeRow(proto),
-          time: 1,
-          in: { [proto.name]: 0 },
-          out: { [proto.burnt_result]: 0 },
-          producers: Array.from(producerSet),
-          flags: ['burn'],
-        };
-        modData.recipes.push(recipe);
-      }
-
       // Check for spoil recipes
       if (isAnyItemPrototype(proto) && proto.spoil_result) {
         // Found spoil recipe
@@ -2507,7 +2473,6 @@ async function processMod(): Promise<void> {
    * by hand for alternate locales.
    */
 
-  groupsUsed.add('other');
   modData.items.push(power);
   modData.items.push(heat);
 

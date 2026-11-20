@@ -144,9 +144,6 @@ export function recipeHasQuality(
   itemData: Record<string, ItemJson>,
 ): boolean {
   const flags = new Set(recipe.flags);
-  Object.keys(recipe.in).forEach((k) => {
-    if (itemData[k] == null) console.log(recipe, k);
-  });
   return (
     recipe.part == null &&
     !flags.has('mining') &&

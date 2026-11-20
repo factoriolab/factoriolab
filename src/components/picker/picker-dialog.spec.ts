@@ -20,13 +20,11 @@ describe('PickerDialog', () => {
   let fixture: ComponentFixture<PickerDialog>;
   let mocks: Mocks;
 
-  beforeEach(() => {
-    PickerDialog['lastCategory'] = null;
-    PickerDialog['lastQuality'] = null;
-  });
-
   describe('', () => {
     beforeEach(async () => {
+      PickerDialog['lastCategory'] = null;
+      PickerDialog['lastQuality'] = null;
+
       await TestBed.configureTestingModule({
         imports: [TestModule, PickerDialog],
         providers: [
@@ -123,7 +121,7 @@ describe('PickerDialog', () => {
         };
         spyOn<any>(component, 'data').and.returnValue(data);
         component['selectedQuality'].set('normal');
-        expect(component['categoryRows']()).toHaveSize(6);
+        expect(component['categoryRows']()).toHaveSize(7);
       });
 
       it('should filter based on text', () => {
