@@ -153,7 +153,7 @@ const mockZipPartial: ZipData<LabParams> = {
     ich: 'C',
     rex: 'C',
     rch: 'C',
-    tre: 'C-',
+    tre: 'B',
     omt: '0',
   },
   hash: {
@@ -184,7 +184,7 @@ const mockZipPartial: ZipData<LabParams> = {
     ich: 'C',
     rex: 'C',
     rch: 'C',
-    tre: 'C-',
+    tre: 'B',
     omt: '0',
   },
 };
@@ -774,13 +774,6 @@ describe('RouterSync', () => {
     });
 
     it('should unzip v10', (done) => {
-      // void service['compression']
-      //   .inflate(
-      //     'eJw1j82KQzEIhd.GhVDQrGZzFpkMlIG-RJPJpVnYe7F.d9VnLwbGhRz184hPqNKKwsrKEbS2CzINFM6c6aky-o4yRbugkKPwiZWFkwirSIz8n.HJmDlO71-yxfFN1h3HdyarHRrQ3TvKgdY.RyLbHEqj9ri6ODSJULWBsK7eIVRHg5CNO4RGe03wFcY1Vm274Uh-3aC0WjBtOSNRszNUqD2u0er7NGy3R1S246AiQh2J88w.1MGZKuK1zF9TJc4fagVRSA__',
-      //   )
-      //   .then((x) => {
-      //     console.log(x);
-      //   });
       dispatch.and.callFake((v) => {
         expect(v).toEqual(mockStateV10);
         done();
@@ -788,7 +781,7 @@ describe('RouterSync', () => {
       mockRoute.next(
         {},
         {
-          z: 'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
+          z: 'eJwdjM0GgmEQhe9mFg8xZ1ZtWsxbfOLbdQFDFEmkqF3XnnkPh-P8PfcIMSG7CCfZlgjSzsNunSeJ7NVypSvhjpp23bH8EjFqraO9BzEHpy.jTuLzcIBYZhCovV47G7m7feT2CLKCQ5F.QZMgHQ__',
           v: '10',
         },
       );
@@ -807,24 +800,10 @@ describe('RouterSync', () => {
         expect(v).toEqual(mockStateV10);
         done();
       });
-      // void service['compression']
-      //   .inflate(
-      //     'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
-      //   )
-      //   .then((x) => {
-      //     console.log(x);
-      //   });
-      // void service['compression']
-      //   .inflate(
-      //     'eJwdjL0KwkAQhN9miw8CO1vZWOxFCEI6H-BAMBBEEAXtfHbZGxgY5u85I8SA7Cac5NBFkHZttleeJLJXyZWqhDsq2nZk-SWi9bWf7T1PxFhcvrQ7iY.HBmIZQaDyau5Mcnf7yO0RZA9OnfwDX7ggSw__',
-      //   )
-      //   .then((x) => {
-      //     console.log(x);
-      //   });
       mockRoute.next(
         { id: '1.0' },
         {
-          z: 'eJw1j82KQzEIhd.GhVDQrGZzFpkMlIG-RJPJpVnYe7F.d9VnLwbGhRz184hPqNKKwsrKEbS2CzINFM6c6aky-o4yRbugkKPwiZWFkwirSIz8n.HJmDlO71-yxfFN1h3HdyarHRrQ3TvKgdY.RyLbHEqj9ri6ODSJULWBsK7eIVRHg5CNO4RGe03wFcY1Vm274Uh-3aC0WjBtOSNRszNUqD2u0er7NGy3R1S246AiQh2J88w.1MGZKuK1zF9TJc4fagVRSA__',
+          z: 'eJw1j82KQzEIhd.GhTCgWc3mLNIMlIG-RJPJpVnYe7F.d9VnLwbGhRz184hPqNKKwsrKEbS2CzINFM6c6aky-o4yRbugkKPwiZWFkwirSIz8n.HJmDlO71-yxXEg647jO5PVDg3o7h0HWv8ciWxzKI3a4-ji0CRC1QbCuXqHUB0NQjbuEBrtNcFX-NZYte2GI.l1g9JqwbTljETNzlCh9rhGq-.TsN0eUdmOLxUR6kicZ.6hDs5UEZ9l.p4qcf4AKcJRGg__',
           v: '11',
         },
       );

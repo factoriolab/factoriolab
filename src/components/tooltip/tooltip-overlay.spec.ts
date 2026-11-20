@@ -18,116 +18,112 @@ describe('TooltipOverlay', () => {
   let fixture: ComponentFixture<TooltipOverlay>;
   let positionChanges: Subject<ConnectedOverlayPositionChange>;
 
-  beforeEach(async () => {
-    positionChanges = new Subject<ConnectedOverlayPositionChange>();
-    await TestBed.configureTestingModule({
-      imports: [TestModule, TooltipOverlay],
-      providers: [
-        {
-          provide: TOOLTIP_DATA,
-          useValue: {
-            value: ItemId.ElectronicCircuit,
-            type: 'item',
-            defaultPosition: STANDARD_DROPDOWN_BELOW_POSITIONS[0],
-            positionChanges,
+  describe('(item & recipe)', () => {
+    beforeEach(async () => {
+      positionChanges = new Subject<ConnectedOverlayPositionChange>();
+      await TestBed.configureTestingModule({
+        imports: [TestModule, TooltipOverlay],
+        providers: [
+          {
+            provide: TOOLTIP_DATA,
+            useValue: {
+              value: ItemId.ElectronicCircuit,
+              type: 'item',
+              defaultPosition: STANDARD_DROPDOWN_BELOW_POSITIONS[0],
+              positionChanges,
+            },
           },
-        },
-      ],
-    }).compileComponents();
+        ],
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(TooltipOverlay);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+      fixture = TestBed.createComponent(TooltipOverlay);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
 
-  describe('recipeId', () => {
-    it('should get a recipe to show for an item', () => {
-      expect(component['recipeId']()).toEqual(RecipeId.ElectronicCircuit);
+    describe('recipeId', () => {
+      it('should get a recipe to show for an item', () => {
+        expect(component['recipeId']()).toEqual(RecipeId.ElectronicCircuit);
+      });
+    });
+
+    describe('constructor', () => {
+      it('should subscribe to position changes', () => {
+        spyOn(component['position'], 'set');
+        positionChanges.next({ connectionPair: {} } as any);
+        expect(component['position'].set).toHaveBeenCalled();
+      });
     });
   });
 
-  describe('constructor', () => {
-    it('should subscribe to position changes', () => {
-      spyOn(component['position'], 'set');
-      positionChanges.next({ connectionPair: {} } as any);
-      expect(component['position'].set).toHaveBeenCalled();
-    });
-  });
-});
-
-describe('TooltipOverlay', () => {
-  let component: TooltipOverlay;
-  let fixture: ComponentFixture<TooltipOverlay>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [TestModule, TooltipOverlay],
-      providers: [
-        {
-          provide: TOOLTIP_DATA,
-          useValue: {
-            value: RecipeId.ElectronicCircuit,
-            type: 'recipe',
-            defaultPosition: STANDARD_DROPDOWN_BELOW_POSITIONS[0],
-            positionChanges: EMPTY,
-            adjustedRecipe: {
-              effects: {
-                consumption: rational.one,
-                pollution: rational.one,
-                productivity: rational.one,
-                quality: rational.one,
-                speed: rational.one,
+  describe('(recipe)', () => {
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [TestModule, TooltipOverlay],
+        providers: [
+          {
+            provide: TOOLTIP_DATA,
+            useValue: {
+              value: RecipeId.ElectronicCircuit,
+              type: 'recipe',
+              defaultPosition: STANDARD_DROPDOWN_BELOW_POSITIONS[0],
+              positionChanges: EMPTY,
+              adjustedRecipe: {
+                effects: {
+                  consumption: rational.one,
+                  pollution: rational.one,
+                  productivity: rational.one,
+                  quality: rational.one,
+                  speed: rational.one,
+                },
               },
             },
           },
-        },
-      ],
-    }).compileComponents();
+        ],
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(TooltipOverlay);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+      fixture = TestBed.createComponent(TooltipOverlay);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
 
-  describe('recipeId', () => {
-    it('should return undefined where not relevant', () => {
-      expect(component['recipeId']()).toBeUndefined();
+    describe('recipeId', () => {
+      it('should return undefined where not relevant', () => {
+        expect(component['recipeId']()).toBeUndefined();
+      });
     });
   });
-});
 
-describe('TooltipOverlay', () => {
-  let component: TooltipOverlay;
-  let fixture: ComponentFixture<TooltipOverlay>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [TestModule, TooltipOverlay],
-      providers: [
-        {
-          provide: TOOLTIP_DATA,
-          useValue: {
-            value: ItemId.PetroleumGas,
-            type: 'item',
-            defaultPosition: STANDARD_DROPDOWN_BELOW_POSITIONS[0],
-            positionChanges: EMPTY,
+  describe('(item)', () => {
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [TestModule, TooltipOverlay],
+        providers: [
+          {
+            provide: TOOLTIP_DATA,
+            useValue: {
+              value: ItemId.PetroleumGas,
+              type: 'item',
+              defaultPosition: STANDARD_DROPDOWN_BELOW_POSITIONS[0],
+              positionChanges: EMPTY,
+            },
           },
-        },
-      ],
-    }).compileComponents();
+        ],
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(TooltipOverlay);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+      fixture = TestBed.createComponent(TooltipOverlay);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
 
-  describe('recipeId', () => {
-    it('should return undefined if a single recipe match is not found', () => {
-      expect(component['recipeId']()).toBeUndefined();
+    describe('recipeId', () => {
+      it('should return undefined if a single recipe match is not found', () => {
+        expect(component['recipeId']()).toBeUndefined();
+      });
     });
   });
 });

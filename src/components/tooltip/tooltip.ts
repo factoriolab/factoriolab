@@ -1,5 +1,6 @@
 import {
   Overlay,
+  OverlayConfig,
   OverlayRef,
   STANDARD_DROPDOWN_ADJACENT_POSITIONS,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
@@ -87,7 +88,9 @@ export class Tooltip implements OnDestroy {
       providers: [{ provide: TOOLTIP_DATA, useValue: data }],
     });
 
-    const ref = this.overlay.create({ positionStrategy });
+    const overlayConfig = new OverlayConfig();
+    overlayConfig.positionStrategy = positionStrategy;
+    const ref = this.overlay.create(overlayConfig);
 
     // Watch for click events to hide after touchstart on mobile
     ref

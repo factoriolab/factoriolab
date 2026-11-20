@@ -122,11 +122,9 @@ export function sankey<
   let _nodeId = defaultId<N, L>;
   let _nodeAlign = sankeyJustify<N, L>;
   let _nodeSort:
-    | ((a: SankeyNode<N, L>, b: SankeyNode<N, L>) => number)
-    | undefined;
+    ((a: SankeyNode<N, L>, b: SankeyNode<N, L>) => number) | undefined;
   let _linkSort:
-    | ((a: SankeyLink<N, L>, b: SankeyLink<N, L>) => number)
-    | undefined;
+    ((a: SankeyLink<N, L>, b: SankeyLink<N, L>) => number) | undefined;
   let _nodes = defaultNodes<N, L>;
   let _links = defaultLinks<N, L>;
   let _iterations = 6;
@@ -179,8 +177,7 @@ export function sankey<
   sankey.nodeAlign = nodeAlign;
 
   function nodeSort():
-    | ((a: SankeyNode<N, L>, b: SankeyNode<N, L>) => number)
-    | undefined;
+    ((a: SankeyNode<N, L>, b: SankeyNode<N, L>) => number) | undefined;
   function nodeSort(
     compare: (a: SankeyNode<N, L>, b: SankeyNode<N, L>) => number,
   ): Layout;
@@ -242,8 +239,7 @@ export function sankey<
   sankey.links = links;
 
   function linkSort():
-    | ((a: SankeyLink<N, L>, b: SankeyLink<N, L>) => number)
-    | undefined;
+    ((a: SankeyLink<N, L>, b: SankeyLink<N, L>) => number) | undefined;
   function linkSort(
     compare: (a: SankeyLink<N, L>, b: SankeyLink<N, L>) => number,
   ): Layout;

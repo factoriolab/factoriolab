@@ -27,10 +27,7 @@ import { CollectionItem } from './collection-item';
 import { CollectionKey } from './collection-key';
 
 type RecordKey =
-  | 'categoryRecord'
-  | 'itemRecord'
-  | 'recipeRecord'
-  | 'locationRecord';
+  'categoryRecord' | 'itemRecord' | 'recipeRecord' | 'locationRecord';
 
 const recordKey: Partial<Record<IconType, RecordKey>> = {
   category: 'categoryRecord',
@@ -91,13 +88,11 @@ export class CollectionTable {
     const record = data[key];
     let result = this.ids()
       .map((i) => record[i])
-      .map(
-        (r): CollectionItem => ({
-          id: r.id,
-          name: r.name,
-          category: data.categoryRecord[coalesce((r as Item).category, '')],
-        }),
-      );
+      .map((r): CollectionItem => ({
+        id: r.id,
+        name: r.name,
+        category: data.categoryRecord[coalesce((r as Item).category, '')],
+      }));
 
     const state = this.state();
     const filter = state.filter?.toLowerCase();

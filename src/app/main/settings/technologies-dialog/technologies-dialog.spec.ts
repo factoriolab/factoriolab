@@ -38,7 +38,7 @@ describe('TechnologiesDialog', () => {
       const status = component['status']();
       expect(status.available.length).toEqual(2);
       expect(status.researched.length).toEqual(1);
-      expect(status.locked.length).toEqual(193);
+      expect(status.locked.length).toEqual(185);
     });
   });
 

@@ -30,7 +30,7 @@ export const systemIcons: IconJson[] = [
 ];
 
 export const systemIconsRecord = toRecord(
-  systemIcons.map(
-    (i): IconData => parseIconData(parseIcon(i), 'icons/icons.webp'),
+  systemIcons.map((i): IconData =>
+    parseIconData(parseIcon(i), 'icons/icons.webp'),
   ),
 );

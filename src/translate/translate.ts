@@ -75,9 +75,11 @@ export class Translate {
     const result: TranslateData = {};
     if (data == null) return result;
 
-    const entries = Object.keys(data).map(
-      (key): ParseEntry => ({ data, key, path: key }),
-    );
+    const entries = Object.keys(data).map((key): ParseEntry => ({
+      data,
+      key,
+      path: key,
+    }));
     while (entries.length) {
       const entry = entries.pop();
       /**
@@ -90,13 +92,11 @@ export class Translate {
       if (typeof data === 'string') result[entry.path] = data;
       else {
         entries.push(
-          ...Object.keys(data).map(
-            (key): ParseEntry => ({
-              data,
-              key,
-              path: `${entry.path}.${key}`,
-            }),
-          ),
+          ...Object.keys(data).map((key): ParseEntry => ({
+            data,
+            key,
+            path: `${entry.path}.${key}`,
+          })),
         );
       }
     }

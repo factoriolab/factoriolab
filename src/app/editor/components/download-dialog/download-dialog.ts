@@ -38,9 +38,10 @@ export class DownloadDialog implements DialogData {
   protected readonly faXmark = faXmark;
   protected readonly loading = signal(false);
   protected readonly modId = signal(DEFAULT_MOD);
-  protected readonly options = datasets.mods.map(
-    (m): Option => ({ label: m.name, value: m.id }),
-  );
+  protected readonly options = datasets.mods.map((m): Option => ({
+    label: m.name,
+    value: m.id,
+  }));
 
   save(): void {
     this.loading.set(true);

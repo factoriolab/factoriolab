@@ -118,13 +118,13 @@ describe('Normalization', () => {
         stepB,
         'parents',
         '0',
-        rational(247n, 80n),
+        rational(2471n, 800n),
       );
       expect(service['addEntityValue']).toHaveBeenCalledWith(
         stepA,
         'outputs',
         'iron-plate',
-        rational(741n, 200n),
+        rational(7413n, 2000n),
       );
     });
   });

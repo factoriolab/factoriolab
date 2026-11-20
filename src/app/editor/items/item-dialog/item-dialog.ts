@@ -1,4 +1,9 @@
-import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import {
+  Dialog,
+  DIALOG_DATA,
+  DialogConfig,
+  DialogRef,
+} from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -74,31 +79,32 @@ export class ItemDialog {
   protected readonly toArray = toArray;
 
   editBeacon(item: ItemJson): void {
-    this.dialog
-      .open<
-        BeaconJson | null | undefined,
-        BeaconJson,
-        BeaconDialog
-      >(BeaconDialog, { data: coalesce(item.beacon, { effectivity: 1, modules: 1 }) })
-      .closed.subscribe((beacon) => {
-        if (beacon === null) delete item.beacon;
-        else if (beacon) item.beacon = beacon;
-        this.cd.detectChanges();
-      });
+    const config = new DialogConfig<
+      BeaconJson,
+      DialogRef<BeaconJson | null, BeaconDialog>
+    >();
+    config.data = coalesce(item.beacon, { effectivity: 1, modules: 1 });
+    this.dialog.open(BeaconDialog, config).closed.subscribe((beacon) => {
+      if (beacon === null) delete item.beacon;
+      else if (beacon) item.beacon = beacon;
+      this.cd.detectChanges();
+    });
   }
 
   editBelt(item: ItemJson): void {
-    this.dialog
-      .open<
-        BeltJson | null | undefined,
-        BeltDialogData,
-        BeltDialog
-      >(BeltDialog, { data: { belt: coalesce(item.belt, { itemTypes: [], speed: 1 }), header: 'data.belt' } })
-      .closed.subscribe((belt) => {
-        if (belt === null) delete item.belt;
-        else if (belt) item.belt = belt;
-        this.cd.detectChanges();
-      });
+    const config = new DialogConfig<
+      BeltDialogData,
+      DialogRef<BeltJson | null, BeltDialog>
+    >();
+    config.data = {
+      belt: coalesce(item.belt, { itemTypes: [], speed: 1 }),
+      header: 'data.belt',
+    };
+    this.dialog.open(BeltDialog, config).closed.subscribe((belt) => {
+      if (belt === null) delete item.belt;
+      else if (belt) item.belt = belt;
+      this.cd.detectChanges();
+    });
   }
 
   editMachine(item: ItemJson): void {
@@ -110,17 +116,21 @@ export class ItemDialog {
       true,
     );
     const locationOptions = toOptions(coalesce(data.locations, []), icons);
-    this.dialog
-      .open<
-        MachineJson | null | undefined,
-        MachineDialogData,
-        MachineDialog
-      >(MachineDialog, { data: { machine: coalesce(item.machine, {}), fuelOptions, locationOptions, edit } })
-      .closed.subscribe((machine) => {
-        if (machine === null) delete item.machine;
-        else if (machine) item.machine = machine;
-        this.cd.detectChanges();
-      });
+    const config = new DialogConfig<
+      MachineDialogData,
+      DialogRef<MachineJson | null, MachineDialog>
+    >();
+    config.data = {
+      machine: coalesce(item.machine, {}),
+      fuelOptions,
+      locationOptions,
+      edit,
+    };
+    this.dialog.open(MachineDialog, config).closed.subscribe((machine) => {
+      if (machine === null) delete item.machine;
+      else if (machine) item.machine = machine;
+      this.cd.detectChanges();
+    });
   }
 
   editModule(item: ItemJson): void {
@@ -132,47 +142,51 @@ export class ItemDialog {
       limitationOptions.push({ label: limitation, value: limitation });
     }
     const itemOptions = toOptions(data.items, icons, true);
-    this.dialog
-      .open<
-        ModuleJson | null | undefined,
-        ModuleDialogData,
-        ModuleDialog
-      >(ModuleDialog, { data: { module: coalesce(item.module, {}), limitationOptions, itemOptions } })
-      .closed.subscribe((module) => {
-        if (module === null) delete item.module;
-        else if (module) item.module = module;
-        this.cd.detectChanges();
-      });
+    const config = new DialogConfig<
+      ModuleDialogData,
+      DialogRef<ModuleJson | null, ModuleDialog>
+    >();
+    config.data = {
+      module: coalesce(item.module, {}),
+      limitationOptions,
+      itemOptions,
+    };
+    this.dialog.open(ModuleDialog, config).closed.subscribe((module) => {
+      if (module === null) delete item.module;
+      else if (module) item.module = module;
+      this.cd.detectChanges();
+    });
   }
 
   editFuel(item: ItemJson): void {
     const { data, icons } = this.data.edit;
     const itemOptions = toOptions(data.items, icons, true);
-    this.dialog
-      .open<
-        FuelJson | null | undefined,
-        FuelDialogData,
-        FuelDialog
-      >(FuelDialog, { data: { fuel: coalesce(item.fuel, { types: [], value: 1 }), itemOptions } })
-      .closed.subscribe((fuel) => {
-        if (fuel === null) delete item.fuel;
-        else if (fuel) item.fuel = fuel;
-        this.cd.detectChanges();
-      });
+    const config = new DialogConfig<
+      FuelDialogData,
+      DialogRef<FuelJson | null, FuelDialog>
+    >();
+    config.data = {
+      fuel: coalesce(item.fuel, { types: [], value: 1 }),
+      itemOptions,
+    };
+    this.dialog.open(FuelDialog, config).closed.subscribe((fuel) => {
+      if (fuel === null) delete item.fuel;
+      else if (fuel) item.fuel = fuel;
+      this.cd.detectChanges();
+    });
   }
 
   editWagon(item: ItemJson): void {
-    this.dialog
-      .open<
-        WagonJson | null | undefined,
-        WagonJson,
-        WagonDialog
-      >(WagonDialog, { data: coalesce(item.wagon, { itemTypes: [], capacity: 1 }) })
-      .closed.subscribe((wagon) => {
-        if (wagon === null) delete item.wagon;
-        else if (wagon) item.wagon = wagon;
-        this.cd.detectChanges();
-      });
+    const config = new DialogConfig<
+      WagonJson,
+      DialogRef<WagonJson | null, WagonDialog>
+    >();
+    config.data = coalesce(item.wagon, { itemTypes: [], capacity: 1 });
+    this.dialog.open(WagonDialog, config).closed.subscribe((wagon) => {
+      if (wagon === null) delete item.wagon;
+      else if (wagon) item.wagon = wagon;
+      this.cd.detectChanges();
+    });
   }
 
   editTechnology(item: ItemJson): void {
@@ -183,12 +197,18 @@ export class ItemDialog {
     );
     const qualityOptions = toOptions(coalesce(data.qualities, []), icons);
     const recipeOptions = toOptions(data.recipes, icons);
+    const config = new DialogConfig<
+      TechnologyDialogData,
+      DialogRef<TechnologyJson | null, TechnologyDialog>
+    >();
+    config.data = {
+      technology: coalesce(item.technology, {}),
+      prerequisiteOptions,
+      qualityOptions,
+      recipeOptions,
+    };
     this.dialog
-      .open<
-        TechnologyJson | null | undefined,
-        TechnologyDialogData,
-        TechnologyDialog
-      >(TechnologyDialog, { data: { technology: coalesce(item.technology, {}), prerequisiteOptions, qualityOptions, recipeOptions } })
+      .open(TechnologyDialog, config)
       .closed.subscribe((technology) => {
         if (technology === null) delete item.technology;
         else if (technology) item.technology = technology;
@@ -197,16 +217,15 @@ export class ItemDialog {
   }
 
   editInserter(item: ItemJson): void {
-    this.dialog
-      .open<
-        InserterJson | null | undefined,
-        InserterJson,
-        InserterDialog
-      >(InserterDialog, { data: coalesce(item.inserter, { speed: 1 }) })
-      .closed.subscribe((inserter) => {
-        if (inserter === null) delete item.inserter;
-        else if (inserter) item.inserter = inserter;
-        this.cd.detectChanges();
-      });
+    const config = new DialogConfig<
+      InserterJson,
+      DialogRef<InserterJson | null, InserterDialog>
+    >();
+    config.data = coalesce(item.inserter, { speed: 1 });
+    this.dialog.open(InserterDialog, config).closed.subscribe((inserter) => {
+      if (inserter === null) delete item.inserter;
+      else if (inserter) item.inserter = inserter;
+      this.cd.detectChanges();
+    });
   }
 }

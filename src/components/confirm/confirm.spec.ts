@@ -24,9 +24,12 @@ describe('Confirm', () => {
       } as any);
       const data: ConfirmData<number> = { header: '', message: '' };
       service.open(data);
-      expect(service['dialog'].open).toHaveBeenCalledWith(ConfirmDialog, {
-        data,
-      });
+      expect(service['dialog'].open).toHaveBeenCalledWith(
+        ConfirmDialog,
+        jasmine.objectContaining({
+          data,
+        }),
+      );
     });
   });
 });

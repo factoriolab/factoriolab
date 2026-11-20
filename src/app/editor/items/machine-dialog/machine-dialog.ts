@@ -1,4 +1,9 @@
-import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import {
+  Dialog,
+  DIALOG_DATA,
+  DialogConfig,
+  DialogRef,
+} from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -18,8 +23,7 @@ import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
 import { DialogData } from '~/components/dialog/dialog';
 import { Select } from '~/components/select/select';
-import { EnergyType } from '~/data/schema/energy-type';
-import { MachineJson } from '~/data/schema/machine';
+import { MachineFlag, MachineJson } from '~/data/schema/machine';
 import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
 import { Option } from '~/option/option';
@@ -76,60 +80,66 @@ export class MachineDialog implements DialogData {
   protected readonly dialogRef =
     inject<DialogRef<MachineJson | null | undefined>>(DialogRef);
 
-  protected readonly energySourceOptions: Option<EnergyType | undefined>[] = [
-    { label: 'none', value: undefined },
-    { label: 'options.energyType.burner', value: EnergyType.Burner },
-    { label: 'options.energyType.electric', value: EnergyType.Electric },
-  ];
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   readonly header = 'data.machine';
+  protected readonly machineFlagOptions: Option<MachineFlag>[] = [
+    { label: 'hideRate', value: 'hideRate' },
+    { label: 'totalRecipe', value: 'totalRecipe' },
+  ];
   protected readonly moduleEffectOptions = moduleEffectOptions;
   protected readonly toNullableArray = toNullableArray;
   protected readonly toNullableNumeric = toNullableNumeric;
   protected readonly toSize = toSize;
 
   editSilo(machine: MachineJson): void {
-    this.dialog
-      .open<
-        SiloJson | null | undefined,
-        SiloJson,
-        SiloDialog
-      >(SiloDialog, { data: coalesce(machine.silo, { parts: 1, launch: 1 }) })
-      .closed.subscribe((silo) => {
-        if (silo === null) delete machine.silo;
-        else if (silo) machine.silo = silo;
-        this.cd.detectChanges();
-      });
+    const config = new DialogConfig<
+      SiloJson,
+      DialogRef<SiloJson | null, SiloDialog>
+    >();
+    config.data = coalesce(machine.silo, { parts: 1, launch: 1 });
+    this.dialog.open(SiloDialog, config).closed.subscribe((silo) => {
+      if (silo === null) delete machine.silo;
+      else if (silo) machine.silo = silo;
+      this.cd.detectChanges();
+    });
   }
 
   editConsumption(machine: MachineJson): void {
     const { data, icons } = this.data.edit;
     const options = toOptions(data.items, icons);
     const record = { ...machine.consumption };
-    this.dialog
-      .open<
-        Partial<Record<string, string | number>> | null | undefined,
-        QuantitiesDialogData,
+    const config = new DialogConfig<
+      QuantitiesDialogData,
+      DialogRef<
+        Partial<Record<string, string | number>> | null,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record, options, header: 'data.consumption', optional: true } })
-      .closed.subscribe((result) => {
-        if (result === null) delete machine.consumption;
-        else if (result) machine.consumption = result;
-        this.cd.detectChanges();
-      });
+      >
+    >();
+    config.data = {
+      record,
+      options,
+      header: 'data.consumption',
+      optional: true,
+    };
+    this.dialog.open(QuantitiesDialog, config).closed.subscribe((result) => {
+      if (result === null) delete machine.consumption;
+      else if (result) machine.consumption = result;
+      this.cd.detectChanges();
+    });
   }
 
   editBaseEffect(machine: MachineJson): void {
+    const config = new DialogConfig<
+      Partial<Record<ModuleEffect, number>>,
+      DialogRef<Partial<Record<ModuleEffect, number>> | null, BaseEffectDialog>
+    >();
+    config.data = coalesce(machine.baseEffect, {});
     this.dialog
-      .open<
-        Partial<Record<ModuleEffect, number>> | null | undefined,
-        Partial<Record<ModuleEffect, number>>,
-        BaseEffectDialog
-      >(BaseEffectDialog, { data: coalesce(machine.baseEffect, {}) })
+      .open(BaseEffectDialog, config)
       .closed.subscribe((baseEffect) => {
         if (baseEffect === null) delete machine.baseEffect;
         else if (baseEffect) machine.baseEffect = baseEffect;

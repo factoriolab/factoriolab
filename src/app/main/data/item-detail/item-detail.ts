@@ -16,6 +16,7 @@ import { CollectionTable } from '~/components/collection-table/collection-table'
 import { Icon } from '~/components/icon/icon';
 import { Item } from '~/data/schema/item';
 import { BonusPercentPipe } from '~/rational/bonus-percent-pipe';
+import { rational } from '~/rational/rational';
 import { RoundPipe } from '~/rational/round-pipe';
 import { UsagePipe } from '~/rational/usage-pipe';
 import { ItemsStore } from '~/state/items/items-store';
@@ -52,6 +53,7 @@ export class ItemDetail extends DetailBase<Item> {
   protected readonly machinesStore = inject(MachinesStore);
 
   protected readonly faArrowRotateLeft = faArrowRotateLeft;
+  protected readonly rational = rational;
   protected readonly settings = this.settingsStore.settings;
 
   protected readonly obj = computed(

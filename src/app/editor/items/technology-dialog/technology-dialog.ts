@@ -1,4 +1,9 @@
-import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import {
+  Dialog,
+  DIALOG_DATA,
+  DialogConfig,
+  DialogRef,
+} from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -62,12 +67,16 @@ export class TechnologyDialog implements DialogData {
   protected readonly toNullableNumeric = toNullableNumeric;
 
   editInserterStack(technology: TechnologyJson): void {
-    this.dialog
-      .open<
-        { value: number | string; category?: string }[] | null | undefined,
-        { value: number | string; category?: string }[],
+    const config = new DialogConfig<
+      { value: number | string; caregory?: string }[],
+      DialogRef<
+        { value: number | string; category?: string }[] | null,
         InserterStackDialog
-      >(InserterStackDialog, { data: coalesce(technology.inserterStack, []) })
+      >
+    >();
+    config.data = coalesce(technology.inserterStack, []);
+    this.dialog
+      .open(InserterStackDialog, config)
       .closed.subscribe((inserterStack) => {
         if (inserterStack === null) delete technology.inserterStack;
         else if (inserterStack) technology.inserterStack = inserterStack;
@@ -76,12 +85,19 @@ export class TechnologyDialog implements DialogData {
   }
 
   editRecipeProductivity(technology: TechnologyJson): void {
-    this.dialog
-      .open<
-        { id: string; value: number | string }[] | null | undefined,
-        RecipeProductivityDialogData,
+    const config = new DialogConfig<
+      RecipeProductivityDialogData,
+      DialogRef<
+        { id: string; value: number | string }[] | null,
         RecipeProductivityDialog
-      >(RecipeProductivityDialog, { data: { recipeProductivity: coalesce(technology.recipeProductivity, []), recipeOptions: this.data.recipeOptions } })
+      >
+    >();
+    config.data = {
+      recipeProductivity: coalesce(technology.recipeProductivity, []),
+      recipeOptions: this.data.recipeOptions,
+    };
+    this.dialog
+      .open(RecipeProductivityDialog, config)
       .closed.subscribe((recipeProductivity) => {
         if (recipeProductivity === null) delete technology.recipeProductivity;
         else if (recipeProductivity)

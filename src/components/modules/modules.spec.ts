@@ -70,8 +70,8 @@ describe('Modules', () => {
     it('should immediately return if modules are disallowed or unlimited', () => {
       const modules = mockModuleSettings.map((m) => spread(m));
       spyOn(component, 'entity').and.returnValues(
-        { modules: true },
-        { modules: undefined },
+        { modules: true, flags: new Set() },
+        { modules: undefined, flags: new Set() },
       );
       component['updateEmpty'](modules);
       component['updateEmpty'](modules);

@@ -2155,8 +2155,7 @@ interface _DecorativePrototype {
   stateless_visualisation?: StatelessVisualisation | StatelessVisualisation[];
   /** Only loaded if `stateless_visualisation` is not defined. Can be defined only when decorative is not "decal" (see `render_layer`). */
   stateless_visualisation_variations?: (
-    | StatelessVisualisation
-    | StatelessVisualisation[]
+    StatelessVisualisation | StatelessVisualisation[]
   )[];
   target_count?: number;
   /** Mandatory if `render_layer` = "decals". This int16 is converted to a [TileRenderLayer](prototype:TileRenderLayer) internally. It is offset from `ground-natural`. */
@@ -7079,8 +7078,7 @@ interface _SimpleEntityPrototype {
   shuffled_variation_on_chunk_generated?: boolean;
   /** Loaded and drawn with all `pictures`, `picture` and `animations`. If graphics variation is larger than number of `lower_pictures` variations this layer is not drawn. */
   stateless_visualisation_variations?: (
-    | StatelessVisualisation
-    | StatelessVisualisation[]
+    StatelessVisualisation | StatelessVisualisation[]
   )[];
 }
 
@@ -7131,8 +7129,7 @@ interface _SimpleEntityWithOwnerPrototype {
   /** Used to determine render order for entities with the same `render_layer` in the same position. Entities with a higher `secondary_draw_order` are drawn on top. */
   secondary_draw_order?: number;
   stateless_visualisation_variations?: (
-    | StatelessVisualisation
-    | StatelessVisualisation[]
+    StatelessVisualisation | StatelessVisualisation[]
   )[];
 }
 
@@ -8450,8 +8447,7 @@ interface _TreePrototype {
   /** Mandatory if `variations` is not defined. */
   pictures?: SpriteVariations;
   stateless_visualisation_variations?: (
-    | StatelessVisualisation
-    | StatelessVisualisation[]
+    StatelessVisualisation | StatelessVisualisation[]
   )[];
   variation_weights?: number[];
   /** If defined, it can't be empty. */
@@ -11975,8 +11971,7 @@ export interface CranePartDyingEffect {
   explosion_linear_distance_step?: number;
   particle_effect_linear_distance_step?: number;
   particle_effects?:
-    | CreateParticleTriggerEffectItem
-    | CreateParticleTriggerEffectItem[];
+    CreateParticleTriggerEffectItem | CreateParticleTriggerEffectItem[];
 }
 export interface CraterPlacementDefinition {
   minimum_segments_to_place?: number;
@@ -13618,9 +13613,7 @@ Expected icon sizes:
 export interface IconDrawSpecification {
   /** Render layer of the icon. */
   render_layer?:
-    | 'entity-info-icon'
-    | 'entity-info-icon-above'
-    | 'air-entity-info-icon';
+    'entity-info-icon' | 'entity-info-icon-above' | 'air-entity-info-icon';
   scale?: number;
   /** Scale of the icon when there are many items. */
   scale_for_many?: number;
@@ -15041,10 +15034,7 @@ export interface PlatformBackdropHeroCloud {
   /** With each planet revolution, the cloud smoothly travels along this path by approximating the provided points. If only single position is provided, it remains stationary at that point. */
   positions?: Vector[];
   projection_style?:
-    | 'none'
-    | 'front-only'
-    | 'front-and-back'
-    | 'front-and-back-inverted';
+    'none' | 'front-only' | 'front-and-back' | 'front-and-back-inverted';
   rotate_with_planet?: boolean;
   rotation_deviation?: number;
   rotation_speed?: number;
@@ -18892,11 +18882,7 @@ export interface WorkingVisualisation {
   animation?: Animation;
   /** Used by [CraftingMachinePrototype](prototype:CraftingMachinePrototype). Has precedence over `apply_tint`. */
   apply_recipe_tint?:
-    | 'primary'
-    | 'secondary'
-    | 'tertiary'
-    | 'quaternary'
-    | 'none';
+    'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'none';
   /** Used by [CraftingMachinePrototype](prototype:CraftingMachinePrototype) ("status" and "visual-state-color" only) and [MiningDrillPrototype](prototype:MiningDrillPrototype).
 
 For "status" on CraftingMachine and MiningDrill, the colors are specified via [WorkingVisualisations::status_colors](prototype:WorkingVisualisations::status_colors). For "resource-color", the colors are specified via [ResourceEntityPrototype::mining_visualisation_tint](prototype:ResourceEntityPrototype::mining_visualisation_tint). */
@@ -19012,11 +18998,7 @@ export type Alignment =
 
 /** Lets the game know in what instances the audio file is played. */
 export type AmbientSoundType =
-  | 'menu-track'
-  | 'main-track'
-  | 'hero-track'
-  | 'interlude'
-  | 'script-track';
+  'menu-track' | 'main-track' | 'hero-track' | 'interlude' | 'script-track';
 
 /** The name of an [AmmoCategory](prototype:AmmoCategory). */
 export type AmmoCategoryID = string;
@@ -19037,9 +19019,7 @@ export type AnimationFrameSequence = number[];
 export type AnimationRunMode = 'forward' | 'backward' | 'forward-then-backward';
 
 export type AnimationVariations =
-  | _AnimationVariations
-  | Animation
-  | Animation[];
+  _AnimationVariations | Animation | Animation[];
 
 /** Any basic type (string, number, boolean) or table. */
 export type AnyBasic = string | boolean | number;
@@ -19317,17 +19297,10 @@ export type AsteroidChunkID = string;
 
 /** Loaded as one of the [BaseAttackParameters](prototype:BaseAttackParameters) extensions, based on the value of the `type` key. */
 export type AttackParameters =
-  | ProjectileAttackParameters
-  | BeamAttackParameters
-  | StreamAttackParameters;
+  ProjectileAttackParameters | BeamAttackParameters | StreamAttackParameters;
 
 export type AttenuationType =
-  | 'none'
-  | 'linear'
-  | 'logarithmic'
-  | 'exponential'
-  | 'cosine'
-  | 'S-curve';
+  'none' | 'linear' | 'logarithmic' | 'exponential' | 'cosine' | 'S-curve';
 
 /** The name of an [AutoplaceControl](prototype:AutoplaceControl). */
 export type AutoplaceControlID = string;
@@ -19393,24 +19366,14 @@ Color allows the short-hand notation of passing an array of exactly 3 or 4 numbe
 
 The game usually expects colors to be in pre-multiplied form (color channels are pre-multiplied by alpha). */
 export type Color =
-  | _Color
-  | [number, number, number]
-  | [number, number, number, number];
+  _Color | [number, number, number] | [number, number, number, number];
 
 /** A lookup table (LUT) for the color which maps the original color to a position in the sprite where the replacement color is found. The file pointed to by the filename must be a sprite of size 256×16. */
 export type ColorLookupTable = FileName;
 
 /** A string that specifies how the inputs should be compared. */
 export type ComparatorString =
-  | '='
-  | '>'
-  | '<'
-  | '≥'
-  | '>='
-  | '≤'
-  | '<='
-  | '≠'
-  | '!=';
+  '=' | '>' | '<' | '≥' | '>=' | '≤' | '<=' | '≠' | '!=';
 
 /** Defines which other inputs a [CustomInputPrototype](prototype:CustomInputPrototype) consumes. */
 export type ConsumingType = 'none' | 'game-only';
@@ -19435,9 +19398,7 @@ export type CursorBoxType =
 export type CustomEventID = string;
 
 export type DamageTypeFilters =
-  | _DamageTypeFilters
-  | DamageTypeID
-  | DamageTypeID[];
+  _DamageTypeFilters | DamageTypeID | DamageTypeID[];
 
 /** The name of a [DamageType](prototype:DamageType). */
 export type DamageTypeID = string;
@@ -19690,13 +19651,7 @@ export type FluidID = string;
 export type FootstepTriggerEffectList = FootstepTriggerEffectItem[];
 
 export type ForceCondition =
-  | 'all'
-  | 'enemy'
-  | 'ally'
-  | 'friend'
-  | 'not-friend'
-  | 'same'
-  | 'not-same';
+  'all' | 'enemy' | 'ally' | 'friend' | 'not-friend' | 'same' | 'not-same';
 
 /** The name of a [FuelCategory](prototype:FuelCategory). */
 export type FuelCategoryID = string;
@@ -19705,8 +19660,7 @@ export type HorizontalAlign = 'left' | 'center' | 'right';
 
 /** Item or fluid ingredient. */
 export type IngredientPrototype =
-  | ItemIngredientPrototype
-  | FluidIngredientPrototype;
+  ItemIngredientPrototype | FluidIngredientPrototype;
 
 export type ItemCountType = number;
 
@@ -19971,11 +19925,7 @@ export type LocalisedString = string | LocalisedString[];
 export type LogisticFilterIndex = number;
 
 export type LogisticMode =
-  | 'active-provider'
-  | 'passive-provider'
-  | 'requester'
-  | 'storage'
-  | 'buffer';
+  'active-provider' | 'passive-provider' | 'requester' | 'storage' | 'buffer';
 
 /** A floating point number specifying an amount.
 
@@ -20101,11 +20051,7 @@ export type Mods = Record<string, string>;
 export type ModuleCategoryID = string;
 
 export type ModuleTint =
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'quaternary'
-  | 'none';
+  'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'none';
 
 /** The name of a [MouseCursor](prototype:MouseCursor). */
 export type MouseCursorID = string;
@@ -20206,8 +20152,7 @@ export type Order = string;
 export type ParticleID = string;
 
 export type PersistentWorldAmbientSoundDefinition =
-  | _PersistentWorldAmbientSoundDefinition
-  | Sound;
+  _PersistentWorldAmbientSoundDefinition | Sound;
 
 export type PipeConnectionType = 'normal' | 'underground' | 'linked';
 
@@ -20215,9 +20160,7 @@ export type PipeConnectionType = 'normal' | 'underground' | 'linked';
 export type PlayFor = 'character_actions' | 'everything';
 
 export type PlayerInputMethodFilter =
-  | 'all'
-  | 'keyboard_and_mouse'
-  | 'game_controller';
+  'all' | 'keyboard_and_mouse' | 'game_controller';
 
 /** Probabilities of all items must add up to 100. */
 export type ProbabilityTable = ProbabilityTableItem[];
@@ -20232,17 +20175,11 @@ export type ProcessionAudioCatalogue = ProcessionAudioCatalogueItem[];
 
 /** Type of [ProcessionAudioEvent](prototype:ProcessionAudioEvent). */
 export type ProcessionAudioEventType =
-  | 'play-sound'
-  | 'start-looped-sound'
-  | 'stop-looped-sound';
+  'play-sound' | 'start-looped-sound' | 'stop-looped-sound';
 
 /** Types of [ProcessionAudio](prototype:ProcessionAudio). */
 export type ProcessionAudioType =
-  | 'none'
-  | 'sound'
-  | 'looped-sound'
-  | 'pod-catalogue'
-  | 'location-catalogue';
+  'none' | 'sound' | 'looped-sound' | 'pod-catalogue' | 'location-catalogue';
 
 /** Who will hear [ProcessionAudioEvent](prototype:ProcessionAudioEvent). */
 export type ProcessionAudioUsage = 'both' | 'passenger' | 'outside';
@@ -20464,8 +20401,7 @@ export type SelectionModeFlags =
     )[];
 
 export type SemiPersistentWorldAmbientSoundDefinition =
-  | _SemiPersistentWorldAmbientSoundDefinition
-  | Sound;
+  _SemiPersistentWorldAmbientSoundDefinition | Sound;
 
 export type SendToOrbitMode = 'not-sendable' | 'manual' | 'automated';
 
@@ -20595,13 +20531,7 @@ export type SpriteUsageHint =
 
 /** Provides hint to sprite atlas system, so it can try to put sprites that are intended to be used at the same locations to the same sprite atlas. */
 export type SpriteUsageSurfaceHint =
-  | 'any'
-  | 'nauvis'
-  | 'vulcanus'
-  | 'gleba'
-  | 'fulgora'
-  | 'aquilo'
-  | 'space';
+  'any' | 'nauvis' | 'vulcanus' | 'gleba' | 'fulgora' | 'aquilo' | 'space';
 
 export type SpriteVariations = _SpriteVariations | SpriteSheet | Sprite[];
 
@@ -20663,8 +20593,7 @@ export type TechnologyTrigger =
   | ScriptedTechnologyTrigger;
 
 export type ThrusterPerformancePoint =
-  | _ThrusterPerformancePoint
-  | [number, number, number];
+  _ThrusterPerformancePoint | [number, number, number];
 
 /** The name of an [TileEffectDefinition](prototype:TileEffectDefinition). */
 export type TileEffectDefinitionID = string;
@@ -20753,10 +20682,7 @@ export type TipTrigger =
 export type Trigger =
   | (DirectTriggerItem | AreaTriggerItem | LineTriggerItem | ClusterTriggerItem)
   | (
-      | DirectTriggerItem
-      | AreaTriggerItem
-      | LineTriggerItem
-      | ClusterTriggerItem
+      DirectTriggerItem | AreaTriggerItem | LineTriggerItem | ClusterTriggerItem
     )[];
 
 /** Loaded as one of the [TriggerDeliveryItem](prototype:TriggerDeliveryItem) extensions, based on the value of the `type` key. */
@@ -20845,18 +20771,14 @@ export type TurretState =
 
 /** It can be specified as a table with named or numbered keys, but not a mix of both. If this is specified as a table with numbered keys then the first value is the unit and the second is the spawn points. */
 export type UnitSpawnDefinition =
-  | _UnitSpawnDefinition
-  | [EntityID, SpawnPoint[]];
+  _UnitSpawnDefinition | [EntityID, SpawnPoint[]];
 
 /** Defines the mode of operation for a [ValvePrototype](prototype:ValvePrototype). */
 export type ValveMode = 'one-way' | 'overflow' | 'top-up';
 
 /** Defines how are individual samples selected and played after each other. */
 export type VariableAmbientSoundCompositionMode =
-  | 'randomized'
-  | 'semi-randomized'
-  | 'shuffled'
-  | 'layer-controlled';
+  'randomized' | 'semi-randomized' | 'shuffled' | 'layer-controlled';
 
 /** First property is the name of a layer.
 
@@ -20865,14 +20787,10 @@ export type VariableAmbientSoundLayerSample = [string, number];
 
 /** Defines how a transition to next state is triggered. */
 export type VariableAmbientSoundNextStateTrigger =
-  | 'layers-finished'
-  | 'duration';
+  'layers-finished' | 'duration';
 
 export type VariableAmbientSoundStateType =
-  | 'regular'
-  | 'intermezzo'
-  | 'final'
-  | 'stop';
+  'regular' | 'intermezzo' | 'final' | 'stop';
 
 /** A vector is a two-element array or dictionary containing the x and y components. Positive x goes east, positive y goes south. */
 export type Vector = _Vector | [number, number];

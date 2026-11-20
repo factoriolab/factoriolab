@@ -1,4 +1,4 @@
-import { Dialog } from '@angular/cdk/dialog';
+import { Dialog, DialogConfig, DialogRef } from '@angular/cdk/dialog';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -43,6 +43,7 @@ import { BeaconsSelect } from '~/components/beacons-select/beacons-select';
 import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
 import { CustomDataDialog } from '~/components/custom-data-dialog/custom-data-dialog';
+import { DialogData } from '~/components/dialog/dialog';
 import { FormField } from '~/components/form-field/form-field';
 import { Icon } from '~/components/icon/icon';
 import { InputNumber } from '~/components/input-number/input-number';
@@ -250,8 +251,11 @@ export class Settings {
   }
 
   openRecipeProductivity(): void {
-    this.dialog.open(RecipeProductivityDialog, {
-      data: { header: 'settings.recipeProductivity' },
-    });
+    const config = new DialogConfig<
+      unknown,
+      DialogRef<DialogData, RecipeProductivityDialog>
+    >();
+    config.data = { header: 'settings.recipeProductivity' };
+    this.dialog.open(RecipeProductivityDialog, config);
   }
 }

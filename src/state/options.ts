@@ -51,16 +51,14 @@ export class Options {
       allowedEntities = allowedEntities.filter((f) =>
         settings.availableItemIds.has(f.id),
       );
-    return allowedEntities.map(
-      (f): Option => ({
-        value: f.id,
-        label: f.name,
-        icon: f.id,
-        iconType: 'item',
-        tooltip: f.id,
-        tooltipType: type,
-      }),
-    );
+    return allowedEntities.map((f): Option => ({
+      value: f.id,
+      label: f.name,
+      icon: f.id,
+      iconType: 'item',
+      tooltip: f.id,
+      tooltipType: type,
+    }));
   }
 
   machineOptions(recipe: Recipe, settings: Settings, data: Dataset): Option[] {
@@ -101,16 +99,14 @@ export class Options {
       allowedIds = allowedIds.filter((f) =>
         settings.availableItemIds.has(f.id),
       );
-    return allowedIds.map(
-      (f): Option => ({
-        value: f.id,
-        label: f.name,
-        icon: f.id,
-        iconType: 'item',
-        tooltip: f.id,
-        tooltipType: 'fuel',
-      }),
-    );
+    return allowedIds.map((f): Option => ({
+      value: f.id,
+      label: f.name,
+      icon: f.id,
+      iconType: 'item',
+      tooltip: f.id,
+      tooltipType: 'fuel',
+    }));
   }
 
   moduleOptions(
@@ -159,16 +155,14 @@ export class Options {
       }
     }
 
-    const options = allowed.map(
-      (m): Option => ({
-        value: m.id,
-        label: m.name,
-        icon: m.id,
-        iconType: 'item',
-        tooltip: m.id,
-        tooltipType: 'module',
-      }),
-    );
+    const options = allowed.map((m): Option => ({
+      value: m.id,
+      label: m.name,
+      icon: m.id,
+      iconType: 'item',
+      tooltip: m.id,
+      tooltipType: 'module',
+    }));
     if (
       (!data.flags.has('resourcePurity') || !recipe?.flags.has('mining')) &&
       !data.flags.has('duplicators')

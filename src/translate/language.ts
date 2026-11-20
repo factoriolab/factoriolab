@@ -1,15 +1,7 @@
 import { Option } from '~/option/option';
 
 export type Language =
-  | 'en'
-  | 'zh'
-  | 'de'
-  | 'fr'
-  | 'ru'
-  | 'ja'
-  | 'ko'
-  | 'pt-BR'
-  | 'es';
+  'en' | 'zh' | 'de' | 'fr' | 'ru' | 'ja' | 'ko' | 'pt-BR' | 'es';
 
 export const languageOptions: Option<Language>[] = [
   { label: 'English', value: 'en' },

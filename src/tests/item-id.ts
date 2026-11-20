@@ -29,6 +29,7 @@ export enum ItemId {
   FastTransportBelt = 'fast-transport-belt',
   FirearmMagazine = 'firearm-magazine',
   FluidWagon = 'fluid-wagon',
+  HeatExchanger = 'heat-exchanger',
   HeavyOil = 'heavy-oil',
   Inserter = 'inserter',
   IronOre = 'iron-ore',

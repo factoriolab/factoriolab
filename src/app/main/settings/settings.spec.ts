@@ -28,7 +28,7 @@ describe('Settings', () => {
 
   describe('miningSpeed', () => {
     it('should return the mining bonus plus 100', () => {
-      expect(component['miningSpeed']().eq(rational(140n))).toBeTrue();
+      expect(component['miningSpeed']()).toEqual(rational(130n));
     });
   });
 

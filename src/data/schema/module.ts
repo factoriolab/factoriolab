@@ -3,11 +3,7 @@ import { Rational, rational } from '~/rational/rational';
 export const SOMERSLOOP = 'somersloop';
 
 export type ModuleEffect =
-  | 'consumption'
-  | 'pollution'
-  | 'productivity'
-  | 'quality'
-  | 'speed';
+  'consumption' | 'pollution' | 'productivity' | 'quality' | 'speed';
 
 export const highEffectPrecision: Record<ModuleEffect, number> = {
   consumption: 4,

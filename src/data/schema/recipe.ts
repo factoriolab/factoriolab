@@ -42,6 +42,8 @@ export interface RecipeJson {
   iconText?: string;
   /** Used to override the machine's usage for this recipe */
   usage?: number | string;
+  /** Multiplies the machine's usage by this factor for this recipe */
+  usageFactor?: number | string;
   disallowedEffects?: ModuleEffect[];
   locations?: string[];
   flags?: RecipeFlag[];
@@ -65,9 +67,14 @@ export interface Recipe {
   icon?: string;
   /** Used to add extra text to an already defined icon */
   iconText?: string;
+  /** Set machine power usage for this recipe; ignores machine power usage */
   usage?: Rational;
+  /** Multiplies the machine's usage by this factor for this recipe */
+  usageFactor?: Rational;
   drain?: Rational;
-  consumption?: Rational;
+  power?: Rational;
+  burner?: Rational;
+  heat?: Rational;
   pollution?: Rational;
   quality?: Quality;
   disallowedEffects?: ModuleEffect[];
@@ -91,6 +98,7 @@ export function parseRecipe(json: RecipeJson): Recipe {
     icon: json.icon,
     iconText: json.iconText,
     usage: rational(json.usage),
+    usageFactor: rational(json.usageFactor),
     disallowedEffects: json.disallowedEffects,
     locations: json.locations,
     flags: new Set(json.flags),

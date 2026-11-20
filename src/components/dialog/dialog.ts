@@ -19,6 +19,10 @@ export interface DialogData {
   headerParams?: TranslateParams;
 }
 
+export interface AnimatedCloseDialog {
+  animateClose(result?: unknown): void;
+}
+
 @Component({
   selector: 'lab-dialog',
   imports: [CdkPortalOutlet, Button, TranslatePipe],
@@ -29,7 +33,10 @@ export interface DialogData {
       'flex max-w-dvw flex-col rounded-xs border border-gray-600 bg-ground-950 transition-all starting:scale-75 starting:opacity-0',
   },
 })
-export class Dialog extends CdkDialogContainer implements OnInit {
+export class Dialog
+  extends CdkDialogContainer
+  implements OnInit, AnimatedCloseDialog
+{
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly dialogRef = inject(DialogRef);
 
