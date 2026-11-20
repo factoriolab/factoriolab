@@ -1,4 +1,4 @@
-import { Dialog, DialogConfig, DialogRef } from '@angular/cdk/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import {
   CdkDragDrop,
   DragDropModule,
@@ -172,24 +172,24 @@ export class Defaults extends EditorTab {
   editRecipeProductivity(defaults: BaseDefaultsJson): void {
     const { data, icons } = this.edit();
     const options = toOptions(data.items, icons);
-    const config = new DialogConfig<
-      QuantitiesDialogData,
-      DialogRef<
-        Partial<Record<string, string | number> | null>,
+    this.dialog
+      .open<
+        Partial<Record<string, string | number>> | null | undefined,
+        QuantitiesDialogData,
         QuantitiesDialog
-      >
-    >();
-    config.data = {
-      record: coalesce(defaults.recipeProductivity, {}),
-      options,
-      header: 'data.recipeProductivity',
-      optional: true,
-    };
-    this.dialog.open(QuantitiesDialog, config).closed.subscribe((record) => {
-      if (record === null) delete defaults.recipeProductivity;
-      else if (record) defaults.recipeProductivity = record;
-      this.cd.detectChanges();
-    });
+      >(QuantitiesDialog, {
+        data: {
+          record: coalesce(defaults.recipeProductivity, {}),
+          options,
+          header: 'data.recipeProductivity',
+          optional: true,
+        },
+      })
+      .closed.subscribe((record) => {
+        if (record === null) delete defaults.recipeProductivity;
+        else if (record) defaults.recipeProductivity = record;
+        this.cd.detectChanges();
+      });
   }
 
   addPreset(defaults: CustomPresetsJson): void {
@@ -221,18 +221,18 @@ export class Defaults extends EditorTab {
       technologyOptions: this.technologyOptions(),
       wagonOptions: this.wagonOptions(),
     };
-    const config = new DialogConfig<
-      PresetDialogData,
-      DialogRef<PresetJson, PresetDialog>
-    >();
-    config.data = data;
-    this.dialog.open(PresetDialog, config).closed.subscribe((result) => {
-      if (result) {
-        if (index == null) this.model = result;
-        else defaults.presets[index] = result;
-      }
-      this.cd.detectChanges();
-    });
+    this.dialog
+      .open<PresetJson | undefined, PresetDialogData, PresetDialog>(
+        PresetDialog,
+        { data },
+      )
+      .closed.subscribe((result) => {
+        if (result) {
+          if (index == null) this.model = result;
+          else defaults.presets[index] = result;
+        }
+        this.cd.detectChanges();
+      });
   }
 
   removePreset(defaults: CustomPresetsJson, id: number): void {

@@ -1,4 +1,4 @@
-import { Dialog, DialogConfig, DialogRef } from '@angular/cdk/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import {
   CdkDragDrop,
   DragDropModule,
@@ -65,18 +65,17 @@ export class Items extends EditorTab {
 
   editItem(item: ItemJson, index?: number): void {
     item = JSON.parse(JSON.stringify(item)) as ItemJson;
-    const config = new DialogConfig<
-      ItemDialogData,
-      DialogRef<ItemJson, ItemDialog>
-    >();
-    config.data = { item, edit: this.edit(), header: item.name };
-    this.dialog.open(ItemDialog, config).closed.subscribe((result) => {
-      if (result) {
-        if (index == null) this.model = result;
-        else this.edit().data.items[index] = result;
-      }
-      this.cd.detectChanges();
-    });
+    this.dialog
+      .open<ItemJson | undefined, ItemDialogData, ItemDialog>(ItemDialog, {
+        data: { item, edit: this.edit(), header: item.name },
+      })
+      .closed.subscribe((result) => {
+        if (result) {
+          if (index == null) this.model = result;
+          else this.edit().data.items[index] = result;
+        }
+        this.cd.detectChanges();
+      });
   }
 
   add(): void {
