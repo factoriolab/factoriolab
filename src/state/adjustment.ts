@@ -346,7 +346,10 @@ export class Adjustment {
 
       // Power
       recipe.drain = machine.drain;
-      let power = recipe.usage ?? machine.usage;
+      let power = coalesce(
+        recipe.usage,
+        machine.usage?.mul(coalesce(recipe.usageFactor, rational.one)),
+      );
       let burner = machine.burner;
       let heat = machine.heat;
       if (oc && !machine.neighborBonus) {

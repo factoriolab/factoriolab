@@ -42,6 +42,8 @@ export interface RecipeJson {
   iconText?: string;
   /** Used to override the machine's usage for this recipe */
   usage?: number | string;
+  /** Multiplies the machine's usage by this factor for this recipe */
+  usageFactor?: number | string;
   disallowedEffects?: ModuleEffect[];
   locations?: string[];
   flags?: RecipeFlag[];
@@ -67,6 +69,8 @@ export interface Recipe {
   iconText?: string;
   /** Set machine power usage for this recipe; ignores machine power usage */
   usage?: Rational;
+  /** Multiplies the machine's usage by this factor for this recipe */
+  usageFactor?: Rational;
   drain?: Rational;
   power?: Rational;
   burner?: Rational;
@@ -94,6 +98,7 @@ export function parseRecipe(json: RecipeJson): Recipe {
     icon: json.icon,
     iconText: json.iconText,
     usage: rational(json.usage),
+    usageFactor: rational(json.usageFactor),
     disallowedEffects: json.disallowedEffects,
     locations: json.locations,
     flags: new Set(json.flags),
@@ -139,6 +144,9 @@ export function recipeHasQuality(
   itemData: Record<string, ItemJson>,
 ): boolean {
   const flags = new Set(recipe.flags);
+  Object.keys(recipe.in).forEach((k) => {
+    if (itemData[k] == null) console.log(recipe, k);
+  });
   return (
     recipe.part == null &&
     !flags.has('mining') &&

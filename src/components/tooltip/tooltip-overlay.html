@@ -225,12 +225,12 @@
             @if (machine.usage && machine.usage.nonzero()) {
               @if (machine.usage.gt(rational.zero)) {
                 <tr>
-                  <th>{{ 'data.powerUsage' | translate }}</th>
+                  <td>{{ 'data.powerUsage' | translate }}</td>
                   <td>{{ machine.usage | usage }}</td>
                 </tr>
               } @else {
                 <tr>
-                  <th>{{ 'data.powerOutput' | translate }}</th>
+                  <td>{{ 'data.powerOutput' | translate }}</td>
                   <td>{{ machine.usage.inverse() | usage }}</td>
                 </tr>
               }

@@ -5,6 +5,7 @@ import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
 import { WagonJson } from '~/data/schema/wagon';
 import { rational } from '~/rational/rational';
+import { coalesce } from '~/utils/nullish';
 import { clamp } from '~/utils/number';
 
 import * as M from '../factorio.models';
@@ -87,7 +88,7 @@ export function getPipe(
       const variant: Partial<BeltJson> = {};
 
       const qSpeed = speed * getDefaultMultiplier(quality);
-      if (qSpeed !== belt.speed) variant.speed = qSpeed;
+      if (qSpeed !== speed) variant.speed = qSpeed;
 
       if (Object.keys(variant).length) qualityRecord[quality.name] = variant;
     }
@@ -98,16 +99,68 @@ export function getPipe(
   return belt;
 }
 
-export function getCargoWagon(proto: M.CargoWagonPrototype): WagonJson {
-  return {
+export function getCargoWagon(
+  proto: M.CargoWagonPrototype,
+  abnormalQualities: M.QualityPrototype[],
+): WagonJson {
+  const capacity = proto.inventory_size;
+  const wagon: WagonJson = {
     itemTypes: [D.ITEM_TYPE],
-    capacity: proto.inventory_size,
+    capacity,
     capacityType: 'stacks',
   };
+
+  if (proto.quality_affects_inventory_size && abnormalQualities.length) {
+    const qualityRecord: Record<string, Partial<WagonJson>> = {};
+
+    for (const quality of abnormalQualities) {
+      const variant: Partial<WagonJson> = {};
+
+      const qCapacity =
+        capacity *
+        coalesce(
+          quality.cargo_wagon_inventory_size_multiplier,
+          getDefaultMultiplier(quality),
+        );
+      if (qCapacity !== capacity) variant.capacity = qCapacity;
+
+      if (Object.keys(variant).length) qualityRecord[quality.name] = variant;
+    }
+
+    if (Object.keys(qualityRecord).length) wagon.qualityRecord = qualityRecord;
+  }
+
+  return wagon;
 }
 
-export function getFluidWagon(proto: M.FluidWagonPrototype): WagonJson {
-  return { itemTypes: [D.FLUID_TYPE], capacity: proto.capacity };
+export function getFluidWagon(
+  proto: M.FluidWagonPrototype,
+  abnormalQualities: M.QualityPrototype[],
+): WagonJson {
+  const capacity = proto.capacity;
+  const wagon: WagonJson = { itemTypes: [D.FLUID_TYPE], capacity };
+
+  if (proto.quality_affects_capacity && abnormalQualities.length) {
+    const qualityRecord: Record<string, Partial<WagonJson>> = {};
+
+    for (const quality of abnormalQualities) {
+      const variant: Partial<WagonJson> = {};
+
+      const qCapacity =
+        capacity *
+        coalesce(
+          quality.fluid_wagon_capacity_multiplier,
+          getDefaultMultiplier(quality),
+        );
+      if (qCapacity !== capacity) variant.capacity = qCapacity;
+
+      if (Object.keys(variant).length) qualityRecord[quality.name] = variant;
+    }
+
+    if (Object.keys(qualityRecord).length) wagon.qualityRecord = qualityRecord;
+  }
+
+  return wagon;
 }
 
 export function getInserter(
@@ -421,9 +474,10 @@ export function getMachinePower(
   } else if (M.isGeneratorPrototype(proto)) {
     if (proto.fluid_box.filter) {
       const fluid = data.fluid[proto.fluid_box.filter];
-      const tempDiff = proto.maximum_temperature - fluid.default_temperature;
       const inputMJ = getEnergyInMJ(fluid.heat_capacity ?? '1KJ');
-      usage = round(tempDiff * inputMJ * 60000, 10);
+      const diff = proto.maximum_temperature - fluid.default_temperature;
+      if (diff < 0) return undefined;
+      usage = round(inputMJ * diff * 60000, 10);
       usage *= -(proto.effectivity ?? 1);
       if (quality) usage *= getDefaultMultiplier(quality);
     }

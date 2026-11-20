@@ -54,8 +54,8 @@ export interface DataRawDump {
   fluid: Record<string, M.FluidPrototype>;
   'fluid-wagon': Record<string, M.FluidWagonPrototype>;
   furnace: Record<string, M.FurnacePrototype>;
-  'fusion-generator': Record<string, M.FusionGeneratorPrototype>;
-  'fusion-reactor': Record<string, M.FusionReactorPrototype>;
+  'fusion-generator'?: Record<string, M.FusionGeneratorPrototype>;
+  'fusion-reactor'?: Record<string, M.FusionReactorPrototype>;
   generator: Record<string, M.GeneratorPrototype>;
   gun: Record<string, M.GunPrototype>;
   item: Record<string, M.ItemPrototype>;
