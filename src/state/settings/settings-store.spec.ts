@@ -258,6 +258,22 @@ describe('SettingsStore', () => {
       const options = service.options();
       expect(options.belts.find((o) => o.value === ItemId.Car)).toBeUndefined();
     });
+
+    it('should filter out wagon options that are unaffected by quality', () => {
+      const data = mocks.getDataset();
+      data.wagonIds.push(ItemId.Car);
+      data.itemRecord[ItemId.Car].quality = {
+        id: 'uncommon',
+        level: 2,
+        name: 'Uncommon',
+      };
+      data.wagonRecord[ItemId.Car] = data.wagonRecord[ItemId.CargoWagon];
+      spyOn(service, 'dataset').and.returnValue(data);
+      const options = service.options();
+      expect(
+        options.wagons.find((o) => o.value === ItemId.Car),
+      ).toBeUndefined();
+    });
   });
 
   describe('beltSpeed', () => {
@@ -605,6 +621,11 @@ describe('SettingsStore', () => {
               speed: 1,
               qualityRecord: { uncommon: { speed: 2 } },
             },
+            wagon: {
+              itemTypes: ['item'],
+              capacity: 1,
+              qualityRecord: { uncommon: { capacity: 2 } },
+            },
             inserter: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
             machine: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
             module: { speed: 1, qualityRecord: { uncommon: { speed: 2 } } },
@@ -655,6 +676,7 @@ describe('SettingsStore', () => {
       expect(result.machineRecord['id(1)']).toBeDefined();
       expect(result.moduleRecord['id(1)']).toBeDefined();
       expect(result.beltRecord['id(1)']).toBeDefined();
+      expect(result.wagonRecord['id(1)']).toBeDefined();
     });
 
     it('should use the correct file for custom data', () => {

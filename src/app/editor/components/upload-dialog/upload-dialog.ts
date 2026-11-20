@@ -47,27 +47,29 @@ export class UploadDialog implements DialogData {
   }
 
   save(): void {
-    if (!this.dataFile || !this.iconsFile) return;
+    if (!this.dataFile) return;
     this.loading.set(true);
+
     const dataFile = this.dataFile;
     const iconsFile = this.iconsFile;
-
     const reader = new FileReader();
     reader.onload = (ev): void => {
       const result = ev.target?.result;
       if (typeof result === 'string') {
         try {
           const data = JSON.parse(result) as ModData;
-          const url = URL.createObjectURL(iconsFile);
-          splitIcons(url, data).then(
-            (value) => {
-              this.dialogRef.close(value);
-            },
-            (err: unknown) => {
-              console.error(err);
-              this.loading.set(false);
-            },
-          );
+          if (iconsFile) {
+            const url = URL.createObjectURL(iconsFile);
+            splitIcons(url, data).then(
+              (value) => {
+                this.dialogRef.close(value);
+              },
+              (err: unknown) => {
+                console.error(err);
+                this.loading.set(false);
+              },
+            );
+          } else this.dialogRef.close({ data, icons: {} });
         } catch {
           // Do nothing
         }
