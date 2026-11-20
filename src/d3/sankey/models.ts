@@ -89,8 +89,7 @@ export interface SankeyLayout<Data, N extends object, L extends object> {
   iterations(): number;
   iterations(iterations: number): this;
   nodeSort():
-    | ((a: SankeyNode<N, L>, b: SankeyNode<N, L>) => number)
-    | undefined;
+    ((a: SankeyNode<N, L>, b: SankeyNode<N, L>) => number) | undefined;
   nodeSort(
     compare: (
       a: SankeyNode<N, L>,
@@ -98,8 +97,7 @@ export interface SankeyLayout<Data, N extends object, L extends object> {
     ) => number | undefined | null,
   ): this;
   linkSort():
-    | ((a: SankeyLink<N, L>, b: SankeyLink<N, L>) => number)
-    | undefined;
+    ((a: SankeyLink<N, L>, b: SankeyLink<N, L>) => number) | undefined;
   linkSort(
     compare: (
       a: SankeyLink<N, L>,

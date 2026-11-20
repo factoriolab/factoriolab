@@ -508,16 +508,14 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         enabledIds = [s.recipeId];
       }
 
-      const options = ids.map(
-        (i): Option => ({
-          label: data.recipeRecord[i].name,
-          value: i,
-          icon: i,
-          iconType: 'recipe',
-          tooltip: i,
-          tooltipType: 'recipe',
-        }),
-      );
+      const options = ids.map((i): Option => ({
+        label: data.recipeRecord[i].name,
+        value: i,
+        icon: i,
+        iconType: 'recipe',
+        tooltip: i,
+        tooltipType: 'recipe',
+      }));
 
       e[s.id] = { ids, enabledIds, options };
 

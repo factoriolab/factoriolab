@@ -828,8 +828,7 @@ export class Migration {
 
     // Objectives
     const oldObjectives = params[ZipSectionV10.Objectives] as
-      | string
-      | undefined;
+      string | undefined;
     delete params[ZipSectionV10.Objectives];
     const objectiveIds: string[] = [];
     const newObjectives = oldObjectives

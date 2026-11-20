@@ -15,11 +15,7 @@ export interface ModInfo {
 }
 
 export type EffectType =
-  | 'speed'
-  | 'productivity'
-  | 'consumption'
-  | 'pollution'
-  | 'quality';
+  'speed' | 'productivity' | 'consumption' | 'pollution' | 'quality';
 
 export const allEffects: EffectType[] = [
   'consumption',

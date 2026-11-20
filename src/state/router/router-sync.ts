@@ -149,8 +149,7 @@ export class RouterSync {
           () =>
             !(
               this.router.currentNavigation()?.extras.info as
-                | { sync?: true }
-                | undefined
+                { sync?: true } | undefined
             )?.sync,
         ),
         switchMap(async ({ params, queryParams }) => {

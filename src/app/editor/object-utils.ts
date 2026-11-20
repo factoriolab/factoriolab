@@ -118,28 +118,24 @@ export function toOptions(
 ): Option<string | undefined>[] {
   objects = [...objects];
   objects.sort((a, b) => a.name.localeCompare(b.name));
-  const result = objects.map(
-    (o): Option<string | undefined> => ({
-      label: o.name,
-      value: o.id,
-      icon: icons[coalesce(o.icon, o.id)]?.url,
-      iconType: 'img',
-      iconText: o.iconText,
-    }),
-  );
+  const result = objects.map((o): Option<string | undefined> => ({
+    label: o.name,
+    value: o.id,
+    icon: icons[coalesce(o.icon, o.id)]?.url,
+    iconType: 'img',
+    iconText: o.iconText,
+  }));
   qualities?.forEach((q) => {
     if (!q.level) return;
     result.push(
-      ...objects.map(
-        (o): Option<string | undefined> => ({
-          label: o.name,
-          value: qualityId(o.id, q),
-          icon: icons[coalesce(o.icon, o.id)]?.url,
-          iconType: 'img',
-          iconText: o.iconText,
-          qualityUrl: icons[coalesce(q.icon, q.id)]?.url,
-        }),
-      ),
+      ...objects.map((o): Option<string | undefined> => ({
+        label: o.name,
+        value: qualityId(o.id, q),
+        icon: icons[coalesce(o.icon, o.id)]?.url,
+        iconType: 'img',
+        iconText: o.iconText,
+        qualityUrl: icons[coalesce(q.icon, q.id)]?.url,
+      })),
     );
   });
 

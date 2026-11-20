@@ -1,9 +1,5 @@
 export type StepDetailSection =
-  | 'sources'
-  | 'destinations'
-  | 'depletion'
-  | 'inputs'
-  | 'outputs';
+  'sources' | 'destinations' | 'depletion' | 'inputs' | 'outputs';
 
 export const stepDetailSections: StepDetailSection[] = [
   'sources',
