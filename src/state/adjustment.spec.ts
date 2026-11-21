@@ -345,8 +345,8 @@ describe('Adjustment', () => {
         settingsStore.settings(),
         data,
       );
-      // 2 × 0.3 × 1.5 × 0.5 / sqrt(0.5)
-      expect(result.effects.speed.toNumber()).toBeCloseTo(0.636396, 5);
+      // 1 + (2 × 0.2 × 1.5 × 0.5 / sqrt(0.5))
+      expect(result.effects.speed.toNumber()).toBeCloseTo(1.4243, 4);
     });
 
     it('should fall back to 1/sqrt when profile entry is missing', () => {
@@ -368,8 +368,8 @@ describe('Adjustment', () => {
         settingsStore.settings(),
         data,
       );
-      // 2 × 0.3 × 1.5 × 8 / sqrt(8)
-      expect(result.effects.speed.toNumber()).toBeCloseTo(2.545584, 5);
+      // 1 + (2 × 0.2 × 1.5 × 8 / sqrt(8))
+      expect(result.effects.speed.toNumber()).toBeCloseTo(2.6971, 4);
     });
 
     it('should use minimum 20% effects', () => {
