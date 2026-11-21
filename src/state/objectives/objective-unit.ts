@@ -10,6 +10,12 @@ export enum ObjectiveUnit {
   Machines = 3,
 }
 
+export const ObjectivePowerUnitMap: Partial<Record<ObjectiveUnit, string>> = {
+  [ObjectiveUnit.Items]: 'options.powerUnit.kW',
+  [ObjectiveUnit.Belts]: 'options.powerUnit.MW',
+  [ObjectiveUnit.Wagons]: 'options.powerUnit.GW',
+};
+
 export function objectiveUnitOptions(
   dispRateInfo: DisplayRateInfo,
   data: Dataset,

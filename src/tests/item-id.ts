@@ -48,6 +48,7 @@ export enum ItemId {
   PiercingRoundsMagazine = 'piercing-rounds-magazine',
   Pipe = 'pipe',
   PlasticBar = 'plastic-bar',
+  Power = 'power',
   ProductivityModule = 'productivity-module',
   ProductivityModule3 = 'productivity-module-3',
   Pump = 'pump',

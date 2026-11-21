@@ -81,6 +81,38 @@ describe('Normalization', () => {
         }),
       ).toEqual(rational(2500n, 3n));
     });
+
+    it('should normalize power objectives', () => {
+      expect(
+        service.normalizeRate({
+          id: '0',
+          targetId: ItemId.Power,
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        }),
+      ).toEqual(rational.one);
+
+      expect(
+        service.normalizeRate({
+          id: '0',
+          targetId: ItemId.Power,
+          value: rational.one,
+          unit: ObjectiveUnit.Belts,
+          type: ObjectiveType.Output,
+        }),
+      ).toEqual(rational(1000n));
+
+      expect(
+        service.normalizeRate({
+          id: '0',
+          targetId: ItemId.Power,
+          value: rational.one,
+          unit: ObjectiveUnit.Wagons,
+          type: ObjectiveType.Output,
+        }),
+      ).toEqual(rational(1000000n));
+    });
   });
 
   describe('normalizeSteps', () => {

@@ -31,10 +31,20 @@ export class Normalization {
     // Ignore unit entirely when maximizing, do not adjust if unit is Machines
     if (
       objective.unit === ObjectiveUnit.Machines ||
-      objective.type === ObjectiveType.Maximize ||
-      IsPowerPipe.transform(objective.targetId)
+      objective.type === ObjectiveType.Maximize
     )
       return objective.value;
+
+    if (IsPowerPipe.transform(objective.targetId)) {
+      switch (objective.unit) {
+        case ObjectiveUnit.Items:
+          return objective.value;
+        case ObjectiveUnit.Belts:
+          return objective.value.mul(rational(1000n));
+        case ObjectiveUnit.Wagons:
+          return objective.value.mul(rational(1000000n));
+      }
+    }
 
     const dispRateVal = this.settingsStore.displayRateInfo().value;
     const data = this.recipesStore.adjustedDataset();

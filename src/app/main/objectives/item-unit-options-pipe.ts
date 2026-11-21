@@ -2,7 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { IsPowerPipe } from '~/data/schema/item';
 import { Option } from '~/option/option';
-import { ObjectiveUnit } from '~/state/objectives/objective-unit';
+import {
+  ObjectivePowerUnitMap,
+  ObjectiveUnit,
+} from '~/state/objectives/objective-unit';
 import { spread } from '~/utils/object';
 
 @Pipe({ name: 'itemUnitOptions' })
@@ -13,9 +16,9 @@ export class ItemUnitOptionsPipe implements PipeTransform {
   ): Option<ObjectiveUnit>[] {
     if (IsPowerPipe.transform(itemId))
       return options.map((o) =>
-        o.value === ObjectiveUnit.Machines
-          ? o
-          : spread(o, { label: 'options.powerUnit.kW' }),
+        ObjectivePowerUnitMap[o.value]
+          ? spread(o, { label: ObjectivePowerUnitMap[o.value] })
+          : o,
       );
     return options;
   }
