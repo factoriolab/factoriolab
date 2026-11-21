@@ -75,11 +75,10 @@ export class ItemDialog {
 
   editBeacon(item: ItemJson): void {
     this.dialog
-      .open<
-        BeaconJson | null | undefined,
-        BeaconJson,
-        BeaconDialog
-      >(BeaconDialog, { data: coalesce(item.beacon, { effectivity: 1, modules: 1 }) })
+      .open<BeaconJson | null | undefined, BeaconJson, BeaconDialog>(
+        BeaconDialog,
+        { data: coalesce(item.beacon, { effectivity: 1, modules: 1 }) },
+      )
       .closed.subscribe((beacon) => {
         if (beacon === null) delete item.beacon;
         else if (beacon) item.beacon = beacon;
@@ -89,11 +88,15 @@ export class ItemDialog {
 
   editBelt(item: ItemJson): void {
     this.dialog
-      .open<
-        BeltJson | null | undefined,
-        BeltDialogData,
-        BeltDialog
-      >(BeltDialog, { data: { belt: coalesce(item.belt, { itemTypes: [], speed: 1 }), header: 'data.belt' } })
+      .open<BeltJson | null | undefined, BeltDialogData, BeltDialog>(
+        BeltDialog,
+        {
+          data: {
+            belt: coalesce(item.belt, { itemTypes: [], speed: 1 }),
+            header: 'data.belt',
+          },
+        },
+      )
       .closed.subscribe((belt) => {
         if (belt === null) delete item.belt;
         else if (belt) item.belt = belt;
@@ -111,11 +114,17 @@ export class ItemDialog {
     );
     const locationOptions = toOptions(coalesce(data.locations, []), icons);
     this.dialog
-      .open<
-        MachineJson | null | undefined,
-        MachineDialogData,
-        MachineDialog
-      >(MachineDialog, { data: { machine: coalesce(item.machine, {}), fuelOptions, locationOptions, edit } })
+      .open<MachineJson | null | undefined, MachineDialogData, MachineDialog>(
+        MachineDialog,
+        {
+          data: {
+            machine: coalesce(item.machine, {}),
+            fuelOptions,
+            locationOptions,
+            edit,
+          },
+        },
+      )
       .closed.subscribe((machine) => {
         if (machine === null) delete item.machine;
         else if (machine) item.machine = machine;
@@ -133,11 +142,16 @@ export class ItemDialog {
     }
     const itemOptions = toOptions(data.items, icons, true);
     this.dialog
-      .open<
-        ModuleJson | null | undefined,
-        ModuleDialogData,
-        ModuleDialog
-      >(ModuleDialog, { data: { module: coalesce(item.module, {}), limitationOptions, itemOptions } })
+      .open<ModuleJson | null | undefined, ModuleDialogData, ModuleDialog>(
+        ModuleDialog,
+        {
+          data: {
+            module: coalesce(item.module, {}),
+            limitationOptions,
+            itemOptions,
+          },
+        },
+      )
       .closed.subscribe((module) => {
         if (module === null) delete item.module;
         else if (module) item.module = module;
@@ -149,11 +163,15 @@ export class ItemDialog {
     const { data, icons } = this.data.edit;
     const itemOptions = toOptions(data.items, icons, true);
     this.dialog
-      .open<
-        FuelJson | null | undefined,
-        FuelDialogData,
-        FuelDialog
-      >(FuelDialog, { data: { fuel: coalesce(item.fuel, { types: [], value: 1 }), itemOptions } })
+      .open<FuelJson | null | undefined, FuelDialogData, FuelDialog>(
+        FuelDialog,
+        {
+          data: {
+            fuel: coalesce(item.fuel, { types: [], value: 1 }),
+            itemOptions,
+          },
+        },
+      )
       .closed.subscribe((fuel) => {
         if (fuel === null) delete item.fuel;
         else if (fuel) item.fuel = fuel;
@@ -163,11 +181,9 @@ export class ItemDialog {
 
   editWagon(item: ItemJson): void {
     this.dialog
-      .open<
-        WagonJson | null | undefined,
-        WagonJson,
-        WagonDialog
-      >(WagonDialog, { data: coalesce(item.wagon, { itemTypes: [], capacity: 1 }) })
+      .open<WagonJson | null | undefined, WagonJson, WagonDialog>(WagonDialog, {
+        data: coalesce(item.wagon, { itemTypes: [], capacity: 1 }),
+      })
       .closed.subscribe((wagon) => {
         if (wagon === null) delete item.wagon;
         else if (wagon) item.wagon = wagon;
@@ -188,7 +204,14 @@ export class ItemDialog {
         TechnologyJson | null | undefined,
         TechnologyDialogData,
         TechnologyDialog
-      >(TechnologyDialog, { data: { technology: coalesce(item.technology, {}), prerequisiteOptions, qualityOptions, recipeOptions } })
+      >(TechnologyDialog, {
+        data: {
+          technology: coalesce(item.technology, {}),
+          prerequisiteOptions,
+          qualityOptions,
+          recipeOptions,
+        },
+      })
       .closed.subscribe((technology) => {
         if (technology === null) delete item.technology;
         else if (technology) item.technology = technology;
@@ -198,11 +221,10 @@ export class ItemDialog {
 
   editInserter(item: ItemJson): void {
     this.dialog
-      .open<
-        InserterJson | null | undefined,
-        InserterJson,
-        InserterDialog
-      >(InserterDialog, { data: coalesce(item.inserter, { speed: 1 }) })
+      .open<InserterJson | null | undefined, InserterJson, InserterDialog>(
+        InserterDialog,
+        { data: coalesce(item.inserter, { speed: 1 }) },
+      )
       .closed.subscribe((inserter) => {
         if (inserter === null) delete item.inserter;
         else if (inserter) item.inserter = inserter;

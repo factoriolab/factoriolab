@@ -13,7 +13,7 @@ export enum Preset {
 export function presetOptions(
   data: Dataset,
   defaults?: DefaultsJson,
-): Option<Preset>[] {
+): Option<number>[] {
   if (defaults && 'presets' in defaults) {
     return defaults.presets.map((preset) => ({
       value: preset.id,

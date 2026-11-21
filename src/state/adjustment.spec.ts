@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
+import { HEAT_ID, POWER_ID } from '~/data/schema/item';
 import { AdjustedRecipe, Recipe, RecipeFlag } from '~/data/schema/recipe';
 import { rational } from '~/rational/rational';
 import { ItemId } from '~/tests/item-id';
@@ -69,7 +70,7 @@ describe('Adjustment', () => {
           out: { [ItemId.SteelChest]: rational.one },
           time: rational(2n, 3n),
           drain: rational(5n),
-          consumption: rational(150n),
+          power: rational(150n),
           pollution: rational(1n, 20n),
           effects: mockModuleEffects,
           produces: new Set(),
@@ -94,7 +95,7 @@ describe('Adjustment', () => {
         {
           time: rational(2n, 3n),
           drain: rational(5n),
-          consumption: rational(150n),
+          power: rational(150n),
           pollution: rational(1n, 20n),
           effects: mockModuleEffects,
           produces: new Set(),
@@ -124,7 +125,7 @@ describe('Adjustment', () => {
           out: { [ItemId.MiningProductivity]: rational.one },
           time: rational(30n),
           drain: undefined,
-          consumption: rational(60n),
+          power: rational(60n),
           pollution: rational.zero,
           effects: mockModuleEffects,
           produces: new Set(),
@@ -152,7 +153,7 @@ describe('Adjustment', () => {
           out: { [ItemId.IronOre]: rational(3n) },
           time: rational(2n),
           drain: undefined,
-          consumption: rational(90n),
+          power: rational(90n),
           pollution: rational(1n, 6n),
           effects: spread(mockModuleEffects, { productivity: rational(3n) }),
           produces: new Set(),
@@ -201,7 +202,7 @@ describe('Adjustment', () => {
           out: { [ItemId.SteelChest]: rational(76n, 25n) },
           time: rational(40n, 81n),
           drain: rational(5n),
-          consumption: rational(255n),
+          power: rational(255n),
           pollution: rational(1037n, 4000n),
           effects: {
             consumption: rational(17n, 10n),
@@ -253,9 +254,64 @@ describe('Adjustment', () => {
         ] as AdjustedRecipe,
         {
           out: { [ItemId.SteelChest]: rational(4n) },
+          time: rational(10000n, 32097n),
+          drain: rational(5n),
+          power: rational(12984n, 25n),
+          pollution: rational(1319499n, 1562500n),
+          effects: {
+            consumption: rational(2164n, 625n),
+            pollution: rational(2439n, 500n),
+            productivity: rational(4n),
+            speed: rational(10699n, 5000n),
+            quality: rational(-119n, 2000n),
+          },
+          produces: new Set(),
+          output: {},
+        },
+      );
+      expect(result).toEqual(expected);
+    });
+
+    it('should handle modules and diminishing beacons with lowEffectPrecision', () => {
+      const settings = spread(mocks.recipeSettings()[RecipeId.SteelChest]);
+      settings.modules = [
+        { count: rational.one, id: ItemId.SpeedModule },
+        { count: rational.one, id: ItemId.ProductivityModule },
+        { count: rational.one, id: ItemId.EfficiencyModule },
+        { id: '' },
+      ];
+      settings.beacons = [
+        {
+          id: ItemId.Beacon,
+          count: rational(8n),
+          modules: [
+            { count: rational(2n), id: ItemId.SpeedModule },
+            { count: rational.one, id: ItemId.SpeedModule2 },
+          ],
+        },
+      ];
+      const data = mocks.getAdjustedDataset();
+      data.moduleRecord[ItemId.SpeedModule].productivity = rational.one;
+      data.moduleRecord[ItemId.SpeedModule].pollution = rational.one;
+      data.moduleRecord[ItemId.ProductivityModule].consumption = undefined;
+      data.beaconRecord[ItemId.Beacon].effectivity = rational(1n, 2n);
+      data.flags.add('lowEffectPrecision');
+      const result = service.adjustRecipe(
+        RecipeId.SteelChest,
+        settings,
+        itemsStore.settings(),
+        settingsStore.settings(),
+        data,
+      );
+      const expected = spread(
+        recipesStore.adjustedDataset().recipeRecord[
+          RecipeId.SteelChest
+        ] as AdjustedRecipe,
+        {
+          out: { [ItemId.SteelChest]: rational(4n) },
           time: rational(100n, 321n),
           drain: rational(5n),
-          consumption: rational(519n),
+          power: rational(519n),
           pollution: rational(10553n, 12500n),
           effects: {
             consumption: rational(173n, 50n),
@@ -349,7 +405,7 @@ describe('Adjustment', () => {
           out: { [ItemId.SteelChest]: rational.one },
           time: rational(10n, 3n),
           drain: rational(5n),
-          consumption: rational(30n),
+          power: rational(30n),
           pollution: rational(1n, 500n),
           effects: {
             consumption: rational(1n, 5n),
@@ -384,8 +440,8 @@ describe('Adjustment', () => {
 
     it('should find matching nonchemical fuel', () => {
       const result = service.adjustRecipe(
-        RecipeId.DepletedUraniumFuelCell,
-        recipesStore.settings()[RecipeId.DepletedUraniumFuelCell],
+        RecipeId.NuclearReactorReactor,
+        recipesStore.settings()[RecipeId.NuclearReactorReactor],
         itemsStore.settings(),
         settingsStore.settings(),
         recipesStore.adjustedDataset(),
@@ -396,17 +452,17 @@ describe('Adjustment', () => {
     it('should find non-matching nonchemical fuel', () => {
       const data = spread(recipesStore.adjustedDataset(), {
         recipeRecord: spread(recipesStore.adjustedDataset().recipeRecord, {
-          [RecipeId.DepletedUraniumFuelCell]: spread(
+          [RecipeId.NuclearReactorReactor]: spread(
             recipesStore.adjustedDataset().recipeRecord[
-              RecipeId.DepletedUraniumFuelCell
+              RecipeId.NuclearReactorReactor
             ],
             { in: {}, out: {} },
           ),
         }),
       });
       const result = service.adjustRecipe(
-        RecipeId.DepletedUraniumFuelCell,
-        recipesStore.settings()[RecipeId.DepletedUraniumFuelCell],
+        RecipeId.NuclearReactorReactor,
+        recipesStore.settings()[RecipeId.NuclearReactorReactor],
         itemsStore.settings(),
         settingsStore.settings(),
         data,
@@ -432,7 +488,7 @@ describe('Adjustment', () => {
           out: { [ItemId.SteelChest]: rational.one },
           time: rational(1n, 3n),
           drain: rational(5n),
-          consumption: rational(136838616n, 364903n),
+          power: rational(136838616n, 364903n),
           pollution: rational(1n, 20n),
           effects: spread(mockModuleEffects, { speed: rational(2n) }),
           produces: new Set(),
@@ -459,10 +515,13 @@ describe('Adjustment', () => {
           RecipeId.SteelChest
         ] as AdjustedRecipe,
         {
-          out: { [ItemId.SteelChest]: rational.one },
+          out: {
+            [ItemId.SteelChest]: rational.one,
+            [POWER_ID]: rational(20n, 3n),
+          },
           time: rational(1n, 3n),
           drain: rational(5n),
-          consumption: rational(-20n),
+          power: rational(-20n),
           pollution: rational(1n, 20n),
           effects: spread(mockModuleEffects, { speed: rational(2n) }),
           produces: new Set(),
@@ -491,7 +550,7 @@ describe('Adjustment', () => {
           out: { [ItemId.SteelChest]: rational.one },
           time: rational(2n, 3n),
           drain: rational(5n),
-          consumption: rational(10000n),
+          power: rational(10000n),
           pollution: rational(1n, 20n),
           effects: mockModuleEffects,
           usage: rational(10000n),
@@ -535,7 +594,7 @@ describe('Adjustment', () => {
         out: { [ItemId.SteelChest]: rational(11n, 10n) },
         time: rational(8n, 97n),
         drain: rational(25n, 2n),
-        consumption: rational(2775n),
+        power: rational(2775n),
         pollution: rational(407n, 1500n),
         effects: {
           consumption: rational(37n, 5n),
@@ -573,7 +632,7 @@ describe('Adjustment', () => {
           },
           time: rational(2n, 3n),
           drain: rational(5n),
-          consumption: rational(150n),
+          power: rational(150n),
           pollution: rational(1n, 20n),
           effects: mockModuleEffects,
           produces: new Set(),
@@ -656,9 +715,9 @@ describe('Adjustment', () => {
         ] as AdjustedRecipe,
         {
           out: { [ItemId.ElectronicCircuit]: rational.one },
-          time: rational(1n, 30n),
+          time: rational(1n, 90n),
           drain: rational(5n),
-          consumption: rational(150n),
+          power: rational(150n),
           pollution: rational(1n, 20n),
           effects: mockModuleEffects,
           produces: new Set(),
@@ -738,7 +797,7 @@ describe('Adjustment', () => {
           out: { [ItemId.CopperCable]: rational(3n) },
           time: rational(4n, 9n),
           drain: rational(5n),
-          consumption: rational(225n),
+          power: rational(225n),
           pollution: rational(9n, 80n),
           effects: {
             consumption: rational(3n, 2n),
@@ -864,7 +923,7 @@ describe('Adjustment', () => {
         settingsStore.settings(),
         data,
       );
-      expect(result.pollution).toEqual(rational(854n, 125n));
+      expect(result.pollution).toEqual(rational(21347n, 3125n));
     });
 
     it('should apply a recipeCostMultiplier', () => {
@@ -881,6 +940,36 @@ describe('Adjustment', () => {
         data,
       );
       expect(result.in[ItemId.IronPlate]).toEqual(rational(10n));
+    });
+
+    it('should account for heat output', () => {
+      const data = mocks.getDataset();
+      data.machineRecord[ItemId.HeatExchanger].heat = data.machineRecord[
+        ItemId.HeatExchanger
+      ].heat?.mul(rational(-1n));
+      const result = service.adjustRecipe(
+        RecipeId.HeatExchangerSteamBoil,
+        recipesStore.settings()[RecipeId.HeatExchangerSteamBoil],
+        itemsStore.settings(),
+        settingsStore.settings(),
+        data,
+      );
+      expect(result.out[HEAT_ID]).toBeDefined();
+    });
+
+    it('should account for machine neighborBonus', () => {
+      const recipeSettings = spread(
+        recipesStore.settings()[RecipeId.NuclearReactorReactor],
+        { overclock: rational(200n) },
+      );
+      const result = service.adjustRecipe(
+        RecipeId.NuclearReactorReactor,
+        recipeSettings,
+        itemsStore.settings(),
+        settingsStore.settings(),
+        settingsStore.dataset(),
+      );
+      expect(result.in[ItemId.UraniumFuelCell]).toEqual(rational(1n, 800n));
     });
   });
 
@@ -949,7 +1038,7 @@ describe('Adjustment', () => {
         recipesStore.settings(),
         recipesStore.adjustedDataset(),
       );
-      expect(recipe.time).toEqual(rational(9375n, 203n));
+      expect(recipe.time).toEqual(rational(750000n, 16247n));
     });
   });
 
@@ -978,9 +1067,9 @@ describe('Adjustment', () => {
         settingsStore.dataset(),
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        rational(9375n, 203n),
+        rational(750000n, 16247n),
       );
-      expect(result[RecipeId.RocketPart].time).toEqual(rational(75n, 116n));
+      expect(result[RecipeId.RocketPart].time).toEqual(rational(1500n, 2321n));
     });
 
     it('should handle invalid machine', () => {
@@ -997,7 +1086,7 @@ describe('Adjustment', () => {
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
         rational(203n, 5n),
       );
-      expect(result[RecipeId.RocketPart].time).toEqual(rational(75n, 116n));
+      expect(result[RecipeId.RocketPart].time).toEqual(rational(1500n, 2321n));
     });
 
     it('should handle missing machine id', () => {
@@ -1014,7 +1103,7 @@ describe('Adjustment', () => {
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
         rational(203n, 5n),
       );
-      expect(result[RecipeId.RocketPart].time).toEqual(rational(75n, 116n));
+      expect(result[RecipeId.RocketPart].time).toEqual(rational(1500n, 2321n));
     });
 
     it('should limit speed based on launch speed when buffered', () => {
@@ -1059,7 +1148,7 @@ describe('Adjustment', () => {
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
         rational(203n, 5n),
       );
-      expect(result[RecipeId.RocketPart].time).toEqual(rational(75n, 116n));
+      expect(result[RecipeId.RocketPart].time).toEqual(rational(1500n, 2321n));
     });
   });
 
@@ -1153,7 +1242,7 @@ describe('Adjustment', () => {
         initialSettingsState.costs,
         recipesStore.adjustedDataset(),
       );
-      expect(adjustedRecipe[RecipeId.Coal].cost).toEqual(rational(8143n, 20n));
+      expect(adjustedRecipe[RecipeId.Coal].cost).toEqual(rational(9584n, 25n));
       expect(adjustedRecipe[RecipeId.CopperCable].cost).toEqual(rational(9n));
     });
 
@@ -1268,10 +1357,14 @@ describe('Adjustment', () => {
     });
 
     it('should use the correct fuel for a burn recipe objective', () => {
+      const data = mocks.getAdjustedDataset();
+      const recipe = data.recipeRecord[RecipeId.NuclearReactorReactor];
+      recipe.flags.add('burn');
+      recipe.in[ItemId.UraniumFuelCell] = rational.zero;
       const result = service.adjustObjective(
         {
           id: '1',
-          targetId: RecipeId.DepletedUraniumFuelCell,
+          targetId: RecipeId.NuclearReactorReactor,
           value: rational.one,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
@@ -1281,7 +1374,7 @@ describe('Adjustment', () => {
         recipesStore.settings(),
         machinesStore.settings(),
         settingsStore.settings(),
-        recipesStore.adjustedDataset(),
+        data,
       );
       expect(result.fuelId).toEqual(ItemId.UraniumFuelCell);
     });

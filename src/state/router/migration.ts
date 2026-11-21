@@ -71,7 +71,10 @@ export class Migration {
       };
 
     params = spread(params);
-    const v = coalesce(params['v'] as ZipVersion, ZipVersion.Version0);
+    const v = coalesce(
+      params['v'] as unknown as ZipVersion,
+      ZipVersion.Version0,
+    );
     log('unzip_version', v);
 
     const isBare = params['z'] == null;
@@ -825,8 +828,7 @@ export class Migration {
 
     // Objectives
     const oldObjectives = params[ZipSectionV10.Objectives] as
-      | string
-      | undefined;
+      string | undefined;
     delete params[ZipSectionV10.Objectives];
     const objectiveIds: string[] = [];
     const newObjectives = oldObjectives

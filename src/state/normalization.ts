@@ -5,7 +5,7 @@ import {
   SankeyNodeExtraProperties,
 } from '~/d3/sankey/models';
 import { sankey } from '~/d3/sankey/sankey';
-import { EnergyType } from '~/data/schema/energy-type';
+import { IsPowerPipe } from '~/data/schema/item';
 import { Rational, rational } from '~/rational/rational';
 import { Step } from '~/solver/step';
 import { coalesce } from '~/utils/nullish';
@@ -34,6 +34,17 @@ export class Normalization {
       objective.type === ObjectiveType.Maximize
     )
       return objective.value;
+
+    if (IsPowerPipe.transform(objective.targetId)) {
+      switch (objective.unit) {
+        case ObjectiveUnit.Items:
+          return objective.value;
+        case ObjectiveUnit.Belts:
+          return objective.value.mul(rational(1000n));
+        case ObjectiveUnit.Wagons:
+          return objective.value.mul(rational(1000000n));
+      }
+    }
 
     const dispRateVal = this.settingsStore.displayRateInfo().value;
     const data = this.recipesStore.adjustedDataset();
@@ -227,11 +238,7 @@ export class Normalization {
           }
 
           const beacon = data.beaconRecord[b.id];
-          if (
-            beacon.type === EnergyType.Electric &&
-            beacon.usage != null &&
-            total != null
-          ) {
+          if (beacon.usage != null && total != null) {
             step.power = (step.power ?? rational.zero).add(
               total.mul(beacon.usage),
             );
@@ -252,7 +259,8 @@ export class Normalization {
           step.parents[key] = step.parents[key].div(step.items);
       }
 
-      step.items = step.items.mul(dispRateVal);
+      if (!IsPowerPipe.transform(step.itemId))
+        step.items = step.items.mul(dispRateVal);
     }
 
     if (step.surplus) step.surplus = step.surplus.mul(dispRateVal);

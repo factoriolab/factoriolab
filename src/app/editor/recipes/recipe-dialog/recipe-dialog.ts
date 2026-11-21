@@ -96,7 +96,9 @@ export class RecipeDialog {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record, options, header: 'data.ingredients' } })
+      >(QuantitiesDialog, {
+        data: { record, options, header: 'data.ingredients' },
+      })
       .closed.subscribe((result) => {
         if (result) recipe.in = result;
         this.cd.detectChanges();
@@ -112,7 +114,9 @@ export class RecipeDialog {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record, options, header: 'data.products' } })
+      >(QuantitiesDialog, {
+        data: { record, options, header: 'data.products' },
+      })
       .closed.subscribe((result) => {
         if (result) recipe.out = result;
         this.cd.detectChanges();
@@ -128,7 +132,9 @@ export class RecipeDialog {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record, options, header: 'data.catalysts', optional: true } })
+      >(QuantitiesDialog, {
+        data: { record, options, header: 'data.catalysts', optional: true },
+      })
       .closed.subscribe((result) => {
         if (result === null) delete recipe.catalyst;
         else if (result) recipe.catalyst = result;

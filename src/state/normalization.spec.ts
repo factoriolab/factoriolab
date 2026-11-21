@@ -57,7 +57,7 @@ describe('Normalization', () => {
           unit: ObjectiveUnit.Belts,
           type: ObjectiveType.Output,
         }),
-      ).toEqual(rational(15n));
+      ).toEqual(rational(45n));
     });
 
     it('should normalize item objective rates based on wagons', () => {
@@ -80,6 +80,38 @@ describe('Normalization', () => {
           type: ObjectiveType.Output,
         }),
       ).toEqual(rational(2500n, 3n));
+    });
+
+    it('should normalize power objectives', () => {
+      expect(
+        service.normalizeRate({
+          id: '0',
+          targetId: ItemId.Power,
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        }),
+      ).toEqual(rational.one);
+
+      expect(
+        service.normalizeRate({
+          id: '0',
+          targetId: ItemId.Power,
+          value: rational.one,
+          unit: ObjectiveUnit.Belts,
+          type: ObjectiveType.Output,
+        }),
+      ).toEqual(rational(1000n));
+
+      expect(
+        service.normalizeRate({
+          id: '0',
+          targetId: ItemId.Power,
+          value: rational.one,
+          unit: ObjectiveUnit.Wagons,
+          type: ObjectiveType.Output,
+        }),
+      ).toEqual(rational(1000000n));
     });
   });
 
@@ -118,13 +150,13 @@ describe('Normalization', () => {
         stepB,
         'parents',
         '0',
-        rational(247n, 80n),
+        rational(2471n, 800n),
       );
       expect(service['addEntityValue']).toHaveBeenCalledWith(
         stepA,
         'outputs',
         'iron-plate',
-        rational(741n, 200n),
+        rational(7413n, 2000n),
       );
     });
   });
@@ -184,7 +216,7 @@ describe('Normalization', () => {
         belts: rational.zero,
       };
       service['calculateLogistics'](step);
-      expect(step.belts).toEqual(rational(3n));
+      expect(step.belts).toEqual(rational.one);
       expect(step.wagons).toEqual(rational(9n, 400n));
     });
 

@@ -8,10 +8,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '~/components/button/button';
-import { Checkbox } from '~/components/checkbox/checkbox';
 import { DialogData } from '~/components/dialog/dialog';
 import { BeaconJson } from '~/data/schema/beacon';
-import { EnergyType } from '~/data/schema/energy-type';
 import { TranslatePipe } from '~/translate/translate-pipe';
 import { SetJoinPipe } from '~/utils/set';
 
@@ -25,14 +23,7 @@ import {
 
 @Component({
   selector: 'lab-beacon-dialog',
-  imports: [
-    FormsModule,
-    Button,
-    Checkbox,
-    TranslatePipe,
-    SetJoinPipe,
-    EditorMultiselect,
-  ],
+  imports: [FormsModule, Button, TranslatePipe, SetJoinPipe, EditorMultiselect],
   templateUrl: './beacon-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -45,7 +36,6 @@ export class BeaconDialog implements DialogData {
     inject<DialogRef<BeaconJson | null | undefined>>(DialogRef);
 
   protected readonly moduleEffectOptions = moduleEffectOptions;
-  protected readonly EnergyType = EnergyType;
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;

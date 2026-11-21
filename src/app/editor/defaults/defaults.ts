@@ -177,7 +177,14 @@ export class Defaults extends EditorTab {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: coalesce(defaults.recipeProductivity, {}), options, header: 'data.recipeProductivity', optional: true } })
+      >(QuantitiesDialog, {
+        data: {
+          record: coalesce(defaults.recipeProductivity, {}),
+          options,
+          header: 'data.recipeProductivity',
+          optional: true,
+        },
+      })
       .closed.subscribe((record) => {
         if (record === null) delete defaults.recipeProductivity;
         else if (record) defaults.recipeProductivity = record;
@@ -215,11 +222,10 @@ export class Defaults extends EditorTab {
       wagonOptions: this.wagonOptions(),
     };
     this.dialog
-      .open<
-        PresetJson | undefined,
-        PresetDialogData,
-        PresetDialog
-      >(PresetDialog, { data })
+      .open<PresetJson | undefined, PresetDialogData, PresetDialog>(
+        PresetDialog,
+        { data },
+      )
       .closed.subscribe((result) => {
         if (result) {
           if (index == null) this.model = result;

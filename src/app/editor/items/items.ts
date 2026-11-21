@@ -66,11 +66,9 @@ export class Items extends EditorTab {
   editItem(item: ItemJson, index?: number): void {
     item = JSON.parse(JSON.stringify(item)) as ItemJson;
     this.dialog
-      .open<
-        ItemJson | undefined,
-        ItemDialogData,
-        ItemDialog
-      >(ItemDialog, { data: { item, edit: this.edit(), header: item.name } })
+      .open<ItemJson | undefined, ItemDialogData, ItemDialog>(ItemDialog, {
+        data: { item, edit: this.edit(), header: item.name },
+      })
       .closed.subscribe((result) => {
         if (result) {
           if (index == null) this.model = result;

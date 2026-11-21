@@ -3,9 +3,7 @@ import { Interior, MIP, Simplex, Status } from 'glpk-ts';
 import { Rational } from '~/rational/rational';
 
 export type GlpkReturnCode =
-  | Simplex.ReturnCode
-  | Interior.ReturnCode
-  | MIP.ReturnCode;
+  Simplex.ReturnCode | Interior.ReturnCode | MIP.ReturnCode;
 
 export interface GlpkResult {
   surplus: Record<string, Rational>;

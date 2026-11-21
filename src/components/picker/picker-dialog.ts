@@ -171,9 +171,10 @@ export class PickerDialog implements AfterViewInit {
   });
 
   protected readonly categoryTabs = computed(() =>
-    Object.keys(this.categoryRows()).map(
-      (k): TabData => ({ label: this.data().categoryRecord[k].name, value: k }),
-    ),
+    Object.keys(this.categoryRows()).map((k): TabData => ({
+      label: this.data().categoryRecord[k].name,
+      value: k,
+    })),
   );
 
   protected readonly selectedQuality = linkedSignal<Dataset, string>({

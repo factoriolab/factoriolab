@@ -350,13 +350,12 @@ export class Flow {
       return;
 
     const boxes = result.children;
-    const edges = flow.links.map(
-      (l): BoxEdge =>
-        spread<BoxEdge>(l as unknown as BoxEdge, {
-          id: `${l.source}|${l.target}`,
-          sourceNode: boxes.find((b) => b.id === l.source),
-          targetNode: boxes.find((b) => b.id === l.target),
-        }),
+    const edges = flow.links.map((l): BoxEdge =>
+      spread<BoxEdge>(l as unknown as BoxEdge, {
+        id: `${l.source}|${l.target}`,
+        sourceNode: boxes.find((b) => b.id === l.source),
+        targetNode: boxes.find((b) => b.id === l.target),
+      }),
     );
 
     const svg = select(this.svgElement().nativeElement)

@@ -52,7 +52,7 @@
     text="ok"
     [faIcon]="faCheck"
     [loading]="loading()"
-    [disabled]="!dataFile || !iconsFile || loading()"
+    [disabled]="!dataFile || loading()"
     (click)="save()"
   ></button>
   <button

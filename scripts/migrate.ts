@@ -1,12 +1,12 @@
 import { datasets } from '~/data/datasets';
+import { CUSTOM_MOD } from '~/data/game';
 import { ModData } from '~/data/schema/mod-data';
 
 import { getJsonData } from './utils/file';
 import { logTime } from './utils/log';
 
-const OLD_FACTORIO_MODS = new Set(['2.0', 'spa', '1.0', '017', '016']);
 const CURRENT_FACTORIO_MODS = datasets.mods
-  .filter((m) => m.game === 'factorio' && !OLD_FACTORIO_MODS.has(m.id))
+  .filter((m) => m.id !== CUSTOM_MOD)
   .map((m) => m.id);
 
 // Load mods from arguments
@@ -26,12 +26,31 @@ function updateMods(mods: string[]): void {
     const modData = getJsonData(modDataPath) as ModData;
 
     modData.items.forEach((i) => {
-      if (i.name == null) console.log('item', i.id);
+      if (i.machine) {
+        const x = i.machine as { type?: string };
+        if (x.type) {
+          if (x.type === 'burner') {
+            i.machine.burner = i.machine.usage;
+            delete x.type;
+            delete i.machine.usage;
+          } else if (x.type === 'heat') {
+            i.machine.heat = i.machine.usage;
+            delete x.type;
+            delete i.machine.heat;
+            delete i.machine.usage;
+          } else {
+            delete x.type;
+          }
+        }
+      }
     });
-    modData.recipes.forEach((i) => {
-      if (i.name == null) console.log('recipe', i.id);
-    });
+    // modData.recipes.forEach((i) => {
+    //   if (i.usage) {
+    //     console.log(mod, i.id);
+    //   }
+    // });
 
+    // writeJsonData(modDataPath, modData);
     logTime(
       `Migrated mod '${mod}' (${(i + 1).toString()} of ${mods.length.toString()})`,
     );

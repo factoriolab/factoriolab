@@ -81,7 +81,12 @@ export class TechnologyDialog implements DialogData {
         { id: string; value: number | string }[] | null | undefined,
         RecipeProductivityDialogData,
         RecipeProductivityDialog
-      >(RecipeProductivityDialog, { data: { recipeProductivity: coalesce(technology.recipeProductivity, []), recipeOptions: this.data.recipeOptions } })
+      >(RecipeProductivityDialog, {
+        data: {
+          recipeProductivity: coalesce(technology.recipeProductivity, []),
+          recipeOptions: this.data.recipeOptions,
+        },
+      })
       .closed.subscribe((recipeProductivity) => {
         if (recipeProductivity === null) delete technology.recipeProductivity;
         else if (recipeProductivity)

@@ -108,7 +108,7 @@
                 class="md:basis-1/5 -ms-px basis-1/3"
                 labelledBy="units-label"
                 rounded="none"
-                [options]="unitOptions()"
+                [options]="objective.targetId | itemUnitOptions: unitOptions()"
                 [ngModel]="objective.unit"
                 (ngModelChange)="conversion.changeUnit(objective, $event)"
               ></lab-select>

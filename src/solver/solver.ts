@@ -25,6 +25,7 @@ import {
 import { AdjustedDataset, Dataset } from '~/state/settings/dataset';
 import { MaximizeType } from '~/state/settings/maximize-type';
 import { Settings } from '~/state/settings/settings';
+import { fnPropsNotNullish } from '~/utils/nullish';
 import { spread } from '~/utils/object';
 import { contains } from '~/utils/record';
 
@@ -384,7 +385,7 @@ export class Solver {
     const config: VariableProperties = {
       obj: state.costs.maximize.toNumber(),
       lb: 0,
-      name: 'maximize',
+      name: 'objective|maximize',
     };
     const maximizeVar = m.addVar(config);
 
@@ -396,7 +397,7 @@ export class Solver {
       const config: VariableProperties = {
         obj: (state.recipes[recipeId].cost ?? rational.zero).toNumber(),
         lb: 0,
-        name: recipeId,
+        name: `recipe|${recipeId}`,
       };
 
       // Add limit, if any
@@ -411,7 +412,7 @@ export class Solver {
     for (const obj of state.recipeObjectives) {
       const config: VariableProperties = {
         lb: 0,
-        name: obj.id,
+        name: `objective|${obj.id}`,
       };
 
       // Set ub/lb if type is output, maximize will be set up later
@@ -428,7 +429,7 @@ export class Solver {
             const varConfig: VariableProperties = {
               obj: obj.value.mul(state.costs.maximize).toNumber(),
               lb: 0,
-              name: obj.id,
+              name: `maximize|${obj.id}`,
             };
             maximizeRecipeVarRecord[obj.id] = m.addVar(varConfig);
             const coeffs: [Variable, number][] = [
@@ -438,7 +439,7 @@ export class Solver {
             const constrConfig: ConstraintProperties = {
               coeffs,
               lb: 0,
-              name: obj.id,
+              name: `maximize|${obj.id}`,
             };
             recipeObjectiveConstrRecord[obj.id] = m.addConstr(constrConfig);
             break;
@@ -452,7 +453,7 @@ export class Solver {
             const config: ConstraintProperties = {
               coeffs,
               lb: 0,
-              name: obj.id,
+              name: `maximize|${obj.id}`,
             };
             recipeObjectiveConstrRecord[obj.id] = m.addConstr(config);
             break;
@@ -467,7 +468,7 @@ export class Solver {
       const config: VariableProperties = {
         obj,
         lb: 0,
-        name: itemId,
+        name: `unproduceable|${itemId}`,
       };
       unproduceableVarRecord[itemId] = m.addVar(config);
     }
@@ -478,7 +479,7 @@ export class Solver {
       const config: VariableProperties = {
         obj,
         lb: 0,
-        name: itemId,
+        name: `excluded|${itemId}`,
       };
       excludedVarRecord[itemId] = m.addVar(config);
     }
@@ -489,7 +490,7 @@ export class Solver {
       const config: VariableProperties = {
         obj,
         lb: 0,
-        name: itemId,
+        name: `surplus|${itemId}`,
       };
       surplusVarRecord[itemId] = m.addVar(config);
 
@@ -498,7 +499,7 @@ export class Solver {
         const inputConfig: VariableProperties = {
           lb: 0,
           ub: values.in.toNumber(),
-          name: itemId,
+          name: `input|${itemId}`,
         };
         inputVarRecord[itemId] = m.addVar(inputConfig);
       }
@@ -572,7 +573,7 @@ export class Solver {
             const config: VariableProperties = {
               obj: values.max.mul(state.costs.maximize).toNumber(),
               lb: 0,
-              name: itemId,
+              name: `maximize|${itemId}`,
             };
             maximizeItemVarRecord[itemId] = m.addVar(config);
             netCoeffs.push([maximizeItemVarRecord[itemId], -1]);
@@ -590,7 +591,7 @@ export class Solver {
         coeffs: netCoeffs,
         lb: values.out.toNumber(),
         ub: values.out.toNumber(),
-        name: itemId,
+        name: `item|${itemId}`,
       };
       itemConstrRecord[itemId] = m.addConstr(netConfig);
 
@@ -598,7 +599,7 @@ export class Solver {
         const inputConfig: ConstraintProperties = {
           coeffs: inputCoeffs,
           ub: values.lim.toNumber(),
-          name: itemId,
+          name: `limit|${itemId}`,
         };
         inputLimitConstrRecord[itemId] = m.addConstr(inputConfig);
       }
@@ -835,16 +836,18 @@ export class Solver {
     }
 
     // Find best recipe match for remaining steps
-    const potentials: Record<string, string[]> = {};
-    for (const step of steps.filter((s) => s.recipeId == null)) {
-      if (step.itemId) {
+    const potentials = steps
+      .filter((s) => s.recipeId == null)
+      .filter(fnPropsNotNullish('itemId', 'items'))
+      .sort((a, b) => b.items.sub(a.items).toNumber())
+      .reduce<Record<string, string[]>>((res, step) => {
         const itemId = step.itemId;
-        potentials[itemId] = recipes
+        res[itemId] = recipes
           .filter((r) => r.output[itemId]?.gt(rational.zero))
           .sort((a, b) => b.output[itemId].sub(a.output[itemId]).toNumber())
           .map((r) => r.id);
-      }
-    }
+        return res;
+      }, {});
 
     // Sort only based on output recipes, ignore input recipes
     const order = Object.keys(potentials).sort(
@@ -917,7 +920,7 @@ export class Solver {
     data: Dataset,
   ): void {
     if (step.machines?.nonzero() && !recipe.part) {
-      if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
+      if (recipe.drain?.nonzero() || recipe.power?.nonzero()) {
         // Reset power
         step.power = rational.zero;
 
@@ -932,8 +935,8 @@ export class Solver {
           step.power = step.power.add(machines.mul(recipe.drain));
         }
         // Calculate consumption
-        if (recipe.consumption?.nonzero())
-          step.power = step.power.add(step.machines.mul(recipe.consumption));
+        if (recipe.power?.nonzero())
+          step.power = step.power.add(step.machines.mul(recipe.power));
       }
 
       // Calculate pollution

@@ -37,6 +37,8 @@ import { RecipeState } from '../recipes/recipe-state';
 import { RecipesStore } from '../recipes/recipes-store';
 import { CostSettings } from '../settings/cost-settings';
 import { Dataset } from '../settings/dataset';
+import { DisplayRate } from '../settings/display-rate';
+import { MaximizeType } from '../settings/maximize-type';
 import {
   initialSettingsState,
   PartialSettingsState,
@@ -147,8 +149,7 @@ export class RouterSync {
           () =>
             !(
               this.router.currentNavigation()?.extras.info as
-                | { sync?: true }
-                | undefined
+                { sync?: true } | undefined
             )?.sync,
         ),
         switchMap(async ({ params, queryParams }) => {
@@ -716,8 +717,14 @@ export class RouterSync {
         id: index.toString(),
         targetId: s[i++], // Convert to real id after determining unit, if hashed
         value: coalesce(this.zip.parseRational(s[i++]), rational.one),
-        unit: this.zip.parseNumber(s[i++]) ?? ObjectiveUnit.Items,
-        type: this.zip.parseNumber(s[i++]) ?? ObjectiveType.Output,
+        unit: coalesce(
+          this.zip.parseNumber(s[i++]) as unknown as ObjectiveUnit,
+          ObjectiveUnit.Items,
+        ),
+        type: coalesce(
+          this.zip.parseNumber(s[i++]) as unknown as ObjectiveType,
+          ObjectiveType.Output,
+        ),
         machineId: this.zip.parseString(s[i++], hash?.machines),
         modules: this.zip.parseIndices(s[i++], moduleSettings),
         beacons: this.zip.parseIndices(s[i++], beaconSettings),
@@ -1032,12 +1039,15 @@ export class RouterSync {
     const rnk = get(this.zip.parseArray.bind(this.zip));
     const arr = get(this.zip.parseIndices.bind(this.zip));
 
+    const maximizeType = num('omt') as unknown as MaximizeType | undefined;
+    const displayRate = num('odr') as unknown as DisplayRate | undefined;
+
     const obj: PartialSettingsState = {
       modId,
       checkedObjectiveIds: sub('och', objectiveIds),
-      maximizeType: num('omt'),
+      maximizeType,
       requireMachinesOutput: bln('orm'),
-      displayRate: num('odr'),
+      displayRate,
       excludedItemIds: sub('iex', modHash.items),
       checkedItemIds: sub('ich', modHash.items),
       beltRankIds: rnk('ibe', hash?.belts),

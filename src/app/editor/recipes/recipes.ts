@@ -67,11 +67,10 @@ export class Recipes extends EditorTab {
   editRecipe(recipe: RecipeJson, index?: number): void {
     recipe = JSON.parse(JSON.stringify(recipe)) as RecipeJson;
     this.dialog
-      .open<
-        RecipeJson | undefined,
-        RecipeDialogData,
-        RecipeDialog
-      >(RecipeDialog, { data: { recipe, edit: this.edit() } })
+      .open<RecipeJson | undefined, RecipeDialogData, RecipeDialog>(
+        RecipeDialog,
+        { data: { recipe, edit: this.edit() } },
+      )
       .closed.subscribe((result) => {
         if (result) {
           if (index == null) this.model = result;

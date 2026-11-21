@@ -77,13 +77,11 @@ export const initialColumnsState: ColumnsState = allColumns.reduce(
 export function columnOptions(data: Dataset): Option<ColumnKey>[] {
   return allColumns
     .filter((c) => !columnsInfo[c].exclude?.(data))
-    .map(
-      (id): Option<ColumnKey> => ({
-        label: `options.column.${id}`,
-        value: id,
-        disabled: id === 'items' || id === 'machines',
-      }),
-    );
+    .map((id): Option<ColumnKey> => ({
+      label: `options.column.${id}`,
+      value: id,
+      disabled: id === 'items' || id === 'machines',
+    }));
 }
 
 export function gameColumnsState(

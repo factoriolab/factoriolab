@@ -18,8 +18,7 @@ import { Button } from '~/components/button/button';
 import { Checkbox } from '~/components/checkbox/checkbox';
 import { DialogData } from '~/components/dialog/dialog';
 import { Select } from '~/components/select/select';
-import { EnergyType } from '~/data/schema/energy-type';
-import { MachineJson } from '~/data/schema/machine';
+import { MachineFlag, MachineJson } from '~/data/schema/machine';
 import { ModuleEffect } from '~/data/schema/module';
 import { SiloJson } from '~/data/schema/silo';
 import { Option } from '~/option/option';
@@ -76,17 +75,16 @@ export class MachineDialog implements DialogData {
   protected readonly dialogRef =
     inject<DialogRef<MachineJson | null | undefined>>(DialogRef);
 
-  protected readonly energySourceOptions: Option<EnergyType | undefined>[] = [
-    { label: 'none', value: undefined },
-    { label: 'options.energyType.burner', value: EnergyType.Burner },
-    { label: 'options.energyType.electric', value: EnergyType.Electric },
-  ];
   protected readonly faFloppyDisk = faFloppyDisk;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
   protected readonly faTrash = faTrash;
   protected readonly faXmark = faXmark;
   readonly header = 'data.machine';
+  protected readonly machineFlagOptions: Option<MachineFlag>[] = [
+    { label: 'hideRate', value: 'hideRate' },
+    { label: 'totalRecipe', value: 'totalRecipe' },
+  ];
   protected readonly moduleEffectOptions = moduleEffectOptions;
   protected readonly toNullableArray = toNullableArray;
   protected readonly toNullableNumeric = toNullableNumeric;
@@ -94,11 +92,9 @@ export class MachineDialog implements DialogData {
 
   editSilo(machine: MachineJson): void {
     this.dialog
-      .open<
-        SiloJson | null | undefined,
-        SiloJson,
-        SiloDialog
-      >(SiloDialog, { data: coalesce(machine.silo, { parts: 1, launch: 1 }) })
+      .open<SiloJson | null | undefined, SiloJson, SiloDialog>(SiloDialog, {
+        data: coalesce(machine.silo, { parts: 1, launch: 1 }),
+      })
       .closed.subscribe((silo) => {
         if (silo === null) delete machine.silo;
         else if (silo) machine.silo = silo;
@@ -115,7 +111,9 @@ export class MachineDialog implements DialogData {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record, options, header: 'data.consumption', optional: true } })
+      >(QuantitiesDialog, {
+        data: { record, options, header: 'data.consumption', optional: true },
+      })
       .closed.subscribe((result) => {
         if (result === null) delete machine.consumption;
         else if (result) machine.consumption = result;

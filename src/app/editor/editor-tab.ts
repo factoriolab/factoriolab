@@ -16,14 +16,12 @@ export abstract class EditorTab {
   protected readonly iconOptions = computed(() => {
     const { data, icons } = this.edit();
     const result = data.icons
-      .map(
-        (i): Option<string | undefined> => ({
-          label: i.id,
-          value: i.id,
-          icon: icons[i.id]?.url,
-          iconType: 'img',
-        }),
-      )
+      .map((i): Option<string | undefined> => ({
+        label: i.id,
+        value: i.id,
+        icon: icons[i.id]?.url,
+        iconType: 'img',
+      }))
       .sort((a, b) => a.label.localeCompare(b.label));
     result.unshift({ label: 'none', value: undefined });
     return result;

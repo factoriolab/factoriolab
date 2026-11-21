@@ -38,6 +38,8 @@ export default defineConfig(
         { allowWithDecorator: true },
       ],
       '@typescript-eslint/no-unnecessary-condition': 'off',
+      /** This rule seems to be incompatible with the Angular CDK as of v22.3 */
+      '@typescript-eslint/no-unsafe-class-instance-assignment': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {

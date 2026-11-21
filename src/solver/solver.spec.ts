@@ -197,7 +197,7 @@ describe('Solver', () => {
           [ItemId.SteelPlate]: { out: rational.zero },
           [ItemId.CopperPlate]: {
             out: rational.zero,
-            in: rational(741n, 200n),
+            in: rational(7413n, 2000n),
           },
           [ItemId.PetroleumGas]: { out: rational.zero, lim: rational(100n) },
         },
@@ -557,7 +557,7 @@ describe('Solver', () => {
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: rational(8143n, 1000n),
+          items: rational(4792n, 625n),
           output: rational(3n),
           parents: { '': rational(3n) },
         },
@@ -579,7 +579,7 @@ describe('Solver', () => {
         {
           id: '0',
           itemId: ItemId.PiercingRoundsMagazine,
-          items: rational(301n, 60n),
+          items: rational(2007n, 400n),
         },
       ]);
     });
@@ -600,7 +600,7 @@ describe('Solver', () => {
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: rational(8143n, 500n),
+          items: rational(9584n, 625n),
           surplus: rational(3n),
         },
       ]);
@@ -609,7 +609,7 @@ describe('Solver', () => {
     it('should avoid floating point errors in surpluses', () => {
       const solution: any = {
         surplus: {
-          [ItemId.Coal]: rational(8143000000001n, 500000000000n),
+          [ItemId.Coal]: rational(9584000000001n, 625000000000n),
         },
         unproduceable: {},
         excluded: {},
@@ -624,8 +624,8 @@ describe('Solver', () => {
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: rational(8143n, 500n),
-          surplus: rational(8143n, 500n),
+          items: rational(9584n, 625n),
+          surplus: rational(9584n, 625n),
         },
       ]);
     });
@@ -916,7 +916,7 @@ describe('Solver', () => {
       const result = spread(step);
       const recipe: any = {
         drain: null,
-        consumption: rational(2n),
+        power: rational(2n),
         pollution: null,
       };
       service['adjustPowerPollution'](result, recipe, settingsStore.dataset());
@@ -930,7 +930,7 @@ describe('Solver', () => {
       const step: any = { machines: rational(3n, 2n) };
       const recipe: any = {
         drain: rational(3n),
-        consumption: rational(4n),
+        power: rational(4n),
         pollution: rational(5n),
       };
       service['adjustPowerPollution'](step, recipe, settingsStore.dataset());

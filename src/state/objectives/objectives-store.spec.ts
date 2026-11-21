@@ -157,7 +157,7 @@ describe('ObjectivesStore', () => {
       const result = service.totals();
       expect(result).toEqual({
         belts: {
-          [ItemId.TransportBelt]: {
+          [ItemId.ExpressTransportBelt]: {
             total: rational.one,
             iconType: 'item',
             tooltipType: 'belt',
@@ -213,7 +213,7 @@ describe('ObjectivesStore', () => {
           },
         },
       ]);
-      data.machineRecord[ItemId.ElectricMiningDrill].totalRecipe = true;
+      data.machineRecord[ItemId.ElectricMiningDrill].flags.add('totalRecipe');
       spyOn(service['recipesStore'], 'adjustedDataset').and.returnValue(data);
       const result = service.totals();
       expect(result).toEqual({
@@ -293,7 +293,7 @@ describe('ObjectivesStore', () => {
               items: rational.one,
               itemId: ItemId.ElectronicCircuit,
               belts: undefined,
-              beltId: ItemId.TransportBelt,
+              beltId: ItemId.ExpressTransportBelt,
               stack: rational.one,
               wagons: undefined,
               wagonId: ItemId.CargoWagon,
@@ -312,7 +312,7 @@ describe('ObjectivesStore', () => {
               items: rational.one,
               itemId: ItemId.ElectronicCircuit,
               belts: undefined,
-              beltId: ItemId.TransportBelt,
+              beltId: ItemId.ExpressTransportBelt,
               stack: rational.one,
               wagons: undefined,
               wagonId: ItemId.CargoWagon,
@@ -338,7 +338,7 @@ describe('ObjectivesStore', () => {
               items: rational.one,
               itemId: ItemId.ElectronicCircuit,
               belts: undefined,
-              beltId: ItemId.TransportBelt,
+              beltId: ItemId.ExpressTransportBelt,
               stack: rational.one,
               wagons: undefined,
               wagonId: ItemId.CargoWagon,
@@ -357,7 +357,7 @@ describe('ObjectivesStore', () => {
               items: rational.one,
               itemId: ItemId.ElectronicCircuit,
               belts: undefined,
-              beltId: ItemId.TransportBelt,
+              beltId: ItemId.ExpressTransportBelt,
               stack: rational.one,
               wagons: undefined,
               wagonId: ItemId.CargoWagon,

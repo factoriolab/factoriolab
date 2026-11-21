@@ -122,7 +122,7 @@ describe('Options', () => {
   describe('fuelOptions', () => {
     it('should handle Record with no fuel categories', () => {
       const result = service.fuelOptions(
-        {},
+        { flags: new Set() },
         settingsStore.settings(),
         recipesStore.adjustedDataset(),
       );
@@ -131,7 +131,7 @@ describe('Options', () => {
 
     it('should handle entity that specifies a fuel', () => {
       const result = service.fuelOptions(
-        { fuel: ItemId.Coal },
+        { fuel: ItemId.Coal, flags: new Set() },
         settingsStore.settings(),
         recipesStore.adjustedDataset(),
       );

@@ -77,7 +77,14 @@ export class PresetDialog {
         Partial<Record<string, string | number>> | null | undefined,
         QuantitiesDialogData,
         QuantitiesDialog
-      >(QuantitiesDialog, { data: { record: coalesce(preset.recipeProductivity, {}), options, header: 'data.recipeProductivity', optional: true } })
+      >(QuantitiesDialog, {
+        data: {
+          record: coalesce(preset.recipeProductivity, {}),
+          options,
+          header: 'data.recipeProductivity',
+          optional: true,
+        },
+      })
       .closed.subscribe((record) => {
         if (record === null) delete preset.recipeProductivity;
         else if (record) preset.recipeProductivity = record;

@@ -207,7 +207,10 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
             let machine = settings.machineId;
             let iconType: IconType = 'item';
             let tooltipType: TooltipType = 'machine';
-            if (machine && data.machineRecord[machine].totalRecipe) {
+            if (
+              machine &&
+              data.machineRecord[machine].flags?.has('totalRecipe')
+            ) {
               // Use recipe id (vein type) in place of mining machine for DSP mining
               machine = step.recipeId;
               iconType = 'recipe';
@@ -505,16 +508,14 @@ export class ObjectivesStore extends RecordStore<ObjectiveState> {
         enabledIds = [s.recipeId];
       }
 
-      const options = ids.map(
-        (i): Option => ({
-          label: data.recipeRecord[i].name,
-          value: i,
-          icon: i,
-          iconType: 'recipe',
-          tooltip: i,
-          tooltipType: 'recipe',
-        }),
-      );
+      const options = ids.map((i): Option => ({
+        label: data.recipeRecord[i].name,
+        value: i,
+        icon: i,
+        iconType: 'recipe',
+        tooltip: i,
+        tooltipType: 'recipe',
+      }));
 
       e[s.id] = { ids, enabledIds, options };
 

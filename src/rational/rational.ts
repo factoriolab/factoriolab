@@ -196,7 +196,9 @@ export class Rational {
 
   /**
    * Converts rational to string
-   * * Default: Use decimals if 3 or less, use num/den otherwise
+   * * Default: Use num/dem if re-parsing decimal reprentation results in loss
+   *     of precision or if shorter than decimal representation, otherwise use
+   *     decimal representation
    * * Custom:
    *   * Specify null to use mixed fraction
    *   * Specify number to specify number of decimals
@@ -204,11 +206,11 @@ export class Rational {
   toString(precision?: number | null): string {
     if (precision) return this.toPrecision(precision).toString();
 
-    const number = this.toNumber();
-    if (precision === null || Number(number.toFixed(3)) !== number)
-      return this.toFraction(precision !== undefined);
+    const decimal = this.toNumber().toString();
+    const fraction = this.toFraction(precision !== undefined);
+    if (precision === null || !this.eq(rational(decimal))) return fraction;
 
-    return this.toNumber().toString();
+    return decimal.length > fraction.length ? fraction : decimal;
   }
 
   toJSON(): string {

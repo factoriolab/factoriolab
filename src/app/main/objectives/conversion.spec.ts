@@ -119,7 +119,7 @@ describe('Conversion', () => {
       );
       expect(service['objectivesStore'].updateRecord).toHaveBeenCalledWith(
         '1',
-        { value: rational(5n, 406n) },
+        { value: rational(200n, 16247n) },
       );
     });
 
@@ -151,7 +151,7 @@ describe('Conversion', () => {
       );
       expect(service['objectivesStore'].updateRecord).toHaveBeenCalledWith(
         '5',
-        { value: rational(181n) },
+        { value: rational(181.05) },
       );
     });
 
@@ -184,7 +184,7 @@ describe('Conversion', () => {
       );
       expect(service['objectivesStore'].updateRecord).toHaveBeenCalledWith(
         '1',
-        { value: rational(1n, 900n) },
+        { value: rational(1n, 2700n) },
       );
     });
 
