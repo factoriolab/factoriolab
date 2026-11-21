@@ -240,8 +240,12 @@ describe('Rational', () => {
       expect(rational(1, 3).toString()).toEqual('1/3');
     });
 
+    it('should return a fraction if explicitly requested', () => {
+      expect(rational(1, 2).toString(null)).toEqual('1/2');
+    });
+
     it('should handle very small numbers', () => {
-      expect(rational(3, 10000000).toString()).toEqual('3/10000000');
+      expect(rational(3, 10000000).toString()).toEqual('3e-7');
     });
 
     it('should use specified precision', () => {
