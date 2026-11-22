@@ -264,13 +264,13 @@
             >
               @if (step.itemId | isPower) {
                 (+{{
-                  step.items
+                  step.surplus
                     | power
                       : cols().power?.precision
                       : objectivesStore.effectivePowerUnit()
                 }})
               } @else {
-                (+{{ step.items | rate: cols().items?.precision }})
+                (+{{ step.surplus | rate: cols().items?.precision }})
               }
             </span>
           }
