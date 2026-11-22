@@ -28,6 +28,32 @@ describe('Picker', () => {
       expect(service['dialog'].open).toHaveBeenCalled();
       expect(result).toEqual(ItemId.IronPlate);
     });
+
+    it('should prompt if a technology is selected with the same name as an item', () => {
+      spyOn(service['dialog'], 'open').and.returnValue({
+        closed: of(ItemId.ProductionSciencePackTechnology),
+      } as any);
+      spyOn(service['confirm'], 'open').and.returnValue(
+        of(ItemId.ProductionSciencePackTechnology),
+      );
+      let result: string | undefined;
+      service.pickItem().subscribe((r) => (result = r));
+      expect(service['dialog'].open).toHaveBeenCalled();
+      expect(service['confirm'].open).toHaveBeenCalled();
+      expect(result).toEqual(ItemId.ProductionSciencePackTechnology);
+    });
+
+    it('should not prompt if a technology is selected with a unique name', () => {
+      spyOn(service['dialog'], 'open').and.returnValue({
+        closed: of(ItemId.MiningProductivity),
+      } as any);
+      spyOn(service['confirm'], 'open');
+      let result: string | undefined;
+      service.pickItem().subscribe((r) => (result = r));
+      expect(service['dialog'].open).toHaveBeenCalled();
+      expect(service['confirm'].open).not.toHaveBeenCalled();
+      expect(result).toEqual(ItemId.MiningProductivity);
+    });
   });
 
   describe('pickRecipe', () => {
