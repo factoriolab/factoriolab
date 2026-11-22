@@ -252,6 +252,7 @@ export class Normalization {
 
   private calculateDisplayRate(step: Step): void {
     const dispRateVal = this.settingsStore.displayRateInfo().value;
+    const notPower = !IsPowerPipe.transform(step.itemId);
 
     if (step.items) {
       if (step.parents && step.items.nonzero()) {
@@ -259,11 +260,10 @@ export class Normalization {
           step.parents[key] = step.parents[key].div(step.items);
       }
 
-      if (!IsPowerPipe.transform(step.itemId))
-        step.items = step.items.mul(dispRateVal);
+      if (notPower) step.items = step.items.mul(dispRateVal);
     }
 
-    if (step.surplus) step.surplus = step.surplus.mul(dispRateVal);
+    if (step.surplus && notPower) step.surplus = step.surplus.mul(dispRateVal);
     if (step.wagons) step.wagons = step.wagons.mul(dispRateVal);
     if (step.rockets) step.rockets = step.rockets.mul(dispRateVal);
     if (step.pollution) step.pollution = step.pollution.mul(dispRateVal);
