@@ -439,7 +439,11 @@
     "includedRecipes": "启用配方",
     "qualityFilter": "Quality filter",
     "selectItem": "选择一个物品",
-    "selectRecipe": "选择一个配方"
+    "selectRecipe": "选择一个配方",
+    "techConfirmHeader": "Confirm technology selection",
+    "techConfirmItem": "Use item",
+    "techConfirmMessage": "You have selected a technology instead of the item with the same name. Proceed?",
+    "techConfirmTech": "Use technology"
   },
   "preferences": {
     "backgroundLightness": "背景亮度",

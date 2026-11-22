@@ -439,7 +439,11 @@
     "includedRecipes": "Set included recipes",
     "qualityFilter": "Quality filter",
     "selectItem": "Select an item",
-    "selectRecipe": "Select a recipe"
+    "selectRecipe": "Select a recipe",
+    "techConfirmHeader": "Confirm technology selection",
+    "techConfirmItem": "Use item",
+    "techConfirmMessage": "You have selected a technology instead of the item with the same name. Proceed?",
+    "techConfirmTech": "Use technology"
   },
   "preferences": {
     "backgroundLightness": "Background lightness",

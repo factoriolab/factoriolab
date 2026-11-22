@@ -139,8 +139,8 @@ export class Editor {
         message: 'Are you sure you want to reset all editor data?',
         icon: faExclamationTriangle,
         actions: [
-          { text: 'yes', value: 1, icon: faRotateLeft },
-          { text: 'cancel', value: 0, icon: faXmark },
+          { text: 'yes', value: 1, faIcon: faRotateLeft },
+          { text: 'cancel', value: 0, faIcon: faXmark },
         ],
       })
       .subscribe((res) => {

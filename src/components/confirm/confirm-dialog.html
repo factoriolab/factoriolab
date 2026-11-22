@@ -11,7 +11,9 @@
       type="button"
       labButton
       [color]="action.color ?? ($first ? 'brand' : 'gray')"
-      [faIcon]="action.icon"
+      [faIcon]="action.faIcon"
+      [icon]="action.icon"
+      [iconType]="action.iconType"
       [text]="action.text"
       (click)="dialogRef.close(action.value)"
     ></button>

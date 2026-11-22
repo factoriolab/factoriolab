@@ -103,8 +103,8 @@ export class Locations extends EditorTab {
           'If this location is in use, deleting it will invalidate some entities. Continue?',
         icon: faExclamationTriangle,
         actions: [
-          { text: 'yes', value: 1, icon: faCheck },
-          { text: 'cancel', value: 0, icon: faXmark },
+          { text: 'yes', value: 1, faIcon: faCheck },
+          { text: 'cancel', value: 0, faIcon: faXmark },
         ],
       })
       .subscribe((res) => {

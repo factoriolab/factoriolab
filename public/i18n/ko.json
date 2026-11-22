@@ -439,7 +439,11 @@
     "includedRecipes": "포함된 제작법 설정",
     "qualityFilter": "품질 필터",
     "selectItem": "아이템 선택",
-    "selectRecipe": "제작법 선택"
+    "selectRecipe": "제작법 선택",
+    "techConfirmHeader": "Confirm technology selection",
+    "techConfirmItem": "Use item",
+    "techConfirmMessage": "You have selected a technology instead of the item with the same name. Proceed?",
+    "techConfirmTech": "Use technology"
   },
   "preferences": {
     "backgroundLightness": "배경 밝기",
