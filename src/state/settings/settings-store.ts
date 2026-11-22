@@ -18,7 +18,14 @@ import {
   parseIconData,
 } from '~/data/schema/icon-data';
 import { Inserter, parseInserter } from '~/data/schema/inserter';
-import { Item, itemHasQuality, ItemJson, parseItem } from '~/data/schema/item';
+import {
+  HEAT_ID,
+  Item,
+  itemHasQuality,
+  ItemJson,
+  parseItem,
+  POWER_ID,
+} from '~/data/schema/item';
 import { Machine, parseMachine } from '~/data/schema/machine';
 import { ModData } from '~/data/schema/mod-data';
 import { ModHash } from '~/data/schema/mod-hash';
@@ -775,6 +782,9 @@ export class SettingsStore extends Store<SettingsState> {
       return e;
     }, {});
     const includableItemIds = new Set(fuelIds);
+    [HEAT_ID, POWER_ID]
+      .filter((id) => itemRecord[id])
+      .forEach((id) => includableItemIds.add(id));
     const noRecipeItemIds = new Set(itemIds);
     const recipeRecord = recipes.reduce((e: Record<string, Recipe>, r) => {
       toRecordEntries(r.out).forEach(([i, val]) => {
