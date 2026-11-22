@@ -474,10 +474,11 @@ export function getMachinePower(
   } else if (M.isGeneratorPrototype(proto)) {
     if (proto.fluid_box.filter) {
       const fluid = data.fluid[proto.fluid_box.filter];
+      const fluidUsagePerSec = proto.fluid_usage_per_tick * 60;
       const inputMJ = getEnergyInMJ(fluid.heat_capacity ?? '1KJ');
       const diff = proto.maximum_temperature - fluid.default_temperature;
       if (diff < 0) return undefined;
-      usage = round(inputMJ * diff * 60000, 10);
+      usage = round(inputMJ * diff * fluidUsagePerSec * 1000, 10);
       usage *= -(proto.effectivity ?? 1);
       if (quality) usage *= getDefaultMultiplier(quality);
     }
