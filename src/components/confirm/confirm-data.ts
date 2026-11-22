@@ -1,12 +1,15 @@
 import { IconDefinition } from '@fortawesome/angular-fontawesome';
 
+import { IconType } from '~/data/icon-type';
 import { Color } from '~/state/preferences/color';
 
 export interface ConfirmAction<T> {
   text: string;
   value?: T;
   color?: Color;
-  icon?: IconDefinition;
+  faIcon?: IconDefinition;
+  icon?: string;
+  iconType?: IconType;
 }
 
 export interface ConfirmData<T> {

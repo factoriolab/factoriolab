@@ -31,6 +31,14 @@ export interface Dataset {
   iconRecord: Record<Exclude<IconType, 'img'>, Record<string, IconData>>;
   itemIds: string[];
   itemRecord: Record<string, Item>;
+  /**
+   * Items consumed or produced by some recipe, and fuels. Items outside this
+   * set are not shown as options for objective targets, since they would have
+   * no influence on the production chain. For example, this excludes items with
+   * a technology, machine, belt, or other associated entity but no recipe.
+   */
+  includableItemIds: Set<string>;
+  /** Items not net-producible by any recipe */
   noRecipeItemIds: Set<string>;
   beaconIds: string[];
   beaconRecord: Record<string, Beacon>;

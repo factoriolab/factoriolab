@@ -49,6 +49,7 @@ export enum ItemId {
   Pipe = 'pipe',
   PlasticBar = 'plastic-bar',
   Power = 'power',
+  ProductionSciencePackTechnology = 'production-science-pack-technology',
   ProductivityModule = 'productivity-module',
   ProductivityModule3 = 'productivity-module-3',
   Pump = 'pump',

@@ -147,9 +147,9 @@ export class Preferences {
         message: 'preferences.resetMessage',
         icon: faExclamationTriangle,
         actions: [
-          { text: 'yes', value: 1, icon: faRotateLeft },
-          { text: 'no', value: 2, icon: faTrash },
-          { text: 'cancel', value: 0, icon: faXmark },
+          { text: 'yes', value: 1, faIcon: faRotateLeft },
+          { text: 'no', value: 2, faIcon: faTrash },
+          { text: 'cancel', value: 0, faIcon: faXmark },
         ],
       })
       .subscribe((res) => {

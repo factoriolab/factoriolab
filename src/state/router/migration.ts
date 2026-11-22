@@ -1083,7 +1083,7 @@ export class Migration {
       this.confirm.open({
         header: 'app.migrationWarning',
         message,
-        actions: [{ text: 'ok', icon: faCheck }],
+        actions: [{ text: 'ok', faIcon: faCheck }],
       });
     }
   }
