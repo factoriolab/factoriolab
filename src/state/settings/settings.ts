@@ -26,7 +26,9 @@ export interface Settings extends SettingsState {
   researchedTechnologyIds: Set<string>;
   locationIds: Set<string>;
   defaultLocationIds: Set<string>;
+  /** Recipes that are available at the current technology level */
   availableRecipeIds: Set<string>;
+  /** Items that are available at the current technology level */
   availableItemIds: Set<string>;
   quality?: Quality;
 }

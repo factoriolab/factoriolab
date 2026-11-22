@@ -16,6 +16,12 @@ export class Picker {
     selection?: string,
     allIds?: string[] | Set<string>,
   ): Observable<string> {
+    // By default, only include items that are "includable" and "available"
+    allIds ??= this.settingsStore
+      .dataset()
+      .includableItemIds.intersection(
+        this.settingsStore.settings().availableItemIds,
+      );
     allIds ??= this.settingsStore.settings().availableItemIds;
     return this.dialog
       .open<boolean | string, PickerData>(PickerDialog, {

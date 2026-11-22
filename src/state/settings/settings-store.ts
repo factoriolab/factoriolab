@@ -774,11 +774,15 @@ export class SettingsStore extends Store<SettingsState> {
       e[i.id] = i;
       return e;
     }, {});
+    const includableItemIds = new Set(fuelIds);
     const noRecipeItemIds = new Set(itemIds);
     const recipeRecord = recipes.reduce((e: Record<string, Recipe>, r) => {
       toRecordEntries(r.out).forEach(([i, val]) => {
-        if ((r.in[i] ?? 0) < val) noRecipeItemIds.delete(i);
+        if (coalesce(r.in[i], rational.zero).lt(val)) noRecipeItemIds.delete(i);
+        includableItemIds.add(i);
       });
+
+      Object.keys(r.in).forEach((i) => includableItemIds.add(i));
 
       e[r.id] = r;
       return e;
@@ -850,6 +854,7 @@ export class SettingsStore extends Store<SettingsState> {
       iconRecord,
       itemIds,
       itemRecord,
+      includableItemIds,
       noRecipeItemIds,
       beaconIds,
       beaconRecord,
