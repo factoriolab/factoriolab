@@ -505,7 +505,6 @@ export function getMachineBaseEffect(
     M.isFusionGeneratorPrototype(proto) ||
     M.isGeneratorPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
-    // M.isReactorPrototype(proto) ||
     proto.effect_receiver?.base_effect == null
   )
     return undefined;

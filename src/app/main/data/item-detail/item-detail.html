@@ -226,7 +226,7 @@
         @if (machine.pollution) {
           <tr>
             <th>{{ 'data.pollution' | translate }}</th>
-            <td>{{ machine.pollution }}/m</td>
+            <td>{{ machine.pollution | round }}/m</td>
           </tr>
         }
         @if (machine.consumption) {
@@ -258,37 +258,37 @@
             <th colspan="2" class="text-lg/9 font-semibold">
               {{ 'data.baseEffect' | translate }}
             </th>
-            @if (baseEffect.consumption) {
-              <tr>
-                <th>{{ 'data.consumption' | translate }}</th>
-                <td>{{ baseEffect.consumption | bonusPercent }}</td>
-              </tr>
-            }
-            @if (baseEffect.speed) {
-              <tr>
-                <th>{{ 'data.speed' | translate }}</th>
-                <td>{{ baseEffect.speed | bonusPercent }}</td>
-              </tr>
-            }
-            @if (baseEffect.productivity) {
-              <tr>
-                <th>{{ 'data.productivity' | translate }}</th>
-                <td>{{ baseEffect.productivity | bonusPercent }}</td>
-              </tr>
-            }
-            @if (baseEffect.pollution) {
-              <tr>
-                <th>{{ 'data.pollution' | translate }}</th>
-                <td>{{ baseEffect.pollution | bonusPercent }}</td>
-              </tr>
-            }
-            @if (baseEffect.quality) {
-              <tr>
-                <th>{{ 'data.quality' | translate }}</th>
-                <td>{{ baseEffect.quality | bonusPercent }}</td>
-              </tr>
-            }
           </tr>
+          @if (baseEffect.consumption) {
+            <tr>
+              <th>{{ 'data.consumption' | translate }}</th>
+              <td>{{ baseEffect.consumption | bonusPercent }}</td>
+            </tr>
+          }
+          @if (baseEffect.speed) {
+            <tr>
+              <th>{{ 'data.speed' | translate }}</th>
+              <td>{{ baseEffect.speed | bonusPercent }}</td>
+            </tr>
+          }
+          @if (baseEffect.productivity) {
+            <tr>
+              <th>{{ 'data.productivity' | translate }}</th>
+              <td>{{ baseEffect.productivity | bonusPercent }}</td>
+            </tr>
+          }
+          @if (baseEffect.pollution) {
+            <tr>
+              <th>{{ 'data.pollution' | translate }}</th>
+              <td>{{ baseEffect.pollution | bonusPercent }}</td>
+            </tr>
+          }
+          @if (baseEffect.quality) {
+            <tr>
+              <th>{{ 'data.quality' | translate }}</th>
+              <td>{{ baseEffect.quality | bonusPercent }}</td>
+            </tr>
+          }
         }
         @if (machine.ingredientUsage) {
           <tr>
