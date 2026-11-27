@@ -631,9 +631,12 @@ export class Solver {
       }
 
       let unboundedRecipeId: string | undefined;
-      if (ray && contains(recipeVarRecord, ray)) {
-        unboundedRecipeId = ray.name;
-      }
+      if (
+        ray &&
+        contains(recipeVarRecord, ray) &&
+        ray.name.startsWith('recipe|')
+      )
+        unboundedRecipeId = ray.name.substring(7);
 
       return {
         returnCode,
